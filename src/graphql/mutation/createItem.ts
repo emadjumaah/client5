@@ -1,0 +1,42 @@
+import { gql } from "@apollo/client";
+
+export default gql`
+  mutation createItem(
+    $branch: String
+    $itemType: Int
+    $barcode: String
+    $name: String
+    $nameAr: String
+    $desc: String
+    $photo: String
+    $cost: Float
+    $price: Float
+    $unit: String
+    $category: CategoryInput
+    $brand: BrandInput
+    $employee: EmployeeInput
+    $department: DepartmentInput
+  ) {
+    createItem(
+      branch: $branch
+      itemType: $itemType
+      barcode: $barcode
+      name: $name
+      nameAr: $nameAr
+      desc: $desc
+      photo: $photo
+      cost: $cost
+      price: $price
+      unit: $unit
+      category: $category
+      brand: $brand
+      employee: $employee
+      department: $department
+    ) {
+      ok
+      message
+      data
+      error
+    }
+  }
+`;

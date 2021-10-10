@@ -1,0 +1,104 @@
+/* eslint-disable no-shadow */
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
+import React, { useContext } from "react";
+
+import Language from "./LanguageSelect";
+import { Box, Grid } from "@material-ui/core";
+import GenTheme from "./ThemeSelect";
+import { GContextTypes } from "../../types";
+import { GlobalContext } from "../../contexts";
+import BackupRestoreDB from "../../Shared/BackupRestoreDB";
+import { isSuperAdmin } from "../../common/roles";
+import CalendarOptions from "./CalendarOptions";
+import Company from "./Company";
+import Names from "./Names";
+
+const initcalendar = {
+  duration: 30,
+  start: 8.5,
+  end: 21.5,
+};
+
+const Options = ({
+  menuitem,
+  isRTL,
+  words,
+  isEditor,
+  company,
+  editCompany,
+  theme,
+}: any) => {
+  const { store, dispatch }: GContextTypes = useContext(GlobalContext);
+  const { lang, themeId, user, calendar } = store;
+
+  const view = isSuperAdmin(user);
+
+  const setLang = (lang: any) => {
+    dispatch({ type: "setLang", payload: lang });
+  };
+  const setThemeId = (themeId: any) => {
+    dispatch({ type: "setThemeId", payload: themeId });
+  };
+  const setCalendar = (data: any) => {
+    dispatch({ type: "setCalendar", payload: data });
+  };
+  const setNames = (data: any) => {
+    dispatch({ type: "setNames", payload: data });
+  };
+
+  if (!calendar) {
+    setCalendar(initcalendar);
+  }
+
+  return (
+    <Box
+      style={{
+        padding: 10,
+      }}
+    >
+      <Grid container spacing={2}>
+        <Grid item xs={12} md={10}>
+          <Language lang={lang} setLang={setLang} isRTL={isRTL}></Language>
+        </Grid>
+
+        <Grid item xs={12} md={10}>
+          {isEditor && (
+            <CalendarOptions
+              calendar={calendar}
+              words={words}
+              setCalendar={setCalendar}
+              isRTL={isRTL}
+            ></CalendarOptions>
+          )}
+        </Grid>
+
+        <Grid item xs={12} md={10}>
+          <GenTheme
+            isRTL={isRTL}
+            themeId={themeId}
+            setThemeId={setThemeId}
+          ></GenTheme>
+        </Grid>
+
+        {view && (
+          <Grid item xs={12} md={10}>
+            <BackupRestoreDB isRTL={isRTL} dialog={false}></BackupRestoreDB>
+          </Grid>
+        )}
+        <Grid item xs={12} md={10}>
+          <Company
+            company={company}
+            editCompany={editCompany}
+            words={words}
+            isRTL={isRTL}
+          ></Company>
+        </Grid>
+        <Grid item xs={12} md={10}>
+          <Names setNames={setNames} isRTL={isRTL} words={words}></Names>
+        </Grid>
+      </Grid>
+    </Box>
+  );
+};
+
+export default Options;

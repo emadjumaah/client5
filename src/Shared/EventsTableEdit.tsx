@@ -1,0 +1,247 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
+import { useEffect, useState } from "react";
+import {
+  Grid,
+  Table,
+  TableHeaderRow,
+  TableEditColumn,
+  VirtualTable,
+} from "@devexpress/dx-react-grid-material-ui";
+import { fade, Paper, Typography, withStyles } from "@material-ui/core";
+import {
+  DataTypeProvider,
+  EditingState,
+  IntegratedSorting,
+  SortingState,
+} from "@devexpress/dx-react-grid";
+import { Getter } from "@devexpress/dx-react-core";
+import { getColumns } from "../common/columns";
+import {
+  createdAtFormatter,
+  currencyFormatter,
+  doneFormatter,
+  eventStatusFormatter,
+  fromToFormatter,
+} from "./colorFormat";
+import { useLazyQuery, useMutation } from "@apollo/client";
+import {
+  createEvent,
+  deleteEventById,
+  getCustomers,
+  getDepartments,
+  getEmployees,
+  updateEvent,
+} from "../graphql";
+import { Command } from "./Command";
+import PopupEditing from "./PopupEditing";
+import PopupAppointmentTask from "../pubups/PopupAppointmentTask";
+import getTaskEvents from "../graphql/query/getTaskEvents";
+import getTasks from "../graphql/query/getTasks";
+import LoadingInline from "./LoadingInline";
+export const getRowId = (row: any) => row._id;
+
+const NumberTypeProvider = (props) => (
+  <DataTypeProvider
+    formatterComponent={({ value }) => (
+      <Typography variant="subtitle2">{Number(value) + 1}</Typography>
+    )}
+    {...props}
+  />
+);
+
+const styles = (theme) => ({
+  tableStriped: {
+    "& tbody tr:nth-of-type(odd)": {
+      backgroundColor: fade(theme.palette.primary.main, 0.1),
+    },
+  },
+});
+
+const TableComponentBase = ({ classes, ...restProps }) => (
+  <Table.Table {...restProps} className={classes.tableStriped} />
+);
+
+export const TableComponent = withStyles(styles, { name: "TableComponent" })(
+  TableComponentBase
+);
+
+export default function EventsTableEdit({
+  isRTL,
+  words,
+  isEditor,
+  employees,
+  departments,
+  customers,
+  servicesproducts,
+  theme,
+  isNew,
+  employee,
+  department,
+  customer,
+  company,
+  taskId,
+}: any) {
+  const [loading, setLoading] = useState(true);
+  const col = getColumns({ isRTL, words });
+
+  const [columns] = useState([
+    col.startDate,
+    col.fromto,
+    col.docNo,
+    col.department,
+    col.employee,
+    col.status,
+    col.done,
+    col.amount,
+  ]);
+
+  const [rows, setRows] = useState([]);
+
+  const refresQuery = {
+    refetchQueries: [
+      {
+        query: getTaskEvents,
+        variables: { taskId },
+      },
+      {
+        query: getTasks,
+      },
+      {
+        query: getCustomers,
+      },
+      {
+        query: getEmployees,
+      },
+      {
+        query: getDepartments,
+      },
+    ],
+  };
+
+  const [getEvents, eventsData]: any = useLazyQuery(getTaskEvents, {
+    fetchPolicy: "cache-and-network",
+  });
+
+  useEffect(() => {
+    const variables = { taskId };
+    getEvents({ variables });
+  }, []);
+
+  useEffect(() => {
+    const data = eventsData?.data?.["getTaskEvents"]?.data;
+    if (data) {
+      setLoading(false);
+    }
+    const events = data || [];
+    setRows(events);
+  }, [eventsData]);
+
+  const [addEvent] = useMutation(createEvent, refresQuery);
+  const [editEvent] = useMutation(updateEvent, refresQuery);
+  const [removeEventById] = useMutation(deleteEventById, refresQuery);
+
+  const commitChanges = async ({ deleted }) => {
+    if (deleted) {
+      const _id = deleted[0];
+      removeEventById({ variables: { _id } });
+      setRows(rows.filter((row: any) => row._id !== _id));
+    }
+  };
+
+  return (
+    <Paper
+      style={{
+        maxHeight: 600,
+        overflow: "auto",
+        margin: 10,
+        minHeight: 600,
+      }}
+    >
+      {loading && <LoadingInline></LoadingInline>}
+
+      {rows && (
+        <Grid rows={rows} columns={columns} getRowId={getRowId}>
+          <SortingState />
+          <EditingState onCommitChanges={commitChanges} />
+          <IntegratedSorting />
+
+          <VirtualTable
+            height={600}
+            messages={{
+              noData: isRTL ? "لا يوجد بيانات" : "no data",
+            }}
+            estimatedRowHeight={45}
+            tableComponent={TableComponent}
+          />
+          <DataTypeProvider
+            for={["startDate"]}
+            formatterComponent={createdAtFormatter}
+          ></DataTypeProvider>
+          <DataTypeProvider
+            for={["fromto"]}
+            formatterComponent={fromToFormatter}
+          ></DataTypeProvider>
+          <DataTypeProvider
+            for={["status"]}
+            formatterComponent={eventStatusFormatter}
+          ></DataTypeProvider>
+          <DataTypeProvider
+            for={["amount"]}
+            formatterComponent={currencyFormatter}
+          ></DataTypeProvider>
+          <DataTypeProvider
+            for={["done"]}
+            formatterComponent={(props: any) =>
+              doneFormatter({ ...props, editEvent })
+            }
+          ></DataTypeProvider>
+          <NumberTypeProvider for={["index"]} />
+          <TableHeaderRow showSortingControls />
+
+          {isEditor && !isNew && (
+            <TableEditColumn
+              showEditCommand
+              showDeleteCommand={rows && rows.length > 1}
+              showAddCommand
+              commandComponent={Command}
+            ></TableEditColumn>
+          )}
+
+          <PopupEditing addAction={addEvent} editAction={editEvent}>
+            <PopupAppointmentTask
+              employees={employees}
+              departments={departments}
+              customers={customers}
+              servicesproducts={servicesproducts}
+              theme={theme}
+              employee={employee}
+              department={department}
+              customer={customer}
+              company={company}
+              isEditor={isEditor}
+              taskId={taskId}
+            ></PopupAppointmentTask>
+          </PopupEditing>
+
+          <Getter
+            name="tableColumns"
+            computed={({ tableColumns }) => {
+              const result = [
+                {
+                  key: "editCommand",
+                  type: TableEditColumn.COLUMN_TYPE,
+                  width: isNew ? 20 : 100,
+                },
+                ...tableColumns.filter(
+                  (c: any) => c.type !== TableEditColumn.COLUMN_TYPE
+                ),
+              ];
+              return result;
+            }}
+          />
+        </Grid>
+      )}
+    </Paper>
+  );
+}
