@@ -3,11 +3,14 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import { useLazyQuery, useMutation } from "@apollo/client";
 import { useEffect } from "react";
-import { getBranches, updateBranch } from "../graphql";
+import { getBranches, createBranch, updateBranch } from "../graphql";
 
 export default () => {
   const [getbras, branchData] = useLazyQuery(getBranches);
 
+  const [addBranch] = useMutation(createBranch, {
+    refetchQueries: [{ query: getBranches }],
+  });
   const [editBranch] = useMutation(updateBranch, {
     refetchQueries: [{ query: getBranches }],
   });
@@ -18,5 +21,5 @@ export default () => {
 
   const branches = branchData?.data?.["getBranches"]?.data || [];
 
-  return { branches, editBranch };
+  return { branches, addBranch, editBranch };
 };

@@ -58,6 +58,7 @@ import updateExpenses from "./updateExpenses";
 import deleteExpenses from "./deleteExpenses";
 import changePassword from "./changePassword";
 import blockUser from "./blockUser";
+import createBranch from "./createBranch";
 
 export {
   createCategory,
@@ -120,4 +121,5 @@ export {
   createGroup,
   deleteGroup,
   updateGroup,
+  createBranch,
 };

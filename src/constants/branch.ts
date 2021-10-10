@@ -20,6 +20,17 @@ export const systemTypes = {
   acc: "acc",
 };
 
+export const defaultSystems = [
+  "cal",
+  "pos",
+  "exp",
+  "pur",
+  "inv",
+  "hr",
+  "ass",
+  "acc",
+];
+
 export const taskTypes = [
   {
     id: 1,

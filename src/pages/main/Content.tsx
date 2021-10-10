@@ -104,6 +104,7 @@ import ManageEmployees from "../adds/ManageEmployees";
 import ManageDepartments from "../adds/ManageDepartments";
 import EmployeesCalendar from "../calendar/EmployeesCalendar";
 import ManageResourses from "../adds/ManageResourses";
+import Branches from "../adds/Branches";
 // import { webFrame } from "electron";
 
 const Content = () => {
@@ -451,6 +452,22 @@ const Content = () => {
                 refresh={refreshAccount}
               >
                 <Accounts accounts={accs}></Accounts>
+              </PageLayout>
+            )}
+          />
+          <Route
+            path="/branches"
+            component={() => (
+              <PageLayout
+                menuitem={menuitem}
+                isRTL={isRTL}
+                words={words}
+                theme={theme}
+                isEditor={isEditor}
+              >
+                <Branches isRTL={isRTL} words={words} theme={theme}>
+                  {" "}
+                </Branches>
               </PageLayout>
             )}
           />

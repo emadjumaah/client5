@@ -31,6 +31,7 @@ import {
 } from "../../Shared/colorFormat";
 import { AlertLocal, SearchTable } from "../../components";
 import PageLayout from "../main/PageLayout";
+import useCompany from "../../hooks/useCompany";
 
 const getRowId = (row: { _id: any }) => row._id;
 
@@ -64,7 +65,7 @@ export default function Users({
     block,
     refreshuser,
   } = useUsers();
-
+  const { company } = useCompany();
   const commitChanges = async ({ deleted }) => {
     if (deleted) {
       const _id = deleted[0];
@@ -176,7 +177,11 @@ export default function Users({
           />
 
           <PopupEditing theme={theme} addAction={addUser} editAction={editUser}>
-            <PopupUser editPassword={editPassword} block={block}></PopupUser>
+            <PopupUser
+              brch={company?.basename}
+              editPassword={editPassword}
+              block={block}
+            ></PopupUser>
           </PopupEditing>
         </Grid>
         {alrt.show && (

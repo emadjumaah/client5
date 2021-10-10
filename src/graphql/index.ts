@@ -102,6 +102,7 @@ import {
   createAction,
   deleteAction,
   updateAction,
+  createBranch,
 } from "./mutation";
 
 export { client };
@@ -208,4 +209,5 @@ export {
   createGroup,
   deleteGroup,
   updateGroup,
+  createBranch,
 };

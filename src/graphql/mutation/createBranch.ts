@@ -1,10 +1,11 @@
 import { gql } from "@apollo/client";
 
 export default gql`
-  mutation updateBranch(
-    $_id: String
+  mutation createBranch(
     $pack: String
     $users: Int
+    $username: String
+    $password: String
     $name: String
     $nameAr: String
     $logo: String
@@ -22,10 +23,11 @@ export default gql`
     $location: LocationInput
     $note: String
   ) {
-    updateBranch(
-      _id: $_id
+    createBranch(
       pack: $pack
       users: $users
+      username: $username
+      password: $password
       name: $name
       nameAr: $nameAr
       logo: $logo

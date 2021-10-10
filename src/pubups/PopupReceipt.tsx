@@ -102,21 +102,16 @@ const PopupReceipt = ({
       const da = row.debitAcc;
 
       const filteredcredit = accounts.filter(
-        (acc: any) =>
-          acc.parentcode === parents.CASH && acc.branch === "branch1"
+        (acc: any) => acc.parentcode === parents.CASH
       );
       setDebaccounts(filteredcredit);
 
       if (ca) {
-        const credit = accounts.filter(
-          (acc: any) => acc.code === ca && acc.branch === "branch1"
-        )[0];
+        const credit = accounts.filter((acc: any) => acc.code === ca)[0];
         setCreditAcc(credit);
       }
       if (da) {
-        const debit = accounts.filter(
-          (acc: any) => acc.code === da && acc.branch === "branch1"
-        )[0];
+        const debit = accounts.filter((acc: any) => acc.code === da)[0];
         setDebitAcc(debit);
       }
       const customerId = row?.customerId;
@@ -127,13 +122,10 @@ const PopupReceipt = ({
       handleDateChange(row.time);
     } else {
       const filtereddebits = accounts.filter(
-        (acc: any) =>
-          acc.parentcode === parents.ACCOUNTS_RECEIVABLE &&
-          acc.branch === "branch1"
+        (acc: any) => acc.parentcode === parents.ACCOUNTS_RECEIVABLE
       );
       const filteredcredit = accounts.filter(
-        (acc: any) =>
-          acc.parentcode === parents.CASH && acc.branch === "branch1"
+        (acc: any) => acc.parentcode === parents.CASH
       );
       setDebaccounts(filteredcredit);
       setDebitAcc(filteredcredit?.[0]);

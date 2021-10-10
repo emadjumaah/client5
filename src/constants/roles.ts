@@ -39,3 +39,27 @@ export const rolesExample = {
     },
   ],
 };
+
+export const packages = [
+  {
+    name: "basic",
+    eventsQty: 1500,
+    durationQty: 1,
+    durationType: "y",
+    cost: 1000,
+  },
+  {
+    name: "standard",
+    eventsQty: 4500,
+    durationQty: 1,
+    durationType: "y",
+    cost: 1400,
+  },
+  {
+    name: "premium",
+    eventsQty: 9000,
+    durationQty: 1,
+    durationType: "y",
+    cost: 1800,
+  },
+];

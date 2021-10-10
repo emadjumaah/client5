@@ -155,38 +155,30 @@ const PopupExpenses = ({
         setTaskvalue(tsk);
       }
       const filtereddebits = accounts.filter(
-        (acc: any) =>
-          acc.parentcode === parents.EXPENCES && acc.branch === "branch1"
+        (acc: any) => acc.parentcode === parents.EXPENCES
       );
       setDebaccounts(filtereddebits);
       const filteredcredit = accounts.filter(
-        (acc: any) =>
-          acc.parentcode === parents.CASH && acc.branch === "branch1"
+        (acc: any) => acc.parentcode === parents.CASH
       );
       setCridaccounts(filteredcredit);
 
       if (ca) {
-        const credit = accounts.filter(
-          (acc: any) => acc.code === ca && acc.branch === "branch1"
-        )[0];
+        const credit = accounts.filter((acc: any) => acc.code === ca)[0];
         setCreditAcc(credit);
       }
       if (da) {
-        const debit = accounts.filter(
-          (acc: any) => acc.code === da && acc.branch === "branch1"
-        )[0];
+        const debit = accounts.filter((acc: any) => acc.code === da)[0];
         setDebitAcc(debit);
       }
       handleDateChange(row.time);
     } else {
       const filtereddebits = accounts.filter(
-        (acc: any) =>
-          acc.parentcode === parents.EXPENCES && acc.branch === "branch1"
+        (acc: any) => acc.parentcode === parents.EXPENCES
       );
       setDebaccounts(filtereddebits);
       const filteredcredit = accounts.filter(
-        (acc: any) =>
-          acc.parentcode === parents.CASH && acc.branch === "branch1"
+        (acc: any) => acc.parentcode === parents.CASH
       );
       setCridaccounts(filteredcredit);
       setCreditAcc(filteredcredit?.[0]);

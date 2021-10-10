@@ -63,8 +63,7 @@ const PopupFinance = ({
       if (ot === 70) {
         setPtype("deposit");
         const filtereddebits = accounts.filter(
-          (acc: any) =>
-            acc.parentcode === parents.CASH && acc.branch === "branch1"
+          (acc: any) => acc.parentcode === parents.CASH
         );
         setDebaccounts(filtereddebits);
         setCridaccounts(filtereddebits);
@@ -72,56 +71,43 @@ const PopupFinance = ({
       if (ot === 71) {
         setPtype("partnerdraw");
         const filtereddebits = accounts.filter(
-          (acc: any) =>
-            acc.parentcode === parents.OTHER_CURRENT_LIABILITIES &&
-            acc.branch === "branch1"
+          (acc: any) => acc.parentcode === parents.OTHER_CURRENT_LIABILITIES
         );
         setDebaccounts(filtereddebits);
         const filteredcredit = accounts.filter(
-          (acc: any) =>
-            acc.parentcode === parents.CASH && acc.branch === "branch1"
+          (acc: any) => acc.parentcode === parents.CASH
         );
         setCridaccounts(filteredcredit);
       }
       if (ot === 72) {
         setPtype("partneradd");
         const filtereddebits = accounts.filter(
-          (acc: any) =>
-            acc.parentcode === parents.OTHER_CURRENT_LIABILITIES &&
-            acc.branch === "branch1"
+          (acc: any) => acc.parentcode === parents.OTHER_CURRENT_LIABILITIES
         );
         setCridaccounts(filtereddebits);
         const filteredcredit = accounts.filter(
-          (acc: any) =>
-            acc.parentcode === parents.CASH && acc.branch === "branch1"
+          (acc: any) => acc.parentcode === parents.CASH
         );
         setDebaccounts(filteredcredit);
       }
       if (ot === 14) {
         setPtype("customerpay");
         const filtereddebits = accounts.filter(
-          (acc: any) =>
-            acc.parentcode === parents.ACCOUNTS_RECEIVABLE &&
-            acc.branch === "branch1"
+          (acc: any) => acc.parentcode === parents.ACCOUNTS_RECEIVABLE
         );
         setCridaccounts(filtereddebits);
         const filteredcredit = accounts.filter(
-          (acc: any) =>
-            acc.parentcode === parents.CASH && acc.branch === "branch1"
+          (acc: any) => acc.parentcode === parents.CASH
         );
         setDebaccounts(filteredcredit);
       }
 
       if (ca) {
-        const credit = accounts.filter(
-          (acc: any) => acc.code === ca && acc.branch === "branch1"
-        )[0];
+        const credit = accounts.filter((acc: any) => acc.code === ca)[0];
         setCreditAcc(credit);
       }
       if (da) {
-        const debit = accounts.filter(
-          (acc: any) => acc.code === da && acc.branch === "branch1"
-        )[0];
+        const debit = accounts.filter((acc: any) => acc.code === da)[0];
         setDebitAcc(debit);
       }
       const customerId = row?.customerId;
@@ -132,8 +118,7 @@ const PopupFinance = ({
     } else {
       if (ptype === "deposit") {
         const filtereddebits = accounts.filter(
-          (acc: any) =>
-            acc.parentcode === parents.CASH && acc.branch === "branch1"
+          (acc: any) => acc.parentcode === parents.CASH
         );
         setDebaccounts(filtereddebits);
         setCridaccounts(filtereddebits);
@@ -142,14 +127,11 @@ const PopupFinance = ({
       }
       if (ptype === "partnerdraw") {
         const filtereddebits = accounts.filter(
-          (acc: any) =>
-            acc.parentcode === parents.OTHER_CURRENT_LIABILITIES &&
-            acc.branch === "branch1"
+          (acc: any) => acc.parentcode === parents.OTHER_CURRENT_LIABILITIES
         );
         setDebaccounts(filtereddebits);
         const filteredcredit = accounts.filter(
-          (acc: any) =>
-            acc.parentcode === parents.CASH && acc.branch === "branch1"
+          (acc: any) => acc.parentcode === parents.CASH
         );
         setCridaccounts(filteredcredit);
         setCreditAcc(filteredcredit?.[0]);
@@ -157,14 +139,11 @@ const PopupFinance = ({
       }
       if (ptype === "partneradd") {
         const filtereddebits = accounts.filter(
-          (acc: any) =>
-            acc.parentcode === parents.OTHER_CURRENT_LIABILITIES &&
-            acc.branch === "branch1"
+          (acc: any) => acc.parentcode === parents.OTHER_CURRENT_LIABILITIES
         );
         setCridaccounts(filtereddebits);
         const filteredcredit = accounts.filter(
-          (acc: any) =>
-            acc.parentcode === parents.CASH && acc.branch === "branch1"
+          (acc: any) => acc.parentcode === parents.CASH
         );
         setDebaccounts(filteredcredit);
         setDebitAcc(filteredcredit?.[0]);

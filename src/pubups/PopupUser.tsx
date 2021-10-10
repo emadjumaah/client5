@@ -6,7 +6,6 @@ import React, { useContext, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useBranches } from "../hooks";
 import {
-  successAlert,
   dublicateAlert,
   errorAlert,
   yup,
@@ -33,11 +32,11 @@ const PopupUser = ({
   theme,
   editPassword,
   block,
+  brch,
 }: any) => {
   const [saving, setSaving] = useState(false);
   const [alrt, setAlrt] = useState({ show: false, msg: "", type: undefined });
   const [roles, setRoles] = useState({});
-  const [brch, setBrch] = useState("branch1");
   const [blockUser, setBlockUser] = useState(false);
 
   const [openPass, setOpenPass] = useState(false);
@@ -79,7 +78,6 @@ const PopupUser = ({
   useEffect(() => {
     if (row && row._id) {
       const rols = JSON.parse(row.roles);
-      setBrch(row.branch);
       setRoles(rols);
       setBlockUser(row.block);
     }
@@ -147,7 +145,6 @@ const PopupUser = ({
   const onFormClose = () => {
     reset();
     setRoles({});
-    setBrch("branch1");
     onClose();
   };
 
