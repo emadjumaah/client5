@@ -22,7 +22,7 @@ export default () => {
   const lastNos: lastNoTypes | any = {};
   if (numbers.length > 0) {
     numbers.map((no: any) => {
-      lastNos[no._id] = no.sequenceValue;
+      lastNos[no.name] = no.sequenceValue;
     });
   }
   return { lastNos, freshlastNos };

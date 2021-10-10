@@ -15,12 +15,7 @@ import * as yup from "yup";
 
 import { PopupTextField } from "../../Shared";
 import { yupResolver } from "@hookform/resolvers/yup";
-import {
-  ImageOnlineUpload,
-  ImageUpload,
-  uploadPhotoOnline,
-} from "../../common/upload";
-import { isProd } from "../../constants/sizes";
+import { ImageOnlineUpload, uploadPhotoOnline } from "../../common/upload";
 
 const phoneRegExp =
   /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
@@ -197,33 +192,17 @@ const Company = ({ words, editCompany, company, isRTL }) => {
               errors={errors}
               disabled={!active}
             />
-            {!isProd && (
-              <>
-                <img
-                  src={logo}
-                  alt={company?.name}
-                  height={100}
-                  style={{
-                    objectFit: "contain",
-                    borderRadius: 10,
-                    marginTop: 5,
-                  }}
-                />
-                <ImageUpload disabled={!active} setLogo={setLogo}></ImageUpload>
-              </>
-            )}
+
             <Box style={{ marginBottom: 20 }}></Box>
-            {isProd && (
-              <ImageOnlineUpload
-                url={iconurl}
-                setUrl={setIconurl}
-                image={iconimage}
-                setImage={setIconimage}
-                width={300}
-                height={150}
-                size="400x200"
-              ></ImageOnlineUpload>
-            )}
+            <ImageOnlineUpload
+              url={iconurl}
+              setUrl={setIconurl}
+              image={iconimage}
+              setImage={setIconimage}
+              width={300}
+              height={150}
+              size="400x200"
+            ></ImageOnlineUpload>
           </Grid>
           <Grid item xs={12} md={4}></Grid>
           <Grid item xs={12}>

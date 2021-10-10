@@ -1,14 +1,12 @@
 /* eslint-disable no-shadow */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import React, { useContext } from "react";
+import { useContext } from "react";
 
 import Language from "./LanguageSelect";
 import { Box, Grid } from "@material-ui/core";
 import GenTheme from "./ThemeSelect";
 import { GContextTypes } from "../../types";
 import { GlobalContext } from "../../contexts";
-import BackupRestoreDB from "../../Shared/BackupRestoreDB";
-import { isSuperAdmin } from "../../common/roles";
 import CalendarOptions from "./CalendarOptions";
 import Company from "./Company";
 import Names from "./Names";
@@ -29,9 +27,7 @@ const Options = ({
   theme,
 }: any) => {
   const { store, dispatch }: GContextTypes = useContext(GlobalContext);
-  const { lang, themeId, user, calendar } = store;
-
-  const view = isSuperAdmin(user);
+  const { lang, themeId, calendar } = store;
 
   const setLang = (lang: any) => {
     dispatch({ type: "setLang", payload: lang });
@@ -80,11 +76,6 @@ const Options = ({
           ></GenTheme>
         </Grid>
 
-        {view && (
-          <Grid item xs={12} md={10}>
-            <BackupRestoreDB isRTL={isRTL} dialog={false}></BackupRestoreDB>
-          </Grid>
-        )}
         <Grid item xs={12} md={10}>
           <Company
             company={company}
