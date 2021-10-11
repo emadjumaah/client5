@@ -2,7 +2,7 @@
 import { EventsContextTypes } from "../../types";
 
 export const initTasksContext = {
-  currentViewName: "Week",
+  currentViewName: "Month",
   currentDate: new Date(),
   endDate: new Date(),
   sort: [{ columnName: "startDate", direction: "desc" }],

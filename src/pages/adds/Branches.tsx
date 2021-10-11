@@ -1,36 +1,48 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import React, { useState } from "react";
 import Paper from "@material-ui/core/Paper";
-import { EditingState, GroupingState } from "@devexpress/dx-react-grid";
+import {
+  DataTypeProvider,
+  EditingState,
+  IntegratedFiltering,
+  IntegratedSorting,
+  SearchState,
+  SortingState,
+} from "@devexpress/dx-react-grid";
 import {
   Grid,
-  Table,
   TableHeaderRow,
   TableEditColumn,
   VirtualTable,
+  Toolbar,
+  SearchPanel,
 } from "@devexpress/dx-react-grid-material-ui";
 import { Command, PopupEditing } from "../../Shared";
 import PopupBranch from "../../pubups/PopupBranch";
 import { useBranches } from "../../hooks";
-
-export const branchCol = [
-  { name: "basename", title: "Basename" },
-  { name: "name", title: "Name" },
-  { name: "nameAr", title: "Name Arabic" },
-  { name: "users", title: "Users" },
-];
-export const branchColExt = [
-  { columnName: "basename", width: "10%" },
-  { columnName: "name", width: "auto" },
-  { columnName: "nameAr", width: "auto" },
-  { columnName: "users", width: "10%" },
-];
+import {
+  createdAtFormatter,
+  currencyFormatter,
+  logoFormatter,
+} from "../../Shared/colorFormat";
+import { SearchTable } from "../../components";
 
 export const getRowId = (row: { _id: any }) => row._id;
 
 export default function Branches({ isRTL, theme, words }: any) {
+  const branchCol = [
+    { name: "logo", title: " " },
+    { name: isRTL ? "nameAr" : "name", title: words.name },
+    { name: "tel1", title: words.phoneNumber },
+    { name: "email", title: words.email },
+    { name: "packName", title: isRTL ? "الاشتراك" : "Package" },
+    { name: "packStart", title: isRTL ? "بداية الاشتراك" : "Start" },
+    { name: "packEnd", title: isRTL ? "نهاية الاشتراك" : "End" },
+    { name: "packCost", title: words.price },
+    { name: "packQty", title: words.qty },
+  ];
+
   const [columns] = useState(branchCol);
-  const [tableColumnExtensions]: any = useState(branchColExt);
 
   const commitChanges = async ({ deleted }) => {
     //
@@ -41,24 +53,43 @@ export default function Branches({ isRTL, theme, words }: any) {
   return (
     <Paper>
       <Grid rows={branches} columns={columns} getRowId={getRowId}>
-        <GroupingState />
+        <SortingState />
         <EditingState onCommitChanges={commitChanges} />
+        <SearchState />
 
-        <Table columnExtensions={tableColumnExtensions} />
+        <IntegratedSorting />
+        <IntegratedFiltering />
         <VirtualTable
           height={window.innerHeight - 133}
           messages={{
             noData: isRTL ? "لا يوجد بيانات" : "no data",
           }}
-          estimatedRowHeight={40}
+          estimatedRowHeight={70}
         />
-        <TableHeaderRow />
+        <TableHeaderRow showSortingControls />
+        <DataTypeProvider
+          for={["packCost"]}
+          formatterComponent={currencyFormatter}
+        ></DataTypeProvider>
+        <DataTypeProvider
+          for={["logo"]}
+          formatterComponent={logoFormatter}
+        ></DataTypeProvider>
+        <DataTypeProvider
+          for={["packStart", "packEnd"]}
+          formatterComponent={createdAtFormatter}
+        ></DataTypeProvider>
 
         <TableEditColumn
           showAddCommand
           commandComponent={Command}
         ></TableEditColumn>
-
+        <Toolbar />
+        <SearchPanel
+          inputComponent={(props: any) => {
+            return <SearchTable isRTL={isRTL} {...props}></SearchTable>;
+          }}
+        />
         <PopupEditing addAction={addBranch} editAction={editBranch}>
           <PopupBranch
             isRTL={isRTL}

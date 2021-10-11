@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/alt-text */
 /* eslint-disable @typescript-eslint/no-redeclare */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import {
@@ -439,6 +440,24 @@ export const amountFormatter = ({ row }: any) => {
 };
 export const currencyFormatter = ({ value }: any) => {
   return <span style={{ color: "#403795" }}>{moneyFormat(value)}</span>;
+};
+export const logoFormatter = ({ value }: any) => {
+  return value ? (
+    <img
+      style={{
+        overflow: "hidden",
+        borderRadius: 5,
+        objectFit: "cover",
+        borderWidth: 1,
+        borderColor: "#ddd",
+      }}
+      width={100}
+      height={50}
+      src={value}
+    />
+  ) : (
+    <div style={{ width: 100, height: 50 }}></div>
+  );
 };
 export const currencyFormatterEmpty = ({ value }: any) => {
   return <span style={{ color: "#403795" }}>{moneyFormatEmpty(value)}</span>;

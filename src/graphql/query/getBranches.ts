@@ -12,6 +12,13 @@ export default gql`
         systems
         users
 
+        packType
+        packName
+        packStart
+        packEnd
+        packCost
+        packQty
+
         name
         nameAr
         logo
