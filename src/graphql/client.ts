@@ -8,7 +8,7 @@ const store = stringstore ? JSON.parse(stringstore) : null;
 const token = store ? store.token : null;
 
 const uri = isElectron
-  ? 'https://jadwal-web.herokuapp.com/'
+  ? 'https://jadwal-web.herokuapp.com/graphql'
   : process?.env?.GRAPHQL_URI
   ? process.env.GRAPHQL_URI
   : 'http://jadwal-main:4000/graphql';
