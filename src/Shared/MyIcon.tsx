@@ -23,6 +23,8 @@ import WorkIcon from "@material-ui/icons/Work";
 import GroupIcon from "@material-ui/icons/Group";
 import Business from "@material-ui/icons/Business";
 import Dashboard from "@material-ui/icons/Dashboard";
+import DirectionsCarIcon from "@material-ui/icons/DirectionsCar";
+
 export default function MyIcon({ icon, color, size }: any) {
   const style = { color, fontSize: size ? size : undefined };
   switch (icon) {
@@ -78,6 +80,8 @@ export default function MyIcon({ icon, color, size }: any) {
       return <ExitToAppIcon style={style}></ExitToAppIcon>;
     case "work":
       return <WorkIcon style={style}></WorkIcon>;
+    case "resourse":
+      return <DirectionsCarIcon style={style}></DirectionsCarIcon>;
 
     default:
       return <div></div>;

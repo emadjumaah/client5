@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import React from "react";
-import { fade, ListItemIcon } from "@material-ui/core";
+import { Box, fade } from "@material-ui/core";
 
 import { ListItem, ListItemText } from "@material-ui/core";
 
@@ -14,9 +14,19 @@ export const renderIcon = (icon: any, theme: any, isSelected: any) => {
     ? fade(theme.palette.secondary.main, 0.8)
     : fade(theme.palette.background.default, 0.8);
   return (
-    <ListItemIcon>
+    <Box
+      display="flex"
+      style={{
+        alignItems: "center",
+        justifyContent: "flex-start",
+        padding: 0,
+        margin: 0,
+        width: 40,
+        height: 25,
+      }}
+    >
       <MyIcon icon={icon} color={color} size={25}></MyIcon>
-    </ListItemIcon>
+    </Box>
   );
 };
 
@@ -64,6 +74,7 @@ export const subMenuItem = ({
           primary={isRTL ? item.titleAr : item.titleEn}
           style={{
             color: isSelected ? theme.palette.secondary.main : undefined,
+            margin: 0,
           }}
         />
       </ListItem>

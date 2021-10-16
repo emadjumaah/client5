@@ -38,7 +38,7 @@ const MenuItem = ({
         <ListItemText
           primary={isRTL ? item.titleAr : item.titleEn}
           className={isRTL ? classes.txtrtl : classes.txtltr}
-          style={{ marginLeft: -20, paddingTop: 3 }}
+          style={{ marginLeft: -20, margin: 0 }}
         />
         {open ? (
           <ExpandLess style={{ color: "#eee", fontSize: 20 }} />

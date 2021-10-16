@@ -67,7 +67,7 @@ const Menu = ({
                     primary={isRTL ? item.titleAr : item.titleEn}
                     className={isRTL ? classes.txtrtl : classes.txtltr}
                     style={{
-                      paddingTop: 3,
+                      margin: 0,
                       color: isSelected
                         ? theme.palette.secondary.main
                         : undefined,
