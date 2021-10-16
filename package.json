@@ -45,7 +45,7 @@
     "recharts": "^2.0.9",
     "rrule": "^2.6.8",
     "tafgeetjs": "^2.1.0",
-    "typescript": "^4.0.3",
+    "typescript": "^4.4.3",
     "web-vitals": "^0.2.4",
     "workbox-background-sync": "^5.1.3",
     "workbox-broadcast-update": "^5.1.3",
@@ -73,6 +73,9 @@
       "react-app",
       "react-app/jest"
     ]
+  },
+  "prettier": {
+    "singleQuote": true
   },
   "browserslist": {
     "production": [
