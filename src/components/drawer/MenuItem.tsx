@@ -1,12 +1,12 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import React from "react";
-import { List, ListItem, ListItemText } from "@material-ui/core";
+import React from 'react';
+import { List, ListItem, ListItemText } from '@material-ui/core';
 
-import ExpandLess from "@material-ui/icons/ExpandLess";
-import ExpandMore from "@material-ui/icons/ExpandMore";
-import Collapse from "@material-ui/core/Collapse";
-import { renderIcon, subMenuItem } from "./renders";
+import ExpandLess from '@material-ui/icons/ExpandLess';
+import ExpandMore from '@material-ui/icons/ExpandMore';
+import Collapse from '@material-ui/core/Collapse';
+import { renderIcon, subMenuItem } from './renders';
 
 const MenuItem = ({
   item,
@@ -16,7 +16,6 @@ const MenuItem = ({
   submenu,
   setMenuitem,
   menuitem,
-  i,
   user,
   setMobileOpen,
 }: any) => {
@@ -29,10 +28,10 @@ const MenuItem = ({
     <div>
       <ListItem
         id={item.id}
-        dir={isRTL ? "rtl" : undefined}
+        dir={isRTL ? 'rtl' : undefined}
         className={classes.child}
         onClick={handleClick}
-        style={{ cursor: "pointer" }}
+        style={{ cursor: 'pointer' }}
       >
         {renderIcon(item.icon, theme, false)}
         <ListItemText
@@ -41,9 +40,9 @@ const MenuItem = ({
           style={{ marginLeft: -20, margin: 0 }}
         />
         {open ? (
-          <ExpandLess style={{ color: "#eee", fontSize: 20 }} />
+          <ExpandLess style={{ color: '#eee', fontSize: 20 }} />
         ) : (
-          <ExpandMore style={{ color: "#eee", fontSize: 20 }} />
+          <ExpandMore style={{ color: '#eee', fontSize: 20 }} />
         )}
       </ListItem>
       <Collapse in={open} timeout="auto" unmountOnExit>

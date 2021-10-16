@@ -1,8 +1,9 @@
-import { Box, Button, Grid, Paper, Typography } from "@material-ui/core";
-import { useContext } from "react";
-import { useForm } from "react-hook-form";
-import { GlobalContext } from "../../contexts";
-import { PopupTextField } from "../../Shared";
+import { Box, Button, Grid, Paper, Typography } from '@material-ui/core';
+import React from 'react';
+import { useContext } from 'react';
+import { useForm } from 'react-hook-form';
+import { GlobalContext } from '../../contexts';
+import { PopupTextField } from '../../Shared';
 
 export default function Names({ isRTL, words, setNames }) {
   const { store } = useContext(GlobalContext);
@@ -39,7 +40,7 @@ export default function Names({ isRTL, words, setNames }) {
     <Paper>
       <Box padding={3}>
         <Typography variant="h6">
-          {isRTL ? "تعديل الاسماء" : "Edit Names"}
+          {isRTL ? 'تعديل الاسماء' : 'Edit Names'}
         </Typography>
         <Box
           style={{
@@ -117,8 +118,8 @@ export default function Names({ isRTL, words, setNames }) {
           <Box
             display="flex"
             style={{
-              alignItems: "center",
-              justifyContent: "flex-start",
+              alignItems: 'center',
+              justifyContent: 'flex-start',
               height: 50,
               // marginTop: 20,
             }}
@@ -130,8 +131,8 @@ export default function Names({ isRTL, words, setNames }) {
               style={{
                 width: 90,
                 height: 34,
-                alignItems: "center",
-                justifyContent: "center",
+                alignItems: 'center',
+                justifyContent: 'center',
               }}
             >
               <Typography>{words.save}</Typography>

@@ -1,4 +1,4 @@
-import { LanguageType } from "../languages/langTypes";
+import { LanguageType } from '../languages/langTypes';
 
 interface UserTypes {
   _id: string;

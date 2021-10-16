@@ -1,8 +1,8 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import React, { useContext, useEffect, useState } from "react";
-import { GContextTypes } from "../types";
-import { GlobalContext } from "../contexts";
+import React, { useContext, useEffect, useState } from 'react';
+import { GContextTypes } from '../types';
+import { GlobalContext } from '../contexts';
 import {
   Box,
   Button,
@@ -11,21 +11,21 @@ import {
   Tab,
   Tabs,
   Typography,
-} from "@material-ui/core";
-import PopupLayout from "../pages/main/PopupLayout";
-import { Grid } from "@material-ui/core";
+} from '@material-ui/core';
+import PopupLayout from '../pages/main/PopupLayout';
+import { Grid } from '@material-ui/core';
 
-import { useLazyQuery } from "@apollo/client";
-import { moneyFormat } from "../Shared/colorFormat";
-import PopupTaskAppointment from "./PopupTaskAppointment";
-import _ from "lodash";
-import PopupTaskInvoice from "./PopupTaskInvoice";
-import getTaskItems from "../graphql/query/getTaskItems";
-import { taskManamentTabs } from "../constants/rrule";
-import EventsCustomer from "../Shared/EventsCustomer";
-import InvoicesCustomer from "../Shared/InvoicesCustomer";
-import ReceiptCustomer from "../Shared/ReceiptCustomer";
-import ExpensesCustomer from "../Shared/ExpensesCustomer";
+import { useLazyQuery } from '@apollo/client';
+import { moneyFormat } from '../Shared/colorFormat';
+import PopupTaskAppointment from './PopupTaskAppointment';
+import _ from 'lodash';
+import PopupTaskInvoice from './PopupTaskInvoice';
+import getTaskItems from '../graphql/query/getTaskItems';
+import { taskManamentTabs } from '../constants/rrule';
+import EventsCustomer from '../Shared/EventsCustomer';
+import InvoicesCustomer from '../Shared/InvoicesCustomer';
+import ReceiptCustomer from '../Shared/ReceiptCustomer';
+import ExpensesCustomer from '../Shared/ExpensesCustomer';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -50,7 +50,7 @@ function TabPanel(props) {
 function a11yProps(index: any) {
   return {
     id: `vertical-tab-${index}`,
-    "aria-controls": `vertical-tabpanel-${index}`,
+    'aria-controls': `vertical-tabpanel-${index}`,
   };
 }
 
@@ -58,7 +58,7 @@ const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
     backgroundColor: theme.palette.background.paper,
-    display: "flex",
+    display: 'flex',
     height: 224,
   },
   tabs: {
@@ -97,7 +97,7 @@ const PopupTaskView = ({
   const [row, setRow] = useState(item);
   const [value, setValue] = React.useState(0);
 
-  const handleChange = (event, newValue) => {
+  const handleChange = (_, newValue) => {
     setValue(newValue);
   };
 
@@ -122,12 +122,12 @@ const PopupTaskView = ({
   }: GContextTypes = useContext(GlobalContext);
 
   const [getItems, itemsData]: any = useLazyQuery(getTaskItems, {
-    fetchPolicy: "cache-and-network",
+    fetchPolicy: 'cache-and-network',
   });
 
   useEffect(() => {
     if (open) {
-      const items = itemsData?.data?.["getTaskItems"]?.data || [];
+      const items = itemsData?.data?.['getTaskItems']?.data || [];
       if (items && items.length > 0) {
         const ids = items.map((it: any) => it.itemId);
         const servlist = servicesproducts.filter((ser: any) =>
@@ -170,8 +170,8 @@ const PopupTaskView = ({
           };
         });
         const finalItems = _(itemsWqtyprice)
-          .groupBy("_id")
-          .map((array, key) => ({
+          .groupBy('_id')
+          .map((array) => ({
             _id: array[0]._id,
             name: array[0].name,
             nameAr: array[0].nameAr,
@@ -192,10 +192,10 @@ const PopupTaskView = ({
             itemType: array[0].itemType,
             index: array[0].index,
             itemprice: array[0].itemprice,
-            itemqty: _.sumBy(array, "itemqty"),
-            itemtotal: _.sumBy(array, "itemtotal"),
+            itemqty: _.sumBy(array, 'itemqty'),
+            itemtotal: _.sumBy(array, 'itemtotal'),
           }))
-          .orderBy("index")
+          .orderBy('index')
           .value();
         setItemsList(finalItems);
       }
@@ -214,7 +214,7 @@ const PopupTaskView = ({
   }, [row]);
 
   const getOverallTotal = () => {
-    const evssum = _.sumBy(evList, "amount");
+    const evssum = _.sumBy(evList, 'amount');
     setTotal(evssum);
   };
 
@@ -241,7 +241,7 @@ const PopupTaskView = ({
       theme={theme}
       alrt={{}}
       mt={10}
-      maxWidth={isNew ? "lg" : "xl"}
+      maxWidth={isNew ? 'lg' : 'xl'}
       fullWidth
       preventclose
       onlyclose
@@ -253,7 +253,7 @@ const PopupTaskView = ({
           <Grid item xs={11}>
             <Box
               style={{
-                backgroundColor: "#eee",
+                backgroundColor: '#eee',
               }}
             >
               <Box display="flex" style={{ margin: 10 }}></Box>
@@ -315,35 +315,35 @@ const PopupTaskView = ({
                   <Box
                     display="flex"
                     style={{
-                      alignItems: "center",
-                      justifyContent: "space-between",
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
                       marginLeft: 20,
                       marginRight: 20,
                     }}
                   >
                     <Box>
                       <Typography style={{ fontSize: 14 }}>
-                        {isRTL ? "الاجمالي" : "Total"}
+                        {isRTL ? 'الاجمالي' : 'Total'}
                       </Typography>
-                      <Typography style={{ fontWeight: "bold", fontSize: 14 }}>
+                      <Typography style={{ fontWeight: 'bold', fontSize: 14 }}>
                         {moneyFormat(viewtotal)}
                       </Typography>
                     </Box>
                     <Box>
                       <Typography style={{ fontSize: 14 }}>
-                        {isRTL ? "نسبة الانجاز" : "Progress"}
+                        {isRTL ? 'نسبة الانجاز' : 'Progress'}
                       </Typography>
-                      <Typography style={{ fontWeight: "bold", fontSize: 14 }}>
+                      <Typography style={{ fontWeight: 'bold', fontSize: 14 }}>
                         {progress}%
                       </Typography>
                     </Box>
-                    <Box display="flex" style={{ flexDirection: "row" }}>
+                    <Box display="flex" style={{ flexDirection: 'row' }}>
                       <Box>
                         <Typography style={{ fontSize: 14 }}>
-                          {isRTL ? "الفواتير" : "Total Invoiced"}
+                          {isRTL ? 'الفواتير' : 'Total Invoiced'}
                         </Typography>
                         <Typography
-                          style={{ fontWeight: "bold", fontSize: 14 }}
+                          style={{ fontWeight: 'bold', fontSize: 14 }}
                         >
                           {moneyFormat(totalinvoiced)}
                         </Typography>
@@ -351,10 +351,10 @@ const PopupTaskView = ({
                       {totalDiscount > 0 && (
                         <Box style={{ marginLeft: 20, marginRight: 20 }}>
                           <Typography style={{ fontSize: 14 }}>
-                            {isRTL ? "الحسومات" : "Total Discounts"}
+                            {isRTL ? 'الحسومات' : 'Total Discounts'}
                           </Typography>
                           <Typography
-                            style={{ fontWeight: "bold", fontSize: 14 }}
+                            style={{ fontWeight: 'bold', fontSize: 14 }}
                           >
                             {moneyFormat(totalDiscount)}
                           </Typography>
@@ -363,9 +363,9 @@ const PopupTaskView = ({
                     </Box>
                     <Box>
                       <Typography style={{ fontSize: 14 }}>
-                        {isRTL ? "المقبوضات" : "Total Paid"}
+                        {isRTL ? 'المقبوضات' : 'Total Paid'}
                       </Typography>
-                      <Typography style={{ fontWeight: "bold", fontSize: 14 }}>
+                      <Typography style={{ fontWeight: 'bold', fontSize: 14 }}>
                         {moneyFormat(totalpaid)}
                       </Typography>
                     </Box>
@@ -373,11 +373,11 @@ const PopupTaskView = ({
                       <Typography
                         style={{ fontSize: 14, color: colors.red[500] }}
                       >
-                        {isRTL ? "المتبقي" : "Due Payment"}
-                      </Typography>{" "}
+                        {isRTL ? 'المتبقي' : 'Due Payment'}
+                      </Typography>{' '}
                       <Typography
                         style={{
-                          fontWeight: "bold",
+                          fontWeight: 'bold',
                           fontSize: 14,
                           color: colors.red[500],
                         }}
@@ -388,9 +388,9 @@ const PopupTaskView = ({
 
                     <Box>
                       <Typography style={{ fontSize: 14 }}>
-                        {isRTL ? "المصاريف" : "Total Expenses"}
-                      </Typography>{" "}
-                      <Typography style={{ fontWeight: "bold", fontSize: 14 }}>
+                        {isRTL ? 'المصاريف' : 'Total Expenses'}
+                      </Typography>{' '}
+                      <Typography style={{ fontWeight: 'bold', fontSize: 14 }}>
                         {moneyFormat(toatlExpenses)}
                       </Typography>
                     </Box>
@@ -398,11 +398,11 @@ const PopupTaskView = ({
                       <Typography
                         style={{ fontSize: 14, color: colors.blue[500] }}
                       >
-                        {isRTL ? "صافي الايراد" : "Total Income"}
-                      </Typography>{" "}
+                        {isRTL ? 'صافي الايراد' : 'Total Income'}
+                      </Typography>{' '}
                       <Typography
                         style={{
-                          fontWeight: "bold",
+                          fontWeight: 'bold',
                           fontSize: 14,
                           color: colors.blue[500],
                         }}
@@ -433,7 +433,7 @@ const PopupTaskView = ({
                       <Tab
                         style={{
                           backgroundColor:
-                            value === item.id ? "#eee" : undefined,
+                            value === item.id ? '#eee' : undefined,
                         }}
                         label={isRTL ? item.nameAr : item.name}
                         {...a11yProps(item.id)}
@@ -444,18 +444,18 @@ const PopupTaskView = ({
               </Box>
               <Box
                 style={{
-                  backgroundColor: "#eee",
+                  backgroundColor: '#eee',
                   margin: 7,
                   padding: 8,
                   borderRadius: 5,
-                  alignItems: "flex-start",
-                  justifyContent: "center",
+                  alignItems: 'flex-start',
+                  justifyContent: 'center',
                 }}
               >
                 <Typography
                   variant="subtitle1"
                   style={{
-                    fontWeight: "bold",
+                    fontWeight: 'bold',
                     marginTop: 10,
                     marginBottom: 10,
                   }}
@@ -464,7 +464,7 @@ const PopupTaskView = ({
                 </Typography>
                 <Typography
                   variant="subtitle2"
-                  style={{ fontWeight: "bold", marginTop: 10 }}
+                  style={{ fontWeight: 'bold', marginTop: 10 }}
                 >
                   {words.customer}
                 </Typography>
@@ -473,7 +473,7 @@ const PopupTaskView = ({
                 </Typography>
                 <Typography
                   variant="subtitle2"
-                  style={{ fontWeight: "bold", marginTop: 10 }}
+                  style={{ fontWeight: 'bold', marginTop: 10 }}
                 >
                   {words.employee}
                 </Typography>
@@ -482,7 +482,7 @@ const PopupTaskView = ({
                 </Typography>
                 <Typography
                   variant="subtitle2"
-                  style={{ fontWeight: "bold", marginTop: 10 }}
+                  style={{ fontWeight: 'bold', marginTop: 10 }}
                 >
                   {words.department}
                 </Typography>

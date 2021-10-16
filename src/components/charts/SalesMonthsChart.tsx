@@ -1,8 +1,8 @@
 /* eslint-disable array-callback-return */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import { Box } from "@material-ui/core";
-import { Paper } from "@material-ui/core";
-import React from "react";
+import { Box } from '@material-ui/core';
+import { Paper } from '@material-ui/core';
+import React from 'react';
 import {
   BarChart,
   Bar,
@@ -12,7 +12,7 @@ import {
   Tooltip,
   Legend,
   ResponsiveContainer,
-} from "recharts";
+} from 'recharts';
 
 const renderLegend = (props) => {
   const { payload } = props;
@@ -32,24 +32,22 @@ const renderLegend = (props) => {
 };
 
 const scheme = [
-  "#717EC3",
-  "#2AB7CA",
-  "#FFA8A9",
-  "#A14A76",
-  "#E8DB7D",
-  "#558C8C",
-  "#8DE969",
-  "#231123",
-  "#EE8434",
-  "#FE4A49",
-  "#151060",
-  "#EFF7FF",
+  '#717EC3',
+  '#2AB7CA',
+  '#FFA8A9',
+  '#A14A76',
+  '#E8DB7D',
+  '#558C8C',
+  '#8DE969',
+  '#231123',
+  '#EE8434',
+  '#FE4A49',
+  '#151060',
+  '#EFF7FF',
 ];
 
 export const SalesMonthsChart = (props: any) => {
-  const { data, isRTL, height } = props;
-  const name = isRTL ? "nameAr" : "name";
-  console.log("SalesMonthsChart", data);
+  const { data, height } = props;
 
   const rdata = data.map((d: any) => {
     const obj = d;

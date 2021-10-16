@@ -1,13 +1,13 @@
 /* eslint-disable no-var */
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import { useContext, useEffect, useReducer, useState } from "react";
-import { fade, useTheme } from "@material-ui/core/styles";
-import { Box, CssBaseline } from "@material-ui/core";
-import { Route } from "react-router-dom";
-import { AppDrawer } from "../../components";
-import { mainmenu } from "../../constants";
-import Landing from "./Landing";
+import { useContext, useEffect, useReducer, useState } from 'react';
+import { fade, useTheme } from '@material-ui/core/styles';
+import { Box, CssBaseline } from '@material-ui/core';
+import { Route } from 'react-router-dom';
+import { AppDrawer } from '../../components';
+import { mainmenu } from '../../constants';
+import Landing from './Landing';
 import {
   EventsContext,
   eventsReducer,
@@ -37,10 +37,10 @@ import {
   receiptReducer,
   initReceiptContext,
   ReceiptContext,
-} from "../../contexts";
-import { layoutClasses } from "../../themes";
-import MainCalendar from "../calendar/MainCalendar";
-import Options from "../options";
+} from '../../contexts';
+import { layoutClasses } from '../../themes';
+import MainCalendar from '../calendar/MainCalendar';
+import Options from '../options';
 import {
   Users,
   Departments,
@@ -49,62 +49,63 @@ import {
   Services,
   Invoices,
   Accounts,
-} from "../adds";
-import { GContextTypes } from "../../types";
-import Finance from "../adds/Finance";
+} from '../adds';
+import { GContextTypes } from '../../types';
+import Finance from '../adds/Finance';
 
-import { useBranches, useServices, useSuppliers } from "../../hooks";
-import { roles } from "../../common";
-import useCompany from "../../hooks/useCompany";
-import PageLayout from "./PageLayout";
-import Appointments from "../adds/Appointments";
-import { CalendarContext } from "../../contexts/calendar";
-import { initCalendar, calendarReducer } from "../../contexts";
-import SalesReport from "../reports/SalesReport";
-import useAccounts from "../../hooks/useAccounts";
-import FinanceReport from "../reports/FinanceReport";
+import { useBranches, useServices, useSuppliers } from '../../hooks';
+import { roles } from '../../common';
+import useCompany from '../../hooks/useCompany';
+import PageLayout from './PageLayout';
+import Appointments from '../adds/Appointments';
+import { CalendarContext } from '../../contexts/calendar';
+import { initCalendar, calendarReducer } from '../../contexts';
+import SalesReport from '../reports/SalesReport';
+import useAccounts from '../../hooks/useAccounts';
+import FinanceReport from '../reports/FinanceReport';
 import {
   eventsReportReducer,
   initEventsReportContext,
-} from "../../contexts/eventsreport/salesReducer";
-import EventsReport from "../reports/EventsReport";
-import CustomerReport from "../reports/CustomerReport";
-import EventsReportContext from "../../contexts/eventsreport";
+} from '../../contexts/eventsreport/salesReducer';
+import EventsReport from '../reports/EventsReport';
+import CustomerReport from '../reports/CustomerReport';
+import EventsReportContext from '../../contexts/eventsreport';
 import {
   calendarReportReducer,
   initCalendarReportContext,
-} from "../../contexts/calendarReport/eventsReducer";
-import CalendarReportContext from "../../contexts/calendarReport";
-import Expenses from "../adds/Expenses";
-import { filterMenu, getparentAccounts } from "../../common/helpers";
-import PurchaseReport from "../reports/PurchaseReport";
-import ExpensesReport from "../reports/ExpensesReport";
-import Resourses from "../adds/Resourses";
-import Receipt from "../adds/Receipt";
-import FinanceAll from "../adds/FinanceAll";
-import Tasks from "../adds/Tasks";
+} from '../../contexts/calendarReport/eventsReducer';
+import CalendarReportContext from '../../contexts/calendarReport';
+import Expenses from '../adds/Expenses';
+import { filterMenu, getparentAccounts } from '../../common/helpers';
+import PurchaseReport from '../reports/PurchaseReport';
+import ExpensesReport from '../reports/ExpensesReport';
+import Resourses from '../adds/Resourses';
+import Receipt from '../adds/Receipt';
+import FinanceAll from '../adds/FinanceAll';
+import Tasks from '../adds/Tasks';
 import {
   initTasksContext,
   tasksReducer,
-} from "../../contexts/tasks/tasksReducer";
-import TasksContext from "../../contexts/tasks";
-import DocumentsReport from "../reports/DocumentsReport";
+} from '../../contexts/tasks/tasksReducer';
+import TasksContext from '../../contexts/tasks';
+import DocumentsReport from '../reports/DocumentsReport';
 import {
   documentsReportReducer,
   initDocumentsReportContext,
-} from "../../contexts/documentsReport/documentsReducer";
-import DocumentsReportContext from "../../contexts/documentsReport";
-import ServicesReportContext from "../../contexts/servicesReport";
-import ServicesReport from "../reports/ServicesReport";
+} from '../../contexts/documentsReport/documentsReducer';
+import DocumentsReportContext from '../../contexts/documentsReport';
+import ServicesReportContext from '../../contexts/servicesReport';
+import ServicesReport from '../reports/ServicesReport';
 import {
   initServicesReportContext,
   servicesReportReducer,
-} from "../../contexts/servicesReport/servicesReducer";
-import ManageEmployees from "../adds/ManageEmployees";
-import ManageDepartments from "../adds/ManageDepartments";
-import EmployeesCalendar from "../calendar/EmployeesCalendar";
-import ManageResourses from "../adds/ManageResourses";
-import Branches from "../adds/Branches";
+} from '../../contexts/servicesReport/servicesReducer';
+import ManageEmployees from '../adds/ManageEmployees';
+import ManageDepartments from '../adds/ManageDepartments';
+import EmployeesCalendar from '../calendar/EmployeesCalendar';
+import ManageResourses from '../adds/ManageResourses';
+import Branches from '../adds/Branches';
+import React from 'react';
 // import { webFrame } from "electron";
 
 const Content = () => {
@@ -129,7 +130,7 @@ const Content = () => {
     translate: { words, isRTL },
   }: GContextTypes = useContext(GlobalContext);
   const logout = () => {
-    dispatch({ type: "logout" });
+    dispatch({ type: 'logout' });
   };
 
   useEffect(() => {
@@ -219,7 +220,7 @@ const Content = () => {
   return (
     <Box
       className={classes.root}
-      dir={isRTL ? "rtl" : undefined}
+      dir={isRTL ? 'rtl' : undefined}
       display="flex"
       style={{
         flex: 1,
@@ -466,7 +467,7 @@ const Content = () => {
                 isEditor={isEditor}
               >
                 <Branches isRTL={isRTL} words={words} theme={theme}>
-                  {" "}
+                  {' '}
                 </Branches>
               </PageLayout>
             )}

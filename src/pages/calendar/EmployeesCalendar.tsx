@@ -1,6 +1,7 @@
-import { useEffect, useState } from "react";
-import { useCustomers, useDepartments, useEmployees } from "../../hooks";
-import EmployeesAppoints from "./Employees";
+import React from 'react';
+import { useEffect, useState } from 'react';
+import { useCustomers, useDepartments, useEmployees } from '../../hooks';
+import EmployeesAppoints from './Employees';
 
 const EmployeesCalendar = (props: any) => {
   const [state, setstate] = useState([]);

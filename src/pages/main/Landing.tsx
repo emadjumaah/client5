@@ -1,19 +1,20 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import { Box, Grid } from "@material-ui/core";
-import { moneyFormat, moneyFormatSimple } from "../../Shared/colorFormat";
-import { InfoBox } from "../../components";
-import SalesDaysChart from "../../components/charts/SalesDaysChart";
-import MonthsChart from "../../components/charts/MonthsChart";
+import { Box, Grid } from '@material-ui/core';
+import { moneyFormat, moneyFormatSimple } from '../../Shared/colorFormat';
+import { InfoBox } from '../../components';
+import SalesDaysChart from '../../components/charts/SalesDaysChart';
+import MonthsChart from '../../components/charts/MonthsChart';
 
-import DaysEvents from "../../components/charts/DaysEvents";
-import EventsDaysChart from "../../components/charts/EventsDaysChart";
-import PercentChart from "../../components/charts/PercentChart";
-import MonthsEmpChart from "../../components/charts/MonthsEmpChart";
-import InfoBoxDark from "../../components/charts/InfoBoxDark";
-import useLandingChart from "../../hooks/useLandingChart";
-import PageLayout from "./PageLayout";
-import { useDepartments, useEmployees } from "../../hooks";
+import DaysEvents from '../../components/charts/DaysEvents';
+import EventsDaysChart from '../../components/charts/EventsDaysChart';
+import PercentChart from '../../components/charts/PercentChart';
+import MonthsEmpChart from '../../components/charts/MonthsEmpChart';
+import InfoBoxDark from '../../components/charts/InfoBoxDark';
+import useLandingChart from '../../hooks/useLandingChart';
+import PageLayout from './PageLayout';
+import { useDepartments, useEmployees } from '../../hooks';
+import React from 'react';
 
 export default function Landing(props: any) {
   const { words, isRTL, user, theme, menuitem } = props;
@@ -61,7 +62,7 @@ export default function Landing(props: any) {
       <Box
         style={{
           height: window.innerHeight - 90,
-          overflow: "auto",
+          overflow: 'auto',
         }}
       >
         <Box style={{ margin: 20, marginBottom: 20 }}>
@@ -71,7 +72,7 @@ export default function Landing(props: any) {
                 <Grid container spacing={2}>
                   <Grid item xs={6} md={2}>
                     <InfoBoxDark
-                      title={isRTL ? "الصندوق" : "Cash"}
+                      title={isRTL ? 'الصندوق' : 'Cash'}
                       value={moneyFormat(raseeds?.cash)}
                       icon="cash"
                       color={prim}
@@ -91,40 +92,40 @@ export default function Landing(props: any) {
                   </Grid>
                   <Grid item xs={6} md={2}>
                     <InfoBox
-                      title={isRTL ? "اليوم" : "Today"}
+                      title={isRTL ? 'اليوم' : 'Today'}
                       value={moneyFormat(salesTodayTotal)}
                       icon="sales"
                       color={salesColor}
-                      desc={isRTL ? "مبيعات هذا اليوم" : "Today Sales"}
+                      desc={isRTL ? 'مبيعات هذا اليوم' : 'Today Sales'}
                     ></InfoBox>
                   </Grid>
 
                   <Grid item xs={6} md={2}>
                     <InfoBox
-                      title={isRTL ? "هذا الشهر" : "This Month"}
+                      title={isRTL ? 'هذا الشهر' : 'This Month'}
                       value={moneyFormat(salesMonthTotal)}
                       icon="sales"
                       color={salesColor}
-                      desc={isRTL ? "مبيعات هذا الشهر" : "This Month Sales"}
+                      desc={isRTL ? 'مبيعات هذا الشهر' : 'This Month Sales'}
                     ></InfoBox>
                   </Grid>
                   <Grid item xs={6} md={2}>
                     <InfoBox
-                      title={isRTL ? "اليوم" : "Today"}
+                      title={isRTL ? 'اليوم' : 'Today'}
                       value={moneyFormatSimple(eventsTodayCount)}
                       icon="event"
                       color={eventColor}
-                      desc={isRTL ? "المواعيد اليوم" : "Appointments Today"}
+                      desc={isRTL ? 'المواعيد اليوم' : 'Appointments Today'}
                     ></InfoBox>
                   </Grid>
                   <Grid item xs={6} md={2}>
                     <InfoBox
-                      title={isRTL ? "هذا الشهر" : "This Month"}
+                      title={isRTL ? 'هذا الشهر' : 'This Month'}
                       value={moneyFormatSimple(eventsMonthCount)}
                       icon="event"
                       color={eventColor}
                       desc={
-                        isRTL ? "المواعيد هذا الشهر" : "Appointments This month"
+                        isRTL ? 'المواعيد هذا الشهر' : 'Appointments This month'
                       }
                     ></InfoBox>
                   </Grid>
@@ -189,8 +190,8 @@ export default function Landing(props: any) {
                   color={salesColor}
                   title={
                     isRTL
-                      ? "مبيعات هذا الشهر بحسب الموظف"
-                      : "Month Sales - Employee"
+                      ? 'مبيعات هذا الشهر بحسب الموظف'
+                      : 'Month Sales - Employee'
                   }
                   employees={employees.filter((emp: any) => emp.resType === 1)}
                   prim={prim}
@@ -206,8 +207,8 @@ export default function Landing(props: any) {
                   color={salesColor}
                   title={
                     isRTL
-                      ? "مبيعات هذا الشهر بحسب القسم"
-                      : "Month Sales - Department"
+                      ? 'مبيعات هذا الشهر بحسب القسم'
+                      : 'Month Sales - Department'
                   }
                   departments={departments.filter(
                     (dep: any) => dep.depType === 1
@@ -225,7 +226,7 @@ export default function Landing(props: any) {
                   color={salesColor}
                   prim={prim}
                   dataKey="total"
-                  title={isRTL ? "المبيعات بحسب الشهور" : "Months Sales"}
+                  title={isRTL ? 'المبيعات بحسب الشهور' : 'Months Sales'}
                   height={400}
                 ></MonthsChart>
               </Grid>
@@ -237,7 +238,7 @@ export default function Landing(props: any) {
                   isRTL={isRTL}
                   color={eventColor}
                   dataKey="count"
-                  title={isRTL ? "المواعيد بحسب الشهور" : "Months Appointment"}
+                  title={isRTL ? 'المواعيد بحسب الشهور' : 'Months Appointment'}
                   prim={prim}
                   height={400}
                 ></MonthsChart>

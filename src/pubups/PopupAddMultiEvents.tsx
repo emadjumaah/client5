@@ -1,15 +1,16 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
 
-import PopupLayout from "../pages/main/PopupLayout";
-import { Grid } from "@material-ui/core";
-import getRruleData from "../common/getRruleData";
-import { SelectLocal } from "../pages/calendar/common/SelectLocal";
-import RRule from "rrule";
-import { CalenderLocal, TextFieldLocal } from "../components";
-import SelectMulti from "../Shared/SelectMulti";
-import { byweekdayOptions, freqOptions } from "../constants/rrule";
+import PopupLayout from '../pages/main/PopupLayout';
+import { Grid } from '@material-ui/core';
+import getRruleData from '../common/getRruleData';
+import { SelectLocal } from '../pages/calendar/common/SelectLocal';
+import RRule from 'rrule';
+import { CalenderLocal, TextFieldLocal } from '../components';
+import SelectMulti from '../Shared/SelectMulti';
+import { byweekdayOptions, freqOptions } from '../constants/rrule';
+import React from 'react';
 
 const PopupAddMultiEvents = ({
   open,
@@ -29,7 +30,7 @@ const PopupAddMultiEvents = ({
   const [interval, setInterval] = useState(1);
   const [count, setCount] = useState(1);
 
-  const [alrt, setAlrt] = useState({ show: false, msg: "", type: undefined });
+  const [alrt] = useState({ show: false, msg: '', type: undefined });
 
   const onChangeFreq = (e: any) => {
     setFreq(e.target.value);
@@ -72,7 +73,7 @@ const PopupAddMultiEvents = ({
     onFormClose();
   };
 
-  const title = isRTL ? "انشاء مواعيد متعددة" : "Add Multi Appointments";
+  const title = isRTL ? 'انشاء مواعيد متعددة' : 'Add Multi Appointments';
 
   const onFormClose = () => {
     setFreq(RRule.DAILY);

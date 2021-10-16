@@ -6,8 +6,8 @@ import React, {
   useEffect,
   useRef,
   useState,
-} from "react";
-import Paper from "@material-ui/core/Paper";
+} from 'react';
+import Paper from '@material-ui/core/Paper';
 import {
   SortingState,
   IntegratedSorting,
@@ -16,7 +16,7 @@ import {
   SummaryState,
   IntegratedGrouping,
   IntegratedSummary,
-} from "@devexpress/dx-react-grid";
+} from '@devexpress/dx-react-grid';
 import {
   Grid,
   TableHeaderRow,
@@ -27,9 +27,9 @@ import {
   ColumnChooser,
   TableGroupRow,
   TableSummaryRow,
-} from "@devexpress/dx-react-grid-material-ui";
-import PrintIcon from "@material-ui/icons/Print";
-import { getRowId } from "../../common";
+} from '@devexpress/dx-react-grid-material-ui';
+import PrintIcon from '@material-ui/icons/Print';
+import { getRowId } from '../../common';
 import {
   calculateAmount,
   covertToDate,
@@ -37,27 +37,27 @@ import {
   createdAtFormatter,
   currencyFormatter,
   moneyFormat,
-} from "../../Shared/colorFormat";
-import { Box, fade, IconButton, withStyles } from "@material-ui/core";
-import { getMonthlyReport } from "../../graphql";
-import { useLazyQuery } from "@apollo/client";
-import ReportsFilter from "../../Shared/ReportsFilter";
-import { GridExporter } from "@devexpress/dx-react-grid-export";
-import saveAs from "file-saver";
-import { getColumns } from "../../common/columns";
-import { reportprint } from "../../common/ipc";
-import _ from "lodash";
-import PageLayout from "../main/PageLayout";
-import { ReportGroupBySwitcher } from "../calendar/common/ReportGroupBySwitcher";
-import DateNavigatorReports from "../../components/filters/DateNavigatorReports";
-import { PurchaseReportContext } from "../../contexts";
-import { groupList } from "../../constants/reports";
-import { groupSumCount } from "../../common/reports";
-import { useDepartments, useEmployees } from "../../hooks";
+} from '../../Shared/colorFormat';
+import { Box, fade, IconButton, withStyles } from '@material-ui/core';
+import { getMonthlyReport } from '../../graphql';
+import { useLazyQuery } from '@apollo/client';
+import ReportsFilter from '../../Shared/ReportsFilter';
+import { GridExporter } from '@devexpress/dx-react-grid-export';
+import saveAs from 'file-saver';
+import { getColumns } from '../../common/columns';
+import { reportprint } from '../../common/ipc';
+import _ from 'lodash';
+import PageLayout from '../main/PageLayout';
+import { ReportGroupBySwitcher } from '../calendar/common/ReportGroupBySwitcher';
+import DateNavigatorReports from '../../components/filters/DateNavigatorReports';
+import { PurchaseReportContext } from '../../contexts';
+import { groupList } from '../../constants/reports';
+import { groupSumCount } from '../../common/reports';
+import { useDepartments, useEmployees } from '../../hooks';
 
 const styles = (theme: any) => ({
   tableStriped: {
-    "& tbody tr:nth-of-type(odd)": {
+    '& tbody tr:nth-of-type(odd)': {
       backgroundColor: fade(theme.palette.primary.main, 0.05),
     },
   },
@@ -66,12 +66,12 @@ const styles = (theme: any) => ({
 const TableComponentBase = ({ classes, ...restProps }) => (
   <VirtualTable.Table {...restProps} className={classes.tableStriped} />
 );
-export const TableComponent = withStyles(styles, { name: "TableComponent" })(
+export const TableComponent = withStyles(styles, { name: 'TableComponent' })(
   TableComponentBase
 );
 export const TableComponent2 = withStyles(
   {},
-  { name: "TableComponent" }
+  { name: 'TableComponent' }
 )(TableComponentBase);
 
 export default function PurchaseReport({
@@ -81,7 +81,7 @@ export default function PurchaseReport({
   services,
   suppliers,
   categories,
-  brands,
+
   company,
   theme,
   isEditor,
@@ -124,7 +124,7 @@ export default function PurchaseReport({
   ]);
 
   const [getSummary, summaryData]: any = useLazyQuery(getMonthlyReport, {
-    fetchPolicy: "cache-and-network",
+    fetchPolicy: 'cache-and-network',
   });
   const { departments } = useDepartments();
   const { employees } = useEmployees();
@@ -137,7 +137,6 @@ export default function PurchaseReport({
       departvalue,
       emplvalue,
       suppvalue,
-      brandvalue,
       catvalue,
       group,
       groupby,
@@ -148,49 +147,46 @@ export default function PurchaseReport({
   } = useContext(PurchaseReportContext);
 
   const currentViewNameChange = (e: any) => {
-    dispatch({ type: "setCurrentViewName", payload: e.target.value });
+    dispatch({ type: 'setCurrentViewName', payload: e.target.value });
   };
   const currentDateChange = (curDate: any) => {
-    dispatch({ type: "setCurrentDate", payload: curDate });
+    dispatch({ type: 'setCurrentDate', payload: curDate });
   };
   const endDateChange = (curDate: any) => {
-    dispatch({ type: "setEndDate", payload: curDate });
+    dispatch({ type: 'setEndDate', payload: curDate });
   };
 
   const setServicevalueDispatch = (value: any) => {
-    dispatch({ type: "setServicevalue", payload: value });
+    dispatch({ type: 'setServicevalue', payload: value });
   };
   const setDepartvalueDispatch = (value: any) => {
-    dispatch({ type: "setDepartvalue", payload: value });
+    dispatch({ type: 'setDepartvalue', payload: value });
   };
   const setEmplvalueDispatch = (value: any) => {
-    dispatch({ type: "setEmplvalue", payload: value });
+    dispatch({ type: 'setEmplvalue', payload: value });
   };
   const setSuppvalueDispatch = (value: any) => {
-    dispatch({ type: "setSuppvalue", payload: value });
+    dispatch({ type: 'setSuppvalue', payload: value });
   };
   const setCatvalueDispatch = (value: any) => {
-    dispatch({ type: "setCatvalue", payload: value });
-  };
-  const setBrandvalueDispatch = (value: any) => {
-    dispatch({ type: "setBrandvalue", payload: value });
+    dispatch({ type: 'setCatvalue', payload: value });
   };
 
   const setGroupbyDispatch = (value: any) => {
-    dispatch({ type: "setGroupby", payload: value });
+    dispatch({ type: 'setGroupby', payload: value });
   };
   const setGroupDispatch = (value: any) => {
-    dispatch({ type: "setGroup", payload: value });
+    dispatch({ type: 'setGroup', payload: value });
   };
   const setSumcolumnDispatch = (value: any) => {
-    dispatch({ type: "setSumcolumn", payload: value });
+    dispatch({ type: 'setSumcolumn', payload: value });
   };
   const setSortDispatch = (value: any) => {
-    dispatch({ type: "setSort", payload: value });
+    dispatch({ type: 'setSort', payload: value });
   };
 
   useEffect(() => {
-    const slsData = summaryData?.data?.["getMonthlyReport"]?.data || [];
+    const slsData = summaryData?.data?.['getMonthlyReport']?.data || [];
     const updatedRows =
       slsData?.length > 0
         ? slsData.map((item: any) => {
@@ -250,7 +246,7 @@ export default function PurchaseReport({
       const now = new Date();
       const name = `sales-report-${covertToTimeDateDigit(now)}`;
       saveAs(
-        new Blob([buffer], { type: "application/octet-stream" }),
+        new Blob([buffer], { type: 'application/octet-stream' }),
         `${name}.xlsx`
       );
     });
@@ -276,45 +272,45 @@ export default function PurchaseReport({
 
       const printrows = sortRows.map((row: any) => {
         return {
-          opTime: inActiveColumns("opTime")
+          opTime: inActiveColumns('opTime')
             ? row.opDocNo
               ? covertToDate(row.opTime)
-              : " - "
+              : ' - '
             : undefined,
-          opDocNo: inActiveColumns("opDocNo")
+          opDocNo: inActiveColumns('opDocNo')
             ? row.opDocNo
               ? row.opDocNo
-              : " - "
+              : ' - '
             : undefined,
-          employee: inActiveColumns("employee")
+          employee: inActiveColumns('employee')
             ? row[col.employee.name]
               ? row[col.employee.name]
-              : " - "
+              : ' - '
             : undefined,
-          service: inActiveColumns("service")
+          service: inActiveColumns('service')
             ? row[col.service.name]
               ? row[col.service.name]
-              : " - "
+              : ' - '
             : undefined,
-          department: inActiveColumns("department")
+          department: inActiveColumns('department')
             ? row[col.department.name]
               ? row[col.department.name]
-              : " - "
+              : ' - '
             : undefined,
-          category: inActiveColumns("category")
+          category: inActiveColumns('category')
             ? row[col.category.name]
               ? row[col.category.name]
-              : " - "
+              : ' - '
             : undefined,
-          supplier: inActiveColumns("supplier")
+          supplier: inActiveColumns('supplier')
             ? row[col.supplier.name]
               ? row[col.supplier.name]
-              : " - "
+              : ' - '
             : undefined,
-          amount: inActiveColumns("amount")
+          amount: inActiveColumns('amount')
             ? row.amount
               ? moneyFormat(row.amount)
-              : " - "
+              : ' - '
             : undefined,
         };
       });
@@ -344,17 +340,17 @@ export default function PurchaseReport({
     const rest = {
       isRTL,
       totl: words.total,
-      totalamount: total ? moneyFormat(total) : "",
-      reportname: isRTL ? "تقرير المبيعات" : "Sales Report",
+      totalamount: total ? moneyFormat(total) : '',
+      reportname: isRTL ? 'تقرير المبيعات' : 'Sales Report',
       logo: company.logo,
       phone: company.tel1,
       mobile: company.mob,
       address: company.address,
       company: isRTL ? company.nameAr : company.name,
-      start: start ? covertToDate(start) : "",
-      end: end ? covertToDate(end) : "",
+      start: start ? covertToDate(start) : '',
+      end: end ? covertToDate(end) : '',
       filters,
-      color: "#b2e2be",
+      color: '#b2e2be',
       now: covertToTimeDateDigit(new Date()),
     };
 
@@ -362,9 +358,9 @@ export default function PurchaseReport({
   };
   const arrangeGroupParing = () => {
     const cols = [
-      { name: isRTL ? "الاسم" : "Name" },
-      { name: isRTL ? "العدد" : "Count" },
-      { name: isRTL ? "المجموع" : "Total" },
+      { name: isRTL ? 'الاسم' : 'Name' },
+      { name: isRTL ? 'العدد' : 'Count' },
+      { name: isRTL ? 'المجموع' : 'Total' },
     ];
     const readyItems = totalRows.items.map((it: any) => {
       return {
@@ -375,17 +371,17 @@ export default function PurchaseReport({
     const rest = {
       isRTL,
       totl: words.total,
-      totalamount: total ? moneyFormat(totalRows.total) : "",
+      totalamount: total ? moneyFormat(totalRows.total) : '',
       count: totalRows?.count,
-      reportname: isRTL ? "تقرير المبيعات" : "Sales Report",
+      reportname: isRTL ? 'تقرير المبيعات' : 'Sales Report',
       logo: company.logo,
       phone: company.tel1,
       mobile: company.mob,
       address: company.address,
       company: isRTL ? company.nameAr : company.name,
-      start: start ? covertToDate(start) : "",
-      end: end ? covertToDate(end) : "",
-      color: "#b2e2be",
+      start: start ? covertToDate(start) : '',
+      end: end ? covertToDate(end) : '',
+      color: '#b2e2be',
       now: covertToTimeDateDigit(new Date()),
     };
 
@@ -397,9 +393,9 @@ export default function PurchaseReport({
   };
 
   const onSwitcherChange = (e: any) => {
-    if (e.target.value === "none") {
+    if (e.target.value === 'none') {
       setGroupDispatch(false);
-      setGroupbyDispatch("none");
+      setGroupbyDispatch('none');
     } else {
       setGroupDispatch(true);
       setGroupbyDispatch(e.target.value);
@@ -408,20 +404,20 @@ export default function PurchaseReport({
   };
 
   const totalSummaryItems = [
-    { columnName: col.opDocNo.name, type: "count" },
-    { columnName: "amount", type: "sum" },
+    { columnName: col.opDocNo.name, type: 'count' },
+    { columnName: 'amount', type: 'sum' },
   ];
 
   const grouping = [{ columnName: sumcolumn }];
   const groupSummaryItems = [
     {
       columnName: col.opDocNo.name,
-      type: "count",
+      type: 'count',
       alignByColumn: true,
     },
     {
-      columnName: "amount",
-      type: "sum",
+      columnName: 'amount',
+      type: 'sum',
       alignByColumn: true,
     },
   ];
@@ -439,7 +435,7 @@ export default function PurchaseReport({
       <Paper>
         <Box
           style={{
-            position: "absolute",
+            position: 'absolute',
             left: isRTL ? 145 : undefined,
             right: isRTL ? undefined : 145,
             top: 65,
@@ -471,14 +467,14 @@ export default function PurchaseReport({
         <Box
           display="flex"
           style={{
-            position: "absolute",
+            position: 'absolute',
             left: isRTL ? 200 : undefined,
             right: isRTL ? undefined : 200,
             top: 65,
             height: 38,
             zIndex: 111,
-            alignItems: "center",
-            justifyContent: "flex-start",
+            alignItems: 'center',
+            justifyContent: 'flex-start',
             paddingLeft: 20,
             paddingRight: 20,
             marginTop: 2,
@@ -510,7 +506,7 @@ export default function PurchaseReport({
             isRTL={isRTL}
           ></ReportGroupBySwitcher>
         </Box>
-        <Paper style={{ height: window.innerHeight - 85, overflow: "auto" }}>
+        <Paper style={{ height: window.innerHeight - 85, overflow: 'auto' }}>
           <Grid rows={rows} columns={columns} getRowId={getRowId}>
             <SortingState
               defaultSorting={sort}
@@ -529,7 +525,7 @@ export default function PurchaseReport({
               height={window.innerHeight - 133}
               tableComponent={!group ? TableComponent : TableComponent2}
               messages={{
-                noData: isRTL ? "لا يوجد بيانات" : "no data",
+                noData: isRTL ? 'لا يوجد بيانات' : 'no data',
               }}
               estimatedRowHeight={40}
             />
@@ -546,11 +542,11 @@ export default function PurchaseReport({
               }}
             />
             <DataTypeProvider
-              for={["opTime"]}
+              for={['opTime']}
               formatterComponent={createdAtFormatter}
             ></DataTypeProvider>
             <DataTypeProvider
-              for={["amount"]}
+              for={['amount']}
               formatterComponent={currencyFormatter}
             ></DataTypeProvider>
             <Toolbar />
@@ -559,18 +555,18 @@ export default function PurchaseReport({
             {group && (
               <TableGroupRow
                 messages={{
-                  sum: isRTL ? "المجموع" : "Total",
-                  count: isRTL ? "العدد" : "Count",
-                  sumOf: isRTL ? "المجموع" : "Total",
-                  countOf: isRTL ? "العدد" : "Count",
+                  sum: isRTL ? 'المجموع' : 'Total',
+                  count: isRTL ? 'العدد' : 'Count',
+                  sumOf: isRTL ? 'المجموع' : 'Total',
+                  countOf: isRTL ? 'العدد' : 'Count',
                 }}
                 showColumnsWhenGrouped
               />
             )}
             <TableSummaryRow
               messages={{
-                sum: isRTL ? "المجموع" : "Total",
-                count: isRTL ? "العدد" : "Count",
+                sum: isRTL ? 'المجموع' : 'Total',
+                count: isRTL ? 'العدد' : 'Count',
               }}
             ></TableSummaryRow>
           </Grid>

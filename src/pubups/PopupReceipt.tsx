@@ -1,21 +1,21 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import React, { useContext, useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
-import { dublicateAlert, errorAlert, yup, messageAlert } from "../Shared";
-import { GContextTypes } from "../types";
-import { GlobalContext } from "../contexts";
-import useAccounts from "../hooks/useAccounts";
-import { operationTypes } from "../constants";
-import { parents } from "../constants/kaid";
-import PopupLayout from "../pages/main/PopupLayout";
-import { Grid } from "@material-ui/core";
-import { CalenderLocal, TextFieldLocal } from "../components";
-import { getAppStartEndPeriod } from "../common/time";
-import AutoFieldLocal from "../components/fields/AutoFieldLocal";
-import { useCustomers } from "../hooks";
-import { useLazyQuery } from "@apollo/client";
-import getInvoicesList from "../graphql/query/getInvoicesList";
+import React, { useContext, useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { dublicateAlert, errorAlert, yup, messageAlert } from '../Shared';
+import { GContextTypes } from '../types';
+import { GlobalContext } from '../contexts';
+import useAccounts from '../hooks/useAccounts';
+import { operationTypes } from '../constants';
+import { parents } from '../constants/kaid';
+import PopupLayout from '../pages/main/PopupLayout';
+import { Grid } from '@material-ui/core';
+import { CalenderLocal, TextFieldLocal } from '../components';
+import { getAppStartEndPeriod } from '../common/time';
+import AutoFieldLocal from '../components/fields/AutoFieldLocal';
+import { useCustomers } from '../hooks';
+import { useLazyQuery } from '@apollo/client';
+import getInvoicesList from '../graphql/query/getInvoicesList';
 const PopupReceipt = ({
   open,
   onClose,
@@ -27,16 +27,16 @@ const PopupReceipt = ({
   name,
   value,
 }: any) => {
-  const [alrt, setAlrt] = useState({ show: false, msg: "", type: undefined });
+  const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
   const [selectedDate, setSelectedDate] = React.useState(new Date());
-  const [ptype, setPtype] = React.useState("deposit");
+  const [ptype, setPtype] = React.useState('deposit');
   const [debaccounts, setDebaccounts] = React.useState([]);
 
   const [debitAcc, setDebitAcc]: any = React.useState(null);
   const [creditAcc, setCreditAcc]: any = React.useState(null);
 
   const [custvalue, setCustvalue] = useState<any>(
-    name === "customerId" ? value : null
+    name === 'customerId' ? value : null
   );
   const [custError, setCustError] = useState<any>(false);
 
@@ -56,7 +56,7 @@ const PopupReceipt = ({
   const { customers } = useCustomers();
 
   const [loadInvoices, invoicesData]: any = useLazyQuery(getInvoicesList, {
-    fetchPolicy: "cache-and-network",
+    fetchPolicy: 'cache-and-network',
   });
   useEffect(() => {
     if (custvalue) {
@@ -64,7 +64,7 @@ const PopupReceipt = ({
       loadInvoices({ variables });
     }
     if (isNew) {
-      if (name === "taskId") {
+      if (name === 'taskId') {
         if (value?.customerId) {
           const dept = customers.filter(
             (dep: any) => dep._id === value?.customerId
@@ -138,7 +138,7 @@ const PopupReceipt = ({
     if (selectedDate < startPeriod || selectedDate > endPeriod) {
       await messageAlert(
         setAlrt,
-        isRTL ? "يجب تعديل التاريخ" : "Date should be change"
+        isRTL ? 'يجب تعديل التاريخ' : 'Date should be change'
       );
       return;
     }
@@ -146,7 +146,7 @@ const PopupReceipt = ({
     if (!debitAcc || !creditAcc || !custvalue) {
       await messageAlert(
         setAlrt,
-        isRTL ? "يجب تحديد كلا الحسابين" : "You have to select both accounts"
+        isRTL ? 'يجب تحديد كلا الحسابين' : 'You have to select both accounts'
       );
       return;
     }
@@ -222,7 +222,7 @@ const PopupReceipt = ({
   };
 
   const onError = async (error: any) => {
-    if (error.message.includes("duplicate")) {
+    if (error.message.includes('duplicate')) {
       await dublicateAlert(setAlrt, isRTL);
     } else {
       await errorAlert(setAlrt, isRTL);
@@ -233,7 +233,7 @@ const PopupReceipt = ({
 
   const resetAll = () => {
     reset();
-    setPtype("deposit");
+    setPtype('deposit');
     setCreditAcc(null);
     setDebitAcc(null);
     setDebaccounts([]);
@@ -290,13 +290,13 @@ const PopupReceipt = ({
                 selectError={custError}
                 isRTL={isRTL}
                 fullwidth
-                disabled={name === "customerId"}
+                disabled={name === 'customerId'}
               ></AutoFieldLocal>
             </Grid>
             <Grid item xs={6}>
               <AutoFieldLocal
                 name="debitAcc"
-                title={isRTL ? "حساب القبض" : "Receipt Acc"}
+                title={isRTL ? 'حساب القبض' : 'Receipt Acc'}
                 words={words}
                 options={debaccounts}
                 value={debitAcc}
@@ -309,7 +309,7 @@ const PopupReceipt = ({
             <Grid item xs={12}>
               <AutoFieldLocal
                 name="invoice"
-                title={isRTL ? "الفواتير" : "Invoices"}
+                title={isRTL ? 'الفواتير' : 'Invoices'}
                 words={words}
                 options={invoices}
                 value={invoicevalue}

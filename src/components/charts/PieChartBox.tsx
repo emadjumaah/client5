@@ -1,15 +1,14 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 
-import React, { useEffect, useState } from "react";
-import Paper from "@material-ui/core/Paper";
-import { Box, Grid, Typography } from "@material-ui/core";
-import PieChart from "./PieChart";
-import { formatKeyToMonth } from "../../common/reports";
-import _ from "lodash";
+import React, { useEffect, useState } from 'react';
+import Paper from '@material-ui/core/Paper';
+import { Box, Grid, Typography } from '@material-ui/core';
+import PieChart from './PieChart';
+import { formatKeyToMonth } from '../../common/reports';
+import _ from 'lodash';
 
 export default function PieChartBox({
   title,
-  desc,
   data,
   valueField,
   argumentField,

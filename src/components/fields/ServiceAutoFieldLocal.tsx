@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import React from "react";
-import { Box, IconButton, TextField, Typography } from "@material-ui/core";
-import AddIcon from "@material-ui/icons/Add";
+import React from 'react';
+import { Box, IconButton, TextField, Typography } from '@material-ui/core';
+import AddIcon from '@material-ui/icons/Add';
 
-import { Autocomplete } from "@material-ui/lab";
-import OptionItemData from "../../Shared/OptionItemData";
+import { Autocomplete } from '@material-ui/lab';
+import OptionItemData from '../../Shared/OptionItemData';
 
 export default function ServiceAutoFieldLocal({
   name,
@@ -16,15 +16,14 @@ export default function ServiceAutoFieldLocal({
   setPricevalue,
   open,
   isRTL,
-  canAdd,
 }: any) {
   return (
     <Box>
       <Box
         style={{
-          display: "flex",
+          display: 'flex',
           width: 120,
-          alignItems: "center",
+          alignItems: 'center',
           height: 40,
           padding: 10,
         }}
@@ -34,10 +33,10 @@ export default function ServiceAutoFieldLocal({
 
       <Box
         style={{
-          display: "flex",
-          flexDirection: "row",
-          justifyContent: "space-between",
-          alignItems: "center",
+          display: 'flex',
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          alignItems: 'center',
           marginTop: -15,
         }}
       >
@@ -58,7 +57,7 @@ export default function ServiceAutoFieldLocal({
             if (setPricevalue) {
               setPricevalue(newValue?.price);
             } else {
-              onNewFieldChange(newValue?.price, "amount");
+              onNewFieldChange(newValue?.price, 'amount');
             }
           }}
           renderInput={(params) => (

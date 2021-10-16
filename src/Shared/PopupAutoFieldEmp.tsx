@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import React, { useEffect, useState } from "react";
-import { Box, IconButton, TextField, Typography } from "@material-ui/core";
-import AddIcon from "@material-ui/icons/Add";
+import React, { useEffect, useState } from 'react';
+import { Box, IconButton, TextField, Typography } from '@material-ui/core';
+import AddIcon from '@material-ui/icons/Add';
 
-import { Autocomplete } from "@material-ui/lab";
-import OptionItem from "./OptionItem";
-import { weekdaysNNo } from "../constants/datatypes";
+import { Autocomplete } from '@material-ui/lab';
+import OptionItem from './OptionItem';
+import { weekdaysNNo } from '../constants/datatypes';
 
 export default function PopupAutoFieldEmp({
   name,
@@ -14,14 +14,11 @@ export default function PopupAutoFieldEmp({
   value,
   onNewFieldChange,
   open,
-  required = false,
-  autoFocus = false,
-  setNewtext,
   appointmentData,
   isRTL,
   canAdd,
 }: any) {
-  const defaultColor = "#fff";
+  const defaultColor = '#fff';
   const [color, setcolor] = useState(defaultColor);
   const isColor = color !== defaultColor;
 
@@ -37,17 +34,17 @@ export default function PopupAutoFieldEmp({
   return (
     <Box
       style={{
-        display: "flex",
-        flexDirection: "row",
-        justifyContent: "space-between",
-        alignItems: "center",
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
       }}
     >
       <Box
         style={{
-          display: "flex",
+          display: 'flex',
           width: 100,
-          alignItems: "center",
+          alignItems: 'center',
           height: 40,
           padding: 10,
           marginBottom: 25,
@@ -66,7 +63,7 @@ export default function PopupAutoFieldEmp({
         value={value}
         onChange={(_, newValue: any) => {
           onNewFieldChange(newValue, name);
-          setcolor(newValue?.color ? newValue.color : "#fff");
+          setcolor(newValue?.color ? newValue.color : '#fff');
         }}
         renderInput={(params) => (
           <React.Fragment>
@@ -84,7 +81,7 @@ export default function PopupAutoFieldEmp({
             ></TextField>
             <Box
               style={{
-                position: "relative",
+                position: 'relative',
                 bottom: 40,
                 width: 30,
                 height: 30,

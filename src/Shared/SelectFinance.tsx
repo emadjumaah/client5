@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import React from "react";
+import React from 'react';
 import {
   Box,
   FormControl,
   MenuItem,
   Select,
   Typography,
-} from "@material-ui/core";
+} from '@material-ui/core';
 
 export default function SelectFinance({
   errors,
@@ -16,7 +16,6 @@ export default function SelectFinance({
   account,
   setAccount,
   isRTL,
-  fullWidth,
 }: any) {
   return (
     <FormControl style={{ marginBottom: 20 }} margin="dense">
@@ -29,7 +28,7 @@ export default function SelectFinance({
         onChange={(e) => {
           setAccount(e.target.value);
         }}
-        value={account || ""}
+        value={account || ''}
         error={errors[name] ? true : false}
         autoWidth
         variant="outlined"
@@ -39,7 +38,7 @@ export default function SelectFinance({
         {options.map((option: any) => (
           <MenuItem key={option._id} value={option}>
             <Box style={{ minWidth: 100 }}>
-              <Typography style={{ textAlign: isRTL ? "right" : "left" }}>
+              <Typography style={{ textAlign: isRTL ? 'right' : 'left' }}>
                 {isRTL ? option.nameAr : option.name}
               </Typography>
             </Box>

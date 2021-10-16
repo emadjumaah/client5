@@ -1,15 +1,15 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import React from "react";
-import { Box, Typography } from "@material-ui/core";
+import React from 'react';
+import { Box, Typography } from '@material-ui/core';
 import {
   KeyboardDatePicker,
   MuiPickersUtilsProvider,
-} from "@material-ui/pickers";
-import DateFnsUtils from "@date-io/date-fns";
-import { eventStatus } from "../constants";
-import { moneyFormat } from "./colorFormat";
-import FilterSelect from "./FilterSelect";
-import { periods } from "../constants/datatypes";
+} from '@material-ui/pickers';
+import DateFnsUtils from '@date-io/date-fns';
+import { eventStatus } from '../constants';
+import { moneyFormat } from './colorFormat';
+import FilterSelect from './FilterSelect';
+import { periods } from '../constants/datatypes';
 export default function EventsFilter({
   employees,
   departments,
@@ -23,9 +23,6 @@ export default function EventsFilter({
   customers,
   custvalue,
   setCustvalue,
-  catvalue,
-  setCatvalue,
-  categories,
   start,
   setStart,
   end,
@@ -42,19 +39,19 @@ export default function EventsFilter({
     <Box>
       <Box
         display="flex"
-        style={{ alignItems: "center", justifyContent: "space-between" }}
+        style={{ alignItems: 'center', justifyContent: 'space-between' }}
       >
         <Box
           display="flex"
           border={1}
           borderColor="#ddd"
           style={{
-            position: "absolute",
+            position: 'absolute',
             left: isRTL ? 20 : undefined,
             right: isRTL ? undefined : 20,
             top: 30,
             borderRadius: 10,
-            backgroundColor: "#f8f8f8",
+            backgroundColor: '#f8f8f8',
           }}
         >
           <MuiPickersUtilsProvider utils={DateFnsUtils}>
@@ -69,7 +66,7 @@ export default function EventsFilter({
               value={start}
               onChange={setStart}
               KeyboardButtonProps={{
-                "aria-label": "change date",
+                'aria-label': 'change date',
               }}
               style={{ width: 150, marginLeft: 20, marginRight: 20 }}
             />
@@ -84,7 +81,7 @@ export default function EventsFilter({
               value={end}
               onChange={setEnd}
               KeyboardButtonProps={{
-                "aria-label": "change date",
+                'aria-label': 'change date',
               }}
               style={{ width: 150 }}
             />
@@ -112,7 +109,7 @@ export default function EventsFilter({
       </Box>
       <Box
         display="flex"
-        style={{ position: "absolute", marginTop: 10, zIndex: 111 }}
+        style={{ position: 'absolute', marginTop: 10, zIndex: 111 }}
       >
         <FilterSelect
           options={employees}
@@ -161,8 +158,8 @@ export default function EventsFilter({
             display="flex"
             style={{
               flex: 1,
-              alignItems: "center",
-              justifyContent: "flex-end",
+              alignItems: 'center',
+              justifyContent: 'flex-end',
             }}
           >
             <Box style={{ marginLeft: 20, marginRight: 20 }}>

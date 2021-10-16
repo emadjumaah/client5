@@ -1,7 +1,7 @@
 /* eslint-disable array-callback-return */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import { fade, Paper } from "@material-ui/core";
-import React from "react";
+import { fade, Paper } from '@material-ui/core';
+import React from 'react';
 import {
   BarChart,
   Bar,
@@ -10,8 +10,8 @@ import {
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
-} from "recharts";
-import ChartHeader from "./ChartHeader";
+} from 'recharts';
+import ChartHeader from './ChartHeader';
 
 export const MonthsChart = (props: any) => {
   const { data, color, dataKey, height, prim, title, isRTL } = props;
@@ -40,7 +40,7 @@ export const MonthsChart = (props: any) => {
             tickFormatter={(value) => value.toLocaleString()}
           />
           <Tooltip
-            cursor={{ fill: "transparent" }}
+            cursor={{ fill: 'transparent' }}
             formatter={(value) => [value.toLocaleString()]}
           />
           <Bar dataKey={dataKey} fill={ucolor} />;

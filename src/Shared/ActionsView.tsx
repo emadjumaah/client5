@@ -1,28 +1,29 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useLazyQuery, useMutation } from "@apollo/client";
-import { DataTypeProvider, EditingState } from "@devexpress/dx-react-grid";
+import { useLazyQuery, useMutation } from '@apollo/client';
+import { DataTypeProvider, EditingState } from '@devexpress/dx-react-grid';
 import {
   Grid,
   Table,
   TableEditColumn,
   TableHeaderRow,
-} from "@devexpress/dx-react-grid-material-ui";
-import { useEffect, useState } from "react";
-import { getRowId } from "../common";
-import { AlertLocal } from "../components";
+} from '@devexpress/dx-react-grid-material-ui';
+import React from 'react';
+import { useEffect, useState } from 'react';
+import { getRowId } from '../common';
+import { AlertLocal } from '../components';
 import {
   createAction,
   deleteAction,
   getActions,
   updateAction,
-} from "../graphql";
-import PopupLayout from "../pages/main/PopupLayout";
-import PopupAction from "../pubups/PopupAction";
-import { actionTimeFormatter, actionTypeFormatter } from "./colorFormat";
-import { CommandAddSmall } from "./CommandAddSmall";
-import { errorAlert } from "./helpers";
-import Loading from "./Loading";
-import PopupEditing from "./PopupEditing";
+} from '../graphql';
+import PopupLayout from '../pages/main/PopupLayout';
+import PopupAction from '../pubups/PopupAction';
+import { actionTimeFormatter, actionTypeFormatter } from './colorFormat';
+import { CommandAddSmall } from './CommandAddSmall';
+import { errorAlert } from './helpers';
+import Loading from './Loading';
+import PopupEditing from './PopupEditing';
 
 export default function ActionsView({
   open,
@@ -36,18 +37,18 @@ export default function ActionsView({
 }: any) {
   const [loading, setLoading] = useState(false);
 
-  const [alrt, setAlrt] = useState({ show: false, msg: "", type: undefined });
+  const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
 
   const [rows, setRows] = useState([]);
 
   const [columns] = useState([
-    { name: "sendtime", title: words.time },
-    { name: "type", title: words.to },
+    { name: 'sendtime', title: words.time },
+    { name: 'type', title: words.to },
   ]);
 
   const [loadActions, actionsData]: any = useLazyQuery(getActions, {
     variables: { eventId: event.id },
-    fetchPolicy: "cache-and-network",
+    fetchPolicy: 'cache-and-network',
   });
 
   const refresQuery = {
@@ -89,7 +90,7 @@ export default function ActionsView({
       setLoading(false);
     }
   };
-  const title = isRTL ? "التبيهات" : "Reminders";
+  const title = isRTL ? 'التبيهات' : 'Reminders';
   return (
     <PopupLayout
       isRTL={isRTL}
@@ -106,7 +107,7 @@ export default function ActionsView({
         <Grid rows={rows} columns={columns} getRowId={getRowId}>
           <EditingState onCommitChanges={commitChanges} />
 
-          <Table messages={{ noData: "" }} />
+          <Table messages={{ noData: '' }} />
           <TableHeaderRow />
           {isEditor && (
             <TableEditColumn
@@ -117,11 +118,11 @@ export default function ActionsView({
             ></TableEditColumn>
           )}
           <DataTypeProvider
-            for={["sendtime"]}
+            for={['sendtime']}
             formatterComponent={actionTimeFormatter}
           ></DataTypeProvider>
           <DataTypeProvider
-            for={["type"]}
+            for={['type']}
             formatterComponent={actionTypeFormatter}
           ></DataTypeProvider>
           <PopupEditing

@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import React from "react";
+import React from 'react';
 import {
   Box,
   FormControl,
@@ -7,8 +7,8 @@ import {
   Select,
   Typography,
   useTheme,
-} from "@material-ui/core";
-import { colors } from "../constants";
+} from '@material-ui/core';
+import { colors } from '../constants';
 
 export default function PobupColorSelect({
   register,
@@ -16,38 +16,36 @@ export default function PobupColorSelect({
   name,
   label,
   row,
-  required = false,
-  autoFocus = false,
 }: any) {
   const theme = useTheme();
   return (
     <FormControl margin="dense">
       <Box
         style={{
-          display: "flex",
-          flexDirection: "row",
+          display: 'flex',
+          flexDirection: 'row',
           backgroundColor: theme.palette.secondary.light,
           borderRadius: 5,
         }}
       >
         <Box
           style={{
-            display: "flex",
+            display: 'flex',
             width: 70,
-            alignItems: "center",
+            alignItems: 'center',
             height: 40,
             padding: 10,
           }}
         >
           <Typography>{label}</Typography>
         </Box>
-        <Box style={{ display: "flex" }}>
+        <Box style={{ display: 'flex' }}>
           <Select
             name={name}
             labelId="select-helper-label"
-            onChange={(e) => register({ name: "color", value: e.target.value })}
+            onChange={(e) => register({ name: 'color', value: e.target.value })}
             // value={row?.[name] || ""}
-            defaultValue={row?.[name] || ""}
+            defaultValue={row?.[name] || ''}
             error={errors[name] ? true : false}
             autoWidth
             variant="outlined"

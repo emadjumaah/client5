@@ -1,24 +1,24 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import React, { useContext, useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
-import { useCategories, useDepartments, useBrands } from "../hooks";
+import React, { useContext, useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { useCategories, useDepartments, useBrands } from '../hooks';
 import {
   successAlert,
   dublicateAlert,
   errorAlert,
   getReturnItem,
   yup,
-} from "../Shared";
-import PopupDeprtment from "./PopupDeprtment";
-import PopupCategory from "./PopupCategory";
-import { GContextTypes } from "../types";
-import { GlobalContext } from "../contexts";
-import { PopupBrand } from ".";
-import PopupLayout from "../pages/main/PopupLayout";
-import { Grid } from "@material-ui/core";
-import { TextFieldLocal } from "../components";
-import AutoFieldLocal from "../components/fields/AutoFieldLocal";
+} from '../Shared';
+import PopupDeprtment from './PopupDeprtment';
+import PopupCategory from './PopupCategory';
+import { GContextTypes } from '../types';
+import { GlobalContext } from '../contexts';
+import { PopupBrand } from '.';
+import PopupLayout from '../pages/main/PopupLayout';
+import { Grid } from '@material-ui/core';
+import { TextFieldLocal } from '../components';
+import AutoFieldLocal from '../components/fields/AutoFieldLocal';
 
 const PopupProduct = ({
   open,
@@ -32,7 +32,7 @@ const PopupProduct = ({
   theme,
 }: any) => {
   const [saving, setSaving] = useState(false);
-  const [alrt, setAlrt] = useState({ show: false, msg: "", type: undefined });
+  const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
 
   const [departvalue, setDepartvalue] = useState<any>(null);
   const [departError, setDepartError] = useState<any>(false);
@@ -88,21 +88,14 @@ const PopupProduct = ({
     setCatError(false);
   };
 
-  const openDepartment = () => {
-    setOpenDepart(true);
-  };
   const closeDepartment = () => {
     setOpenDepart(false);
   };
-  const openBrand = () => {
-    setOpenBrnd(true);
-  };
+
   const closeBrand = () => {
     setOpenBrnd(false);
   };
-  const openCategory = () => {
-    setOpenCat(true);
-  };
+
   const closeCategory = () => {
     setOpenCat(false);
   };
@@ -179,7 +172,7 @@ const PopupProduct = ({
       userId: user._id,
     };
     const mutate = isNew ? addAction : editAction;
-    const mutateName = isNew ? "createItem" : "updateItem";
+    const mutateName = isNew ? 'createItem' : 'updateItem';
     apply(mutate, mutateName, variables);
   };
 
@@ -187,7 +180,7 @@ const PopupProduct = ({
     try {
       const res = await mutate({ variables });
       const nitem = getReturnItem(res, mutateName);
-      if (setNewValue && nitem) setNewValue(nitem, "item");
+      if (setNewValue && nitem) setNewValue(nitem, 'item');
       setSaving(false);
       await successAlert(setAlrt, isRTL);
       closeModal();
@@ -197,7 +190,7 @@ const PopupProduct = ({
   };
 
   const onError = async (error: any) => {
-    if (error.message.includes("duplicate")) {
+    if (error.message.includes('duplicate')) {
       await dublicateAlert(setAlrt, isRTL);
     } else {
       await errorAlert(setAlrt, isRTL);
@@ -216,11 +209,11 @@ const PopupProduct = ({
   };
   const title = isRTL
     ? isNew
-      ? "منتج جدبد"
-      : "تعديل منتج"
+      ? 'منتج جدبد'
+      : 'تعديل منتج'
     : isNew
-    ? "New Product"
-    : "Edit Product";
+    ? 'New Product'
+    : 'Edit Product';
 
   return (
     <PopupLayout
@@ -239,7 +232,7 @@ const PopupProduct = ({
           <TextFieldLocal
             autoFocus
             name="barcode"
-            label={"Barcode"}
+            label={'Barcode'}
             register={register}
             errors={errors}
             row={row}

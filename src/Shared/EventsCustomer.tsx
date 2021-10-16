@@ -1,30 +1,30 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
 import {
   Grid,
   Table,
   TableHeaderRow,
   TableEditColumn,
   VirtualTable,
-} from "@devexpress/dx-react-grid-material-ui";
-import { fade, Paper, Typography, withStyles } from "@material-ui/core";
+} from '@devexpress/dx-react-grid-material-ui';
+import { fade, Paper, Typography, withStyles } from '@material-ui/core';
 import {
   DataTypeProvider,
   EditingState,
   IntegratedSorting,
   SortingState,
-} from "@devexpress/dx-react-grid";
-import { Getter } from "@devexpress/dx-react-core";
-import { getColumns } from "../common/columns";
+} from '@devexpress/dx-react-grid';
+import { Getter } from '@devexpress/dx-react-core';
+import { getColumns } from '../common/columns';
 import {
   createdAtFormatter,
   currencyFormatter,
   doneFormatter,
   eventStatusFormatter,
   fromToFormatter,
-} from "./colorFormat";
-import { useLazyQuery, useMutation } from "@apollo/client";
+} from './colorFormat';
+import { useLazyQuery, useMutation } from '@apollo/client';
 import {
   createEvent,
   deleteEventById,
@@ -32,14 +32,15 @@ import {
   getDepartments,
   getEmployees,
   updateEvent,
-} from "../graphql";
-import { Command } from "./Command";
-import PopupEditing from "./PopupEditing";
-import getObjectEvents from "../graphql/query/getObjectEvents";
-import getTasks from "../graphql/query/getTasks";
-import LoadingInline from "./LoadingInline";
-import PopupAppointmentCustomer from "../pubups/PopupAppointmentCustomer";
-import useTasks from "../hooks/useTasks";
+} from '../graphql';
+import { Command } from './Command';
+import PopupEditing from './PopupEditing';
+import getObjectEvents from '../graphql/query/getObjectEvents';
+import getTasks from '../graphql/query/getTasks';
+import LoadingInline from './LoadingInline';
+import PopupAppointmentCustomer from '../pubups/PopupAppointmentCustomer';
+import useTasks from '../hooks/useTasks';
+import React from 'react';
 export const getRowId = (row: any) => row._id;
 
 const NumberTypeProvider = (props) => (
@@ -53,7 +54,7 @@ const NumberTypeProvider = (props) => (
 
 const styles = (theme) => ({
   tableStriped: {
-    "& tbody tr:nth-of-type(odd)": {
+    '& tbody tr:nth-of-type(odd)': {
       backgroundColor: fade(theme.palette.primary.main, 0.1),
     },
   },
@@ -63,7 +64,7 @@ const TableComponentBase = ({ classes, ...restProps }) => (
   <Table.Table {...restProps} className={classes.tableStriped} />
 );
 
-export const TableComponent = withStyles(styles, { name: "TableComponent" })(
+export const TableComponent = withStyles(styles, { name: 'TableComponent' })(
   TableComponentBase
 );
 
@@ -86,7 +87,7 @@ export default function EventsCustomer({
   const col = getColumns({ isRTL, words });
 
   const [columns] = useState([
-    { id: 4, ref: "title", name: "title", title: words.title },
+    { id: 4, ref: 'title', name: 'title', title: words.title },
     col.startDate,
     col.fromto,
     col.docNo,
@@ -121,7 +122,7 @@ export default function EventsCustomer({
   };
 
   const [getEvents, eventsData]: any = useLazyQuery(getObjectEvents, {
-    fetchPolicy: "cache-and-network",
+    fetchPolicy: 'cache-and-network',
   });
 
   useEffect(() => {
@@ -130,7 +131,7 @@ export default function EventsCustomer({
   }, [id]);
 
   useEffect(() => {
-    const data = eventsData?.data?.["getObjectEvents"]?.data;
+    const data = eventsData?.data?.['getObjectEvents']?.data;
     if (data) {
       setLoading(false);
     }
@@ -154,7 +155,7 @@ export default function EventsCustomer({
     <Paper
       style={{
         maxHeight: 600,
-        overflow: "auto",
+        overflow: 'auto',
         margin: 10,
         minHeight: 600,
       }}
@@ -170,34 +171,34 @@ export default function EventsCustomer({
           <VirtualTable
             height={600}
             messages={{
-              noData: isRTL ? "لا يوجد بيانات" : "no data",
+              noData: isRTL ? 'لا يوجد بيانات' : 'no data',
             }}
             estimatedRowHeight={45}
             tableComponent={TableComponent}
           />
           <DataTypeProvider
-            for={["startDate"]}
+            for={['startDate']}
             formatterComponent={createdAtFormatter}
           ></DataTypeProvider>
           <DataTypeProvider
-            for={["fromto"]}
+            for={['fromto']}
             formatterComponent={fromToFormatter}
           ></DataTypeProvider>
           <DataTypeProvider
-            for={["status"]}
+            for={['status']}
             formatterComponent={eventStatusFormatter}
           ></DataTypeProvider>
           <DataTypeProvider
-            for={["amount"]}
+            for={['amount']}
             formatterComponent={currencyFormatter}
           ></DataTypeProvider>
           <DataTypeProvider
-            for={["done"]}
+            for={['done']}
             formatterComponent={(props: any) =>
               doneFormatter({ ...props, editEvent })
             }
           ></DataTypeProvider>
-          <NumberTypeProvider for={["index"]} />
+          <NumberTypeProvider for={['index']} />
           <TableHeaderRow showSortingControls />
 
           {isEditor && !isNew && (
@@ -229,7 +230,7 @@ export default function EventsCustomer({
             computed={({ tableColumns }) => {
               const result = [
                 {
-                  key: "editCommand",
+                  key: 'editCommand',
                   type: TableEditColumn.COLUMN_TYPE,
                   width: isNew ? 20 : 100,
                 },

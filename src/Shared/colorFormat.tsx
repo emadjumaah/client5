@@ -8,29 +8,29 @@ import {
   colors,
   fade,
   Typography,
-} from "@material-ui/core";
-import React from "react";
+} from '@material-ui/core';
+import React from 'react';
 import {
   isBranchAdmin,
   isEditor,
   isSuperAdmin,
   isSystemAdmin,
   isViewer,
-} from "../common/roles";
-import { operationTypes } from "../constants";
-import { getTaskName } from "../constants/branch";
+} from '../common/roles';
+import { operationTypes } from '../constants';
+import { getTaskName } from '../constants/branch';
 import {
   eventColors,
   eventStatus,
   operationNames,
   opTypesNames,
   weekdaysObj,
-} from "../constants/datatypes";
-import { actionType } from "../constants/kaid";
-import { sectionTypes } from "../constants/reports";
-import { getStoreItem } from "../store";
-import Avatar from "./Avatar";
-import AvatarColor from "./AvatarColor";
+} from '../constants/datatypes';
+import { actionType } from '../constants/kaid';
+import { sectionTypes } from '../constants/reports';
+import { getStoreItem } from '../store';
+import Avatar from './Avatar';
+import AvatarColor from './AvatarColor';
 
 export const colorPatternFormatter = ({ value }) => (
   <Box
@@ -63,7 +63,7 @@ export const daysoffFormatter = ({ value, isRTL }: any) => {
         {days.map((day: any) => {
           return (
             <span key={day} style={{ marginRight: 2, marginLeft: 2 }}>
-              {isRTL ? weekdaysObj[day]?.nameAr : weekdaysObj[day]?.name}{" "}
+              {isRTL ? weekdaysObj[day]?.nameAr : weekdaysObj[day]?.name}{' '}
             </span>
           );
         })}
@@ -77,20 +77,20 @@ export const daysoffFormatter = ({ value, isRTL }: any) => {
 export const rolesFormatter = ({ value, row, isRTL }: any) => {
   const user = { ...row, roles: JSON.parse(value) };
   if (isSuperAdmin(user)) {
-    return <Box>{isRTL ? "الأدمن" : "Main Admin"}</Box>;
+    return <Box>{isRTL ? 'الأدمن' : 'Main Admin'}</Box>;
   }
   if (isBranchAdmin(user)) {
-    return <Box>{isRTL ? "مدير الفرع" : "Branch Admin"}</Box>;
+    return <Box>{isRTL ? 'مدير الفرع' : 'Branch Admin'}</Box>;
   }
 
-  if (isSystemAdmin(user, "cal") || isSystemAdmin(user, "pos")) {
-    return <Box>{isRTL ? "مدير حساب" : "Account Admin"}</Box>;
+  if (isSystemAdmin(user, 'cal') || isSystemAdmin(user, 'pos')) {
+    return <Box>{isRTL ? 'مدير حساب' : 'Account Admin'}</Box>;
   }
-  if (isEditor(user, "cal") || isEditor(user, "pos")) {
-    return <Box>{isRTL ? "محرر" : "Editor"}</Box>;
+  if (isEditor(user, 'cal') || isEditor(user, 'pos')) {
+    return <Box>{isRTL ? 'محرر' : 'Editor'}</Box>;
   }
-  if (isViewer(user, "cal") || isViewer(user, "pos")) {
-    return <Box>{isRTL ? "زائر" : "Viewer"}</Box>;
+  if (isViewer(user, 'cal') || isViewer(user, 'pos')) {
+    return <Box>{isRTL ? 'زائر' : 'Viewer'}</Box>;
   }
 
   return <Box></Box>;
@@ -106,10 +106,10 @@ export const avatarPatternFormatter = ({ row }: any) => {
   );
 };
 export const sectionsTypeFormatter = ({ value }: any) => {
-  const store = getStoreItem("store");
+  const store = getStoreItem('store');
   const { lang } = store;
   const nameObj = sectionTypes.filter((st: any) => st.value === value)?.[0];
-  const name = nameObj ? (lang === "ar" ? nameObj.nameAr : nameObj.name) : "";
+  const name = nameObj ? (lang === 'ar' ? nameObj.nameAr : nameObj.name) : '';
 
   return <span>{name}</span>;
 };
@@ -126,152 +126,152 @@ export const avatarFormatter = ({ row }: any) => {
 
 export const arabicFormatter = ({ value }: any) => {
   return (
-    <Typography style={{ fontSize: "1.1em", fontWeight: "bold" }}>
+    <Typography style={{ fontSize: '1.1em', fontWeight: 'bold' }}>
       {value}
     </Typography>
   );
 };
 export const activeFormatter = ({ value }: any) => {
-  const store = getStoreItem("store");
+  const store = getStoreItem('store');
   const { lang } = store;
   return (
-    <Typography style={{ color: !value ? "green" : "red" }}>
+    <Typography style={{ color: !value ? 'green' : 'red' }}>
       {!value
-        ? lang === "ar"
-          ? "فعال"
-          : "Active"
-        : lang === "ar"
-        ? "معطل"
-        : "Inactive"}
+        ? lang === 'ar'
+          ? 'فعال'
+          : 'Active'
+        : lang === 'ar'
+        ? 'معطل'
+        : 'Inactive'}
     </Typography>
   );
 };
 export const covertToDate = (time: any) => {
   if (time) {
     const date = new Date(time);
-    return date.toLocaleString("en-GB", {
-      day: "2-digit",
-      month: "2-digit",
-      year: "numeric",
+    return date.toLocaleString('en-GB', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
     });
   } else {
-    return "";
+    return '';
   }
 };
 export const covertToTimeDate = (time: any) => {
   if (time) {
     const date = new Date(time);
-    return date.toLocaleString("en-GB", {
-      day: "2-digit",
-      month: "short",
-      year: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
+    return date.toLocaleString('en-GB', {
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
     });
   } else {
-    return "";
+    return '';
   }
 };
 export const covertToTimeDateDigit = (time: any) => {
   if (time) {
     const date = new Date(time);
-    return date.toLocaleString("en-GB", {
-      day: "2-digit",
-      month: "2-digit",
-      year: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
+    return date.toLocaleString('en-GB', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
     });
   } else {
-    return "";
+    return '';
   }
 };
 export const covertToTimeOnly = (time: any) => {
   if (time) {
     const date = new Date(time);
-    return date.toLocaleString("en-QA", {
-      hour: "2-digit",
-      minute: "2-digit",
+    return date.toLocaleString('en-QA', {
+      hour: '2-digit',
+      minute: '2-digit',
       hour12: false,
     });
   } else {
-    return "";
+    return '';
   }
 };
 export const getDateDayFormat = (time: any, isRTL: any) => {
   if (time) {
     const date = new Date(time);
-    return date.toLocaleString(isRTL ? "ar-QA" : "en-GB", {
-      weekday: "long",
-      day: "numeric",
-      month: "long",
-      year: "numeric",
+    return date.toLocaleString(isRTL ? 'ar-QA' : 'en-GB', {
+      weekday: 'long',
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric',
     });
   } else {
-    return "";
+    return '';
   }
 };
 export const getDateDayTimeFormat = (time: any, isRTL: any) => {
   if (time) {
     const date = new Date(time);
-    return date.toLocaleString(isRTL ? "ar-QA" : "en-GB", {
-      weekday: "long",
-      day: "numeric",
-      month: "long",
-      year: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
+    return date.toLocaleString(isRTL ? 'ar-QA' : 'en-GB', {
+      weekday: 'long',
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
     });
   } else {
-    return "";
+    return '';
   }
 };
 export const getDateDay = (time: any, isRTL: any) => {
   if (time) {
     const date = new Date(time);
-    return date.toLocaleString(isRTL ? "ar-QA" : "en-GB", {
-      day: "numeric",
-      month: "long",
-      year: "numeric",
+    return date.toLocaleString(isRTL ? 'ar-QA' : 'en-GB', {
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric',
     });
   } else {
-    return "";
+    return '';
   }
 };
 export const getDateDayWeek = (time: any, isRTL: any) => {
   if (time) {
     const date = new Date(time);
-    return date.toLocaleString(isRTL ? "ar-QA" : "en-GB", {
-      weekday: "short",
-      day: "numeric",
-      month: "long",
-      year: "numeric",
+    return date.toLocaleString(isRTL ? 'ar-QA' : 'en-GB', {
+      weekday: 'short',
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric',
     });
   } else {
-    return "";
+    return '';
   }
 };
 
 export const getDateFormat = (time: any, isRTL: any) => {
   if (time) {
     const date = new Date(time);
-    return date.toLocaleString(isRTL ? "ar-QA" : "en-GB", {
-      day: "numeric",
-      month: "long",
+    return date.toLocaleString(isRTL ? 'ar-QA' : 'en-GB', {
+      day: 'numeric',
+      month: 'long',
     });
   } else {
-    return "";
+    return '';
   }
 };
 export const getDateMonthFormat = (time: any, isRTL: any) => {
   if (time) {
     const date = new Date(time);
-    return date.toLocaleString(isRTL ? "ar-QA" : "en-GB", {
-      month: "long",
-      year: "numeric",
+    return date.toLocaleString(isRTL ? 'ar-QA' : 'en-GB', {
+      month: 'long',
+      year: 'numeric',
     });
   } else {
-    return "";
+    return '';
   }
 };
 
@@ -308,13 +308,13 @@ export const dateTimePrintFormatter = ({ row }: any) => {
   return <div style={{ fontSize: 12 }}>{covertToTimeOnly(startDate)}</div>;
 };
 export const eventStatusPrintFormatter = ({ value }: any) => {
-  const store = getStoreItem("store");
+  const store = getStoreItem('store');
   const { lang } = store;
   const item = eventStatus.filter((es: any) => es.id === value);
   if (item && item.length > 0) {
     return (
       <div style={{ color: eventColors[value], fontSize: 12 }}>
-        {lang === "ar" ? item[0].nameAr : item[0].name}
+        {lang === 'ar' ? item[0].nameAr : item[0].name}
       </div>
     );
   } else {
@@ -323,7 +323,7 @@ export const eventStatusPrintFormatter = ({ value }: any) => {
 };
 export const currencyPrintFormatter = ({ value }: any) => {
   return (
-    <div style={{ color: "#403795", fontSize: 12 }}>{moneyFormat(value)}</div>
+    <div style={{ color: '#403795', fontSize: 12 }}>{moneyFormat(value)}</div>
   );
 };
 export const samllFormatter = ({ value }: any) => {
@@ -355,13 +355,13 @@ export const valueTimeFormatter = ({ value }: any) => {
   return <div>{covertToTimeDate(value)}</div>;
 };
 export const eventStatusFormatter = ({ value }: any) => {
-  const store = getStoreItem("store");
+  const store = getStoreItem('store');
   const { lang } = store;
   const item = eventStatus.filter((es: any) => es.id === value);
   if (item && item.length > 0) {
     return (
       <span style={{ color: eventColors[value] }}>
-        {lang === "ar" ? item[0].nameAr : item[0].name}
+        {lang === 'ar' ? item[0].nameAr : item[0].name}
       </span>
     );
   } else {
@@ -375,50 +375,50 @@ export const taskStatusFormatter = ({ value }: any) => {
         width: 18,
         height: 18,
         borderRadius: 9,
-        backgroundColor: value === 10 ? "#39a539a0" : "#ffffff0",
+        backgroundColor: value === 10 ? '#39a539a0' : '#ffffff0',
       }}
     >
       {value === 1 && (
-        <CircularProgress style={{ color: "#9958ac9b" }} size={16} />
+        <CircularProgress style={{ color: '#9958ac9b' }} size={16} />
       )}
     </Box>
   );
 };
 export const eventStatusPrintDataFormatter = (value) => {
-  const store = getStoreItem("store");
+  const store = getStoreItem('store');
   const { lang } = store;
   const item = eventStatus.filter((es: any) => es.id === value);
   if (item && item.length > 0) {
-    return lang === "ar" ? item[0].nameAr : item[0].name;
+    return lang === 'ar' ? item[0].nameAr : item[0].name;
   } else {
-    return "";
+    return '';
   }
 };
 
 export const moneyFormat = (amount: number) => {
   if (amount) {
     if (!isNaN(amount)) {
-      return amount.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, "$&,");
+      return amount.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
     }
   }
-  return "0.00";
+  return '0.00';
 };
 export const moneyFormatEmpty = (amount: number) => {
   if (amount) {
     if (!isNaN(amount)) {
-      return amount.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, "$&,");
+      return amount.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
     }
   }
-  return "";
+  return '';
 };
 
 export const simpleDateFormatter = (time: any) => {
   return (
     <div>
-      {new Date(time).toLocaleString("en-GB", {
-        day: "2-digit",
-        month: "2-digit",
-        year: "numeric",
+      {new Date(time).toLocaleString('en-GB', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
       })}
     </div>
   );
@@ -426,9 +426,9 @@ export const simpleDateFormatter = (time: any) => {
 
 export const moneyFormatSimple = (amount: number) => {
   if (amount) {
-    return amount.toFixed(0).replace(/\d(?=(\d{3})+\.)/g, "$&,");
+    return amount.toFixed(0).replace(/\d(?=(\d{3})+\.)/g, '$&,');
   } else {
-    return "0";
+    return '0';
   }
 };
 
@@ -436,20 +436,20 @@ export const amountFormatter = ({ row }: any) => {
   const { total, discount } = row;
   const amount = total - discount;
 
-  return <div style={{ color: "#403795" }}>{moneyFormat(amount)}</div>;
+  return <div style={{ color: '#403795' }}>{moneyFormat(amount)}</div>;
 };
 export const currencyFormatter = ({ value }: any) => {
-  return <span style={{ color: "#403795" }}>{moneyFormat(value)}</span>;
+  return <span style={{ color: '#403795' }}>{moneyFormat(value)}</span>;
 };
 export const logoFormatter = ({ value }: any) => {
   return value ? (
     <img
       style={{
-        overflow: "hidden",
+        overflow: 'hidden',
         borderRadius: 5,
-        objectFit: "cover",
+        objectFit: 'cover',
         borderWidth: 1,
-        borderColor: "#ddd",
+        borderColor: '#ddd',
       }}
       width={100}
       height={50}
@@ -460,7 +460,7 @@ export const logoFormatter = ({ value }: any) => {
   );
 };
 export const currencyFormatterEmpty = ({ value }: any) => {
-  return <span style={{ color: "#403795" }}>{moneyFormatEmpty(value)}</span>;
+  return <span style={{ color: '#403795' }}>{moneyFormatEmpty(value)}</span>;
 };
 
 export const dueAmountFormatter = ({ row }: any) => {
@@ -497,13 +497,13 @@ export const doneFormatter = ({ row, editEvent }: any) => {
       <Checkbox
         style={{ padding: 5, color: colors.blue[500] }}
         checked={row.status === 10}
-        onChange={async (e: any) => {
+        onChange={async () => {
           await editEvent({
             variables,
             optimisticResponse: {
-              __typename: "updateEvent",
+              __typename: 'updateEvent',
               updateEvent: {
-                __typename: "Operation",
+                __typename: 'Operation',
                 id,
                 ...row,
                 ...variables,
@@ -524,7 +524,7 @@ export const invoiceReceiptFormatter = ({ value, row }: any) => {
       style={{
         width: 100,
         height: 15,
-        backgroundColor: "#ddd",
+        backgroundColor: '#ddd',
       }}
     >
       <Box
@@ -534,12 +534,12 @@ export const invoiceReceiptFormatter = ({ value, row }: any) => {
           backgroundColor: fade(colors.green[500], 0.5),
         }}
       ></Box>
-      <Box style={{ position: "relative", bottom: 17, right: 30 }}>
+      <Box style={{ position: 'relative', bottom: 17, right: 30 }}>
         <Typography
-          style={{ direction: "ltr", fontWeight: "bold" }}
+          style={{ direction: 'ltr', fontWeight: 'bold' }}
           variant="caption"
         >
-          {value ? moneyFormat(value) : ""}
+          {value ? moneyFormat(value) : ''}
         </Typography>
       </Box>
     </Box>
@@ -549,9 +549,9 @@ export const invoiceReceiptFormatter = ({ value, row }: any) => {
 export const taskIdFormatter = ({ value, tasks }: any) => {
   const task = tasks.filter((tsk: any) => tsk.id === value);
   if (task && task.length > 0) {
-    return <span style={{ color: "#403795" }}>{task[0].title}</span>;
+    return <span style={{ color: '#403795' }}>{task[0].title}</span>;
   } else {
-    return <span style={{ color: "#403795" }}></span>;
+    return <span style={{ color: '#403795' }}></span>;
   }
 };
 
@@ -563,14 +563,14 @@ export const nameLinkFormat = ({ row, value, setItem, setOpenItem }: any) => {
         setOpenItem(true);
       }}
       style={{
-        cursor: "pointer",
+        cursor: 'pointer',
         borderRadius: 5,
       }}
     >
       <Typography
         style={{
           fontSize: 13,
-          textAlign: "start",
+          textAlign: 'start',
           color: colors.deepPurple[500],
         }}
       >
@@ -593,15 +593,15 @@ export const taskIdLinkFormat = ({
       <div
         onClick={() => {
           setItem(task);
-          setName("task");
+          setName('task');
           setOpenItem(true);
         }}
-        style={{ cursor: "pointer" }}
+        style={{ cursor: 'pointer' }}
       >
         <Typography
           style={{
             fontSize: 13,
-            textAlign: "start",
+            textAlign: 'start',
             color: colors.deepPurple[500],
           }}
         >
@@ -615,11 +615,11 @@ export const taskIdLinkFormat = ({
 };
 
 export const taskNameFormatter = ({ value }: any) => {
-  const store = getStoreItem("store");
+  const store = getStoreItem('store');
   const { lang } = store;
-  const isRTL = lang === "ar";
+  const isRTL = lang === 'ar';
   return (
-    <span style={{ color: "#403795" }}>
+    <span style={{ color: '#403795' }}>
       {getTaskName({ id: value, isRTL })}
     </span>
   );
@@ -630,7 +630,7 @@ export const progressFormatter = ({ value }: any) => {
       style={{
         width: 100,
         height: 15,
-        backgroundColor: "#ddd",
+        backgroundColor: '#ddd',
       }}
     >
       <Box
@@ -640,12 +640,12 @@ export const progressFormatter = ({ value }: any) => {
           backgroundColor: fade(colors.blue[500], 0.5),
         }}
       ></Box>
-      <Box style={{ position: "relative", bottom: 17, right: 40 }}>
+      <Box style={{ position: 'relative', bottom: 17, right: 40 }}>
         <Typography
-          style={{ direction: "ltr", fontWeight: "bold" }}
+          style={{ direction: 'ltr', fontWeight: 'bold' }}
           variant="caption"
         >
-          {value ? `${parseInt(value)}%` : ""}
+          {value ? `${parseInt(value)}%` : ''}
         </Typography>
       </Box>
     </Box>
@@ -655,22 +655,22 @@ export const deleteFormatter = ({ removeItem, row }: any) => {
   return (
     <span
       onClick={removeItem(row.indx - 1)}
-      style={{ color: "#ffffff", padding: 5, backgroundColor: "#e99393" }}
+      style={{ color: '#ffffff', padding: 5, backgroundColor: '#e99393' }}
     >
       X
     </span>
   );
 };
 export const opTypeFormatter = ({ value }: any) => {
-  const store = getStoreItem("store");
+  const store = getStoreItem('store');
   const { lang } = store;
   const name =
-    lang === "ar" ? opTypesNames?.[value]?.nameAr : opTypesNames?.[value]?.name;
+    lang === 'ar' ? opTypesNames?.[value]?.nameAr : opTypesNames?.[value]?.name;
   return <span>{name}</span>;
 };
 export const actionTypeFormatter = ({ row }: any) => {
   const name =
-    row.type === 1 ? row.phone : row.type === 2 ? row.email : "Notification";
+    row.type === 1 ? row.phone : row.type === 2 ? row.email : 'Notification';
   return <span>{name}</span>;
 };
 
@@ -707,7 +707,7 @@ export const kaidAmountFormatter = ({ row }: any) => {
       ? -debit
       : 0;
 
-  return <div style={{ color: "#403795" }}>{moneyFormat(value)}</div>;
+  return <div style={{ color: '#403795' }}>{moneyFormat(value)}</div>;
 };
 
 export const getNameOfDocument = (opType: number) => {
@@ -717,7 +717,7 @@ export const getNameOfDocument = (opType: number) => {
   if (name) {
     return operationNames[name];
   } else {
-    return "";
+    return '';
   }
 };
 
@@ -736,7 +736,7 @@ export const accountFormatter = (props: any, accounts: any, isRTL: any) => {
         ? isRTL
           ? account[0].nameAr
           : account[0].name
-        : ""}
+        : ''}
     </div>
   );
 };
@@ -763,7 +763,7 @@ export const customerAccountFormatter = (
           ? isRTL
             ? account[0].nameAr
             : account[0].name
-          : ""}
+          : ''}
       </div>
     );
   }
@@ -775,12 +775,12 @@ export const employeeColorStyle = {
   // backgroundSize: "1px 5px",
 };
 export const mainBackgroud = {
-  backgroundColor: "#ecf1fa",
+  backgroundColor: '#ecf1fa',
   // opacity: "0.3",
   backgroundImage:
-    "radial-gradient(#D0D7F1 0.75px, transparent 0.75px), radial-gradient(#D0D7F1 0.75px, #ecf1fa 0.75px)",
-  backgroundSize: "30px 30px",
-  backgroundPosition: "0 0,15px 15px",
+    'radial-gradient(#D0D7F1 0.75px, transparent 0.75px), radial-gradient(#D0D7F1 0.75px, #ecf1fa 0.75px)',
+  backgroundSize: '30px 30px',
+  backgroundPosition: '0 0,15px 15px',
 };
 
 // background-color: gray;

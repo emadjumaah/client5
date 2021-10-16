@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react';
 import {
   Box,
   Fab,
@@ -8,16 +8,16 @@ import {
   Radio,
   RadioGroup,
   TextField,
-} from "@material-ui/core";
-import { useForm } from "react-hook-form";
-import SaveOutlinedIcon from "@material-ui/icons/SaveOutlined";
-import { Autocomplete } from "@material-ui/lab";
-import OptionItemData from "../Shared/OptionItemData";
-import { yup } from "../constants";
-import AutoField from "../Shared/AutoField";
-import { itemClasses } from "../themes/classes";
-import { useDepartments, useEmployees, useServices } from "../hooks";
-import { PopupDialog } from "../Shared";
+} from '@material-ui/core';
+import { useForm } from 'react-hook-form';
+import SaveOutlinedIcon from '@material-ui/icons/SaveOutlined';
+import { Autocomplete } from '@material-ui/lab';
+import OptionItemData from '../Shared/OptionItemData';
+import { yup } from '../constants';
+import AutoField from '../Shared/AutoField';
+import { itemClasses } from '../themes/classes';
+import { useDepartments, useEmployees, useServices } from '../hooks';
+import { PopupDialog } from '../Shared';
 
 export const indexTheList = (list: any) => {
   return list.map((item: any, index: any) => {
@@ -32,7 +32,6 @@ const PopupItem = ({
   open,
   onClose,
   row,
-  isNew,
   editAction,
   isRTL,
   words,
@@ -153,7 +152,7 @@ const PopupItem = ({
     <PopupDialog
       open={open}
       onClose={onFormClose}
-      maxWidth={"lg"}
+      maxWidth={'lg'}
       classes={classes}
     >
       <Box
@@ -161,7 +160,7 @@ const PopupItem = ({
         style={{
           flex: 1,
           margin: 20,
-          direction: isRTL ? "rtl" : "ltr",
+          direction: isRTL ? 'rtl' : 'ltr',
         }}
       >
         <Box
@@ -169,8 +168,8 @@ const PopupItem = ({
           style={{
             flex: 1,
 
-            alignItems: "center",
-            justifyContent: "space-between",
+            alignItems: 'center',
+            justifyContent: 'space-between',
           }}
         >
           <Autocomplete
@@ -233,7 +232,7 @@ const PopupItem = ({
             isRTL={isRTL}
           ></AutoField>
 
-          <Box style={{ position: "absolute", marginTop: -80, right: 480 }}>
+          <Box style={{ position: 'absolute', marginTop: -80, right: 480 }}>
             <RadioGroup
               aria-label="Views"
               name="views"
@@ -249,7 +248,7 @@ const PopupItem = ({
                 control={
                   <Radio style={{ padding: 0, margin: 0 }} color="primary" />
                 }
-                label={isRTL ? "الموظفين" : "Employees"}
+                label={isRTL ? 'الموظفين' : 'Employees'}
               />
 
               <FormControlLabel
@@ -257,7 +256,7 @@ const PopupItem = ({
                 control={
                   <Radio style={{ padding: 0, margin: 0 }} color="primary" />
                 }
-                label={isRTL ? "الموارد" : "Resourses"}
+                label={isRTL ? 'الموارد' : 'Resourses'}
               />
             </RadioGroup>
           </Box>
@@ -292,7 +291,7 @@ const PopupItem = ({
             margin="dense"
             onFocus={(e) => e.target.select()}
             inputProps={{
-              style: { textAlign: "right", fontSize: 13, height: 13 },
+              style: { textAlign: 'right', fontSize: 13, height: 13 },
             }}
           />
           <TextField
@@ -308,7 +307,7 @@ const PopupItem = ({
             margin="dense"
             onFocus={(e) => e.target.select()}
             inputProps={{
-              style: { textAlign: "right", fontSize: 13, height: 13 },
+              style: { textAlign: 'right', fontSize: 13, height: 13 },
             }}
           />
           <Fab

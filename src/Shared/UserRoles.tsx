@@ -5,8 +5,9 @@ import {
   FormControlLabel,
   FormGroup,
   Typography,
-} from "@material-ui/core";
-import { systemsNames } from "../constants/menu";
+} from '@material-ui/core';
+import React from 'react';
+import { systemsNames } from '../constants/menu';
 
 export default function UserRoles({
   branches,
@@ -15,11 +16,11 @@ export default function UserRoles({
   brch,
   isRTL,
 }) {
-  const manager = isRTL ? "المدير العام" : "General Manager";
+  const manager = isRTL ? 'المدير العام' : 'General Manager';
   return (
     <Box>
       {branches.map((branch: any) => {
-        const systems = ["cal", "pos", "exp", "acc"];
+        const systems = ['cal', 'pos', 'exp', 'acc'];
         if (branch.basename === brch) {
           return (
             <Box key={branch.basename}>
@@ -31,7 +32,7 @@ export default function UserRoles({
                       handleChangeRoles({
                         branch: branch.basename,
                         system: null,
-                        role: "admin",
+                        role: 'admin',
                       })
                     }
                     name={branch.basename.admin}
@@ -39,7 +40,7 @@ export default function UserRoles({
                   />
                 }
                 label={
-                  <Typography variant="body2" style={{ fontWeight: "bold" }}>
+                  <Typography variant="body2" style={{ fontWeight: 'bold' }}>
                     {manager}
                   </Typography>
                 }
@@ -52,7 +53,7 @@ export default function UserRoles({
                         <Box style={{ minWidth: 150, marginTop: 10 }}>
                           <Typography
                             variant="subtitle2"
-                            style={{ fontWeight: "bold" }}
+                            style={{ fontWeight: 'bold' }}
                           >
                             {isRTL
                               ? systemsNames[bs].nameAr
@@ -69,7 +70,7 @@ export default function UserRoles({
                                 handleChangeRoles({
                                   branch: branch.basename,
                                   system: bs,
-                                  role: "admin",
+                                  role: 'admin',
                                 })
                               }
                               size="small"
@@ -81,7 +82,7 @@ export default function UserRoles({
                           }
                           label={
                             <Typography variant="body2" color="textSecondary">
-                              {isRTL ? "مدير" : "Admin"}
+                              {isRTL ? 'مدير' : 'Admin'}
                             </Typography>
                           }
                         />
@@ -95,7 +96,7 @@ export default function UserRoles({
                                 handleChangeRoles({
                                   branch: branch.basename,
                                   system: bs,
-                                  role: "edit",
+                                  role: 'edit',
                                 })
                               }
                               size="small"
@@ -113,7 +114,7 @@ export default function UserRoles({
                           }
                           label={
                             <Typography variant="body2" color="textSecondary">
-                              {isRTL ? "محرر" : "Editor"}
+                              {isRTL ? 'محرر' : 'Editor'}
                             </Typography>
                           }
                         />
@@ -127,7 +128,7 @@ export default function UserRoles({
                                 handleChangeRoles({
                                   branch: branch.basename,
                                   system: bs,
-                                  role: "view",
+                                  role: 'view',
                                 })
                               }
                               size="small"
@@ -147,7 +148,7 @@ export default function UserRoles({
                           }
                           label={
                             <Typography variant="body2" color="textSecondary">
-                              {isRTL ? "مشاهد" : "Viwer"}
+                              {isRTL ? 'مشاهد' : 'Viwer'}
                             </Typography>
                           }
                         />

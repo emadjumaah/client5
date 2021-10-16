@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import { useState } from "react";
-import Paper from "@material-ui/core/Paper";
+import { useState } from 'react';
+import Paper from '@material-ui/core/Paper';
 import {
   EditingState,
   SortingState,
@@ -8,7 +8,7 @@ import {
   DataTypeProvider,
   SearchState,
   IntegratedFiltering,
-} from "@devexpress/dx-react-grid";
+} from '@devexpress/dx-react-grid';
 import {
   Grid,
   TableHeaderRow,
@@ -16,22 +16,23 @@ import {
   VirtualTable,
   Toolbar,
   SearchPanel,
-} from "@devexpress/dx-react-grid-material-ui";
-import AddIcon from "@material-ui/icons/Add";
-import EditIcon from "@material-ui/icons/Edit";
-import DeleteIcon from "@material-ui/icons/Delete";
-import { errorAlert, Loading, PopupEditing } from "../../Shared";
-import { Box, Fab, IconButton } from "@material-ui/core";
-import { useUsers } from "../../hooks";
-import PopupUser from "../../pubups/PopupUser";
+} from '@devexpress/dx-react-grid-material-ui';
+import AddIcon from '@material-ui/icons/Add';
+import EditIcon from '@material-ui/icons/Edit';
+import DeleteIcon from '@material-ui/icons/Delete';
+import { errorAlert, Loading, PopupEditing } from '../../Shared';
+import { Box, Fab, IconButton } from '@material-ui/core';
+import { useUsers } from '../../hooks';
+import PopupUser from '../../pubups/PopupUser';
 import {
   activeFormatter,
   avatarFormatter,
   rolesFormatter,
-} from "../../Shared/colorFormat";
-import { AlertLocal, SearchTable } from "../../components";
-import PageLayout from "../main/PageLayout";
-import useCompany from "../../hooks/useCompany";
+} from '../../Shared/colorFormat';
+import { AlertLocal, SearchTable } from '../../components';
+import PageLayout from '../main/PageLayout';
+import useCompany from '../../hooks/useCompany';
+import React from 'react';
 
 const getRowId = (row: { _id: any }) => row._id;
 
@@ -44,16 +45,16 @@ export default function Users({
 }: any) {
   const [loading, setLoading] = useState(false);
 
-  const [alrt, setAlrt] = useState({ show: false, msg: "", type: undefined });
+  const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
 
   const [columns] = useState([
-    { name: "avatar", title: words.avatar },
-    { name: "username", title: words.username },
-    { name: "name", title: words.name },
-    { name: "phone", title: words.phoneNumber },
-    { name: "email", title: words.email },
-    { name: "roles", title: words.roles },
-    { name: "block", title: isRTL ? "الحالة" : "Status" },
+    { name: 'avatar', title: words.avatar },
+    { name: 'username', title: words.username },
+    { name: 'name', title: words.name },
+    { name: 'phone', title: words.phoneNumber },
+    { name: 'email', title: words.email },
+    { name: 'roles', title: words.roles },
+    { name: 'block', title: isRTL ? 'الحالة' : 'Status' },
   ]);
 
   const {
@@ -81,7 +82,7 @@ export default function Users({
   };
 
   const AddButton = ({ onExecute }) => (
-    <div style={{ textAlign: "center" }}>
+    <div style={{ textAlign: 'center' }}>
       <Box m={1}>
         <Fab color="primary" onClick={onExecute} title="Create new row">
           <AddIcon />
@@ -99,7 +100,7 @@ export default function Users({
   const DeleteButton = ({ onExecute }) => (
     <IconButton
       onClick={() => {
-        if (window.confirm("Are you sure you want to delete this row?")) {
+        if (window.confirm('Are you sure you want to delete this row?')) {
           onExecute();
         }
       }}
@@ -143,23 +144,23 @@ export default function Users({
           <VirtualTable
             height={window.innerHeight - 133}
             messages={{
-              noData: isRTL ? "لا يوجد بيانات" : "no data",
+              noData: isRTL ? 'لا يوجد بيانات' : 'no data',
             }}
             estimatedRowHeight={40}
           />
           <TableHeaderRow showSortingControls />
           <DataTypeProvider
-            for={["roles"]}
+            for={['roles']}
             formatterComponent={(props: any) =>
               rolesFormatter({ ...props, isRTL })
             }
           ></DataTypeProvider>
           <DataTypeProvider
-            for={["avatar"]}
+            for={['avatar']}
             formatterComponent={avatarFormatter}
           ></DataTypeProvider>
           <DataTypeProvider
-            for={["block"]}
+            for={['block']}
             formatterComponent={activeFormatter}
           ></DataTypeProvider>
 

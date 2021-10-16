@@ -1,13 +1,13 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable array-callback-return */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import React, { useCallback, useEffect, useRef, useState } from "react";
-import Paper from "@material-ui/core/Paper";
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+import Paper from '@material-ui/core/Paper';
 import {
   DataTypeProvider,
   IntegratedSorting,
   SortingState,
-} from "@devexpress/dx-react-grid";
+} from '@devexpress/dx-react-grid';
 import {
   Grid,
   TableHeaderRow,
@@ -16,10 +16,10 @@ import {
   ExportPanel,
   TableColumnVisibility,
   ColumnChooser,
-} from "@devexpress/dx-react-grid-material-ui";
-import { GridExporter } from "@devexpress/dx-react-grid-export";
+} from '@devexpress/dx-react-grid-material-ui';
+import { GridExporter } from '@devexpress/dx-react-grid-export';
 
-import { getRowId } from "../../common";
+import { getRowId } from '../../common';
 import {
   covertToDate,
   covertToTimeDateDigit,
@@ -30,22 +30,22 @@ import {
   eventStatusFormatter,
   eventStatusPrintDataFormatter,
   moneyFormat,
-} from "../../Shared/colorFormat";
-import { Box, fade, IconButton, withStyles } from "@material-ui/core";
-import { getReportEvents } from "../../graphql";
-import { useLazyQuery } from "@apollo/client";
-import EventsFilter from "../../Shared/EventsFilter";
-import saveAs from "file-saver";
-import { getPeriods } from "../../common/time";
-import PrintIcon from "@material-ui/icons/Print";
-import { reportprint } from "../../common/ipc";
-import { getColumns } from "../../common/columns";
-import _ from "lodash";
-import PageLayout from "../main/PageLayout";
+} from '../../Shared/colorFormat';
+import { Box, fade, IconButton, withStyles } from '@material-ui/core';
+import { getReportEvents } from '../../graphql';
+import { useLazyQuery } from '@apollo/client';
+import EventsFilter from '../../Shared/EventsFilter';
+import saveAs from 'file-saver';
+import { getPeriods } from '../../common/time';
+import PrintIcon from '@material-ui/icons/Print';
+import { reportprint } from '../../common/ipc';
+import { getColumns } from '../../common/columns';
+import _ from 'lodash';
+import PageLayout from '../main/PageLayout';
 
 const styles = (theme) => ({
   tableStriped: {
-    "& tbody tr:nth-of-type(odd)": {
+    '& tbody tr:nth-of-type(odd)': {
       backgroundColor: fade(theme.palette.primary.main, 0.05),
     },
   },
@@ -54,7 +54,7 @@ const styles = (theme) => ({
 const TableComponentBase = ({ classes, ...restProps }) => (
   <VirtualTable.Table {...restProps} className={classes.tableStriped} />
 );
-export const TableComponent = withStyles(styles, { name: "TableComponent" })(
+export const TableComponent = withStyles(styles, { name: 'TableComponent' })(
   TableComponentBase
 );
 
@@ -89,7 +89,7 @@ export default function Events({
   const col = getColumns({ isRTL, words });
 
   const [sort, setSort] = useState<any>([
-    { columnName: col.startDate.name, direction: "asc" },
+    { columnName: col.startDate.name, direction: 'asc' },
   ]);
   const [activecolumns, setActivecolumns] = useState([
     col.startDate,
@@ -131,8 +131,8 @@ export default function Events({
   }, [getEvents]);
 
   useEffect(() => {
-    const eventsData = evnData?.data?.["getReportEvents"]?.data || [];
-    const eventsTotal = evnData?.data?.["getReportEvents"]?.message || null;
+    const eventsData = evnData?.data?.['getReportEvents']?.data || [];
+    const eventsTotal = evnData?.data?.['getReportEvents']?.message || null;
     setRows(eventsData);
     setTotal(eventsTotal ? JSON.parse(eventsTotal) : null);
   }, [evnData]);
@@ -143,7 +143,7 @@ export default function Events({
       setStart(prd.start);
       setEnd(prd.end);
     } else {
-      const prd = getPeriods("cm");
+      const prd = getPeriods('cm');
       setStart(prd.start);
       setEnd(prd.end);
     }
@@ -185,7 +185,7 @@ export default function Events({
       const now = new Date();
       const name = `appoint-report-${covertToTimeDateDigit(now)}`;
       saveAs(
-        new Blob([buffer], { type: "application/octet-stream" }),
+        new Blob([buffer], { type: 'application/octet-stream' }),
         `${name}.xlsx`
       );
     });
@@ -204,25 +204,25 @@ export default function Events({
     const sortRows = _.orderBy(rows, [sort[0].columnName], [sort[0].direction]);
     const printrows = sortRows.map((row: any) => {
       return {
-        date: inActiveColumns("date") ? covertToDate(row.startDate) : undefined,
-        time: inActiveColumns("time")
+        date: inActiveColumns('date') ? covertToDate(row.startDate) : undefined,
+        time: inActiveColumns('time')
           ? covertToTimeOnly(row.startDate)
           : undefined,
-        docNo: inActiveColumns("docNo") ? row.docNo : undefined,
-        status: inActiveColumns("status")
+        docNo: inActiveColumns('docNo') ? row.docNo : undefined,
+        status: inActiveColumns('status')
           ? eventStatusPrintDataFormatter(row.status)
           : undefined,
-        employee: inActiveColumns("employee")
+        employee: inActiveColumns('employee')
           ? row[col.employee.name]
           : undefined,
-        service: inActiveColumns("service") ? row[col.service.name] : undefined,
-        department: inActiveColumns("department")
+        service: inActiveColumns('service') ? row[col.service.name] : undefined,
+        department: inActiveColumns('department')
           ? row[col.department.name]
           : undefined,
-        customer: inActiveColumns("customer")
+        customer: inActiveColumns('customer')
           ? row[col.customer.name]
           : undefined,
-        amount: inActiveColumns("amount") ? moneyFormat(row.amount) : undefined,
+        amount: inActiveColumns('amount') ? moneyFormat(row.amount) : undefined,
       };
     });
 
@@ -252,17 +252,17 @@ export default function Events({
       isRTL,
       totl: words.total,
       totalamount:
-        total && total.length > 0 ? moneyFormat(total?.[0]?.total) : "",
-      reportname: isRTL ? "تقرير المواعيد" : "Appointment Report",
+        total && total.length > 0 ? moneyFormat(total?.[0]?.total) : '',
+      reportname: isRTL ? 'تقرير المواعيد' : 'Appointment Report',
       logo: company.logo,
       phone: company.tel1,
       mobile: company.mob,
       address: company.address,
       company: isRTL ? company.nameAr : company.name,
-      start: start ? covertToDate(start) : "",
-      end: end ? covertToDate(end) : "",
+      start: start ? covertToDate(start) : '',
+      end: end ? covertToDate(end) : '',
       filters,
-      color: "#afbddf",
+      color: '#afbddf',
       now: covertToTimeDateDigit(new Date()),
     };
 
@@ -287,7 +287,7 @@ export default function Events({
       <Paper>
         <Box
           style={{
-            position: "absolute",
+            position: 'absolute',
             left: isRTL ? 145 : undefined,
             right: isRTL ? undefined : 145,
             top: 146,
@@ -329,7 +329,7 @@ export default function Events({
           ></EventsFilter>
         </Box>
         <Box>
-          <Paper style={{ height: window.innerHeight - 85, overflow: "auto" }}>
+          <Paper style={{ height: window.innerHeight - 85, overflow: 'auto' }}>
             <Box style={{ marginTop: 40 }}>
               <Grid rows={rows} columns={columns} getRowId={getRowId}>
                 <SortingState
@@ -341,7 +341,7 @@ export default function Events({
                   height={800}
                   tableComponent={TableComponent}
                   messages={{
-                    noData: isRTL ? "لا يوجد بيانات" : "no data",
+                    noData: isRTL ? 'لا يوجد بيانات' : 'no data',
                   }}
                   estimatedRowHeight={40}
                 />
@@ -360,19 +360,19 @@ export default function Events({
                   }}
                 />
                 <DataTypeProvider
-                  for={["startDate"]}
+                  for={['startDate']}
                   formatterComponent={createdAtFormatter}
                 ></DataTypeProvider>
                 <DataTypeProvider
-                  for={["time"]}
+                  for={['time']}
                   formatterComponent={dateTimeFormatter}
                 ></DataTypeProvider>
                 <DataTypeProvider
-                  for={["status"]}
+                  for={['status']}
                   formatterComponent={eventStatusFormatter}
                 ></DataTypeProvider>
                 <DataTypeProvider
-                  for={["amount"]}
+                  for={['amount']}
                   formatterComponent={currencyFormatter}
                 ></DataTypeProvider>
                 <Toolbar />

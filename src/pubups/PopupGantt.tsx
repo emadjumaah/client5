@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { Box, Grid } from "@material-ui/core";
-import PopupLayout from "../pages/main/PopupLayout";
+import { Box, Grid } from '@material-ui/core';
+import PopupLayout from '../pages/main/PopupLayout';
 import {
   Gantt,
   // Task,
@@ -8,9 +8,10 @@ import {
   // StylingOption,
   ViewMode,
   // DisplayOption,
-} from "gantt-task-react";
-import { useEffect, useState } from "react";
-import { ViewSwitcher } from "../pages/calendar/TasksGantt";
+} from 'gantt-task-react';
+import { useEffect, useState } from 'react';
+import { ViewSwitcher } from '../pages/calendar/TasksGantt';
+import React from 'react';
 
 const PopupGantt = ({ open, onClose, theme, tasks, isRTL }: any) => {
   const [rows, setRows] = useState([]);
@@ -42,7 +43,7 @@ const PopupGantt = ({ open, onClose, theme, tasks, isRTL }: any) => {
     onClose();
   };
 
-  const title = isRTL ? "جدول المهمات" : "Tasks View";
+  const title = isRTL ? 'جدول المهمات' : 'Tasks View';
 
   return (
     <PopupLayout
@@ -60,8 +61,8 @@ const PopupGantt = ({ open, onClose, theme, tasks, isRTL }: any) => {
         <Grid item xs={12}>
           <Box
             style={{
-              backgroundColor: "#fff",
-              direction: "ltr",
+              backgroundColor: '#fff',
+              direction: 'ltr',
             }}
           >
             <ViewSwitcher
@@ -72,8 +73,8 @@ const PopupGantt = ({ open, onClose, theme, tasks, isRTL }: any) => {
               view={view}
             />
 
-            <h2 style={{ textAlign: "center" }}>
-              {isRTL ? "جدول المهمات" : "Task View"}
+            <h2 style={{ textAlign: 'center' }}>
+              {isRTL ? 'جدول المهمات' : 'Task View'}
             </h2>
             <Gantt
               tasks={rows}
@@ -85,7 +86,7 @@ const PopupGantt = ({ open, onClose, theme, tasks, isRTL }: any) => {
               // onDoubleClick={handleDblClick}
               // onSelect={handleSelect}
               // onExpanderClick={handleExpanderClick}
-              listCellWidth={isChecked ? "155px" : ""}
+              listCellWidth={isChecked ? '155px' : ''}
               ganttHeight={500}
               columnWidth={columnWidth}
               barProgressColor="#58ac58"

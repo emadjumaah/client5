@@ -1,6 +1,6 @@
 // const remote = require("electron").remote;
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import React, { useState } from "react";
+import React, { useState } from 'react';
 import {
   Box,
   Button,
@@ -14,21 +14,21 @@ import {
   TableContainer,
   TableRow,
   Typography,
-} from "@material-ui/core";
+} from '@material-ui/core';
 // import { remote } from "electron";
-import { useBackup } from "../hooks";
-import Loading from "./Loading";
-import { messageAlert, messageShow } from "./helpers";
-import AlertMsg from "./AlertMsg";
+import { useBackup } from '../hooks';
+import Loading from './Loading';
+import { messageAlert, messageShow } from './helpers';
+import AlertMsg from './AlertMsg';
 // const eFS = remote.require("fs");
 // const ePath = remote.require("path");
 
 export default function BackupRestoreDB({ dialog, isRTL }: any) {
   const [loading, setLoading] = useState(false);
-  const [alrt, setAlrt] = useState({ show: false, msg: "", type: undefined });
+  const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
 
-  const [btype, setBtype] = useState("auto");
-  const [pathlist, setPathlist]: any = useState(null);
+  const [btype, setBtype] = useState('auto');
+  const [pathlist]: any = useState(null);
 
   const { backup, restore } = useBackup();
 
@@ -86,14 +86,14 @@ export default function BackupRestoreDB({ dialog, isRTL }: any) {
         <Box
           display="flex"
           style={{
-            alignItems: "flex-start",
-            justifyContent: "space-between",
+            alignItems: 'flex-start',
+            justifyContent: 'space-between',
           }}
         >
           <Typography variant="h6">
             {isRTL
-              ? "نسخ احتياطي لقاعدة البيانات"
-              : "Backup and Restore Database"}
+              ? 'نسخ احتياطي لقاعدة البيانات'
+              : 'Backup and Restore Database'}
           </Typography>
           {!dialog && (
             <Button
@@ -102,7 +102,7 @@ export default function BackupRestoreDB({ dialog, isRTL }: any) {
               variant="contained"
               style={{ height: 36 }}
             >
-              {isRTL ? "انشاء نسخ احتياطي" : "Backup Now"}
+              {isRTL ? 'انشاء نسخ احتياطي' : 'Backup Now'}
             </Button>
           )}
         </Box>
@@ -115,23 +115,23 @@ export default function BackupRestoreDB({ dialog, isRTL }: any) {
             value={btype}
             onChange={(e: any) => setBtype(e.target.value)}
           >
-            <Box display="flex" style={{ flexDirection: "row" }}>
+            <Box display="flex" style={{ flexDirection: 'row' }}>
               <FormControlLabel
                 value="auto"
                 control={<Radio color="primary" />}
-                label={isRTL ? "النسخ الاحتياطي الألي" : "Auto Backups"}
+                label={isRTL ? 'النسخ الاحتياطي الألي' : 'Auto Backups'}
               />
             </Box>
-            <Box display="flex" style={{ flexDirection: "row" }}>
+            <Box display="flex" style={{ flexDirection: 'row' }}>
               <FormControlLabel
                 value="manual"
                 control={<Radio color="primary" />}
-                label={isRTL ? "النسخ الاحتياطي اليدوي" : "Manual Backups"}
+                label={isRTL ? 'النسخ الاحتياطي اليدوي' : 'Manual Backups'}
               />
             </Box>
           </RadioGroup>
         </Box>
-        <Paper elevation={3} style={{ height: 360, overflow: "auto" }}>
+        <Paper elevation={3} style={{ height: 360, overflow: 'auto' }}>
           <Box padding={3}>
             <TableContainer>
               {pathlist && (
@@ -149,7 +149,7 @@ export default function BackupRestoreDB({ dialog, isRTL }: any) {
                             variant="outlined"
                             color="primary"
                           >
-                            {isRTL ? "استرجاع البيانات" : "Restore"}
+                            {isRTL ? 'استرجاع البيانات' : 'Restore'}
                           </Button>
                         </TableCell>
                       </TableRow>

@@ -1,9 +1,10 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import { Popper } from "@material-ui/core";
+import { Popper } from '@material-ui/core';
+import React from 'react';
 
 const styles: any = () => ({
   popper: {
-    width: "fit-content",
+    width: 'fit-content',
   },
 });
 

@@ -1,10 +1,10 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import React, { useContext, useState } from "react";
-import { useMutation } from "@apollo/client";
-import { useForm } from "react-hook-form";
-import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
-import Button from "@material-ui/core/Button";
+import React, { useContext, useState } from 'react';
+import { useMutation } from '@apollo/client';
+import { useForm } from 'react-hook-form';
+import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
+import Button from '@material-ui/core/Button';
 import {
   Avatar,
   Box,
@@ -13,15 +13,15 @@ import {
   Link,
   TextField,
   Typography,
-} from "@material-ui/core";
-import { login } from "../../graphql/mutation";
-import { yup } from "../../constants";
-import { GContextTypes } from "../../types";
-import { GlobalContext } from "../../contexts";
-import { loginClasses } from "../../themes";
-import { client } from "../../graphql";
+} from '@material-ui/core';
+import { login } from '../../graphql/mutation';
+import { yup } from '../../constants';
+import { GContextTypes } from '../../types';
+import { GlobalContext } from '../../contexts';
+import { loginClasses } from '../../themes';
+import { client } from '../../graphql';
 
-const Login = (props: any): any => {
+const Login = (): any => {
   const classes = loginClasses();
 
   const [error, seterror] = useState(null);
@@ -44,7 +44,7 @@ const Login = (props: any): any => {
       };
       await client.resetStore();
       const token = JSON.stringify({ accessToken, refreshToken });
-      dispatch({ type: "login", payload: { user, token } });
+      dispatch({ type: 'login', payload: { user, token } });
       window.location.reload();
       seterror(null);
     } else if (userData?.data?.login?.ok === false) {
@@ -67,13 +67,13 @@ const Login = (props: any): any => {
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
-            {isRTL ? "تسجيل الدخول" : "Sign in"}
+            {isRTL ? 'تسجيل الدخول' : 'Sign in'}
           </Typography>
 
           <form className={classes.form} noValidate>
             <TextField
               autoFocus
-              label={isRTL ? "اسم المستخدم" : "Username"}
+              label={isRTL ? 'اسم المستخدم' : 'Username'}
               name="username"
               variant="outlined"
               inputRef={register}
@@ -84,7 +84,7 @@ const Login = (props: any): any => {
             />
             <TextField
               name="password"
-              label={isRTL ? "كلمة المرور" : "Password"}
+              label={isRTL ? 'كلمة المرور' : 'Password'}
               type="password"
               variant="outlined"
               inputRef={register}
@@ -104,18 +104,18 @@ const Login = (props: any): any => {
               style={{ height: 40 }}
               onClick={handleSubmit(onSubmit)}
             >
-              {isRTL ? "تسجبل الدخول" : "Login"}
+              {isRTL ? 'تسجبل الدخول' : 'Login'}
             </Button>
           </form>
         </div>
         <Box mt={8}>
           <Typography variant="body2" color="textSecondary" align="center">
-            {"Copyright © "}
+            {'Copyright © '}
             <Link color="inherit" href="https://jadwalerp.com/">
               Jadwal ERP
-            </Link>{" "}
+            </Link>{' '}
             {new Date().getFullYear()}
-            {"."}
+            {'.'}
           </Typography>
         </Box>
       </Container>

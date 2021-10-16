@@ -6,8 +6,8 @@ import React, {
   useEffect,
   useRef,
   useState,
-} from "react";
-import Paper from "@material-ui/core/Paper";
+} from 'react';
+import Paper from '@material-ui/core/Paper';
 import {
   SortingState,
   IntegratedSorting,
@@ -16,7 +16,7 @@ import {
   SummaryState,
   IntegratedGrouping,
   IntegratedSummary,
-} from "@devexpress/dx-react-grid";
+} from '@devexpress/dx-react-grid';
 import {
   Grid,
   TableHeaderRow,
@@ -27,8 +27,8 @@ import {
   ColumnChooser,
   TableGroupRow,
   TableSummaryRow,
-} from "@devexpress/dx-react-grid-material-ui";
-import { getRowId } from "../../common";
+} from '@devexpress/dx-react-grid-material-ui';
+import { getRowId } from '../../common';
 import {
   calculateAmount,
   covertToDate,
@@ -39,25 +39,24 @@ import {
   moneyFormat,
   opTypeFormatter,
   taskIdFormatter,
-} from "../../Shared/colorFormat";
-import { Box, fade, Typography, withStyles } from "@material-ui/core";
-import { getMonthlyReport } from "../../graphql";
-import { useLazyQuery } from "@apollo/client";
-import { GridExporter } from "@devexpress/dx-react-grid-export";
-import saveAs from "file-saver";
-import { getColumns } from "../../common/columns";
-import { reportprint } from "../../common/ipc";
-import _ from "lodash";
-import PageLayout from "../main/PageLayout";
-import DateNavigatorReports from "../../components/filters/DateNavigatorReports";
-import { CustomerReportContext } from "../../contexts";
-import FilterSelectCkeckBox from "../../Shared/FilterSelectCkeckBox";
-import { useCustomers } from "../../hooks";
-import useTasks from "../../hooks/useTasks";
+} from '../../Shared/colorFormat';
+import { Box, fade, Typography, withStyles } from '@material-ui/core';
+import { getMonthlyReport } from '../../graphql';
+import { useLazyQuery } from '@apollo/client';
+import { GridExporter } from '@devexpress/dx-react-grid-export';
+import saveAs from 'file-saver';
+import { getColumns } from '../../common/columns';
+import _ from 'lodash';
+import PageLayout from '../main/PageLayout';
+import DateNavigatorReports from '../../components/filters/DateNavigatorReports';
+import { CustomerReportContext } from '../../contexts';
+import FilterSelectCkeckBox from '../../Shared/FilterSelectCkeckBox';
+import { useCustomers } from '../../hooks';
+import useTasks from '../../hooks/useTasks';
 
 const styles = (theme) => ({
   tableStriped: {
-    "& tbody tr:nth-of-type(odd)": {
+    '& tbody tr:nth-of-type(odd)': {
       backgroundColor: fade(theme.palette.primary.main, 0.05),
     },
   },
@@ -66,7 +65,7 @@ const styles = (theme) => ({
 const TableComponentBase = ({ classes, ...restProps }) => (
   <VirtualTable.Table {...restProps} className={classes.tableStriped} />
 );
-export const TableComponent = withStyles(styles, { name: "TableComponent" })(
+export const TableComponent = withStyles(styles, { name: 'TableComponent' })(
   TableComponentBase
 );
 
@@ -74,7 +73,6 @@ export default function CustomerReport({
   isRTL,
   words,
   menuitem,
-  company,
   theme,
   isEditor,
 }: any) {
@@ -82,7 +80,7 @@ export default function CustomerReport({
   const [end, setEnd] = useState<any>(null);
 
   const [rows, setRows] = useState([]);
-  const [printRows, setPrintRows]: any = useState([]);
+  const [_, setPrintRows]: any = useState([]);
   const [total, setTotal]: any = useState(null);
 
   const col = getColumns({ isRTL, words });
@@ -122,7 +120,7 @@ export default function CustomerReport({
   ]);
 
   const [getSummary, summaryData]: any = useLazyQuery(getMonthlyReport, {
-    fetchPolicy: "cache-and-network",
+    fetchPolicy: 'cache-and-network',
   });
   const { customers } = useCustomers();
 
@@ -147,22 +145,22 @@ export default function CustomerReport({
   const { tasks } = useTasks();
 
   const currentViewNameChange = (e: any) => {
-    dispatch({ type: "setCurrentViewName", payload: e.target.value });
+    dispatch({ type: 'setCurrentViewName', payload: e.target.value });
   };
   const currentDateChange = (curDate: any) => {
-    dispatch({ type: "setCurrentDate", payload: curDate });
+    dispatch({ type: 'setCurrentDate', payload: curDate });
   };
   const endDateChange = (curDate: any) => {
-    dispatch({ type: "setEndDate", payload: curDate });
+    dispatch({ type: 'setEndDate', payload: curDate });
   };
 
   const setCustvalueDispatch = (value: any) => {
-    dispatch({ type: "setCustvalue", payload: value ? [value] : [] });
+    dispatch({ type: 'setCustvalue', payload: value ? [value] : [] });
   };
 
   useEffect(() => {
-    const slsData = summaryData?.data?.["getMonthlyReport"]?.data || [];
-    const balance = summaryData?.data?.["getMonthlyReport"]?.message || null;
+    const slsData = summaryData?.data?.['getMonthlyReport']?.data || [];
+    const balance = summaryData?.data?.['getMonthlyReport']?.message || null;
 
     const amount = balance ? Number(balance) : null;
 
@@ -179,8 +177,8 @@ export default function CustomerReport({
     if (amount) {
       updatedRows.unshift({
         _id: Date.now(),
-        accNameAr: "رصيد افتتاحي",
-        accName: "Opening Balancee",
+        accNameAr: 'رصيد افتتاحي',
+        accName: 'Opening Balancee',
         amount,
       });
     }
@@ -228,7 +226,7 @@ export default function CustomerReport({
       const now = new Date();
       const name = `finance-report-${covertToTimeDateDigit(now)}`;
       saveAs(
-        new Blob([buffer], { type: "application/octet-stream" }),
+        new Blob([buffer], { type: 'application/octet-stream' }),
         `${name}.xlsx`
       );
     });
@@ -248,80 +246,80 @@ export default function CustomerReport({
 
     const printrows = sortRows.map((row: any) => {
       return {
-        opTime: inActiveColumns("opTime")
+        opTime: inActiveColumns('opTime')
           ? covertToDate(row.opTime)
           : undefined,
-        opDocNo: inActiveColumns("opDocNo") ? row.opDocNo : undefined,
-        employee: inActiveColumns("employee")
+        opDocNo: inActiveColumns('opDocNo') ? row.opDocNo : undefined,
+        employee: inActiveColumns('employee')
           ? row[col.employee.name]
           : undefined,
-        service: inActiveColumns("service") ? row[col.service.name] : undefined,
-        department: inActiveColumns("department")
+        service: inActiveColumns('service') ? row[col.service.name] : undefined,
+        department: inActiveColumns('department')
           ? row[col.department.name]
           : undefined,
-        category: inActiveColumns("category")
+        category: inActiveColumns('category')
           ? row[col.category.name]
           : undefined,
-        customer: inActiveColumns("customer")
+        customer: inActiveColumns('customer')
           ? row[col.customer.name]
           : undefined,
-        amount: inActiveColumns("amount") ? moneyFormat(row.amount) : undefined,
+        amount: inActiveColumns('amount') ? moneyFormat(row.amount) : undefined,
       };
     });
 
     setPrintRows(printrows);
   }, [activecolumns, rows, sort]);
 
-  const arrangeParing = () => {
-    const cols = activecolumns.map((co: any) => {
-      return { name: co.title };
-    });
+  // const arrangeParing = () => {
+  //   const cols = activecolumns.map((co: any) => {
+  //     return { name: co.title };
+  //   });
 
-    const filters: any = [];
-    if (emplvalue) {
-      filters.push({ name: isRTL ? emplvalue?.nameAr : emplvalue?.name });
-    }
-    if (departvalue) {
-      filters.push({ name: isRTL ? departvalue?.nameAr : departvalue?.name });
-    }
-    if (servicevalue) {
-      filters.push({ name: isRTL ? servicevalue?.nameAr : servicevalue?.name });
-    }
-    if (catvalue) {
-      filters.push({ name: isRTL ? catvalue?.nameAr : catvalue?.name });
-    }
+  //   const filters: any = [];
+  //   if (emplvalue) {
+  //     filters.push({ name: isRTL ? emplvalue?.nameAr : emplvalue?.name });
+  //   }
+  //   if (departvalue) {
+  //     filters.push({ name: isRTL ? departvalue?.nameAr : departvalue?.name });
+  //   }
+  //   if (servicevalue) {
+  //     filters.push({ name: isRTL ? servicevalue?.nameAr : servicevalue?.name });
+  //   }
+  //   if (catvalue) {
+  //     filters.push({ name: isRTL ? catvalue?.nameAr : catvalue?.name });
+  //   }
 
-    const rest = {
-      isRTL,
-      totl: words.total,
-      totalamount: total ? total : "",
-      reportname: isRTL ? "تقرير المالية" : "Finance Report",
-      logo: company.logo,
-      phone: company.tel1,
-      mobile: company.mob,
-      address: company.address,
-      company: isRTL ? company.nameAr : company.name,
-      start: start ? covertToDate(start) : "",
-      end: end ? covertToDate(end) : "",
-      filters,
-      color: "#b2e2be",
-      now: covertToTimeDateDigit(new Date()),
-    };
+  //   const rest = {
+  //     isRTL,
+  //     totl: words.total,
+  //     totalamount: total ? total : "",
+  //     reportname: isRTL ? "تقرير المالية" : "Finance Report",
+  //     logo: company.logo,
+  //     phone: company.tel1,
+  //     mobile: company.mob,
+  //     address: company.address,
+  //     company: isRTL ? company.nameAr : company.name,
+  //     start: start ? covertToDate(start) : "",
+  //     end: end ? covertToDate(end) : "",
+  //     filters,
+  //     color: "#b2e2be",
+  //     now: covertToTimeDateDigit(new Date()),
+  //   };
 
-    reportprint({ rows: printRows, cols, ...rest });
-  };
+  //   reportprint({ rows: printRows, cols, ...rest });
+  // };
 
   const refresh = () => {
     summaryData?.refetch();
   };
 
   const setSortDispatch = (value: any) => {
-    dispatch({ type: "setSort", payload: value });
+    dispatch({ type: 'setSort', payload: value });
   };
 
   const totalSummaryItems = [
-    { columnName: "credit", type: "sum" },
-    { columnName: "debit", type: "sum" },
+    { columnName: 'credit', type: 'sum' },
+    { columnName: 'debit', type: 'sum' },
   ];
   // const [totalSummaryItems] = useState([
   //   { columnName: columnName, type: "count" },
@@ -333,25 +331,25 @@ export default function CustomerReport({
   const groupSummaryItems = [
     {
       columnName: col.category.name,
-      type: "count",
+      type: 'count',
       alignByColumn: true,
       // showInGroupFooter: true,
     },
     {
-      columnName: "amount",
-      type: "sum",
+      columnName: 'amount',
+      type: 'sum',
       // showInGroupFooter: true,
       alignByColumn: true,
     },
     {
       columnName: col.category.name,
-      type: "count",
+      type: 'count',
       // alignByColumn: true,
       showInGroupFooter: true,
     },
     {
-      columnName: "amount",
-      type: "sum",
+      columnName: 'amount',
+      type: 'sum',
       showInGroupFooter: true,
       // alignByColumn: true,
     },
@@ -383,10 +381,10 @@ export default function CustomerReport({
         <Box
           display="flex"
           style={{
-            position: "absolute",
+            position: 'absolute',
             zIndex: 111,
-            flexDirection: "row",
-            alignItems: "center",
+            flexDirection: 'row',
+            alignItems: 'center',
           }}
         >
           <DateNavigatorReports
@@ -407,8 +405,8 @@ export default function CustomerReport({
             display="flex"
             style={{
               height: 38,
-              alignItems: "center",
-              justifyContent: "space-between",
+              alignItems: 'center',
+              justifyContent: 'space-between',
               paddingLeft: 100,
               paddingRight: 100,
             }}
@@ -427,18 +425,18 @@ export default function CustomerReport({
           <Box
             display="flex"
             style={{
-              alignItems: "center",
-              justifyContent: "flex-end",
+              alignItems: 'center',
+              justifyContent: 'flex-end',
               minWidth: 120,
               marginRight: 90,
             }}
           >
-            <Typography variant="subtitle1" style={{ fontWeight: "bold" }}>
+            <Typography variant="subtitle1" style={{ fontWeight: 'bold' }}>
               {currencyFormatter({ value: total })}
             </Typography>
           </Box>
         </Box>
-        <Paper style={{ height: window.innerHeight - 85, overflow: "auto" }}>
+        <Paper style={{ height: window.innerHeight - 85, overflow: 'auto' }}>
           <Grid rows={rows} columns={columns} getRowId={getRowId}>
             <SortingState
               defaultSorting={sort}
@@ -457,7 +455,7 @@ export default function CustomerReport({
               height={window.innerHeight - 133}
               tableComponent={TableComponent}
               messages={{
-                noData: isRTL ? "لا يوجد بيانات" : "no data",
+                noData: isRTL ? 'لا يوجد بيانات' : 'no data',
               }}
               estimatedRowHeight={40}
             />
@@ -474,19 +472,19 @@ export default function CustomerReport({
               }}
             />
             <DataTypeProvider
-              for={["opTime"]}
+              for={['opTime']}
               formatterComponent={createdAtFormatter}
             ></DataTypeProvider>
             <DataTypeProvider
-              for={["credit", "debit"]}
+              for={['credit', 'debit']}
               formatterComponent={currencyFormatterEmpty}
             ></DataTypeProvider>
             <DataTypeProvider
-              for={["opType"]}
+              for={['opType']}
               formatterComponent={opTypeFormatter}
             ></DataTypeProvider>
             <DataTypeProvider
-              for={["taskId"]}
+              for={['taskId']}
               formatterComponent={(props: any) =>
                 taskIdFormatter({ ...props, tasks })
               }
@@ -497,7 +495,7 @@ export default function CustomerReport({
             {group && <TableGroupRow showColumnsWhenGrouped />}
             <TableSummaryRow
               messages={{
-                sum: "",
+                sum: '',
               }}
               // messages={{
               //   sum: isRTL ? "المجموع" : "Total",

@@ -6,13 +6,13 @@ import {
   getDateDayFormat,
   getDateFormat,
   getDateMonthFormat,
-} from "../Shared/colorFormat";
+} from '../Shared/colorFormat';
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export const periods = {
-  day: "day",
-  month: "month",
-  year: "year",
+  day: 'day',
+  month: 'month',
+  year: 'year',
 };
 
 export const getTarseedDates = () => {
@@ -145,7 +145,7 @@ export const getLastYear = () => {
 export const getPreviousDMY = () => {
   const day = getLastDay();
   const month = getLastMonth();
-  console.log("month", month);
+  console.log('month', month);
 
   const year = getLastYear();
   return { day, month, year };
@@ -214,6 +214,7 @@ export const getLastPeriodInfo = (period: any) => {
     end.setHours(23, 59, 59, 999);
     return { year, start, end };
   }
+  return { year: null, start: null, end: null };
 };
 
 export const getStartEndPeriod = (period: any, date = new Date()) => {
@@ -275,19 +276,19 @@ export const getPeriods = (period: any) => {
   const startLastYear = new Date(yy, 0, 1, 0, 0, 0, 0);
   const endLastYear = new Date(yy, 11, 31, 23, 59, 59, 999);
 
-  if (period === "cm") {
+  if (period === 'cm') {
     start = startThisMonth;
     end = endThisMonth;
   }
-  if (period === "pm") {
+  if (period === 'pm') {
     start = startLastMonth;
     end = endLastMonth;
   }
-  if (period === "cy") {
+  if (period === 'cy') {
     start = startThisYear;
     end = endThisYear;
   }
-  if (period === "py") {
+  if (period === 'py') {
     start = startLastYear;
     end = endLastYear;
   }
@@ -295,7 +296,7 @@ export const getPeriods = (period: any) => {
 };
 
 export const getStartEndEventView = ({ time, view, isRTL, endDate }: any) => {
-  if (view === "Day") {
+  if (view === 'Day') {
     const start = new Date(time);
     start.setHours(0, 0, 0, 0);
     const end = new Date(time);
@@ -303,7 +304,7 @@ export const getStartEndEventView = ({ time, view, isRTL, endDate }: any) => {
     const period = getDateDayFormat(time, isRTL);
     return { start, end, period };
   }
-  if (view === "3Days") {
+  if (view === '3Days') {
     const start = new Date(time);
     start.setHours(0, 0, 0, 0);
     const end = new Date(time);
@@ -316,7 +317,7 @@ export const getStartEndEventView = ({ time, view, isRTL, endDate }: any) => {
     )} ${year}`;
     return { start, end, period };
   }
-  if (view === "Week") {
+  if (view === 'Week') {
     const start = new Date(time);
     const dayno = start.getDay();
     const minnus = dayno === 6 ? 0 : dayno + 1;
@@ -334,7 +335,7 @@ export const getStartEndEventView = ({ time, view, isRTL, endDate }: any) => {
     )} ${year}`;
     return { start, end, period };
   }
-  if (view === "Month") {
+  if (view === 'Month') {
     const date = new Date(time);
     const month = date.getMonth();
     const year = date.getFullYear();
@@ -343,15 +344,15 @@ export const getStartEndEventView = ({ time, view, isRTL, endDate }: any) => {
     const period = getDateMonthFormat(start, isRTL);
     return { start, end, period };
   }
-  if (view === "Year") {
+  if (view === 'Year') {
     const date = new Date(time);
     const year = date.getFullYear();
     const start = new Date(year, 0, 1, 0, 0, 0, 0);
     const end = new Date(year, 11, 31, 23, 59, 59, 999);
-    const period = `${isRTL ? "سنة" : "Year"} ${year}`;
+    const period = `${isRTL ? 'سنة' : 'Year'} ${year}`;
     return { start, end, period };
   }
-  if (view === "Custom") {
+  if (view === 'Custom') {
     const start = new Date(time);
     start.setHours(0, 0, 0, 0);
     const end = endDate ? new Date(endDate) : new Date();
@@ -362,20 +363,7 @@ export const getStartEndEventView = ({ time, view, isRTL, endDate }: any) => {
     return { start, end, period, periodEnd };
   }
 
-  // const start = new Date(time);
-  // const dayno = start.getDay();
-  // const minnus = dayno === 6 ? 0 : dayno + 1;
-  // const plus = dayno === 5 ? 0 : dayno === 6 ? 6 : 5 - dayno;
-
-  // start.setDate(start.getDate() - minnus);
-  // start.setHours(0, 0, 0, 0);
-  // const end = new Date(time);
-  // end.setDate(end.getDate() + plus);
-  // end.setHours(23, 59, 59, 999);
-  // const period = `${start.getDate()}/${
-  //   start.getMonth() + 1
-  // } - ${end.getDate()}/${end.getMonth() + 1}`;
-  // return { start, end, period };
+  return { start: null, end: null, period: null, periodEnd: null };
 };
 
 export const getDaysOfWeek = (time: any) => {
@@ -433,9 +421,9 @@ export const getAppStartEndPeriod = () => {
   return { startPeriod, endPeriod };
 };
 
-export const getLastDays = (days: any, isRTL: any, location = "start") => {
+export const getLastDays = (days: any, isRTL: any, location = 'start') => {
   const list: any = [];
-  if (location === "mid") {
+  if (location === 'mid') {
     const time = new Date();
     const md = Math.ceil(days / 2);
     // const rem = days - md;

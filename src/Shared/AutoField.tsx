@@ -1,10 +1,10 @@
 /* eslint-disable react/jsx-no-undef */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import React from "react";
-import { Box, IconButton, TextField, Typography } from "@material-ui/core";
-import { Autocomplete } from "@material-ui/lab";
-import AddIcon from "@material-ui/icons/Add";
-import OptionItem from "./OptionItem";
+import React from 'react';
+import { Box, IconButton, TextField, Typography } from '@material-ui/core';
+import { Autocomplete } from '@material-ui/lab';
+import AddIcon from '@material-ui/icons/Add';
+import OptionItem from './OptionItem';
 
 export default function AutoField({
   words,
@@ -23,9 +23,7 @@ export default function AutoField({
   nolabel = false,
   noPlus = false,
   ms,
-  autoSelect,
   openOnFocus,
-  setEmplvalue,
   classes,
   basename,
   resetRelated,
@@ -37,9 +35,9 @@ any) {
   return (
     <Box
       style={{
-        display: "flex",
-        flexDirection: "row",
-        alignItems: "center",
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
         margin: margin ? margin : undefined,
         // marginTop: 15,
       }}
@@ -47,9 +45,9 @@ any) {
       {!nolabel && (
         <Box
           style={{
-            display: "flex",
+            display: 'flex',
             width: 100,
-            alignItems: "center",
+            alignItems: 'center',
             height: 40,
             padding: 10,
           }}
@@ -68,7 +66,7 @@ any) {
             ? option?.nameAr
             : option?.name
             ? option.name
-            : ""
+            : ''
         }
         getOptionSelected={(option, values) => option._id === values._id}
         renderOption={(option) => (

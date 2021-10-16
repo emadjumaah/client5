@@ -6,8 +6,8 @@ import React, {
   useEffect,
   useRef,
   useState,
-} from "react";
-import Paper from "@material-ui/core/Paper";
+} from 'react';
+import Paper from '@material-ui/core/Paper';
 import {
   SortingState,
   IntegratedSorting,
@@ -16,7 +16,7 @@ import {
   SummaryState,
   IntegratedGrouping,
   IntegratedSummary,
-} from "@devexpress/dx-react-grid";
+} from '@devexpress/dx-react-grid';
 import {
   Grid,
   TableHeaderRow,
@@ -27,8 +27,8 @@ import {
   ColumnChooser,
   TableGroupRow,
   TableSummaryRow,
-} from "@devexpress/dx-react-grid-material-ui";
-import { getRowId } from "../../common";
+} from '@devexpress/dx-react-grid-material-ui';
+import { getRowId } from '../../common';
 import {
   calculateAmount,
   covertToDate,
@@ -38,24 +38,24 @@ import {
   moneyFormat,
   opTypeFormatter,
   taskIdFormatter,
-} from "../../Shared/colorFormat";
-import { Box, fade, Typography, withStyles } from "@material-ui/core";
-import { getMonthlyReport } from "../../graphql";
-import { useLazyQuery } from "@apollo/client";
-import { GridExporter } from "@devexpress/dx-react-grid-export";
-import saveAs from "file-saver";
-import { getColumns } from "../../common/columns";
-import { reportprint } from "../../common/ipc";
-import _ from "lodash";
-import PageLayout from "../main/PageLayout";
-import DateNavigatorReports from "../../components/filters/DateNavigatorReports";
-import { ExpensesReportContext } from "../../contexts";
-import FilterSelectCkeckBox from "../../Shared/FilterSelectCkeckBox";
-import useTasks from "../../hooks/useTasks";
+} from '../../Shared/colorFormat';
+import { Box, fade, Typography, withStyles } from '@material-ui/core';
+import { getMonthlyReport } from '../../graphql';
+import { useLazyQuery } from '@apollo/client';
+import { GridExporter } from '@devexpress/dx-react-grid-export';
+import saveAs from 'file-saver';
+import { getColumns } from '../../common/columns';
+// import { reportprint } from '../../common/ipc';
+import _ from 'lodash';
+import PageLayout from '../main/PageLayout';
+import DateNavigatorReports from '../../components/filters/DateNavigatorReports';
+import { ExpensesReportContext } from '../../contexts';
+import FilterSelectCkeckBox from '../../Shared/FilterSelectCkeckBox';
+import useTasks from '../../hooks/useTasks';
 
 const styles = (theme) => ({
   tableStriped: {
-    "& tbody tr:nth-of-type(odd)": {
+    '& tbody tr:nth-of-type(odd)': {
       backgroundColor: fade(theme.palette.primary.main, 0.05),
     },
   },
@@ -64,7 +64,7 @@ const styles = (theme) => ({
 const TableComponentBase = ({ classes, ...restProps }) => (
   <VirtualTable.Table {...restProps} className={classes.tableStriped} />
 );
-export const TableComponent = withStyles(styles, { name: "TableComponent" })(
+export const TableComponent = withStyles(styles, { name: 'TableComponent' })(
   TableComponentBase
 );
 
@@ -73,7 +73,7 @@ export default function ExpensesReport({
   words,
   menuitem,
   mainaccounts,
-  company,
+  // company,
   theme,
   isEditor,
 }: any) {
@@ -84,7 +84,7 @@ export default function ExpensesReport({
   const [end, setEnd] = useState<any>(null);
 
   const [rows, setRows] = useState([]);
-  const [printRows, setPrintRows]: any = useState([]);
+  const [_, setPrintRows]: any = useState([]);
   const [total, setTotal]: any = useState(null);
 
   const col = getColumns({ isRTL, words });
@@ -125,7 +125,7 @@ export default function ExpensesReport({
   ]);
 
   const [getSummary, summaryData]: any = useLazyQuery(getMonthlyReport, {
-    fetchPolicy: "cache-and-network",
+    fetchPolicy: 'cache-and-network',
   });
 
   const {
@@ -150,25 +150,25 @@ export default function ExpensesReport({
   const { tasks } = useTasks();
 
   const currentViewNameChange = (e: any) => {
-    dispatch({ type: "setCurrentViewName", payload: e.target.value });
+    dispatch({ type: 'setCurrentViewName', payload: e.target.value });
   };
   const currentDateChange = (curDate: any) => {
-    dispatch({ type: "setCurrentDate", payload: curDate });
+    dispatch({ type: 'setCurrentDate', payload: curDate });
   };
   const endDateChange = (curDate: any) => {
-    dispatch({ type: "setEndDate", payload: curDate });
+    dispatch({ type: 'setEndDate', payload: curDate });
   };
 
   const setAccvalueDispatch = (value: any) => {
-    dispatch({ type: "setAccvalue", payload: value ? [value] : [] });
+    dispatch({ type: 'setAccvalue', payload: value ? [value] : [] });
   };
   const setTaskvalueDispatch = (value: any) => {
-    dispatch({ type: "setTaskvalue", payload: value ? [value] : [] });
+    dispatch({ type: 'setTaskvalue', payload: value ? [value] : [] });
   };
 
   useEffect(() => {
-    const slsData = summaryData?.data?.["getMonthlyReport"]?.data || [];
-    const balance = summaryData?.data?.["getMonthlyReport"]?.message || null;
+    const slsData = summaryData?.data?.['getMonthlyReport']?.data || [];
+    const balance = summaryData?.data?.['getMonthlyReport']?.message || null;
 
     const amount = balance ? Number(balance) : null;
 
@@ -185,8 +185,8 @@ export default function ExpensesReport({
     if (amount) {
       updatedRows.unshift({
         _id: Date.now(),
-        accNameAr: "رصيد افتتاحي",
-        accName: "Opening Balancee",
+        accNameAr: 'رصيد افتتاحي',
+        accName: 'Opening Balancee',
         amount,
       });
     }
@@ -237,7 +237,7 @@ export default function ExpensesReport({
       const now = new Date();
       const name = `finance-report-${covertToTimeDateDigit(now)}`;
       saveAs(
-        new Blob([buffer], { type: "application/octet-stream" }),
+        new Blob([buffer], { type: 'application/octet-stream' }),
         `${name}.xlsx`
       );
     });
@@ -257,81 +257,81 @@ export default function ExpensesReport({
 
     const printrows = sortRows.map((row: any) => {
       return {
-        opTime: inActiveColumns("opTime")
+        opTime: inActiveColumns('opTime')
           ? covertToDate(row.opTime)
           : undefined,
-        opDocNo: inActiveColumns("opDocNo") ? row.opDocNo : undefined,
-        employee: inActiveColumns("employee")
+        opDocNo: inActiveColumns('opDocNo') ? row.opDocNo : undefined,
+        employee: inActiveColumns('employee')
           ? row[col.employee.name]
           : undefined,
-        service: inActiveColumns("service") ? row[col.service.name] : undefined,
-        department: inActiveColumns("department")
+        service: inActiveColumns('service') ? row[col.service.name] : undefined,
+        department: inActiveColumns('department')
           ? row[col.department.name]
           : undefined,
-        category: inActiveColumns("category")
+        category: inActiveColumns('category')
           ? row[col.category.name]
           : undefined,
-        customer: inActiveColumns("customer")
+        customer: inActiveColumns('customer')
           ? row[col.customer.name]
           : undefined,
-        amount: inActiveColumns("amount") ? moneyFormat(row.amount) : undefined,
+        amount: inActiveColumns('amount') ? moneyFormat(row.amount) : undefined,
       };
     });
 
     setPrintRows(printrows);
   }, [activecolumns, rows, sort]);
 
-  const arrangeParing = () => {
-    const cols = activecolumns.map((co: any) => {
-      return { name: co.title };
-    });
+  //  const arrangeParing = () => {
+  //   const cols = activecolumns.map((co: any) => {
+  //     return { name: co.title };
+  //   });
 
-    const filters: any = [];
-    if (emplvalue) {
-      filters.push({ name: isRTL ? emplvalue?.nameAr : emplvalue?.name });
-    }
-    if (departvalue) {
-      filters.push({ name: isRTL ? departvalue?.nameAr : departvalue?.name });
-    }
-    if (servicevalue) {
-      filters.push({ name: isRTL ? servicevalue?.nameAr : servicevalue?.name });
-    }
-    if (catvalue) {
-      filters.push({ name: isRTL ? catvalue?.nameAr : catvalue?.name });
-    }
+  //   const filters: any = [];
+  //   if (emplvalue) {
+  //     filters.push({ name: isRTL ? emplvalue?.nameAr : emplvalue?.name });
+  //   }
+  //   if (departvalue) {
+  //     filters.push({ name: isRTL ? departvalue?.nameAr : departvalue?.name });
+  //   }
+  //   if (servicevalue) {
+  //     filters.push({ name: isRTL ? servicevalue?.nameAr : servicevalue?.name });
+  //   }
+  //   if (catvalue) {
+  //     filters.push({ name: isRTL ? catvalue?.nameAr : catvalue?.name });
+  //   }
 
-    const rest = {
-      isRTL,
-      totl: words.total,
-      totalamount: total ? total : "",
-      reportname: isRTL ? "تقرير المالية" : "Finance Report",
-      logo: company.logo,
-      phone: company.tel1,
-      mobile: company.mob,
-      address: company.address,
-      company: isRTL ? company.nameAr : company.name,
-      start: start ? covertToDate(start) : "",
-      end: end ? covertToDate(end) : "",
-      filters,
-      color: "#b2e2be",
-      now: covertToTimeDateDigit(new Date()),
-    };
+  //   const rest = {
+  //     isRTL,
+  //     totl: words.total,
+  //     totalamount: total ? total : '',
+  //     reportname: isRTL ? 'تقرير المالية' : 'Finance Report',
+  //     logo: company.logo,
+  //     phone: company.tel1,
+  //     mobile: company.mob,
+  //     address: company.address,
+  //     company: isRTL ? company.nameAr : company.name,
+  //     start: start ? covertToDate(start) : '',
+  //     end: end ? covertToDate(end) : '',
+  //     filters,
+  //     color: '#b2e2be',
+  //     now: covertToTimeDateDigit(new Date()),
+  //   };
 
-    reportprint({ rows: printRows, cols, ...rest });
-  };
+  //   reportprint({ rows: printRows, cols, ...rest });
+  // };
 
   const refresh = () => {
     summaryData?.refetch();
   };
 
   const setSortDispatch = (value: any) => {
-    dispatch({ type: "setSort", payload: value });
+    dispatch({ type: 'setSort', payload: value });
   };
 
   const totalSummaryItems = [
-    { columnName: sumcolumn, type: "count" },
-    { columnName: col.category.name, type: "count" },
-    { columnName: "amount", type: "sum" },
+    { columnName: sumcolumn, type: 'count' },
+    { columnName: col.category.name, type: 'count' },
+    { columnName: 'amount', type: 'sum' },
   ];
   // const [totalSummaryItems] = useState([
   //   { columnName: columnName, type: "count" },
@@ -343,25 +343,25 @@ export default function ExpensesReport({
   const groupSummaryItems = [
     {
       columnName: col.category.name,
-      type: "count",
+      type: 'count',
       alignByColumn: true,
       // showInGroupFooter: true,
     },
     {
-      columnName: "amount",
-      type: "sum",
+      columnName: 'amount',
+      type: 'sum',
       // showInGroupFooter: true,
       alignByColumn: true,
     },
     {
       columnName: col.category.name,
-      type: "count",
+      type: 'count',
       // alignByColumn: true,
       showInGroupFooter: true,
     },
     {
-      columnName: "amount",
-      type: "sum",
+      columnName: 'amount',
+      type: 'sum',
       showInGroupFooter: true,
       // alignByColumn: true,
     },
@@ -407,14 +407,14 @@ export default function ExpensesReport({
         <Box
           display="flex"
           style={{
-            position: "absolute",
+            position: 'absolute',
             left: isRTL ? 200 : undefined,
             right: isRTL ? undefined : 200,
             top: 65,
             height: 38,
             zIndex: 111,
-            alignItems: "center",
-            justifyContent: "flex-start",
+            alignItems: 'center',
+            justifyContent: 'flex-start',
             paddingLeft: 20,
             paddingRight: 20,
             marginTop: 8,
@@ -449,12 +449,12 @@ export default function ExpensesReport({
               marginLeft: isRTL ? undefined : 20,
             }}
           >
-            <Typography variant="subtitle1" style={{ fontWeight: "bold" }}>
+            <Typography variant="subtitle1" style={{ fontWeight: 'bold' }}>
               {currencyFormatter({ value: total })}
             </Typography>
           </Box>
         </Box>
-        <Paper style={{ height: window.innerHeight - 133, overflow: "auto" }}>
+        <Paper style={{ height: window.innerHeight - 133, overflow: 'auto' }}>
           <Grid rows={rows} columns={columns} getRowId={getRowId}>
             <SortingState
               defaultSorting={sort}
@@ -473,7 +473,7 @@ export default function ExpensesReport({
               height={window.innerHeight - 181}
               tableComponent={TableComponent}
               messages={{
-                noData: isRTL ? "لا يوجد بيانات" : "no data",
+                noData: isRTL ? 'لا يوجد بيانات' : 'no data',
               }}
               estimatedRowHeight={40}
             />
@@ -490,19 +490,19 @@ export default function ExpensesReport({
               }}
             />
             <DataTypeProvider
-              for={["opTime"]}
+              for={['opTime']}
               formatterComponent={createdAtFormatter}
             ></DataTypeProvider>
             <DataTypeProvider
-              for={["amount"]}
+              for={['amount']}
               formatterComponent={currencyFormatter}
             ></DataTypeProvider>
             <DataTypeProvider
-              for={["opType"]}
+              for={['opType']}
               formatterComponent={opTypeFormatter}
             ></DataTypeProvider>
             <DataTypeProvider
-              for={["taskId"]}
+              for={['taskId']}
               formatterComponent={(props: any) =>
                 taskIdFormatter({ ...props, tasks })
               }
@@ -514,8 +514,8 @@ export default function ExpensesReport({
             {group && (
               <TableSummaryRow
                 messages={{
-                  sum: isRTL ? "المجموع" : "Total",
-                  count: isRTL ? "العدد" : "Count",
+                  sum: isRTL ? 'المجموع' : 'Total',
+                  count: isRTL ? 'العدد' : 'Count',
                 }}
               ></TableSummaryRow>
             )}

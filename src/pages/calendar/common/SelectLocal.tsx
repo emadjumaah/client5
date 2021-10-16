@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import { FormControl, MenuItem, Select } from "@material-ui/core";
+import { FormControl, MenuItem, Select } from '@material-ui/core';
+import React from 'react';
 
 export const SelectLocal = ({
   options,
@@ -20,17 +21,17 @@ export const SelectLocal = ({
         style={{
           height: 38,
           width: width,
-          alignSelf: "flex-end",
+          alignSelf: 'flex-end',
           fontSize: 12,
-          fontWeight: "bold",
-          color: "#555",
+          fontWeight: 'bold',
+          color: '#555',
         }}
       >
         {options.map((item: any) => {
           return (
             <MenuItem
               key={item.id}
-              style={{ justifyContent: isRTL ? "flex-end" : "flex-start" }}
+              style={{ justifyContent: isRTL ? 'flex-end' : 'flex-start' }}
               value={item.value}
             >
               {isRTL ? item.nameAr : item.name}

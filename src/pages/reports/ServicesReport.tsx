@@ -6,8 +6,8 @@ import React, {
   useEffect,
   useRef,
   useState,
-} from "react";
-import Paper from "@material-ui/core/Paper";
+} from 'react';
+import Paper from '@material-ui/core/Paper';
 import {
   SortingState,
   IntegratedSorting,
@@ -16,7 +16,7 @@ import {
   SummaryState,
   IntegratedGrouping,
   IntegratedSummary,
-} from "@devexpress/dx-react-grid";
+} from '@devexpress/dx-react-grid';
 import {
   Grid,
   TableHeaderRow,
@@ -27,9 +27,9 @@ import {
   ColumnChooser,
   TableGroupRow,
   TableSummaryRow,
-} from "@devexpress/dx-react-grid-material-ui";
-import PrintIcon from "@material-ui/icons/Print";
-import { getRowId } from "../../common";
+} from '@devexpress/dx-react-grid-material-ui';
+import PrintIcon from '@material-ui/icons/Print';
+import { getRowId } from '../../common';
 import {
   covertToDate,
   covertToTimeDateDigit,
@@ -41,30 +41,28 @@ import {
   moneyFormat,
   opTypeFormatter,
   taskIdFormatter,
-} from "../../Shared/colorFormat";
-import { Box, fade, IconButton, withStyles } from "@material-ui/core";
-import { useLazyQuery } from "@apollo/client";
-import ReportsFilter from "../../Shared/ReportsFilter";
-import { GridExporter } from "@devexpress/dx-react-grid-export";
-import saveAs from "file-saver";
-import { getColumns } from "../../common/columns";
-import { reportprint } from "../../common/ipc";
-import _ from "lodash";
-import PageLayout from "../main/PageLayout";
-import { ReportGroupBySwitcher } from "../calendar/common/ReportGroupBySwitcher";
-import DateNavigatorReports from "../../components/filters/DateNavigatorReports";
-import { documentTypes, groupList } from "../../constants/reports";
-import FilterSelectCkeckBox from "../../Shared/FilterSelectCkeckBox";
-import { eventStatus } from "../../constants";
-import { groupSumCount } from "../../common/reports";
-import { useCustomers, useDepartments, useEmployees } from "../../hooks";
-import useTasks from "../../hooks/useTasks";
-import getReportServices from "../../graphql/query/getReportServices";
-import ServicesReportContext from "../../contexts/servicesReport";
+} from '../../Shared/colorFormat';
+import { Box, fade, IconButton, withStyles } from '@material-ui/core';
+import { useLazyQuery } from '@apollo/client';
+import ReportsFilter from '../../Shared/ReportsFilter';
+import { GridExporter } from '@devexpress/dx-react-grid-export';
+import saveAs from 'file-saver';
+import { getColumns } from '../../common/columns';
+import { reportprint } from '../../common/ipc';
+import _ from 'lodash';
+import PageLayout from '../main/PageLayout';
+import { ReportGroupBySwitcher } from '../calendar/common/ReportGroupBySwitcher';
+import DateNavigatorReports from '../../components/filters/DateNavigatorReports';
+import { documentTypes, groupList } from '../../constants/reports';
+import { groupSumCount } from '../../common/reports';
+import { useCustomers, useDepartments, useEmployees } from '../../hooks';
+import useTasks from '../../hooks/useTasks';
+import getReportServices from '../../graphql/query/getReportServices';
+import ServicesReportContext from '../../contexts/servicesReport';
 
 const styles = (theme) => ({
   tableStriped: {
-    "& tbody tr:nth-of-type(odd)": {
+    '& tbody tr:nth-of-type(odd)': {
       backgroundColor: fade(theme.palette.primary.main, 0.05),
     },
   },
@@ -73,12 +71,12 @@ const styles = (theme) => ({
 const TableComponentBase = ({ classes, ...restProps }) => (
   <VirtualTable.Table {...restProps} className={classes.tableStriped} />
 );
-export const TableComponent = withStyles(styles, { name: "TableComponent" })(
+export const TableComponent = withStyles(styles, { name: 'TableComponent' })(
   TableComponentBase
 );
 export const TableComponent2 = withStyles(
   {},
-  { name: "TableComponent" }
+  { name: 'TableComponent' }
 )(TableComponentBase);
 
 export default function ServicesReport({
@@ -109,8 +107,8 @@ export default function ServicesReport({
     col.taskId,
     col.employee,
     col.department,
-    { name: "qty", title: words.qty },
-    { name: "total", title: words.amount },
+    { name: 'qty', title: words.qty },
+    { name: 'total', title: words.amount },
   ]);
 
   const [columns] = useState([
@@ -122,8 +120,8 @@ export default function ServicesReport({
     col.taskId,
     col.employee,
     col.department,
-    { name: "qty", title: words.qty },
-    { name: "total", title: words.amount },
+    { name: 'qty', title: words.qty },
+    { name: 'total', title: words.amount },
   ]);
 
   const [tableColumnVisibilityColumnExtensions] = useState([
@@ -132,7 +130,7 @@ export default function ServicesReport({
   ]);
 
   const [getSummary, summaryData]: any = useLazyQuery(getReportServices, {
-    fetchPolicy: "cache-and-network",
+    fetchPolicy: 'cache-and-network',
   });
   const { customers } = useCustomers();
   const { departments } = useDepartments();
@@ -158,49 +156,46 @@ export default function ServicesReport({
   } = useContext(ServicesReportContext);
   const { tasks } = useTasks();
   const currentViewNameChange = (e: any) => {
-    dispatch({ type: "setCurrentViewName", payload: e.target.value });
+    dispatch({ type: 'setCurrentViewName', payload: e.target.value });
   };
   const currentDateChange = (curDate: any) => {
-    dispatch({ type: "setCurrentDate", payload: curDate });
+    dispatch({ type: 'setCurrentDate', payload: curDate });
   };
   const endDateChange = (curDate: any) => {
-    dispatch({ type: "setEndDate", payload: curDate });
+    dispatch({ type: 'setEndDate', payload: curDate });
   };
 
   const setDepartvalueDispatch = (value: any) => {
-    dispatch({ type: "setDepartvalue", payload: value });
+    dispatch({ type: 'setDepartvalue', payload: value });
   };
   const setEmplvalueDispatch = (value: any) => {
-    dispatch({ type: "setEmplvalue", payload: value });
+    dispatch({ type: 'setEmplvalue', payload: value });
   };
   const setCustvalueDispatch = (value: any) => {
-    dispatch({ type: "setCustvalue", payload: value });
+    dispatch({ type: 'setCustvalue', payload: value });
   };
   const setTaskvalueDispatch = (value: any) => {
-    dispatch({ type: "setTaskvalue", payload: value });
+    dispatch({ type: 'setTaskvalue', payload: value });
   };
   const setTypesDispatch = (value: any) => {
-    dispatch({ type: "setTypes", payload: value });
+    dispatch({ type: 'setTypes', payload: value });
   };
   const setServicevalueDispatch = (value: any) => {
-    dispatch({ type: "setServicevalue", payload: value });
+    dispatch({ type: 'setServicevalue', payload: value });
   };
 
   const setGroupbyDispatch = (value: any) => {
-    dispatch({ type: "setGroupby", payload: value });
+    dispatch({ type: 'setGroupby', payload: value });
   };
   const setGroupDispatch = (value: any) => {
-    dispatch({ type: "setGroup", payload: value });
+    dispatch({ type: 'setGroup', payload: value });
   };
   const setSumcolumnDispatch = (value: any) => {
-    dispatch({ type: "setSumcolumn", payload: value });
-  };
-  const setStatusDispatch = (value: any) => {
-    dispatch({ type: "setStatus", payload: value });
+    dispatch({ type: 'setSumcolumn', payload: value });
   };
 
   useEffect(() => {
-    const slsData = summaryData?.data?.["getReportServices"]?.data || [];
+    const slsData = summaryData?.data?.['getReportServices']?.data || [];
 
     setRows(slsData);
     if (group) {
@@ -255,7 +250,7 @@ export default function ServicesReport({
       const now = new Date();
       const name = `events-report-${covertToTimeDateDigit(now)}`;
       saveAs(
-        new Blob([buffer], { type: "application/octet-stream" }),
+        new Blob([buffer], { type: 'application/octet-stream' }),
         `${name}.xlsx`
       );
     });
@@ -280,60 +275,60 @@ export default function ServicesReport({
       );
       const printrows = sortRows.map((row: any) => {
         return {
-          date: inActiveColumns("date")
+          date: inActiveColumns('date')
             ? row.startDate
               ? covertToDate(row.startDate)
-              : " - "
+              : ' - '
             : undefined,
-          time: inActiveColumns("time")
+          time: inActiveColumns('time')
             ? row.startDate
               ? covertToTimeOnly(row.startDate)
-              : " - "
+              : ' - '
             : undefined,
-          docNo: inActiveColumns("docNo")
+          docNo: inActiveColumns('docNo')
             ? row.docNo
               ? row.docNo
-              : " - "
+              : ' - '
             : undefined,
-          status: inActiveColumns("status")
+          status: inActiveColumns('status')
             ? row.status
               ? eventStatusPrintDataFormatter(row.status)
-              : " - "
+              : ' - '
             : undefined,
-          employee: inActiveColumns("employee")
+          employee: inActiveColumns('employee')
             ? row[col.employee.name]
               ? row[col.employee.name]
-              : " - "
+              : ' - '
             : undefined,
-          service: inActiveColumns("service")
+          service: inActiveColumns('service')
             ? row[col.service.name]
               ? row[col.service.name]
-              : " - "
+              : ' - '
             : undefined,
-          department: inActiveColumns("department")
+          department: inActiveColumns('department')
             ? row[col.department.name]
               ? row[col.department.name]
-              : " - "
+              : ' - '
             : undefined,
-          customer: inActiveColumns("customer")
+          customer: inActiveColumns('customer')
             ? row[col.customer.name]
               ? row[col.customer.name]
-              : " - "
+              : ' - '
             : undefined,
-          taskId: inActiveColumns("taskId")
+          taskId: inActiveColumns('taskId')
             ? row[col.taskId.name]
               ? row[col.taskId.name]
-              : " - "
+              : ' - '
             : undefined,
-          opType: inActiveColumns("opType")
+          opType: inActiveColumns('opType')
             ? row[col.opType.name]
               ? row[col.opType.name]
-              : " - "
+              : ' - '
             : undefined,
-          amount: inActiveColumns("amount")
+          amount: inActiveColumns('amount')
             ? row.amount
               ? moneyFormat(row.amount)
-              : " - "
+              : ' - '
             : undefined,
         };
       });
@@ -365,17 +360,17 @@ export default function ServicesReport({
     const rest = {
       isRTL,
       totl: words.total,
-      totalamount: total ? moneyFormat(total) : "",
-      reportname: isRTL ? "تقرير المواعيد" : "Appointment Report",
+      totalamount: total ? moneyFormat(total) : '',
+      reportname: isRTL ? 'تقرير المواعيد' : 'Appointment Report',
       logo: company.logo,
       phone: company.tel1,
       mobile: company.mob,
       address: company.address,
       company: isRTL ? company.nameAr : company.name,
-      start: start ? covertToDate(start) : "",
-      end: end ? covertToDate(end) : "",
+      start: start ? covertToDate(start) : '',
+      end: end ? covertToDate(end) : '',
       filters,
-      color: "#afbddf",
+      color: '#afbddf',
       now: covertToTimeDateDigit(new Date()),
     };
 
@@ -384,9 +379,9 @@ export default function ServicesReport({
 
   const arrangeGroupParing = () => {
     const cols = [
-      { name: isRTL ? "الاسم" : "Name" },
-      { name: isRTL ? "العدد" : "Count" },
-      { name: isRTL ? "المجموع" : "Total" },
+      { name: isRTL ? 'الاسم' : 'Name' },
+      { name: isRTL ? 'العدد' : 'Count' },
+      { name: isRTL ? 'المجموع' : 'Total' },
     ];
     const readyItems = totalRows.items.map((it: any) => {
       return {
@@ -397,17 +392,17 @@ export default function ServicesReport({
     const rest = {
       isRTL,
       totl: words.total,
-      totalamount: total ? moneyFormat(totalRows.total) : "",
+      totalamount: total ? moneyFormat(totalRows.total) : '',
       count: totalRows?.count,
-      reportname: isRTL ? "تقرير المبيعات" : "Sales Report",
+      reportname: isRTL ? 'تقرير المبيعات' : 'Sales Report',
       logo: company.logo,
       phone: company.tel1,
       mobile: company.mob,
       address: company.address,
       company: isRTL ? company.nameAr : company.name,
-      start: start ? covertToDate(start) : "",
-      end: end ? covertToDate(end) : "",
-      color: "#b2e2be",
+      start: start ? covertToDate(start) : '',
+      end: end ? covertToDate(end) : '',
+      color: '#b2e2be',
       now: covertToTimeDateDigit(new Date()),
     };
 
@@ -419,9 +414,9 @@ export default function ServicesReport({
   };
 
   const onSwitcherChange = (e: any) => {
-    if (e.target.value === "none") {
+    if (e.target.value === 'none') {
       setGroupDispatch(false);
-      setGroupbyDispatch("none");
+      setGroupbyDispatch('none');
     } else {
       setGroupDispatch(true);
       setGroupbyDispatch(e.target.value);
@@ -430,24 +425,24 @@ export default function ServicesReport({
   };
 
   const setSortDispatch = (value: any) => {
-    dispatch({ type: "setSort", payload: value });
+    dispatch({ type: 'setSort', payload: value });
   };
 
   const totalSummaryItems = [
-    { columnName: col.docNo.name, type: "count" },
-    { columnName: "total", type: "sum" },
+    { columnName: col.docNo.name, type: 'count' },
+    { columnName: 'total', type: 'sum' },
   ];
 
   const grouping = [{ columnName: sumcolumn }];
   const groupSummaryItems = [
     {
       columnName: col.docNo.name,
-      type: "count",
+      type: 'count',
       alignByColumn: true,
     },
     {
-      columnName: "total",
-      type: "sum",
+      columnName: 'total',
+      type: 'sum',
       alignByColumn: true,
     },
   ];
@@ -467,7 +462,7 @@ export default function ServicesReport({
       <Paper>
         <Box
           style={{
-            position: "absolute",
+            position: 'absolute',
             left: isRTL ? 145 : undefined,
             right: isRTL ? undefined : 145,
             top: 68,
@@ -485,10 +480,10 @@ export default function ServicesReport({
         <Box
           display="flex"
           style={{
-            position: "absolute",
+            position: 'absolute',
             zIndex: 111,
-            flexDirection: "row",
-            alignItems: "center",
+            flexDirection: 'row',
+            alignItems: 'center',
           }}
         >
           <DateNavigatorReports
@@ -508,8 +503,8 @@ export default function ServicesReport({
           <Box
             display="flex"
             style={{
-              alignItems: "center",
-              justifyContent: "center",
+              alignItems: 'center',
+              justifyContent: 'center',
               paddingLeft: 20,
               paddingRight: 20,
               marginTop: -4,
@@ -545,7 +540,7 @@ export default function ServicesReport({
             ></ReportGroupBySwitcher>
           </Box>
         </Box>
-        <Paper style={{ height: window.innerHeight - 85, overflow: "auto" }}>
+        <Paper style={{ height: window.innerHeight - 85, overflow: 'auto' }}>
           <Grid rows={rows} columns={columns} getRowId={getRowId}>
             <SortingState
               defaultSorting={sort}
@@ -563,7 +558,7 @@ export default function ServicesReport({
               height={window.innerHeight - 133}
               tableComponent={!group ? TableComponent : TableComponent2}
               messages={{
-                noData: isRTL ? "لا يوجد بيانات" : "no data",
+                noData: isRTL ? 'لا يوجد بيانات' : 'no data',
               }}
               estimatedRowHeight={40}
             />
@@ -580,25 +575,25 @@ export default function ServicesReport({
               }}
             />
             <DataTypeProvider
-              for={["opTime"]}
+              for={['opTime']}
               formatterComponent={createdAtFormatter}
             ></DataTypeProvider>
             <DataTypeProvider
-              for={["status"]}
+              for={['status']}
               formatterComponent={eventStatusFormatter}
             ></DataTypeProvider>
             <DataTypeProvider
-              for={["amount"]}
+              for={['amount']}
               formatterComponent={currencyFormatter}
-            ></DataTypeProvider>{" "}
+            ></DataTypeProvider>{' '}
             <DataTypeProvider
-              for={["taskId"]}
+              for={['taskId']}
               formatterComponent={(props: any) =>
                 taskIdFormatter({ ...props, tasks })
               }
-            ></DataTypeProvider>{" "}
+            ></DataTypeProvider>{' '}
             <DataTypeProvider
-              for={["opType"]}
+              for={['opType']}
               formatterComponent={opTypeFormatter}
             ></DataTypeProvider>
             <Toolbar />
@@ -607,18 +602,18 @@ export default function ServicesReport({
             {group && (
               <TableGroupRow
                 messages={{
-                  sum: isRTL ? "المجموع" : "Total",
-                  count: isRTL ? "العدد" : "Count",
-                  sumOf: isRTL ? "المجموع" : "Total",
-                  countOf: isRTL ? "العدد" : "Count",
+                  sum: isRTL ? 'المجموع' : 'Total',
+                  count: isRTL ? 'العدد' : 'Count',
+                  sumOf: isRTL ? 'المجموع' : 'Total',
+                  countOf: isRTL ? 'العدد' : 'Count',
                 }}
                 showColumnsWhenGrouped
               />
             )}
             <TableSummaryRow
               messages={{
-                sum: isRTL ? "المجموع" : "Total",
-                count: isRTL ? "العدد" : "Count",
+                sum: isRTL ? 'المجموع' : 'Total',
+                count: isRTL ? 'العدد' : 'Count',
               }}
             ></TableSummaryRow>
           </Grid>

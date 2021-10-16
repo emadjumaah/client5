@@ -1,19 +1,11 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import * as React from "react";
-import Radio from "@material-ui/core/Radio";
-import RadioGroup from "@material-ui/core/RadioGroup";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import { Box, Paper, TextField, Typography } from "@material-ui/core";
-import { useState } from "react";
-const Connection = ({
-  setNetwork,
-  network,
-  setWeburi,
-  weburi,
-  setLocaluri,
-  localuri,
-  isRTL,
-}) => {
+import * as React from 'react';
+import Radio from '@material-ui/core/Radio';
+import RadioGroup from '@material-ui/core/RadioGroup';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import { Box, Paper, TextField, Typography } from '@material-ui/core';
+import { useState } from 'react';
+const Connection = ({ setNetwork, network, weburi, localuri, isRTL }) => {
   const [web, setWeb] = useState(null);
   const [local, setLocal] = useState(null);
   const onchange = (e: any) => {
@@ -24,7 +16,7 @@ const Connection = ({
     <Paper elevation={3}>
       <Box padding={3}>
         <Typography variant="h6">
-          {isRTL ? "كيفية الاتصال مع المخدم" : "Server Connection type"}
+          {isRTL ? 'كيفية الاتصال مع المخدم' : 'Server Connection type'}
         </Typography>
 
         <RadioGroup
@@ -36,13 +28,13 @@ const Connection = ({
         >
           <Box
             display="flex"
-            style={{ flexDirection: "row", marginBottom: 20 }}
+            style={{ flexDirection: 'row', marginBottom: 20 }}
           >
             <FormControlLabel
               value="local"
               control={<Radio color="primary" />}
               label={
-                isRTL ? "الاتصال من شبكة محلية" : "Local Network Connection"
+                isRTL ? 'الاتصال من شبكة محلية' : 'Local Network Connection'
               }
               style={{ width: 300 }}
             />
@@ -59,12 +51,12 @@ const Connection = ({
           </Box>
           <Box
             display="flex"
-            style={{ flexDirection: "row", marginBottom: 20 }}
+            style={{ flexDirection: 'row', marginBottom: 20 }}
           >
             <FormControlLabel
               value="web"
               control={<Radio color="primary" />}
-              label={isRTL ? "الاتصال من الانترنت" : "Web/Remote Connection"}
+              label={isRTL ? 'الاتصال من الانترنت' : 'Web/Remote Connection'}
               style={{ width: 300 }}
             />
             <TextField

@@ -1,12 +1,13 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import React from "react";
-import { Box, Typography } from "@material-ui/core";
+import React from 'react';
+import { Box, Typography } from '@material-ui/core';
 
-function ccyFormat(num: number) {
+export const ccyFormat = (num: number) => {
   if (num > 0) {
-    return num.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, "$&,");
+    return num.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
   }
-}
+  return '';
+};
 
 const OptionItemData = ({ item, isRTL }: any) => {
   return (
@@ -14,14 +15,14 @@ const OptionItemData = ({ item, isRTL }: any) => {
       display="flex"
       style={{
         flex: 1,
-        direction: isRTL ? "rtl" : "ltr",
+        direction: isRTL ? 'rtl' : 'ltr',
       }}
     >
-      <Box style={{ position: "relative", top: 7 }}>
+      <Box style={{ position: 'relative', top: 7 }}>
         <Box>
           <Typography
             style={{
-              textAlign: isRTL ? "right" : "left",
+              textAlign: isRTL ? 'right' : 'left',
             }}
           >
             {isRTL ? item.nameAr : item.name}
@@ -31,14 +32,14 @@ const OptionItemData = ({ item, isRTL }: any) => {
           {item.categoryName && (
             <Typography
               style={{
-                color: "#20A4F3",
+                color: '#20A4F3',
                 width: 100,
                 fontSize: 11,
                 paddingRight: 10,
                 paddingLeft: 10,
-                textAlign: isRTL ? "right" : "left",
+                textAlign: isRTL ? 'right' : 'left',
               }}
-              variant={isRTL ? "subtitle1" : "caption"}
+              variant={isRTL ? 'subtitle1' : 'caption'}
             >
               {isRTL ? item.categoryNameAr : item.categoryName}
             </Typography>
@@ -47,20 +48,20 @@ const OptionItemData = ({ item, isRTL }: any) => {
             <Typography
               style={{
                 marginRight: 20,
-                color: "#844257",
+                color: '#844257',
                 width: 100,
                 fontSize: 11,
               }}
-              variant={isRTL ? "subtitle1" : "caption"}
+              variant={isRTL ? 'subtitle1' : 'caption'}
             >
               {isRTL ? item.brandNameAr : item.brandName}
             </Typography>
           )}
           <Typography
-            style={{ color: "#00B77C", width: 100, fontSize: 11 }}
-            variant={isRTL ? "subtitle1" : "caption"}
+            style={{ color: '#00B77C', width: 100, fontSize: 11 }}
+            variant={isRTL ? 'subtitle1' : 'caption'}
           >
-            {item.price ? ccyFormat(item.price) : "-"}
+            {item.price ? ccyFormat(item.price) : '-'}
           </Typography>
         </Box>
       </Box>

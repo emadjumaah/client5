@@ -1,30 +1,30 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import React, { useContext, useEffect, useState } from "react";
-import { dublicateAlert, errorAlert, messageAlert } from "../Shared";
-import { GContextTypes } from "../types";
-import { GlobalContext } from "../contexts";
+import React, { useContext, useEffect, useState } from 'react';
+import { dublicateAlert, errorAlert, messageAlert } from '../Shared';
+import { GContextTypes } from '../types';
+import { GlobalContext } from '../contexts';
 import {
   Box,
   Fab,
   FormControlLabel,
   Radio,
   RadioGroup,
-} from "@material-ui/core";
-import useAccounts from "../hooks/useAccounts";
-import { operationTypes } from "../constants";
-import PopupLayout from "../pages/main/PopupLayout";
-import { Grid } from "@material-ui/core";
-import { CalenderLocal, TextFieldLocal } from "../components";
-import { getAppStartEndPeriod } from "../common/time";
-import AutoFieldLocal from "../components/fields/AutoFieldLocal";
-import KaidsTable from "../Shared/KaidsTable";
-import AddIcon from "@material-ui/icons/Add";
-import { useLazyQuery } from "@apollo/client";
-import getOperationKaids from "../graphql/query/getOperationKaids";
-import LoadingInline from "../Shared/LoadingInline";
-import _ from "lodash";
-import { useDepartments, useEmployees } from "../hooks";
+} from '@material-ui/core';
+import useAccounts from '../hooks/useAccounts';
+import { operationTypes } from '../constants';
+import PopupLayout from '../pages/main/PopupLayout';
+import { Grid } from '@material-ui/core';
+import { CalenderLocal, TextFieldLocal } from '../components';
+import { getAppStartEndPeriod } from '../common/time';
+import AutoFieldLocal from '../components/fields/AutoFieldLocal';
+import KaidsTable from '../Shared/KaidsTable';
+import AddIcon from '@material-ui/icons/Add';
+import { useLazyQuery } from '@apollo/client';
+import getOperationKaids from '../graphql/query/getOperationKaids';
+import LoadingInline from '../Shared/LoadingInline';
+import _ from 'lodash';
+import { useDepartments, useEmployees } from '../hooks';
 
 export const indexTheList = (list: any) => {
   return list.map((item: any, index: any) => {
@@ -46,13 +46,13 @@ const PopupFinanceAll = ({
 }: any) => {
   const [loading, setLoading] = useState(false);
 
-  const [alrt, setAlrt] = useState({ show: false, msg: "", type: undefined });
+  const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
   const [selectedDate, setSelectedDate] = React.useState(new Date());
   const [debaccounts, setDebaccounts] = React.useState([]);
   const [cridaccounts, setCridaccounts] = React.useState([]);
 
   const [amount, setAmount]: any = React.useState(0);
-  const [desc, setDesc]: any = React.useState("");
+  const [desc, setDesc]: any = React.useState('');
   const [debitAcc, setDebitAcc]: any = React.useState(null);
   const [creditAcc, setCreditAcc]: any = React.useState(null);
   const crdRef: any = React.useRef();
@@ -70,14 +70,14 @@ const PopupFinanceAll = ({
   const [resKind, setResKind] = useState<any>(null);
   const [emplslist, setEmplslist] = useState<any>([]);
 
-  const [maindesc, setMaindesc] = useState<any>("");
+  const [maindesc, setMaindesc] = useState<any>('');
   const {
     translate: { words, isRTL },
     store: { user },
   }: GContextTypes = useContext(GlobalContext);
 
   const [getItems, itemsData]: any = useLazyQuery(getOperationKaids, {
-    fetchPolicy: "cache-and-network",
+    fetchPolicy: 'cache-and-network',
   });
 
   const { accounts } = useAccounts();
@@ -107,11 +107,11 @@ const PopupFinanceAll = ({
   }, [emplvalue]);
 
   useEffect(() => {
-    const items = itemsData?.data?.["getOperationKaids"]?.data || [];
+    const items = itemsData?.data?.['getOperationKaids']?.data || [];
     if (items && items.length > 0) {
       const data = _(items)
-        .groupBy("shareId")
-        .map((array, key, index) => {
+        .groupBy('shareId')
+        .map((array) => {
           const debitAcc = array.filter((ari: any) => ari.debit)?.[0]?.accCode;
           const creditAcc = array.filter((ari: any) => ari.credit)?.[0]
             ?.accCode;
@@ -159,14 +159,14 @@ const PopupFinanceAll = ({
     if (!debitAcc || !creditAcc) {
       await messageAlert(
         setAlrt,
-        isRTL ? "يجب تحديد كلا الحسابين" : "You have to select both accounts"
+        isRTL ? 'يجب تحديد كلا الحسابين' : 'You have to select both accounts'
       );
       return;
     }
     if (debitAcc === creditAcc) {
       await messageAlert(
         setAlrt,
-        isRTL ? "الحسابات يجب ان تكون مختلفة" : "The accounts must be deferent"
+        isRTL ? 'الحسابات يجب ان تكون مختلفة' : 'The accounts must be deferent'
       );
       return;
     }
@@ -209,14 +209,14 @@ const PopupFinanceAll = ({
     if (selectedDate < startPeriod || selectedDate > endPeriod) {
       await messageAlert(
         setAlrt,
-        isRTL ? "يجب تعديل التاريخ" : "Date should be change"
+        isRTL ? 'يجب تعديل التاريخ' : 'Date should be change'
       );
       return;
     }
     if (!itemsList || itemsList.length === 0) {
       await messageAlert(
         setAlrt,
-        isRTL ? "لا يوجد قيود لحفظها" : "No Items to be saved"
+        isRTL ? 'لا يوجد قيود لحفظها' : 'No Items to be saved'
       );
       return;
     }
@@ -272,7 +272,7 @@ const PopupFinanceAll = ({
   };
 
   const onError = async (error: any) => {
-    if (error.message.includes("duplicate")) {
+    if (error.message.includes('duplicate')) {
       await dublicateAlert(setAlrt, isRTL);
     } else {
       await errorAlert(setAlrt, isRTL);
@@ -282,7 +282,7 @@ const PopupFinanceAll = ({
 
   const resetForm = () => {
     setAmount(0);
-    setDesc("");
+    setDesc('');
     setCreditAcc(null);
     setDebitAcc(null);
   };
@@ -297,7 +297,7 @@ const PopupFinanceAll = ({
     setEmplError(false);
     setResKind(null);
     setEmplslist([]);
-    setMaindesc("");
+    setMaindesc('');
   };
   const closeModal = () => {
     resetAll();
@@ -342,7 +342,7 @@ const PopupFinanceAll = ({
           />
           <Grid
             style={{
-              backgroundColor: "#f4f4f4",
+              backgroundColor: '#f4f4f4',
               padding: 15,
               borderRadius: 10,
             }}
@@ -414,7 +414,7 @@ const PopupFinanceAll = ({
                             color="primary"
                           />
                         }
-                        label={isRTL ? "الموظف" : "Employee"}
+                        label={isRTL ? 'الموظف' : 'Employee'}
                       />
 
                       <FormControlLabel
@@ -425,7 +425,7 @@ const PopupFinanceAll = ({
                             color="primary"
                           />
                         }
-                        label={isRTL ? "المورد" : "Resourse"}
+                        label={isRTL ? 'المورد' : 'Resourse'}
                       />
                     </RadioGroup>
                   </Box>

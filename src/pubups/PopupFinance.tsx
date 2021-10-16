@@ -1,27 +1,27 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import React, { useContext, useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
+import React, { useContext, useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
 import {
   successAlert,
   dublicateAlert,
   errorAlert,
   yup,
   messageAlert,
-} from "../Shared";
-import { GContextTypes } from "../types";
-import { GlobalContext } from "../contexts";
-import { Box } from "@material-ui/core";
-import useAccounts from "../hooks/useAccounts";
-import { operationTypes } from "../constants";
-import { parents } from "../constants/kaid";
-import CashTransfareSelect from "../pages/options/CashTransfareSelect";
-import PopupLayout from "../pages/main/PopupLayout";
-import { Grid } from "@material-ui/core";
-import { CalenderLocal, TextFieldLocal } from "../components";
-import { getAppStartEndPeriod } from "../common/time";
-import AutoFieldLocal from "../components/fields/AutoFieldLocal";
-import { useCustomers } from "../hooks";
+} from '../Shared';
+import { GContextTypes } from '../types';
+import { GlobalContext } from '../contexts';
+import { Box } from '@material-ui/core';
+import useAccounts from '../hooks/useAccounts';
+import { operationTypes } from '../constants';
+import { parents } from '../constants/kaid';
+import CashTransfareSelect from '../pages/options/CashTransfareSelect';
+import PopupLayout from '../pages/main/PopupLayout';
+import { Grid } from '@material-ui/core';
+import { CalenderLocal, TextFieldLocal } from '../components';
+import { getAppStartEndPeriod } from '../common/time';
+import AutoFieldLocal from '../components/fields/AutoFieldLocal';
+import { useCustomers } from '../hooks';
 
 const PopupFinance = ({
   open,
@@ -32,9 +32,9 @@ const PopupFinance = ({
   editAction,
   theme,
 }: any) => {
-  const [alrt, setAlrt] = useState({ show: false, msg: "", type: undefined });
+  const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
   const [selectedDate, setSelectedDate] = React.useState(new Date());
-  const [ptype, setPtype] = React.useState("deposit");
+  const [ptype, setPtype] = React.useState('deposit');
   const [debaccounts, setDebaccounts] = React.useState([]);
   const [cridaccounts, setCridaccounts] = React.useState([]);
 
@@ -61,7 +61,7 @@ const PopupFinance = ({
       const da = row.debitAcc;
       const ot = row.opType;
       if (ot === 70) {
-        setPtype("deposit");
+        setPtype('deposit');
         const filtereddebits = accounts.filter(
           (acc: any) => acc.parentcode === parents.CASH
         );
@@ -69,7 +69,7 @@ const PopupFinance = ({
         setCridaccounts(filtereddebits);
       }
       if (ot === 71) {
-        setPtype("partnerdraw");
+        setPtype('partnerdraw');
         const filtereddebits = accounts.filter(
           (acc: any) => acc.parentcode === parents.OTHER_CURRENT_LIABILITIES
         );
@@ -80,7 +80,7 @@ const PopupFinance = ({
         setCridaccounts(filteredcredit);
       }
       if (ot === 72) {
-        setPtype("partneradd");
+        setPtype('partneradd');
         const filtereddebits = accounts.filter(
           (acc: any) => acc.parentcode === parents.OTHER_CURRENT_LIABILITIES
         );
@@ -91,7 +91,7 @@ const PopupFinance = ({
         setDebaccounts(filteredcredit);
       }
       if (ot === 14) {
-        setPtype("customerpay");
+        setPtype('customerpay');
         const filtereddebits = accounts.filter(
           (acc: any) => acc.parentcode === parents.ACCOUNTS_RECEIVABLE
         );
@@ -116,7 +116,7 @@ const PopupFinance = ({
         setCustvalue(cust);
       }
     } else {
-      if (ptype === "deposit") {
+      if (ptype === 'deposit') {
         const filtereddebits = accounts.filter(
           (acc: any) => acc.parentcode === parents.CASH
         );
@@ -125,7 +125,7 @@ const PopupFinance = ({
         setCreditAcc(filtereddebits?.[0]);
         setDebitAcc(filtereddebits?.[2]);
       }
-      if (ptype === "partnerdraw") {
+      if (ptype === 'partnerdraw') {
         const filtereddebits = accounts.filter(
           (acc: any) => acc.parentcode === parents.OTHER_CURRENT_LIABILITIES
         );
@@ -137,7 +137,7 @@ const PopupFinance = ({
         setCreditAcc(filteredcredit?.[0]);
         setDebitAcc(filtereddebits?.[0]);
       }
-      if (ptype === "partneradd") {
+      if (ptype === 'partneradd') {
         const filtereddebits = accounts.filter(
           (acc: any) => acc.parentcode === parents.OTHER_CURRENT_LIABILITIES
         );
@@ -153,13 +153,14 @@ const PopupFinance = ({
   }, [row, ptype, open]);
 
   const getActionType = () => {
-    if (ptype === "deposit") {
+    if (ptype === 'deposit') {
       return operationTypes.deposet;
-    } else if (ptype === "partneradd") {
+    } else if (ptype === 'partneradd') {
       return operationTypes.ownerDeposit;
-    } else if (ptype === "partnerdraw") {
+    } else if (ptype === 'partnerdraw') {
       return operationTypes.ownerDraw;
     }
+    return null;
   };
 
   const onSubmit = async (data: any) => {
@@ -167,7 +168,7 @@ const PopupFinance = ({
     if (selectedDate < startPeriod || selectedDate > endPeriod) {
       await messageAlert(
         setAlrt,
-        isRTL ? "يجب تعديل التاريخ" : "Date should be change"
+        isRTL ? 'يجب تعديل التاريخ' : 'Date should be change'
       );
       return;
     }
@@ -175,14 +176,14 @@ const PopupFinance = ({
     if (!debitAcc || !creditAcc) {
       await messageAlert(
         setAlrt,
-        isRTL ? "يجب تحديد كلا الحسابين" : "You have to select both accounts"
+        isRTL ? 'يجب تحديد كلا الحسابين' : 'You have to select both accounts'
       );
       return;
     }
     if (debitAcc === creditAcc) {
       await messageAlert(
         setAlrt,
-        isRTL ? "الحسابات يجب ان تكون مختلفة" : "The accounts must be deferent"
+        isRTL ? 'الحسابات يجب ان تكون مختلفة' : 'The accounts must be deferent'
       );
       return;
     }
@@ -221,7 +222,7 @@ const PopupFinance = ({
   };
 
   const onError = async (error: any) => {
-    if (error.message.includes("duplicate")) {
+    if (error.message.includes('duplicate')) {
       await dublicateAlert(setAlrt, isRTL);
     } else {
       await errorAlert(setAlrt, isRTL);
@@ -232,7 +233,7 @@ const PopupFinance = ({
 
   const resetAll = () => {
     reset();
-    setPtype("deposit");
+    setPtype('deposit');
     setCreditAcc(null);
     setDebitAcc(null);
     setDebaccounts([]);

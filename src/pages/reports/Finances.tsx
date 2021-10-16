@@ -1,12 +1,12 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import React, { useCallback, useEffect, useRef, useState } from "react";
-import Paper from "@material-ui/core/Paper";
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+import Paper from '@material-ui/core/Paper';
 import {
   SortingState,
   IntegratedSorting,
   DataTypeProvider,
-} from "@devexpress/dx-react-grid";
+} from '@devexpress/dx-react-grid';
 import {
   Grid,
   TableHeaderRow,
@@ -15,31 +15,31 @@ import {
   ExportPanel,
   TableColumnVisibility,
   ColumnChooser,
-} from "@devexpress/dx-react-grid-material-ui";
-import PrintIcon from "@material-ui/icons/Print";
-import { getRowId } from "../../common";
+} from '@devexpress/dx-react-grid-material-ui';
+import PrintIcon from '@material-ui/icons/Print';
+import { getRowId } from '../../common';
 import {
   covertToDate,
   covertToTimeDateDigit,
   createdAtFormatter,
   currencyFormatter,
   moneyFormat,
-} from "../../Shared/colorFormat";
-import { Box, fade, IconButton, withStyles } from "@material-ui/core";
-import { getFinanceReport } from "../../graphql";
-import { useLazyQuery } from "@apollo/client";
-import SalesFilter from "../../Shared/SalesFilter";
-import { GridExporter } from "@devexpress/dx-react-grid-export";
-import saveAs from "file-saver";
-import { getPeriods } from "../../common/time";
-import { getColumns } from "../../common/columns";
-import { reportprint } from "../../common/ipc";
-import _ from "lodash";
-import PageLayout from "../main/PageLayout";
+} from '../../Shared/colorFormat';
+import { Box, fade, IconButton, withStyles } from '@material-ui/core';
+import { getFinanceReport } from '../../graphql';
+import { useLazyQuery } from '@apollo/client';
+import SalesFilter from '../../Shared/SalesFilter';
+import { GridExporter } from '@devexpress/dx-react-grid-export';
+import saveAs from 'file-saver';
+import { getPeriods } from '../../common/time';
+import { getColumns } from '../../common/columns';
+import { reportprint } from '../../common/ipc';
+import _ from 'lodash';
+import PageLayout from '../main/PageLayout';
 
 const styles = (theme) => ({
   tableStriped: {
-    "& tbody tr:nth-of-type(odd)": {
+    '& tbody tr:nth-of-type(odd)': {
       backgroundColor: fade(theme.palette.primary.main, 0.05),
     },
   },
@@ -48,7 +48,7 @@ const styles = (theme) => ({
 const TableComponentBase = ({ classes, ...restProps }) => (
   <VirtualTable.Table {...restProps} className={classes.tableStriped} />
 );
-export const TableComponent = withStyles(styles, { name: "TableComponent" })(
+export const TableComponent = withStyles(styles, { name: 'TableComponent' })(
   TableComponentBase
 );
 
@@ -81,7 +81,7 @@ export default function Finances({
 
   const col = getColumns({ isRTL, words });
   const [sort, setSort] = useState<any>([
-    { columnName: col.startDate.name, direction: "asc" },
+    { columnName: col.startDate.name, direction: 'asc' },
   ]);
   const [activecolumns, setActivecolumns] = useState([
     col.opTime,
@@ -124,8 +124,8 @@ export default function Finances({
   }, [getFinances]);
 
   useEffect(() => {
-    const slsData = financesData?.data?.["getFinanceReport"]?.data || [];
-    const slsTotal = financesData?.data?.["getFinanceReport"]?.message || null;
+    const slsData = financesData?.data?.['getFinanceReport']?.data || [];
+    const slsTotal = financesData?.data?.['getFinanceReport']?.message || null;
 
     setRows(slsData);
     setTotal(slsTotal ? JSON.parse(slsTotal) : null);
@@ -137,7 +137,7 @@ export default function Finances({
       setStart(prd.start);
       setEnd(prd.end);
     } else {
-      const prd = getPeriods("cm");
+      const prd = getPeriods('cm');
       setStart(prd.start);
       setEnd(prd.end);
     }
@@ -178,7 +178,7 @@ export default function Finances({
       const now = new Date();
       const name = `sales-report-${covertToTimeDateDigit(now)}`;
       saveAs(
-        new Blob([buffer], { type: "application/octet-stream" }),
+        new Blob([buffer], { type: 'application/octet-stream' }),
         `${name}.xlsx`
       );
     });
@@ -198,24 +198,24 @@ export default function Finances({
 
     const printrows = sortRows.map((row: any) => {
       return {
-        opTime: inActiveColumns("opTime")
+        opTime: inActiveColumns('opTime')
           ? covertToDate(row.opTime)
           : undefined,
-        opDocNo: inActiveColumns("opDocNo") ? row.opDocNo : undefined,
-        employee: inActiveColumns("employee")
+        opDocNo: inActiveColumns('opDocNo') ? row.opDocNo : undefined,
+        employee: inActiveColumns('employee')
           ? row[col.employee.name]
           : undefined,
-        service: inActiveColumns("service") ? row[col.service.name] : undefined,
-        department: inActiveColumns("department")
+        service: inActiveColumns('service') ? row[col.service.name] : undefined,
+        department: inActiveColumns('department')
           ? row[col.department.name]
           : undefined,
-        category: inActiveColumns("category")
+        category: inActiveColumns('category')
           ? row[col.category.name]
           : undefined,
-        customer: inActiveColumns("customer")
+        customer: inActiveColumns('customer')
           ? row[col.customer.name]
           : undefined,
-        amount: inActiveColumns("amount") ? moneyFormat(row.amount) : undefined,
+        amount: inActiveColumns('amount') ? moneyFormat(row.amount) : undefined,
       };
     });
 
@@ -245,17 +245,17 @@ export default function Finances({
       isRTL,
       totl: words.total,
       totalamount:
-        total && total.length > 0 ? moneyFormat(total?.[0]?.total) : "",
-      reportname: isRTL ? "تقرير المبيعات" : "Sales Report",
+        total && total.length > 0 ? moneyFormat(total?.[0]?.total) : '',
+      reportname: isRTL ? 'تقرير المبيعات' : 'Sales Report',
       logo: company.logo,
       phone: company.tel1,
       mobile: company.mob,
       address: company.address,
       company: isRTL ? company.nameAr : company.name,
-      start: start ? covertToDate(start) : "",
-      end: end ? covertToDate(end) : "",
+      start: start ? covertToDate(start) : '',
+      end: end ? covertToDate(end) : '',
       filters,
-      color: "#b2e2be",
+      color: '#b2e2be',
       now: covertToTimeDateDigit(new Date()),
     };
 
@@ -280,7 +280,7 @@ export default function Finances({
       <Paper>
         <Box
           style={{
-            position: "absolute",
+            position: 'absolute',
             left: isRTL ? 145 : undefined,
             right: isRTL ? undefined : 145,
             top: 146,
@@ -319,7 +319,7 @@ export default function Finances({
             setPeriodvalue={setPeriodvalue}
           ></SalesFilter>
         </Box>
-        <Paper style={{ height: window.innerHeight - 85, overflow: "auto" }}>
+        <Paper style={{ height: window.innerHeight - 85, overflow: 'auto' }}>
           <Box style={{ marginTop: 40 }}>
             <Grid rows={rows} columns={columns} getRowId={getRowId}>
               <SortingState
@@ -331,7 +331,7 @@ export default function Finances({
                 height={800}
                 tableComponent={TableComponent}
                 messages={{
-                  noData: isRTL ? "لا يوجد بيانات" : "no data",
+                  noData: isRTL ? 'لا يوجد بيانات' : 'no data',
                 }}
                 estimatedRowHeight={40}
               />
@@ -348,15 +348,15 @@ export default function Finances({
                 }}
               />
               <DataTypeProvider
-                for={["opTime"]}
+                for={['opTime']}
                 formatterComponent={createdAtFormatter}
               ></DataTypeProvider>
               <DataTypeProvider
-                for={["debit"]}
+                for={['debit']}
                 formatterComponent={currencyFormatter}
               ></DataTypeProvider>
               <DataTypeProvider
-                for={["credit"]}
+                for={['credit']}
                 formatterComponent={currencyFormatter}
               ></DataTypeProvider>
               <Toolbar />

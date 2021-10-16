@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import React, { useState } from "react";
-import Paper from "@material-ui/core/Paper";
+import React, { useState } from 'react';
+import Paper from '@material-ui/core/Paper';
 import {
   DataTypeProvider,
   EditingState,
@@ -8,7 +8,7 @@ import {
   IntegratedSorting,
   SearchState,
   SortingState,
-} from "@devexpress/dx-react-grid";
+} from '@devexpress/dx-react-grid';
 import {
   Grid,
   TableHeaderRow,
@@ -16,35 +16,35 @@ import {
   VirtualTable,
   Toolbar,
   SearchPanel,
-} from "@devexpress/dx-react-grid-material-ui";
-import { Command, PopupEditing } from "../../Shared";
-import PopupBranch from "../../pubups/PopupBranch";
-import { useBranches } from "../../hooks";
+} from '@devexpress/dx-react-grid-material-ui';
+import { Command, PopupEditing } from '../../Shared';
+import PopupBranch from '../../pubups/PopupBranch';
+import { useBranches } from '../../hooks';
 import {
   createdAtFormatter,
   currencyFormatter,
   logoFormatter,
-} from "../../Shared/colorFormat";
-import { SearchTable } from "../../components";
+} from '../../Shared/colorFormat';
+import { SearchTable } from '../../components';
 
 export const getRowId = (row: { _id: any }) => row._id;
 
 export default function Branches({ isRTL, theme, words }: any) {
   const branchCol = [
-    { name: "logo", title: " " },
-    { name: isRTL ? "nameAr" : "name", title: words.name },
-    { name: "tel1", title: words.phoneNumber },
-    { name: "email", title: words.email },
-    { name: "packName", title: isRTL ? "الاشتراك" : "Package" },
-    { name: "packStart", title: isRTL ? "بداية الاشتراك" : "Start" },
-    { name: "packEnd", title: isRTL ? "نهاية الاشتراك" : "End" },
-    { name: "packCost", title: words.price },
-    { name: "packQty", title: words.qty },
+    { name: 'logo', title: ' ' },
+    { name: isRTL ? 'nameAr' : 'name', title: words.name },
+    { name: 'tel1', title: words.phoneNumber },
+    { name: 'email', title: words.email },
+    { name: 'packName', title: isRTL ? 'الاشتراك' : 'Package' },
+    { name: 'packStart', title: isRTL ? 'بداية الاشتراك' : 'Start' },
+    { name: 'packEnd', title: isRTL ? 'نهاية الاشتراك' : 'End' },
+    { name: 'packCost', title: words.price },
+    { name: 'packQty', title: words.qty },
   ];
 
   const [columns] = useState(branchCol);
 
-  const commitChanges = async ({ deleted }) => {
+  const commitChanges = async ({}) => {
     //
   };
 
@@ -62,21 +62,21 @@ export default function Branches({ isRTL, theme, words }: any) {
         <VirtualTable
           height={window.innerHeight - 133}
           messages={{
-            noData: isRTL ? "لا يوجد بيانات" : "no data",
+            noData: isRTL ? 'لا يوجد بيانات' : 'no data',
           }}
           estimatedRowHeight={70}
         />
         <TableHeaderRow showSortingControls />
         <DataTypeProvider
-          for={["packCost"]}
+          for={['packCost']}
           formatterComponent={currencyFormatter}
         ></DataTypeProvider>
         <DataTypeProvider
-          for={["logo"]}
+          for={['logo']}
           formatterComponent={logoFormatter}
         ></DataTypeProvider>
         <DataTypeProvider
-          for={["packStart", "packEnd"]}
+          for={['packStart', 'packEnd']}
           formatterComponent={createdAtFormatter}
         ></DataTypeProvider>
 

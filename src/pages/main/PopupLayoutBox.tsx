@@ -7,9 +7,10 @@ import {
   IconButton,
   Paper,
   Typography,
-} from "@material-ui/core";
-import Draggable from "react-draggable";
-import CloseOutlinedIcon from "@material-ui/icons/CloseOutlined";
+} from '@material-ui/core';
+import Draggable from 'react-draggable';
+import CloseOutlinedIcon from '@material-ui/icons/CloseOutlined';
+import React from 'react';
 function PaperComponent(props: any) {
   return (
     <Draggable
@@ -49,17 +50,17 @@ export default function PopupLayoutBox(props: any) {
       <Box
         id="draggable-dialog-title"
         style={{
-          direction: isRTL ? "rtl" : "ltr",
+          direction: isRTL ? 'rtl' : 'ltr',
           backgroundColor: theme
             ? fade(theme.palette.primary.main, 0.15)
-            : "#eee",
-          cursor: "move",
+            : '#eee',
+          cursor: 'move',
           height: 60,
-          display: "flex",
+          display: 'flex',
           flex: 1,
-          flexDirection: "row",
-          alignItems: "center",
-          justifyContent: "space-between",
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'space-between',
         }}
       >
         <Typography
@@ -73,7 +74,7 @@ export default function PopupLayoutBox(props: any) {
         </Typography>
         <IconButton onClick={onClose}>
           <CloseOutlinedIcon
-            style={{ fontSize: 26, color: "#777" }}
+            style={{ fontSize: 26, color: '#777' }}
           ></CloseOutlinedIcon>
         </IconButton>
       </Box>
@@ -81,7 +82,7 @@ export default function PopupLayoutBox(props: any) {
         style={{
           width: width,
           height: height,
-          direction: isRTL ? "rtl" : "ltr",
+          direction: isRTL ? 'rtl' : 'ltr',
           paddingTop: mt,
           paddingBottom: mb,
         }}

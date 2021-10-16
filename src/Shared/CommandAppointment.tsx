@@ -1,14 +1,14 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import React from "react";
+import React from 'react';
 
-import DeleteIcon from "@material-ui/icons/Delete";
+import DeleteIcon from '@material-ui/icons/Delete';
 
-import { Box, IconButton, Button, Typography } from "@material-ui/core";
-import { getStoreItem } from "../store";
-import { roles } from "../common";
+import { Box, IconButton, Button, Typography } from '@material-ui/core';
+import { getStoreItem } from '../store';
+import { roles } from '../common';
 
 const SaveButton = ({ onExecute }: any) => {
-  const store = getStoreItem("store");
+  const store = getStoreItem('store');
   const { lang } = store;
   const isCalEditor = roles.isCalEditor();
   if (!isCalEditor) {
@@ -16,7 +16,7 @@ const SaveButton = ({ onExecute }: any) => {
   }
 
   return (
-    <div style={{ textAlign: "center" }}>
+    <div style={{ textAlign: 'center' }}>
       <Box m={1}>
         <Button
           style={{ width: 85, height: 36 }}
@@ -24,17 +24,17 @@ const SaveButton = ({ onExecute }: any) => {
           onClick={onExecute}
           color="primary"
         >
-          <Typography>{lang === "ar" ? "حفظ" : "Save"}</Typography>
+          <Typography>{lang === 'ar' ? 'حفظ' : 'Save'}</Typography>
         </Button>
       </Box>
     </div>
   );
 };
 
-const CancelButton = ({ onExecute }: any) => <div></div>;
+const CancelButton = () => <div></div>;
 
 const DeleteButton = ({ onExecute }: any) => {
-  const store = getStoreItem("store");
+  const store = getStoreItem('store');
   const { lang } = store;
   const isCalEditor = roles.isCalEditor();
   if (!isCalEditor) {
@@ -46,9 +46,9 @@ const DeleteButton = ({ onExecute }: any) => {
       onClick={() => {
         if (
           window.confirm(
-            lang === "ar"
-              ? "هل انت متأكد من حذف الموعد ؟"
-              : "Are you sure you want to delete this row?",
+            lang === 'ar'
+              ? 'هل انت متأكد من حذف الموعد ؟'
+              : 'Are you sure you want to delete this row?'
           )
         ) {
           onExecute();

@@ -1,5 +1,6 @@
-import { useDepartments, useEmployees } from "../../hooks";
-import Main from "./Main";
+import React from 'react';
+import { useDepartments, useEmployees } from '../../hooks';
+import Main from './Main';
 
 const MainCalendar = (props: any) => {
   const { employees } = useEmployees();

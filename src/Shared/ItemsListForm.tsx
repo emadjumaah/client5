@@ -1,28 +1,28 @@
 /* eslint-disable no-shadow */
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import React, { useState } from "react";
-import { useForm, useWatch } from "react-hook-form";
-import RemoveCircleOutlineIcon from "@material-ui/icons/RemoveCircleOutline";
-import { TextField, Typography, Box, IconButton } from "@material-ui/core";
-import Autocomplete from "@material-ui/lab/Autocomplete";
+import React, { useState } from 'react';
+import { useForm, useWatch } from 'react-hook-form';
+import RemoveCircleOutlineIcon from '@material-ui/icons/RemoveCircleOutline';
+import { TextField, Typography, Box, IconButton } from '@material-ui/core';
+import Autocomplete from '@material-ui/lab/Autocomplete';
 
-function ccyFormat(num: number) {
+export const ccyFormat = (num: any) => {
   if (num > 0) {
-    return num.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, "$&,");
+    return num.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
   }
-}
+};
 
 const OptionItem = ({ item }: any) => {
   return (
     <Box margin="0.5">
-      <Box style={{ position: "relative", top: 7 }}>
+      <Box style={{ position: 'relative', top: 7 }}>
         <Box display="flex" flexDirection="row">
           <Typography
             style={{
               marginLeft: 5,
               marginRight: 20,
-              color: "#20A4F3",
+              color: '#20A4F3',
               width: 100,
               fontSize: 11,
             }}
@@ -33,19 +33,19 @@ const OptionItem = ({ item }: any) => {
           <Typography
             style={{
               marginRight: 20,
-              color: "#844257",
+              color: '#844257',
               width: 100,
               fontSize: 11,
             }}
             variant="caption"
           >
-            {item.brandName ? item.brandName : ""}
+            {item.brandName ? item.brandName : ''}
           </Typography>
           <Typography
-            style={{ color: "#00B77C", width: 100, fontSize: 11 }}
+            style={{ color: '#00B77C', width: 100, fontSize: 11 }}
             variant="caption"
           >
-            {item.price ? ccyFormat(item.price) : "-"}
+            {item.price ? ccyFormat(item.price) : '-'}
           </Typography>
         </Box>
       </Box>
@@ -64,7 +64,7 @@ const Price = ({ control, index }: any) => {
   });
   const total = (value.qty || 0) * (value.price || 0);
   return (
-    <Typography style={{ paddingRight: 10, fontWeight: "bold" }}>
+    <Typography style={{ paddingRight: 10, fontWeight: 'bold' }}>
       {total}
     </Typography>
   );
@@ -82,7 +82,7 @@ const PriceTotal = ({ control }: any) => {
     sum = totals.reduce((psum: any, a: any) => psum + a, 0);
   }
   return (
-    <Typography style={{ fontWeight: "bold", fontSize: 18 }}>
+    <Typography style={{ fontWeight: 'bold', fontSize: 18 }}>
       Total: {sum || 0}
     </Typography>
   );
@@ -103,20 +103,10 @@ export default function ItemsListForm({
 }: any): any {
   const [itemsList, setItemsList] = useState<any>([]);
 
-  const [itemError, setItemError] = React.useState<any>(false);
-  const [itemsSum, setItemsSum] = React.useState<any>(0);
-  const [itemsCostSum, setItemsCostSum] = React.useState<any>(0);
-
   const addItemToList = (item: any) => {
     const newArray = [...itemsList, item];
     setItemsList(newArray);
   };
-  const removeItemFromList = (index: any) => {
-    const newList = [...itemsList];
-    newList.splice(index, 1);
-    setItemsList(newList);
-  };
-  // console.log("itemsList", itemsList);
 
   React.useEffect(() => {
     getOverallTotal(itemsList);
@@ -133,8 +123,6 @@ export default function ItemsListForm({
       const costsum = totalscost.reduce((psum: any, a: any) => psum + a, 0);
       const amount = sum - discount;
       const prfit = amount - costsum;
-      setItemsSum(amount);
-      setItemsCostSum(costsum);
       setCostAmount(costsum);
       setTotal(sum);
       setAmount(amount);
@@ -142,13 +130,13 @@ export default function ItemsListForm({
     }
   };
 
-  console.log("itemsList", itemsList);
+  console.log('itemsList', itemsList);
   // console.log("localitems", localitems);
 
   return (
     <div
-      dir={lang === "ar" ? "rtl" : undefined}
-      style={{ backgroundColor: "#fff" }}
+      dir={lang === 'ar' ? 'rtl' : undefined}
+      style={{ backgroundColor: '#fff' }}
     >
       <Box display="flex" flexDirection="row" justifyContent="space-between">
         <Typography style={{ padding: 10 }}>Items</Typography>
@@ -160,10 +148,10 @@ export default function ItemsListForm({
             style={{
               width: 50,
               height: 40,
-              alignItems: "center",
-              justifyContent: "center",
+              alignItems: 'center',
+              justifyContent: 'center',
               borderRadius: 5,
-              backgroundColor: "#dedede",
+              backgroundColor: '#dedede',
               // marginLeft: 10,
             }}
           ></Box>
@@ -174,7 +162,7 @@ export default function ItemsListForm({
               getOptionLabel={(option: any) => option.name}
               renderOption={(option) => <OptionItem item={option}></OptionItem>}
               getOptionSelected={(option, values) => option._id === values._id}
-              onChange={(event: any, newValue: any) => {
+              onChange={(_: any, newValue: any) => {
                 addItemToList(newValue);
               }}
               openOnFocus
@@ -191,7 +179,7 @@ export default function ItemsListForm({
                   required
                   id="itemName"
                   name="itemName"
-                  error={itemError ? true : false}
+                  error={false}
                   variant="outlined"
                   defaultValue=""
                   inputRef={(ref) => {
@@ -205,7 +193,7 @@ export default function ItemsListForm({
           <TextField
             name="qty"
             style={{ width: 120, margin: 0, padding: 0, marginLeft: 10 }}
-            inputProps={{ style: { textAlign: "right" } }}
+            inputProps={{ style: { textAlign: 'right' } }}
             variant="outlined"
             type="number"
             defaultValue={1}
@@ -216,10 +204,10 @@ export default function ItemsListForm({
             required
             name="price"
             style={{ width: 120, margin: 0, padding: 0, marginLeft: 10 }}
-            inputProps={{ style: { textAlign: "right" } }}
+            inputProps={{ style: { textAlign: 'right' } }}
             variant="outlined"
             type="number"
-            defaultValue={""}
+            defaultValue={''}
             inputRef={register()}
           />
           <Box
@@ -227,10 +215,10 @@ export default function ItemsListForm({
             style={{
               width: 120,
               height: 40,
-              alignItems: "center",
-              justifyContent: "flex-end",
+              alignItems: 'center',
+              justifyContent: 'flex-end',
               borderRadius: 5,
-              backgroundColor: "#dedede",
+              backgroundColor: '#dedede',
               marginLeft: 10,
             }}
           >
@@ -260,8 +248,8 @@ export default function ItemsListForm({
             style={{
               width: 50,
               height: 40,
-              alignItems: "center",
-              justifyContent: "center",
+              alignItems: 'center',
+              justifyContent: 'center',
               borderRadius: 5,
             }}
           >

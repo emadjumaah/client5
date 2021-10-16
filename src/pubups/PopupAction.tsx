@@ -1,19 +1,20 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import { useContext, useEffect, useState } from "react";
-import { GContextTypes } from "../types";
-import { GlobalContext } from "../contexts";
-import PopupLayout from "../pages/main/PopupLayout";
-import { Box, Grid } from "@material-ui/core";
-import { TextFieldLocal } from "../components";
-import { SelectLocal } from "../pages/calendar/common/SelectLocal";
+import { useContext, useEffect, useState } from 'react';
+import { GContextTypes } from '../types';
+import { GlobalContext } from '../contexts';
+import PopupLayout from '../pages/main/PopupLayout';
+import { Box, Grid } from '@material-ui/core';
+import { TextFieldLocal } from '../components';
+import { SelectLocal } from '../pages/calendar/common/SelectLocal';
 import {
   actionOptions,
   timeRelationOptions,
   timeUnitOptions,
-} from "../constants/rrule";
-import { getSendTime } from "../common/helpers";
-import { getDateDayTimeFormat } from "../Shared/colorFormat";
+} from '../constants/rrule';
+import { getSendTime } from '../common/helpers';
+import { getDateDayTimeFormat } from '../Shared/colorFormat';
+import React from 'react';
 
 const PopupAction = ({
   open,
@@ -27,11 +28,11 @@ const PopupAction = ({
 }: any) => {
   const [saving, setSaving] = useState(false);
   const [type, setType] = useState(1);
-  const [timeunit, setTimeunit] = useState("minute");
-  const [timerelate, setTimerelate] = useState("bstart");
+  const [timeunit, setTimeunit] = useState('minute');
+  const [timerelate, setTimerelate] = useState('bstart');
   const [qty, setQty] = useState(30);
-  const [body, setBody] = useState("");
-  const [address, setAddreess] = useState("");
+  const [body, setBody] = useState('');
+  const [address, setAddreess] = useState('');
   const [sendtime, setSendtime] = useState(null);
 
   const {
@@ -93,11 +94,11 @@ const PopupAction = ({
 
   const reset = () => {
     setType(1);
-    setTimeunit("minute");
-    setTimerelate("bstart");
+    setTimeunit('minute');
+    setTimerelate('bstart');
     setQty(30);
-    setBody("");
-    setAddreess("");
+    setBody('');
+    setAddreess('');
     setSendtime(null);
   };
 
@@ -108,11 +109,11 @@ const PopupAction = ({
 
   const title = isRTL
     ? isNew
-      ? "اضافة تنبيه"
-      : "تعديل تنبيه"
+      ? 'اضافة تنبيه'
+      : 'تعديل تنبيه'
     : isNew
-    ? "New Action"
-    : "Edit Action";
+    ? 'New Action'
+    : 'Edit Action';
   const addresstitle =
     type === 1 ? words.mobile : type === 2 ? words.email : words.notification;
 
@@ -204,10 +205,10 @@ const PopupAction = ({
                     display="flex"
                     style={{
                       flex: 1,
-                      direction: "ltr",
+                      direction: 'ltr',
                       fontSize: 16,
-                      alignItems: "center",
-                      justifyContent: "center",
+                      alignItems: 'center',
+                      justifyContent: 'center',
                     }}
                   >
                     {getDateDayTimeFormat(sendtime, isRTL)}

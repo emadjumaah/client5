@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import React from "react";
-import { Box, IconButton, TextField, Typography } from "@material-ui/core";
-import AddIcon from "@material-ui/icons/Add";
+import React from 'react';
+import { Box, IconButton, TextField, Typography } from '@material-ui/core';
+import AddIcon from '@material-ui/icons/Add';
 
-import { Autocomplete } from "@material-ui/lab";
-import OptionItem from "./OptionItem";
+import { Autocomplete } from '@material-ui/lab';
+import OptionItem from './OptionItem';
 
 export default function CustomerAutoField({
   name,
@@ -13,8 +13,6 @@ export default function CustomerAutoField({
   value,
   onNewFieldChange,
   open,
-  required = false,
-  autoFocus = false,
   setNewtext,
   isRTL,
   canAdd,
@@ -23,9 +21,9 @@ export default function CustomerAutoField({
     <Box>
       <Box
         style={{
-          display: "flex",
+          display: 'flex',
           width: 120,
-          alignItems: "center",
+          alignItems: 'center',
           height: 40,
           padding: 10,
           marginTop: 10,
@@ -36,10 +34,10 @@ export default function CustomerAutoField({
 
       <Box
         style={{
-          display: "flex",
-          flexDirection: "row",
-          justifyContent: "space-between",
-          alignItems: "center",
+          display: 'flex',
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          alignItems: 'center',
           marginTop: -15,
         }}
       >

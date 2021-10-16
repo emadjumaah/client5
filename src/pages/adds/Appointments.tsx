@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import { useContext, useEffect, useState } from "react";
-import Paper from "@material-ui/core/Paper";
+import { useContext, useEffect, useState } from 'react';
+import Paper from '@material-ui/core/Paper';
 import {
   EditingState,
   SortingState,
@@ -9,7 +9,7 @@ import {
   DataTypeProvider,
   SearchState,
   IntegratedFiltering,
-} from "@devexpress/dx-react-grid";
+} from '@devexpress/dx-react-grid';
 import {
   Grid,
   TableHeaderRow,
@@ -19,9 +19,9 @@ import {
   SearchPanel,
   TableColumnVisibility,
   ColumnChooser,
-} from "@devexpress/dx-react-grid-material-ui";
-import { Command, Loading, PopupEditing } from "../../Shared";
-import { getRowId } from "../../common";
+} from '@devexpress/dx-react-grid-material-ui';
+import { Command, Loading, PopupEditing } from '../../Shared';
+import { getRowId } from '../../common';
 import {
   createEvent,
   deleteEventById,
@@ -32,8 +32,8 @@ import {
   getLandingChartData,
   // getReminders,
   updateEvent,
-} from "../../graphql";
-import { useLazyQuery, useMutation } from "@apollo/client";
+} from '../../graphql';
+import { useLazyQuery, useMutation } from '@apollo/client';
 import {
   createdAtFormatter,
   currencyFormatter,
@@ -42,29 +42,30 @@ import {
   fromToFormatter,
   nameLinkFormat,
   taskIdLinkFormat,
-} from "../../Shared/colorFormat";
-import PageLayout from "../main/PageLayout";
-import { SearchTable } from "../../components";
-import { getColumns } from "../../common/columns";
-import PopupAppointment from "../../pubups/PopupAppointment";
-import { EventsContext } from "../../contexts";
-import DateNavigatorReports from "../../components/filters/DateNavigatorReports";
+} from '../../Shared/colorFormat';
+import PageLayout from '../main/PageLayout';
+import { SearchTable } from '../../components';
+import { getColumns } from '../../common/columns';
+import PopupAppointment from '../../pubups/PopupAppointment';
+import { EventsContext } from '../../contexts';
+import DateNavigatorReports from '../../components/filters/DateNavigatorReports';
 import {
   Box,
   Checkbox,
   colors,
   FormControlLabel,
   Typography,
-} from "@material-ui/core";
-import useTasks from "../../hooks/useTasks";
-import getTasks from "../../graphql/query/getTasks";
-import { Getter } from "@devexpress/dx-react-core";
-import { TableComponent } from "../../Shared/TableComponent";
-import { useCustomers, useDepartments, useEmployees } from "../../hooks";
-import PopupDepartmentView from "../../pubups/PopupDepartmentView";
-import PopupEmployeeView from "../../pubups/PopupEmployeeView";
-import PopupTaskView from "../../pubups/PopupTaskView";
-import PopupCustomerView from "../../pubups/PopupCustomerView";
+} from '@material-ui/core';
+import useTasks from '../../hooks/useTasks';
+import getTasks from '../../graphql/query/getTasks';
+import { Getter } from '@devexpress/dx-react-core';
+import { TableComponent } from '../../Shared/TableComponent';
+import { useCustomers, useDepartments, useEmployees } from '../../hooks';
+import PopupDepartmentView from '../../pubups/PopupDepartmentView';
+import PopupEmployeeView from '../../pubups/PopupEmployeeView';
+import PopupTaskView from '../../pubups/PopupTaskView';
+import PopupCustomerView from '../../pubups/PopupCustomerView';
+import React from 'react';
 
 export default function Appointments({
   isRTL,
@@ -79,7 +80,7 @@ export default function Appointments({
   const col = getColumns({ isRTL, words });
 
   const [columns] = useState([
-    { id: 4, ref: "title", name: "title", title: words.title },
+    { id: 4, ref: 'title', name: 'title', title: words.title },
     col.createdAt,
     col.startDate,
     col.fromto,
@@ -131,7 +132,7 @@ export default function Appointments({
     const empl = employees.filter((em: any) => em._id === data.employeeId)?.[0];
     if (empl) {
       setItem(empl);
-      setName("employee");
+      setName('employee');
     }
   };
   const setDepartmentItem = (data: any) => {
@@ -140,14 +141,14 @@ export default function Appointments({
     )?.[0];
     if (empl) {
       setItem(empl);
-      setName("department");
+      setName('department');
     }
   };
   const setCustomerItem = (data: any) => {
     const empl = customers.filter((em: any) => em._id === data.customerId)?.[0];
     if (empl) {
       setItem(empl);
-      setName("customer");
+      setName('customer');
     }
   };
 
@@ -162,17 +163,17 @@ export default function Appointments({
   } = useContext(EventsContext);
 
   const currentViewNameChange = (e: any) => {
-    dispatch({ type: "setCurrentViewName", payload: e.target.value });
+    dispatch({ type: 'setCurrentViewName', payload: e.target.value });
   };
   const currentDateChange = (curDate: any) => {
-    dispatch({ type: "setCurrentDate", payload: curDate });
+    dispatch({ type: 'setCurrentDate', payload: curDate });
   };
   const endDateChange = (curDate: any) => {
-    dispatch({ type: "setEndDate", payload: curDate });
+    dispatch({ type: 'setEndDate', payload: curDate });
   };
 
   const [loadEvents, eventsData]: any = useLazyQuery(getEvents, {
-    fetchPolicy: "cache-and-network",
+    fetchPolicy: 'cache-and-network',
   });
 
   const refresQuery = {
@@ -237,7 +238,7 @@ export default function Appointments({
   }, [eventsData]);
 
   useEffect(() => {
-    if (name === "department") {
+    if (name === 'department') {
       if (departments && departments.length > 0) {
         const opened = departments.filter(
           (ts: any) => ts._id === item._id
@@ -245,14 +246,14 @@ export default function Appointments({
         setItem(opened);
       }
     }
-    if (name === "employee") {
+    if (name === 'employee') {
       if (employees && employees.length > 0) {
         const opened = employees.filter((ts: any) => ts._id === item._id)?.[0];
         setItem(opened);
       }
     }
-    if (name === "customer") {
-      console.log("customer", item);
+    if (name === 'customer') {
+      console.log('customer', item);
 
       if (customers && customers.length > 0) {
         const opened = customers.filter((ts: any) => ts._id === item._id)?.[0];
@@ -287,16 +288,16 @@ export default function Appointments({
         <Box
           display="flex"
           style={{
-            position: "absolute",
+            position: 'absolute',
             zIndex: 111,
-            flexDirection: "row",
-            alignItems: "center",
+            flexDirection: 'row',
+            alignItems: 'center',
           }}
         >
           <Box
             style={{
               opacity: due ? 0.5 : undefined,
-              pointerEvents: due ? "none" : undefined,
+              pointerEvents: due ? 'none' : undefined,
             }}
           >
             <DateNavigatorReports
@@ -341,7 +342,7 @@ export default function Appointments({
                   style={{ color: colors.blue[700] }}
                   variant="subtitle2"
                 >
-                  {isRTL ? "المواعيد المتأخرة" : "Due Appointments"}
+                  {isRTL ? 'المواعيد المتأخرة' : 'Due Appointments'}
                 </Typography>
               }
               style={{ fontSize: 14 }}
@@ -359,7 +360,7 @@ export default function Appointments({
           <VirtualTable
             height={window.innerHeight - 133}
             messages={{
-              noData: isRTL ? "لا يوجد بيانات" : "no data",
+              noData: isRTL ? 'لا يوجد بيانات' : 'no data',
             }}
             estimatedRowHeight={45}
             tableComponent={TableComponent}
@@ -375,29 +376,29 @@ export default function Appointments({
           />
 
           <DataTypeProvider
-            for={["fromto"]}
+            for={['fromto']}
             formatterComponent={fromToFormatter}
           ></DataTypeProvider>
           <DataTypeProvider
-            for={["startDate", "createdAt"]}
+            for={['startDate', 'createdAt']}
             formatterComponent={createdAtFormatter}
           ></DataTypeProvider>
           <DataTypeProvider
-            for={["status"]}
+            for={['status']}
             formatterComponent={eventStatusFormatter}
           ></DataTypeProvider>
           <DataTypeProvider
-            for={["amount"]}
+            for={['amount']}
             formatterComponent={currencyFormatter}
           ></DataTypeProvider>
           <DataTypeProvider
-            for={["done"]}
+            for={['done']}
             formatterComponent={(props: any) =>
               doneFormatter({ ...props, editEvent })
             }
           ></DataTypeProvider>
           <DataTypeProvider
-            for={["taskId"]}
+            for={['taskId']}
             formatterComponent={(props: any) =>
               taskIdLinkFormat({
                 ...props,
@@ -409,7 +410,7 @@ export default function Appointments({
             }
           ></DataTypeProvider>
           <DataTypeProvider
-            for={["employeeNameAr", "employeeName"]}
+            for={['employeeNameAr', 'employeeName']}
             formatterComponent={(props: any) =>
               nameLinkFormat({
                 ...props,
@@ -419,7 +420,7 @@ export default function Appointments({
             }
           ></DataTypeProvider>
           <DataTypeProvider
-            for={["departmentNameAr", "departmentName"]}
+            for={['departmentNameAr', 'departmentName']}
             formatterComponent={(props: any) =>
               nameLinkFormat({
                 ...props,
@@ -429,7 +430,7 @@ export default function Appointments({
             }
           ></DataTypeProvider>
           <DataTypeProvider
-            for={["customerNameAr", "customerName"]}
+            for={['customerNameAr', 'customerName']}
             formatterComponent={(props: any) =>
               nameLinkFormat({
                 ...props,
@@ -473,7 +474,7 @@ export default function Appointments({
             computed={({ tableColumns }) => {
               const result = [
                 {
-                  key: "editCommand",
+                  key: 'editCommand',
                   type: TableEditColumn.COLUMN_TYPE,
                   width: 110,
                 },

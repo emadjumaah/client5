@@ -1,32 +1,32 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import { StoreTypes } from "../types";
+import { StoreTypes } from '../types/index';
 
 export const storeReducer = (state: StoreTypes, action: any) => {
   switch (action.type) {
-    case "setLang":
+    case 'setLang':
       return { ...state, lang: action.payload };
-    case "setCalendar":
+    case 'setCalendar':
       return { ...state, calendar: action.payload };
-    case "setThemeId":
+    case 'setThemeId':
       return { ...state, themeId: action.payload };
-    case "setNetwork":
+    case 'setNetwork':
       return { ...state, network: action.payload };
-    case "setWeburi":
+    case 'setWeburi':
       return { ...state, weburi: action.payload };
-    case "setLocaluri":
+    case 'setLocaluri':
       return { ...state, localuri: action.payload };
-    case "setNames":
+    case 'setNames':
       return { ...state, names: action.payload };
-    case "login":
+    case 'login':
       return {
         ...state,
         user: action.payload.user,
         token: action.payload.token,
       };
-    case "logout":
+    case 'logout':
       return { ...state, user: null, token: null };
 
     default:
-      throw new Error("Unexpected action");
+      throw new Error('Unexpected action');
   }
 };

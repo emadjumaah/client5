@@ -6,15 +6,15 @@ import React, {
   useEffect,
   useRef,
   useState,
-} from "react";
-import Paper from "@material-ui/core/Paper";
+} from 'react';
+import Paper from '@material-ui/core/Paper';
 import {
   SortingState,
   IntegratedSorting,
   DataTypeProvider,
   SummaryState,
   IntegratedSummary,
-} from "@devexpress/dx-react-grid";
+} from '@devexpress/dx-react-grid';
 import {
   Grid,
   TableHeaderRow,
@@ -24,8 +24,8 @@ import {
   TableColumnVisibility,
   ColumnChooser,
   TableSummaryRow,
-} from "@devexpress/dx-react-grid-material-ui";
-import { getRowId } from "../../common";
+} from '@devexpress/dx-react-grid-material-ui';
+import { getRowId } from '../../common';
 import {
   calculateAmount,
   covertToTimeDateDigit,
@@ -34,23 +34,23 @@ import {
   currencyFormatterEmpty,
   opTypeFormatter,
   taskIdFormatter,
-} from "../../Shared/colorFormat";
-import { Box, fade, Typography, withStyles } from "@material-ui/core";
-import { getMonthlyReport } from "../../graphql";
-import { useLazyQuery } from "@apollo/client";
-import { GridExporter } from "@devexpress/dx-react-grid-export";
-import saveAs from "file-saver";
-import { getColumns } from "../../common/columns";
-import PageLayout from "../main/PageLayout";
-import DateNavigatorReports from "../../components/filters/DateNavigatorReports";
-import { FinanceContext } from "../../contexts";
-import FilterSelectCkeckBox from "../../Shared/FilterSelectCkeckBox";
-import useTasks from "../../hooks/useTasks";
-import _ from "lodash";
+} from '../../Shared/colorFormat';
+import { Box, fade, Typography, withStyles } from '@material-ui/core';
+import { getMonthlyReport } from '../../graphql';
+import { useLazyQuery } from '@apollo/client';
+import { GridExporter } from '@devexpress/dx-react-grid-export';
+import saveAs from 'file-saver';
+import { getColumns } from '../../common/columns';
+import PageLayout from '../main/PageLayout';
+import DateNavigatorReports from '../../components/filters/DateNavigatorReports';
+import { FinanceContext } from '../../contexts';
+import FilterSelectCkeckBox from '../../Shared/FilterSelectCkeckBox';
+import useTasks from '../../hooks/useTasks';
+import _ from 'lodash';
 
 const styles = (theme) => ({
   tableStriped: {
-    "& tbody tr:nth-of-type(odd)": {
+    '& tbody tr:nth-of-type(odd)': {
       backgroundColor: fade(theme.palette.primary.main, 0.05),
     },
   },
@@ -59,7 +59,7 @@ const styles = (theme) => ({
 const TableComponentBase = ({ classes, ...restProps }) => (
   <VirtualTable.Table {...restProps} className={classes.tableStriped} />
 );
-export const TableComponent = withStyles(styles, { name: "TableComponent" })(
+export const TableComponent = withStyles(styles, { name: 'TableComponent' })(
   TableComponentBase
 );
 
@@ -68,7 +68,6 @@ export default function FinanceReport({
   words,
   menuitem,
   mainaccounts,
-  company,
   theme,
   isEditor,
 }: any) {
@@ -103,7 +102,7 @@ export default function FinanceReport({
   ]);
 
   const [getSummary, summaryData]: any = useLazyQuery(getMonthlyReport, {
-    fetchPolicy: "cache-and-network",
+    fetchPolicy: 'cache-and-network',
   });
 
   const {
@@ -128,27 +127,27 @@ export default function FinanceReport({
   const { tasks } = useTasks();
 
   const currentViewNameChange = (e: any) => {
-    dispatch({ type: "setCurrentViewName", payload: e.target.value });
+    dispatch({ type: 'setCurrentViewName', payload: e.target.value });
   };
   const currentDateChange = (curDate: any) => {
-    dispatch({ type: "setCurrentDate", payload: curDate });
+    dispatch({ type: 'setCurrentDate', payload: curDate });
   };
   const endDateChange = (curDate: any) => {
-    dispatch({ type: "setEndDate", payload: curDate });
+    dispatch({ type: 'setEndDate', payload: curDate });
   };
 
   const setAccvalueDispatch = (value: any) => {
-    dispatch({ type: "setAccvalue", payload: value ? [value] : [] });
+    dispatch({ type: 'setAccvalue', payload: value ? [value] : [] });
   };
   const setTaskvalueDispatch = (value: any) => {
-    dispatch({ type: "setTaskvalue", payload: value ? [value] : [] });
+    dispatch({ type: 'setTaskvalue', payload: value ? [value] : [] });
   };
 
   useEffect(() => {}, [rows]);
 
   useEffect(() => {
-    const slsData = summaryData?.data?.["getMonthlyReport"]?.data || [];
-    const balance = summaryData?.data?.["getMonthlyReport"]?.message || null;
+    const slsData = summaryData?.data?.['getMonthlyReport']?.data || [];
+    const balance = summaryData?.data?.['getMonthlyReport']?.message || null;
 
     const amount = balance ? Number(balance) : null;
 
@@ -176,8 +175,8 @@ export default function FinanceReport({
 
       updatedRows.unshift({
         _id: Date.now(),
-        accNameAr: "رصيد افتتاحي",
-        accName: "Opening Balancee",
+        accNameAr: 'رصيد افتتاحي',
+        accName: 'Opening Balancee',
         amount,
         credit,
         debit,
@@ -185,7 +184,7 @@ export default function FinanceReport({
     }
 
     setRows(updatedRows);
-    const sum = _.sumBy(updatedRows, "amount");
+    const sum = _.sumBy(updatedRows, 'amount');
 
     setTotal(sum);
   }, [summaryData]);
@@ -229,7 +228,7 @@ export default function FinanceReport({
       const now = new Date();
       const name = `finance-report-${covertToTimeDateDigit(now)}`;
       saveAs(
-        new Blob([buffer], { type: "application/octet-stream" }),
+        new Blob([buffer], { type: 'application/octet-stream' }),
         `${name}.xlsx`
       );
     });
@@ -240,12 +239,12 @@ export default function FinanceReport({
   };
 
   const setSortDispatch = (value: any) => {
-    dispatch({ type: "setSort", payload: value });
+    dispatch({ type: 'setSort', payload: value });
   };
 
   const totalSummaryItems = [
-    { columnName: "credit", type: "sum" },
-    { columnName: "debit", type: "sum" },
+    { columnName: 'credit', type: 'sum' },
+    { columnName: 'debit', type: 'sum' },
   ];
 
   return (
@@ -261,10 +260,10 @@ export default function FinanceReport({
         <Box
           display="flex"
           style={{
-            position: "absolute",
+            position: 'absolute',
             zIndex: 111,
-            flexDirection: "row",
-            alignItems: "center",
+            flexDirection: 'row',
+            alignItems: 'center',
           }}
         >
           <DateNavigatorReports
@@ -285,8 +284,8 @@ export default function FinanceReport({
             display="flex"
             style={{
               height: 38,
-              alignItems: "center",
-              justifyContent: "flex-start",
+              alignItems: 'center',
+              justifyContent: 'flex-start',
               paddingLeft: 20,
               paddingRight: 20,
             }}
@@ -318,19 +317,19 @@ export default function FinanceReport({
             <Box
               display="flex"
               style={{
-                alignItems: "center",
-                justifyContent: "flex-end",
+                alignItems: 'center',
+                justifyContent: 'flex-end',
                 minWidth: 120,
                 marginRight: 90,
               }}
             >
-              <Typography variant="subtitle1" style={{ fontWeight: "bold" }}>
+              <Typography variant="subtitle1" style={{ fontWeight: 'bold' }}>
                 {currencyFormatter({ value: total })}
               </Typography>
             </Box>
           )}
         </Box>
-        <Paper style={{ height: window.innerHeight - 85, overflow: "auto" }}>
+        <Paper style={{ height: window.innerHeight - 85, overflow: 'auto' }}>
           <Grid rows={rows} columns={columns} getRowId={getRowId}>
             <SortingState
               defaultSorting={sort}
@@ -344,7 +343,7 @@ export default function FinanceReport({
               height={window.innerHeight - 133}
               tableComponent={TableComponent}
               messages={{
-                noData: isRTL ? "لا يوجد بيانات" : "no data",
+                noData: isRTL ? 'لا يوجد بيانات' : 'no data',
               }}
               estimatedRowHeight={30}
             />
@@ -354,19 +353,19 @@ export default function FinanceReport({
               defaultHiddenColumnNames={[col.amount.name]}
             />
             <DataTypeProvider
-              for={["opTime"]}
+              for={['opTime']}
               formatterComponent={createdAtFormatter}
             ></DataTypeProvider>
             <DataTypeProvider
-              for={["credit", "debit"]}
+              for={['credit', 'debit']}
               formatterComponent={currencyFormatterEmpty}
             ></DataTypeProvider>
             <DataTypeProvider
-              for={["opType"]}
+              for={['opType']}
               formatterComponent={opTypeFormatter}
             ></DataTypeProvider>
             <DataTypeProvider
-              for={["taskId"]}
+              for={['taskId']}
               formatterComponent={(props: any) =>
                 taskIdFormatter({ ...props, tasks })
               }
@@ -377,8 +376,8 @@ export default function FinanceReport({
 
             <TableSummaryRow
               messages={{
-                sum: isRTL ? "المجموع" : "Total",
-                count: isRTL ? "العدد" : "Count",
+                sum: isRTL ? 'المجموع' : 'Total',
+                count: isRTL ? 'العدد' : 'Count',
               }}
             ></TableSummaryRow>
           </Grid>

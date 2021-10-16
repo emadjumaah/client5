@@ -1,22 +1,22 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import { useState } from "react";
+import { useState } from 'react';
 import {
   Grid,
   Table,
   TableHeaderRow,
   TableEditColumn,
   VirtualTable,
-} from "@devexpress/dx-react-grid-material-ui";
-import { fade, Paper, Typography, withStyles } from "@material-ui/core";
+} from '@devexpress/dx-react-grid-material-ui';
+import { fade, Paper, Typography, withStyles } from '@material-ui/core';
 import {
   DataTypeProvider,
   EditingState,
   IntegratedSorting,
   SortingState,
-} from "@devexpress/dx-react-grid";
-import { Getter } from "@devexpress/dx-react-core";
-import { getColumns } from "../common/columns";
+} from '@devexpress/dx-react-grid';
+import { Getter } from '@devexpress/dx-react-core';
+import { getColumns } from '../common/columns';
 import {
   createdAtFormatter,
   currencyFormatter,
@@ -24,9 +24,10 @@ import {
   employeeFormatter,
   eventStatusFormatter,
   fromToFormatter,
-} from "./colorFormat";
+} from './colorFormat';
 
-import { Command } from "./Command";
+import { Command } from './Command';
+import React from 'react';
 
 export const getRowId = (row: any) => row.index;
 
@@ -41,7 +42,7 @@ const NumberTypeProvider = (props) => (
 
 const styles = (theme) => ({
   tableStriped: {
-    "& tbody tr:nth-of-type(odd)": {
+    '& tbody tr:nth-of-type(odd)': {
       backgroundColor: fade(theme.palette.primary.main, 0.1),
     },
   },
@@ -51,7 +52,7 @@ const TableComponentBase = ({ classes, ...restProps }) => (
   <Table.Table {...restProps} className={classes.tableStriped} />
 );
 
-export const TableComponent = withStyles(styles, { name: "TableComponent" })(
+export const TableComponent = withStyles(styles, { name: 'TableComponent' })(
   TableComponentBase
 );
 
@@ -64,19 +65,19 @@ export default function EventsTable({
   const col = getColumns({ isRTL, words });
 
   const [columns] = useState([
-    { id: 1, ref: "title", name: "title", title: words.title },
+    { id: 1, ref: 'title', name: 'title', title: words.title },
     col.startDate,
     col.fromto,
     {
       id: 4,
-      ref: "department",
-      name: "departmentname",
+      ref: 'department',
+      name: 'departmentname',
       title: words.department,
     },
     {
       id: 5,
-      ref: "employee",
-      name: "employeename",
+      ref: 'employee',
+      name: 'employeename',
       title: words.employee,
     },
 
@@ -95,7 +96,7 @@ export default function EventsTable({
     <Paper
       style={{
         maxHeight: 500,
-        overflow: "auto",
+        overflow: 'auto',
         margin: 10,
         minHeight: 500,
       }}
@@ -108,40 +109,40 @@ export default function EventsTable({
           <VirtualTable
             height={500}
             messages={{
-              noData: isRTL ? "لا يوجد بيانات" : "no data",
+              noData: isRTL ? 'لا يوجد بيانات' : 'no data',
             }}
             estimatedRowHeight={45}
             tableComponent={TableComponent}
           />
           <DataTypeProvider
-            for={["startDate"]}
+            for={['startDate']}
             formatterComponent={createdAtFormatter}
           ></DataTypeProvider>
           <DataTypeProvider
-            for={["fromto"]}
+            for={['fromto']}
             formatterComponent={fromToFormatter}
           ></DataTypeProvider>
           <DataTypeProvider
-            for={["status"]}
+            for={['status']}
             formatterComponent={eventStatusFormatter}
           ></DataTypeProvider>
           <DataTypeProvider
-            for={["amount"]}
+            for={['amount']}
             formatterComponent={currencyFormatter}
           ></DataTypeProvider>
           <DataTypeProvider
-            for={["departmentname"]}
+            for={['departmentname']}
             formatterComponent={(props: any) =>
               departmentFormatter({ ...props, isRTL })
             }
           ></DataTypeProvider>
           <DataTypeProvider
-            for={["employeename"]}
+            for={['employeename']}
             formatterComponent={(props: any) =>
               employeeFormatter({ ...props, isRTL })
             }
           ></DataTypeProvider>
-          <NumberTypeProvider for={["index"]} />
+          <NumberTypeProvider for={['index']} />
           <TableHeaderRow showSortingControls />
 
           <TableEditColumn
@@ -153,7 +154,7 @@ export default function EventsTable({
             computed={({ tableColumns }) => {
               const result = [
                 {
-                  key: "editCommand",
+                  key: 'editCommand',
                   type: TableEditColumn.COLUMN_TYPE,
                   width: 70,
                 },

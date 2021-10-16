@@ -1,6 +1,6 @@
 export const initStore = {
-  lang: "ar",
-  themeId: "0",
+  lang: 'ar',
+  themeId: '0',
   user: null,
   token: null,
   calendar: {
@@ -11,10 +11,10 @@ export const initStore = {
   network: null, // web / local
   weburi: null, // jadwal.webredirect.org
   names: {
-    tasks: "المهام",
-    customers: "العملاء",
-    employees: "الموظفين",
-    departments: "الأقسام",
+    tasks: 'المهام',
+    customers: 'العملاء',
+    employees: 'الموظفين',
+    departments: 'الأقسام',
   },
-  localuri: "jadwal-server:4000", // jadwal-server
+  localuri: 'jadwal-server:4000', // jadwal-server
 };
