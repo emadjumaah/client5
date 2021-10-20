@@ -10,6 +10,9 @@ export const initStore = {
   },
   network: null, // web / local
   weburi: null, // jadwal.webredirect.org
+  lastSuccess: Date.now(),
+  wrongTimes: 0,
+  startBlock: null,
   names: {
     tasks: 'المهام',
     customers: 'العملاء',

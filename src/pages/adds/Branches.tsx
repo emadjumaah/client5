@@ -44,7 +44,7 @@ export default function Branches({ isRTL, theme, words }: any) {
 
   const [columns] = useState(branchCol);
 
-  const commitChanges = async ({}) => {
+  const commitChanges = async () => {
     //
   };
 
@@ -82,6 +82,7 @@ export default function Branches({ isRTL, theme, words }: any) {
 
         <TableEditColumn
           showAddCommand
+          showEditCommand
           commandComponent={Command}
         ></TableEditColumn>
         <Toolbar />

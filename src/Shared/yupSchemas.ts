@@ -1,5 +1,5 @@
-import * as yup from "yup";
-import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from 'yup';
+import { yupResolver } from '@hookform/resolvers/yup';
 
 const phoneRegExp =
   /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
@@ -17,8 +17,7 @@ const loginSchema = yup.object().shape({
 export const loginResolver = { resolver: yupResolver(loginSchema) };
 
 const addUserSchema = yup.object().shape({
-  username: yup.string().required().min(3).max(100),
-  password: yup.string().required().min(3).max(100),
+  password: yup.string().required().min(6).max(100),
 });
 export const addUserResolver = { resolver: yupResolver(addUserSchema) };
 const editUserSchema = yup.object().shape({
@@ -52,7 +51,7 @@ const custSchema = yup.object().shape({
   nameAr: yup.string().required(),
   phone: yup
     .string()
-    .matches(phoneRegExp, "Phone number is not valid")
+    .matches(phoneRegExp, 'Phone number is not valid')
     .required(),
   email: yup.string().email(),
 });
@@ -82,7 +81,7 @@ const invoeSchema = yup.object().shape({
   customer: yup.string().required(),
   phone: yup
     .string()
-    .matches(phoneRegExp, "Phone number is not valid")
+    .matches(phoneRegExp, 'Phone number is not valid')
     .required(),
 });
 export const invoiceResolver = { resolver: yupResolver(invoeSchema) };

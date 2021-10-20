@@ -1,11 +1,10 @@
 import { gql } from '@apollo/client';
 
 export default gql`
-  query checkUsername($username: String) {
-    checkUsername(username: $username) {
+  mutation deleteStep($_id: String) {
+    deleteStep(_id: $_id) {
       ok
       message
-      data
       error
     }
   }

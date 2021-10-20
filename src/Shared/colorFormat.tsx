@@ -11,10 +11,10 @@ import {
 } from '@material-ui/core';
 import React from 'react';
 import {
+  isSuperAdmin,
   isBranchAdmin,
   isEditor,
-  isSuperAdmin,
-  isSystemAdmin,
+  isWriter,
   isViewer,
 } from '../common/roles';
 import { operationTypes } from '../constants';
@@ -75,21 +75,20 @@ export const daysoffFormatter = ({ value, isRTL }: any) => {
   return <Box></Box>;
 };
 export const rolesFormatter = ({ value, row, isRTL }: any) => {
-  const user = { ...row, roles: JSON.parse(value) };
+  const user = row;
   if (isSuperAdmin(user)) {
     return <Box>{isRTL ? 'الأدمن' : 'Main Admin'}</Box>;
   }
   if (isBranchAdmin(user)) {
     return <Box>{isRTL ? 'مدير الفرع' : 'Branch Admin'}</Box>;
   }
-
-  if (isSystemAdmin(user, 'cal') || isSystemAdmin(user, 'pos')) {
-    return <Box>{isRTL ? 'مدير حساب' : 'Account Admin'}</Box>;
+  if (isEditor(user)) {
+    return <Box>{isRTL ? 'محرر' : 'Account Admin'}</Box>;
   }
-  if (isEditor(user, 'cal') || isEditor(user, 'pos')) {
-    return <Box>{isRTL ? 'محرر' : 'Editor'}</Box>;
+  if (isWriter(user)) {
+    return <Box>{isRTL ? 'كاتب' : 'Editor'}</Box>;
   }
-  if (isViewer(user, 'cal') || isViewer(user, 'pos')) {
+  if (isViewer(user)) {
     return <Box>{isRTL ? 'زائر' : 'Viewer'}</Box>;
   }
 

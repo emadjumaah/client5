@@ -2,22 +2,22 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 
 export const systems = {
-  cal: "cal",
-  pos: "pos",
-  pur: "pur",
-  exp: "exp",
-  inv: "inv",
-  hr: "hr",
-  ass: "ass",
-  acc: "acc",
+  cal: 'cal',
+  pos: 'pos',
+  pur: 'pur',
+  exp: 'exp',
+  inv: 'inv',
+  hr: 'hr',
+  ass: 'ass',
+  acc: 'acc',
 };
 
 export const roles = {
-  view: "view",
-  add: "add",
-  edit: "edit",
-  delete: "delete",
-  report: "report",
+  view: 'view',
+  add: 'add',
+  edit: 'edit',
+  delete: 'delete',
+  report: 'report',
 };
 
 // export const user: any = {
@@ -94,7 +94,7 @@ export const RolesToBrSy = (rols: any) => {
   const branches = Object.keys(rols);
   branches.map((branch: any) => {
     const asyss = Object.keys(rols[branch]);
-    syss = asyss.filter((it: any) => it !== "admin");
+    syss = asyss.filter((it: any) => it !== 'admin');
   });
   return { branches, systems: syss };
 };
@@ -116,99 +116,48 @@ export const isSuperAdmin = (user: any) => {
 };
 
 export const isBranchAdmin = (user: any) => {
-  return user?.isSuperAdmin || user?.roles?.[user?.branch]?.admin;
+  return user?.isSuperAdmin || user?.isBranchAdmin;
+};
+export const isEmployee = (user: any) => {
+  return user?.isEmployee;
+};
+export const isFinance = (user: any) => {
+  return user?.isFinance;
+};
+export const isOperate = (user: any) => {
+  return user?.isOperate;
 };
 
-export const isSystemAdmin = (user: any, system: string) => {
+export const isEditor = (user: any) => {
+  return user?.isSuperAdmin || user?.isBranchAdmin || user?.isEditor;
+};
+export const isWriter = (user: any) => {
   return (
     user?.isSuperAdmin ||
-    user?.roles?.[user?.branch]?.admin ||
-    user?.roles?.[user.branch]?.[system]?.admin
+    user?.isBranchAdmin ||
+    user?.isEditor ||
+    user?.isWriter
   );
 };
-
-export const isReproter = (user: any, system: string) => {
+export const isViewer = (user: any) => {
   return (
     user?.isSuperAdmin ||
-    user?.roles?.[user?.branch]?.admin ||
-    user?.roles?.[user?.branch]?.[system]?.admin ||
-    user?.roles?.[user?.branch]?.[system]?.[roles.report]
-  );
-};
-
-export const isEditor = (user: any, system: string) => {
-  return (
-    user?.isSuperAdmin ||
-    user?.roles?.[user?.branch]?.admin ||
-    user?.roles?.[user?.branch]?.[system]?.admin ||
-    user?.roles?.[user?.branch]?.[system]?.[roles.report] ||
-    user?.roles?.[user?.branch]?.[system]?.[roles.edit]
-  );
-};
-export const isSystemEditor = (user: any, system: string) => {
-  return (
-    user?.isSuperAdmin ||
-    user?.roles?.[user?.branch]?.admin ||
-    user?.roles?.[user?.branch]?.[system]?.admin ||
-    user?.roles?.[user?.branch]?.[system]?.[roles.report] ||
-    user?.roles?.[user?.branch]?.[system]?.[roles.edit]
-  );
-};
-
-export const isAdder = (user: any, system: string) => {
-  return (
-    user?.isSuperAdmin ||
-    user?.roles?.[user?.branch]?.admin ||
-    user?.roles?.[user?.branch]?.[system]?.admin ||
-    user?.roles?.[user?.branch]?.[system]?.[roles.report] ||
-    user?.roles?.[user?.branch]?.[system]?.[roles.edit] ||
-    user?.roles?.[user?.branch]?.[system]?.[roles.add]
-  );
-};
-
-export const isViewer = (user: any, system: string) => {
-  return (
-    user?.isSuperAdmin ||
-    user?.roles?.[user?.branch]?.admin ||
-    user?.roles?.[user?.branch]?.[system]?.admin ||
-    user?.roles?.[user?.branch]?.[system]?.[roles.report] ||
-    user?.roles?.[user?.branch]?.[system]?.[roles.edit] ||
-    user?.roles?.[user?.branch]?.[system]?.[roles.add] ||
-    user?.roles?.[user?.branch]?.[system]?.[roles.view]
-  );
-};
-export const isSystemViewer = (user: any, system: string) => {
-  return (
-    user?.isSuperAdmin ||
-    user?.roles?.[user?.branch]?.admin ||
-    user?.roles?.[user?.branch]?.[system]?.admin ||
-    user?.roles?.[user?.branch]?.[system]?.[roles.report] ||
-    user?.roles?.[user?.branch]?.[system]?.[roles.edit] ||
-    user?.roles?.[user?.branch]?.[system]?.[roles.add] ||
-    user?.roles?.[user?.branch]?.[system]?.[roles.view]
-  );
-};
-
-// special
-export const isSpesificBranchAdmin = (user: any, branch: string) => {
-  return user?.isSuperAdmin || user?.roles?.[branch]?.admin;
-};
-
-// special
-export const hasRole = (user: any, role: string, system: string) => {
-  return (
-    user?.isSuperAdmin ||
-    user?.roles?.[user?.branch]?.admin ||
-    user?.roles?.[user?.branch]?.[system]?.admin ||
-    user?.roles?.[user?.branch]?.[system]?.[role]
+    user?.isBranchAdmin ||
+    user?.isEditor ||
+    user?.isWriter ||
+    user?.isViewer
   );
 };
 
 export const menuRoles = {
-  superAdmin: "superAdmin",
-  branchAdmin: "branchAdmin",
-  calAdmin: "calAdmin",
-  posAdmin: "posAdmin",
+  superAdmin: 'superAdmin',
+  branchAdmin: 'branchAdmin',
+  editor: 'editor',
+  writer: 'writer',
+  viewer: 'viewer',
+  finance: 'finance',
+  operate: 'operate',
+  employee: 'employee',
 };
 
 export const applyRole = (role: string, user: any) => {
@@ -217,10 +166,18 @@ export const applyRole = (role: string, user: any) => {
       return isSuperAdmin(user);
     case menuRoles.branchAdmin:
       return isBranchAdmin(user);
-    case menuRoles.calAdmin:
-      return isSystemAdmin(user, systems.cal);
-    case menuRoles.posAdmin:
-      return isSystemAdmin(user, systems.pos);
+    case menuRoles.employee:
+      return isEmployee(user);
+    case menuRoles.finance:
+      return isFinance(user);
+    case menuRoles.operate:
+      return isOperate(user);
+    case menuRoles.editor:
+      return isEditor(user);
+    case menuRoles.writer:
+      return isWriter(user);
+    case menuRoles.viewer:
+      return isViewer(user);
 
     default:
       return () => null;

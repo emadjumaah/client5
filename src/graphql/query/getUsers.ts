@@ -1,4 +1,4 @@
-import { gql } from "@apollo/client";
+import { gql } from '@apollo/client';
 
 export default gql`
   query getUsers {
@@ -22,10 +22,17 @@ export default gql`
         mob
 
         isSuperAdmin
+        isBranchAdmin
+        isDepartAdmin
+        isEmployee
+        isFinance
+        isOperate
+        isEditor
+        isWriter
+        isViewer
 
         roles
 
-        isDepartAdmin
         departmentId
         departmentName
         departmentNameAr

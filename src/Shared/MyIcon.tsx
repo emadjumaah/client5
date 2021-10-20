@@ -1,87 +1,89 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import React from "react";
-import PaymentOutlinedIcon from "@material-ui/icons/PaymentOutlined";
-import AccountBalanceOutlinedIcon from "@material-ui/icons/AccountBalanceOutlined";
-import AccountCircleOutlinedIcon from "@material-ui/icons/AccountCircleOutlined";
-import AttachMoneyOutlinedIcon from "@material-ui/icons/AttachMoneyOutlined";
-import ArrowDropDownOutlinedIcon from "@material-ui/icons/ArrowDropDownOutlined";
-import EventOutlinedIcon from "@material-ui/icons/EventOutlined";
-import AddBox from "@material-ui/icons/AddBox";
-import SettingsIcon from "@material-ui/icons/Settings";
-import HomeWorkOutlinedIcon from "@material-ui/icons/HomeWorkOutlined";
-import ReceiptIcon from "@material-ui/icons/Receipt";
-import DescriptionOutlinedIcon from "@material-ui/icons/DescriptionOutlined";
-import FormatListNumberedIcon from "@material-ui/icons/FormatListNumbered";
-import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
-import PaymentIcon from "@material-ui/icons/Payment";
-import PersonIcon from "@material-ui/icons/Person";
-import CalendarTodayIcon from "@material-ui/icons/CalendarToday";
-import AssessmentIcon from "@material-ui/icons/Assessment";
-import AccountBalanceIcon from "@material-ui/icons/AccountBalance";
-import ExitToAppIcon from "@material-ui/icons/ExitToApp";
-import WorkIcon from "@material-ui/icons/Work";
-import GroupIcon from "@material-ui/icons/Group";
-import Business from "@material-ui/icons/Business";
-import Dashboard from "@material-ui/icons/Dashboard";
-import DirectionsCarIcon from "@material-ui/icons/DirectionsCar";
-
+import React from 'react';
+import PaymentOutlinedIcon from '@material-ui/icons/PaymentOutlined';
+import AccountBalanceOutlinedIcon from '@material-ui/icons/AccountBalanceOutlined';
+import AccountCircleOutlinedIcon from '@material-ui/icons/AccountCircleOutlined';
+import AttachMoneyOutlinedIcon from '@material-ui/icons/AttachMoneyOutlined';
+import ArrowDropDownOutlinedIcon from '@material-ui/icons/ArrowDropDownOutlined';
+import EventOutlinedIcon from '@material-ui/icons/EventOutlined';
+import AddBox from '@material-ui/icons/AddBox';
+import SettingsIcon from '@material-ui/icons/Settings';
+import HomeWorkOutlinedIcon from '@material-ui/icons/HomeWorkOutlined';
+import ReceiptIcon from '@material-ui/icons/Receipt';
+import DescriptionOutlinedIcon from '@material-ui/icons/DescriptionOutlined';
+import FormatListNumberedIcon from '@material-ui/icons/FormatListNumbered';
+import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
+import PaymentIcon from '@material-ui/icons/Payment';
+import PersonIcon from '@material-ui/icons/Person';
+import CalendarTodayIcon from '@material-ui/icons/CalendarToday';
+import AssessmentIcon from '@material-ui/icons/Assessment';
+import AccountBalanceIcon from '@material-ui/icons/AccountBalance';
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import WorkIcon from '@material-ui/icons/Work';
+import GroupIcon from '@material-ui/icons/Group';
+import Business from '@material-ui/icons/Business';
+import Dashboard from '@material-ui/icons/Dashboard';
+import DirectionsCarIcon from '@material-ui/icons/DirectionsCar';
+import RoomIcon from '@material-ui/icons//Room';
 export default function MyIcon({ icon, color, size }: any) {
   const style = { color, fontSize: size ? size : undefined };
   switch (icon) {
-    case "home":
+    case 'home':
       return <HomeWorkOutlinedIcon style={style}></HomeWorkOutlinedIcon>;
-    case "calendar":
+    case 'calendar':
       return <CalendarTodayIcon style={style}></CalendarTodayIcon>;
-    case "sales":
+    case 'sales':
       return <DescriptionOutlinedIcon style={style}></DescriptionOutlinedIcon>;
-    case "purchase":
+    case 'purchase':
       return <ShoppingCartIcon style={style}></ShoppingCartIcon>;
-    case "expenses":
+    case 'expenses':
       return <ReceiptIcon style={style}></ReceiptIcon>;
-    case "inventory":
+    case 'inventory':
       return <FormatListNumberedIcon style={style}></FormatListNumberedIcon>;
-    case "finance":
+    case 'finance':
       return <PaymentIcon style={style}></PaymentIcon>;
-    case "add":
+    case 'add':
       return <AddBox style={style}></AddBox>;
-    case "user":
+    case 'user':
       return <PersonIcon style={style}></PersonIcon>;
-    case "business":
+    case 'business':
       return <Business style={style}></Business>;
-    case "group":
+    case 'group':
       return <GroupIcon style={style}></GroupIcon>;
-    case "options":
+    case 'options':
       return <SettingsIcon style={style}></SettingsIcon>;
-    case "cash":
+    case 'cash':
       return <AttachMoneyOutlinedIcon style={style}></AttachMoneyOutlinedIcon>;
-    case "card":
+    case 'card':
       return <PaymentOutlinedIcon style={style}></PaymentOutlinedIcon>;
-    case "bank":
+    case 'bank':
       return (
         <AccountBalanceOutlinedIcon style={style}></AccountBalanceOutlinedIcon>
       );
-    case "depart":
+    case 'depart':
       return <Dashboard style={style}></Dashboard>;
-    case "partner":
+    case 'partner':
       return (
         <AccountCircleOutlinedIcon style={style}></AccountCircleOutlinedIcon>
       );
-    case "discount":
+    case 'discount':
       return (
         <ArrowDropDownOutlinedIcon style={style}></ArrowDropDownOutlinedIcon>
       );
-    case "event":
+    case 'event':
       return <EventOutlinedIcon style={style}></EventOutlinedIcon>;
-    case "report":
+    case 'report':
       return <AssessmentIcon style={style}></AssessmentIcon>;
-    case "account":
+    case 'account':
       return <AccountBalanceIcon style={style}></AccountBalanceIcon>;
-    case "logout":
+    case 'logout':
       return <ExitToAppIcon style={style}></ExitToAppIcon>;
-    case "work":
+    case 'work':
       return <WorkIcon style={style}></WorkIcon>;
-    case "resourse":
+    case 'resourse':
       return <DirectionsCarIcon style={style}></DirectionsCarIcon>;
+    case 'location':
+      return <RoomIcon style={style}></RoomIcon>;
 
     default:
       return <div></div>;

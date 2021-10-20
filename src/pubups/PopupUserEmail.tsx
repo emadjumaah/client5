@@ -4,109 +4,154 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import React, { useContext, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { useBranches } from '../hooks';
-import {
-  dublicateAlert,
-  errorAlert,
-  yup,
-  PopupTextField,
-  UserRoles,
-} from '../Shared';
+import { dublicateAlert, errorAlert, yup, PopupTextField } from '../Shared';
 import { GContextTypes } from '../types';
 import { GlobalContext } from '../contexts';
-import { branchesToEmptyWithKeep, isBranchAdmin } from '../common/roles';
-import { Box, Button, Typography } from '@material-ui/core';
+import { Box, Button } from '@material-ui/core';
 import PopupLayout from '../pages/main/PopupLayout';
 import { Grid } from '@material-ui/core';
 import PopupPassword from './PopupPassword';
 import { errorAlertMsg } from '../Shared/helpers';
+import UserRolesEmail from '../Shared/UserRolesEmail';
+import { useLazyQuery } from '@apollo/client';
+import checkUsername from '../graphql/query/checkUsername';
+import { isValidEmail } from '../common/helpers';
+import { TextFieldLocal } from '../components';
+import _ from 'lodash';
 
-const PopupUser = ({
+const search = _.debounce(({ checkUser, username }) => {
+  checkUser({ variables: { username } });
+}, 300);
+
+const PopupUserEmail = ({
   open,
   onClose,
   row,
   isNew,
-  applyChanges,
   addAction,
   editAction,
   theme,
   editPassword,
   block,
   brch,
+  employees,
 }: any) => {
   const [saving, setSaving] = useState(false);
   const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
-  const [roles, setRoles] = useState({});
   const [blockUser, setBlockUser] = useState(false);
 
   const [openPass, setOpenPass] = useState(false);
 
+  const [isBranchAdmin, setisBranchAdmin] = useState(false);
+  const [isEmployee, setisEmployee] = useState(false);
+  const [isFinance, setisFinance] = useState(false);
+  const [isOperate, setisOperate] = useState(false);
+  const [isEditor, setisEditor] = useState(false);
+  const [isWriter, setisWriter] = useState(false);
+  const [isViewer, setisViewer] = useState(false);
+
+  const [emplvalue, setEmplvalue] = useState<any>(null);
+
+  const [username, setUsername] = useState(null);
+  const [valid, setValid] = useState(null);
+  const [checkUser, userData] = useLazyQuery(checkUsername);
+
   const { register, handleSubmit, errors, reset } = useForm(
-    isNew ? yup.addUserResolver : yup.editUserResolver
+    isNew ? yup.addUserResolver : undefined
   );
   const {
     translate: { words, isRTL },
     store: { user },
   }: GContextTypes = useContext(GlobalContext);
-  const isBA = isBranchAdmin(user);
-  const { branches } = useBranches();
-  const handleChangeRoles = ({ branch, system, role }: any) => {
-    if (!branch) return;
-    const rolesObj = { ...roles };
 
-    if (branch && !system) {
-      if (rolesObj[branch][role] === true) {
-        delete rolesObj[branch][role];
-      } else {
-        rolesObj[branch][role] = true;
-      }
-    } else {
-      if (rolesObj[branch][system][role] === true) {
-        delete rolesObj[branch][system][role];
-      } else {
-        rolesObj[branch][system][role] = true;
-      }
-    }
-    setRoles(rolesObj);
+  const onUsernameChange = async (e: any) => {
+    setUsername(e.target.value);
   };
 
   useEffect(() => {
-    const rols = branchesToEmptyWithKeep(branches, brch);
-    setRoles(rols);
-  }, [open, brch]);
+    search({ checkUser, username });
+  }, [username]);
+
+  useEffect(() => {
+    if (isNew) {
+      if (userData?.data?.checkUsername?.ok && isValidEmail(username)) {
+        setValid(true);
+      } else {
+        setValid(false);
+      }
+    }
+  }, [userData]);
 
   useEffect(() => {
     if (row && row._id) {
-      const rols = JSON.parse(row.roles);
-      setRoles(rols);
       setBlockUser(row.block);
+      setisBranchAdmin(row.isBranchAdmin);
+      setisEmployee(row.isEmployee);
+      setisFinance(row.isFinance);
+      setisOperate(row.isOperate);
+      setisEditor(row.isEditor);
+      setisWriter(row.isWriter);
+      setisViewer(row.isViewer);
+      if (row?.employeeId) {
+        const dept = employees.filter(
+          (dep: any) => dep._id === row?.employeeId
+        )?.[0];
+        setEmplvalue(dept);
+      }
     }
   }, [open]);
 
   const onClosePass = () => setOpenPass(false);
 
   const onSubmit = async (data: any) => {
+    if (isNew && !valid) {
+      await errorAlertMsg(setAlrt, 'valid email require');
+      return;
+    }
     if (user.isSuperAdmin !== true) {
       if (row.isSuperAdmin === true || row.isSuperAdmin === 'true') {
         await errorAlertMsg(setAlrt, "You can't change this account");
         return;
       }
     }
+    if (isEmployee && !emplvalue) {
+      await errorAlertMsg(setAlrt, 'You have to choose an Employee');
+      return;
+    }
     setSaving(true);
-    applyChanges();
-    const username = isNew ? data.username : row.username;
     const name = data.name.trim();
     const phone = data.phone;
     const password = data.password;
-    const email = data.email;
+
     const variables: any = {
       _id: row && row._id ? row._id : undefined, // is it new or edit
       username,
       name,
       phone,
-      email,
       password: isNew ? password : undefined,
-      roles: JSON.stringify(roles),
+      isBranchAdmin,
+      isEmployee,
+      isFinance,
+      isOperate,
+      isEditor,
+      isWriter,
+      isViewer,
+      employee:
+        emplvalue && isEmployee
+          ? {
+              employeeId: emplvalue._id,
+              employeeName: emplvalue.name,
+              employeeNameAr: emplvalue.nameAr,
+              employeeColor: emplvalue.color,
+              employeePhone: emplvalue.phone,
+            }
+          : {
+              employeeId: undefined,
+              employeeName: undefined,
+              employeeNameAr: undefined,
+              employeeColor: undefined,
+              employeePhone: undefined,
+            },
       branch: brch,
       userId: user._id,
     };
@@ -144,7 +189,16 @@ const PopupUser = ({
 
   const onFormClose = () => {
     reset();
-    setRoles({});
+    setisBranchAdmin(false);
+    setisEmployee(false);
+    setisFinance(false);
+    setisOperate(false);
+    setisEditor(false);
+    setisWriter(false);
+    setisViewer(false);
+    setEmplvalue(null);
+    setUsername(null);
+    setValid(null);
     onClose();
   };
 
@@ -159,11 +213,12 @@ const PopupUser = ({
     : isNew
     ? 'New User'
     : 'Edit User';
+
   return (
     <PopupLayout
       isRTL={isRTL}
       open={open}
-      onClose={onClose}
+      onClose={onFormClose}
       title={title}
       onSubmit={onHandleSubmit}
       theme={theme}
@@ -174,16 +229,31 @@ const PopupUser = ({
       <Grid container spacing={2}>
         <Grid item xs={1}></Grid>
         <Grid item xs={9}>
-          <PopupTextField
-            autoFocus
-            required
-            name="username"
-            label={words.username}
-            register={register}
-            errors={errors}
-            row={row}
-            disabled={!isNew}
-          />
+          <Box display="flex" style={{ flexDirection: 'row' }}>
+            <TextFieldLocal
+              autoFocus
+              required
+              name="username"
+              label={words.email}
+              value={username}
+              onChange={onUsernameChange}
+              row={row}
+              disabled={!isNew}
+            />
+            {isNew && (
+              <Box
+                style={{
+                  marginTop: 15,
+                  marginLeft: 10,
+                  marginRight: 10,
+                  width: 28,
+                  height: 28,
+                  borderRadius: 14,
+                  backgroundColor: valid ? '#b6fcd5' : '#ffc0cb',
+                }}
+              ></Box>
+            )}
+          </Box>
           {isNew && (
             <PopupTextField
               required
@@ -210,26 +280,30 @@ const PopupUser = ({
             errors={errors}
             row={row}
           />
-          <PopupTextField
-            name="email"
-            label={words.email}
-            register={register}
-            errors={errors}
-            row={row}
-          />
-          <Box>
-            <Typography variant="h6" style={{ marginTop: 10 }}>
-              {isRTL ? 'الصلاحيات' : 'Roles'}
-            </Typography>
-          </Box>
-          {branches && roles && (
-            <UserRoles
-              roles={roles}
+
+          {user && (
+            <UserRolesEmail
               isRTL={isRTL}
-              branches={branches}
-              brch={brch}
-              handleChangeRoles={handleChangeRoles}
-            ></UserRoles>
+              branch={user?.branch}
+              words={words}
+              isBranchAdmin={isBranchAdmin}
+              isEmployee={isEmployee}
+              isFinance={isFinance}
+              isOperate={isOperate}
+              isEditor={isEditor}
+              isWriter={isWriter}
+              isViewer={isViewer}
+              emplvalue={emplvalue}
+              setisBranchAdmin={setisBranchAdmin}
+              setisEmployee={setisEmployee}
+              setisFinance={setisFinance}
+              setisOperate={setisOperate}
+              setisEditor={setisEditor}
+              setisWriter={setisWriter}
+              setisViewer={setisViewer}
+              setEmplvalue={setEmplvalue}
+              employees={employees}
+            ></UserRolesEmail>
           )}
           <Box
             display="flex"
@@ -254,7 +328,7 @@ const PopupUser = ({
                 {isRTL ? 'تغيير كلمة المرور' : 'Change Password'}
               </Button>
             )}
-            {isBA && !row.isSuperAdmin && !isNew && (
+            {!row.isBranchAdmin && !row.isSuperAdmin && !isNew && (
               <Button
                 color={blockUser ? 'secondary' : 'primary'}
                 onClick={onBlockUser}
@@ -284,4 +358,4 @@ const PopupUser = ({
   );
 };
 
-export default PopupUser;
+export default PopupUserEmail;

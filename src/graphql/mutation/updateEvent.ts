@@ -1,4 +1,4 @@
-import { gql } from "@apollo/client";
+import { gql } from '@apollo/client';
 
 export default gql`
   mutation updateEvent(
@@ -13,6 +13,7 @@ export default gql`
     $endDate: Date
     $allDay: Boolean
     $reminder: Boolean
+    $location: LocationInput
     $priority: Int
     $amount: Float
     $status: Int
@@ -34,6 +35,7 @@ export default gql`
       endDate: $endDate
       allDay: $allDay
       reminder: $reminder
+      location: $location
       priority: $priority
       amount: $amount
       status: $status

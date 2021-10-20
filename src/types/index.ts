@@ -9,8 +9,15 @@ interface UserTypes {
   phone: string;
   avatar: string;
   isSuperAdmin: boolean;
-  roles: any;
   isDepartAdmin: boolean;
+  isBranchAdmin: boolean;
+  isEmployee: boolean;
+  isFinance: boolean;
+  isOperate: boolean;
+  isEditor: boolean;
+  isWriter: boolean;
+  isViewer: boolean;
+  roles: any;
 }
 
 export interface StoreTypes {
@@ -23,6 +30,9 @@ export interface StoreTypes {
     end: string;
     duration: string;
   };
+  lastSuccess: any;
+  wrongTimes: any;
+  startBlock: any;
   network: string;
   weburi: string;
   localuri: string;

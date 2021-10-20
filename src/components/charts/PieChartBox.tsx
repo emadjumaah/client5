@@ -5,7 +5,6 @@ import Paper from '@material-ui/core/Paper';
 import { Box, Grid, Typography } from '@material-ui/core';
 import PieChart from './PieChart';
 import { formatKeyToMonth } from '../../common/reports';
-import _ from 'lodash';
 
 export default function PieChartBox({
   title,

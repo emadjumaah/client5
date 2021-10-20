@@ -1,4 +1,4 @@
-import { gql } from "@apollo/client";
+import { gql } from '@apollo/client';
 
 export default gql`
   query getBranches {
@@ -12,12 +12,14 @@ export default gql`
         systems
         users
 
+        pack
         packType
         packName
         packStart
         packEnd
         packCost
         packQty
+        packDocsQty
 
         name
         nameAr
@@ -35,7 +37,7 @@ export default gql`
         country
         location {
           lat
-          lon
+          lng
         }
         userId
         note

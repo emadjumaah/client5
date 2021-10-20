@@ -54,7 +54,9 @@ export const FileUpload = () => {
 };
 
 export const ImageUpload = ({ setLogo, disabled }) => {
-  const [_, setFile] = useState({ name: '', path: '' });
+  const [file, setFile] = useState({ name: '', path: '' });
+  console.log(file);
+
   const handleChange = (e: any) => {
     const file = e.target.files[0];
     uploadFile(file);

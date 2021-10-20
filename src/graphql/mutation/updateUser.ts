@@ -1,4 +1,4 @@
-import { gql } from "@apollo/client";
+import { gql } from '@apollo/client';
 
 export default gql`
   mutation updateUser(
@@ -10,8 +10,15 @@ export default gql`
     $email: String
     $avatar: String
     $department: DepartmentInput
-    $isDepartAdmin: Boolean
     $employee: EmployeeInput
+    $isBranchAdmin: Boolean
+    $isDepartAdmin: Boolean
+    $isEmployee: Boolean
+    $isFinance: Boolean
+    $isOperate: Boolean
+    $isEditor: Boolean
+    $isWriter: Boolean
+    $isViewer: Boolean
   ) {
     updateUser(
       _id: $_id
@@ -22,8 +29,15 @@ export default gql`
       email: $email
       avatar: $avatar
       department: $department
-      isDepartAdmin: $isDepartAdmin
       employee: $employee
+      isBranchAdmin: $isBranchAdmin
+      isDepartAdmin: $isDepartAdmin
+      isEmployee: $isEmployee
+      isFinance: $isFinance
+      isOperate: $isOperate
+      isEditor: $isEditor
+      isWriter: $isWriter
+      isViewer: $isViewer
     ) {
       ok
       message

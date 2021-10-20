@@ -46,7 +46,6 @@ import { GridExporter } from '@devexpress/dx-react-grid-export';
 import saveAs from 'file-saver';
 import { getColumns } from '../../common/columns';
 // import { reportprint } from '../../common/ipc';
-import _ from 'lodash';
 import PageLayout from '../main/PageLayout';
 import DateNavigatorReports from '../../components/filters/DateNavigatorReports';
 import { ExpensesReportContext } from '../../contexts';

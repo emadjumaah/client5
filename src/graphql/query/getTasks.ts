@@ -1,4 +1,4 @@
-import { gql } from "@apollo/client";
+import { gql } from '@apollo/client';
 
 export default gql`
   query getTasks(
@@ -35,7 +35,10 @@ export default gql`
         progress
         isDisabled
         tasktype
-
+        location {
+          lat
+          lng
+        }
         priority
         amount
         evQty

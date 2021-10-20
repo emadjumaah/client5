@@ -1,4 +1,4 @@
-import { gql } from "@apollo/client";
+import { gql } from '@apollo/client';
 
 export default gql`
   mutation updateTask(
@@ -16,6 +16,7 @@ export default gql`
     $evDone: Int
     $events: String
     $items: String
+    $location: LocationInput
     $amount: Float
     $priority: Int
     $customer: CustomerInput
@@ -37,6 +38,7 @@ export default gql`
       evDone: $evDone
       events: $events
       items: $items
+      location: $location
       amount: $amount
       priority: $priority
       customer: $customer

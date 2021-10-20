@@ -1,4 +1,4 @@
-import { client } from "./client";
+import { client } from './client';
 import {
   getCategories,
   getDepartments,
@@ -41,7 +41,7 @@ import {
   getExpenses,
   getReminders,
   getActions,
-} from "./query";
+} from './query';
 import {
   createCategory,
   createDepartment,
@@ -103,7 +103,7 @@ import {
   deleteAction,
   updateAction,
   createBranch,
-} from "./mutation";
+} from './mutation';
 
 export { client };
 export {

@@ -1,8 +1,8 @@
 /* eslint-disable array-callback-return */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import * as Tafgeet from "tafgeetjs";
-import { mainmenu } from "../constants";
-import { systemTypes } from "../constants/branch";
+import * as Tafgeet from 'tafgeetjs';
+import { mainmenu } from '../constants';
+import { systemTypes } from '../constants/branch';
 import {
   parentsBasicAccountsList,
   parentsExpAccountsList,
@@ -10,13 +10,13 @@ import {
   parentsInvAccountsList,
   parentsPurAccountsList,
   parentsSalesAccountsList,
-} from "../constants/kaid";
+} from '../constants/kaid';
 const userAgent = navigator.userAgent.toLowerCase();
 
-export const isElectron = userAgent.indexOf(" electron/") > -1;
+export const isElectron = userAgent.indexOf(' electron/') > -1;
 
 export const isDEV =
-  !process.env.NODE_ENV || process.env.NODE_ENV === "development";
+  !process.env.NODE_ENV || process.env.NODE_ENV === 'development';
 
 export const getResourses = (
   resourse: any,
@@ -48,7 +48,7 @@ export const nameToColor = (name: string, s = 70, l = 40) => {
   }
 
   const h = hash % 360;
-  return "hsl(" + h + ", " + s + "%, " + l + "%)";
+  return 'hsl(' + h + ', ' + s + '%, ' + l + '%)';
 };
 
 export const groupBy = (list: any, fld: any) => {
@@ -180,14 +180,14 @@ export const getSendTime = ({
   qty,
 }: any) => {
   const baseTime =
-    timerelate === "bstart" || timerelate === "astart" ? startDate : endDate;
-  const isPlus = timerelate === "bstart" ? false : true;
+    timerelate === 'bstart' || timerelate === 'astart' ? startDate : endDate;
+  const isPlus = timerelate === 'bstart' ? false : true;
   const unitms =
-    timeunit === "minute"
+    timeunit === 'minute'
       ? 1000 * 60
-      : timeunit === "hour"
+      : timeunit === 'hour'
       ? 1000 * 60 * 60
-      : timeunit === "day"
+      : timeunit === 'day'
       ? 1000 * 60 * 60 * 24
       : 0;
   const fms = isPlus ? unitms * qty : -(unitms * qty);
@@ -196,6 +196,19 @@ export const getSendTime = ({
 };
 
 export const tafkeet = (number: any) => {
-  const stringText = new Tafgeet(number, "QAR").parse();
+  const stringText = new Tafgeet(number, 'QAR').parse();
   return stringText;
+};
+
+export const isValidEmail = (email: any) => {
+  if (!email) return false;
+  const re =
+    /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  return re.test(String(email).toLowerCase());
+};
+
+export const sToMAndS = (s: number) => {
+  const minutes = Math.floor(s / 60);
+  const seconds = (s % 60).toFixed(0);
+  return minutes + ':' + (Number(seconds) < 10 ? '0' : '') + seconds;
 };

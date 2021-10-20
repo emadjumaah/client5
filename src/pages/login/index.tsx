@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useMutation } from '@apollo/client';
 import { useForm } from 'react-hook-form';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
@@ -20,6 +20,10 @@ import { GContextTypes } from '../../types';
 import { GlobalContext } from '../../contexts';
 import { loginClasses } from '../../themes';
 import { client } from '../../graphql';
+import CountDown from '../../Shared/CountDown';
+
+const timeToWait = 900000;
+const possibleWrong = 15;
 
 const Login = (): any => {
   const classes = loginClasses();
@@ -29,14 +33,32 @@ const Login = (): any => {
   const { register, handleSubmit, errors }: any = useForm(yup.loginResolver);
   const {
     dispatch,
+    store: { wrongTimes, startBlock },
     translate: { isRTL },
   }: GContextTypes = useContext(GlobalContext);
   const [dologin] = useMutation(login);
+
+  const timeFromBlock = Date.now() - startBlock;
+  const validtime = startBlock ? timeFromBlock > timeToWait : true;
+  const remaningTime = Math.floor((timeToWait - timeFromBlock) / 1000);
+
+  const initStoreState = () => {
+    dispatch({ type: 'setLastSuccess', payload: Date.now() });
+    dispatch({ type: 'setWrongTimes', payload: 0 });
+    dispatch({ type: 'setStartBlock', payload: null });
+  };
+
+  useEffect(() => {
+    if (validtime) {
+      initStoreState();
+    }
+  }, [validtime]);
 
   const onSubmit = async (dt: any) => {
     const { username, password } = dt;
     const userData = await dologin({ variables: { username, password } });
     if (userData?.data?.login?.ok === true) {
+      initStoreState();
       const { data, accessToken, refreshToken } = userData.data.login;
       const user = {
         ...data,
@@ -49,6 +71,10 @@ const Login = (): any => {
       seterror(null);
     } else if (userData?.data?.login?.ok === false) {
       seterror(userData.data.login.error);
+      dispatch({ type: 'setWrongTimes' });
+      if (wrongTimes > possibleWrong) {
+        dispatch({ type: 'setStartBlock', payload: Date.now() });
+      }
     }
   };
 
@@ -57,6 +83,10 @@ const Login = (): any => {
       handleSubmit(onSubmit)();
     }
   };
+
+  if (!validtime) {
+    return <CountDown time={remaningTime}></CountDown>;
+  }
 
   return (
     <>

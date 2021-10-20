@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
+import React from 'react';
 import { useState } from 'react';
 import Paper from '@material-ui/core/Paper';
 import {
@@ -22,8 +23,7 @@ import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { errorAlert, Loading, PopupEditing } from '../../Shared';
 import { Box, Fab, IconButton } from '@material-ui/core';
-import { useUsers } from '../../hooks';
-import PopupUser from '../../pubups/PopupUser';
+import { useEmployees, useUsers } from '../../hooks';
 import {
   activeFormatter,
   avatarFormatter,
@@ -32,7 +32,7 @@ import {
 import { AlertLocal, SearchTable } from '../../components';
 import PageLayout from '../main/PageLayout';
 import useCompany from '../../hooks/useCompany';
-import React from 'react';
+import PopupUserEmail from '../../pubups/PopupUserEmail';
 
 const getRowId = (row: { _id: any }) => row._id;
 
@@ -49,11 +49,14 @@ export default function Users({
 
   const [columns] = useState([
     { name: 'avatar', title: words.avatar },
-    { name: 'username', title: words.username },
+    { name: 'username', title: words.email },
     { name: 'name', title: words.name },
     { name: 'phone', title: words.phoneNumber },
-    { name: 'email', title: words.email },
     { name: 'roles', title: words.roles },
+    {
+      name: isRTL ? 'employeeNameAr' : 'employeeName',
+      title: words.employee,
+    },
     { name: 'block', title: isRTL ? 'الحالة' : 'Status' },
   ]);
 
@@ -67,6 +70,8 @@ export default function Users({
     refreshuser,
   } = useUsers();
   const { company } = useCompany();
+  const { employees } = useEmployees();
+
   const commitChanges = async ({ deleted }) => {
     if (deleted) {
       const _id = deleted[0];
@@ -178,11 +183,12 @@ export default function Users({
           />
 
           <PopupEditing theme={theme} addAction={addUser} editAction={editUser}>
-            <PopupUser
+            <PopupUserEmail
               brch={company?.basename}
               editPassword={editPassword}
               block={block}
-            ></PopupUser>
+              employees={employees}
+            ></PopupUserEmail>
           </PopupEditing>
         </Grid>
         {alrt.show && (

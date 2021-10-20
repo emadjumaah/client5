@@ -1,4 +1,4 @@
-import { gql } from "@apollo/client";
+import { gql } from '@apollo/client';
 
 export default gql`
   query getEvents(
@@ -38,7 +38,10 @@ export default gql`
         reminder
         exDate
         allowDrag
-
+        location {
+          lat
+          lng
+        }
         autoNo
         docNo
         priority

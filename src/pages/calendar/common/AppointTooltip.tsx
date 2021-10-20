@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from 'react';
 import {
   Box,
   Button,
@@ -9,18 +9,18 @@ import {
   CardContent,
   Divider,
   Typography,
-} from "@material-ui/core";
-import { roles, timeToHourMinute } from "../../../common";
-import { eventStatusEn } from "../../../constants";
-import { cardClasses } from "../../../themes/classes";
-import { renderStatusIcon } from "./StatusIcon";
-import PopupAppointInvoice from "../../../pubups/PopupAppointInvoice";
-import { Avatar } from "../../../Shared";
-import { GContextTypes } from "../../../types";
-import { GlobalContext } from "../../../contexts";
-import { eventStatusAr } from "../../../constants/datatypes";
-import { useLazyQuery } from "@apollo/client";
-import { getOperationItems } from "../../../graphql";
+} from '@material-ui/core';
+import { roles, timeToHourMinute } from '../../../common';
+import { eventStatusEn } from '../../../constants';
+import { cardClasses } from '../../../themes/classes';
+import { renderStatusIcon } from './StatusIcon';
+import PopupAppointInvoice from '../../../pubups/PopupAppointInvoice';
+import { Avatar } from '../../../Shared';
+import { GContextTypes } from '../../../types';
+import { GlobalContext } from '../../../contexts';
+import { eventStatusAr } from '../../../constants/datatypes';
+import { useLazyQuery } from '@apollo/client';
+import { getOperationItems } from '../../../graphql';
 
 export const RenderToolTip = ({
   appointmentData,
@@ -45,7 +45,7 @@ export const RenderToolTip = ({
   const classes = cardClasses();
 
   useEffect(() => {
-    const isCalPOSEditor = roles.isCalEditor() || roles.isPOSEditor();
+    const isCalPOSEditor = roles.isEditor();
     setIsEditor(isCalPOSEditor);
   }, []);
 
@@ -73,7 +73,7 @@ export const RenderToolTip = ({
   const task = tasks.filter((t: any) => t.id === taskId)?.[0];
 
   const [getItems, itemsData]: any = useLazyQuery(getOperationItems, {
-    fetchPolicy: "cache-and-network",
+    fetchPolicy: 'cache-and-network',
   });
 
   useEffect(() => {
@@ -86,7 +86,7 @@ export const RenderToolTip = ({
   }, []);
 
   useEffect(() => {
-    const items = itemsData?.data?.["getOperationItems"]?.data || [];
+    const items = itemsData?.data?.['getOperationItems']?.data || [];
     if (items && items.length > 0) {
       const ids = items.map((it: any) => it.itemId);
       const servlist = services.filter((ser: any) => ids.includes(ser._id));
@@ -134,10 +134,10 @@ export const RenderToolTip = ({
   }, [itemsData]);
 
   const options = {
-    weekday: "long",
-    year: "numeric",
-    month: "long",
-    day: "numeric",
+    weekday: 'long',
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
   };
 
   const handleNewInvoice = () => {
@@ -146,35 +146,35 @@ export const RenderToolTip = ({
 
   const empColor = employees
     ? employees.filter((emp: any) => emp._id === employeeId)
-    : "";
-  const employeeColor = empColor?.[0]?.color || "";
+    : '';
+  const employeeColor = empColor?.[0]?.color || '';
 
   const departColor = departments
     ? departments.filter((dep: any) => dep._id === departmentId)
-    : "";
-  const departmentColor = departColor?.[0]?.color || "";
+    : '';
+  const departmentColor = departColor?.[0]?.color || '';
 
   const desabledSave = (!customerPhone && !items) || status === 10 || !isEditor;
 
   return (
-    <Card style={{ direction: isRTL ? "rtl" : "ltr" }} className={classes.root}>
+    <Card style={{ direction: isRTL ? 'rtl' : 'ltr' }} className={classes.root}>
       <CardContent>
         {status && (
           <Box
             display="flex"
             style={{
-              position: "absolute",
+              position: 'absolute',
               height: 30,
               paddingRight: 5,
               paddingLeft: 5,
               borderRadius: 3,
-              alignItems: "center",
-              justifyContent: "center",
+              alignItems: 'center',
+              justifyContent: 'center',
               left: 10,
               top: 10,
             }}
           >
-            {renderStatusIcon(status, "#555", 20)}
+            {renderStatusIcon(status, '#555', 20)}
             <Typography
               style={{
                 marginTop: -1,
@@ -187,34 +187,34 @@ export const RenderToolTip = ({
         )}
         <Box
           display="flex"
-          style={{ alignItems: "center", justifyContent: "flex-end" }}
+          style={{ alignItems: 'center', justifyContent: 'flex-end' }}
         >
-          <Typography style={{ fontWeight: "bold" }} variant="body2">
+          <Typography style={{ fontWeight: 'bold' }} variant="body2">
             {docNo}
           </Typography>
         </Box>
-        <Box style={{ alignItems: "center", justifyContent: "flex-start" }}>
-          <Typography style={{ fontWeight: "bold" }} variant="body2">
+        <Box style={{ alignItems: 'center', justifyContent: 'flex-start' }}>
+          <Typography style={{ fontWeight: 'bold' }} variant="body2">
             {task?.title}
           </Typography>
-          <Typography style={{ fontWeight: "bold" }} variant="body2">
+          <Typography style={{ fontWeight: 'bold' }} variant="body2">
             {title}
           </Typography>
         </Box>
         <Box
           display="flex"
-          style={{ alignItems: "center", justifyContent: "space-between" }}
+          style={{ alignItems: 'center', justifyContent: 'space-between' }}
         >
           <Box>
             <Typography gutterBottom variant="subtitle2" component="h2">
-              {startDate.toLocaleString(isRTL ? "ar-QA" : "en-US", options)}
+              {startDate.toLocaleString(isRTL ? 'ar-QA' : 'en-US', options)}
             </Typography>
           </Box>
           <Box display="flex" style={{ marginBottom: 3 }}>
             <div>
-              {timeToHourMinute(startDate, isRTL ? "ar-QA" : "en-US")} -{" "}
+              {timeToHourMinute(startDate, isRTL ? 'ar-QA' : 'en-US')} -{' '}
             </div>
-            <div> {timeToHourMinute(endDate, isRTL ? "ar-QA" : "en-US")}</div>
+            <div> {timeToHourMinute(endDate, isRTL ? 'ar-QA' : 'en-US')}</div>
           </Box>
         </Box>
         <Box>
@@ -233,7 +233,7 @@ export const RenderToolTip = ({
         <Divider></Divider>
         <Box
           display="flex"
-          style={{ alignItems: "center", justifyContent: "space-between" }}
+          style={{ alignItems: 'center', justifyContent: 'space-between' }}
         >
           {itemsList?.[0] && (
             <Typography gutterBottom variant="h6" component="h1">
@@ -246,8 +246,8 @@ export const RenderToolTip = ({
               style={{
                 zIndex: 10,
                 padding: 3,
-                backgroundColor: "#667fb5",
-                color: "#fff",
+                backgroundColor: '#667fb5',
+                color: '#fff',
               }}
               gutterBottom
               variant="subtitle2"
@@ -261,7 +261,7 @@ export const RenderToolTip = ({
           m={2}
           display="flex"
           style={{
-            alignItems: "center",
+            alignItems: 'center',
           }}
         >
           <Box
@@ -285,7 +285,7 @@ export const RenderToolTip = ({
           m={3}
           display="flex"
           style={{
-            alignItems: "center",
+            alignItems: 'center',
           }}
         >
           <Avatar name={employeeName} bg={employeeColor} size={26}></Avatar>
@@ -310,7 +310,7 @@ export const RenderToolTip = ({
           <Box
             m={1}
             display="flex"
-            style={{ flex: 1, justifyContent: "flex-end" }}
+            style={{ flex: 1, justifyContent: 'flex-end' }}
           >
             <Button
               size="medium"

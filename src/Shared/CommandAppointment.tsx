@@ -10,7 +10,7 @@ import { roles } from '../common';
 const SaveButton = ({ onExecute }: any) => {
   const store = getStoreItem('store');
   const { lang } = store;
-  const isCalEditor = roles.isCalEditor();
+  const isCalEditor = roles.isEditor();
   if (!isCalEditor) {
     return <div></div>;
   }
@@ -36,7 +36,7 @@ const CancelButton = () => <div></div>;
 const DeleteButton = ({ onExecute }: any) => {
   const store = getStoreItem('store');
   const { lang } = store;
-  const isCalEditor = roles.isCalEditor();
+  const isCalEditor = roles.isEditor();
   if (!isCalEditor) {
     return <div></div>;
   }

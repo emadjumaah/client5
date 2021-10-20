@@ -1,4 +1,4 @@
-import { gql } from "@apollo/client";
+import { gql } from '@apollo/client';
 
 export default gql`
   mutation login($username: String, $password: String) {
@@ -21,11 +21,18 @@ export default gql`
         fax
         mob
 
-        isSuperAdmin
-
         roles
 
+        isSuperAdmin
+        isBranchAdmin
         isDepartAdmin
+        isEmployee
+        isFinance
+        isOperate
+        isEditor
+        isWriter
+        isViewer
+
         departmentId
         departmentName
         departmentNameAr

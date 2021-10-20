@@ -25,6 +25,15 @@ export const storeReducer = (state: StoreTypes, action: any) => {
       };
     case 'logout':
       return { ...state, user: null, token: null };
+    case 'setLastSuccess':
+      return { ...state, lastSuccess: action.payload };
+    case 'setWrongTimes':
+      return {
+        ...state,
+        wrongTimes: action.payload === 0 ? 0 : state.wrongTimes + 1,
+      };
+    case 'setStartBlock':
+      return { ...state, startBlock: action.payload };
 
     default:
       throw new Error('Unexpected action');

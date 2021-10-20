@@ -1,20 +1,20 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import React from "react";
+import React from 'react';
 
-import AddIcon from "@material-ui/icons/Add";
-import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
-import DeleteOutlinedIcon from "@material-ui/icons/DeleteOutlined";
-import { Box, IconButton, Fab } from "@material-ui/core";
-import { roles } from "../common";
-import { getStoreItem } from "../store";
+import AddIcon from '@material-ui/icons/Add';
+import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
+import DeleteOutlinedIcon from '@material-ui/icons/DeleteOutlined';
+import { Box, IconButton, Fab } from '@material-ui/core';
+import { roles } from '../common';
+import { getStoreItem } from '../store';
 
 const AddButton = ({ onExecute }) => {
-  const isEditor = roles.isCalEditor() || roles.isPOSEditor();
+  const isEditor = roles.isEditor();
   if (!isEditor) {
     return <div></div>;
   }
   return (
-    <div style={{ textAlign: "center" }}>
+    <div style={{ textAlign: 'center' }}>
       <Box m={1}>
         <Fab color="primary" onClick={onExecute} title="Create new row">
           <AddIcon style={{ fontSize: 26 }} />
@@ -25,7 +25,7 @@ const AddButton = ({ onExecute }) => {
 };
 
 const EditButton = ({ onExecute }) => {
-  const isEditor = roles.isCalEditor() || roles.isPOSEditor();
+  const isEditor = roles.isEditor();
   if (!isEditor) {
     return <div></div>;
   }
@@ -35,15 +35,15 @@ const EditButton = ({ onExecute }) => {
       onClick={onExecute}
       title="Edit row"
     >
-      <EditOutlinedIcon style={{ fontSize: 22, color: "#729aaf" }} />
+      <EditOutlinedIcon style={{ fontSize: 22, color: '#729aaf' }} />
     </IconButton>
   );
 };
 
 const DeleteButton = ({ onExecute }) => {
-  const store = getStoreItem("store");
+  const store = getStoreItem('store');
   const { lang } = store;
-  const isEditor = roles.isCalEditor() || roles.isPOSEditor();
+  const isEditor = roles.isEditor();
   if (!isEditor) {
     return <div></div>;
   }
@@ -52,9 +52,9 @@ const DeleteButton = ({ onExecute }) => {
       onClick={() => {
         if (
           window.confirm(
-            lang === "ar"
-              ? "هل انت متأكد من حذف المدخل ؟"
-              : "Are you sure you want to delete this row?"
+            lang === 'ar'
+              ? 'هل انت متأكد من حذف المدخل ؟'
+              : 'Are you sure you want to delete this row?'
           )
         ) {
           onExecute();
@@ -63,7 +63,7 @@ const DeleteButton = ({ onExecute }) => {
       title="Delete row"
       style={{ padding: 5 }}
     >
-      <DeleteOutlinedIcon style={{ fontSize: 22, color: "#a76f9a" }} />
+      <DeleteOutlinedIcon style={{ fontSize: 22, color: '#a76f9a' }} />
     </IconButton>
   );
 };

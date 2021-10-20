@@ -1,31 +1,32 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import React, { useContext, useEffect, useState } from "react";
-import { Box } from "@material-ui/core";
-import { MuiPickersUtilsProvider } from "@material-ui/pickers";
-import DateFnsUtils from "@date-io/date-fns";
+import React, { useContext, useEffect, useState } from 'react';
+import { Box } from '@material-ui/core';
+import { MuiPickersUtilsProvider } from '@material-ui/pickers';
+import DateFnsUtils from '@date-io/date-fns';
 import {
   useDepartments,
   useEmployees,
   useCustomers,
   useServices,
-} from "../../../hooks";
+} from '../../../hooks';
 import {
   PopupDeprtment,
   PopupEmployee,
   PopupCustomer,
   PopupService,
-} from "../../../pubups";
+} from '../../../pubups';
 import {
   PopupAutoField,
   CustomerAutoField,
   ServiceAutoField,
   PopupAutoFieldEmp,
-} from "../../../Shared";
-import { getSelectedFromAppointment, roles } from "../../../common";
-import { GContextTypes } from "../../../types";
-import { GlobalContext } from "../../../contexts";
-import { DateTimePicker } from "@material-ui/pickers";
-import { StatusSelect } from "./StatusSelect";
+} from '../../../Shared';
+import { getSelectedFromAppointment, roles } from '../../../common';
+import { GContextTypes } from '../../../types';
+import { GlobalContext } from '../../../contexts';
+import { DateTimePicker } from '@material-ui/pickers';
+import { StatusSelect } from './StatusSelect';
 
 export const AppointForm2 = ({ onFieldChange, appointmentData }: any) => {
   const {
@@ -38,11 +39,11 @@ export const AppointForm2 = ({ onFieldChange, appointmentData }: any) => {
 
   const [isEditor, setIsEditor] = useState(false);
 
-  const [newtext, setNewtext] = useState("");
+  const [newtext, setNewtext] = useState('');
   const [status, setStatus] = useState(appointmentData.status || 2);
 
   useEffect(() => {
-    const isCalPOSEditor = roles.isCalEditor() || roles.isPOSEditor();
+    const isCalPOSEditor = roles.isEditor();
     setIsEditor(isCalPOSEditor);
   }, []);
 
@@ -51,28 +52,28 @@ export const AppointForm2 = ({ onFieldChange, appointmentData }: any) => {
   };
   const onCloseDepartment = () => {
     setOpenDep(false);
-    setNewtext("");
+    setNewtext('');
   };
   const openEmployee = () => {
     setOpenEmp(true);
   };
   const onCloseEmploee = () => {
     setOpenEmp(false);
-    setNewtext("");
+    setNewtext('');
   };
   const openCustomer = () => {
     setOpenCust(true);
   };
   const onCloseCustomer = () => {
     setOpenCust(false);
-    setNewtext("");
+    setNewtext('');
   };
   const openItem = () => {
     setOpenItm(true);
   };
   const onCloseItem = () => {
     setOpenItm(false);
-    setNewtext("");
+    setNewtext('');
   };
 
   const { departments, addDepartment, editDepartment } = useDepartments();
@@ -82,7 +83,7 @@ export const AppointForm2 = ({ onFieldChange, appointmentData }: any) => {
 
   useEffect(() => {
     if (!appointmentData.status) {
-      onNewFieldChange(2, "status");
+      onNewFieldChange(2, 'status');
     }
   }, []);
 
@@ -94,15 +95,15 @@ export const AppointForm2 = ({ onFieldChange, appointmentData }: any) => {
     onFieldChange({ [name]: nextValue });
     if (nextValue?.employeeId) {
       const itememp = employees.filter(
-        (emp: any) => emp._id === nextValue.employeeId,
+        (emp: any) => emp._id === nextValue.employeeId
       )[0];
-      onNewFieldChange(itememp, "employee");
+      onNewFieldChange(itememp, 'employee');
     }
     if (nextValue?.departmentId) {
       const itemdep = departments.filter(
-        (dep: any) => dep._id === nextValue.departmentId,
+        (dep: any) => dep._id === nextValue.departmentId
       )[0];
-      onNewFieldChange(itemdep, "department");
+      onNewFieldChange(itemdep, 'department');
     }
   };
 
@@ -117,15 +118,15 @@ export const AppointForm2 = ({ onFieldChange, appointmentData }: any) => {
   } = getSelectedFromAppointment(appointmentData);
 
   return (
-    <Box style={{ direction: isRTL ? "rtl" : "ltr" }}>
+    <Box style={{ direction: isRTL ? 'rtl' : 'ltr' }}>
       <Box padding={3}>
         <MuiPickersUtilsProvider utils={DateFnsUtils}>
           <Box
             display="flex"
             style={{
               paddingBottom: 10,
-              alignItems: "center",
-              justifyContent: "space-between",
+              alignItems: 'center',
+              justifyContent: 'space-between',
               marginRight: isRTL ? undefined : 54,
               marginLeft: isRTL ? 54 : undefined,
             }}
@@ -139,7 +140,7 @@ export const AppointForm2 = ({ onFieldChange, appointmentData }: any) => {
               inputVariant="standard"
               format="dd/MM/yyyy hh:mm"
               value={startDate}
-              onChange={(d: any) => onNewFieldChange(d, "startDate")}
+              onChange={(d: any) => onNewFieldChange(d, 'startDate')}
               style={{ width: 175 }}
             />
             <DateTimePicker
@@ -152,7 +153,7 @@ export const AppointForm2 = ({ onFieldChange, appointmentData }: any) => {
               name="endDate"
               inputVariant="standard"
               value={endDate}
-              onChange={(d: any) => onNewFieldChange(d, "endDate")}
+              onChange={(d: any) => onNewFieldChange(d, 'endDate')}
               style={{ width: 175 }}
             />
           </Box>

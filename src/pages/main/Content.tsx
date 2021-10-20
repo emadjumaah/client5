@@ -1,7 +1,7 @@
 /* eslint-disable no-var */
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import { useContext, useEffect, useReducer, useState } from 'react';
+import { useContext, useReducer, useState } from 'react';
 import { fade, useTheme } from '@material-ui/core/styles';
 import { Box, CssBaseline } from '@material-ui/core';
 import { Route } from 'react-router-dom';
@@ -54,7 +54,6 @@ import { GContextTypes } from '../../types';
 import Finance from '../adds/Finance';
 
 import { useBranches, useServices, useSuppliers } from '../../hooks';
-import { roles } from '../../common';
 import useCompany from '../../hooks/useCompany';
 import PageLayout from './PageLayout';
 import Appointments from '../adds/Appointments';
@@ -106,15 +105,10 @@ import EmployeesCalendar from '../calendar/EmployeesCalendar';
 import ManageResourses from '../adds/ManageResourses';
 import Branches from '../adds/Branches';
 import React from 'react';
-// import { webFrame } from "electron";
 
 const Content = () => {
-  // webFrame.setZoomFactor(0.9);
-  // webFrame.setZoomFactor(1);
-
   const classes = layoutClasses();
   const [menuitem, setMenuitem] = useState(mainmenu[0]);
-  const [isEditor, setIsEditor] = useState(false);
 
   const theme = useTheme();
 
@@ -133,10 +127,7 @@ const Content = () => {
     dispatch({ type: 'logout' });
   };
 
-  useEffect(() => {
-    const isCalPOSEditor = roles.isCalEditor() || roles.isPOSEditor();
-    setIsEditor(isCalPOSEditor);
-  }, []);
+  const isEditor = user?.isEditor;
 
   const [calendarStore, calendarDispatch] = useReducer(
     calendarReducer,
