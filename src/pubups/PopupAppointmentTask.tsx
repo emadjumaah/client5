@@ -1,10 +1,10 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import React, { useContext, useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
-import { dublicateAlert, errorAlert, messageAlert } from "../Shared";
-import { GContextTypes } from "../types";
-import { GlobalContext } from "../contexts";
+import React, { useContext, useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { dublicateAlert, errorAlert, messageAlert } from '../Shared';
+import { GContextTypes } from '../types';
+import { GlobalContext } from '../contexts';
 import {
   Box,
   Button,
@@ -17,29 +17,29 @@ import {
   Radio,
   RadioGroup,
   Typography,
-} from "@material-ui/core";
-import PopupLayout from "../pages/main/PopupLayout";
-import { Grid } from "@material-ui/core";
-import AutoFieldLocal from "../components/fields/AutoFieldLocal";
-import { CalenderLocal, TextFieldLocal } from "../components";
-import { eventStatus, weekdaysNNo } from "../constants/datatypes";
+} from '@material-ui/core';
+import PopupLayout from '../pages/main/PopupLayout';
+import { Grid } from '@material-ui/core';
+import AutoFieldLocal from '../components/fields/AutoFieldLocal';
+import { CalenderLocal, TextFieldLocal } from '../components';
+import { eventStatus, weekdaysNNo } from '../constants/datatypes';
 // import { getAppStartEndPeriod } from "../common/time";
-import ServiceItemForm from "../Shared/ServiceItemForm";
-import ItemsTable from "../Shared/ItemsTable";
-import LoadingInline from "../Shared/LoadingInline";
-import { useLazyQuery } from "@apollo/client";
-import { getActions, getOperationItems } from "../graphql";
-import { invoiceClasses } from "../themes/classes";
+import ServiceItemForm from '../Shared/ServiceItemForm';
+import ItemsTable from '../Shared/ItemsTable';
+import LoadingInline from '../Shared/LoadingInline';
+import { useLazyQuery } from '@apollo/client';
+import { getActions, getOperationItems } from '../graphql';
+import { invoiceClasses } from '../themes/classes';
 import {
   actionTypeFormatter,
   getDateDayTimeFormat,
   moneyFormat,
-} from "../Shared/colorFormat";
-import PopupAddMultiEvents from "./PopupAddMultiEvents";
-import PopupAppointInvoice from "./PopupAppointInvoice";
-import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
-import DeleteOutlinedIcon from "@material-ui/icons/DeleteOutlined";
-import PopupAction from "./PopupAction";
+} from '../Shared/colorFormat';
+import PopupAddMultiEvents from './PopupAddMultiEvents';
+import PopupAppointInvoice from './PopupAppointInvoice';
+import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
+import DeleteOutlinedIcon from '@material-ui/icons/DeleteOutlined';
+import PopupAction from './PopupAction';
 
 export const indexTheList = (list: any) => {
   return list.map((item: any, index: any) => {
@@ -97,7 +97,7 @@ const PopupAppointmentTask = ({
   const [openMulti, setOpenMulti] = useState(false);
   const [openInvoice, setOpenInvoice] = useState(false);
 
-  const [alrt, setAlrt] = useState({ show: false, msg: "", type: undefined });
+  const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
 
   const [openAction, setOpenAction] = useState(false);
   const [actionslist, setActionslist] = useState([]);
@@ -114,11 +114,11 @@ const PopupAppointmentTask = ({
   }: GContextTypes = useContext(GlobalContext);
 
   const [getItems, itemsData]: any = useLazyQuery(getOperationItems, {
-    fetchPolicy: "cache-and-network",
+    fetchPolicy: 'cache-and-network',
   });
 
   const [loadActions, actionsData]: any = useLazyQuery(getActions, {
-    fetchPolicy: "cache-and-network",
+    fetchPolicy: 'cache-and-network',
   });
 
   useEffect(() => {
@@ -131,8 +131,8 @@ const PopupAppointmentTask = ({
   }, [resKind, employees]);
 
   useEffect(() => {
-    const items = itemsData?.data?.["getOperationItems"]?.data || [];
-    const actions = actionsData?.data?.["getActions"]?.data || [];
+    const items = itemsData?.data?.['getOperationItems']?.data || [];
+    const actions = actionsData?.data?.['getActions']?.data || [];
 
     if (items && items.length > 0) {
       const ids = items.map((it: any) => it.itemId);
@@ -338,14 +338,14 @@ const PopupAppointmentTask = ({
     if (startDate > endDate) {
       await messageAlert(
         setAlrt,
-        isRTL ? "يجب تعديل التاريخ" : "Date should be change"
+        isRTL ? 'يجب تعديل التاريخ' : 'Date should be change'
       );
       return;
     }
     if (new Date(startDate).getDate() !== new Date(endDate).getDate()) {
       await messageAlert(
         setAlrt,
-        isRTL ? "يجب تعديل التاريخ" : "Date should be change"
+        isRTL ? 'يجب تعديل التاريخ' : 'Date should be change'
       );
       return;
     }
@@ -427,7 +427,7 @@ const PopupAppointmentTask = ({
 
   const apply = async (mutate: any, variables: any) => {
     try {
-      mutate({ variables });
+      await mutate({ variables });
       onCloseForm();
     } catch (error) {
       onError(error);
@@ -436,7 +436,7 @@ const PopupAppointmentTask = ({
   };
 
   const onError = async (error: any) => {
-    if (error.message.includes("duplicate")) {
+    if (error.message.includes('duplicate')) {
       await dublicateAlert(setAlrt, isRTL);
     } else {
       await errorAlert(setAlrt, isRTL);
@@ -458,11 +458,11 @@ const PopupAppointmentTask = ({
 
   const title = isRTL
     ? isNew
-      ? "موعد جديد"
-      : "تعديل موعد"
+      ? 'موعد جديد'
+      : 'تعديل موعد'
     : isNew
-    ? "New Appointment"
-    : "Edit Appointment";
+    ? 'New Appointment'
+    : 'Edit Appointment';
   const desabledSave = row.status === 10 || !isEditor;
 
   return (
@@ -481,7 +481,7 @@ const PopupAppointmentTask = ({
     >
       <>
         <Box display="flex">
-          <Typography style={{ fontWeight: "bold" }} variant="body2">
+          <Typography style={{ fontWeight: 'bold' }} variant="body2">
             {row?.docNo}
           </Typography>
         </Box>
@@ -562,7 +562,7 @@ const PopupAppointmentTask = ({
                               color="primary"
                             />
                           }
-                          label={isRTL ? "الموظف" : "Employee"}
+                          label={isRTL ? 'الموظف' : 'Employee'}
                         />
 
                         <FormControlLabel
@@ -573,7 +573,7 @@ const PopupAppointmentTask = ({
                               color="primary"
                             />
                           }
-                          label={isRTL ? "المورد" : "Resourse"}
+                          label={isRTL ? 'المورد' : 'Resourse'}
                         />
                       </RadioGroup>
                     </Box>
@@ -623,7 +623,7 @@ const PopupAppointmentTask = ({
                 item
                 xs={4}
                 style={{
-                  backgroundColor: "#eee",
+                  backgroundColor: '#eee',
                   borderRadius: 5,
                 }}
               >
@@ -639,9 +639,9 @@ const PopupAppointmentTask = ({
                     setOpenAction(true);
                   }}
                 >
-                  {isRTL ? "اضافة تنبيه" : "Add Reminder"}
+                  {isRTL ? 'اضافة تنبيه' : 'Add Reminder'}
                 </Button>
-                <Paper style={{ height: 150, overflow: "auto" }}>
+                <Paper style={{ height: 150, overflow: 'auto' }}>
                   {actionslist.map((act: any) => {
                     return (
                       <ListItem>
@@ -655,7 +655,7 @@ const PopupAppointmentTask = ({
                           style={{ padding: 5 }}
                         >
                           <DeleteOutlinedIcon
-                            style={{ fontSize: 22, color: "#a76f9a" }}
+                            style={{ fontSize: 22, color: '#a76f9a' }}
                           />
                         </IconButton>
                         <IconButton
@@ -667,7 +667,7 @@ const PopupAppointmentTask = ({
                           title="Edit row"
                         >
                           <EditOutlinedIcon
-                            style={{ fontSize: 22, color: "#729aaf" }}
+                            style={{ fontSize: 22, color: '#729aaf' }}
                           />
                         </IconButton>
                       </ListItem>
@@ -681,7 +681,7 @@ const PopupAppointmentTask = ({
             <Grid container spacing={2}></Grid>
             <Box
               style={{
-                backgroundColor: "#f4f4f4",
+                backgroundColor: '#f4f4f4',
                 padding: 10,
                 marginTop: 15,
                 borderRadius: 10,
@@ -713,7 +713,7 @@ const PopupAppointmentTask = ({
             </Box>
             <Grid container spacing={2}>
               <Grid item xs={4}>
-                <Typography style={{ fontWeight: "bold", fontSize: 16 }}>
+                <Typography style={{ fontWeight: 'bold', fontSize: 16 }}>
                   {words.total} : {moneyFormat(totals.amount)}
                 </Typography>
               </Grid>
@@ -738,7 +738,7 @@ const PopupAppointmentTask = ({
                   <Box
                     m={1}
                     display="flex"
-                    style={{ flex: 1, justifyContent: "flex-end" }}
+                    style={{ flex: 1, justifyContent: 'flex-end' }}
                   >
                     <Button
                       size="medium"

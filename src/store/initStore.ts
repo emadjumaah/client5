@@ -8,6 +8,8 @@ export const initStore = {
     start: 8.5,
     end: 21.5,
   },
+  packIssue: false,
+  packIssueMsg: null,
   network: null, // web / local
   weburi: null, // jadwal.webredirect.org
   lastSuccess: Date.now(),

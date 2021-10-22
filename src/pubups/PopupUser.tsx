@@ -116,8 +116,7 @@ const PopupUser = ({
 
   const apply = async (mutate: any, variables: any) => {
     try {
-      mutate({ variables });
-      setSaving(false);
+      await mutate({ variables });
       onFormClose();
     } catch (error) {
       onError(error);
@@ -146,6 +145,7 @@ const PopupUser = ({
     reset();
     setRoles({});
     onClose();
+    setSaving(false);
   };
 
   const onHandleSubmit = () => {
@@ -163,7 +163,7 @@ const PopupUser = ({
     <PopupLayout
       isRTL={isRTL}
       open={open}
-      onClose={onClose}
+      onClose={onFormClose}
       title={title}
       onSubmit={onHandleSubmit}
       theme={theme}

@@ -100,6 +100,7 @@ const PopupAction = ({
     setBody('');
     setAddreess('');
     setSendtime(null);
+    setSaving(false);
   };
 
   const onCloseForem = () => {

@@ -202,6 +202,7 @@ const PopupProduct = ({
   const closeModal = () => {
     resetAll();
     onClose();
+    setSaving(false);
   };
 
   const onHandleSubmit = () => {

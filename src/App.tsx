@@ -8,7 +8,10 @@ import rtl from 'jss-rtl';
 import { StylesProvider, jssPreset } from '@material-ui/core/styles';
 import { ApolloProvider } from '@apollo/client';
 import { createThem } from './themes';
-import { client } from './graphql';
+import { ApolloClient, createHttpLink, InMemoryCache } from '@apollo/client';
+import { onError } from '@apollo/client/link/error';
+import { setContext } from '@apollo/client/link/context';
+import { isElectron } from './common';
 import { getStoreItem, setStoreItem } from './store';
 import { Layout } from './pages/main';
 import { initStore, storeReducer } from './store';
@@ -18,6 +21,7 @@ import { useTranslate } from './hooks';
 const jss = create({ plugins: [...jssPreset().plugins, rtl()] });
 
 function App() {
+  // Store and Theme
   const storeState = getStoreItem('store', initStore);
   const [store, dispatch] = useReducer(
     storeReducer,
@@ -29,15 +33,75 @@ function App() {
     setStoreItem('store', store);
   }, [store]);
 
+  // Apollo Client
+  const token = store ? store.token : null;
+
+  const uri = isElectron
+    ? 'https://jadwal-web.herokuapp.com/graphql'
+    : process?.env?.GRAPHQL_URI
+    ? process.env.GRAPHQL_URI
+    : 'http://jadwal-main:4000/graphql';
+
+  const httpLink = createHttpLink({
+    uri,
+  });
+
+  const authLink = setContext((_, { headers }) => {
+    return {
+      headers: {
+        ...headers,
+        authorization: token ? `Jadwal ${token}` : '',
+      },
+    };
+  });
+
+  const isRTL = store?.lang === 'ar';
+  const timeMsg = isRTL
+    ? 'لقد انتهى وقت الإشتراك الخاص بك ، يرجى تجديد الإشتراك'
+    : 'your subscription suspended!, please renew';
+  const docsMsg = isRTL
+    ? 'عدد الوثائق المسموحة لهذا الاشتراك قد نفذت ، يرجى رفع الإشتراك أو التواصل معنا'
+    : 'you reach documents limit of your subscription, please upgrade or contact us';
+  const usersMsg = isRTL
+    ? 'عدد المستخدمين المسموحة بهم لهذا الاشتراك قد نفذت ، يرجى رفع الإشتراك أو التواصل معنا'
+    : 'you reach users limit of your subscription, please upgrade or contact us';
+
+  const errorLink = onError(({ graphQLErrors, networkError }) => {
+    if (graphQLErrors)
+      graphQLErrors.forEach(({ message, locations, path }) => {
+        if (message === 'auth token error') {
+          dispatch({ type: 'logout' });
+        }
+        if (message === 'package time limit exceeded') {
+          dispatch({ type: 'setPackIssue', payload: timeMsg });
+        }
+        if (message === 'package docs limit exceeded') {
+          dispatch({ type: 'setPackIssue', payload: docsMsg });
+        }
+        if (message === 'package users limit exceeded') {
+          dispatch({ type: 'setPackIssue', payload: usersMsg });
+        }
+        console.log(
+          `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`
+        );
+      });
+    if (networkError) console.log(`[Network error]: ${networkError}`);
+  });
+
+  const client = new ApolloClient({
+    link: authLink.concat(errorLink).concat(httpLink),
+    cache: new InMemoryCache(),
+  });
+
   return (
     <ApolloProvider client={client}>
-      <StylesProvider jss={jss}>
-        <ThemeProvider theme={theme}>
-          <GlobalContext.Provider value={{ store, dispatch, translate }}>
+      <GlobalContext.Provider value={{ store, dispatch, translate }}>
+        <StylesProvider jss={jss}>
+          <ThemeProvider theme={theme}>
             <Layout></Layout>
-          </GlobalContext.Provider>
-        </ThemeProvider>
-      </StylesProvider>
+          </ThemeProvider>
+        </StylesProvider>
+      </GlobalContext.Provider>
     </ApolloProvider>
   );
 }

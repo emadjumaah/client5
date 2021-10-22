@@ -1,10 +1,10 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import React, { useContext, useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
-import { dublicateAlert, errorAlert, messageAlert } from "../Shared";
-import { GContextTypes } from "../types";
-import { GlobalContext } from "../contexts";
+import React, { useContext, useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { dublicateAlert, errorAlert, messageAlert } from '../Shared';
+import { GContextTypes } from '../types';
+import { GlobalContext } from '../contexts';
 import {
   Box,
   Button,
@@ -13,17 +13,17 @@ import {
   Radio,
   RadioGroup,
   Typography,
-} from "@material-ui/core";
-import PopupLayout from "../pages/main/PopupLayout";
-import { Grid } from "@material-ui/core";
-import AutoFieldLocal from "../components/fields/AutoFieldLocal";
-import { CalenderLocal, TextFieldLocal } from "../components";
-import { eventStatus, weekdaysNNo } from "../constants/datatypes";
-import { compressEvents } from "../common/time";
-import { moneyFormat } from "../Shared/colorFormat";
-import PopupTaskAppointment from "./PopupTaskAppointment";
-import EventsTable from "../Shared/EventsTable";
-import _ from "lodash";
+} from '@material-ui/core';
+import PopupLayout from '../pages/main/PopupLayout';
+import { Grid } from '@material-ui/core';
+import AutoFieldLocal from '../components/fields/AutoFieldLocal';
+import { CalenderLocal, TextFieldLocal } from '../components';
+import { eventStatus, weekdaysNNo } from '../constants/datatypes';
+import { compressEvents } from '../common/time';
+import { moneyFormat } from '../Shared/colorFormat';
+import PopupTaskAppointment from './PopupTaskAppointment';
+import EventsTable from '../Shared/EventsTable';
+import _ from 'lodash';
 
 export const indexTheList = (list: any) => {
   return list.map((item: any, index: any) => {
@@ -61,19 +61,19 @@ const PopupTask = ({
   const [end, setEnd]: any = useState(null);
 
   const [departvalue, setDepartvalue] = useState<any>(
-    name === "departmentId" ? value : null
+    name === 'departmentId' ? value : null
   );
   const [departError, setDepartError] = useState<any>(false);
   const departRef: any = React.useRef();
 
   const [emplvalue, setEmplvalue] = useState<any>(
-    name === "employeeId" ? value : null
+    name === 'employeeId' ? value : null
   );
   const [emplError, setEmplError] = useState<any>(false);
   const emplRef: any = React.useRef();
 
   const [custvalue, setCustvalue] = useState<any>(
-    name === "customerId" ? value : null
+    name === 'customerId' ? value : null
   );
   const [custError, setCustError] = useState<any>(false);
   const custRef: any = React.useRef();
@@ -87,7 +87,7 @@ const PopupTask = ({
   const [resKind, setResKind] = useState<any>(null);
   const [emplslist, setEmplslist] = useState<any>([]);
 
-  const [alrt, setAlrt] = useState({ show: false, msg: "", type: undefined });
+  const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
 
   const { register, handleSubmit, reset } = useForm({});
   const {
@@ -96,7 +96,7 @@ const PopupTask = ({
 
   const addEventsToList = (events: any) => {
     const newArray = [...evList, ...events];
-    const sorted = _.sortBy(newArray, "startDate");
+    const sorted = _.sortBy(newArray, 'startDate');
     const listwithindex = indexTheList(sorted);
     setEvList(listwithindex);
   };
@@ -119,7 +119,7 @@ const PopupTask = ({
 
   useEffect(() => {
     if (isNew) {
-      if (emplvalue && name !== "departmentId") {
+      if (emplvalue && name !== 'departmentId') {
         if (emplvalue?.departmentId) {
           const dept = departments.filter(
             (dep: any) => dep._id === emplvalue?.departmentId
@@ -141,7 +141,7 @@ const PopupTask = ({
       setEnd(end);
       setStatus(eventStatus.filter((es: any) => es.id === 1)?.[0]);
       setEvList([]);
-      if (name === "employeeId") {
+      if (name === 'employeeId') {
         if (value?.departmentId) {
           const dept = departments.filter(
             (dep: any) => dep._id === value?.departmentId
@@ -152,7 +152,7 @@ const PopupTask = ({
     }
   }, [open]);
   const getOverallTotal = () => {
-    const evssum = _.sumBy(evList, "amount");
+    const evssum = _.sumBy(evList, 'amount');
     setTotal(evssum);
   };
   useEffect(() => {
@@ -199,7 +199,7 @@ const PopupTask = ({
     if (start > end) {
       await messageAlert(
         setAlrt,
-        isRTL ? "يجب تعديل التاريخ" : "Date should be change"
+        isRTL ? 'يجب تعديل التاريخ' : 'Date should be change'
       );
       return;
     }
@@ -207,7 +207,7 @@ const PopupTask = ({
     if (!tasktitle) {
       await messageAlert(
         setAlrt,
-        isRTL ? "يرجى اضافة اسم للمهمة" : "Please add Task title"
+        isRTL ? 'يرجى اضافة اسم للمهمة' : 'Please add Task title'
       );
       return;
     }
@@ -215,14 +215,14 @@ const PopupTask = ({
     if (!custvalue) {
       await messageAlert(
         setAlrt,
-        isRTL ? "يرجى اضافة عميل للفاتورة" : "Please add Customer"
+        isRTL ? 'يرجى اضافة عميل للفاتورة' : 'Please add Customer'
       );
       return;
     }
     if (isNew && (!evList || evList.length === 0)) {
       await messageAlert(
         setAlrt,
-        isRTL ? "يرجى اضافة موعد" : "Please add Appointment"
+        isRTL ? 'يرجى اضافة موعد' : 'Please add Appointment'
       );
       return;
     }
@@ -291,7 +291,7 @@ const PopupTask = ({
 
   const apply = async (mutate: any, variables: any) => {
     try {
-      mutate({ variables });
+      await mutate({ variables });
       setTimeout(() => {
         refresh();
         onCloseForm();
@@ -303,7 +303,7 @@ const PopupTask = ({
   };
 
   const onError = async (error: any) => {
-    if (error.message.includes("duplicate")) {
+    if (error.message.includes('duplicate')) {
       await dublicateAlert(setAlrt, isRTL);
     } else {
       await errorAlert(setAlrt, isRTL);
@@ -315,6 +315,7 @@ const PopupTask = ({
   const onCloseForm = () => {
     resetAllForms();
     onClose();
+    setSaving(false);
   };
 
   const onHandleSubmit = () => {
@@ -325,11 +326,11 @@ const PopupTask = ({
   const day = weekdaysNNo?.[date.getDay()];
   const title = isRTL
     ? isNew
-      ? "مهمة جديدة"
-      : "تعديل مهمة"
+      ? 'مهمة جديدة'
+      : 'تعديل مهمة'
     : isNew
-    ? "New Task"
-    : "Edit Task";
+    ? 'New Task'
+    : 'Edit Task';
 
   return (
     <PopupLayout
@@ -341,7 +342,7 @@ const PopupTask = ({
       theme={theme}
       alrt={alrt}
       mt={10}
-      maxWidth={isNew ? "lg" : "xl"}
+      maxWidth={isNew ? 'lg' : 'xl'}
       fullWidth
       preventclose
       saving={saving}
@@ -350,7 +351,7 @@ const PopupTask = ({
     >
       <>
         <Box display="flex">
-          <Typography style={{ fontWeight: "bold" }} variant="body2">
+          <Typography style={{ fontWeight: 'bold' }} variant="body2">
             {row?.docNo}
           </Typography>
         </Box>
@@ -384,7 +385,7 @@ const PopupTask = ({
               isRTL={isRTL}
               fullWidth
               showphone
-              disabled={name === "customerId"}
+              disabled={name === 'customerId'}
             ></AutoFieldLocal>
           </Grid>
           <Grid item xs={2}></Grid>
@@ -416,7 +417,7 @@ const PopupTask = ({
                   control={
                     <Radio style={{ padding: 0, margin: 0 }} color="primary" />
                   }
-                  label={isRTL ? "الموظف" : "Employee"}
+                  label={isRTL ? 'الموظف' : 'Employee'}
                 />
 
                 <FormControlLabel
@@ -424,7 +425,7 @@ const PopupTask = ({
                   control={
                     <Radio style={{ padding: 0, margin: 0 }} color="primary" />
                   }
-                  label={isRTL ? "المورد" : "Resourse"}
+                  label={isRTL ? 'المورد' : 'Resourse'}
                 />
               </RadioGroup>
             </Box>
@@ -435,7 +436,7 @@ const PopupTask = ({
               name="employee"
               title={words.employee}
               words={words}
-              options={emplslist || name === "employeeId"}
+              options={emplslist || name === 'employeeId'}
               disabled={!resKind}
               value={emplvalue}
               setSelectValue={setEmplvalue}
@@ -464,7 +465,7 @@ const PopupTask = ({
               noPlus
               isRTL={isRTL}
               fullWidth
-              disabled={name === "departmentId"}
+              disabled={name === 'departmentId'}
             ></AutoFieldLocal>
           </Grid>
           <Grid item xs={2}></Grid>
@@ -485,7 +486,7 @@ const PopupTask = ({
             {isNew && (
               <Box
                 style={{
-                  backgroundColor: "#F3F3F3",
+                  backgroundColor: '#F3F3F3',
                   marginTop: 15,
                   borderRadius: 10,
                 }}
@@ -493,8 +494,8 @@ const PopupTask = ({
                 <Box
                   display="flex"
                   style={{
-                    alignItems: "center",
-                    justifyContent: "flex-start",
+                    alignItems: 'center',
+                    justifyContent: 'flex-start',
                     marginInlineStart: 10,
                   }}
                 >
@@ -503,7 +504,7 @@ const PopupTask = ({
                     onClick={() => setOpenEvent(true)}
                     variant="contained"
                   >
-                    {isRTL ? "اضافة مواعيد" : "Add Appointments"}
+                    {isRTL ? 'اضافة مواعيد' : 'Add Appointments'}
                   </Button>
                 </Box>
                 <Box style={{ marginBottom: 20 }}>
@@ -528,7 +529,7 @@ const PopupTask = ({
                     start={startrange}
                     end={endrange}
                   ></EventsTable>
-                  <Typography style={{ fontWeight: "bold", fontSize: 16 }}>
+                  <Typography style={{ fontWeight: 'bold', fontSize: 16 }}>
                     {words.total} : {moneyFormat(total)}
                   </Typography>
                 </Box>

@@ -1,32 +1,32 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import React, { useContext, useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
-import * as yup from "yup";
-import { yupResolver } from "@hookform/resolvers/yup";
+import React, { useContext, useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import * as yup from 'yup';
+import { yupResolver } from '@hookform/resolvers/yup';
 import {
   createStyles,
   Grid,
   makeStyles,
   Theme,
   Typography,
-} from "@material-ui/core";
-import { parentsAccountsList } from "../constants/kaid";
-import useBranches from "../hooks/useBranches";
-import PopupLayout from "../pages/main/PopupLayout";
-import { GContextTypes } from "../types";
-import { TextFieldLocal } from "../components";
-import AutoFieldLocal from "../components/fields/AutoFieldLocal";
-import { GlobalContext } from "../contexts";
-import { dublicateAlert, errorAlert } from "../Shared";
-import { getAccountCodeRange, getNewCode } from "../common/accounts";
-import { errorAlertMsg } from "../Shared/helpers";
+} from '@material-ui/core';
+import { parentsAccountsList } from '../constants/kaid';
+import useBranches from '../hooks/useBranches';
+import PopupLayout from '../pages/main/PopupLayout';
+import { GContextTypes } from '../types';
+import { TextFieldLocal } from '../components';
+import AutoFieldLocal from '../components/fields/AutoFieldLocal';
+import { GlobalContext } from '../contexts';
+import { dublicateAlert, errorAlert } from '../Shared';
+import { getAccountCodeRange, getNewCode } from '../common/accounts';
+import { errorAlertMsg } from '../Shared/helpers';
 
 export const accountClasses = makeStyles((theme: Theme) =>
   createStyles({
     popup: {
-      height: "50vh",
-      width: "60vh",
+      height: '50vh',
+      width: '60vh',
     },
     margin: {
       margin: 8,
@@ -65,7 +65,7 @@ const PopupAccount = ({
   accounts,
 }: any) => {
   const [saving, setSaving] = useState(false);
-  const [alrt, setAlrt] = useState({ show: false, msg: "", type: undefined });
+  const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
   const [parentvalue, setParentvalue] = useState<any>(null);
   const [parentError, setParentError] = useState<any>(false);
   const parentRef: any = React.useRef();
@@ -135,7 +135,7 @@ const PopupAccount = ({
     if (code > range.max || code < range.min) {
       await errorAlertMsg(
         setAlrt,
-        isRTL ? "رقم الحساب خارج النطاق" : "Code range issue"
+        isRTL ? 'رقم الحساب خارج النطاق' : 'Code range issue'
       );
       return;
     }
@@ -167,7 +167,7 @@ const PopupAccount = ({
   };
 
   const onError = async (error: any) => {
-    if (error.message.includes("duplicate")) {
+    if (error.message.includes('duplicate')) {
       await dublicateAlert(setAlrt, isRTL);
     } else {
       await errorAlert(setAlrt, isRTL);
@@ -179,6 +179,7 @@ const PopupAccount = ({
     setParentvalue(null);
     setParentError(false);
     setBranchvalue(null);
+    setSaving(false);
     setRange({});
     setCode(0);
     reset();
@@ -194,11 +195,11 @@ const PopupAccount = ({
   };
   const title = isRTL
     ? isNew
-      ? "اضافة حساب"
-      : "تعديل بيانات حساب"
+      ? 'اضافة حساب'
+      : 'تعديل بيانات حساب'
     : isNew
-    ? "New Account"
-    : "Edit Account";
+    ? 'New Account'
+    : 'Edit Account';
 
   return (
     <PopupLayout
@@ -217,7 +218,7 @@ const PopupAccount = ({
           <AutoFieldLocal
             name="parent"
             nolabel
-            title={isRTL ? "الحساب الرئيسي" : "Main Account"}
+            title={isRTL ? 'الحساب الرئيسي' : 'Main Account'}
             basename="parent"
             options={filteredParents}
             value={parentvalue}
@@ -238,7 +239,7 @@ const PopupAccount = ({
           <TextFieldLocal
             required
             name="code"
-            label={isRTL ? "كود الحساب" : "Code"}
+            label={isRTL ? 'كود الحساب' : 'Code'}
             value={code}
             onChange={(e: any) => setCode(e.target.value)}
             row={row}

@@ -1,8 +1,10 @@
-import { gql } from "@apollo/client";
+import { gql } from '@apollo/client';
 
 export default gql`
   mutation createBranch(
     $pack: String
+    $packStart: Date
+    $packEnd: Date
     $users: Int
     $username: String
     $password: String
@@ -25,6 +27,8 @@ export default gql`
   ) {
     createBranch(
       pack: $pack
+      packStart: $packStart
+      packEnd: $packEnd
       users: $users
       username: $username
       password: $password

@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import React, { useContext, useState } from "react";
-import { useForm } from "react-hook-form";
+import React, { useContext, useState } from 'react';
+import { useForm } from 'react-hook-form';
 
 import {
   successAlert,
@@ -9,12 +9,12 @@ import {
   errorAlert,
   getReturnItem,
   yup,
-} from "../Shared";
-import { GContextTypes } from "../types";
-import { GlobalContext } from "../contexts";
-import PopupLayout from "../pages/main/PopupLayout";
-import { Grid } from "@material-ui/core";
-import { TextFieldLocal } from "../components";
+} from '../Shared';
+import { GContextTypes } from '../types';
+import { GlobalContext } from '../contexts';
+import PopupLayout from '../pages/main/PopupLayout';
+import { Grid } from '@material-ui/core';
+import { TextFieldLocal } from '../components';
 
 const PopupBrand = ({
   open,
@@ -27,7 +27,7 @@ const PopupBrand = ({
   theme,
 }: any) => {
   const [saving, setSaving] = useState(false);
-  const [alrt, setAlrt] = useState({ show: false, msg: "", type: undefined });
+  const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
   const { register, handleSubmit, errors, reset } = useForm(yup.brandResolver);
   const {
     translate: { words, isRTL },
@@ -46,7 +46,7 @@ const PopupBrand = ({
       userId: user._id,
     };
     const mutate = isNew ? addAction : editAction;
-    const mutateName = isNew ? "createBrand" : "updateBrand";
+    const mutateName = isNew ? 'createBrand' : 'updateBrand';
     apply(mutate, mutateName, variables);
   };
 
@@ -55,10 +55,8 @@ const PopupBrand = ({
       const res = await mutate({ variables });
       const nitem = getReturnItem(res, mutateName);
       if (setNewValue && nitem) setNewValue(nitem);
-      reset();
-      setSaving(false);
+      closeModal();
       await successAlert(setAlrt, isRTL);
-      onClose();
     } catch (error) {
       onError(error);
     }
@@ -68,8 +66,14 @@ const PopupBrand = ({
     handleSubmit(onSubmit)();
   };
 
+  const closeModal = () => {
+    onClose();
+    setSaving(false);
+    reset();
+  };
+
   const onError = async (error: any) => {
-    if (error.message.includes("duplicate")) {
+    if (error.message.includes('duplicate')) {
       await dublicateAlert(setAlrt, isRTL);
     } else {
       await errorAlert(setAlrt, isRTL);
@@ -80,17 +84,17 @@ const PopupBrand = ({
 
   const title = isRTL
     ? isNew
-      ? "اضافة براند"
-      : "تعديل براند"
+      ? 'اضافة براند'
+      : 'تعديل براند'
     : isNew
-    ? "New Brand"
-    : "Edit Brand";
+    ? 'New Brand'
+    : 'Edit Brand';
 
   return (
     <PopupLayout
       isRTL={isRTL}
       open={open}
-      onClose={onClose}
+      onClose={closeModal}
       title={title}
       onSubmit={onHandleSubmit}
       theme={theme}

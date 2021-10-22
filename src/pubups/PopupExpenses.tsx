@@ -1,19 +1,19 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import React, { useContext, useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
-import { dublicateAlert, errorAlert, yup, messageAlert } from "../Shared";
-import { GContextTypes } from "../types";
-import { GlobalContext } from "../contexts";
-import { Box, FormControlLabel, Radio, RadioGroup } from "@material-ui/core";
-import useAccounts from "../hooks/useAccounts";
-import { parents } from "../constants/kaid";
-import PopupLayout from "../pages/main/PopupLayout";
-import { Grid } from "@material-ui/core";
-import { CalenderLocal, TextFieldLocal } from "../components";
+import React, { useContext, useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { dublicateAlert, errorAlert, yup, messageAlert } from '../Shared';
+import { GContextTypes } from '../types';
+import { GlobalContext } from '../contexts';
+import { Box, FormControlLabel, Radio, RadioGroup } from '@material-ui/core';
+import useAccounts from '../hooks/useAccounts';
+import { parents } from '../constants/kaid';
+import PopupLayout from '../pages/main/PopupLayout';
+import { Grid } from '@material-ui/core';
+import { CalenderLocal, TextFieldLocal } from '../components';
 // import { getAppStartEndPeriod } from "../common/time";
-import AutoFieldLocal from "../components/fields/AutoFieldLocal";
-import { useDepartments, useEmployees } from "../hooks";
+import AutoFieldLocal from '../components/fields/AutoFieldLocal';
+import { useDepartments, useEmployees } from '../hooks';
 
 const PopupExpenses = ({
   open,
@@ -27,7 +27,7 @@ const PopupExpenses = ({
   name,
   value,
 }: any) => {
-  const [alrt, setAlrt] = useState({ show: false, msg: "", type: undefined });
+  const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
   const [selectedDate, setSelectedDate] = React.useState(new Date());
   const [debaccounts, setDebaccounts] = React.useState([]);
   const [cridaccounts, setCridaccounts] = React.useState([]);
@@ -36,7 +36,7 @@ const PopupExpenses = ({
   const [creditAcc, setCreditAcc]: any = React.useState(null);
 
   const [emplvalue, setEmplvalue] = useState<any>(
-    name === "employeeId" ? value : null
+    name === 'employeeId' ? value : null
   );
   const [emplError, setEmplError] = useState<any>(false);
 
@@ -44,12 +44,12 @@ const PopupExpenses = ({
   const [emplslist, setEmplslist] = useState<any>([]);
 
   const [departvalue, setDepartvalue] = useState<any>(
-    name === "departmentId" ? value : null
+    name === 'departmentId' ? value : null
   );
   const [departError, setDepartError] = useState<any>(false);
 
   const [taskvalue, setTaskvalue] = useState<any>(
-    name === "taskId" ? value : null
+    name === 'taskId' ? value : null
   );
 
   const { employees } = useEmployees();
@@ -69,13 +69,13 @@ const PopupExpenses = ({
   useEffect(() => {
     if (isNew) {
       if (taskvalue) {
-        if (taskvalue?.departmentId && name !== "departmentId") {
+        if (taskvalue?.departmentId && name !== 'departmentId') {
           const dept = departments.filter(
             (dep: any) => dep._id === taskvalue?.departmentId
           )?.[0];
           setDepartvalue(dept);
         }
-        if (taskvalue?.employeeId && name !== "employeeId") {
+        if (taskvalue?.employeeId && name !== 'employeeId') {
           const dept = employees.filter(
             (dep: any) => dep._id === taskvalue?.employeeId
           )?.[0];
@@ -88,7 +88,7 @@ const PopupExpenses = ({
   useEffect(() => {
     if (isNew) {
       if (emplvalue) {
-        if (emplvalue?.departmentId && name !== "departmentId") {
+        if (emplvalue?.departmentId && name !== 'departmentId') {
           const dept = departments.filter(
             (dep: any) => dep._id === emplvalue?.departmentId
           )?.[0];
@@ -109,7 +109,7 @@ const PopupExpenses = ({
 
   useEffect(() => {
     if (isNew) {
-      if (name === "taskId") {
+      if (name === 'taskId') {
         if (value?.departmentId) {
           const dept = departments.filter(
             (dep: any) => dep._id === value?.departmentId
@@ -123,7 +123,7 @@ const PopupExpenses = ({
           setEmplvalue(dept);
         }
       }
-      if (name === "employeeId") {
+      if (name === 'employeeId') {
         if (value?.departmentId) {
           const dept = departments.filter(
             (dep: any) => dep._id === value?.departmentId
@@ -191,14 +191,14 @@ const PopupExpenses = ({
     if (!debitAcc || !creditAcc) {
       await messageAlert(
         setAlrt,
-        isRTL ? "يجب تحديد كلا الحسابين" : "You have to select both accounts"
+        isRTL ? 'يجب تحديد كلا الحسابين' : 'You have to select both accounts'
       );
       return;
     }
     if (debitAcc === creditAcc) {
       await messageAlert(
         setAlrt,
-        isRTL ? "الحسابات يجب ان تكون مختلفة" : "The accounts must be deferent"
+        isRTL ? 'الحسابات يجب ان تكون مختلفة' : 'The accounts must be deferent'
       );
       return;
     }
@@ -263,7 +263,7 @@ const PopupExpenses = ({
 
   const apply = async (mutate: any, variables: any) => {
     try {
-      mutate({ variables });
+      await mutate({ variables });
       closeModal();
     } catch (error) {
       onError(error);
@@ -271,7 +271,7 @@ const PopupExpenses = ({
   };
 
   const onError = async (error: any) => {
-    if (error.message.includes("duplicate")) {
+    if (error.message.includes('duplicate')) {
       await dublicateAlert(setAlrt, isRTL);
     } else {
       await errorAlert(setAlrt, isRTL);
@@ -332,7 +332,7 @@ const PopupExpenses = ({
             <Grid item xs={6}>
               <AutoFieldLocal
                 name="debitAcc"
-                title={isRTL ? "حساب المصروف" : "Expenses Acc"}
+                title={isRTL ? 'حساب المصروف' : 'Expenses Acc'}
                 words={words}
                 options={debaccounts}
                 value={debitAcc}
@@ -345,7 +345,7 @@ const PopupExpenses = ({
             <Grid item xs={6}>
               <AutoFieldLocal
                 name="creditAcc"
-                title={isRTL ? "حساب الدفع" : "Payment Acc"}
+                title={isRTL ? 'حساب الدفع' : 'Payment Acc'}
                 words={words}
                 options={cridaccounts}
                 value={creditAcc}
@@ -377,7 +377,7 @@ const PopupExpenses = ({
                 register={register}
                 isRTL={isRTL}
                 fullWidth
-                disabled={name === "taskId"}
+                disabled={name === 'taskId'}
               ></AutoFieldLocal>
 
               <Box style={{ marginRight: 10, marginTop: 0, marginBottom: 0 }}>
@@ -399,7 +399,7 @@ const PopupExpenses = ({
                         color="primary"
                       />
                     }
-                    label={isRTL ? "الموظف" : "Employee"}
+                    label={isRTL ? 'الموظف' : 'Employee'}
                   />
 
                   <FormControlLabel
@@ -410,14 +410,14 @@ const PopupExpenses = ({
                         color="primary"
                       />
                     }
-                    label={isRTL ? "المورد" : "Resourse"}
+                    label={isRTL ? 'المورد' : 'Resourse'}
                   />
                 </RadioGroup>
               </Box>
               <AutoFieldLocal
                 name="employee"
                 title={resKind === 2 ? words.resourses : words.employee}
-                disabled={!resKind || name === "employeeId"}
+                disabled={!resKind || name === 'employeeId'}
                 words={words}
                 options={emplslist}
                 value={emplvalue}
@@ -440,7 +440,7 @@ const PopupExpenses = ({
                 register={register}
                 isRTL={isRTL}
                 mb={20}
-                disabled={name === "departmentId"}
+                disabled={name === 'departmentId'}
               ></AutoFieldLocal>
               <TextFieldLocal
                 name="desc"

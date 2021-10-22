@@ -1,19 +1,19 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import React, { useContext, useEffect, useRef, useState } from "react";
-import { useForm } from "react-hook-form";
-import { invoiceClasses } from "../themes";
-import { useLastNos } from "../hooks";
-import { dublicateAlert, errorAlert, messageAlert } from "../Shared";
-import { GContextTypes } from "../types";
-import { GlobalContext } from "../contexts";
+import React, { useContext, useEffect, useRef, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { invoiceClasses } from '../themes';
+import { useLastNos } from '../hooks';
+import { dublicateAlert, errorAlert, messageAlert } from '../Shared';
+import { GContextTypes } from '../types';
+import { GlobalContext } from '../contexts';
 
-import { Box, colors, TextField, Typography } from "@material-ui/core";
-import ServiceItemForm from "../Shared/ServiceItemForm";
-import ItemsTable from "../Shared/ItemsTable";
-import { PriceTotal } from "../Shared/TotalPrice";
-import { operationTypes } from "../constants";
-import { useMutation } from "@apollo/client";
+import { Box, colors, TextField, Typography } from '@material-ui/core';
+import ServiceItemForm from '../Shared/ServiceItemForm';
+import ItemsTable from '../Shared/ItemsTable';
+import { PriceTotal } from '../Shared/TotalPrice';
+import { operationTypes } from '../constants';
+import { useMutation } from '@apollo/client';
 import {
   createInvoice,
   getCustomers,
@@ -22,17 +22,17 @@ import {
   getInvoices,
   getLandingChartData,
   getLastNos,
-} from "../graphql";
-import { accountCode } from "../constants/kaid";
-import PaymentSelect from "../pages/options/PaymentSelect";
-import PopupLayout from "../pages/main/PopupLayout";
-import { Grid } from "@material-ui/core";
-import AutoFieldLocal from "../components/fields/AutoFieldLocal";
-import { CalenderLocal } from "../components";
-import { getAppStartEndPeriod } from "../common/time";
-import getTasks from "../graphql/query/getTasks";
-import { InvoicePrintA5 } from "../common/InvoicePrintA5";
-import { useReactToPrint } from "react-to-print";
+} from '../graphql';
+import { accountCode } from '../constants/kaid';
+import PaymentSelect from '../pages/options/PaymentSelect';
+import PopupLayout from '../pages/main/PopupLayout';
+import { Grid } from '@material-ui/core';
+import AutoFieldLocal from '../components/fields/AutoFieldLocal';
+import { CalenderLocal } from '../components';
+import { getAppStartEndPeriod } from '../common/time';
+import getTasks from '../graphql/query/getTasks';
+import { InvoicePrintA5 } from '../common/InvoicePrintA5';
+import { useReactToPrint } from 'react-to-print';
 
 export const indexTheList = (list: any) => {
   return list.map((item: any, index: any) => {
@@ -57,13 +57,13 @@ const PopupTaskInvoice = ({
   items,
 }: any) => {
   const classes = invoiceClasses();
-  const [alrt, setAlrt] = useState({ show: false, msg: "", type: undefined });
+  const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
   const [selectedDate, setSelectedDate] = React.useState(new Date());
-  const [invNo, setInvNo] = useState<any>("");
+  const [invNo, setInvNo] = useState<any>('');
 
   const [itemsList, setItemsList] = useState<any>([]);
   const [accounts, setAccounts] = useState<any>([]);
-  const [ptype, setPtype] = useState<any>("cash");
+  const [ptype, setPtype] = useState<any>('cash');
 
   const [discount, setDiscount] = useState(0);
   const [totals, setTotals] = useState<any>({});
@@ -127,9 +127,9 @@ const PopupTaskInvoice = ({
     setDiscount(0);
     setTotals({});
     setCustvalue(null);
-    setInvNo("");
+    setInvNo('');
     setAccounts([]);
-    setPtype("cash");
+    setPtype('cash');
     setSelectedDate(new Date());
     setDepartvalue(null);
     setEmplvalue(null);
@@ -225,7 +225,7 @@ const PopupTaskInvoice = ({
       },
       {
         debitAcc:
-          ptype === "cash" ? accountCode.cash_on_hand : accountCode.card,
+          ptype === 'cash' ? accountCode.cash_on_hand : accountCode.card,
         creditAcc: accountCode.accounts_receivable,
         amount: isCash ? sum - discount : 0,
         type: operationTypes.customerReceipt,
@@ -239,14 +239,14 @@ const PopupTaskInvoice = ({
     if (selectedDate < startPeriod || selectedDate > endPeriod) {
       await messageAlert(
         setAlrt,
-        isRTL ? "يجب تعديل التاريخ" : "Date should be change"
+        isRTL ? 'يجب تعديل التاريخ' : 'Date should be change'
       );
       return;
     }
     if (discount < 0) {
       await messageAlert(
         setAlrt,
-        isRTL ? "الحسم لا يمكن ان يكون سلبي" : "Discount can't be minus"
+        isRTL ? 'الحسم لا يمكن ان يكون سلبي' : "Discount can't be minus"
       );
       return;
     }
@@ -254,7 +254,7 @@ const PopupTaskInvoice = ({
       await messageAlert(
         setAlrt,
         isRTL
-          ? "الحسم لا يمكن ان يكون اكبر من قيمة الفاتورة"
+          ? 'الحسم لا يمكن ان يكون اكبر من قيمة الفاتورة'
           : "Discount can't be biger than Total"
       );
       return;
@@ -341,7 +341,7 @@ const PopupTaskInvoice = ({
 
   const apply = async (mutate: any, variables: any) => {
     try {
-      mutate({ variables });
+      await mutate({ variables });
       // handlePrint();
       freshlastNos();
       onCloseForm();
@@ -352,7 +352,7 @@ const PopupTaskInvoice = ({
   };
 
   const onError = async (error: any) => {
-    if (error.message.includes("duplicate")) {
+    if (error.message.includes('duplicate')) {
       await dublicateAlert(setAlrt, isRTL);
     } else {
       await errorAlert(setAlrt, isRTL);
@@ -388,11 +388,11 @@ const PopupTaskInvoice = ({
 
   const title = isRTL
     ? isNew
-      ? "فاتورة جديدة"
-      : "تعديل فاتورة"
+      ? 'فاتورة جديدة'
+      : 'تعديل فاتورة'
     : isNew
-    ? "New Invoice"
-    : "Edit Invoice";
+    ? 'New Invoice'
+    : 'Edit Invoice';
 
   return (
     <PopupLayout
@@ -448,15 +448,15 @@ const PopupTaskInvoice = ({
             display="flex"
             style={{
               flex: 1,
-              flexDirection: isRTL ? "row-reverse" : "row",
-              alignItems: "center",
-              justifyContent: "flex-end",
+              flexDirection: isRTL ? 'row-reverse' : 'row',
+              alignItems: 'center',
+              justifyContent: 'flex-end',
               marginLeft: isRTL ? undefined : 20,
               marginRight: isRTL ? 20 : undefined,
             }}
           >
             {isNew && (
-              <Typography style={{ color: "#777" }}>{words.no}</Typography>
+              <Typography style={{ color: '#777' }}>{words.no}</Typography>
             )}
             <TextField
               name="invNo"
@@ -469,7 +469,7 @@ const PopupTaskInvoice = ({
               // type="number"
               inputProps={{
                 style: {
-                  textAlign: "center",
+                  textAlign: 'center',
                   fontSize: 14,
                   height: 13,
                 },
@@ -514,7 +514,7 @@ const PopupTaskInvoice = ({
         <Grid item xs={12}>
           <Box
             style={{
-              backgroundColor: "#f4f4f4",
+              backgroundColor: '#f4f4f4',
               padding: 10,
               marginTop: 15,
               marginBottom: 15,
@@ -548,8 +548,8 @@ const PopupTaskInvoice = ({
           <Box
             display="flex"
             style={{
-              alignItems: "center",
-              justifyContent: "space-between",
+              alignItems: 'center',
+              justifyContent: 'space-between',
             }}
           >
             <TextField
@@ -572,7 +572,7 @@ const PopupTaskInvoice = ({
             ></PriceTotal>
           </Box>
           <Box>
-            <div style={{ display: "none" }}>
+            <div style={{ display: 'none' }}>
               <InvoicePrintA5
                 company={company}
                 printData={printData}

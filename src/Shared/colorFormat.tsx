@@ -430,6 +430,14 @@ export const moneyFormatSimple = (amount: number) => {
     return '0';
   }
 };
+export const quantityFormat = (amount: number, isRTL: boolean) => {
+  if (amount === -1) return isRTL ? 'غير محددود' : 'unlimited';
+  if (amount) {
+    return amount.toFixed(0).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+  } else {
+    return '';
+  }
+};
 
 export const amountFormatter = ({ row }: any) => {
   const { total, discount } = row;

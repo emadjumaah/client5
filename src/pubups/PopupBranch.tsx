@@ -64,6 +64,14 @@ const PopupBranch = ({
       setPackStart(row?.packStart);
       setPackEnd(row?.packEnd);
     }
+    if (isNew) {
+      const start = new Date();
+      const end = new Date(
+        new Date().setFullYear(new Date().getFullYear() + 1)
+      );
+      setPackStart(start);
+      setPackEnd(end);
+    }
   }, [row]);
 
   useEffect(() => {
@@ -101,6 +109,8 @@ const PopupBranch = ({
           nameAr,
           tel1,
           email,
+          packStart,
+          packEnd,
           users: pack?.users,
           pack: JSON.stringify(pack),
         }

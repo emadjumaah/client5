@@ -32,7 +32,7 @@ const catSchema = yup.object().shape({
 
 export const catResolver = { resolver: yupResolver(catSchema) };
 const passSchema = yup.object().shape({
-  password: yup.string().required().min(3).max(100),
+  // password: yup.string().required().min(3).max(100),
   newPassword: yup.string().required().min(3).max(100),
   newPassword2: yup.string().required().min(3).max(100),
 });

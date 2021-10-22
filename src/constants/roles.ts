@@ -44,6 +44,7 @@ export const packages = [
   {
     name: 'free',
     title: 'Free',
+    titleAr: 'الحزمة المجانية',
     eventsQty: 100,
     durationQty: -1,
     docsQty: 500,
@@ -53,6 +54,7 @@ export const packages = [
   {
     name: 'basic',
     title: 'Basic',
+    titleAr: 'الحزمة الأساسية',
     eventsQty: 1500,
     docsQty: 5000,
     durationQty: 1,
@@ -63,6 +65,7 @@ export const packages = [
   {
     name: 'standard',
     title: 'Standard',
+    titleAr: 'الحزمة القياسية',
     eventsQty: 4500,
     docsQty: 15000,
     durationQty: 1,
@@ -73,11 +76,23 @@ export const packages = [
   {
     name: 'premium',
     title: 'Premium',
+    titleAr: 'الحزمة الممتازة',
     eventsQty: 9000,
     docsQty: -1,
     durationQty: 1,
     durationType: 'y',
     cost: 1800,
     users: 20,
+  },
+  {
+    name: 'custom',
+    title: 'Custom',
+    titleAr: 'الحزمة المخصصة',
+    eventsQty: -1,
+    docsQty: -1,
+    durationQty: 1,
+    durationType: 'y',
+    cost: 1800,
+    users: -1,
   },
 ];

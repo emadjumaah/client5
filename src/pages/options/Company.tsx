@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react';
 
 import {
   Box,
@@ -9,13 +9,14 @@ import {
   Grid,
   Paper,
   Typography,
-} from "@material-ui/core";
-import { useForm } from "react-hook-form";
-import * as yup from "yup";
+} from '@material-ui/core';
+import { useForm } from 'react-hook-form';
+import * as yup from 'yup';
 
-import { PopupTextField } from "../../Shared";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { ImageOnlineUpload, uploadPhotoOnline } from "../../common/upload";
+import { PopupTextField } from '../../Shared';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { ImageOnlineUpload, uploadPhotoOnline } from '../../common/upload';
+import Package from './Package';
 
 const phoneRegExp =
   /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
@@ -25,7 +26,7 @@ const calSchema = yup.object().shape({
   nameAr: yup.string().required(),
   tel1: yup
     .string()
-    .matches(phoneRegExp, "Phone number is not valid")
+    .matches(phoneRegExp, 'Phone number is not valid')
     .required(),
 });
 
@@ -65,7 +66,7 @@ const Company = ({ words, editCompany, company, isRTL }) => {
     let icon: any;
     if (iconimage) {
       icon = await uploadPhotoOnline(iconimage);
-      icon = icon.replace("http://", "https://");
+      icon = icon.replace('http://', 'https://');
     }
     const variables: any = {
       name,
@@ -87,7 +88,7 @@ const Company = ({ words, editCompany, company, isRTL }) => {
     <Paper>
       <Box padding={2}>
         <Typography variant="h6">
-          {isRTL ? "معلوات الشركة" : "Company Information"}
+          {isRTL ? 'معلوات الشركة' : 'Company Information'}
         </Typography>
         <Grid container spacing={2}>
           <Grid item xs={12} md={4}>
@@ -193,7 +194,6 @@ const Company = ({ words, editCompany, company, isRTL }) => {
               disabled={!active}
             />
 
-            <Box style={{ marginBottom: 20 }}></Box>
             <ImageOnlineUpload
               url={iconurl}
               setUrl={setIconurl}
@@ -204,15 +204,16 @@ const Company = ({ words, editCompany, company, isRTL }) => {
               size="400x200"
             ></ImageOnlineUpload>
           </Grid>
-          <Grid item xs={12} md={4}></Grid>
+          <Grid item xs={8}>
+            {company && <Package company={company} isRTL={isRTL}></Package>}
+          </Grid>
           <Grid item xs={12}>
             <Box
               display="flex"
               style={{
-                alignItems: "center",
-                justifyContent: "space-between",
+                alignItems: 'center',
+                justifyContent: 'space-between',
                 height: 50,
-                marginTop: 20,
               }}
             >
               <Button
@@ -223,8 +224,8 @@ const Company = ({ words, editCompany, company, isRTL }) => {
                 style={{
                   width: 90,
                   height: 34,
-                  alignItems: "center",
-                  justifyContent: "center",
+                  alignItems: 'center',
+                  justifyContent: 'center',
                 }}
               >
                 <Typography>{words.save}</Typography>
@@ -238,29 +239,29 @@ const Company = ({ words, editCompany, company, isRTL }) => {
                     color="primary"
                   />
                 }
-                label={isRTL ? "تفعيل التعديل" : "Activate"}
+                label={isRTL ? 'تفعيل التعديل' : 'Activate'}
               />
             </Box>
           </Grid>
           <Box
             display="flex"
             style={{
-              flexDirection: "row",
-              direction: "ltr",
+              flexDirection: 'row',
+              direction: 'ltr',
               flex: 1,
-              alignItems: "center",
-              justifyContent: "space-between",
+              alignItems: 'center',
+              justifyContent: 'space-between',
             }}
           >
             <Box
               display="flex"
-              style={{ flexDirection: "row", direction: "ltr" }}
+              style={{ flexDirection: 'row', direction: 'ltr' }}
             >
               <Box
                 style={{
-                  fontWeight: "bold",
+                  fontWeight: 'bold',
                   fontSize: 11,
-                  color: "#ccc",
+                  color: '#ccc',
                   marginLeft: 10,
                   marginRight: 10,
                 }}
@@ -270,9 +271,9 @@ const Company = ({ words, editCompany, company, isRTL }) => {
               <Box
                 display="flex"
                 style={{
-                  fontWeight: "bold",
+                  fontWeight: 'bold',
                   fontSize: 11,
-                  color: "#ccc",
+                  color: '#ccc',
                 }}
               >
                 {company?.appid}
@@ -281,9 +282,9 @@ const Company = ({ words, editCompany, company, isRTL }) => {
             <Box
               display="flex"
               style={{
-                fontWeight: "bold",
+                fontWeight: 'bold',
                 fontSize: 11,
-                color: "#ccc",
+                color: '#ccc',
                 marginLeft: 10,
                 marginRight: 10,
               }}

@@ -276,7 +276,9 @@ const PopupAppointment = ({
         const stat = eventStatus.filter((es: any) => es.id === statNo)[0];
         setStatus(stat);
       }
-      setLocation(row.location);
+      if (row.location) {
+        setLocation({ lat: row?.location?.lat, lng: row?.location?.lng });
+      }
     }
   }, [row]);
 
@@ -423,7 +425,7 @@ const PopupAppointment = ({
       title,
       startDate,
       endDate,
-      location: location ? location : undefined,
+      location: location?.lat ? location : undefined,
       amount: totals.amount,
       status: status ? status.id : 2,
       items: JSON.stringify(itemsList),
@@ -478,11 +480,11 @@ const PopupAppointment = ({
 
   const apply = async (mutate: any, variables: any) => {
     try {
-      mutate({ variables });
+      await mutate({ variables });
       onCloseForm();
     } catch (error) {
       onError(error);
-      console.log(error);
+      console.log('error popup', error);
     }
   };
 

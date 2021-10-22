@@ -328,6 +328,49 @@ export const mainmenu = [
     dep: null,
   },
 ];
+export const emplmenu = [
+  {
+    id: 1,
+    name: 'calendar',
+    uri: '/',
+    titleAr: 'التقويم',
+    titleEn: 'Calendar',
+    icon: 'calendar',
+    req: 'cal',
+    dep: 'pos',
+  },
+  {
+    id: 2,
+    name: 'appointments',
+    uri: 'appointments',
+    titleAr: 'موعد/نشاط',
+    titleEn: 'Activities',
+    icon: 'event',
+    req: 'cal',
+    dep: 'pos',
+  },
+  {
+    id: 3,
+    name: 'tasks',
+    uri: 'tasks',
+    titleAr: 'مهمة/مرحلة',
+    titleEn: 'Operations',
+    icon: 'work',
+    req: 'cal',
+    dep: 'pos',
+  },
+
+  {
+    id: 4,
+    name: 'options',
+    uri: 'options',
+    titleAr: 'الاعدادات',
+    titleEn: 'Options',
+    icon: 'options',
+    req: null,
+    dep: null,
+  },
+];
 
 export const addButtonsList = [
   {

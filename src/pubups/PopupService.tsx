@@ -1,22 +1,22 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import React, { useContext, useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
+import React, { useContext, useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
 import {
   successAlert,
   dublicateAlert,
   errorAlert,
   getReturnItem,
   yup,
-} from "../Shared";
-import { GContextTypes } from "../types";
-import { GlobalContext } from "../contexts";
-import PopupLayout from "../pages/main/PopupLayout";
-import { FormControlLabel, Grid, Radio, RadioGroup } from "@material-ui/core";
-import { TextFieldLocal } from "../components";
-import AutoFieldLocal from "../components/fields/AutoFieldLocal";
-import useDepartmentsTech from "../hooks/useDepartmentsTech";
-import { useEmployees } from "../hooks";
+} from '../Shared';
+import { GContextTypes } from '../types';
+import { GlobalContext } from '../contexts';
+import PopupLayout from '../pages/main/PopupLayout';
+import { FormControlLabel, Grid, Radio, RadioGroup } from '@material-ui/core';
+import { TextFieldLocal } from '../components';
+import AutoFieldLocal from '../components/fields/AutoFieldLocal';
+import useDepartmentsTech from '../hooks/useDepartmentsTech';
+import { useEmployees } from '../hooks';
 
 const PopupService = ({
   open,
@@ -30,7 +30,7 @@ const PopupService = ({
   theme,
 }: any) => {
   const [saving, setSaving] = useState(false);
-  const [alrt, setAlrt] = useState({ show: false, msg: "", type: undefined });
+  const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
 
   const [departvalue, setDepartvalue] = useState<any>(null);
   const [departError, setDepartError] = useState<any>(false);
@@ -133,7 +133,7 @@ const PopupService = ({
       userId: user._id,
     };
     const mutate = isNew ? addAction : editAction;
-    const mutateName = isNew ? "createItem" : "updateItem";
+    const mutateName = isNew ? 'createItem' : 'updateItem';
     apply(mutate, mutateName, variables);
   };
 
@@ -141,8 +141,8 @@ const PopupService = ({
     try {
       const res = await mutate({ variables });
       const nitem = getReturnItem(res, mutateName);
-      if (setNewValue && nitem) setNewValue(nitem, "item");
-      setSaving(false);
+      if (setNewValue && nitem) setNewValue(nitem, 'item');
+
       await successAlert(setAlrt, isRTL);
       closeModal();
     } catch (error) {
@@ -151,7 +151,7 @@ const PopupService = ({
   };
 
   const onError = async (error: any) => {
-    if (error.message.includes("duplicate")) {
+    if (error.message.includes('duplicate')) {
       await dublicateAlert(setAlrt, isRTL);
     } else {
       await errorAlert(setAlrt, isRTL);
@@ -161,8 +161,9 @@ const PopupService = ({
   };
 
   const closeModal = () => {
-    resetAll();
     onClose();
+    resetAll();
+    setSaving(false);
   };
 
   const onHandleSubmit = () => {
@@ -170,11 +171,11 @@ const PopupService = ({
   };
   const title = isRTL
     ? isNew
-      ? "خدمة جديدة"
-      : "تعديل خدمة"
+      ? 'خدمة جديدة'
+      : 'تعديل خدمة'
     : isNew
-    ? "New Service"
-    : "Edit Service";
+    ? 'New Service'
+    : 'Edit Service';
   return (
     <PopupLayout
       isRTL={isRTL}
@@ -269,13 +270,13 @@ const PopupService = ({
             <FormControlLabel
               value={1}
               control={<Radio color="primary" />}
-              label={isRTL ? "الموظفين" : "Employees"}
+              label={isRTL ? 'الموظفين' : 'Employees'}
             />
 
             <FormControlLabel
               value={2}
               control={<Radio color="primary" />}
-              label={isRTL ? "الموارد" : "Resourses"}
+              label={isRTL ? 'الموارد' : 'Resourses'}
             />
           </RadioGroup>
           <AutoFieldLocal

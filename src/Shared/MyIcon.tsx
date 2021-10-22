@@ -24,7 +24,9 @@ import GroupIcon from '@material-ui/icons/Group';
 import Business from '@material-ui/icons/Business';
 import Dashboard from '@material-ui/icons/Dashboard';
 import DirectionsCarIcon from '@material-ui/icons/DirectionsCar';
-import RoomIcon from '@material-ui/icons//Room';
+import RoomIcon from '@material-ui/icons/Room';
+import CloseIcon from '@material-ui/icons/Close';
+
 export default function MyIcon({ icon, color, size }: any) {
   const style = { color, fontSize: size ? size : undefined };
   switch (icon) {
@@ -84,6 +86,8 @@ export default function MyIcon({ icon, color, size }: any) {
       return <DirectionsCarIcon style={style}></DirectionsCarIcon>;
     case 'location':
       return <RoomIcon style={style}></RoomIcon>;
+    case 'close':
+      return <CloseIcon style={style}></CloseIcon>;
 
     default:
       return <div></div>;

@@ -25,6 +25,8 @@ export interface StoreTypes {
   themeId: string;
   user: UserTypes;
   token: string | null;
+  packIssue: any;
+  packIssueMsg: any;
   calendar: {
     start: string;
     end: string;

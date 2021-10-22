@@ -1,19 +1,19 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import React, { useContext, useState } from "react";
-import { useForm } from "react-hook-form";
+import React, { useContext, useState } from 'react';
+import { useForm } from 'react-hook-form';
 import {
   successAlert,
   dublicateAlert,
   errorAlert,
   getReturnItem,
   yup,
-} from "../Shared";
-import { GContextTypes } from "../types";
-import { GlobalContext } from "../contexts";
-import { Grid } from "@material-ui/core";
-import PopupLayout from "../pages/main/PopupLayout";
-import { TextFieldLocal } from "../components";
+} from '../Shared';
+import { GContextTypes } from '../types';
+import { GlobalContext } from '../contexts';
+import { Grid } from '@material-ui/core';
+import PopupLayout from '../pages/main/PopupLayout';
+import { TextFieldLocal } from '../components';
 
 const PopupSupplier = ({
   open,
@@ -27,7 +27,7 @@ const PopupSupplier = ({
   theme,
 }: any) => {
   const [saving, setSaving] = useState(false);
-  const [alrt, setAlrt] = useState({ show: false, msg: "", type: undefined });
+  const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
   const { register, handleSubmit, errors, reset } = useForm(yup.custResolver);
   const {
     translate: { words, isRTL },
@@ -49,7 +49,7 @@ const PopupSupplier = ({
       userId: user._id,
     };
     const mutate = isNew ? addAction : editAction;
-    const mutateName = isNew ? "createSupplier" : "updateSupplier";
+    const mutateName = isNew ? 'createSupplier' : 'updateSupplier';
     apply(mutate, mutateName, variables);
   };
 
@@ -57,18 +57,23 @@ const PopupSupplier = ({
     try {
       const res = await mutate({ variables });
       const nitem = getReturnItem(res, mutateName);
-      if (setNewValue && nitem) setNewValue(nitem, "supplier");
-      reset();
-      setSaving(false);
+      if (setNewValue && nitem) setNewValue(nitem, 'supplier');
       await successAlert(setAlrt, isRTL);
+      closeModal();
       onClose();
     } catch (error) {
       onError(error);
     }
   };
 
+  const closeModal = () => {
+    onClose();
+    reset();
+    setSaving(false);
+  };
+
   const onError = async (error: any) => {
-    if (error.message.includes("duplicate")) {
+    if (error.message.includes('duplicate')) {
       await dublicateAlert(setAlrt, isRTL);
     } else {
       await errorAlert(setAlrt, isRTL);
@@ -83,17 +88,17 @@ const PopupSupplier = ({
 
   const title = isRTL
     ? isNew
-      ? "اضافة مورد"
-      : "تعديل بيانات مورد"
+      ? 'اضافة مورد'
+      : 'تعديل بيانات مورد'
     : isNew
-    ? "New Supplier"
-    : "Edit Supplier";
+    ? 'New Supplier'
+    : 'Edit Supplier';
 
   return (
     <PopupLayout
       isRTL={isRTL}
       open={open}
-      onClose={onClose}
+      onClose={closeModal}
       title={title}
       onSubmit={onHandleSubmit}
       theme={theme}

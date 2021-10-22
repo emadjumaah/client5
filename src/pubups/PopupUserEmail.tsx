@@ -55,7 +55,7 @@ const PopupUserEmail = ({
   const [username, setUsername] = useState(null);
   const [valid, setValid] = useState(null);
   const [checkUser, userData] = useLazyQuery(checkUsername);
-
+  const isAdmin = row?.isAdmin;
   const { register, handleSubmit, errors, reset } = useForm(
     isNew ? yup.addUserResolver : undefined
   );
@@ -161,8 +161,7 @@ const PopupUserEmail = ({
 
   const apply = async (mutate: any, variables: any) => {
     try {
-      mutate({ variables });
-      setSaving(false);
+      await mutate({ variables });
       onFormClose();
     } catch (error) {
       onError(error);
@@ -199,6 +198,7 @@ const PopupUserEmail = ({
     setEmplvalue(null);
     setUsername(null);
     setValid(null);
+    setSaving(false);
     onClose();
   };
 
@@ -281,7 +281,7 @@ const PopupUserEmail = ({
             row={row}
           />
 
-          {user && (
+          {user && !isAdmin && (
             <UserRolesEmail
               isRTL={isRTL}
               branch={user?.branch}

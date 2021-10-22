@@ -9,7 +9,7 @@ import { GContextTypes } from '../../types';
 import { GlobalContext } from '../../contexts';
 import CalendarOptions from './CalendarOptions';
 import Company from './Company';
-import Names from './Names';
+// import Names from './Names';
 import React from 'react';
 
 const initcalendar = {
@@ -31,9 +31,9 @@ const Options = ({ isRTL, words, isEditor, company, editCompany }: any) => {
   const setCalendar = (data: any) => {
     dispatch({ type: 'setCalendar', payload: data });
   };
-  const setNames = (data: any) => {
-    dispatch({ type: 'setNames', payload: data });
-  };
+  // const setNames = (data: any) => {
+  //   dispatch({ type: 'setNames', payload: data });
+  // };
 
   if (!calendar) {
     setCalendar(initcalendar);
@@ -46,19 +46,27 @@ const Options = ({ isRTL, words, isEditor, company, editCompany }: any) => {
       }}
     >
       <Grid container spacing={2}>
+        {isEditor && (
+          <Grid item xs={12} md={10}>
+            <Company
+              company={company}
+              editCompany={editCompany}
+              words={words}
+              isRTL={isRTL}
+            ></Company>
+          </Grid>
+        )}
         <Grid item xs={12} md={10}>
           <Language lang={lang} setLang={setLang} isRTL={isRTL}></Language>
         </Grid>
 
         <Grid item xs={12} md={10}>
-          {isEditor && (
-            <CalendarOptions
-              calendar={calendar}
-              words={words}
-              setCalendar={setCalendar}
-              isRTL={isRTL}
-            ></CalendarOptions>
-          )}
+          <CalendarOptions
+            calendar={calendar}
+            words={words}
+            setCalendar={setCalendar}
+            isRTL={isRTL}
+          ></CalendarOptions>
         </Grid>
 
         <Grid item xs={12} md={10}>
@@ -69,17 +77,9 @@ const Options = ({ isRTL, words, isEditor, company, editCompany }: any) => {
           ></GenTheme>
         </Grid>
 
-        <Grid item xs={12} md={10}>
-          <Company
-            company={company}
-            editCompany={editCompany}
-            words={words}
-            isRTL={isRTL}
-          ></Company>
-        </Grid>
-        <Grid item xs={12} md={10}>
+        {/* <Grid item xs={12} md={10}>
           <Names setNames={setNames} isRTL={isRTL} words={words}></Names>
-        </Grid>
+        </Grid> */}
       </Grid>
     </Box>
   );

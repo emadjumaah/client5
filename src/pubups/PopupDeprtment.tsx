@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import React, { useContext, useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
+import React, { useContext, useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
 import {
   successAlert,
   dublicateAlert,
@@ -9,12 +9,12 @@ import {
   getReturnItem,
   yup,
   ColorPicker,
-} from "../Shared";
-import { GContextTypes } from "../types";
-import { GlobalContext } from "../contexts";
-import { Grid, TextField } from "@material-ui/core";
-import PopupLayout from "../pages/main/PopupLayout";
-import { TextFieldLocal } from "../components";
+} from '../Shared';
+import { GContextTypes } from '../types';
+import { GlobalContext } from '../contexts';
+import { Grid, TextField } from '@material-ui/core';
+import PopupLayout from '../pages/main/PopupLayout';
+import { TextFieldLocal } from '../components';
 
 const PopupDeprtment = ({
   open,
@@ -29,14 +29,14 @@ const PopupDeprtment = ({
   depType,
 }: any) => {
   const [saving, setSaving] = useState(false);
-  const [alrt, setAlrt] = useState({ show: false, msg: "", type: undefined });
+  const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
   const { register, handleSubmit, errors, reset } = useForm(yup.departResolver);
   const {
     translate: { words, isRTL },
     store: { user },
   }: GContextTypes = useContext(GlobalContext);
 
-  const [color, setColor] = useState<any>("#AAAAAA");
+  const [color, setColor] = useState<any>('#AAAAAA');
 
   useEffect(() => {
     if (row && row._id) {
@@ -60,7 +60,7 @@ const PopupDeprtment = ({
       userId: user._id,
     };
     const mutate = isNew ? addAction : editAction;
-    const mutateName = isNew ? "createDepartment" : "updateDepartment";
+    const mutateName = isNew ? 'createDepartment' : 'updateDepartment';
     apply(mutate, mutateName, variables);
   };
 
@@ -78,12 +78,12 @@ const PopupDeprtment = ({
   };
 
   const onError = async (error: any) => {
-    if (error.message.includes("duplicate")) {
+    if (error.message.includes('duplicate')) {
       await dublicateAlert(setAlrt, isRTL);
     } else {
       await errorAlert(setAlrt, isRTL);
       reset();
-      setColor("#AAAAAA");
+      setColor('#AAAAAA');
       console.log(error);
     }
   };
@@ -91,7 +91,7 @@ const PopupDeprtment = ({
   const onCloseForm = () => {
     onClose();
     reset();
-    setColor("#AAAAAA");
+    setColor('#AAAAAA');
     setSaving(false);
   };
 
@@ -100,16 +100,16 @@ const PopupDeprtment = ({
   };
   const title = isRTL
     ? isNew
-      ? "اضافة قسم"
-      : "تعديل بيانات قسم"
+      ? 'اضافة قسم'
+      : 'تعديل بيانات قسم'
     : isNew
-    ? "New Department"
-    : "Edit Department";
+    ? 'New Department'
+    : 'Edit Department';
   return (
     <PopupLayout
       isRTL={isRTL}
       open={open}
-      onClose={onClose}
+      onClose={onCloseForm}
       title={title}
       onSubmit={onHandleSubmit}
       theme={theme}
@@ -170,7 +170,7 @@ const PopupDeprtment = ({
                   width: 200,
                 }}
                 InputProps={{
-                  style: { borderRadius: 5, color: "#fff" },
+                  style: { borderRadius: 5, color: '#fff' },
                 }}
                 margin="dense"
               />

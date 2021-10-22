@@ -105,6 +105,8 @@ import EmployeesCalendar from '../calendar/EmployeesCalendar';
 import ManageResourses from '../adds/ManageResourses';
 import Branches from '../adds/Branches';
 import React from 'react';
+import { isEditor as isEditorUser } from '../../common/roles';
+import AlertWithClose from '../../components/fields/AlertWithClose';
 
 const Content = () => {
   const classes = layoutClasses();
@@ -119,15 +121,16 @@ const Content = () => {
   const { accounts, refreshAccount } = useAccounts();
 
   const {
-    store: { user, calendar, network },
+    store: { user, calendar, network, packIssue, packIssueMsg },
     dispatch,
     translate: { words, isRTL },
   }: GContextTypes = useContext(GlobalContext);
+
   const logout = () => {
     dispatch({ type: 'logout' });
   };
 
-  const isEditor = user?.isEditor;
+  const isEditor = isEditorUser(user);
 
   const [calendarStore, calendarDispatch] = useReducer(
     calendarReducer,
@@ -447,22 +450,24 @@ const Content = () => {
               </PageLayout>
             )}
           />
-          <Route
-            path="/branches"
-            component={() => (
-              <PageLayout
-                menuitem={menuitem}
-                isRTL={isRTL}
-                words={words}
-                theme={theme}
-                isEditor={isEditor}
-              >
-                <Branches isRTL={isRTL} words={words} theme={theme}>
-                  {' '}
-                </Branches>
-              </PageLayout>
-            )}
-          />
+          {user.isSuperAdmin && (
+            <Route
+              path="/branches"
+              component={() => (
+                <PageLayout
+                  menuitem={menuitem}
+                  isRTL={isRTL}
+                  words={words}
+                  theme={theme}
+                  isEditor={isEditor}
+                >
+                  <Branches isRTL={isRTL} words={words} theme={theme}>
+                    {' '}
+                  </Branches>
+                </PageLayout>
+              )}
+            />
+          )}
           <Route
             path="/options"
             component={() => (
@@ -755,6 +760,13 @@ const Content = () => {
             )}
           />
         </div>
+        <AlertWithClose
+          open={packIssue}
+          dispatch={dispatch}
+          isRTL={isRTL}
+          msg={packIssueMsg}
+          onClose={() => dispatch({ type: 'closePackIssue' })}
+        ></AlertWithClose>
       </main>
     </Box>
   );

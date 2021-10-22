@@ -1,12 +1,12 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import React, { useContext, useEffect, useRef, useState } from "react";
-import { useForm } from "react-hook-form";
-import { invoiceClasses } from "../themes";
-import { useCustomers, useLastNos } from "../hooks";
-import { dublicateAlert, errorAlert, messageAlert } from "../Shared";
-import { GContextTypes } from "../types";
-import { GlobalContext } from "../contexts";
+import React, { useContext, useEffect, useRef, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { invoiceClasses } from '../themes';
+import { useCustomers, useLastNos } from '../hooks';
+import { dublicateAlert, errorAlert, messageAlert } from '../Shared';
+import { GContextTypes } from '../types';
+import { GlobalContext } from '../contexts';
 import {
   Box,
   colors,
@@ -15,27 +15,27 @@ import {
   RadioGroup,
   TextField,
   Typography,
-} from "@material-ui/core";
-import ServiceItemForm from "../Shared/ServiceItemForm";
-import ItemsTable from "../Shared/ItemsTable";
-import { PriceTotal } from "../Shared/TotalPrice";
-import { operationTypes } from "../constants";
-import { accountCode } from "../constants/kaid";
-import PaymentSelect from "../pages/options/PaymentSelect";
-import PopupCustomer from "./PopupCustomer";
-import { useLazyQuery } from "@apollo/client";
-import { getOperationItems } from "../graphql";
-import LoadingInline from "../Shared/LoadingInline";
-import PopupLayout from "../pages/main/PopupLayout";
-import { Grid } from "@material-ui/core";
-import AutoFieldLocal from "../components/fields/AutoFieldLocal";
-import { getAppStartEndPeriod } from "../common/time";
-import { CalenderLocal } from "../components";
-import { useReactToPrint } from "react-to-print";
-import { InvoicePrintA5 } from "../common/InvoicePrintA5";
-import { weekdaysNNo } from "../constants/datatypes";
-import useTasks from "../hooks/useTasks";
-import useCompany from "../hooks/useCompany";
+} from '@material-ui/core';
+import ServiceItemForm from '../Shared/ServiceItemForm';
+import ItemsTable from '../Shared/ItemsTable';
+import { PriceTotal } from '../Shared/TotalPrice';
+import { operationTypes } from '../constants';
+import { accountCode } from '../constants/kaid';
+import PaymentSelect from '../pages/options/PaymentSelect';
+import PopupCustomer from './PopupCustomer';
+import { useLazyQuery } from '@apollo/client';
+import { getOperationItems } from '../graphql';
+import LoadingInline from '../Shared/LoadingInline';
+import PopupLayout from '../pages/main/PopupLayout';
+import { Grid } from '@material-ui/core';
+import AutoFieldLocal from '../components/fields/AutoFieldLocal';
+import { getAppStartEndPeriod } from '../common/time';
+import { CalenderLocal } from '../components';
+import { useReactToPrint } from 'react-to-print';
+import { InvoicePrintA5 } from '../common/InvoicePrintA5';
+import { weekdaysNNo } from '../constants/datatypes';
+import useTasks from '../hooks/useTasks';
+import useCompany from '../hooks/useCompany';
 
 export const indexTheList = (list: any) => {
   return list.map((item: any, index: any) => {
@@ -64,13 +64,13 @@ const PopupInvoice = ({
   const classes = invoiceClasses();
   const [loading, setLoading] = useState(false);
   const { tasks } = useTasks();
-  const [alrt, setAlrt] = useState({ show: false, msg: "", type: undefined });
+  const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
   const [selectedDate, setSelectedDate] = React.useState(new Date());
-  const [invNo, setInvNo] = useState<any>("");
+  const [invNo, setInvNo] = useState<any>('');
 
   const [itemsList, setItemsList] = useState<any>([]);
   const [accounts, setAccounts] = useState<any>([]);
-  const [ptype, setPtype] = useState<any>("");
+  const [ptype, setPtype] = useState<any>('');
 
   const [discount, setDiscount] = useState(0);
   const [totals, setTotals] = useState<any>({});
@@ -78,33 +78,33 @@ const PopupInvoice = ({
   const { company } = useCompany();
 
   const [departvalue, setDepartvalue] = useState<any>(
-    name === "departmentId" ? value : null
+    name === 'departmentId' ? value : null
   );
   const [departError, setDepartError] = useState<any>(false);
   const departRef: any = React.useRef();
 
   const [emplvalue, setEmplvalue] = useState<any>(
-    name === "employeeId" ? value : null
+    name === 'employeeId' ? value : null
   );
   const [emplError, setEmplError] = useState<any>(false);
   const emplRef: any = React.useRef();
 
   const [custvalue, setCustvalue] = useState<any>(
-    name === "customerId" ? value : null
+    name === 'customerId' ? value : null
   );
   const [taskvalue, setTaskvalue] = useState<any>(
-    name === "taskId" ? value : null
+    name === 'taskId' ? value : null
   );
 
   const [openCust, setOpenCust] = useState(false);
-  const [newtext, setNewtext] = useState("");
+  const [newtext, setNewtext] = useState('');
 
   const [isCash, setIsCash] = useState(false);
   const [resKind, setResKind] = useState<any>(null);
   const [emplslist, setEmplslist] = useState<any>([]);
 
   const [getItems, itemsData]: any = useLazyQuery(getOperationItems, {
-    fetchPolicy: "cache-and-network",
+    fetchPolicy: 'cache-and-network',
   });
 
   const { lastNos, freshlastNos } = useLastNos();
@@ -122,13 +122,13 @@ const PopupInvoice = ({
   useEffect(() => {
     if (isNew) {
       if (taskvalue) {
-        if (taskvalue?.departmentId && name !== "departmentId") {
+        if (taskvalue?.departmentId && name !== 'departmentId') {
           const dept = departments.filter(
             (dep: any) => dep._id === taskvalue?.departmentId
           )?.[0];
           setDepartvalue(dept);
         }
-        if (taskvalue?.employeeId && name !== "employeeId") {
+        if (taskvalue?.employeeId && name !== 'employeeId') {
           const dept = employees.filter(
             (dep: any) => dep._id === taskvalue?.employeeId
           )?.[0];
@@ -141,7 +141,7 @@ const PopupInvoice = ({
   useEffect(() => {
     if (isNew) {
       if (emplvalue) {
-        if (emplvalue?.departmentId && name !== "departmentId") {
+        if (emplvalue?.departmentId && name !== 'departmentId') {
           const dept = departments.filter(
             (dep: any) => dep._id === emplvalue?.departmentId
           )?.[0];
@@ -152,7 +152,7 @@ const PopupInvoice = ({
   }, [emplvalue]);
 
   useEffect(() => {
-    const items = itemsData?.data?.["getOperationItems"]?.data || [];
+    const items = itemsData?.data?.['getOperationItems']?.data || [];
     if (items && items.length > 0) {
       const ids = items.map((it: any) => it.itemId);
       const servlist = servicesproducts.filter((ser: any) =>
@@ -212,7 +212,7 @@ const PopupInvoice = ({
   };
   const onCloseCustomer = () => {
     setOpenCust(false);
-    setNewtext("");
+    setNewtext('');
   };
 
   const resetAllForms = () => {
@@ -221,9 +221,9 @@ const PopupInvoice = ({
     setDiscount(0);
     setTotals({});
     setCustvalue(null);
-    setInvNo("");
+    setInvNo('');
     setAccounts([]);
-    setPtype("");
+    setPtype('');
     setTaskvalue(null);
     setIsCash(false);
     setSelectedDate(new Date());
@@ -265,7 +265,7 @@ const PopupInvoice = ({
       setInvNo(lastNos?.salesInvoice ? Number(lastNos?.salesInvoice) + 1 : 1);
     }
     if (isNew) {
-      if (name === "taskId") {
+      if (name === 'taskId') {
         if (value?.departmentId) {
           const dept = departments.filter(
             (dep: any) => dep._id === value?.departmentId
@@ -322,7 +322,7 @@ const PopupInvoice = ({
       setDiscount(row.discount);
       setInvNo(row.docNo);
       handleDateChange(row.time);
-      setPtype(row.paymentType ? row.paymentType : "");
+      setPtype(row.paymentType ? row.paymentType : '');
     }
   }, [row]);
 
@@ -357,7 +357,7 @@ const PopupInvoice = ({
       },
       {
         debitAcc:
-          ptype === "cash" ? accountCode.cash_on_hand : accountCode.card,
+          ptype === 'cash' ? accountCode.cash_on_hand : accountCode.card,
         creditAcc: accountCode.accounts_receivable,
         amount: isCash ? sum - discount : 0,
         type: operationTypes.customerReceipt,
@@ -371,14 +371,14 @@ const PopupInvoice = ({
     if (selectedDate < startPeriod || selectedDate > endPeriod) {
       await messageAlert(
         setAlrt,
-        isRTL ? "يجب تعديل التاريخ" : "Date should be change"
+        isRTL ? 'يجب تعديل التاريخ' : 'Date should be change'
       );
       return;
     }
     if (discount < 0) {
       await messageAlert(
         setAlrt,
-        isRTL ? "الحسم لا يمكن ان يكون سلبي" : "Discount can't be minus"
+        isRTL ? 'الحسم لا يمكن ان يكون سلبي' : "Discount can't be minus"
       );
       return;
     }
@@ -386,7 +386,7 @@ const PopupInvoice = ({
       await messageAlert(
         setAlrt,
         isRTL
-          ? "الحسم لا يمكن ان يكون اكبر من قيمة الفاتورة"
+          ? 'الحسم لا يمكن ان يكون اكبر من قيمة الفاتورة'
           : "Discount can't be biger than Total"
       );
       return;
@@ -394,7 +394,7 @@ const PopupInvoice = ({
     if (!custvalue) {
       await messageAlert(
         setAlrt,
-        isRTL ? "يرجى اضافة عميل للفاتورة" : "Please add Customer"
+        isRTL ? 'يرجى اضافة عميل للفاتورة' : 'Please add Customer'
       );
       return;
     }
@@ -478,7 +478,7 @@ const PopupInvoice = ({
 
   const apply = async (mutate: any, variables: any) => {
     try {
-      mutate({ variables });
+      await mutate({ variables });
       if (row && row._id) {
         itemsData?.refetch();
       }
@@ -492,7 +492,7 @@ const PopupInvoice = ({
   };
 
   const onError = async (error: any) => {
-    if (error.message.includes("duplicate")) {
+    if (error.message.includes('duplicate')) {
       await dublicateAlert(setAlrt, isRTL);
     } else {
       await errorAlert(setAlrt, isRTL);
@@ -533,11 +533,11 @@ const PopupInvoice = ({
   const day = weekdaysNNo?.[date.getDay()];
   const title = isRTL
     ? isNew
-      ? "فاتورة جديدة"
-      : "تعديل فاتورة"
+      ? 'فاتورة جديدة'
+      : 'تعديل فاتورة'
     : isNew
-    ? "New Invoice"
-    : "Edit Invoice";
+    ? 'New Invoice'
+    : 'Edit Invoice';
   return (
     <PopupLayout
       isRTL={isRTL}
@@ -583,7 +583,7 @@ const PopupInvoice = ({
             fullWidth
             openAdd={openCustomer}
             showphone
-            disabled={name === "customerId"}
+            disabled={name === 'customerId'}
           ></AutoFieldLocal>
         </Grid>
         <Grid item xs={4}>
@@ -596,7 +596,7 @@ const PopupInvoice = ({
             setSelectValue={setTaskvalue}
             isRTL={isRTL}
             fullWidth
-            disabled={name === "taskId"}
+            disabled={name === 'taskId'}
           ></AutoFieldLocal>
         </Grid>
         <Grid item xs={2}>
@@ -604,15 +604,15 @@ const PopupInvoice = ({
             display="flex"
             style={{
               flex: 1,
-              flexDirection: isRTL ? "row-reverse" : "row",
-              alignItems: "center",
-              justifyContent: "flex-end",
+              flexDirection: isRTL ? 'row-reverse' : 'row',
+              alignItems: 'center',
+              justifyContent: 'flex-end',
               marginLeft: isRTL ? undefined : 20,
               marginRight: isRTL ? 20 : undefined,
             }}
           >
             {isNew && (
-              <Typography style={{ color: "#777" }}>{words.no}</Typography>
+              <Typography style={{ color: '#777' }}>{words.no}</Typography>
             )}
             <TextField
               name="invNo"
@@ -625,7 +625,7 @@ const PopupInvoice = ({
               // type="number"
               inputProps={{
                 style: {
-                  textAlign: "center",
+                  textAlign: 'center',
                   fontSize: 14,
                   height: 13,
                 },
@@ -650,7 +650,7 @@ const PopupInvoice = ({
                 control={
                   <Radio style={{ padding: 0, margin: 0 }} color="primary" />
                 }
-                label={isRTL ? "الموظف" : "Employee"}
+                label={isRTL ? 'الموظف' : 'Employee'}
               />
 
               <FormControlLabel
@@ -658,7 +658,7 @@ const PopupInvoice = ({
                 control={
                   <Radio style={{ padding: 0, margin: 0 }} color="primary" />
                 }
-                label={isRTL ? "المورد" : "Resourse"}
+                label={isRTL ? 'المورد' : 'Resourse'}
               />
             </RadioGroup>
           </Box>
@@ -670,7 +670,7 @@ const PopupInvoice = ({
             title={words.employee}
             words={words}
             options={emplslist}
-            disabled={!resKind || name === "employeeId"}
+            disabled={!resKind || name === 'employeeId'}
             value={emplvalue}
             setSelectValue={setEmplvalue}
             setSelectError={setEmplError}
@@ -696,14 +696,14 @@ const PopupInvoice = ({
             noPlus
             isRTL={isRTL}
             width={420}
-            disabled={name === "departmentId"}
+            disabled={name === 'departmentId'}
           ></AutoFieldLocal>
         </Grid>
 
         <Grid item xs={12}>
           <Box
             style={{
-              backgroundColor: "#f3f3f3",
+              backgroundColor: '#f3f3f3',
               padding: 10,
               marginTop: 15,
               marginBottom: 15,
@@ -739,8 +739,8 @@ const PopupInvoice = ({
           <Box
             display="flex"
             style={{
-              alignItems: "center",
-              justifyContent: "space-between",
+              alignItems: 'center',
+              justifyContent: 'space-between',
               marginRight: 10,
               marginLeft: 10,
             }}
@@ -775,7 +775,7 @@ const PopupInvoice = ({
             editAction={editCustomer}
           ></PopupCustomer>
           <Box>
-            <div style={{ display: "none" }}>
+            <div style={{ display: 'none' }}>
               <InvoicePrintA5
                 company={company}
                 printData={printData}

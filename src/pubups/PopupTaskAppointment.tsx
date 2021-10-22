@@ -326,13 +326,13 @@ const PopupTaskAppointment = ({
     };
     const eventlist = getEventsList({ event, rrule, actionslist, isRTL });
     addEventsToList(eventlist);
-    setSaving(false);
     onCloseForm();
   };
 
   const onCloseForm = () => {
     resetAllForms();
     onClose();
+    setSaving(false);
   };
 
   const onHandleSubmit = () => {

@@ -1,24 +1,24 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import React, { useContext, useEffect, useRef, useState } from "react";
-import { useForm } from "react-hook-form";
-import { invoiceClasses } from "../themes";
+import React, { useContext, useEffect, useRef, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { invoiceClasses } from '../themes';
 import {
   useCustomers,
   useDepartments,
   useEmployees,
   useLastNos,
-} from "../hooks";
-import { dublicateAlert, errorAlert, messageAlert } from "../Shared";
-import { GContextTypes } from "../types";
-import { GlobalContext } from "../contexts";
+} from '../hooks';
+import { dublicateAlert, errorAlert, messageAlert } from '../Shared';
+import { GContextTypes } from '../types';
+import { GlobalContext } from '../contexts';
 
-import { Box, colors, TextField, Typography } from "@material-ui/core";
-import ServiceItemForm from "../Shared/ServiceItemForm";
-import ItemsTable from "../Shared/ItemsTable";
-import { PriceTotal } from "../Shared/TotalPrice";
-import { operationTypes } from "../constants";
-import { useMutation } from "@apollo/client";
+import { Box, colors, TextField, Typography } from '@material-ui/core';
+import ServiceItemForm from '../Shared/ServiceItemForm';
+import ItemsTable from '../Shared/ItemsTable';
+import { PriceTotal } from '../Shared/TotalPrice';
+import { operationTypes } from '../constants';
+import { useMutation } from '@apollo/client';
 import {
   createInvoice,
   getCustomers,
@@ -27,20 +27,20 @@ import {
   getInvoices,
   getLandingChartData,
   getLastNos,
-} from "../graphql";
-import { accountCode } from "../constants/kaid";
-import PaymentSelect from "../pages/options/PaymentSelect";
-import PopupLayout from "../pages/main/PopupLayout";
-import { Grid } from "@material-ui/core";
-import AutoFieldLocal from "../components/fields/AutoFieldLocal";
-import { CalenderLocal } from "../components";
-import PopupCustomer from "./PopupCustomer";
-import { weekdaysNNo } from "../constants/datatypes";
-import getTasks from "../graphql/query/getTasks";
-import useTasks from "../hooks/useTasks";
-import { InvoicePrintA5 } from "../common/InvoicePrintA5";
-import { useReactToPrint } from "react-to-print";
-import useCompany from "../hooks/useCompany";
+} from '../graphql';
+import { accountCode } from '../constants/kaid';
+import PaymentSelect from '../pages/options/PaymentSelect';
+import PopupLayout from '../pages/main/PopupLayout';
+import { Grid } from '@material-ui/core';
+import AutoFieldLocal from '../components/fields/AutoFieldLocal';
+import { CalenderLocal } from '../components';
+import PopupCustomer from './PopupCustomer';
+import { weekdaysNNo } from '../constants/datatypes';
+import getTasks from '../graphql/query/getTasks';
+import useTasks from '../hooks/useTasks';
+import { InvoicePrintA5 } from '../common/InvoicePrintA5';
+import { useReactToPrint } from 'react-to-print';
+import useCompany from '../hooks/useCompany';
 
 export const indexTheList = (list: any) => {
   return list.map((item: any, index: any) => {
@@ -63,13 +63,13 @@ const PopupAppointInvoice = ({
   onCloseAppoint = () => null,
 }: any) => {
   const classes = invoiceClasses();
-  const [alrt, setAlrt] = useState({ show: false, msg: "", type: undefined });
+  const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
   const [selectedDate, setSelectedDate] = React.useState(new Date());
-  const [invNo, setInvNo] = useState<any>("");
+  const [invNo, setInvNo] = useState<any>('');
 
   const [itemsList, setItemsList] = useState<any>([]);
   const [accounts, setAccounts] = useState<any>([]);
-  const [ptype, setPtype] = useState<any>("cash");
+  const [ptype, setPtype] = useState<any>('cash');
 
   const [discount, setDiscount] = useState(0);
   const [totals, setTotals] = useState<any>({});
@@ -87,7 +87,7 @@ const PopupAppointInvoice = ({
   const [taskvalue, setTaskvalue] = useState<any>(null);
 
   const [openCust, setOpenCust] = useState(false);
-  const [newtext, setNewtext] = useState("");
+  const [newtext, setNewtext] = useState('');
 
   const [isCash, setIsCash] = useState(false);
   const { customers, addCustomer, editCustomer } = useCustomers();
@@ -141,7 +141,7 @@ const PopupAppointInvoice = ({
   };
   const onCloseCustomer = () => {
     setOpenCust(false);
-    setNewtext("");
+    setNewtext('');
   };
   const onNewFieldChange = (nextValue: any) => {
     setCustvalue(nextValue);
@@ -153,9 +153,9 @@ const PopupAppointInvoice = ({
     setDiscount(0);
     setTotals({});
     setCustvalue(null);
-    setInvNo("");
+    setInvNo('');
     setAccounts([]);
-    setPtype("");
+    setPtype('');
     setIsCash(false);
     setSelectedDate(new Date());
     setDepartvalue(null);
@@ -256,7 +256,7 @@ const PopupAppointInvoice = ({
       },
       {
         debitAcc:
-          ptype === "cash" ? accountCode.cash_on_hand : accountCode.card,
+          ptype === 'cash' ? accountCode.cash_on_hand : accountCode.card,
         creditAcc: accountCode.accounts_receivable,
         amount: isCash ? sum - discount : 0,
         type: operationTypes.customerReceipt,
@@ -277,7 +277,7 @@ const PopupAppointInvoice = ({
     if (discount < 0) {
       await messageAlert(
         setAlrt,
-        isRTL ? "الحسم لا يمكن ان يكون سلبي" : "Discount can't be minus"
+        isRTL ? 'الحسم لا يمكن ان يكون سلبي' : "Discount can't be minus"
       );
       return;
     }
@@ -285,7 +285,7 @@ const PopupAppointInvoice = ({
       await messageAlert(
         setAlrt,
         isRTL
-          ? "الحسم لا يمكن ان يكون اكبر من قيمة الفاتورة"
+          ? 'الحسم لا يمكن ان يكون اكبر من قيمة الفاتورة'
           : "Discount can't be biger than Total"
       );
       return;
@@ -293,7 +293,7 @@ const PopupAppointInvoice = ({
     if (!custvalue) {
       await messageAlert(
         setAlrt,
-        isRTL ? "يرجى اضافة عميل للفاتورة" : "Please add Customer"
+        isRTL ? 'يرجى اضافة عميل للفاتورة' : 'Please add Customer'
       );
       return;
     }
@@ -376,7 +376,7 @@ const PopupAppointInvoice = ({
 
   const apply = async (mutate: any, variables: any) => {
     try {
-      mutate({ variables });
+      await mutate({ variables });
       editEvent({ variables: { id: appoint.id, status: 10 } });
       freshlastNos();
       onCloseForm();
@@ -388,7 +388,7 @@ const PopupAppointInvoice = ({
   };
 
   const onError = async (error: any) => {
-    if (error.message.includes("duplicate")) {
+    if (error.message.includes('duplicate')) {
       await dublicateAlert(setAlrt, isRTL);
     } else {
       await errorAlert(setAlrt, isRTL);
@@ -427,11 +427,11 @@ const PopupAppointInvoice = ({
 
   const title = isRTL
     ? isNew
-      ? "فاتورة جديدة"
-      : "تعديل فاتورة"
+      ? 'فاتورة جديدة'
+      : 'تعديل فاتورة'
     : isNew
-    ? "New Invoice"
-    : "Edit Invoice";
+    ? 'New Invoice'
+    : 'Edit Invoice';
 
   return (
     <PopupLayout
@@ -497,15 +497,15 @@ const PopupAppointInvoice = ({
             display="flex"
             style={{
               flex: 1,
-              flexDirection: isRTL ? "row-reverse" : "row",
-              alignItems: "center",
-              justifyContent: "flex-end",
+              flexDirection: isRTL ? 'row-reverse' : 'row',
+              alignItems: 'center',
+              justifyContent: 'flex-end',
               marginLeft: isRTL ? undefined : 20,
               marginRight: isRTL ? 20 : undefined,
             }}
           >
             {isNew && (
-              <Typography style={{ color: "#777" }}>{words.no}</Typography>
+              <Typography style={{ color: '#777' }}>{words.no}</Typography>
             )}
             <TextField
               name="invNo"
@@ -518,7 +518,7 @@ const PopupAppointInvoice = ({
               // type="number"
               inputProps={{
                 style: {
-                  textAlign: "center",
+                  textAlign: 'center',
                   fontSize: 14,
                   height: 13,
                 },
@@ -563,7 +563,7 @@ const PopupAppointInvoice = ({
         <Grid item xs={12}>
           <Box
             style={{
-              backgroundColor: "#f4f4f4",
+              backgroundColor: '#f4f4f4',
               padding: 10,
               marginTop: 15,
               marginBottom: 15,
@@ -597,8 +597,8 @@ const PopupAppointInvoice = ({
           <Box
             display="flex"
             style={{
-              alignItems: "center",
-              justifyContent: "space-between",
+              alignItems: 'center',
+              justifyContent: 'space-between',
             }}
           >
             <TextField
@@ -631,7 +631,7 @@ const PopupAppointInvoice = ({
             editAction={editCustomer}
           ></PopupCustomer>
           <Box>
-            <div style={{ display: "none" }}>
+            <div style={{ display: 'none' }}>
               <InvoicePrintA5
                 company={company}
                 printData={printData}

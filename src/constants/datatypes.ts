@@ -186,9 +186,9 @@ export const statusTypes = {
   Confirmed: 2,
   OnHold: 3,
   Canceled: 4,
-  start: 5,
+  // start: 5,
   progress: 6,
-  end: 7,
+  // end: 7,
   Completed: 10,
 };
 
@@ -197,9 +197,9 @@ export const eventStatusEn = {
   2: 'Confirmed',
   3: 'On-Hold',
   4: 'Canceled',
-  5: 'Starts',
+  // 5: 'Starts',
   6: 'In Progress',
-  7: 'Ends',
+  // 7: 'Ends',
   10: 'Completed',
 };
 export const eventStatusAr = {
@@ -207,9 +207,9 @@ export const eventStatusAr = {
   2: 'موعد مؤكد',
   3: 'موعد معلق',
   4: 'موعد ملغى',
-  5: 'بدأ',
+  // 5: 'بدأ',
   6: 'قيد الانجاز',
-  7: 'انتهى',
+  // 7: 'انتهى',
   10: 'موعد منجز',
 };
 export const eventStatus = [
@@ -217,21 +217,21 @@ export const eventStatus = [
   { id: 2, name: 'Confirmed', nameAr: 'موعد مؤكد', color: '#2AB7CA' },
   { id: 3, name: 'On-Hold', nameAr: 'موعد معلق', color: '#FED766' },
   { id: 4, name: 'Canceled', nameAr: 'موعد ملغى', color: '#FE4A49' },
-  { id: 5, name: 'Starts', nameAr: 'بدأ', color: '#f1Ea94' },
+  // { id: 5, name: 'Starts', nameAr: 'بدأ', color: '#f1Ea94' },
   { id: 6, name: 'In Progress', nameAr: 'قيد الانجاز', color: '#f1Ea94' },
-  { id: 7, name: 'Ends', nameAr: 'انتهى', color: '#f1Ea94' },
+  // { id: 7, name: 'Ends', nameAr: 'انتهى', color: '#f1Ea94' },
   { id: 10, name: 'Completed', nameAr: 'موعد منجز', color: '#61E294' },
 ];
 
 export const eventStatusShort = [
-  { id: 10, name: 'Completed', nameAr: 'منجز', color: '#7bcf9b' },
-  { id: 2, name: 'Confirmed', nameAr: 'مؤكد', color: '#a084bb' },
   { id: 1, name: 'Scheduled', nameAr: 'غير مؤكد', color: '#aa98bb' },
+  { id: 2, name: 'Confirmed', nameAr: 'مؤكد', color: '#a084bb' },
   { id: 3, name: 'On-Hold', nameAr: 'معلق', color: '#b6abc2' },
   { id: 4, name: 'Canceled', nameAr: 'ملغى', color: '#b6abc2' },
-  { id: 5, name: 'Starts', nameAr: 'بدأ', color: '#f1Ea94' },
+  // { id: 5, name: 'Starts', nameAr: 'بدأ', color: '#f1Ea94' },
   { id: 6, name: 'In Progress', nameAr: 'قيد الانجاز', color: '#f1Ea94' },
-  { id: 7, name: 'Ends', nameAr: 'انتهى', color: '#f1Ea94' },
+  // { id: 7, name: 'Ends', nameAr: 'انتهى', color: '#f1Ea94' },
+  { id: 10, name: 'Completed', nameAr: 'منجز', color: '#7bcf9b' },
 ];
 
 export const getThemeStatus = (theme: any) => {
@@ -266,24 +266,24 @@ export const getThemeStatus = (theme: any) => {
       nameAr: 'ملغى',
       color: fade(theme.palette.secondary.light, 0.2),
     },
-    {
-      id: 5,
-      name: 'Starts',
-      nameAr: 'بدأ',
-      color: fade(theme.palette.secondary.light, 0.5),
-    },
+    // {
+    //   id: 5,
+    //   name: 'Starts',
+    //   nameAr: 'بدأ',
+    //   color: fade(theme.palette.secondary.light, 0.5),
+    // },
     {
       id: 6,
       name: 'In Progress',
       nameAr: 'قيد الانجاز',
       color: fade(theme.palette.secondary.light, 0.5),
     },
-    {
-      id: 7,
-      name: 'Ends',
-      nameAr: 'انتهى',
-      color: fade(theme.palette.secondary.light, 0.5),
-    },
+    // {
+    //   id: 7,
+    //   name: 'Ends',
+    //   nameAr: 'انتهى',
+    //   color: fade(theme.palette.secondary.light, 0.5),
+    // },
   ];
 };
 export const departempl = [

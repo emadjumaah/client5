@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
 /* eslint-disable import/no-anonymous-default-export */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import { useLazyQuery, useMutation } from "@apollo/client";
-import { useEffect } from "react";
+import { useLazyQuery, useMutation } from '@apollo/client';
+import { useEffect } from 'react';
 import {
   getUsers,
   signup,
@@ -10,7 +10,8 @@ import {
   deleteUser,
   changePassword,
   blockUser,
-} from "../graphql";
+} from '../graphql';
+import changePasswordQuick from '../graphql/mutation/changePasswordQuick';
 
 export default () => {
   const [getUsrs, usrData]: any = useLazyQuery(getUsers);
@@ -24,6 +25,9 @@ export default () => {
   const [editPassword] = useMutation(changePassword, {
     refetchQueries: [{ query: getUsers }],
   });
+  const [editPasswordQuick] = useMutation(changePasswordQuick, {
+    refetchQueries: [{ query: getUsers }],
+  });
   const [block] = useMutation(blockUser, {
     refetchQueries: [{ query: getUsers }],
   });
@@ -35,7 +39,7 @@ export default () => {
     getUsrs();
   }, [getUsrs]);
 
-  const users = usrData?.data?.["getUsers"]?.data || [];
+  const users = usrData?.data?.['getUsers']?.data || [];
   const refreshuser = () => usrData?.refetch();
 
   return {
@@ -45,6 +49,7 @@ export default () => {
     editUser,
     removeUser,
     editPassword,
+    editPasswordQuick,
     block,
   };
 };

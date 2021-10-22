@@ -22,6 +22,7 @@ export default gql`
         mob
 
         isSuperAdmin
+        isAdmin
         isBranchAdmin
         isDepartAdmin
         isEmployee

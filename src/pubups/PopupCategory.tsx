@@ -1,19 +1,19 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import React, { useContext, useState } from "react";
-import { useForm } from "react-hook-form";
+import React, { useContext, useState } from 'react';
+import { useForm } from 'react-hook-form';
 import {
   successAlert,
   dublicateAlert,
   errorAlert,
   getReturnItem,
   yup,
-} from "../Shared";
-import { GContextTypes } from "../types";
-import { GlobalContext } from "../contexts";
-import PopupLayout from "../pages/main/PopupLayout";
-import { Grid } from "@material-ui/core";
-import { TextFieldLocal } from "../components";
+} from '../Shared';
+import { GContextTypes } from '../types';
+import { GlobalContext } from '../contexts';
+import PopupLayout from '../pages/main/PopupLayout';
+import { Grid } from '@material-ui/core';
+import { TextFieldLocal } from '../components';
 
 const PopupCategory = ({
   open,
@@ -26,7 +26,7 @@ const PopupCategory = ({
   theme,
 }: any) => {
   const [saving, setSaving] = useState(false);
-  const [alrt, setAlrt] = useState({ show: false, msg: "", type: undefined });
+  const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
   const { register, handleSubmit, errors, reset } = useForm(yup.catResolver);
   const {
     translate: { words, isRTL },
@@ -45,7 +45,7 @@ const PopupCategory = ({
       userId: user._id,
     };
     const mutate = isNew ? addAction : editAction;
-    const mutateName = isNew ? "createCategory" : "updateCategory";
+    const mutateName = isNew ? 'createCategory' : 'updateCategory';
     apply(mutate, mutateName, variables);
   };
 
@@ -53,14 +53,19 @@ const PopupCategory = ({
     try {
       const res = await mutate({ variables });
       const nitem = getReturnItem(res, mutateName);
-      if (setNewValue && nitem) setNewValue(nitem, "category");
-      reset();
-      setSaving(false);
+      if (setNewValue && nitem) setNewValue(nitem, 'category');
       await successAlert(setAlrt, isRTL);
-      onClose();
+      closeModal();
     } catch (error) {
+      setSaving(false);
       onError(error);
     }
+  };
+
+  const closeModal = () => {
+    onClose();
+    setSaving(false);
+    reset();
   };
 
   const onHandleSubmit = () => {
@@ -68,7 +73,7 @@ const PopupCategory = ({
   };
 
   const onError = async (error: any) => {
-    if (error.message.includes("duplicate")) {
+    if (error.message.includes('duplicate')) {
       await dublicateAlert(setAlrt, isRTL);
     } else {
       await errorAlert(setAlrt, isRTL);
@@ -79,17 +84,17 @@ const PopupCategory = ({
 
   const title = isRTL
     ? isNew
-      ? "اضافة تصنيف"
-      : "تعديل تصنيف"
+      ? 'اضافة تصنيف'
+      : 'تعديل تصنيف'
     : isNew
-    ? "New Category"
-    : "Edit Category";
+    ? 'New Category'
+    : 'Edit Category';
 
   return (
     <PopupLayout
       isRTL={isRTL}
       open={open}
-      onClose={onClose}
+      onClose={closeModal}
       title={title}
       onSubmit={onHandleSubmit}
       theme={theme}

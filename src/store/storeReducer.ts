@@ -34,6 +34,10 @@ export const storeReducer = (state: StoreTypes, action: any) => {
       };
     case 'setStartBlock':
       return { ...state, startBlock: action.payload };
+    case 'setPackIssue':
+      return { ...state, packIssue: true, packIssueMsg: action.payload };
+    case 'closePackIssue':
+      return { ...state, packIssue: false, packIssueMsg: null };
 
     default:
       throw new Error('Unexpected action');

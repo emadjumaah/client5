@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import React, { useContext, useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
+import React, { useContext, useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
 import {
   successAlert,
   dublicateAlert,
@@ -9,15 +9,15 @@ import {
   getReturnItem,
   yup,
   ColorPicker,
-} from "../Shared";
-import { GContextTypes } from "../types";
-import { GlobalContext } from "../contexts";
-import { TextField } from "@material-ui/core";
-import PopupLayout from "../pages/main/PopupLayout";
-import { Grid } from "@material-ui/core";
-import { TextFieldLocal } from "../components";
-import AutoFieldLocal from "../components/fields/AutoFieldLocal";
-import { useDepartments } from "../hooks";
+} from '../Shared';
+import { GContextTypes } from '../types';
+import { GlobalContext } from '../contexts';
+import { TextField } from '@material-ui/core';
+import PopupLayout from '../pages/main/PopupLayout';
+import { Grid } from '@material-ui/core';
+import { TextFieldLocal } from '../components';
+import AutoFieldLocal from '../components/fields/AutoFieldLocal';
+import { useDepartments } from '../hooks';
 
 const PopupResourses = ({
   open,
@@ -33,10 +33,10 @@ const PopupResourses = ({
   resType,
 }: any) => {
   const [saving, setSaving] = useState(false);
-  const [alrt, setAlrt] = useState({ show: false, msg: "", type: undefined });
+  const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
   const [departvalue, setDepartvalue] = useState<any>(null);
   const [depError, setDepError] = useState<any>(false);
-  const [color, setColor] = useState<any>("#000000");
+  const [color, setColor] = useState<any>('#000000');
 
   const emplRef: any = React.useRef();
 
@@ -88,7 +88,7 @@ const PopupResourses = ({
     };
 
     const mutate = isNew ? addAction : editAction;
-    const mutateName = isNew ? "createEmployee" : "updateEmployee";
+    const mutateName = isNew ? 'createEmployee' : 'updateEmployee';
     apply(mutate, mutateName, variables);
   };
 
@@ -96,7 +96,7 @@ const PopupResourses = ({
     try {
       const res = await mutate({ variables });
       const nitem = getReturnItem(res, mutateName);
-      if (setNewValue && nitem) setNewValue(nitem, "employee");
+      if (setNewValue && nitem) setNewValue(nitem, 'employee');
       setSaving(false);
       await successAlert(setAlrt, isRTL);
       closeModal();
@@ -106,7 +106,7 @@ const PopupResourses = ({
   };
 
   const onError = async (error: any) => {
-    if (error.message.includes("duplicate")) {
+    if (error.message.includes('duplicate')) {
       await dublicateAlert(setAlrt, isRTL);
     } else {
       await errorAlert(setAlrt, isRTL);
@@ -118,11 +118,12 @@ const PopupResourses = ({
   const resetAll = () => {
     reset();
     setDepartvalue(null);
-    setColor("#000000");
+    setColor('#000000');
   };
   const closeModal = () => {
     onClose();
     resetAll();
+    setSaving(false);
   };
 
   const onHandleSubmit = () => {
@@ -131,11 +132,11 @@ const PopupResourses = ({
 
   const title = isRTL
     ? isNew
-      ? "اضافة مورد"
-      : "تعديل بيانات مورد"
+      ? 'اضافة مورد'
+      : 'تعديل بيانات مورد'
     : isNew
-    ? "New Resourse"
-    : "Edit Resourse";
+    ? 'New Resourse'
+    : 'Edit Resourse';
 
   return (
     <PopupLayout
@@ -220,7 +221,7 @@ const PopupResourses = ({
                   value={row?.color ? row.color : color}
                   variant="outlined"
                   style={{ width: 200, backgroundColor: color }}
-                  InputProps={{ style: { borderRadius: 5, color: "#fff" } }}
+                  InputProps={{ style: { borderRadius: 5, color: '#fff' } }}
                   margin="dense"
                 />
                 <ColorPicker setColor={setColor} color={color}></ColorPicker>

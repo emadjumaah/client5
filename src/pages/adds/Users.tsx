@@ -65,7 +65,7 @@ export default function Users({
     addUser,
     editUser,
     removeUser,
-    editPassword,
+    editPasswordQuick,
     block,
     refreshuser,
   } = useUsers();
@@ -185,7 +185,7 @@ export default function Users({
           <PopupEditing theme={theme} addAction={addUser} editAction={editUser}>
             <PopupUserEmail
               brch={company?.basename}
-              editPassword={editPassword}
+              editPassword={editPasswordQuick}
               block={block}
               employees={employees}
             ></PopupUserEmail>
