@@ -21,6 +21,13 @@ export default gql`
         packQty
         packDocsQty
 
+        usedEvents
+        usedDocs
+        usedUsers
+        smss
+        tempId
+        template
+
         name
         nameAr
         logo

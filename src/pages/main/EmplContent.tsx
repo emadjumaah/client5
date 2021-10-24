@@ -1,7 +1,7 @@
 /* eslint-disable no-var */
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import { useContext, useReducer, useState } from 'react';
+import { useContext, useEffect, useReducer, useState } from 'react';
 import { fade, useTheme } from '@material-ui/core/styles';
 import { Box, CssBaseline } from '@material-ui/core';
 import { Route } from 'react-router-dom';
@@ -18,7 +18,6 @@ import Options from '../options';
 import { GContextTypes } from '../../types';
 
 import { useServices } from '../../hooks';
-import useCompany from '../../hooks/useCompany';
 import PageLayout from './PageLayout';
 import { CalendarContext } from '../../contexts/calendar';
 import { initCalendar, calendarReducer } from '../../contexts';
@@ -34,21 +33,35 @@ import AlertWithClose from '../../components/fields/AlertWithClose';
 import MainCalendarEmpl from '../empl/MainCalendarEmpl';
 import AppointmentsEmpl from '../empl/AppointmentsEmpl';
 import TasksEmpl from '../adds/TasksEmpl';
+import { templates } from '../../constants/roles';
 
-const Content = () => {
+const Content = ({ company, editCompany, refreshcompany }) => {
   const classes = layoutClasses();
   const [menuitem, setMenuitem] = useState(emplmenu[0]);
 
   const theme = useTheme();
 
   const { services, addService, editService } = useServices();
-  const { company, editCompany, refreshcompany } = useCompany();
 
   const {
     store: { user, calendar, network, packIssue, packIssueMsg },
     dispatch,
     translate: { words, isRTL },
   }: GContextTypes = useContext(GlobalContext);
+
+  useEffect(() => {
+    if (company) {
+      const temp = company.template ? JSON.parse(company.template) : null;
+      const template = temp ? temp : templates[0];
+      const stringstore = localStorage.getItem('store');
+      const store = stringstore ? JSON.parse(stringstore) : null;
+      const newStore = {
+        ...store,
+        template,
+      };
+      localStorage.setItem('store', JSON.stringify(newStore));
+    }
+  }, []);
 
   const logout = () => {
     dispatch({ type: 'logout' });

@@ -1,7 +1,7 @@
 /* eslint-disable no-var */
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import { useContext, useReducer, useState } from 'react';
+import { useContext, useEffect, useReducer, useState } from 'react';
 import { fade, useTheme } from '@material-ui/core/styles';
 import { Box, CssBaseline } from '@material-ui/core';
 import { Route } from 'react-router-dom';
@@ -54,7 +54,6 @@ import { GContextTypes } from '../../types';
 import Finance from '../adds/Finance';
 
 import { useBranches, useServices, useSuppliers } from '../../hooks';
-import useCompany from '../../hooks/useCompany';
 import PageLayout from './PageLayout';
 import Appointments from '../adds/Appointments';
 import { CalendarContext } from '../../contexts/calendar';
@@ -107,8 +106,9 @@ import Branches from '../adds/Branches';
 import React from 'react';
 import { isEditor as isEditorUser } from '../../common/roles';
 import AlertWithClose from '../../components/fields/AlertWithClose';
+import { templates } from '../../constants/roles';
 
-const Content = () => {
+const Content = ({ company, editCompany, refreshcompany }) => {
   const classes = layoutClasses();
   const [menuitem, setMenuitem] = useState(mainmenu[0]);
 
@@ -116,7 +116,6 @@ const Content = () => {
 
   const { branches } = useBranches();
   const { services, refreshservice, addService, editService } = useServices();
-  const { company, editCompany, refreshcompany } = useCompany();
   const { suppliers } = useSuppliers();
   const { accounts, refreshAccount } = useAccounts();
 
@@ -129,6 +128,19 @@ const Content = () => {
   const logout = () => {
     dispatch({ type: 'logout' });
   };
+  useEffect(() => {
+    if (company) {
+      const temp = company.template ? JSON.parse(company.template) : null;
+      const template = temp ? temp : templates[0];
+      const stringstore = localStorage.getItem('store');
+      const store = stringstore ? JSON.parse(stringstore) : null;
+      const newStore = {
+        ...store,
+        template,
+      };
+      localStorage.setItem('store', JSON.stringify(newStore));
+    }
+  }, []);
 
   const isEditor = isEditorUser(user);
 

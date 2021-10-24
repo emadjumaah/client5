@@ -31,9 +31,6 @@ const Options = ({ isRTL, words, isEditor, company, editCompany }: any) => {
   const setCalendar = (data: any) => {
     dispatch({ type: 'setCalendar', payload: data });
   };
-  // const setNames = (data: any) => {
-  //   dispatch({ type: 'setNames', payload: data });
-  // };
 
   if (!calendar) {
     setCalendar(initcalendar);
@@ -76,10 +73,6 @@ const Options = ({ isRTL, words, isEditor, company, editCompany }: any) => {
             setThemeId={setThemeId}
           ></GenTheme>
         </Grid>
-
-        {/* <Grid item xs={12} md={10}>
-          <Names setNames={setNames} isRTL={isRTL} words={words}></Names>
-        </Grid> */}
       </Grid>
     </Box>
   );

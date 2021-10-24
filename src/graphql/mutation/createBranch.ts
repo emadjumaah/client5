@@ -5,6 +5,7 @@ export default gql`
     $pack: String
     $packStart: Date
     $packEnd: Date
+    $temp: String
     $users: Int
     $username: String
     $password: String
@@ -29,6 +30,7 @@ export default gql`
       pack: $pack
       packStart: $packStart
       packEnd: $packEnd
+      temp: $temp
       users: $users
       username: $username
       password: $password

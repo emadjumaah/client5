@@ -1,25 +1,39 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import React, { useContext } from 'react';
+import React from 'react';
 import { HashRouter as Router } from 'react-router-dom';
 import Login from '../login';
-import { GlobalContext } from '../../contexts';
 import Content from './Content';
-import { jadwalready } from '../../common';
 import EmplContent from './EmplContent';
+import useCompany from '../../hooks/useCompany';
+import LoadingInline from '../../Shared/LoadingInline';
 
-const Layout = () => {
-  const { store } = useContext(GlobalContext);
-  const user = store?.user;
+const Layout = ({ user }: any) => {
+  const { company, editCompany, refreshcompany } = useCompany();
+
   const isEmployee = user?.isEmployee;
-
-  jadwalready();
-
-  return (
-    <Router>
-      {!user && <Login></Login>}
-      {user && isEmployee && <EmplContent></EmplContent>}
-      {user && !isEmployee && <Content></Content>}
-    </Router>
-  );
+  if (!company && user) {
+    return <LoadingInline></LoadingInline>;
+  } else {
+    return (
+      <Router>
+        {!user && <Login></Login>}
+        {user && !isEmployee && (
+          <Content
+            company={company}
+            editCompany={editCompany}
+            refreshcompany={refreshcompany}
+          ></Content>
+        )}
+        {user && isEmployee && (
+          <EmplContent
+            company={company}
+            editCompany={editCompany}
+            refreshcompany={refreshcompany}
+          ></EmplContent>
+        )}
+      </Router>
+    );
+  }
 };
 export default Layout;

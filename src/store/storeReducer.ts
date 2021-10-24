@@ -15,8 +15,6 @@ export const storeReducer = (state: StoreTypes, action: any) => {
       return { ...state, weburi: action.payload };
     case 'setLocaluri':
       return { ...state, localuri: action.payload };
-    case 'setNames':
-      return { ...state, names: action.payload };
     case 'login':
       return {
         ...state,
@@ -38,6 +36,8 @@ export const storeReducer = (state: StoreTypes, action: any) => {
       return { ...state, packIssue: true, packIssueMsg: action.payload };
     case 'closePackIssue':
       return { ...state, packIssue: false, packIssueMsg: null };
+    case 'setTemplate':
+      return { ...state, template: action.payload };
 
     default:
       throw new Error('Unexpected action');

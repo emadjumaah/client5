@@ -13,7 +13,7 @@ import {
   Grid,
   Typography,
 } from '@material-ui/core';
-import { packages } from '../constants/roles';
+import { packages, templates } from '../constants/roles';
 import { CalenderLocal, TextFieldLocal } from '../components';
 import checkUsername from '../graphql/query/checkUsername';
 import { useLazyQuery } from '@apollo/client';
@@ -44,6 +44,7 @@ const PopupBranch = ({
 }: any) => {
   const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
   const [pack, setPack] = useState(null);
+  const [temp, setTemp] = useState(null);
   const [username, setUsername] = useState(null);
   const [valid, setValid] = useState(null);
 
@@ -60,6 +61,9 @@ const PopupBranch = ({
     if (row && row._id) {
       if (row?.pack) {
         setPack(JSON.parse(row?.pack));
+      }
+      if (row?.template) {
+        setTemp(JSON.parse(row?.template));
       }
       setPackStart(row?.packStart);
       setPackEnd(row?.packEnd);
@@ -99,6 +103,10 @@ const PopupBranch = ({
       await errorAlertMsg(setAlrt, 'poackage required');
       return;
     }
+    if (!temp) {
+      await errorAlertMsg(setAlrt, 'template required');
+      return;
+    }
 
     const { name, nameAr, password, tel1, email } = data;
     const variables: any = isNew
@@ -113,6 +121,7 @@ const PopupBranch = ({
           packEnd,
           users: pack?.users,
           pack: JSON.stringify(pack),
+          temp: JSON.stringify(temp),
         }
       : {
           _id: row._id,
@@ -124,6 +133,7 @@ const PopupBranch = ({
           packEnd,
           users: pack?.users,
           pack: JSON.stringify(pack),
+          temp: JSON.stringify(temp),
         };
     const mutate = isNew ? addAction : editAction;
 
@@ -151,6 +161,7 @@ const PopupBranch = ({
     setPack(null);
     setUsername(null);
     setValid(null);
+    setTemp(null);
     reset();
   };
 
@@ -328,6 +339,48 @@ const PopupBranch = ({
                       </Typography>
                       <Typography variant="subtitle1">
                         {pk.cost} ريال قطري
+                      </Typography>
+                    </CardContent>
+                  </Card>
+                );
+              })}
+            </Box>
+          </Grid>
+          <Grid item xs={12}>
+            <Typography
+              style={{ marginTop: 10, marginBottom: 20 }}
+              variant="h5"
+            >
+              النماذج
+            </Typography>
+
+            <Box
+              display="flex"
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+              }}
+            >
+              {templates.map((tm: any) => {
+                const selected = tm?.title === temp?.title;
+                return (
+                  <Card
+                    style={{
+                      width: 150,
+                      height: 100,
+                      backgroundColor: selected ? '#b6fcd5' : '#eee',
+                      cursor: 'pointer',
+                    }}
+                    onClick={() => setTemp(tm)}
+                  >
+                    <CardContent>
+                      <Typography
+                        style={{ marginBottom: 20 }}
+                        variant="subtitle1"
+                        component="div"
+                      >
+                        {isRTL ? tm.nameAr : tm.name}
                       </Typography>
                     </CardContent>
                   </Card>

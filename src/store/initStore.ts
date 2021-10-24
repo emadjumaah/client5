@@ -15,11 +15,6 @@ export const initStore = {
   lastSuccess: Date.now(),
   wrongTimes: 0,
   startBlock: null,
-  names: {
-    tasks: 'المهام',
-    customers: 'العملاء',
-    employees: 'الموظفين',
-    departments: 'الأقسام',
-  },
+  template: null,
   localuri: 'jadwal-server:4000', // jadwal-server
 };

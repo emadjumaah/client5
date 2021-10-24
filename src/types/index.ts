@@ -33,6 +33,7 @@ export interface StoreTypes {
     end: string;
     duration: string;
   };
+  template: any;
   lastSuccess: any;
   wrongTimes: any;
   startBlock: any;
