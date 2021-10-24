@@ -98,7 +98,7 @@ function App() {
       <GlobalContext.Provider value={{ store, dispatch, translate }}>
         <StylesProvider jss={jss}>
           <ThemeProvider theme={theme}>
-            <Layout user={store?.user} dispatch={dispatch}></Layout>
+            <Layout user={store?.user}></Layout>
           </ThemeProvider>
         </StylesProvider>
       </GlobalContext.Provider>

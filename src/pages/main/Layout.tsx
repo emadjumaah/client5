@@ -12,28 +12,26 @@ const Layout = ({ user }: any) => {
   const { company, editCompany, refreshcompany } = useCompany();
 
   const isEmployee = user?.isEmployee;
-  if (!company && user) {
-    return <LoadingInline></LoadingInline>;
-  } else {
-    return (
-      <Router>
-        {!user && <Login></Login>}
-        {user && !isEmployee && (
-          <Content
-            company={company}
-            editCompany={editCompany}
-            refreshcompany={refreshcompany}
-          ></Content>
-        )}
-        {user && isEmployee && (
-          <EmplContent
-            company={company}
-            editCompany={editCompany}
-            refreshcompany={refreshcompany}
-          ></EmplContent>
-        )}
-      </Router>
-    );
-  }
+
+  return (
+    <Router>
+      {!user && <Login></Login>}
+      {user && !company && <LoadingInline></LoadingInline>}
+      {user && company && !isEmployee && (
+        <Content
+          company={company}
+          editCompany={editCompany}
+          refreshcompany={refreshcompany}
+        ></Content>
+      )}
+      {user && company && isEmployee && (
+        <EmplContent
+          company={company}
+          editCompany={editCompany}
+          refreshcompany={refreshcompany}
+        ></EmplContent>
+      )}
+    </Router>
+  );
 };
 export default Layout;
