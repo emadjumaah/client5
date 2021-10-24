@@ -111,6 +111,7 @@ const Content = () => {
                   services={services}
                   addService={addService}
                   editService={editService}
+                  user={user}
                 ></MainCalendarEmpl>
               </CalendarContext.Provider>
             )}
@@ -130,6 +131,7 @@ const Content = () => {
                   theme={theme}
                   company={company}
                   servicesproducts={services}
+                  user={user}
                 ></AppointmentsEmpl>
               </EventsContext.Provider>
             )}

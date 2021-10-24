@@ -126,6 +126,17 @@ const PopupAppointment = ({
     fetchPolicy: 'cache-and-network',
   });
 
+  const isemployee = user?.isEmployee && user?.employeeId;
+
+  useEffect(() => {
+    if (isemployee) {
+      const emp = employees.filter(
+        (em: any) => em._id === user.employeeId
+      )?.[0];
+      setEmplvalue(emp);
+    }
+  }, [user, employees]);
+
   useEffect(() => {
     if (employees && employees.length > 0) {
       const filtered = employees.filter(
@@ -136,7 +147,7 @@ const PopupAppointment = ({
   }, [resKind, employees]);
 
   useEffect(() => {
-    if (isNew) {
+    if (isNew && !isemployee) {
       if (taskvalue) {
         if (taskvalue?.departmentId) {
           const dept = departments.filter(
@@ -604,45 +615,51 @@ const PopupAppointment = ({
                       fullWidth
                     ></AutoFieldLocal>
                   </Grid>
-                  <Grid item xs={6}>
-                    <Box
-                      style={{ marginRight: 10, marginTop: 0, marginBottom: 0 }}
-                    >
-                      <RadioGroup
-                        aria-label="Views"
-                        name="views"
-                        row
-                        value={resKind}
-                        onChange={(e: any) => {
-                          setResKind(Number(e.target.value));
-                          setEmplvalue(null);
+                  {!isemployee && (
+                    <Grid item xs={6}>
+                      <Box
+                        style={{
+                          marginRight: 10,
+                          marginTop: 0,
+                          marginBottom: 0,
                         }}
                       >
-                        <FormControlLabel
-                          value={1}
-                          control={
-                            <Radio
-                              style={{ padding: 0, margin: 0 }}
-                              color="primary"
-                            />
-                          }
-                          label={isRTL ? 'الموظف' : 'Employee'}
-                        />
+                        <RadioGroup
+                          aria-label="Views"
+                          name="views"
+                          row
+                          value={resKind}
+                          onChange={(e: any) => {
+                            setResKind(Number(e.target.value));
+                            setEmplvalue(null);
+                          }}
+                        >
+                          <FormControlLabel
+                            value={1}
+                            control={
+                              <Radio
+                                style={{ padding: 0, margin: 0 }}
+                                color="primary"
+                              />
+                            }
+                            label={isRTL ? 'الموظف' : 'Employee'}
+                          />
 
-                        <FormControlLabel
-                          value={2}
-                          control={
-                            <Radio
-                              style={{ padding: 0, margin: 0 }}
-                              color="primary"
-                            />
-                          }
-                          label={isRTL ? 'المورد' : 'Resourse'}
-                        />
-                      </RadioGroup>
-                    </Box>
-                  </Grid>
-                  <Grid item xs={6}></Grid>
+                          <FormControlLabel
+                            value={2}
+                            control={
+                              <Radio
+                                style={{ padding: 0, margin: 0 }}
+                                color="primary"
+                              />
+                            }
+                            label={isRTL ? 'المورد' : 'Resourse'}
+                          />
+                        </RadioGroup>
+                      </Box>
+                    </Grid>
+                  )}
+                  {!isemployee && <Grid item xs={6}></Grid>}
                   <Grid item xs={6}>
                     <AutoFieldLocal
                       name="employee"

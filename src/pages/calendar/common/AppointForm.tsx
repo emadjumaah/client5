@@ -99,9 +99,10 @@ export const AppointForm = (props: any) => {
   const [loadActions, actionsData]: any = useLazyQuery(getActions, {
     fetchPolicy: 'cache-and-network',
   });
+  const isemployee = user?.isEmployee && user?.employeeId;
 
   useEffect(() => {
-    if (user && user?.isEmployee && user?.employeeId) {
+    if (isemployee) {
       const emp = employees.filter(
         (em: any) => em._id === user.employeeId
       )?.[0];
@@ -464,7 +465,7 @@ export const AppointForm = (props: any) => {
                 fullWidth
               ></AutoFieldLocal>
             </Grid>
-            {(!user?.isEmployee || !user?.employeeId) && (
+            {!isemployee && (
               <Grid item xs={6}>
                 <Box style={{ marginRight: 10, marginTop: 0, marginBottom: 0 }}>
                   <RadioGroup
@@ -502,9 +503,7 @@ export const AppointForm = (props: any) => {
                 </Box>
               </Grid>
             )}
-            {(!user?.isEmployee || !user?.employeeId) && (
-              <Grid item xs={6}></Grid>
-            )}
+            {!isemployee && <Grid item xs={6}></Grid>}
             <Grid item xs={6}>
               <AutoFieldLocal
                 name="employee"

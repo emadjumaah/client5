@@ -64,9 +64,6 @@ const MainEmpl = (props: any) => {
       {
         query: getEmplEvents,
         variables: {
-          departmentId: departvalue ? departvalue._id : undefined,
-          employeeId: emplvalue ? emplvalue._id : undefined,
-          status: status ? status.id : undefined,
           start,
           end,
         },
@@ -112,6 +109,7 @@ const MainEmpl = (props: any) => {
     company,
     isEditor,
     theme,
+    user,
   } = props;
 
   useEffect(() => {
@@ -330,7 +328,9 @@ const MainEmpl = (props: any) => {
                     employees={employees}
                     servicesproducts={services}
                     theme={theme}
-                    tasks={tasks}
+                    tasks={tasks.filter(
+                      (ts: any) => ts.employeeId === user?.employeeId
+                    )}
                     isMobile={isMobile}
                     {...pr}
                   ></AppointForm>

@@ -92,6 +92,7 @@ const PopupTask = ({
   const { register, handleSubmit, reset } = useForm({});
   const {
     translate: { words, isRTL },
+    store: { user },
   }: GContextTypes = useContext(GlobalContext);
 
   const addEventsToList = (events: any) => {
@@ -108,8 +109,19 @@ const PopupTask = ({
     setEvList(listwithindex);
   };
 
+  const isemployee = user?.isEmployee && user?.employeeId;
+
   useEffect(() => {
-    if (employees && employees.length > 0) {
+    if (isemployee) {
+      const emp = employees.filter(
+        (em: any) => em._id === user.employeeId
+      )?.[0];
+      setEmplvalue(emp);
+    }
+  }, [user, employees]);
+
+  useEffect(() => {
+    if (!isemployee && employees && employees.length > 0) {
       const filtered = employees.filter(
         (emp: any) => emp.resKind === resKind && emp.resType === 1
       );
@@ -400,37 +412,45 @@ const PopupTask = ({
               mb={0}
             ></CalenderLocal>
           </Grid>
-          <Grid item xs={4}>
-            <Box style={{ marginRight: 10, marginTop: 0, marginBottom: 0 }}>
-              <RadioGroup
-                aria-label="Views"
-                name="views"
-                row
-                value={resKind}
-                onChange={(e: any) => {
-                  setResKind(Number(e.target.value));
-                  setEmplvalue(null);
-                }}
-              >
-                <FormControlLabel
-                  value={1}
-                  control={
-                    <Radio style={{ padding: 0, margin: 0 }} color="primary" />
-                  }
-                  label={isRTL ? 'الموظف' : 'Employee'}
-                />
+          {!isemployee && (
+            <Grid item xs={4}>
+              <Box style={{ marginRight: 10, marginTop: 0, marginBottom: 0 }}>
+                <RadioGroup
+                  aria-label="Views"
+                  name="views"
+                  row
+                  value={resKind}
+                  onChange={(e: any) => {
+                    setResKind(Number(e.target.value));
+                    setEmplvalue(null);
+                  }}
+                >
+                  <FormControlLabel
+                    value={1}
+                    control={
+                      <Radio
+                        style={{ padding: 0, margin: 0 }}
+                        color="primary"
+                      />
+                    }
+                    label={isRTL ? 'الموظف' : 'Employee'}
+                  />
 
-                <FormControlLabel
-                  value={2}
-                  control={
-                    <Radio style={{ padding: 0, margin: 0 }} color="primary" />
-                  }
-                  label={isRTL ? 'المورد' : 'Resourse'}
-                />
-              </RadioGroup>
-            </Box>
-          </Grid>
-          <Grid item xs={8}></Grid>
+                  <FormControlLabel
+                    value={2}
+                    control={
+                      <Radio
+                        style={{ padding: 0, margin: 0 }}
+                        color="primary"
+                      />
+                    }
+                    label={isRTL ? 'المورد' : 'Resourse'}
+                  />
+                </RadioGroup>
+              </Box>
+            </Grid>
+          )}
+          {!isemployee && <Grid item xs={8}></Grid>}
           <Grid item xs={4}>
             <AutoFieldLocal
               name="employee"

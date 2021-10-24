@@ -75,6 +75,7 @@ export default function AppointmentsEmpl({
   theme,
   company,
   servicesproducts,
+  user,
 }) {
   const [due, setDue] = useState(false);
   const col = getColumns({ isRTL, words });
@@ -465,7 +466,9 @@ export default function AppointmentsEmpl({
               company={company}
               servicesproducts={servicesproducts}
               theme={theme}
-              tasks={tasks}
+              tasks={tasks.filter(
+                (ts: any) => ts.employeeId === user?.employeeId
+              )}
               isEditor={isEditor}
             ></PopupAppointment>
           </PopupEditing>
