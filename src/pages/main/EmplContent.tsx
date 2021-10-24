@@ -14,26 +14,26 @@ import {
   initEventsContext,
 } from '../../contexts';
 import { layoutClasses } from '../../themes';
-import MainCalendar from '../calendar/MainCalendar';
 import Options from '../options';
 import { GContextTypes } from '../../types';
 
-import { useBranches, useServices } from '../../hooks';
+import { useServices } from '../../hooks';
 import useCompany from '../../hooks/useCompany';
 import PageLayout from './PageLayout';
-import Appointments from '../adds/Appointments';
 import { CalendarContext } from '../../contexts/calendar';
 import { initCalendar, calendarReducer } from '../../contexts';
 
-import Tasks from '../adds/Tasks';
 import {
   initTasksContext,
   tasksReducer,
 } from '../../contexts/tasks/tasksReducer';
 import TasksContext from '../../contexts/tasks';
 import React from 'react';
-import { isEditor as isEditorUser } from '../../common/roles';
+import { isEmployee } from '../../common/roles';
 import AlertWithClose from '../../components/fields/AlertWithClose';
+import MainCalendarEmpl from '../empl/MainCalendarEmpl';
+import AppointmentsEmpl from '../empl/AppointmentsEmpl';
+import TasksEmpl from '../adds/TasksEmpl';
 
 const Content = () => {
   const classes = layoutClasses();
@@ -41,7 +41,6 @@ const Content = () => {
 
   const theme = useTheme();
 
-  const { branches } = useBranches();
   const { services, addService, editService } = useServices();
   const { company, editCompany, refreshcompany } = useCompany();
 
@@ -55,7 +54,7 @@ const Content = () => {
     dispatch({ type: 'logout' });
   };
 
-  const isEditor = isEditorUser(user);
+  const isEditor = isEmployee(user);
 
   const [calendarStore, calendarDispatch] = useReducer(
     calendarReducer,
@@ -88,7 +87,6 @@ const Content = () => {
         setMenuitem={setMenuitem}
         menuitem={menuitem}
         user={user}
-        branches={branches}
         menu={emplmenu}
         logout={logout}
         network={network}
@@ -102,7 +100,7 @@ const Content = () => {
               <CalendarContext.Provider
                 value={{ state: calendarStore, dispatch: calendarDispatch }}
               >
-                <MainCalendar
+                <MainCalendarEmpl
                   menuitem={menuitem}
                   isRTL={isRTL}
                   words={words}
@@ -113,7 +111,7 @@ const Content = () => {
                   services={services}
                   addService={addService}
                   editService={editService}
-                ></MainCalendar>
+                ></MainCalendarEmpl>
               </CalendarContext.Provider>
             )}
           />
@@ -124,7 +122,7 @@ const Content = () => {
               <EventsContext.Provider
                 value={{ state: eventsStore, dispatch: eventsDispatch }}
               >
-                <Appointments
+                <AppointmentsEmpl
                   menuitem={menuitem}
                   isRTL={isRTL}
                   words={words}
@@ -132,7 +130,7 @@ const Content = () => {
                   theme={theme}
                   company={company}
                   servicesproducts={services}
-                ></Appointments>
+                ></AppointmentsEmpl>
               </EventsContext.Provider>
             )}
           />
@@ -142,7 +140,7 @@ const Content = () => {
               <TasksContext.Provider
                 value={{ state: tasksStore, dispatch: tasksDispatch }}
               >
-                <Tasks
+                <TasksEmpl
                   menuitem={menuitem}
                   isRTL={isRTL}
                   words={words}
@@ -150,7 +148,7 @@ const Content = () => {
                   theme={theme}
                   company={company}
                   servicesproducts={services}
-                ></Tasks>
+                ></TasksEmpl>
               </TasksContext.Provider>
             )}
           />
@@ -162,7 +160,7 @@ const Content = () => {
                 menuitem={menuitem}
                 isRTL={isRTL}
                 words={words}
-                isEditor={isEditor}
+                isEditor={false}
                 theme={theme}
                 refresh={refreshcompany}
                 editCompany={editCompany}

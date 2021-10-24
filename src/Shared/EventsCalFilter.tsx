@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import React from "react";
-import { eventStatus } from "../constants";
-import FilterSelect from "./FilterSelect";
-import DepartemplSelect from "../pages/options/DepartemplSelect";
-import { Grid } from "@material-ui/core";
+import React from 'react';
+import { eventStatus } from '../constants';
+import FilterSelect from './FilterSelect';
+import DepartemplSelect from '../pages/options/DepartemplSelect';
+import { Grid } from '@material-ui/core';
 
 export default function EventsCalFilter({
   employees,
@@ -21,20 +21,23 @@ export default function EventsCalFilter({
   count,
   theme,
   refresh,
+  noEmpl = false,
 }: any) {
   return (
     <Grid container spacing={2}>
-      <Grid item xs={2}>
-        <FilterSelect
-          options={employees}
-          value={emplvalue}
-          setValue={setEmplvalue}
-          words={words}
-          isRTL={isRTL}
-          name="employee"
-          fullWidth
-        ></FilterSelect>
-      </Grid>
+      {!noEmpl && (
+        <Grid item xs={2}>
+          <FilterSelect
+            options={employees}
+            value={emplvalue}
+            setValue={setEmplvalue}
+            words={words}
+            isRTL={isRTL}
+            name="employee"
+            fullWidth
+          ></FilterSelect>
+        </Grid>
+      )}
       <Grid item xs={2}>
         <FilterSelect
           options={departments}
@@ -65,6 +68,7 @@ export default function EventsCalFilter({
           count={count}
           theme={theme}
           refresh={refresh}
+          noEmpl={noEmpl}
         ></DepartemplSelect>
       </Grid>
     </Grid>

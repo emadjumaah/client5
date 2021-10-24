@@ -1,4 +1,4 @@
-import { getAppStartEndPeriod } from "./time";
+import { getAppStartEndPeriod } from './time';
 
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 export const commitAppointmentChanges = async ({
@@ -31,7 +31,7 @@ export const commitAppointmentChanges = async ({
         startDate > endDate ||
         startDate.getDate() !== endDate.getDate()
       ) {
-        window.alert(isRTL ? "يجب تعديل التاريخ" : "Date should be change");
+        window.alert(isRTL ? 'يجب تعديل التاريخ' : 'Date should be change');
       } else {
         const variables = {
           title,
@@ -106,9 +106,9 @@ export const commitAppointmentChanges = async ({
       await editEvent({
         variables,
         optimisticResponse: {
-          __typename: "updateEvent",
+          __typename: 'updateEvent',
           updateEvent: {
-            __typename: "Operation",
+            __typename: 'Operation',
             id,
             ...variables,
           },
@@ -148,7 +148,7 @@ export const getSelectedFromAppointment = (row: any) => {
         nameAr: item ? item.nameAr : row.itemNameAr,
       }
     : null;
-  const priceValue = row.amount ? row.amount : item ? item.price : "";
+  const priceValue = row.amount ? row.amount : item ? item.price : '';
 
   const selectedCustomer = row.customerId
     ? {
@@ -269,10 +269,10 @@ export const addObjectsToAppointment = (row: any) => {
   return newRow;
 };
 
-export const timeToHourMinute = (time: any, zone = "en-US") => {
+export const timeToHourMinute = (time: any, zone = 'en-US') => {
   return time.toLocaleString(zone, {
-    hour: "2-digit",
-    minute: "2-digit",
+    hour: '2-digit',
+    minute: '2-digit',
     hour12: true,
   });
 };

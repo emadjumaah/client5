@@ -46,7 +46,8 @@ export const RenderToolTip = ({
 
   useEffect(() => {
     const isCalPOSEditor = roles.isEditor();
-    setIsEditor(isCalPOSEditor);
+    const isEmployee = roles.isEmployee();
+    setIsEditor(isCalPOSEditor || isEmployee);
   }, []);
 
   const {

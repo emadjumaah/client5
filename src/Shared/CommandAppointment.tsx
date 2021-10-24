@@ -9,9 +9,9 @@ import { roles } from '../common';
 
 const SaveButton = ({ onExecute }: any) => {
   const store = getStoreItem('store');
-  const { lang } = store;
-  const isCalEditor = roles.isEditor();
-  if (!isCalEditor) {
+  const { lang, user } = store;
+  const isEditor = roles.isEditor();
+  if (!isEditor && !user?.isEmployee) {
     return <div></div>;
   }
 

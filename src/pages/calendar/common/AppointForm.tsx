@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from 'react';
 import {
   Box,
   Button,
@@ -12,31 +12,31 @@ import {
   Radio,
   RadioGroup,
   Typography,
-} from "@material-ui/core";
-import { PopupCustomer } from "../../../pubups";
-import { GContextTypes } from "../../../types";
-import { GlobalContext } from "../../../contexts";
-import { StatusSelect } from "./StatusSelect";
-import { Grid } from "@material-ui/core";
-import { CalenderLocal, TextFieldLocal } from "../../../components";
-import AutoFieldLocal from "../../../components/fields/AutoFieldLocal";
-import { weekdaysNNo } from "../../../constants/datatypes";
-import { setRowFromAppointment } from "../../../common/calendar";
-import { useLazyQuery } from "@apollo/client";
-import { getActions, getOperationItems } from "../../../graphql";
-import ServiceItemForm from "../../../Shared/ServiceItemForm";
-import ItemsTable from "../../../Shared/ItemsTable";
-import LoadingInline from "../../../Shared/LoadingInline";
-import { invoiceClasses } from "../../../themes";
+} from '@material-ui/core';
+import { PopupCustomer } from '../../../pubups';
+import { GContextTypes } from '../../../types';
+import { GlobalContext } from '../../../contexts';
+import { StatusSelect } from './StatusSelect';
+import { Grid } from '@material-ui/core';
+import { CalenderLocal, TextFieldLocal } from '../../../components';
+import AutoFieldLocal from '../../../components/fields/AutoFieldLocal';
+import { weekdaysNNo } from '../../../constants/datatypes';
+import { setRowFromAppointment } from '../../../common/calendar';
+import { useLazyQuery } from '@apollo/client';
+import { getActions, getOperationItems } from '../../../graphql';
+import ServiceItemForm from '../../../Shared/ServiceItemForm';
+import ItemsTable from '../../../Shared/ItemsTable';
+import LoadingInline from '../../../Shared/LoadingInline';
+import { invoiceClasses } from '../../../themes';
 import {
   actionTypeFormatter,
   getDateDayTimeFormat,
   moneyFormat,
-} from "../../../Shared/colorFormat";
-import { useCustomers } from "../../../hooks";
-import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
-import DeleteOutlinedIcon from "@material-ui/icons/DeleteOutlined";
-import PopupAction from "../../../pubups/PopupAction";
+} from '../../../Shared/colorFormat';
+import { useCustomers } from '../../../hooks';
+import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
+import DeleteOutlinedIcon from '@material-ui/icons/DeleteOutlined';
+import PopupAction from '../../../pubups/PopupAction';
 
 export const indexTheList = (list: any) => {
   return list.map((item: any, index: any) => {
@@ -90,15 +90,24 @@ export const AppointForm = (props: any) => {
     translate: { words, isRTL },
     store: { user },
   }: GContextTypes = useContext(GlobalContext);
-  const [newtext, setNewtext] = useState("");
+  const [newtext, setNewtext] = useState('');
 
   const [getItems, itemsData]: any = useLazyQuery(getOperationItems, {
-    fetchPolicy: "cache-and-network",
+    fetchPolicy: 'cache-and-network',
   });
 
   const [loadActions, actionsData]: any = useLazyQuery(getActions, {
-    fetchPolicy: "cache-and-network",
+    fetchPolicy: 'cache-and-network',
   });
+
+  useEffect(() => {
+    if (user && user?.isEmployee && user?.employeeId) {
+      const emp = employees.filter(
+        (em: any) => em._id === user.employeeId
+      )?.[0];
+      setEmplvalue(emp);
+    }
+  }, [user]);
 
   useEffect(() => {
     if (employees && employees.length > 0) {
@@ -110,8 +119,8 @@ export const AppointForm = (props: any) => {
   }, [resKind, employees]);
 
   useEffect(() => {
-    const items = itemsData?.data?.["getOperationItems"]?.data || [];
-    const actions = actionsData?.data?.["getActions"]?.data || [];
+    const items = itemsData?.data?.['getOperationItems']?.data || [];
+    const actions = actionsData?.data?.['getActions']?.data || [];
 
     if (items && items.length > 0) {
       const ids = items.map((it: any) => it.itemId);
@@ -236,7 +245,7 @@ export const AppointForm = (props: any) => {
   };
   const onCloseCustomer = () => {
     setOpenCust(false);
-    setNewtext("");
+    setNewtext('');
   };
 
   const onNewFieldChange = (nextValue: any, name: any) => {
@@ -245,7 +254,7 @@ export const AppointForm = (props: any) => {
 
   useEffect(() => {
     if (!row.status) {
-      onNewFieldChange(2, "status");
+      onNewFieldChange(2, 'status');
     }
   }, [row.status]);
   useEffect(() => {
@@ -257,7 +266,7 @@ export const AppointForm = (props: any) => {
       ? itemsList?.[0]?.nameAr
       : itemsList?.[0]?.name;
     setTasktitle(title);
-    onNewFieldChange(title, "title");
+    onNewFieldChange(title, 'title');
   }, [row.title, itemsList]);
 
   const selectCustomer = (value: any) => {
@@ -269,12 +278,12 @@ export const AppointForm = (props: any) => {
         customerNameAr: undefined,
         customerPhone: undefined,
       };
-      onNewFieldChange(value, "customerId");
-      onNewFieldChange(value, "customerName");
-      onNewFieldChange(value, "customerNameAr");
-      onNewFieldChange(value, "customerPhone");
+      onNewFieldChange(value, 'customerId');
+      onNewFieldChange(value, 'customerName');
+      onNewFieldChange(value, 'customerNameAr');
+      onNewFieldChange(value, 'customerPhone');
     }
-    onNewFieldChange(newValue, "customer");
+    onNewFieldChange(newValue, 'customer');
   };
   const selectDepartment = (value: any) => {
     let newValue = value;
@@ -285,12 +294,12 @@ export const AppointForm = (props: any) => {
         departmentNameAr: undefined,
         departmentColor: undefined,
       };
-      onNewFieldChange(value, "departmentId");
-      onNewFieldChange(value, "departmentName");
-      onNewFieldChange(value, "departmentNameAr");
-      onNewFieldChange(value, "departmentColor");
+      onNewFieldChange(value, 'departmentId');
+      onNewFieldChange(value, 'departmentName');
+      onNewFieldChange(value, 'departmentNameAr');
+      onNewFieldChange(value, 'departmentColor');
     }
-    onNewFieldChange(newValue, "department");
+    onNewFieldChange(newValue, 'department');
   };
   const selectEmployee = (value: any) => {
     let newValue = value;
@@ -301,18 +310,18 @@ export const AppointForm = (props: any) => {
         employeeNameAr: undefined,
         employeeColor: undefined,
       };
-      onNewFieldChange(value, "employeeId");
-      onNewFieldChange(value, "employeeName");
-      onNewFieldChange(value, "employeeNameAr");
-      onNewFieldChange(value, "employeeColor");
+      onNewFieldChange(value, 'employeeId');
+      onNewFieldChange(value, 'employeeName');
+      onNewFieldChange(value, 'employeeNameAr');
+      onNewFieldChange(value, 'employeeColor');
     }
-    onNewFieldChange(newValue, "employee");
+    onNewFieldChange(newValue, 'employee');
     setEmplvalue(newValue);
   };
   const selectTask = (value: any) => {
     let newValue = value?.id;
     setTaskvalue(value);
-    onNewFieldChange(newValue, "taskId");
+    onNewFieldChange(newValue, 'taskId');
   };
 
   useEffect(() => {
@@ -321,7 +330,7 @@ export const AppointForm = (props: any) => {
         const empl = employees.filter(
           (em: any) => em._id === taskvalue?.employeeId
         )?.[0];
-        onNewFieldChange(empl, "employee");
+        onNewFieldChange(empl, 'employee');
         setEmplvalue(empl);
       }
       if (taskvalue) {
@@ -329,7 +338,7 @@ export const AppointForm = (props: any) => {
           const dept = departments.filter(
             (dep: any) => dep._id === taskvalue?.departmentId
           )?.[0];
-          onNewFieldChange(dept, "department");
+          onNewFieldChange(dept, 'department');
         }
       }
     }
@@ -342,7 +351,7 @@ export const AppointForm = (props: any) => {
           const dept = departments.filter(
             (dep: any) => dep._id === emplvalue?.departmentId
           )?.[0];
-          onNewFieldChange(dept, "department");
+          onNewFieldChange(dept, 'department');
         }
       }
     }
@@ -381,7 +390,7 @@ export const AppointForm = (props: any) => {
   return (
     <>
       <Box>
-        <Typography style={{ fontWeight: "bold" }} variant="body2">
+        <Typography style={{ fontWeight: 'bold' }} variant="body2">
           {row?.docNo}
         </Typography>
       </Box>
@@ -395,7 +404,7 @@ export const AppointForm = (props: any) => {
                 value={startDate}
                 onChange={(d: any) => {
                   setStartDate(d);
-                  onNewFieldChange(d, "startDate");
+                  onNewFieldChange(d, 'startDate');
                 }}
                 format="dd/MM/yyyy - hh:mm"
                 time
@@ -408,7 +417,7 @@ export const AppointForm = (props: any) => {
                 value={endDate}
                 onChange={(d: any) => {
                   setEndDate(d);
-                  onNewFieldChange(d, "endDate");
+                  onNewFieldChange(d, 'endDate');
                 }}
                 format="dd/MM/yyyy - hh:mm"
                 time
@@ -422,7 +431,7 @@ export const AppointForm = (props: any) => {
                 value={tasktitle}
                 onChange={(e: any) => {
                   setTasktitle(e.target.value);
-                  onNewFieldChange(e.target.value, "title");
+                  onNewFieldChange(e.target.value, 'title');
                 }}
                 row={row}
                 fullWidth
@@ -455,43 +464,47 @@ export const AppointForm = (props: any) => {
                 fullWidth
               ></AutoFieldLocal>
             </Grid>
-            <Grid item xs={6}>
-              <Box style={{ marginRight: 10, marginTop: 0, marginBottom: 0 }}>
-                <RadioGroup
-                  aria-label="Views"
-                  name="views"
-                  row
-                  value={resKind}
-                  onChange={(e: any) => {
-                    setResKind(Number(e.target.value));
-                    setEmplvalue(null);
-                  }}
-                >
-                  <FormControlLabel
-                    value={1}
-                    control={
-                      <Radio
-                        style={{ padding: 0, margin: 0 }}
-                        color="primary"
-                      />
-                    }
-                    label={isRTL ? "الموظف" : "Employee"}
-                  />
+            {(!user?.isEmployee || !user?.employeeId) && (
+              <Grid item xs={6}>
+                <Box style={{ marginRight: 10, marginTop: 0, marginBottom: 0 }}>
+                  <RadioGroup
+                    aria-label="Views"
+                    name="views"
+                    row
+                    value={resKind}
+                    onChange={(e: any) => {
+                      setResKind(Number(e.target.value));
+                      setEmplvalue(null);
+                    }}
+                  >
+                    <FormControlLabel
+                      value={1}
+                      control={
+                        <Radio
+                          style={{ padding: 0, margin: 0 }}
+                          color="primary"
+                        />
+                      }
+                      label={isRTL ? 'الموظف' : 'Employee'}
+                    />
 
-                  <FormControlLabel
-                    value={2}
-                    control={
-                      <Radio
-                        style={{ padding: 0, margin: 0 }}
-                        color="primary"
-                      />
-                    }
-                    label={isRTL ? "المورد" : "Resourse"}
-                  />
-                </RadioGroup>
-              </Box>
-            </Grid>
-            <Grid item xs={6}></Grid>
+                    <FormControlLabel
+                      value={2}
+                      control={
+                        <Radio
+                          style={{ padding: 0, margin: 0 }}
+                          color="primary"
+                        />
+                      }
+                      label={isRTL ? 'المورد' : 'Resourse'}
+                    />
+                  </RadioGroup>
+                </Box>
+              </Grid>
+            )}
+            {(!user?.isEmployee || !user?.employeeId) && (
+              <Grid item xs={6}></Grid>
+            )}
             <Grid item xs={6}>
               <AutoFieldLocal
                 name="employee"
@@ -526,7 +539,7 @@ export const AppointForm = (props: any) => {
           item
           xs={4}
           style={{
-            backgroundColor: "#eee",
+            backgroundColor: '#eee',
             borderRadius: 5,
             padding: 7,
           }}
@@ -543,9 +556,9 @@ export const AppointForm = (props: any) => {
               setOpenAction(true);
             }}
           >
-            {isRTL ? "اضافة تنبيه" : "Add Reminder"}
+            {isRTL ? 'اضافة تنبيه' : 'Add Reminder'}
           </Button>
-          <Paper style={{ height: 150, overflow: "auto" }}>
+          <Paper style={{ height: 150, overflow: 'auto' }}>
             {actionslist.map((act: any) => {
               return (
                 <ListItem>
@@ -559,7 +572,7 @@ export const AppointForm = (props: any) => {
                     style={{ padding: 5, margin: 5 }}
                   >
                     <DeleteOutlinedIcon
-                      style={{ fontSize: 22, color: "#a76f9a" }}
+                      style={{ fontSize: 22, color: '#a76f9a' }}
                     />
                   </IconButton>
                   <IconButton
@@ -571,7 +584,7 @@ export const AppointForm = (props: any) => {
                     title="Edit row"
                   >
                     <EditOutlinedIcon
-                      style={{ fontSize: 22, color: "#729aaf" }}
+                      style={{ fontSize: 22, color: '#729aaf' }}
                     />
                   </IconButton>
                 </ListItem>
@@ -585,7 +598,7 @@ export const AppointForm = (props: any) => {
 
           <Box
             style={{
-              backgroundColor: "#f4f4f4",
+              backgroundColor: '#f4f4f4',
               padding: 10,
               marginTop: 15,
               marginBottom: 15,
@@ -618,7 +631,7 @@ export const AppointForm = (props: any) => {
             )}
             {loading && <LoadingInline></LoadingInline>}
           </Box>
-          <Typography style={{ fontWeight: "bold", fontSize: 16 }}>
+          <Typography style={{ fontWeight: 'bold', fontSize: 16 }}>
             {words.total} : {moneyFormat(totals.amount)}
           </Typography>
           <Box style={{ marginTop: 10 }}>

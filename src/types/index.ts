@@ -12,6 +12,7 @@ interface UserTypes {
   isDepartAdmin: boolean;
   isBranchAdmin: boolean;
   isEmployee: boolean;
+  employeeId: boolean;
   isFinance: boolean;
   isOperate: boolean;
   isEditor: boolean;

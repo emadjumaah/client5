@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import * as React from "react";
-import Radio from "@material-ui/core/Radio";
-import RadioGroup from "@material-ui/core/RadioGroup";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import { Box, fade, Grid, IconButton, Typography } from "@material-ui/core";
-import RefreshOutlinedIcon from "@material-ui/icons/RefreshOutlined";
+import * as React from 'react';
+import Radio from '@material-ui/core/Radio';
+import RadioGroup from '@material-ui/core/RadioGroup';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import { Box, fade, Grid, IconButton, Typography } from '@material-ui/core';
+import RefreshOutlinedIcon from '@material-ui/icons/RefreshOutlined';
 
 const DepartemplSelect = ({
   value,
@@ -13,6 +13,7 @@ const DepartemplSelect = ({
   count,
   theme,
   refresh,
+  noEmpl,
 }: any) => {
   const onchange = (e: any) => {
     setValue(e.target.value);
@@ -28,20 +29,22 @@ const DepartemplSelect = ({
             value={value}
             onChange={onchange}
           >
-            <FormControlLabel
-              value="employeeId"
-              control={<Radio color="primary" />}
-              label={isRTL ? "الموظف" : "Employee"}
-            />
+            {!noEmpl && (
+              <FormControlLabel
+                value="employeeId"
+                control={<Radio color="primary" />}
+                label={isRTL ? 'الموظف' : 'Employee'}
+              />
+            )}
             <FormControlLabel
               value="departmentId"
               control={<Radio color="primary" />}
-              label={isRTL ? "القسم" : "Department"}
+              label={isRTL ? 'القسم' : 'Department'}
             />
             <FormControlLabel
               value="status"
               control={<Radio color="primary" />}
-              label={isRTL ? "الحالة" : "Status"}
+              label={isRTL ? 'الحالة' : 'Status'}
             />
           </RadioGroup>
         </Grid>
@@ -51,14 +54,14 @@ const DepartemplSelect = ({
               <Typography
                 style={{ marginTop: 10, marginLeft: 10, marginRight: 10 }}
               >
-                {isRTL ? "المواعيد: " : "Appointments: "}
+                {isRTL ? 'المواعيد: ' : 'Appointments: '}
               </Typography>
               <Typography
                 style={{
                   marginTop: 10,
                   marginLeft: 10,
                   marginRight: 10,
-                  fontWeight: "bold",
+                  fontWeight: 'bold',
                 }}
               >
                 {count}
@@ -71,8 +74,8 @@ const DepartemplSelect = ({
             display="flex"
             style={{
               flex: 1,
-              alignItems: "center",
-              justifyContent: "flex-end",
+              alignItems: 'center',
+              justifyContent: 'flex-end',
             }}
           >
             {refresh && (

@@ -10,7 +10,8 @@ import { getStoreItem } from '../store';
 
 const AddButton = ({ onExecute }) => {
   const isEditor = roles.isEditor();
-  if (!isEditor) {
+  const isEmployee = roles.isEmployee();
+  if (!isEditor && !isEmployee) {
     return <div></div>;
   }
   return (
@@ -26,7 +27,8 @@ const AddButton = ({ onExecute }) => {
 
 const EditButton = ({ onExecute }) => {
   const isEditor = roles.isEditor();
-  if (!isEditor) {
+  const isEmployee = roles.isEmployee();
+  if (!isEditor && !isEmployee) {
     return <div></div>;
   }
   return (
@@ -44,7 +46,8 @@ const DeleteButton = ({ onExecute }) => {
   const store = getStoreItem('store');
   const { lang } = store;
   const isEditor = roles.isEditor();
-  if (!isEditor) {
+  const isEmployee = roles.isEmployee();
+  if (!isEditor && !isEmployee) {
     return <div></div>;
   }
   return (
