@@ -1,7 +1,7 @@
 /* eslint-disable no-var */
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import { useContext, useEffect, useReducer, useState } from 'react';
+import { useContext, useReducer, useState } from 'react';
 import { fade, useTheme } from '@material-ui/core/styles';
 import { Box, CssBaseline } from '@material-ui/core';
 import { Route } from 'react-router-dom';
@@ -33,7 +33,6 @@ import AlertWithClose from '../../components/fields/AlertWithClose';
 import MainCalendarEmpl from '../empl/MainCalendarEmpl';
 import AppointmentsEmpl from '../empl/AppointmentsEmpl';
 import TasksEmpl from '../adds/TasksEmpl';
-import { templates } from '../../constants/roles';
 
 const Content = ({ company, editCompany, refreshcompany }) => {
   const classes = layoutClasses();
@@ -48,20 +47,6 @@ const Content = ({ company, editCompany, refreshcompany }) => {
     dispatch,
     translate: { words, isRTL },
   }: GContextTypes = useContext(GlobalContext);
-
-  useEffect(() => {
-    if (company) {
-      const temp = company.template ? JSON.parse(company.template) : null;
-      const template = temp ? temp : templates[0];
-      const stringstore = localStorage.getItem('store');
-      const store = stringstore ? JSON.parse(stringstore) : null;
-      const newStore = {
-        ...store,
-        template,
-      };
-      localStorage.setItem('store', JSON.stringify(newStore));
-    }
-  }, []);
 
   const logout = () => {
     dispatch({ type: 'logout' });

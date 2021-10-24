@@ -2,19 +2,9 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import * as Tafgeet from 'tafgeetjs';
 import { mainmenu } from '../constants';
-import { systemTypes } from '../constants/branch';
-import {
-  parentsBasicAccountsList,
-  parentsExpAccountsList,
-  parentsGeneralAccountsList,
-  parentsInvAccountsList,
-  parentsPurAccountsList,
-  parentsSalesAccountsList,
-} from '../constants/kaid';
+import { parentsAccountsList } from '../constants/kaid';
 const userAgent = navigator.userAgent.toLowerCase();
-
 export const isElectron = userAgent.indexOf(' electron/') > -1;
-
 export const isDEV =
   !process.env.NODE_ENV || process.env.NODE_ENV === 'development';
 
@@ -62,63 +52,22 @@ export const groupBy = (list: any, fld: any) => {
   }
 };
 
-const isValidMenu = (menu: any, systems: any) => {
-  if (menu.req === null || systems.includes(menu.req)) {
-    return true;
-  } else {
-    return false;
-  }
-};
-
-export const filterMenu = (systems: any) => {
+export const filterMenu = () => {
   const fmenu = mainmenu.map((mnu: any) => {
-    const isValidMain = isValidMenu(mnu, systems);
-    if (isValidMain) {
-      if (mnu.subMenu) {
-        const smns = mnu.subMenu.map((sm: any) => {
-          const isValid = isValidMenu(sm, systems);
-          if (isValid) {
-            return sm;
-          }
-        });
-        const submenus = smns.filter((x: any) => x);
-        mnu.subMenu = submenus;
-        return mnu;
-      } else {
-        return mnu;
-      }
+    if (mnu.subMenu) {
+      const smnss = mnu.subMenu.filter((sm: any) => !sm.hide);
+      mnu.subMenu = smnss;
+      return mnu;
+    } else {
+      return mnu;
     }
   });
-  const finalmenu = fmenu.filter((x: any) => x);
+  const finalmenu = fmenu.filter((m: any) => !m.hide);
   return finalmenu;
 };
 
-export const getparentAccounts = (systems: any) => {
-  const basic = parentsBasicAccountsList;
-  const sales = systems?.includes(systemTypes.pos)
-    ? parentsSalesAccountsList
-    : [];
-  const purchase = systems?.includes(systemTypes.pur)
-    ? parentsPurAccountsList
-    : [];
-  const inventory = systems?.includes(systemTypes.inv)
-    ? parentsInvAccountsList
-    : [];
-  const expenses = systems?.includes(systemTypes.exp)
-    ? parentsExpAccountsList
-    : [];
-  const general = systems?.includes(systemTypes.acc || systemTypes.ass)
-    ? parentsGeneralAccountsList
-    : [];
-  const pList = [
-    ...basic,
-    ...sales,
-    ...purchase,
-    ...inventory,
-    ...expenses,
-    ...general,
-  ];
-  const numberlist = pList.map((pl: any) => pl.parentcode);
+export const getparentAccounts = () => {
+  const numberlist = parentsAccountsList.map((pl: any) => pl.parentcode);
   return numberlist;
 };
 

@@ -1,7 +1,7 @@
 /* eslint-disable no-var */
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import { useContext, useEffect, useReducer, useState } from 'react';
+import { useContext, useReducer, useState } from 'react';
 import { fade, useTheme } from '@material-ui/core/styles';
 import { Box, CssBaseline } from '@material-ui/core';
 import { Route } from 'react-router-dom';
@@ -106,7 +106,6 @@ import Branches from '../adds/Branches';
 import React from 'react';
 import { isEditor as isEditorUser } from '../../common/roles';
 import AlertWithClose from '../../components/fields/AlertWithClose';
-import { templates } from '../../constants/roles';
 
 const Content = ({ company, editCompany, refreshcompany }) => {
   const classes = layoutClasses();
@@ -128,19 +127,6 @@ const Content = ({ company, editCompany, refreshcompany }) => {
   const logout = () => {
     dispatch({ type: 'logout' });
   };
-  useEffect(() => {
-    if (company) {
-      const temp = company.template ? JSON.parse(company.template) : null;
-      const template = temp ? temp : templates[0];
-      const stringstore = localStorage.getItem('store');
-      const store = stringstore ? JSON.parse(stringstore) : null;
-      const newStore = {
-        ...store,
-        template,
-      };
-      localStorage.setItem('store', JSON.stringify(newStore));
-    }
-  }, []);
 
   const isEditor = isEditorUser(user);
 
@@ -207,17 +193,11 @@ const Content = ({ company, editCompany, refreshcompany }) => {
     initCalendarReportContext
   );
 
-  let systems: any;
-  const barnch = branches.filter((br: any) => br.basename === user.branch);
-  if (barnch && barnch.length > 0) {
-    systems = barnch?.[0]?.systems;
-  }
-
-  const menu = systems ? filterMenu(systems) : [];
+  const menu = filterMenu();
   const accs = user.isSuperAdmin
     ? accounts
     : accounts.filter((acc: any) => acc.branch === user.branch);
-  const mainaccounts = getparentAccounts(systems);
+  const mainaccounts = getparentAccounts();
   const filteredAccounts =
     accs?.length > 0
       ? accs.filter((acc: any) => mainaccounts.includes(acc.parentcode))

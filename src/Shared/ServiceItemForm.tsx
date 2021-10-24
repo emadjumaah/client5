@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react';
 import {
   Box,
   Fab,
@@ -7,15 +7,16 @@ import {
   Radio,
   RadioGroup,
   TextField,
-} from "@material-ui/core";
-import AddIcon from "@material-ui/icons/Add";
-import { useForm } from "react-hook-form";
+} from '@material-ui/core';
+import AddIcon from '@material-ui/icons/Add';
+import { useForm } from 'react-hook-form';
 
-import { Autocomplete } from "@material-ui/lab";
-import OptionItemData from "./OptionItemData";
-import { yup } from "../constants";
-import AutoField from "./AutoField";
-import AutoPopper from "./AutoPopper";
+import { Autocomplete } from '@material-ui/lab';
+import OptionItemData from './OptionItemData';
+import { yup } from '../constants';
+import AutoField from './AutoField';
+import AutoPopper from './AutoPopper';
+import { useTemplate } from '../hooks';
 
 export default function ServiceItemForm({
   options,
@@ -45,6 +46,7 @@ export default function ServiceItemForm({
   const [emplslist, setEmplslist] = useState<any>([]);
 
   const { register, handleSubmit, errors } = useForm(yup.invItemResolver);
+  const { tempoptions } = useTemplate();
 
   const itemRef: any = React.useRef();
 
@@ -135,8 +137,8 @@ export default function ServiceItemForm({
         display="flex"
         style={{
           flex: 1,
-          alignItems: "center",
-          justifyContent: "space-between",
+          alignItems: 'center',
+          justifyContent: 'space-between',
         }}
       >
         <Autocomplete
@@ -169,7 +171,12 @@ export default function ServiceItemForm({
               label={`${words.service}/${words.product}`}
               error={itemError}
               variant="outlined"
-              style={{ width: 220 }}
+              style={{
+                width:
+                  !tempoptions?.noServEmp && !tempoptions?.noServRes
+                    ? 220
+                    : 420,
+              }}
               inputRef={(ref) => {
                 itemRef.current = ref;
               }}
@@ -181,72 +188,78 @@ export default function ServiceItemForm({
         />
 
         <Box>
-          <Box style={{ marginRight: 10, marginTop: -20 }}>
-            <RadioGroup
-              aria-label="Views"
-              name="views"
-              row
-              value={resKind}
-              onChange={(e: any) => {
-                setResKind(Number(e.target.value));
-                setEmplvalue(null);
-              }}
-            >
-              <FormControlLabel
-                value={1}
-                control={
-                  <Radio style={{ padding: 0, margin: 0 }} color="primary" />
-                }
-                label={isRTL ? "الفني" : "Employee"}
-              />
+          {!tempoptions?.noServEmp && !tempoptions?.noServRes && (
+            <Box style={{ marginRight: 10, marginTop: -20 }}>
+              <RadioGroup
+                aria-label="Views"
+                name="views"
+                row
+                value={resKind}
+                onChange={(e: any) => {
+                  setResKind(Number(e.target.value));
+                  setEmplvalue(null);
+                }}
+              >
+                <FormControlLabel
+                  value={1}
+                  control={
+                    <Radio style={{ padding: 0, margin: 0 }} color="primary" />
+                  }
+                  label={isRTL ? 'الفني' : 'Employee'}
+                />
 
-              <FormControlLabel
-                value={2}
-                control={
-                  <Radio style={{ padding: 0, margin: 0 }} color="primary" />
-                }
-                label={isRTL ? "المورد" : "Resourse"}
-              />
-            </RadioGroup>
-          </Box>
+                <FormControlLabel
+                  value={2}
+                  control={
+                    <Radio style={{ padding: 0, margin: 0 }} color="primary" />
+                  }
+                  label={isRTL ? 'المورد' : 'Resourse'}
+                />
+              </RadioGroup>
+            </Box>
+          )}
+          {!tempoptions?.noServEmp && !tempoptions?.noServRes && (
+            <AutoField
+              name="employee"
+              // title={words.employee}
+              words={words}
+              options={emplslist}
+              disabled={!resKind}
+              value={emplvalue}
+              setSelectValue={setEmplvalue}
+              setSelectError={setEmplError}
+              selectError={emplError}
+              refernce={emplRef}
+              register={register}
+              width={180}
+              ms={0}
+              nolabel
+              noPlus
+              classes={classes}
+              isRTL={isRTL}
+            ></AutoField>
+          )}
+        </Box>
+        {!tempoptions?.noServDep && (
           <AutoField
-            name="employee"
-            // title={words.employee}
+            name="department"
+            title={words.department}
             words={words}
-            options={emplslist}
-            disabled={!resKind}
-            value={emplvalue}
-            setSelectValue={setEmplvalue}
-            setSelectError={setEmplError}
-            selectError={emplError}
-            refernce={emplRef}
+            options={departments.filter((dep: any) => dep.depType === 2)}
+            value={departvalue}
+            setSelectValue={setDepartvalue}
+            setSelectError={setDepError}
+            selectError={depError}
+            refernce={departRef}
             register={register}
-            width={180}
+            width={200}
             ms={0}
             nolabel
             noPlus
             classes={classes}
             isRTL={isRTL}
           ></AutoField>
-        </Box>
-        <AutoField
-          name="department"
-          title={words.department}
-          words={words}
-          options={departments.filter((dep: any) => dep.depType === 2)}
-          value={departvalue}
-          setSelectValue={setDepartvalue}
-          setSelectError={setDepError}
-          selectError={depError}
-          refernce={departRef}
-          register={register}
-          width={200}
-          ms={0}
-          nolabel
-          noPlus
-          classes={classes}
-          isRTL={isRTL}
-        ></AutoField>
+        )}
         <TextField
           name="qty"
           onChange={(e: any) => setItemqty(Number(e.target.value))}
@@ -260,7 +273,7 @@ export default function ServiceItemForm({
           margin="dense"
           onFocus={(e) => e.target.select()}
           inputProps={{
-            style: { textAlign: "right", fontSize: 13, height: 13 },
+            style: { textAlign: 'right', fontSize: 13, height: 13 },
           }}
         />
         <TextField
@@ -276,7 +289,7 @@ export default function ServiceItemForm({
           margin="dense"
           onFocus={(e) => e.target.select()}
           inputProps={{
-            style: { textAlign: "right", fontSize: 13, height: 13 },
+            style: { textAlign: 'right', fontSize: 13, height: 13 },
           }}
         />
         <Fab

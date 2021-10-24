@@ -40,7 +40,7 @@ import PopupAppointInvoice from './PopupAppointInvoice';
 import PopupAction from './PopupAction';
 import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
 import DeleteOutlinedIcon from '@material-ui/icons/DeleteOutlined';
-import { useCustomers } from '../hooks';
+import { useCustomers, useTemplate } from '../hooks';
 import PopupCustomer from './PopupCustomer';
 import { tafkeet } from '../common/helpers';
 import PopupMaps from './PopupMaps';
@@ -111,6 +111,7 @@ const PopupAppointment = ({
   const [location, setLocation] = useState(null);
 
   const { customers, addCustomer, editCustomer } = useCustomers();
+  const { tempoptions } = useTemplate();
 
   const { register, handleSubmit } = useForm({});
   const {
@@ -615,7 +616,7 @@ const PopupAppointment = ({
                       fullWidth
                     ></AutoFieldLocal>
                   </Grid>
-                  {!isemployee && (
+                  {!isemployee && !tempoptions?.noRes && (
                     <Grid item xs={6}>
                       <Box
                         style={{
@@ -659,14 +660,16 @@ const PopupAppointment = ({
                       </Box>
                     </Grid>
                   )}
-                  {!isemployee && <Grid item xs={6}></Grid>}
+                  {!isemployee && !tempoptions?.noRes && (
+                    <Grid item xs={6}></Grid>
+                  )}
                   <Grid item xs={6}>
                     <AutoFieldLocal
                       name="employee"
                       title={words.employee}
                       words={words}
-                      options={emplslist}
-                      disabled={!resKind}
+                      options={!tempoptions?.noRes ? emplslist : employees}
+                      disabled={!resKind && !tempoptions?.noRes}
                       value={emplvalue}
                       setSelectValue={setEmplvalue}
                       setSelectError={setEmplError}

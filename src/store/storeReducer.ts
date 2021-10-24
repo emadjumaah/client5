@@ -20,9 +20,10 @@ export const storeReducer = (state: StoreTypes, action: any) => {
         ...state,
         user: action.payload.user,
         token: action.payload.token,
+        template: action.payload.template,
       };
     case 'logout':
-      return { ...state, user: null, token: null };
+      return { ...state, user: null, token: null, template: null };
     case 'setLastSuccess':
       return { ...state, lastSuccess: action.payload };
     case 'setWrongTimes':

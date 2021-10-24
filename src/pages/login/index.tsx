@@ -21,6 +21,7 @@ import { GlobalContext } from '../../contexts';
 import { loginClasses } from '../../themes';
 import { client } from '../../graphql';
 import CountDown from '../../Shared/CountDown';
+import { templates } from '../../constants/roles';
 
 const timeToWait = 900000;
 const possibleWrong = 15;
@@ -59,14 +60,18 @@ const Login = (): any => {
     const userData = await dologin({ variables: { username, password } });
     if (userData?.data?.login?.ok === true) {
       initStoreState();
-      const { data, accessToken, refreshToken } = userData.data.login;
+      const { data, accessToken, refreshToken, template } = userData.data.login;
       const user = {
         ...data,
         roles: JSON.parse(data.roles),
       };
       await client.resetStore();
       const token = JSON.stringify({ accessToken, refreshToken });
-      dispatch({ type: 'login', payload: { user, token } });
+      const temp = template ? JSON.parse(template) : templates[0];
+      dispatch({
+        type: 'login',
+        payload: { user, token, template: temp },
+      });
       window.location.reload();
       seterror(null);
     } else if (userData?.data?.login?.ok === false) {

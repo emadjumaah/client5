@@ -53,6 +53,7 @@ export default gql`
       }
       accessToken
       refreshToken
+      template
       error
     }
   }

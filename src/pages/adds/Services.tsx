@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import React, { useState } from "react";
-import Paper from "@material-ui/core/Paper";
+import React, { useState } from 'react';
+import Paper from '@material-ui/core/Paper';
 import {
   EditingState,
   SortingState,
@@ -8,7 +8,7 @@ import {
   DataTypeProvider,
   SearchState,
   IntegratedFiltering,
-} from "@devexpress/dx-react-grid";
+} from '@devexpress/dx-react-grid';
 import {
   Grid,
   TableHeaderRow,
@@ -16,31 +16,31 @@ import {
   VirtualTable,
   Toolbar,
   SearchPanel,
-} from "@devexpress/dx-react-grid-material-ui";
-import { Command, Loading, PopupEditing } from "../../Shared";
-import { useServices } from "../../hooks";
-import { getRowId } from "../../common";
-import { PopupService } from "../../pubups";
-import { currencyFormatter } from "../../Shared/colorFormat";
-import { AlertLocal, SearchTable } from "../../components";
-import { errorAlert, errorDeleteAlert } from "../../Shared/helpers";
+} from '@devexpress/dx-react-grid-material-ui';
+import { Command, Loading, PopupEditing } from '../../Shared';
+import { useServices } from '../../hooks';
+import { getRowId } from '../../common';
+import { PopupService } from '../../pubups';
+import { currencyFormatter } from '../../Shared/colorFormat';
+import { AlertLocal, SearchTable } from '../../components';
+import { errorAlert, errorDeleteAlert } from '../../Shared/helpers';
 
 export default function Services({ isRTL, words, theme, isEditor }: any) {
   const [loading, setLoading] = useState(false);
-  const [alrt, setAlrt] = useState({ show: false, msg: "", type: undefined });
+  const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
 
   const [columns] = useState([
-    { name: isRTL ? "nameAr" : "name", title: words.name },
+    { name: isRTL ? 'nameAr' : 'name', title: words.name },
     {
-      name: isRTL ? "departmentNameAr" : "departmentName",
+      name: isRTL ? 'departmentNameAr' : 'departmentName',
       title: words.department,
     },
     {
-      name: isRTL ? "employeeNameAr" : "employeeName",
+      name: isRTL ? 'employeeNameAr' : 'employeeName',
       title: `${words.employee} / ${words.resourses}`,
     },
-    { name: "desc", title: words.description },
-    { name: "price", title: words.price },
+    { name: 'desc', title: words.description },
+    { name: 'price', title: words.price },
   ]);
 
   const { services, addService, editService, removeService } = useServices();
@@ -52,7 +52,7 @@ export default function Services({ isRTL, words, theme, isEditor }: any) {
 
       const res = await removeService({ variables: { _id } });
       if (res?.data?.deleteItem?.ok === false) {
-        if (res?.data?.deleteItem?.error.includes("related")) {
+        if (res?.data?.deleteItem?.error.includes('related')) {
           await errorDeleteAlert(setAlrt, isRTL);
         } else {
           await errorAlert(setAlrt, isRTL);
@@ -76,14 +76,14 @@ export default function Services({ isRTL, words, theme, isEditor }: any) {
         <VirtualTable
           height={window.innerHeight - 133}
           messages={{
-            noData: isRTL ? "لا يوجد بيانات" : "no data",
+            noData: isRTL ? 'لا يوجد بيانات' : 'no data',
           }}
           estimatedRowHeight={40}
         />
         <TableHeaderRow showSortingControls />
 
         <DataTypeProvider
-          for={["price"]}
+          for={['price']}
           formatterComponent={currencyFormatter}
         ></DataTypeProvider>
 

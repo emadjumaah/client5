@@ -16,7 +16,7 @@ import { FormControlLabel, Grid, Radio, RadioGroup } from '@material-ui/core';
 import { TextFieldLocal } from '../components';
 import AutoFieldLocal from '../components/fields/AutoFieldLocal';
 import useDepartmentsTech from '../hooks/useDepartmentsTech';
-import { useEmployees } from '../hooks';
+import { useEmployees, useTemplate } from '../hooks';
 
 const PopupService = ({
   open,
@@ -49,6 +49,7 @@ const PopupService = ({
     store: { user },
   }: GContextTypes = useContext(GlobalContext);
 
+  const { tempoptions } = useTemplate();
   const { departments } = useDepartmentsTech();
   const { employees } = useEmployees();
 
@@ -243,57 +244,63 @@ const PopupService = ({
             </Grid>
           </Grid>
 
-          <AutoFieldLocal
-            name="department"
-            title={words.department}
-            words={words}
-            options={departments}
-            value={departvalue}
-            setSelectValue={setDepartvalue}
-            setSelectError={setDepartError}
-            selectError={departError}
-            refernce={departRef}
-            register={register}
-            isRTL={isRTL}
-            mb={20}
-          ></AutoFieldLocal>
-          <RadioGroup
-            aria-label="Views"
-            name="views"
-            row
-            value={resKind}
-            onChange={(e: any) => {
-              setResKind(Number(e.target.value));
-              setEmplvalue(null);
-            }}
-          >
-            <FormControlLabel
-              value={1}
-              control={<Radio color="primary" />}
-              label={isRTL ? 'الموظفين' : 'Employees'}
-            />
+          {!tempoptions?.noServDep && (
+            <AutoFieldLocal
+              name="department"
+              title={words.department}
+              words={words}
+              options={departments}
+              value={departvalue}
+              setSelectValue={setDepartvalue}
+              setSelectError={setDepartError}
+              selectError={departError}
+              refernce={departRef}
+              register={register}
+              isRTL={isRTL}
+              mb={20}
+            ></AutoFieldLocal>
+          )}
+          {!tempoptions?.noServEmp && !tempoptions?.noServRes && (
+            <RadioGroup
+              aria-label="Views"
+              name="views"
+              row
+              value={resKind}
+              onChange={(e: any) => {
+                setResKind(Number(e.target.value));
+                setEmplvalue(null);
+              }}
+            >
+              <FormControlLabel
+                value={1}
+                control={<Radio color="primary" />}
+                label={isRTL ? 'الموظفين' : 'Employees'}
+              />
 
-            <FormControlLabel
-              value={2}
-              control={<Radio color="primary" />}
-              label={isRTL ? 'الموارد' : 'Resourses'}
-            />
-          </RadioGroup>
-          <AutoFieldLocal
-            name="employee"
-            title={resKind === 2 ? words.resourses : words.employee}
-            disabled={!resKind}
-            words={words}
-            options={emplslist}
-            value={emplvalue}
-            setSelectValue={setEmplvalue}
-            setSelectError={setEmplError}
-            selectError={emplError}
-            refernce={emplRef}
-            register={register}
-            isRTL={isRTL}
-            mb={20}
-          ></AutoFieldLocal>
+              <FormControlLabel
+                value={2}
+                control={<Radio color="primary" />}
+                label={isRTL ? 'الموارد' : 'Resourses'}
+              />
+            </RadioGroup>
+          )}
+          {!tempoptions?.noServEmp && !tempoptions?.noServRes && (
+            <AutoFieldLocal
+              name="employee"
+              title={resKind === 2 ? words.resourses : words.employee}
+              disabled={!resKind}
+              words={words}
+              options={emplslist}
+              value={emplvalue}
+              setSelectValue={setEmplvalue}
+              setSelectError={setEmplError}
+              selectError={emplError}
+              refernce={emplRef}
+              register={register}
+              isRTL={isRTL}
+              mb={20}
+            ></AutoFieldLocal>
+          )}
           <TextFieldLocal
             name="desc"
             label={words.description}
