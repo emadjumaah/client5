@@ -46,7 +46,7 @@ export default function ServiceItemForm({
   const [emplslist, setEmplslist] = useState<any>([]);
 
   const { register, handleSubmit, errors } = useForm(yup.invItemResolver);
-  const { tempoptions } = useTemplate();
+  const { tempoptions, tempwords } = useTemplate();
 
   const itemRef: any = React.useRef();
 
@@ -168,7 +168,7 @@ export default function ServiceItemForm({
               {...params}
               id="service"
               name="service"
-              label={`${words.service}/${words.product}`}
+              label={`${words.service}`}
               error={itemError}
               variant="outlined"
               style={{
@@ -205,7 +205,7 @@ export default function ServiceItemForm({
                   control={
                     <Radio style={{ padding: 0, margin: 0 }} color="primary" />
                   }
-                  label={isRTL ? 'الفني' : 'Employee'}
+                  label={tempwords.employee}
                 />
 
                 <FormControlLabel
@@ -213,7 +213,7 @@ export default function ServiceItemForm({
                   control={
                     <Radio style={{ padding: 0, margin: 0 }} color="primary" />
                   }
-                  label={isRTL ? 'المورد' : 'Resourse'}
+                  label={tempwords.resourse}
                 />
               </RadioGroup>
             </Box>

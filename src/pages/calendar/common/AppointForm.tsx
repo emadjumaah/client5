@@ -33,7 +33,7 @@ import {
   getDateDayTimeFormat,
   moneyFormat,
 } from '../../../Shared/colorFormat';
-import { useCustomers } from '../../../hooks';
+import { useCustomers, useTemplate } from '../../../hooks';
 import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
 import DeleteOutlinedIcon from '@material-ui/icons/DeleteOutlined';
 import PopupAction from '../../../pubups/PopupAction';
@@ -85,6 +85,7 @@ export const AppointForm = (props: any) => {
   const [emplslist, setEmplslist] = useState<any>([]);
 
   const { customers, addCustomer, editCustomer } = useCustomers();
+  const { tempwords, tempoptions } = useTemplate();
 
   const {
     translate: { words, isRTL },
@@ -442,7 +443,7 @@ export const AppointForm = (props: any) => {
             <Grid item xs={6}>
               <AutoFieldLocal
                 name="customer"
-                title={words.customer}
+                title={tempwords.customer}
                 words={words}
                 options={customers}
                 value={row.customer}
@@ -456,7 +457,7 @@ export const AppointForm = (props: any) => {
             <Grid item xs={6}>
               <AutoFieldLocal
                 name="task"
-                title={words.task}
+                title={tempwords.task}
                 words={words}
                 options={tasks}
                 value={taskvalue}
@@ -465,7 +466,7 @@ export const AppointForm = (props: any) => {
                 fullWidth
               ></AutoFieldLocal>
             </Grid>
-            {!isemployee && (
+            {!isemployee && !tempoptions?.noRes && (
               <Grid item xs={6}>
                 <Box style={{ marginRight: 10, marginTop: 0, marginBottom: 0 }}>
                   <RadioGroup
@@ -486,7 +487,7 @@ export const AppointForm = (props: any) => {
                           color="primary"
                         />
                       }
-                      label={isRTL ? 'الموظف' : 'Employee'}
+                      label={tempwords.employee}
                     />
 
                     <FormControlLabel
@@ -497,20 +498,20 @@ export const AppointForm = (props: any) => {
                           color="primary"
                         />
                       }
-                      label={isRTL ? 'المورد' : 'Resourse'}
+                      label={tempwords.resourse}
                     />
                   </RadioGroup>
                 </Box>
               </Grid>
             )}
-            {!isemployee && <Grid item xs={6}></Grid>}
+            {!isemployee && !tempoptions?.noRes && <Grid item xs={6}></Grid>}
             <Grid item xs={6}>
               <AutoFieldLocal
                 name="employee"
-                title={words.employee}
+                title={resKind === 2 ? tempwords.resourse : tempwords.employee}
                 words={words}
-                options={emplslist}
-                disabled={!resKind}
+                options={!tempoptions?.noRes ? emplslist : employees}
+                disabled={!resKind && !tempoptions?.noRes}
                 value={emplvalue}
                 setSelectValue={selectEmployee}
                 noPlus
@@ -522,7 +523,7 @@ export const AppointForm = (props: any) => {
             <Grid item xs={6}>
               <AutoFieldLocal
                 name="department"
-                title={words.department}
+                title={tempwords.department}
                 words={words}
                 options={departments.filter((dep: any) => dep.depType === 1)}
                 value={row.department}

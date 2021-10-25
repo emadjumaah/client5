@@ -14,6 +14,7 @@ import { GlobalContext } from '../contexts';
 import { Grid } from '@material-ui/core';
 import PopupLayout from '../pages/main/PopupLayout';
 import { TextFieldLocal } from '../components';
+import { getPopupTitle } from '../constants/menu';
 
 const PopupCustomer = ({
   open,
@@ -88,13 +89,7 @@ const PopupCustomer = ({
     handleSubmit(onSubmit)();
   };
 
-  const title = isRTL
-    ? isNew
-      ? 'اضافة عميل'
-      : 'تعديل بيانات عميل'
-    : isNew
-    ? 'New Customer'
-    : 'Edit Customer';
+  const title = getPopupTitle('customer', isNew);
 
   return (
     <PopupLayout

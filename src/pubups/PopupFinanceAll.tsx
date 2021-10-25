@@ -24,7 +24,7 @@ import { useLazyQuery } from '@apollo/client';
 import getOperationKaids from '../graphql/query/getOperationKaids';
 import LoadingInline from '../Shared/LoadingInline';
 import _ from 'lodash';
-import { useDepartments, useEmployees } from '../hooks';
+import { useDepartments, useEmployees, useTemplate } from '../hooks';
 
 export const indexTheList = (list: any) => {
   return list.map((item: any, index: any) => {
@@ -69,6 +69,7 @@ const PopupFinanceAll = ({
 
   const [resKind, setResKind] = useState<any>(null);
   const [emplslist, setEmplslist] = useState<any>([]);
+  const { tempwords, tempoptions } = useTemplate();
 
   const [maindesc, setMaindesc] = useState<any>('');
   const {
@@ -392,52 +393,56 @@ const PopupFinanceAll = ({
                   />
                 </Grid>
 
-                <Grid item xs={8}>
-                  <Box
-                    style={{ marginRight: 10, marginTop: 0, marginBottom: 0 }}
-                  >
-                    <RadioGroup
-                      aria-label="Views"
-                      name="views"
-                      row
-                      value={resKind}
-                      onChange={(e: any) => {
-                        setResKind(Number(e.target.value));
-                        setEmplvalue(null);
-                      }}
+                {!tempoptions?.noRes && (
+                  <Grid item xs={8}>
+                    <Box
+                      style={{ marginRight: 10, marginTop: 0, marginBottom: 0 }}
                     >
-                      <FormControlLabel
-                        value={1}
-                        control={
-                          <Radio
-                            style={{ padding: 0, margin: 0 }}
-                            color="primary"
-                          />
-                        }
-                        label={isRTL ? 'الموظف' : 'Employee'}
-                      />
+                      <RadioGroup
+                        aria-label="Views"
+                        name="views"
+                        row
+                        value={resKind}
+                        onChange={(e: any) => {
+                          setResKind(Number(e.target.value));
+                          setEmplvalue(null);
+                        }}
+                      >
+                        <FormControlLabel
+                          value={1}
+                          control={
+                            <Radio
+                              style={{ padding: 0, margin: 0 }}
+                              color="primary"
+                            />
+                          }
+                          label={tempwords.employee}
+                        />
 
-                      <FormControlLabel
-                        value={2}
-                        control={
-                          <Radio
-                            style={{ padding: 0, margin: 0 }}
-                            color="primary"
-                          />
-                        }
-                        label={isRTL ? 'المورد' : 'Resourse'}
-                      />
-                    </RadioGroup>
-                  </Box>
-                </Grid>
-                <Grid item xs={4}></Grid>
+                        <FormControlLabel
+                          value={2}
+                          control={
+                            <Radio
+                              style={{ padding: 0, margin: 0 }}
+                              color="primary"
+                            />
+                          }
+                          label={tempwords.resourse}
+                        />
+                      </RadioGroup>
+                    </Box>
+                  </Grid>
+                )}
+                {!tempoptions?.noRes && <Grid item xs={4}></Grid>}
                 <Grid item xs={8}>
                   <AutoFieldLocal
                     name="employee"
-                    title={resKind === 1 ? words.employee : words.resourses}
-                    disabled={!resKind}
+                    title={
+                      resKind === 2 ? tempwords.resourse : tempwords.employee
+                    }
+                    options={!tempoptions?.noRes ? emplslist : employees}
+                    disabled={!resKind && !tempoptions?.noRes}
                     words={words}
-                    options={emplslist}
                     value={emplvalue}
                     setSelectValue={setEmplvalue}
                     setSelectError={setEmplError}
@@ -450,7 +455,7 @@ const PopupFinanceAll = ({
                 <Grid item xs={4}>
                   <AutoFieldLocal
                     name="department"
-                    title={words.department}
+                    title={tempwords.department}
                     words={words}
                     options={departments}
                     value={departvalue}

@@ -13,7 +13,7 @@ import { Grid } from '@material-ui/core';
 import { CalenderLocal, TextFieldLocal } from '../components';
 // import { getAppStartEndPeriod } from "../common/time";
 import AutoFieldLocal from '../components/fields/AutoFieldLocal';
-import { useDepartments, useEmployees } from '../hooks';
+import { useDepartments, useEmployees, useTemplate } from '../hooks';
 
 const PopupExpenses = ({
   open,
@@ -54,6 +54,7 @@ const PopupExpenses = ({
 
   const { employees } = useEmployees();
   const { departments } = useDepartments();
+  const { tempwords, tempoptions } = useTemplate();
 
   const { register, handleSubmit, errors, reset } = useForm(
     yup.depositResolver
@@ -63,11 +64,21 @@ const PopupExpenses = ({
     translate: { words, isRTL },
     store: { user },
   }: GContextTypes = useContext(GlobalContext);
+  const isemployee = user?.isEmployee && user?.employeeId;
 
   const { accounts } = useAccounts();
 
   useEffect(() => {
-    if (isNew) {
+    if (isemployee) {
+      const emp = employees.filter(
+        (em: any) => em._id === user.employeeId
+      )?.[0];
+      setEmplvalue(emp);
+    }
+  }, [user, employees]);
+
+  useEffect(() => {
+    if (isNew && !isemployee) {
       if (taskvalue) {
         if (taskvalue?.departmentId && name !== 'departmentId') {
           const dept = departments.filter(
@@ -369,7 +380,7 @@ const PopupExpenses = ({
               />
               <AutoFieldLocal
                 name="task"
-                title={words.task}
+                title={tempwords.task}
                 words={words}
                 options={tasks}
                 value={taskvalue}
@@ -380,46 +391,50 @@ const PopupExpenses = ({
                 disabled={name === 'taskId'}
               ></AutoFieldLocal>
 
-              <Box style={{ marginRight: 10, marginTop: 0, marginBottom: 0 }}>
-                <RadioGroup
-                  aria-label="Views"
-                  name="views"
-                  row
-                  value={resKind}
-                  onChange={(e: any) => {
-                    setResKind(Number(e.target.value));
-                    setEmplvalue(null);
-                  }}
-                >
-                  <FormControlLabel
-                    value={1}
-                    control={
-                      <Radio
-                        style={{ padding: 0, margin: 0 }}
-                        color="primary"
-                      />
-                    }
-                    label={isRTL ? 'الموظف' : 'Employee'}
-                  />
+              {!isemployee && !tempoptions?.noRes && (
+                <Box style={{ marginRight: 10, marginTop: 0, marginBottom: 0 }}>
+                  <RadioGroup
+                    aria-label="Views"
+                    name="views"
+                    row
+                    value={resKind}
+                    onChange={(e: any) => {
+                      setResKind(Number(e.target.value));
+                      setEmplvalue(null);
+                    }}
+                  >
+                    <FormControlLabel
+                      value={1}
+                      control={
+                        <Radio
+                          style={{ padding: 0, margin: 0 }}
+                          color="primary"
+                        />
+                      }
+                      label={tempwords.employee}
+                    />
 
-                  <FormControlLabel
-                    value={2}
-                    control={
-                      <Radio
-                        style={{ padding: 0, margin: 0 }}
-                        color="primary"
-                      />
-                    }
-                    label={isRTL ? 'المورد' : 'Resourse'}
-                  />
-                </RadioGroup>
-              </Box>
+                    <FormControlLabel
+                      value={2}
+                      control={
+                        <Radio
+                          style={{ padding: 0, margin: 0 }}
+                          color="primary"
+                        />
+                      }
+                      label={tempwords.resourse}
+                    />
+                  </RadioGroup>
+                </Box>
+              )}
               <AutoFieldLocal
                 name="employee"
-                title={resKind === 2 ? words.resourses : words.employee}
-                disabled={!resKind || name === 'employeeId'}
+                title={resKind === 2 ? tempwords.resourse : tempwords.employee}
+                options={!tempoptions?.noRes ? emplslist : employees}
+                disabled={
+                  (!resKind && !tempoptions?.noRes) || name === 'employeeId'
+                }
                 words={words}
-                options={emplslist}
                 value={emplvalue}
                 setSelectValue={setEmplvalue}
                 setSelectError={setEmplError}
@@ -430,7 +445,7 @@ const PopupExpenses = ({
               ></AutoFieldLocal>
               <AutoFieldLocal
                 name="department"
-                title={words.department}
+                title={tempwords.department}
                 words={words}
                 options={departments}
                 value={departvalue}

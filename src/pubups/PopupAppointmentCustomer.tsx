@@ -40,6 +40,8 @@ import PopupAppointInvoice from './PopupAppointInvoice';
 import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
 import DeleteOutlinedIcon from '@material-ui/icons/DeleteOutlined';
 import PopupAction from './PopupAction';
+import { getPopupTitle } from '../constants/menu';
+import { useTemplate } from '../hooks';
 
 export const indexTheList = (list: any) => {
   return list.map((item: any, index: any) => {
@@ -114,11 +116,14 @@ const PopupAppointmentCustomer = ({
   const [resKind, setResKind] = useState<any>(null);
   const [emplslist, setEmplslist] = useState<any>([]);
 
+  const { tempwords, tempoptions } = useTemplate();
+
   const { register, handleSubmit } = useForm({});
   const {
     translate: { words, isRTL },
     store: { user },
   }: GContextTypes = useContext(GlobalContext);
+  const isemployee = user?.isEmployee && user?.employeeId;
 
   const [getItems, itemsData]: any = useLazyQuery(getOperationItems, {
     fetchPolicy: 'cache-and-network',
@@ -127,6 +132,15 @@ const PopupAppointmentCustomer = ({
   const [loadActions, actionsData]: any = useLazyQuery(getActions, {
     fetchPolicy: 'cache-and-network',
   });
+
+  useEffect(() => {
+    if (isemployee) {
+      const emp = employees.filter(
+        (em: any) => em._id === user.employeeId
+      )?.[0];
+      setEmplvalue(emp);
+    }
+  }, [user, employees]);
 
   useEffect(() => {
     if (employees && employees.length > 0) {
@@ -138,7 +152,7 @@ const PopupAppointmentCustomer = ({
   }, [resKind, employees]);
 
   useEffect(() => {
-    if (isNew) {
+    if (isNew && !isemployee) {
       if (taskvalue) {
         if (taskvalue?.departmentId && name !== 'departmentId') {
           const dept = departments.filter(
@@ -508,13 +522,8 @@ const PopupAppointmentCustomer = ({
   const date = row?.startDate ? new Date(row?.startDate) : new Date();
   const day = weekdaysNNo?.[date.getDay()];
 
-  const title = isRTL
-    ? isNew
-      ? 'موعد جديد'
-      : 'تعديل موعد'
-    : isNew
-    ? 'New Appointment'
-    : 'Edit Appointment';
+  const title = getPopupTitle('appointment', isNew);
+
   const desabledSave = row.status === 10 || !isEditor;
 
   return (
@@ -578,7 +587,7 @@ const PopupAppointmentCustomer = ({
                   <Grid item xs={6}>
                     <AutoFieldLocal
                       name="customer"
-                      title={words.customer}
+                      title={tempwords.customer}
                       words={words}
                       options={customers}
                       value={custvalue}
@@ -596,7 +605,7 @@ const PopupAppointmentCustomer = ({
                   <Grid item xs={6}>
                     <AutoFieldLocal
                       name="task"
-                      title={words.task}
+                      title={tempwords.task}
                       words={words}
                       options={tasks}
                       value={taskvalue}
@@ -607,52 +616,62 @@ const PopupAppointmentCustomer = ({
                       disabled={name === 'taskId'}
                     ></AutoFieldLocal>
                   </Grid>
-                  <Grid item xs={6}>
-                    <Box
-                      style={{ marginRight: 10, marginTop: 0, marginBottom: 0 }}
-                    >
-                      <RadioGroup
-                        aria-label="Views"
-                        name="views"
-                        row
-                        value={resKind}
-                        onChange={(e: any) => {
-                          setResKind(Number(e.target.value));
-                          setEmplvalue(null);
+                  {!isemployee && !tempoptions?.noRes && (
+                    <Grid item xs={6}>
+                      <Box
+                        style={{
+                          marginRight: 10,
+                          marginTop: 0,
+                          marginBottom: 0,
                         }}
                       >
-                        <FormControlLabel
-                          value={1}
-                          control={
-                            <Radio
-                              style={{ padding: 0, margin: 0 }}
-                              color="primary"
-                            />
-                          }
-                          label={isRTL ? 'الموظف' : 'Employee'}
-                        />
+                        <RadioGroup
+                          aria-label="Views"
+                          name="views"
+                          row
+                          value={resKind}
+                          onChange={(e: any) => {
+                            setResKind(Number(e.target.value));
+                            setEmplvalue(null);
+                          }}
+                        >
+                          <FormControlLabel
+                            value={1}
+                            control={
+                              <Radio
+                                style={{ padding: 0, margin: 0 }}
+                                color="primary"
+                              />
+                            }
+                            label={tempwords.employee}
+                          />
 
-                        <FormControlLabel
-                          value={2}
-                          control={
-                            <Radio
-                              style={{ padding: 0, margin: 0 }}
-                              color="primary"
-                            />
-                          }
-                          label={isRTL ? 'المورد' : 'Resourse'}
-                        />
-                      </RadioGroup>
-                    </Box>
-                  </Grid>
-                  <Grid item xs={6}></Grid>
+                          <FormControlLabel
+                            value={2}
+                            control={
+                              <Radio
+                                style={{ padding: 0, margin: 0 }}
+                                color="primary"
+                              />
+                            }
+                            label={tempwords.resourse}
+                          />
+                        </RadioGroup>
+                      </Box>
+                    </Grid>
+                  )}
+                  {!isemployee && !tempoptions?.noRes && (
+                    <Grid item xs={6}></Grid>
+                  )}
                   <Grid item xs={6}>
                     <AutoFieldLocal
                       name="employee"
-                      title={words.employee}
+                      title={
+                        resKind === 2 ? tempwords.resourse : tempwords.employee
+                      }
                       words={words}
-                      options={emplslist}
-                      disabled={!resKind || name === 'employeeId'}
+                      options={!tempoptions?.noRes ? emplslist : employees}
+                      disabled={!resKind && !tempoptions?.noRes}
                       value={emplvalue}
                       setSelectValue={setEmplvalue}
                       setSelectError={setEmplError}
@@ -668,7 +687,7 @@ const PopupAppointmentCustomer = ({
                   <Grid item xs={6}>
                     <AutoFieldLocal
                       name="department"
-                      title={words.department}
+                      title={tempwords.department}
                       words={words}
                       options={departments.filter(
                         (em: any) => em.depType === 1

@@ -24,6 +24,8 @@ import { moneyFormat } from '../Shared/colorFormat';
 import PopupTaskAppointment from './PopupTaskAppointment';
 import EventsTable from '../Shared/EventsTable';
 import _ from 'lodash';
+import { getPopupTitle } from '../constants/menu';
+import { useTemplate } from '../hooks';
 
 export const indexTheList = (list: any) => {
   return list.map((item: any, index: any) => {
@@ -88,6 +90,7 @@ const PopupTask = ({
   const [emplslist, setEmplslist] = useState<any>([]);
 
   const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
+  const { tempwords, tempoptions } = useTemplate();
 
   const { register, handleSubmit, reset } = useForm({});
   const {
@@ -336,13 +339,8 @@ const PopupTask = ({
 
   const date = row?.start ? new Date(row?.start) : new Date();
   const day = weekdaysNNo?.[date.getDay()];
-  const title = isRTL
-    ? isNew
-      ? 'مهمة جديدة'
-      : 'تعديل مهمة'
-    : isNew
-    ? 'New Task'
-    : 'Edit Task';
+
+  const title = getPopupTitle('task', isNew);
 
   return (
     <PopupLayout
@@ -385,7 +383,7 @@ const PopupTask = ({
           <Grid item xs={4}>
             <AutoFieldLocal
               name="customer"
-              title={words.customer}
+              title={tempwords.customer}
               words={words}
               options={customers}
               value={custvalue}
@@ -412,7 +410,7 @@ const PopupTask = ({
               mb={0}
             ></CalenderLocal>
           </Grid>
-          {!isemployee && (
+          {!isemployee && !tempoptions?.noRes && (
             <Grid item xs={4}>
               <Box style={{ marginRight: 10, marginTop: 0, marginBottom: 0 }}>
                 <RadioGroup
@@ -433,7 +431,7 @@ const PopupTask = ({
                         color="primary"
                       />
                     }
-                    label={isRTL ? 'الموظف' : 'Employee'}
+                    label={tempwords.employee}
                   />
 
                   <FormControlLabel
@@ -444,20 +442,22 @@ const PopupTask = ({
                         color="primary"
                       />
                     }
-                    label={isRTL ? 'المورد' : 'Resourse'}
+                    label={tempwords.resourse}
                   />
                 </RadioGroup>
               </Box>
             </Grid>
           )}
-          {!isemployee && <Grid item xs={8}></Grid>}
+          {!isemployee && !tempoptions?.noRes && <Grid item xs={8}></Grid>}
           <Grid item xs={4}>
             <AutoFieldLocal
               name="employee"
-              title={words.employee}
+              title={resKind === 2 ? tempwords.resourse : tempwords.employee}
               words={words}
-              options={emplslist || name === 'employeeId'}
-              disabled={!resKind}
+              options={!tempoptions?.noRes ? emplslist : employees}
+              disabled={
+                (!resKind && !tempoptions?.noRes) || name === 'employeeId'
+              }
               value={emplvalue}
               setSelectValue={setEmplvalue}
               setSelectError={setEmplError}
@@ -473,7 +473,7 @@ const PopupTask = ({
           <Grid item xs={4}>
             <AutoFieldLocal
               name="department"
-              title={words.department}
+              title={tempwords.department}
               words={words}
               options={departments.filter((dep: any) => dep.depType === 1)}
               value={departvalue}

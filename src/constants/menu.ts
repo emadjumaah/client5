@@ -5,7 +5,7 @@ const store = getStoreItem('store');
 const { lang, template } = store;
 const words = template?.words?.[lang];
 const options = template?.options;
-
+const isRTL = lang === 'ar';
 export const mainmenu = [
   {
     id: 0,
@@ -455,4 +455,17 @@ export const systemsNames = {
     name: 'General Accounting',
     nameAr: 'نظام الحسابات العامة',
   },
+};
+
+export const getPopupTitle = (item: any, isNew: boolean) => {
+  const addAr = `${words[item]} جديد`;
+  const add = `Add ${words[item]}`;
+  const editAr = `تعديل ${words[item]}`;
+  const edit = `Edit ${words[item]}`;
+  return isNew ? (isRTL ? addAr : add) : isRTL ? editAr : edit;
+};
+export const getPopupGeneralTitle = (item: any) => {
+  const gtitleAr = `بيانات ${words[item]}`;
+  const gtitle = `${words[item]}`;
+  return isRTL ? gtitleAr : gtitle;
 };

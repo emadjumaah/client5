@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import React, { useContext, useEffect, useState } from "react";
-import Paper from "@material-ui/core/Paper";
+import React, { useContext, useEffect, useState } from 'react';
+import Paper from '@material-ui/core/Paper';
 import {
   EditingState,
   SortingState,
@@ -9,7 +9,7 @@ import {
   DataTypeProvider,
   SearchState,
   IntegratedFiltering,
-} from "@devexpress/dx-react-grid";
+} from '@devexpress/dx-react-grid';
 import {
   Grid,
   TableHeaderRow,
@@ -17,10 +17,10 @@ import {
   VirtualTable,
   Toolbar,
   SearchPanel,
-} from "@devexpress/dx-react-grid-material-ui";
-import { Command, Loading, PopupEditing } from "../../Shared";
-import { getRowId } from "../../common";
-import { PopupInvoice } from "../../pubups";
+} from '@devexpress/dx-react-grid-material-ui';
+import { Command, Loading, PopupEditing } from '../../Shared';
+import { getRowId } from '../../common';
+import { PopupInvoice } from '../../pubups';
 import {
   createInvoice,
   deleteInvoice,
@@ -31,24 +31,24 @@ import {
   getLandingChartData,
   getLastNos,
   updateInvoice,
-} from "../../graphql";
-import { useLazyQuery, useMutation } from "@apollo/client";
+} from '../../graphql';
+import { useLazyQuery, useMutation } from '@apollo/client';
 import {
   amountFormatter,
   currencyFormatter,
   taskIdFormatter,
   timeFormatter,
-} from "../../Shared/colorFormat";
-import PageLayout from "../main/PageLayout";
-import { SearchTable } from "../../components";
-import { SalesContext } from "../../contexts";
-import DateNavigatorReports from "../../components/filters/DateNavigatorReports";
-import { getColumns } from "../../common/columns";
-import useTasks from "../../hooks/useTasks";
-import { TableComponent } from "../reports/SalesReport";
-import { colors } from "@material-ui/core";
-import { useDepartments, useEmployees } from "../../hooks";
-import getTasks from "../../graphql/query/getTasks";
+} from '../../Shared/colorFormat';
+import PageLayout from '../main/PageLayout';
+import { SearchTable } from '../../components';
+import { SalesContext } from '../../contexts';
+import DateNavigatorReports from '../../components/filters/DateNavigatorReports';
+import { getColumns } from '../../common/columns';
+import useTasks from '../../hooks/useTasks';
+import { TableComponent } from '../reports/SalesReport';
+import { colors } from '@material-ui/core';
+import { useDepartments, useEmployees } from '../../hooks';
+import getTasks from '../../graphql/query/getTasks';
 
 export default function Invoices({
   isRTL,
@@ -62,15 +62,15 @@ export default function Invoices({
   const col = getColumns({ isRTL, words });
 
   const [columns] = useState([
-    { name: "time", title: words.time },
-    { name: "docNo", title: words.no },
+    { name: 'time', title: words.time },
+    { name: 'docNo', title: words.no },
     col.eventNo,
     col.taskId,
-    { name: isRTL ? "customerNameAr" : "customerName", title: words.customer },
-    { name: "customerPhone", title: words.phoneNumber },
-    { name: "total", title: words.total },
-    { name: "discount", title: words.discount },
-    { name: "amount", title: words.amount },
+    col.customer,
+    { name: 'customerPhone', title: words.phoneNumber },
+    { name: 'total', title: words.total },
+    { name: 'discount', title: words.discount },
+    { name: 'amount', title: words.amount },
   ]);
 
   const [rows, setRows] = useState([]);
@@ -87,18 +87,18 @@ export default function Invoices({
   } = useContext(SalesContext);
 
   const currentViewNameChange = (e: any) => {
-    dispatch({ type: "setCurrentViewName", payload: e.target.value });
+    dispatch({ type: 'setCurrentViewName', payload: e.target.value });
   };
   const currentDateChange = (curDate: any) => {
-    dispatch({ type: "setCurrentDate", payload: curDate });
+    dispatch({ type: 'setCurrentDate', payload: curDate });
   };
 
   const endDateChange = (curDate: any) => {
-    dispatch({ type: "setEndDate", payload: curDate });
+    dispatch({ type: 'setEndDate', payload: curDate });
   };
 
   const [loadInvoices, opData]: any = useLazyQuery(getInvoices, {
-    fetchPolicy: "cache-and-network",
+    fetchPolicy: 'cache-and-network',
   });
 
   const refresQuery = {
@@ -169,7 +169,7 @@ export default function Invoices({
   };
 
   const setSortDispatch = (value: any) => {
-    dispatch({ type: "setSort", payload: value });
+    dispatch({ type: 'setSort', payload: value });
   };
 
   return (
@@ -211,7 +211,7 @@ export default function Invoices({
           <VirtualTable
             height={window.innerHeight - 181}
             messages={{
-              noData: isRTL ? "لا يوجد بيانات" : "no data",
+              noData: isRTL ? 'لا يوجد بيانات' : 'no data',
             }}
             estimatedRowHeight={40}
             tableComponent={TableComponent}
@@ -219,19 +219,19 @@ export default function Invoices({
           <TableHeaderRow showSortingControls />
 
           <DataTypeProvider
-            for={["time"]}
+            for={['time']}
             formatterComponent={timeFormatter}
           ></DataTypeProvider>
           <DataTypeProvider
-            for={["amount"]}
+            for={['amount']}
             formatterComponent={amountFormatter}
           ></DataTypeProvider>
           <DataTypeProvider
-            for={["total", "discount"]}
+            for={['total', 'discount']}
             formatterComponent={currencyFormatter}
           ></DataTypeProvider>
           <DataTypeProvider
-            for={["taskId"]}
+            for={['taskId']}
             formatterComponent={(props: any) =>
               taskIdFormatter({ ...props, tasks })
             }

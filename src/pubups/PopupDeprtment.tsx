@@ -15,6 +15,7 @@ import { GlobalContext } from '../contexts';
 import { Grid, TextField } from '@material-ui/core';
 import PopupLayout from '../pages/main/PopupLayout';
 import { TextFieldLocal } from '../components';
+import { getPopupTitle } from '../constants/menu';
 
 const PopupDeprtment = ({
   open,
@@ -98,13 +99,8 @@ const PopupDeprtment = ({
   const onHandleSubmit = () => {
     handleSubmit(onSubmit)();
   };
-  const title = isRTL
-    ? isNew
-      ? 'اضافة قسم'
-      : 'تعديل بيانات قسم'
-    : isNew
-    ? 'New Department'
-    : 'Edit Department';
+  const title = getPopupTitle('department', isNew);
+
   return (
     <PopupLayout
       isRTL={isRTL}

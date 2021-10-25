@@ -3,7 +3,7 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { invoiceClasses } from '../themes';
-import { useCustomers, useLastNos } from '../hooks';
+import { useCustomers, useLastNos, useTemplate } from '../hooks';
 import { dublicateAlert, errorAlert, messageAlert } from '../Shared';
 import { GContextTypes } from '../types';
 import { GlobalContext } from '../contexts';
@@ -102,6 +102,14 @@ const PopupInvoice = ({
   const [isCash, setIsCash] = useState(false);
   const [resKind, setResKind] = useState<any>(null);
   const [emplslist, setEmplslist] = useState<any>([]);
+  const { tempwords, tempoptions } = useTemplate();
+
+  const {
+    translate: { words, isRTL },
+    store: { user },
+  }: GContextTypes = useContext(GlobalContext);
+
+  const isemployee = user?.isEmployee && user?.employeeId;
 
   const [getItems, itemsData]: any = useLazyQuery(getOperationItems, {
     fetchPolicy: 'cache-and-network',
@@ -109,6 +117,15 @@ const PopupInvoice = ({
 
   const { lastNos, freshlastNos } = useLastNos();
   const { customers, addCustomer, editCustomer } = useCustomers();
+
+  useEffect(() => {
+    if (isemployee) {
+      const emp = employees.filter(
+        (em: any) => em._id === user.employeeId
+      )?.[0];
+      setEmplvalue(emp);
+    }
+  }, [user, employees]);
 
   useEffect(() => {
     if (employees && employees.length > 0) {
@@ -120,7 +137,7 @@ const PopupInvoice = ({
   }, [resKind, employees]);
 
   useEffect(() => {
-    if (isNew) {
+    if (isNew && !isemployee) {
       if (taskvalue) {
         if (taskvalue?.departmentId && name !== 'departmentId') {
           const dept = departments.filter(
@@ -202,10 +219,6 @@ const PopupInvoice = ({
   }, [itemsData]);
 
   const { handleSubmit, reset } = useForm({});
-  const {
-    translate: { words, isRTL },
-    store: { user },
-  }: GContextTypes = useContext(GlobalContext);
 
   const openCustomer = () => {
     setOpenCust(true);
@@ -574,7 +587,7 @@ const PopupInvoice = ({
         <Grid item xs={6}>
           <AutoFieldLocal
             name="customer"
-            title={words.customer}
+            title={tempwords.customer}
             words={words}
             options={customers}
             value={custvalue}
@@ -589,7 +602,7 @@ const PopupInvoice = ({
         <Grid item xs={4}>
           <AutoFieldLocal
             name="task"
-            title={words.task}
+            title={tempwords.task}
             words={words}
             options={tasks}
             value={taskvalue}
@@ -633,44 +646,48 @@ const PopupInvoice = ({
             />
           </Box>
         </Grid>
-        <Grid item xs={6}>
-          <Box style={{ marginRight: 10, marginTop: 0, marginBottom: 0 }}>
-            <RadioGroup
-              aria-label="Views"
-              name="views"
-              row
-              value={resKind}
-              onChange={(e: any) => {
-                setResKind(Number(e.target.value));
-                setEmplvalue(null);
-              }}
-            >
-              <FormControlLabel
-                value={1}
-                control={
-                  <Radio style={{ padding: 0, margin: 0 }} color="primary" />
-                }
-                label={isRTL ? 'الموظف' : 'Employee'}
-              />
+        {!isemployee && !tempoptions?.noRes && (
+          <Grid item xs={6}>
+            <Box style={{ marginRight: 10, marginTop: 0, marginBottom: 0 }}>
+              <RadioGroup
+                aria-label="Views"
+                name="views"
+                row
+                value={resKind}
+                onChange={(e: any) => {
+                  setResKind(Number(e.target.value));
+                  setEmplvalue(null);
+                }}
+              >
+                <FormControlLabel
+                  value={1}
+                  control={
+                    <Radio style={{ padding: 0, margin: 0 }} color="primary" />
+                  }
+                  label={tempwords.employee}
+                />
 
-              <FormControlLabel
-                value={2}
-                control={
-                  <Radio style={{ padding: 0, margin: 0 }} color="primary" />
-                }
-                label={isRTL ? 'المورد' : 'Resourse'}
-              />
-            </RadioGroup>
-          </Box>
-        </Grid>
-        <Grid item xs={6}></Grid>
+                <FormControlLabel
+                  value={2}
+                  control={
+                    <Radio style={{ padding: 0, margin: 0 }} color="primary" />
+                  }
+                  label={tempwords.resourse}
+                />
+              </RadioGroup>
+            </Box>
+          </Grid>
+        )}
+        {!isemployee && !tempoptions?.noRes && <Grid item xs={6}></Grid>}
         <Grid item xs={6}>
           <AutoFieldLocal
             name="employee"
-            title={words.employee}
+            title={resKind === 2 ? tempwords.resourse : tempwords.employee}
             words={words}
-            options={emplslist}
-            disabled={!resKind || name === 'employeeId'}
+            options={!tempoptions?.noRes ? emplslist : employees}
+            disabled={
+              (!resKind && !tempoptions?.noRes) || name === 'employeeId'
+            }
             value={emplvalue}
             setSelectValue={setEmplvalue}
             setSelectError={setEmplError}
@@ -685,7 +702,7 @@ const PopupInvoice = ({
         <Grid item xs={6}>
           <AutoFieldLocal
             name="department"
-            title={words.department}
+            title={tempwords.department}
             words={words}
             options={departments.filter((dep: any) => dep.depType === 1)}
             value={departvalue}

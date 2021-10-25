@@ -45,6 +45,7 @@ import PopupCustomer from './PopupCustomer';
 import { tafkeet } from '../common/helpers';
 import PopupMaps from './PopupMaps';
 import MyIcon from '../Shared/MyIcon';
+import { getPopupTitle } from '../constants/menu';
 
 export const indexTheList = (list: any) => {
   return list.map((item: any, index: any) => {
@@ -111,7 +112,7 @@ const PopupAppointment = ({
   const [location, setLocation] = useState(null);
 
   const { customers, addCustomer, editCustomer } = useCustomers();
-  const { tempoptions } = useTemplate();
+  const { tempwords, tempoptions } = useTemplate();
 
   const { register, handleSubmit } = useForm({});
   const {
@@ -408,20 +409,20 @@ const PopupAppointment = ({
       );
       return;
     }
-    if (new Date(startDate).getDate() !== new Date(endDate).getDate()) {
-      await messageAlert(
-        setAlrt,
-        isRTL ? 'يجب تعديل التاريخ' : 'Date should be change'
-      );
-      return;
-    }
+    // if (new Date(startDate).getDate() !== new Date(endDate).getDate()) {
+    //   await messageAlert(
+    //     setAlrt,
+    //     isRTL ? 'يجب تعديل التاريخ' : 'Date should be change'
+    //   );
+    //   return;
+    // }
 
     if (!itemsList || itemsList.length === 0) {
       await messageAlert(
         setAlrt,
         isRTL
-          ? `يجب اضافة عنصر (خدمة او منتج) واحد للفاتورة على الأقل`
-          : `You should add min one service to invoice`
+          ? `يجب اضافة عنصر (خدمة او منتج) واحد  على الأقل`
+          : `You should add min one service`
       );
       return;
     }
@@ -520,14 +521,8 @@ const PopupAppointment = ({
 
   const date = row?.startDate ? new Date(row?.startDate) : new Date();
   const day = weekdaysNNo?.[date.getDay()];
+  const title = getPopupTitle('appointment', isNew);
 
-  const title = isRTL
-    ? isNew
-      ? 'موعد جديد'
-      : 'تعديل موعد'
-    : isNew
-    ? 'New Appointment'
-    : 'Edit Appointment';
   const desabledSave = row.status === 10 || !isEditor;
   return (
     <PopupLayout
@@ -591,7 +586,7 @@ const PopupAppointment = ({
                   <Grid item xs={6}>
                     <AutoFieldLocal
                       name="customer"
-                      title={words.customer}
+                      title={tempwords.customer}
                       words={words}
                       options={customers}
                       value={custvalue}
@@ -606,7 +601,7 @@ const PopupAppointment = ({
                   <Grid item xs={6}>
                     <AutoFieldLocal
                       name="task"
-                      title={words.task}
+                      title={tempwords.task}
                       words={words}
                       options={tasks}
                       value={taskvalue}
@@ -643,7 +638,7 @@ const PopupAppointment = ({
                                 color="primary"
                               />
                             }
-                            label={isRTL ? 'الموظف' : 'Employee'}
+                            label={tempwords.employee}
                           />
 
                           <FormControlLabel
@@ -654,7 +649,7 @@ const PopupAppointment = ({
                                 color="primary"
                               />
                             }
-                            label={isRTL ? 'المورد' : 'Resourse'}
+                            label={tempwords.resourse}
                           />
                         </RadioGroup>
                       </Box>
@@ -666,7 +661,9 @@ const PopupAppointment = ({
                   <Grid item xs={6}>
                     <AutoFieldLocal
                       name="employee"
-                      title={words.employee}
+                      title={
+                        resKind === 2 ? tempwords.resourse : tempwords.employee
+                      }
                       words={words}
                       options={!tempoptions?.noRes ? emplslist : employees}
                       disabled={!resKind && !tempoptions?.noRes}
@@ -685,7 +682,7 @@ const PopupAppointment = ({
                   <Grid item xs={6}>
                     <AutoFieldLocal
                       name="department"
-                      title={words.department}
+                      title={tempwords.department}
                       words={words}
                       options={departments.filter(
                         (dep: any) => dep.depType === 1

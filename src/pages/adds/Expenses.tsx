@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import React, { useContext, useEffect, useState } from "react";
-import Paper from "@material-ui/core/Paper";
+import React, { useContext, useEffect, useState } from 'react';
+import Paper from '@material-ui/core/Paper';
 import {
   EditingState,
   SortingState,
@@ -9,7 +9,7 @@ import {
   DataTypeProvider,
   SearchState,
   IntegratedFiltering,
-} from "@devexpress/dx-react-grid";
+} from '@devexpress/dx-react-grid';
 import {
   Grid,
   TableHeaderRow,
@@ -17,10 +17,10 @@ import {
   VirtualTable,
   SearchPanel,
   Toolbar,
-} from "@devexpress/dx-react-grid-material-ui";
-import { Command, Loading, PopupEditing } from "../../Shared";
-import { getRowId } from "../../common";
-import { useLazyQuery, useMutation } from "@apollo/client";
+} from '@devexpress/dx-react-grid-material-ui';
+import { Command, Loading, PopupEditing } from '../../Shared';
+import { getRowId } from '../../common';
+import { useLazyQuery, useMutation } from '@apollo/client';
 import {
   createExpenses,
   deleteExpenses,
@@ -31,43 +31,36 @@ import {
   getLandingChartData,
   getLastNos,
   updateExpenses,
-} from "../../graphql";
+} from '../../graphql';
 import {
   accountFormatter,
   currencyFormatter,
   samllFormatter,
   taskIdFormatter,
   timeFormatter,
-} from "../../Shared/colorFormat";
-import useAccounts from "../../hooks/useAccounts";
-import PageLayout from "../main/PageLayout";
-import { SearchTable } from "../../components";
-import { ExpensesContext } from "../../contexts";
-import DateNavigatorReports from "../../components/filters/DateNavigatorReports";
-import PopupExpenses from "../../pubups/PopupExpenses";
-import useTasks from "../../hooks/useTasks";
-import getTasks from "../../graphql/query/getTasks";
+} from '../../Shared/colorFormat';
+import useAccounts from '../../hooks/useAccounts';
+import PageLayout from '../main/PageLayout';
+import { SearchTable } from '../../components';
+import { ExpensesContext } from '../../contexts';
+import DateNavigatorReports from '../../components/filters/DateNavigatorReports';
+import PopupExpenses from '../../pubups/PopupExpenses';
+import useTasks from '../../hooks/useTasks';
+import getTasks from '../../graphql/query/getTasks';
+import { getColumns } from '../../common/columns';
 
 export default function Expenses({ isRTL, words, menuitem, isEditor, theme }) {
-  const [columns] = useState([
-    { name: "time", title: words.time },
-    { name: "debitAcc", title: isRTL ? "حساب المصروف" : "Expenses Acc" },
-    { name: "creditAcc", title: isRTL ? "حساب الدفع" : "Payment Acc" },
-    {
-      name: isRTL ? "departmentNameAr" : "departmentName",
-      title: words.department,
-    },
-    {
-      name: isRTL ? "employeeNameAr" : "employeeName",
-      title: `${words.employee} / ${words.resourses}`,
-    },
-    {
-      name: "taskId",
-      title: isRTL ? "المهمة" : "Task",
-    },
-    { name: "desc", title: words.description },
+  const col = getColumns({ isRTL, words });
 
-    { name: "amount", title: words.amount },
+  const [columns] = useState([
+    { name: 'time', title: words.time },
+    { name: 'debitAcc', title: isRTL ? 'حساب المصروف' : 'Expenses Acc' },
+    { name: 'creditAcc', title: isRTL ? 'حساب الدفع' : 'Payment Acc' },
+    col.department,
+    col.employee,
+    col.taskId,
+    { name: 'desc', title: words.description },
+    { name: 'amount', title: words.amount },
   ]);
 
   const [rows, setRows] = useState([]);
@@ -83,18 +76,18 @@ export default function Expenses({ isRTL, words, menuitem, isEditor, theme }) {
   } = useContext(ExpensesContext);
 
   const currentViewNameChange = (e: any) => {
-    dispatch({ type: "setCurrentViewName", payload: e.target.value });
+    dispatch({ type: 'setCurrentViewName', payload: e.target.value });
   };
   const currentDateChange = (curDate: any) => {
-    dispatch({ type: "setCurrentDate", payload: curDate });
+    dispatch({ type: 'setCurrentDate', payload: curDate });
   };
 
   const endDateChange = (curDate: any) => {
-    dispatch({ type: "setEndDate", payload: curDate });
+    dispatch({ type: 'setEndDate', payload: curDate });
   };
 
   const [loadExpenses, expensesData]: any = useLazyQuery(getExpenses, {
-    fetchPolicy: "cache-and-network",
+    fetchPolicy: 'cache-and-network',
   });
   const { accounts } = useAccounts();
   const refresQuery = {
@@ -165,7 +158,7 @@ export default function Expenses({ isRTL, words, menuitem, isEditor, theme }) {
   };
 
   const setSortDispatch = (value: any) => {
-    dispatch({ type: "setSort", payload: value });
+    dispatch({ type: 'setSort', payload: value });
   };
   return (
     <PageLayout
@@ -203,37 +196,37 @@ export default function Expenses({ isRTL, words, menuitem, isEditor, theme }) {
           <VirtualTable
             height={window.innerHeight - 181}
             messages={{
-              noData: isRTL ? "لا يوجد بيانات" : "no data",
+              noData: isRTL ? 'لا يوجد بيانات' : 'no data',
             }}
             estimatedRowHeight={40}
           />
           <TableHeaderRow showSortingControls />
           <DataTypeProvider
-            for={["time"]}
+            for={['time']}
             formatterComponent={timeFormatter}
           ></DataTypeProvider>
           <DataTypeProvider
-            for={["amount"]}
+            for={['amount']}
             formatterComponent={currencyFormatter}
           ></DataTypeProvider>
           <DataTypeProvider
-            for={["docNo", "refNo"]}
+            for={['docNo', 'refNo']}
             formatterComponent={samllFormatter}
           ></DataTypeProvider>
           <DataTypeProvider
-            for={["creditAcc"]}
+            for={['creditAcc']}
             formatterComponent={(props) =>
               accountFormatter(props, accounts, isRTL)
             }
           ></DataTypeProvider>
           <DataTypeProvider
-            for={["taskId"]}
+            for={['taskId']}
             formatterComponent={(props: any) =>
               taskIdFormatter({ ...props, tasks })
             }
           ></DataTypeProvider>
           <DataTypeProvider
-            for={["debitAcc"]}
+            for={['debitAcc']}
             formatterComponent={(props) =>
               accountFormatter(props, accounts, isRTL)
             }

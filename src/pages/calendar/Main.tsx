@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import * as React from "react";
-import { ViewState, EditingState } from "@devexpress/dx-react-scheduler";
+import * as React from 'react';
+import { ViewState, EditingState } from '@devexpress/dx-react-scheduler';
 import {
   Scheduler,
   WeekView,
@@ -15,15 +15,15 @@ import {
   EditRecurrenceMenu,
   Resources,
   AllDayPanel,
-} from "@devexpress/dx-react-scheduler-material-ui";
-import { useContext, useEffect, useState } from "react";
-import { AppointForm } from "./common/AppointForm";
-import { getResourses } from "../../common/helpers";
-import { commitAppointmentChanges } from "../../common";
-import { RenderToolTip } from "./common/AppointTooltip";
-import { AppointmentContent } from "./common";
-import { CommandAppointment } from "../../Shared";
-import { useLazyQuery, useMutation } from "@apollo/client";
+} from '@devexpress/dx-react-scheduler-material-ui';
+import { useContext, useEffect, useState } from 'react';
+import { AppointForm } from './common/AppointForm';
+import { getResourses } from '../../common/helpers';
+import { commitAppointmentChanges } from '../../common';
+import { RenderToolTip } from './common/AppointTooltip';
+import { AppointmentContent } from './common';
+import { CommandAppointment } from '../../Shared';
+import { useLazyQuery, useMutation } from '@apollo/client';
 import {
   createEvent,
   deleteEvent,
@@ -33,26 +33,27 @@ import {
   getEvents,
   getLandingChartData,
   updateEvent,
-} from "../../graphql";
-import { Box, Grid, Hidden, useMediaQuery } from "@material-ui/core";
-import EventsCalFilter from "../../Shared/EventsCalFilter";
-import { getStartEndEventView } from "../../common/time";
-import { DateNavigator } from "../../components";
-import { CalendarContext } from "../../contexts";
-import PopupLayoutBox from "../main/PopupLayoutBox";
-import { eventStatus } from "../../constants";
-import useTasks from "../../hooks/useTasks";
-import getTasks from "../../graphql/query/getTasks";
+} from '../../graphql';
+import { Box, Grid, Hidden, useMediaQuery } from '@material-ui/core';
+import EventsCalFilter from '../../Shared/EventsCalFilter';
+import { getStartEndEventView } from '../../common/time';
+import { DateNavigator } from '../../components';
+import { CalendarContext } from '../../contexts';
+import PopupLayoutBox from '../main/PopupLayoutBox';
+import { eventStatus } from '../../constants';
+import useTasks from '../../hooks/useTasks';
+import getTasks from '../../graphql/query/getTasks';
+import { getPopupGeneralTitle } from '../../constants/menu';
 
 const Main = (props: any) => {
   const [visible, setVisible] = useState(false);
   const [start, setStart] = useState(new Date());
   const [end, setEnd] = useState(new Date());
   const [resourseData, setResourseData]: any = useState([]);
-  const [mainResourceName, setMainResourceName]: any = useState("departmentId");
+  const [mainResourceName, setMainResourceName]: any = useState('departmentId');
 
   const [rows, setRows] = useState([]);
-  const isMobile = useMediaQuery("(max-width:600px)");
+  const isMobile = useMediaQuery('(max-width:600px)');
 
   const {
     state: { currentDate, currentViewName, departvalue, emplvalue, status },
@@ -116,7 +117,7 @@ const Main = (props: any) => {
   } = props;
 
   useEffect(() => {
-    const eventsData = evnData?.data?.["getEvents"]?.data || [];
+    const eventsData = evnData?.data?.['getEvents']?.data || [];
     const events =
       eventsData.length > 0
         ? eventsData.map((ap: any) => {
@@ -165,35 +166,35 @@ const Main = (props: any) => {
 
   useEffect(() => {
     let res: any;
-    if (mainResourceName === "employeeId") {
+    if (mainResourceName === 'employeeId') {
       res = employees;
     }
-    if (mainResourceName === "status") {
+    if (mainResourceName === 'status') {
       res = eventStatus;
     }
-    if (mainResourceName === "departmentId") {
+    if (mainResourceName === 'departmentId') {
       res = departments;
     }
-    const resourses = getResourses(res, mainResourceName, "Data");
+    const resourses = getResourses(res, mainResourceName, 'Data');
     setResourseData(resourses);
   }, [mainResourceName, departments]);
 
   const setDepartvalueDispatch = (value: any) => {
-    dispatch({ type: "setDepartvalue", payload: value });
+    dispatch({ type: 'setDepartvalue', payload: value });
   };
   const setEmplvalueDispatch = (value: any) => {
-    dispatch({ type: "setEmplvalue", payload: value });
+    dispatch({ type: 'setEmplvalue', payload: value });
   };
   const setStatusDispatch = (value: any) => {
-    dispatch({ type: "setStatus", payload: value });
+    dispatch({ type: 'setStatus', payload: value });
   };
 
-  const isMonth = currentViewName === "Month";
+  const isMonth = currentViewName === 'Month';
   const currentViewNameChange = (e: any) => {
-    dispatch({ type: "setCurrentViewName", payload: e.target.value });
+    dispatch({ type: 'setCurrentViewName', payload: e.target.value });
   };
   const currentDateChange = (curDate: any) => {
-    dispatch({ type: "setCurrentDate", payload: curDate });
+    dispatch({ type: 'setCurrentDate', payload: curDate });
   };
   const commitChanges = async ({ added, changed, deleted }: any) => {
     commitAppointmentChanges({
@@ -207,14 +208,14 @@ const Main = (props: any) => {
     });
   };
 
-  const title = isRTL ? "بيانات الموعد" : "Appointment";
+  const title = getPopupGeneralTitle('appointment');
   return (
     <Box
       style={{
-        backgroundColor: "#fff",
+        backgroundColor: '#fff',
         marginTop: isMobile ? 47 : undefined,
         height: window.innerHeight - 10,
-        overflow: "auto",
+        overflow: 'auto',
       }}
     >
       <Box style={{ margin: 10 }}>
@@ -264,31 +265,31 @@ const Main = (props: any) => {
             data={rows}
             height={
               isMonth
-                ? "auto"
+                ? 'auto'
                 : isMobile
                 ? window.innerHeight
                 : window.innerHeight - 90
             }
             firstDayOfWeek={6}
-            locale={isRTL ? "ar" : "en"}
+            locale={isRTL ? 'ar' : 'en'}
           >
             {!isMonth && <EditingState onCommitChanges={commitChanges} />}
             {!isMonth && (
               <EditRecurrenceMenu
                 messages={{
-                  current: isRTL ? "الموعد الحالي فقط" : "This appointment",
+                  current: isRTL ? 'الموعد الحالي فقط' : 'This appointment',
                   currentAndFollowing: isRTL
-                    ? "الموعد الحالي والمواعيد اللاحقة"
-                    : "This and following appointments",
-                  all: isRTL ? "كل المواعيد" : "All appointments",
+                    ? 'الموعد الحالي والمواعيد اللاحقة'
+                    : 'This and following appointments',
+                  all: isRTL ? 'كل المواعيد' : 'All appointments',
                   menuEditingTitle: isRTL
-                    ? "تعديل موعد متكرر"
-                    : "Edit recurring appointment",
+                    ? 'تعديل موعد متكرر'
+                    : 'Edit recurring appointment',
                   menuDeletingTitle: isRTL
-                    ? "حذف موعد متكرر"
-                    : "Delete recurring appointment",
-                  cancelButton: isRTL ? "الغاء" : "Cancel",
-                  commitButton: isRTL ? "تعديل" : "OK",
+                    ? 'حذف موعد متكرر'
+                    : 'Delete recurring appointment',
+                  cancelButton: isRTL ? 'الغاء' : 'Cancel',
+                  commitButton: isRTL ? 'تعديل' : 'OK',
                 }}
               />
             )}

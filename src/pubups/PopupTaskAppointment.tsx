@@ -34,11 +34,12 @@ import {
 } from '../Shared/colorFormat';
 import PopupAddMultiEvents from './PopupAddMultiEvents';
 import { getEventsList } from '../common/helpers';
-import { useCustomers } from '../hooks';
+import { useCustomers, useTemplate } from '../hooks';
 import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
 import DeleteOutlinedIcon from '@material-ui/icons/DeleteOutlined';
 import PopupAction from './PopupAction';
 import PopupCustomer from './PopupCustomer';
+import { getPopupTitle } from '../constants/menu';
 
 export const indexTheList = (list: any) => {
   return list.map((item: any, index: any) => {
@@ -90,6 +91,7 @@ const PopupTaskAppointment = ({
   const [rrule, setRrule] = useState<any>(null);
 
   const [openMulti, setOpenMulti] = useState(false);
+  const { tempwords, tempoptions } = useTemplate();
 
   const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
 
@@ -353,13 +355,7 @@ const PopupTaskAppointment = ({
   const date = row?.startDate ? new Date(row?.startDate) : new Date();
   const day = weekdaysNNo?.[date.getDay()];
 
-  const title = isRTL
-    ? isNew
-      ? 'موعد جديد'
-      : 'تعديل موعد'
-    : isNew
-    ? 'New Appointment'
-    : 'Edit Appointment';
+  const title = getPopupTitle('appointment', isNew);
 
   return (
     <PopupLayout
@@ -423,7 +419,7 @@ const PopupTaskAppointment = ({
                   <Grid item xs={12}>
                     <AutoFieldLocal
                       name="customer"
-                      title={words.customer}
+                      title={tempwords.customer}
                       words={words}
                       options={customers}
                       value={custvalue}
@@ -435,7 +431,7 @@ const PopupTaskAppointment = ({
                       fullWidth
                     ></AutoFieldLocal>
                   </Grid>
-                  {!isemployee && (
+                  {!isemployee && !tempoptions?.noRes && (
                     <Grid item xs={6}>
                       <Box
                         style={{
@@ -462,7 +458,7 @@ const PopupTaskAppointment = ({
                                 color="primary"
                               />
                             }
-                            label={isRTL ? 'الموظف' : 'Employee'}
+                            label={tempwords.employee}
                           />
 
                           <FormControlLabel
@@ -473,26 +469,30 @@ const PopupTaskAppointment = ({
                                 color="primary"
                               />
                             }
-                            label={isRTL ? 'المورد' : 'Resourse'}
+                            label={tempwords.resourse}
                           />
                         </RadioGroup>
                       </Box>
                     </Grid>
                   )}
-                  {!isemployee && <Grid item xs={6}></Grid>}
+                  {!isemployee && !tempoptions?.noRes && (
+                    <Grid item xs={6}></Grid>
+                  )}
                   <Grid item xs={6}>
                     <AutoFieldLocal
                       name="employee"
-                      title={words.employee}
+                      title={
+                        resKind === 2 ? tempwords.resourse : tempwords.employee
+                      }
                       words={words}
-                      options={emplslist}
+                      options={!tempoptions?.noRes ? emplslist : employees}
+                      disabled={(!resKind && !tempoptions?.noRes) || isemployee}
                       value={emplvalue}
                       setSelectValue={setEmplvalue}
                       setSelectError={setEmplError}
                       selectError={emplError}
                       refernce={emplRef}
                       register={register}
-                      disabled={isemployee}
                       noPlus
                       isRTL={isRTL}
                       fullWidth
@@ -503,7 +503,7 @@ const PopupTaskAppointment = ({
                   <Grid item xs={6}>
                     <AutoFieldLocal
                       name="department"
-                      title={words.department}
+                      title={tempwords.department}
                       words={words}
                       options={departments.filter(
                         (em: any) => em.depType === 1

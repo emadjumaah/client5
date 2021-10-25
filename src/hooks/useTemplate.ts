@@ -9,7 +9,7 @@ export default () => {
   const store = getStoreItem('store');
   const { lang, template } = store;
 
-  const [tempwords, setTempwords] = useState({});
+  const [tempwords, setTempwords]: any = useState({});
 
   useEffect(() => {
     const words = template?.words?.[lang];

@@ -40,6 +40,7 @@ import PopupAppointInvoice from './PopupAppointInvoice';
 import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
 import DeleteOutlinedIcon from '@material-ui/icons/DeleteOutlined';
 import PopupAction from './PopupAction';
+import { getPopupTitle } from '../constants/menu';
 
 export const indexTheList = (list: any) => {
   return list.map((item: any, index: any) => {
@@ -456,13 +457,8 @@ const PopupAppointmentTask = ({
   const date = row?.startDate ? new Date(row?.startDate) : new Date();
   const day = weekdaysNNo?.[date.getDay()];
 
-  const title = isRTL
-    ? isNew
-      ? 'موعد جديد'
-      : 'تعديل موعد'
-    : isNew
-    ? 'New Appointment'
-    : 'Edit Appointment';
+  const title = getPopupTitle('appointment', isNew);
+
   const desabledSave = row.status === 10 || !isEditor;
 
   return (

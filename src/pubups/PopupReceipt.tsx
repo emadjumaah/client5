@@ -13,7 +13,7 @@ import { Grid } from '@material-ui/core';
 import { CalenderLocal, TextFieldLocal } from '../components';
 import { getAppStartEndPeriod } from '../common/time';
 import AutoFieldLocal from '../components/fields/AutoFieldLocal';
-import { useCustomers } from '../hooks';
+import { useCustomers, useTemplate } from '../hooks';
 import { useLazyQuery } from '@apollo/client';
 import getInvoicesList from '../graphql/query/getInvoicesList';
 const PopupReceipt = ({
@@ -42,6 +42,7 @@ const PopupReceipt = ({
 
   const [invoices, setInvoices] = useState<any>([]);
   const [invoicevalue, setInvoicevalue] = useState<any>(null);
+  const { tempwords } = useTemplate();
 
   const { register, handleSubmit, errors, reset } = useForm(
     yup.depositResolver
@@ -281,7 +282,7 @@ const PopupReceipt = ({
             <Grid item xs={6}>
               <AutoFieldLocal
                 name="customer"
-                title={words.customer}
+                title={tempwords.customer}
                 words={words}
                 options={customers}
                 value={custvalue}

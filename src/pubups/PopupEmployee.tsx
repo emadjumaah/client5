@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import React, { useContext, useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
+import React, { useContext, useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
 import {
   successAlert,
   dublicateAlert,
@@ -9,17 +9,18 @@ import {
   getReturnItem,
   yup,
   ColorPicker,
-} from "../Shared";
-import { GContextTypes } from "../types";
-import { GlobalContext } from "../contexts";
-import { TextField } from "@material-ui/core";
-import DaysOffView from "../Shared/DaysOffView";
-import { weekdays } from "../constants/datatypes";
-import PopupLayout from "../pages/main/PopupLayout";
-import { Grid } from "@material-ui/core";
-import { TextFieldLocal } from "../components";
-import AutoFieldLocal from "../components/fields/AutoFieldLocal";
-import { useDepartments } from "../hooks";
+} from '../Shared';
+import { GContextTypes } from '../types';
+import { GlobalContext } from '../contexts';
+import { TextField } from '@material-ui/core';
+import DaysOffView from '../Shared/DaysOffView';
+import { weekdays } from '../constants/datatypes';
+import PopupLayout from '../pages/main/PopupLayout';
+import { Grid } from '@material-ui/core';
+import { TextFieldLocal } from '../components';
+import AutoFieldLocal from '../components/fields/AutoFieldLocal';
+import { useDepartments } from '../hooks';
+import { getPopupTitle } from '../constants/menu';
 
 const PopupEmployee = ({
   open,
@@ -35,10 +36,10 @@ const PopupEmployee = ({
   resType,
 }: any) => {
   const [saving, setSaving] = useState(false);
-  const [alrt, setAlrt] = useState({ show: false, msg: "", type: undefined });
+  const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
   const [departvalue, setDepartvalue] = useState<any>(null);
   const [depError, setDepError] = useState<any>(false);
-  const [color, setColor] = useState<any>("#000000");
+  const [color, setColor] = useState<any>('#000000');
   const [daysoff, setDaysoff] = React.useState(weekdays);
 
   const daysoffChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -103,7 +104,7 @@ const PopupEmployee = ({
     };
 
     const mutate = isNew ? addAction : editAction;
-    const mutateName = isNew ? "createEmployee" : "updateEmployee";
+    const mutateName = isNew ? 'createEmployee' : 'updateEmployee';
     apply(mutate, mutateName, variables);
   };
 
@@ -111,7 +112,7 @@ const PopupEmployee = ({
     try {
       const res = await mutate({ variables });
       const nitem = getReturnItem(res, mutateName);
-      if (setNewValue && nitem) setNewValue(nitem, "employee");
+      if (setNewValue && nitem) setNewValue(nitem, 'employee');
       setSaving(false);
       await successAlert(setAlrt, isRTL);
       closeModal();
@@ -121,7 +122,7 @@ const PopupEmployee = ({
   };
 
   const onError = async (error: any) => {
-    if (error.message.includes("duplicate")) {
+    if (error.message.includes('duplicate')) {
       await dublicateAlert(setAlrt, isRTL);
     } else {
       await errorAlert(setAlrt, isRTL);
@@ -133,7 +134,7 @@ const PopupEmployee = ({
   const resetAll = () => {
     reset();
     setDepartvalue(null);
-    setColor("#000000");
+    setColor('#000000');
     setDaysoff(weekdays);
     setSaving(false);
   };
@@ -146,13 +147,7 @@ const PopupEmployee = ({
     handleSubmit(onSubmit)();
   };
 
-  const title = isRTL
-    ? isNew
-      ? "اضافة موظف"
-      : "تعديل بيانات موظف"
-    : isNew
-    ? "New Employee"
-    : "Edit Employee";
+  const title = getPopupTitle('employee', isNew);
 
   return (
     <PopupLayout
@@ -262,7 +257,7 @@ const PopupEmployee = ({
                 value={row?.color ? row.color : color}
                 variant="outlined"
                 style={{ width: 200, backgroundColor: color }}
-                InputProps={{ style: { borderRadius: 5, color: "#fff" } }}
+                InputProps={{ style: { borderRadius: 5, color: '#fff' } }}
                 margin="dense"
               />
               <ColorPicker setColor={setColor} color={color}></ColorPicker>
