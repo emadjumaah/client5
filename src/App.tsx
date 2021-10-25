@@ -11,7 +11,7 @@ import { createThem } from './themes';
 import { ApolloClient, createHttpLink, InMemoryCache } from '@apollo/client';
 import { onError } from '@apollo/client/link/error';
 import { setContext } from '@apollo/client/link/context';
-import { isElectron } from './common';
+// import { isElectron } from './common';
 import { getStoreItem, setStoreItem } from './store';
 import { Layout } from './pages/main';
 import { initStore, storeReducer } from './store';
@@ -36,11 +36,15 @@ function App() {
   // Apollo Client
   const token = store ? store.token : null;
 
-  const uri = isElectron
-    ? 'https://jadwal-web.herokuapp.com/graphql'
-    : process?.env?.GRAPHQL_URI
-    ? process.env.GRAPHQL_URI
-    : 'http://jadwal-main:4000/graphql';
+  // const uri = isElectron
+  //   ? 'https://jadwal-web.herokuapp.com/graphql'
+  //   : process?.env?.GRAPHQL_URI
+  //   ? process.env.GRAPHQL_URI
+  //   : 'http://jadwal-main:4000/graphql';
+
+  // const uri = 'http://jadwal-main:4000/graphql'; // localserver
+  // const uri = process.env.GRAPHQL_URI; // desktop
+  const uri = process.env.GRAPHQL_URI; // webserver
 
   const httpLink = createHttpLink({
     uri,

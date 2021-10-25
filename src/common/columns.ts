@@ -3,7 +3,8 @@
 import { getStoreItem } from '../store';
 
 const store = getStoreItem('store');
-const { lang, template } = store;
+const template = store?.template;
+const lang = store?.lang;
 const tempwords = template?.words?.[lang];
 
 export const getRowId = (row: { _id: any }) => row._id;
@@ -24,19 +25,19 @@ export const getColumns = ({ isRTL, words }: any) => {
       id: 6,
       ref: 'employee',
       name: isRTL ? 'employeeNameAr' : 'employeeName',
-      title: tempwords.employee,
+      title: tempwords?.employee,
     },
     service: {
       id: 7,
       ref: 'service',
       name: isRTL ? 'itemNameAr' : 'itemName',
-      title: words.service,
+      title: words?.service,
     },
     department: {
       id: 8,
       ref: 'department',
       name: isRTL ? 'departmentNameAr' : 'departmentName',
-      title: tempwords.department,
+      title: tempwords?.department,
     },
     category: {
       id: 9,
@@ -48,7 +49,7 @@ export const getColumns = ({ isRTL, words }: any) => {
       id: 10,
       ref: 'customer',
       name: isRTL ? 'customerNameAr' : 'customerName',
-      title: tempwords.customer,
+      title: tempwords?.customer,
     },
     supplier: {
       id: 10,
@@ -108,7 +109,7 @@ export const getColumns = ({ isRTL, words }: any) => {
       id: 24,
       ref: 'taskId',
       name: 'taskId',
-      title: tempwords.task,
+      title: tempwords?.task,
     },
     id: {
       id: 25,
