@@ -459,14 +459,14 @@ export const systemsNames = {
 };
 
 export const getPopupTitle = (item: any, isNew: boolean) => {
-  const addAr = `${words[item]} جديد`;
-  const add = `Add ${words[item]}`;
-  const editAr = `تعديل ${words[item]}`;
-  const edit = `Edit ${words[item]}`;
+  const addAr = `${words?.[item]} جديد`;
+  const add = `Add ${words?.[item]}`;
+  const editAr = `تعديل ${words?.[item]}`;
+  const edit = `Edit ${words?.[item]}`;
   return isNew ? (isRTL ? addAr : add) : isRTL ? editAr : edit;
 };
 export const getPopupGeneralTitle = (item: any) => {
-  const gtitleAr = `بيانات ${words[item]}`;
-  const gtitle = `${words[item]}`;
+  const gtitleAr = `بيانات ${words?.[item]}`;
+  const gtitle = `${words?.[item]}`;
   return isRTL ? gtitleAr : gtitle;
 };

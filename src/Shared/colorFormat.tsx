@@ -74,7 +74,7 @@ export const daysoffFormatter = ({ value, isRTL }: any) => {
   }
   return <Box></Box>;
 };
-export const rolesFormatter = ({ value, row, isRTL }: any) => {
+export const rolesFormatter = ({ row, isRTL }: any) => {
   const user = row;
   if (isSuperAdmin(user)) {
     return <Box>{isRTL ? 'الأدمن' : 'Main Admin'}</Box>;

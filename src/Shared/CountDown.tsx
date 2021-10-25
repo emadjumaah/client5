@@ -7,7 +7,7 @@ const Timer = ({ time }) => {
   const [timeLeft, setTimeLeft] = useState(time);
   const [tim, settim] = useState('');
   useEffect(() => {
-    if (!timeLeft) return;
+    if (!timeLeft) return () => null;
     const intervalId = setInterval(() => {
       setTimeLeft(timeLeft - 1);
     }, 1000);
