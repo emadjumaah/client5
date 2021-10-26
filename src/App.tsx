@@ -42,10 +42,10 @@ function App() {
   //   ? process.env.GRAPHQL_URI
   //   : 'http://jadwal-main:4000/graphql';
 
-  // const uri = 'http://jadwal-main:4000/graphql'; // localserver
+  const uri = 'http://jadwal-main:4000/graphql'; // localserver
   // const uri = 'https://jadwal-prod.herokuapp.com/graphql'; // desktop test
   // const uri = 'https://jadwal-prod.herokuapp.com/graphql'; // desktop prod
-  const uri = process.env.GRAPHQL_URI; // webserver
+  // const uri = process.env.GRAPHQL_URI; // webserver
 
   const httpLink = createHttpLink({
     uri,
