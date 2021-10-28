@@ -21,6 +21,8 @@ export default gql`
     $customer: CustomerInput
     $department: DepartmentInput
     $employee: EmployeeInput
+    $project: ProjectInput
+    $resourse: ResourseInput
   ) {
     createEvent(
       branch: $branch
@@ -42,6 +44,8 @@ export default gql`
       customer: $customer
       department: $department
       employee: $employee
+      project: $project
+      resourse: $resourse
     ) {
       _id
       id
@@ -80,6 +84,11 @@ export default gql`
       employeeNameAr
       employeeColor
       employeePhone
+
+      resourseId
+      resourseName
+      resourseNameAr
+      resourseColor
 
       createdAt
       updatedAt

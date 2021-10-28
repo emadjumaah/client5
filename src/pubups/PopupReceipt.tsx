@@ -191,6 +191,19 @@ const PopupReceipt = ({
           employeeNameAr: undefined,
           employeeColor: undefined,
         };
+    const resourse = invoicevalue
+      ? {
+          resourseId: invoicevalue.resourseId,
+          resourseName: invoicevalue.resourseName,
+          resourseNameAr: invoicevalue.resourseNameAr,
+          resourseColor: invoicevalue.resourseColor,
+        }
+      : {
+          resourseId: undefined,
+          resourseName: undefined,
+          resourseNameAr: undefined,
+          resourseColor: undefined,
+        };
 
     const variables: any = {
       _id: row && row._id ? row._id : undefined, // is it new or edit
@@ -203,6 +216,7 @@ const PopupReceipt = ({
       customer,
       department,
       employee,
+      resourse,
       amount,
       desc,
       branch: user.branch,

@@ -1,4 +1,4 @@
-import { gql } from "@apollo/client";
+import { gql } from '@apollo/client';
 
 export default gql`
   mutation createExpenses(
@@ -12,6 +12,8 @@ export default gql`
     $customer: CustomerInput
     $department: DepartmentInput
     $employee: EmployeeInput
+    $project: ProjectInput
+    $resourse: ResourseInput
     $debitAcc: Int
     $creditAcc: Int
     $taskId: Int
@@ -28,6 +30,8 @@ export default gql`
       customer: $customer
       department: $department
       employee: $employee
+      project: $project
+      resourse: $resourse
       debitAcc: $debitAcc
       creditAcc: $creditAcc
       taskId: $taskId

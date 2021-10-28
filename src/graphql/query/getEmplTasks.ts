@@ -4,6 +4,8 @@ export default gql`
   query getEmplTasks(
     $departmentId: String
     $employeeId: String
+    $projectId: String
+    $resourseId: String
     $customerId: String
     $status: Int
     $start: Date
@@ -12,6 +14,8 @@ export default gql`
     getEmplTasks(
       departmentId: $departmentId
       employeeId: $employeeId
+      projectId: $projectId
+      resourseId: $resourseId
       customerId: $customerId
       status: $status
       start: $start
@@ -65,6 +69,15 @@ export default gql`
         employeeNameAr
         employeeColor
         employeePhone
+
+        projectId
+        projectName
+        projectNameAr
+        projectColor
+        resourseId
+        resourseName
+        resourseNameAr
+        resourseColor
 
         userId
         note

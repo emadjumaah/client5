@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import React, { useContext, useEffect, useState } from "react";
-import Paper from "@material-ui/core/Paper";
+import React, { useContext, useEffect, useState } from 'react';
+import Paper from '@material-ui/core/Paper';
 import {
   EditingState,
   SortingState,
@@ -9,7 +9,7 @@ import {
   DataTypeProvider,
   SearchState,
   IntegratedFiltering,
-} from "@devexpress/dx-react-grid";
+} from '@devexpress/dx-react-grid';
 import {
   Grid,
   TableHeaderRow,
@@ -17,10 +17,10 @@ import {
   VirtualTable,
   SearchPanel,
   Toolbar,
-} from "@devexpress/dx-react-grid-material-ui";
-import { Command, Loading, PopupEditing } from "../../Shared";
-import { getRowId } from "../../common";
-import { useLazyQuery, useMutation } from "@apollo/client";
+} from '@devexpress/dx-react-grid-material-ui';
+import { Command, Loading, PopupEditing } from '../../Shared';
+import { getRowId } from '../../common';
+import { useLazyQuery, useMutation } from '@apollo/client';
 import {
   createFinance,
   deleteFinance,
@@ -29,34 +29,36 @@ import {
   getEmployees,
   getLandingChartData,
   getLastNos,
+  getProjects,
+  getResourses,
   updateFinance,
-} from "../../graphql";
+} from '../../graphql';
 import {
   accountFormatter,
   currencyFormatter,
   customerAccountFormatter,
   samllFormatter,
   timeFormatter,
-} from "../../Shared/colorFormat";
-import useAccounts from "../../hooks/useAccounts";
-import PageLayout from "../main/PageLayout";
-import { SearchTable } from "../../components";
-import { ReceiptContext } from "../../contexts";
-import DateNavigatorReports from "../../components/filters/DateNavigatorReports";
-import getReceipts from "../../graphql/query/getReceipts";
-import PopupReceipt from "../../pubups/PopupReceipt";
-import useTasks from "../../hooks/useTasks";
-import getTasks from "../../graphql/query/getTasks";
+} from '../../Shared/colorFormat';
+import useAccounts from '../../hooks/useAccounts';
+import PageLayout from '../main/PageLayout';
+import { SearchTable } from '../../components';
+import { ReceiptContext } from '../../contexts';
+import DateNavigatorReports from '../../components/filters/DateNavigatorReports';
+import getReceipts from '../../graphql/query/getReceipts';
+import PopupReceipt from '../../pubups/PopupReceipt';
+import useTasks from '../../hooks/useTasks';
+import getTasks from '../../graphql/query/getTasks';
 
 export default function Receipt({ isRTL, words, menuitem, isEditor, theme }) {
   const [columns] = useState([
-    { name: "time", title: words.time },
-    { name: "creditAcc", title: words.customer },
-    { name: "debitAcc", title: isRTL ? "حساب القبض" : "Receipt Acc" },
+    { name: 'time', title: words.time },
+    { name: 'creditAcc', title: words.customer },
+    { name: 'debitAcc', title: isRTL ? 'حساب القبض' : 'Receipt Acc' },
 
-    { name: "desc", title: words.description },
-    { name: "docNo", title: words.no },
-    { name: "amount", title: words.amount },
+    { name: 'desc', title: words.description },
+    { name: 'docNo', title: words.no },
+    { name: 'amount', title: words.amount },
   ]);
 
   const [rows, setRows] = useState([]);
@@ -73,18 +75,18 @@ export default function Receipt({ isRTL, words, menuitem, isEditor, theme }) {
   } = useContext(ReceiptContext);
 
   const currentViewNameChange = (e: any) => {
-    dispatch({ type: "setCurrentViewName", payload: e.target.value });
+    dispatch({ type: 'setCurrentViewName', payload: e.target.value });
   };
   const currentDateChange = (curDate: any) => {
-    dispatch({ type: "setCurrentDate", payload: curDate });
+    dispatch({ type: 'setCurrentDate', payload: curDate });
   };
 
   const endDateChange = (curDate: any) => {
-    dispatch({ type: "setEndDate", payload: curDate });
+    dispatch({ type: 'setEndDate', payload: curDate });
   };
 
   const [loadFinances, financeData]: any = useLazyQuery(getReceipts, {
-    fetchPolicy: "cache-and-network",
+    fetchPolicy: 'cache-and-network',
   });
   const { accounts } = useAccounts();
   const refresQuery = {
@@ -110,9 +112,18 @@ export default function Receipt({ isRTL, words, menuitem, isEditor, theme }) {
       },
       {
         query: getEmployees,
+        variables: { isRTL, resType: 1 },
       },
       {
         query: getDepartments,
+        variables: { isRTL, depType: 1 },
+      },
+      {
+        query: getResourses,
+        variables: { isRTL, resType: 1 },
+      },
+      {
+        query: getProjects,
       },
     ],
   };
@@ -155,7 +166,7 @@ export default function Receipt({ isRTL, words, menuitem, isEditor, theme }) {
   };
 
   const setSortDispatch = (value: any) => {
-    dispatch({ type: "setSort", payload: value });
+    dispatch({ type: 'setSort', payload: value });
   };
 
   return (
@@ -194,31 +205,31 @@ export default function Receipt({ isRTL, words, menuitem, isEditor, theme }) {
           <VirtualTable
             height={window.innerHeight - 181}
             messages={{
-              noData: isRTL ? "لا يوجد بيانات" : "no data",
+              noData: isRTL ? 'لا يوجد بيانات' : 'no data',
             }}
             estimatedRowHeight={40}
           />
           <TableHeaderRow showSortingControls />
           <DataTypeProvider
-            for={["time"]}
+            for={['time']}
             formatterComponent={timeFormatter}
           ></DataTypeProvider>
           <DataTypeProvider
-            for={["amount"]}
+            for={['amount']}
             formatterComponent={currencyFormatter}
           ></DataTypeProvider>
           <DataTypeProvider
-            for={["docNo", "refNo"]}
+            for={['docNo', 'refNo']}
             formatterComponent={samllFormatter}
           ></DataTypeProvider>
           <DataTypeProvider
-            for={["creditAcc"]}
+            for={['creditAcc']}
             formatterComponent={(props) =>
               customerAccountFormatter(props, accounts, isRTL)
             }
           ></DataTypeProvider>
           <DataTypeProvider
-            for={["debitAcc"]}
+            for={['debitAcc']}
             formatterComponent={(props) =>
               accountFormatter(props, accounts, isRTL)
             }

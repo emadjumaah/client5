@@ -13,14 +13,15 @@ import MonthsEmpChart from '../../components/charts/MonthsEmpChart';
 import InfoBoxDark from '../../components/charts/InfoBoxDark';
 import useLandingChart from '../../hooks/useLandingChart';
 import PageLayout from './PageLayout';
-import { useDepartments, useEmployees } from '../../hooks';
 import React from 'react';
+import useEmployeesUp from '../../hooks/useEmployeesUp';
+import useDepartmentsUp from '../../hooks/useDepartmentsUp';
 
 export default function Landing(props: any) {
   const { words, isRTL, user, theme, menuitem } = props;
 
-  const { departments } = useDepartments();
-  const { employees } = useEmployees();
+  const { departments } = useDepartmentsUp();
+  const { employees } = useEmployeesUp();
 
   const {
     salesDays,
@@ -68,69 +69,67 @@ export default function Landing(props: any) {
         <Box style={{ margin: 20, marginBottom: 20 }}>
           <Grid container spacing={2}>
             <Grid item xs={12}>
-              {raseeds && salesMonthTotal && eventsMonthCount && (
-                <Grid container spacing={2}>
-                  <Grid item xs={6} md={2}>
-                    <InfoBoxDark
-                      title={isRTL ? 'الصندوق' : 'Cash'}
-                      value={moneyFormat(raseeds?.cash)}
-                      icon="cash"
-                      color={prim}
-                      salesColor={salesColor}
-                      eventColor={eventColor}
-                    ></InfoBoxDark>
-                  </Grid>
-                  <Grid item xs={6} md={2}>
-                    <InfoBoxDark
-                      title={words.card}
-                      value={moneyFormat(raseeds?.card)}
-                      icon="card"
-                      color={prim}
-                      salesColor={salesColor}
-                      eventColor={eventColor}
-                    ></InfoBoxDark>
-                  </Grid>
-                  <Grid item xs={6} md={2}>
-                    <InfoBox
-                      title={isRTL ? 'اليوم' : 'Today'}
-                      value={moneyFormat(salesTodayTotal)}
-                      icon="sales"
-                      color={salesColor}
-                      desc={isRTL ? 'مبيعات هذا اليوم' : 'Today Sales'}
-                    ></InfoBox>
-                  </Grid>
-
-                  <Grid item xs={6} md={2}>
-                    <InfoBox
-                      title={isRTL ? 'هذا الشهر' : 'This Month'}
-                      value={moneyFormat(salesMonthTotal)}
-                      icon="sales"
-                      color={salesColor}
-                      desc={isRTL ? 'مبيعات هذا الشهر' : 'This Month Sales'}
-                    ></InfoBox>
-                  </Grid>
-                  <Grid item xs={6} md={2}>
-                    <InfoBox
-                      title={isRTL ? 'اليوم' : 'Today'}
-                      value={moneyFormatSimple(eventsTodayCount)}
-                      icon="event"
-                      color={eventColor}
-                      desc={isRTL ? 'المواعيد اليوم' : 'Appointments Today'}
-                    ></InfoBox>
-                  </Grid>
-                  <Grid item xs={6} md={2}>
-                    <InfoBox
-                      title={isRTL ? 'هذا الشهر' : 'This Month'}
-                      value={moneyFormatSimple(eventsMonthCount)}
-                      icon="event"
-                      color={eventColor}
-                      desc={
-                        isRTL ? 'المواعيد هذا الشهر' : 'Appointments This month'
-                      }
-                    ></InfoBox>
-                  </Grid>
+              <Grid container spacing={2}>
+                <Grid item xs={6} md={2}>
+                  <InfoBoxDark
+                    title={isRTL ? 'الصندوق' : 'Cash'}
+                    value={moneyFormat(raseeds?.cash)}
+                    icon="cash"
+                    color={prim}
+                    salesColor={salesColor}
+                    eventColor={eventColor}
+                  ></InfoBoxDark>
                 </Grid>
-              )}
+                <Grid item xs={6} md={2}>
+                  <InfoBoxDark
+                    title={words.card}
+                    value={moneyFormat(raseeds?.card)}
+                    icon="card"
+                    color={prim}
+                    salesColor={salesColor}
+                    eventColor={eventColor}
+                  ></InfoBoxDark>
+                </Grid>
+                <Grid item xs={6} md={2}>
+                  <InfoBox
+                    title={isRTL ? 'اليوم' : 'Today'}
+                    value={moneyFormat(salesTodayTotal)}
+                    icon="sales"
+                    color={salesColor}
+                    desc={isRTL ? 'مبيعات هذا اليوم' : 'Today Sales'}
+                  ></InfoBox>
+                </Grid>
+
+                <Grid item xs={6} md={2}>
+                  <InfoBox
+                    title={isRTL ? 'هذا الشهر' : 'This Month'}
+                    value={moneyFormat(salesMonthTotal)}
+                    icon="sales"
+                    color={salesColor}
+                    desc={isRTL ? 'مبيعات هذا الشهر' : 'This Month Sales'}
+                  ></InfoBox>
+                </Grid>
+                <Grid item xs={6} md={2}>
+                  <InfoBox
+                    title={isRTL ? 'اليوم' : 'Today'}
+                    value={moneyFormatSimple(eventsTodayCount)}
+                    icon="event"
+                    color={eventColor}
+                    desc={isRTL ? 'المواعيد اليوم' : 'Appointments Today'}
+                  ></InfoBox>
+                </Grid>
+                <Grid item xs={6} md={2}>
+                  <InfoBox
+                    title={isRTL ? 'هذا الشهر' : 'This Month'}
+                    value={moneyFormatSimple(eventsMonthCount)}
+                    icon="event"
+                    color={eventColor}
+                    desc={
+                      isRTL ? 'المواعيد هذا الشهر' : 'Appointments This month'
+                    }
+                  ></InfoBox>
+                </Grid>
+              </Grid>
             </Grid>
             {todayEvents && (
               <Grid item xs={12} md={4}>
@@ -188,12 +187,12 @@ export default function Landing(props: any) {
                   data={salesMonth}
                   isRTL={isRTL}
                   color={salesColor}
+                  employee={true}
                   title={
                     isRTL
                       ? 'مبيعات هذا الشهر بحسب الموظف'
                       : 'Month Sales - Employee'
                   }
-                  employees={employees.filter((emp: any) => emp.resType === 1)}
                   prim={prim}
                   height={400}
                 ></MonthsEmpChart>
@@ -205,14 +204,12 @@ export default function Landing(props: any) {
                   data={salesMonth}
                   isRTL={isRTL}
                   color={salesColor}
+                  department={true}
                   title={
                     isRTL
                       ? 'مبيعات هذا الشهر بحسب القسم'
                       : 'Month Sales - Department'
                   }
-                  departments={departments.filter(
-                    (dep: any) => dep.depType === 1
-                  )}
                   height={400}
                   prim={prim}
                 ></MonthsEmpChart>

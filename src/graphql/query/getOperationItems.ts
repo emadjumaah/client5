@@ -1,4 +1,4 @@
-import { gql } from "@apollo/client";
+import { gql } from '@apollo/client';
 export default gql`
   query getOperationItems($opId: String) {
     getOperationItems(opId: $opId) {
@@ -50,6 +50,14 @@ export default gql`
         employeeNameAr
         employeeColor
         employeePhone
+        projectId
+        projectName
+        projectNameAr
+        projectColor
+        resourseId
+        resourseName
+        resourseNameAr
+        resourseColor
         createdAt
         updatedAt
       }

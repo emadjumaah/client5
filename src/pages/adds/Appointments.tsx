@@ -30,6 +30,8 @@ import {
   getEmployees,
   getEvents,
   getLandingChartData,
+  getProjects,
+  getResourses,
   // getReminders,
   updateEvent,
 } from '../../graphql';
@@ -60,12 +62,16 @@ import useTasks from '../../hooks/useTasks';
 import getTasks from '../../graphql/query/getTasks';
 import { Getter } from '@devexpress/dx-react-core';
 import { TableComponent } from '../../Shared/TableComponent';
-import { useCustomers, useDepartments, useEmployees } from '../../hooks';
+import { useCustomers } from '../../hooks';
 import PopupDepartmentView from '../../pubups/PopupDepartmentView';
 import PopupEmployeeView from '../../pubups/PopupEmployeeView';
 import PopupTaskView from '../../pubups/PopupTaskView';
 import PopupCustomerView from '../../pubups/PopupCustomerView';
 import React from 'react';
+import PopupResourseView from '../../pubups/PopupResourseView';
+import useResoursesUp from '../../hooks/useResoursesUp';
+import useEmployeesUp from '../../hooks/useEmployeesUp';
+import useDepartmentsUp from '../../hooks/useDepartmentsUp';
 
 export default function Appointments({
   isRTL,
@@ -88,6 +94,7 @@ export default function Appointments({
     col.docNo,
     col.taskId,
     col.employee,
+    col.resourse,
     col.department,
     col.status,
     col.done,
@@ -105,8 +112,14 @@ export default function Appointments({
   const [openTaskItem, setOpenTaskItem] = useState(false);
   const [openCustomerItem, setOpenCustomerItem] = useState(false);
   const [openEmployeeItem, setOpenEmployeeItem] = useState(false);
+  const [openResourseItem, setOpenResourseItem] = useState(false);
   const [openDepartmentItem, setOpenDepartmentItem] = useState(false);
 
+  const { tasks } = useTasks();
+  const { customers, addCustomer, editCustomer } = useCustomers();
+  const { departments, addDepartment, editDepartment } = useDepartmentsUp();
+  const { employees, addEmployee, editEmployee } = useEmployeesUp();
+  const { resourses, addResourse, editResourse } = useResoursesUp();
   const onCloseTaskItem = () => {
     setOpenTaskItem(false);
     setItem(null);
@@ -122,6 +135,11 @@ export default function Appointments({
     setItem(null);
     setName(null);
   };
+  const onCloseResourseItem = () => {
+    setOpenResourseItem(false);
+    setItem(null);
+    setName(null);
+  };
   const onCloseDepartmentItem = () => {
     setOpenDepartmentItem(false);
     setItem(null);
@@ -133,6 +151,13 @@ export default function Appointments({
     if (empl) {
       setItem(empl);
       setName('employee');
+    }
+  };
+  const setResourseItem = (data: any) => {
+    const empl = resourses.filter((em: any) => em._id === data.resourseId)?.[0];
+    if (empl) {
+      setItem(empl);
+      setName('resourse');
     }
   };
   const setDepartmentItem = (data: any) => {
@@ -151,11 +176,6 @@ export default function Appointments({
       setName('customer');
     }
   };
-
-  const { tasks } = useTasks();
-  const { customers, addCustomer, editCustomer } = useCustomers();
-  const { departments, addDepartment, editDepartment } = useDepartments();
-  const { employees, addEmployee, editEmployee } = useEmployees();
 
   const {
     state: { currentDate, currentViewName, endDate },
@@ -196,9 +216,18 @@ export default function Appointments({
       },
       {
         query: getEmployees,
+        variables: { isRTL, resType: 1 },
       },
       {
         query: getDepartments,
+        variables: { isRTL, depType: 1 },
+      },
+      {
+        query: getResourses,
+        variables: { isRTL, resType: 1 },
+      },
+      {
+        query: getProjects,
       },
     ],
   };
@@ -249,6 +278,12 @@ export default function Appointments({
     if (name === 'employee') {
       if (employees && employees.length > 0) {
         const opened = employees.filter((ts: any) => ts._id === item._id)?.[0];
+        setItem(opened);
+      }
+    }
+    if (name === 'resourse') {
+      if (resourses && resourses.length > 0) {
+        const opened = resourses.filter((ts: any) => ts._id === item._id)?.[0];
         setItem(opened);
       }
     }
@@ -420,6 +455,16 @@ export default function Appointments({
             }
           ></DataTypeProvider>
           <DataTypeProvider
+            for={['resourseNameAr', 'resourseName']}
+            formatterComponent={(props: any) =>
+              nameLinkFormat({
+                ...props,
+                setItem: setResourseItem,
+                setOpenItem: setOpenResourseItem,
+              })
+            }
+          ></DataTypeProvider>
+          <DataTypeProvider
             for={['departmentNameAr', 'departmentName']}
             formatterComponent={(props: any) =>
               nameLinkFormat({
@@ -461,6 +506,7 @@ export default function Appointments({
           <PopupEditing addAction={addEvent} editAction={editEvent}>
             <PopupAppointment
               employees={employees}
+              resourses={resourses}
               departments={departments}
               company={company}
               servicesproducts={servicesproducts}
@@ -496,9 +542,10 @@ export default function Appointments({
           editAction={editDepartment}
           theme={theme}
           isEditor={isEditor}
-          departments={departments}
           company={company}
+          departments={departments}
           employees={employees}
+          resourses={resourses}
           servicesproducts={servicesproducts}
           customers={customers}
           tasks={tasks}
@@ -512,13 +559,31 @@ export default function Appointments({
           editAction={editEmployee}
           theme={theme}
           isEditor={isEditor}
-          departments={departments}
           company={company}
+          departments={departments}
           employees={employees}
+          resourses={resourses}
           servicesproducts={servicesproducts}
           customers={customers}
           tasks={tasks}
         ></PopupEmployeeView>
+        <PopupResourseView
+          open={openResourseItem}
+          onClose={onCloseResourseItem}
+          row={item}
+          isNew={false}
+          addAction={addResourse}
+          editAction={editResourse}
+          theme={theme}
+          isEditor={isEditor}
+          company={company}
+          departments={departments}
+          employees={employees}
+          resourses={resourses}
+          servicesproducts={servicesproducts}
+          customers={customers}
+          tasks={tasks}
+        ></PopupResourseView>
         <PopupTaskView
           open={openTaskItem}
           onClose={onCloseTaskItem}
@@ -527,8 +592,9 @@ export default function Appointments({
           isNew={false}
           theme={theme}
           employees={employees}
-          departments={departments}
+          resourses={resourses}
           customers={customers}
+          departments={departments}
           addCustomer={addCustomer}
           editCustomer={editCustomer}
           company={company}
@@ -544,9 +610,10 @@ export default function Appointments({
           editAction={editCustomer}
           theme={theme}
           isEditor={isEditor}
-          departments={departments}
           company={company}
+          departments={departments}
           employees={employees}
+          resourses={resourses}
           servicesproducts={servicesproducts}
           customers={rows}
           tasks={tasks}

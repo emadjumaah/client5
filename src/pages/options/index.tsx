@@ -24,6 +24,7 @@ const Options = ({ isRTL, words, isEditor, company, editCompany }: any) => {
 
   const setLang = (lang: any) => {
     dispatch({ type: 'setLang', payload: lang });
+    window.location.reload();
   };
   const setThemeId = (themeId: any) => {
     dispatch({ type: 'setThemeId', payload: themeId });

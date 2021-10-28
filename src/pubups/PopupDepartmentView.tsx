@@ -78,6 +78,7 @@ const PopupDepartmentView = ({
   departments,
   company,
   employees,
+  resourses,
   servicesproducts,
   customers,
 }: any) => {
@@ -140,6 +141,7 @@ const PopupDepartmentView = ({
                 </TabPanel>
                 <TabPanel value={value} index={1}>
                   <EventsCustomer
+                    resourses={resourses}
                     employees={employees}
                     departments={departments}
                     customers={customers}
@@ -160,6 +162,7 @@ const PopupDepartmentView = ({
                     words={words}
                     isEditor={isEditor}
                     employees={employees}
+                    resourses={resourses}
                     departments={departments}
                     company={company}
                     servicesproducts={servicesproducts}

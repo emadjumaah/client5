@@ -1,14 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import React, { useEffect, useState } from 'react';
-import {
-  Box,
-  Fab,
-  FormControlLabel,
-  Radio,
-  RadioGroup,
-  TextField,
-} from '@material-ui/core';
+import { Box, Fab, TextField } from '@material-ui/core';
 import { useForm } from 'react-hook-form';
 import SaveOutlinedIcon from '@material-ui/icons/SaveOutlined';
 import { Autocomplete } from '@material-ui/lab';
@@ -16,8 +9,11 @@ import OptionItemData from '../Shared/OptionItemData';
 import { yup } from '../constants';
 import AutoField from '../Shared/AutoField';
 import { itemClasses } from '../themes/classes';
-import { useDepartments, useEmployees, useServices } from '../hooks';
+import { useServices, useTemplate } from '../hooks';
 import { PopupDialog } from '../Shared';
+import useDepartmentsDown from '../hooks/useDepartmentsDown';
+import useEmployeesDown from '../hooks/useEmployeesDown';
+import useResoursesDown from '../hooks/useResoursesDown';
 
 export const indexTheList = (list: any) => {
   return list.map((item: any, index: any) => {
@@ -48,8 +44,9 @@ const PopupItem = ({
   const [emplError, setEmplError] = useState<any>(false);
   const emplRef: any = React.useRef();
 
-  const [resType, setResType] = useState<any>(null);
-  const [emplslist, setEmplslist] = useState<any>([]);
+  const [resovalue, setResovalue] = useState<any>(null);
+  const [resoError, setResoError] = useState<any>(false);
+  const resoRef: any = React.useRef();
 
   const [departvalue, setDepartvalue] = useState<any>(null);
   const [depError, setDepError] = useState<any>(false);
@@ -57,9 +54,11 @@ const PopupItem = ({
 
   const { register, handleSubmit, errors } = useForm(yup.invItemResolver);
 
-  const { departments } = useDepartments();
+  const { departments } = useDepartmentsDown();
   const { services } = useServices();
-  const { employees } = useEmployees();
+  const { employees } = useEmployeesDown();
+  const { resourses } = useResoursesDown();
+  const { tempoptions, tempwords } = useTemplate();
 
   const itemRef: any = React.useRef();
 
@@ -70,6 +69,8 @@ const PopupItem = ({
       const servId = row._id;
       const depId = row.departmentId;
       const empId = row.employeeId;
+      const resId = row.resourseId;
+
       if (depId) {
         const depart = departments.filter((dep: any) => dep._id === depId)[0];
         setDepartvalue(depart);
@@ -78,18 +79,17 @@ const PopupItem = ({
         const empl = employees.filter((emp: any) => emp._id === empId)[0];
         setEmplvalue(empl);
       }
+      if (resId) {
+        const empl = resourses.filter((emp: any) => emp._id === resId)[0];
+        setResovalue(empl);
+      }
       if (servId) {
         const serv = services.filter((se: any) => se._id === servId)[0];
         setItemvalue(serv);
       }
     }
   }, [open]);
-  useEffect(() => {
-    if (employees && employees.length > 0) {
-      const filtered = employees.filter((emp: any) => emp.resType === resType);
-      setEmplslist(filtered);
-    }
-  }, [resType, employees]);
+
   const resetAll = () => {
     setItemprice(0);
     setItemqty(1);
@@ -116,6 +116,19 @@ const PopupItem = ({
           employeeNameAr: undefined,
           employeeColor: undefined,
         };
+    const resourse = resovalue
+      ? {
+          resourseId: resovalue._id,
+          resourseName: resovalue.name,
+          resourseNameAr: resovalue.nameAr,
+          resourseColor: resovalue.color,
+        }
+      : {
+          resourseId: undefined,
+          resourseName: undefined,
+          resourseNameAr: undefined,
+          resourseColor: undefined,
+        };
     const department = departvalue
       ? {
           departmentId: departvalue._id,
@@ -132,6 +145,7 @@ const PopupItem = ({
     const itemdata = {
       ...itemvalue,
       ...employee,
+      ...resourse,
       ...department,
       itemqty,
       itemprice,
@@ -202,7 +216,12 @@ const PopupItem = ({
                 label={words.service}
                 error={itemError}
                 variant="outlined"
-                style={{ width: 180 }}
+                style={{
+                  width:
+                    !tempoptions?.noServEmp && !tempoptions?.noServRes
+                      ? 200
+                      : 400,
+                }}
                 inputRef={(ref) => {
                   itemRef.current = ref;
                 }}
@@ -213,71 +232,66 @@ const PopupItem = ({
             )}
           />
 
-          <AutoField
-            name="department"
-            title={words.department}
-            words={words}
-            options={departments}
-            value={departvalue}
-            setSelectValue={setDepartvalue}
-            setSelectError={setDepError}
-            selectError={depError}
-            refernce={departRef}
-            register={register}
-            width={200}
-            ms={0}
-            nolabel
-            noPlus
-            classes={classes}
-            isRTL={isRTL}
-          ></AutoField>
-
-          <Box style={{ position: 'absolute', marginTop: -80, right: 480 }}>
-            <RadioGroup
-              aria-label="Views"
-              name="views"
-              row
-              value={resType}
-              onChange={(e: any) => {
-                setResType(Number(e.target.value));
-                setEmplvalue(null);
-              }}
-            >
-              <FormControlLabel
-                value={1}
-                control={
-                  <Radio style={{ padding: 0, margin: 0 }} color="primary" />
-                }
-                label={isRTL ? 'الموظفين' : 'Employees'}
-              />
-
-              <FormControlLabel
-                value={2}
-                control={
-                  <Radio style={{ padding: 0, margin: 0 }} color="primary" />
-                }
-                label={isRTL ? 'الموارد' : 'Resourses'}
-              />
-            </RadioGroup>
-          </Box>
-          <AutoField
-            name="employee"
-            title={words.employee}
-            words={words}
-            options={emplslist}
-            value={emplvalue}
-            setSelectValue={setEmplvalue}
-            setSelectError={setEmplError}
-            selectError={emplError}
-            refernce={emplRef}
-            register={register}
-            width={150}
-            ms={0}
-            nolabel
-            noPlus
-            classes={classes}
-            isRTL={isRTL}
-          ></AutoField>
+          {!tempoptions?.noServEmp && (
+            <AutoField
+              name="employee"
+              title={tempwords.employee}
+              words={words}
+              options={employees}
+              value={emplvalue}
+              setSelectValue={setEmplvalue}
+              setSelectError={setEmplError}
+              selectError={emplError}
+              refernce={emplRef}
+              register={register}
+              width={130}
+              ms={0}
+              nolabel
+              noPlus
+              classes={classes}
+              isRTL={isRTL}
+            ></AutoField>
+          )}
+          {!tempoptions?.noServRes && (
+            <AutoField
+              name="resourse"
+              title={tempwords.resourse}
+              words={words}
+              options={resourses}
+              value={resovalue}
+              setSelectValue={setResovalue}
+              setSelectError={setResoError}
+              selectError={resoError}
+              refernce={resoRef}
+              register={register}
+              width={130}
+              ms={0}
+              nolabel
+              noPlus
+              classes={classes}
+              isRTL={isRTL}
+            ></AutoField>
+          )}
+          {!tempoptions?.noServDep && (
+            <AutoField
+              name="department"
+              title={words.department}
+              words={words}
+              options={departments}
+              value={departvalue}
+              setSelectValue={setDepartvalue}
+              setSelectError={setDepError}
+              selectError={depError}
+              refernce={departRef}
+              register={register}
+              width={130}
+              ms={0}
+              nolabel
+              noPlus
+              classes={classes}
+              isRTL={isRTL}
+            ></AutoField>
+          )}
           <TextField
             name="qty"
             onChange={(e: any) => setItemqty(Number(e.target.value))}

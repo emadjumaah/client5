@@ -1,4 +1,4 @@
-import { gql } from "@apollo/client";
+import { gql } from '@apollo/client';
 
 export default gql`
   query getTodaySales {
@@ -28,6 +28,15 @@ export default gql`
         employeeId
         employeeName
         employeeNameAr
+
+        projectId
+        projectName
+        projectNameAr
+        projectColor
+        resourseId
+        resourseName
+        resourseNameAr
+        resourseColor
 
         categoryId
         categoryName

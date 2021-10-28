@@ -1,4 +1,4 @@
-import { gql } from "@apollo/client";
+import { gql } from '@apollo/client';
 
 export default gql`
   query getGeneralFinances($start: Date, $end: Date, $search: String) {
@@ -32,6 +32,15 @@ export default gql`
         employeeNameAr
         employeeColor
         employeePhone
+
+        projectId
+        projectName
+        projectNameAr
+        projectColor
+        resourseId
+        resourseName
+        resourseNameAr
+        resourseColor
 
         refNo
         refType

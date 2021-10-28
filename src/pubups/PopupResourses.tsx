@@ -17,7 +17,8 @@ import PopupLayout from '../pages/main/PopupLayout';
 import { Grid } from '@material-ui/core';
 import { TextFieldLocal } from '../components';
 import AutoFieldLocal from '../components/fields/AutoFieldLocal';
-import { useDepartments } from '../hooks';
+import { useDepartments, useTemplate } from '../hooks';
+import { getPopupTitle } from '../constants/menu';
 
 const PopupResourses = ({
   open,
@@ -29,7 +30,6 @@ const PopupResourses = ({
   editAction,
   newtext,
   theme,
-  resKind,
   resType,
 }: any) => {
   const [saving, setSaving] = useState(false);
@@ -39,6 +39,7 @@ const PopupResourses = ({
   const [color, setColor] = useState<any>('#000000');
 
   const emplRef: any = React.useRef();
+  const { tempwords } = useTemplate();
 
   const { register, handleSubmit, errors, reset } = useForm(yup.emppResolver);
   const {
@@ -78,7 +79,6 @@ const PopupResourses = ({
       _id: row && row._id ? row._id : undefined, // is it new or edit
       name,
       nameAr,
-      resKind,
       resType,
       color,
       info,
@@ -88,7 +88,7 @@ const PopupResourses = ({
     };
 
     const mutate = isNew ? addAction : editAction;
-    const mutateName = isNew ? 'createEmployee' : 'updateEmployee';
+    const mutateName = isNew ? 'createResourse' : 'updateResourse';
     apply(mutate, mutateName, variables);
   };
 
@@ -96,7 +96,7 @@ const PopupResourses = ({
     try {
       const res = await mutate({ variables });
       const nitem = getReturnItem(res, mutateName);
-      if (setNewValue && nitem) setNewValue(nitem, 'employee');
+      if (setNewValue && nitem) setNewValue(nitem, 'resourse');
       setSaving(false);
       await successAlert(setAlrt, isRTL);
       closeModal();
@@ -130,13 +130,7 @@ const PopupResourses = ({
     handleSubmit(onSubmit)();
   };
 
-  const title = isRTL
-    ? isNew
-      ? 'اضافة مورد'
-      : 'تعديل بيانات مورد'
-    : isNew
-    ? 'New Resourse'
-    : 'Edit Resourse';
+  const title = getPopupTitle('resourse', isNew);
 
   return (
     <PopupLayout
@@ -186,7 +180,7 @@ const PopupResourses = ({
           <React.Fragment>
             <AutoFieldLocal
               name="department"
-              title={words.department}
+              title={tempwords.department}
               words={words}
               options={departments.filter(
                 (dep: any) => dep.depType === resType

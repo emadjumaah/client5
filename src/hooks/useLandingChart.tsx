@@ -3,20 +3,20 @@
 /* eslint-disable import/no-anonymous-default-export */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 
-import { useLazyQuery } from "@apollo/client";
-import _ from "lodash";
-import { useEffect } from "react";
-import { getLastDays, getLastMonths } from "../common/time";
+import { useLazyQuery } from '@apollo/client';
+import _ from 'lodash';
+import { useEffect } from 'react';
+import { getLastDays, getLastMonths } from '../common/time';
 
-import { getLandingChartData } from "../graphql";
-import { getDateFormat, getDateMonthFormat } from "../Shared/colorFormat";
-import { getStoreItem } from "../store";
-import useDepartments from "./useDepartments";
+import { getLandingChartData } from '../graphql';
+import { getDateFormat, getDateMonthFormat } from '../Shared/colorFormat';
+import { getStoreItem } from '../store';
+import useDepartments from './useDepartments';
 
 export default () => {
-  const store = getStoreItem("store");
+  const store = getStoreItem('store');
   const { lang } = store;
-  const isRTL = lang === "ar" ? true : false;
+  const isRTL = lang === 'ar' ? true : false;
 
   const [freshChartData, chartData]: any = useLazyQuery(getLandingChartData);
   const { departments } = useDepartments();
@@ -25,7 +25,7 @@ export default () => {
     freshChartData();
   }, [freshChartData]);
 
-  const data = chartData?.data?.["getLandingChartData"]?.data;
+  const data = chartData?.data?.['getLandingChartData']?.data;
 
   const refreshChartData = () => chartData?.refetch();
 
@@ -47,10 +47,10 @@ export default () => {
 
   let raseeds: any;
 
-  const fname = isRTL ? "nameAr" : "name";
-  const dfname = isRTL ? "departmentNameAr" : "departmentName";
-  const efname = isRTL ? "employeeNameAr" : "employeeName";
-  const sfname = isRTL ? "statusAr" : "statusEn";
+  const fname = isRTL ? 'nameAr' : 'name';
+  const dfname = isRTL ? 'departmentNameAr' : 'departmentName';
+  const efname = isRTL ? 'employeeNameAr' : 'employeeName';
+  const sfname = isRTL ? 'statusAr' : 'statusEn';
 
   if (data) {
     const charts = JSON.parse(data);
@@ -92,7 +92,7 @@ export default () => {
       }
     });
 
-    const daydata: any = _.groupBy(daysEvents, "date");
+    const daydata: any = _.groupBy(daysEvents, 'date');
     const dayskeys = Object.keys(daydata);
 
     const daysEvent = dayskeys.map((day: any) => {
@@ -100,17 +100,17 @@ export default () => {
         .groupBy(sfname)
         .map((array, key) => ({
           name: key,
-          count: _.sumBy(array, "count"),
-          amount: _.sumBy(array, "amount"),
+          count: _.sumBy(array, 'count'),
+          amount: _.sumBy(array, 'amount'),
         }))
-        .orderBy("count")
+        .orderBy('count')
         .value();
 
-      const spredstatus = _.mapValues(_.keyBy(status, "name"), "count");
+      const spredstatus = _.mapValues(_.keyBy(status, 'name'), 'count');
 
       const time: any = daydata[day]?.[0]?.date;
-      const total = _.sumBy(daydata[day], "amount");
-      const count = _.sumBy(daydata[day], "count");
+      const total = _.sumBy(daydata[day], 'amount');
+      const count = _.sumBy(daydata[day], 'count');
 
       const name = getDateFormat(new Date(time), isRTL);
       return {
@@ -134,7 +134,7 @@ export default () => {
         };
       }
     });
-    const nextdaysList = getLastDays(7, isRTL, "mid");
+    const nextdaysList = getLastDays(7, isRTL, 'mid');
     nextEventDays = nextdaysList.map((day: any) => {
       const is = daysEvent.filter((ds: any) => ds.name === day);
       if (is && is.length > 0) {
@@ -151,7 +151,7 @@ export default () => {
       const mdata = _.groupBy(todaySalesData, dfname);
       const todayKeys = Object.keys(mdata);
       todaySales = todayKeys.map((dep: any) => {
-        const value = _.sumBy(mdata[dep], "amount");
+        const value = _.sumBy(mdata[dep], 'amount');
         const color =
           departments && departments.length
             ? departments.filter((item: any) => item[fname] === dep)
@@ -159,43 +159,42 @@ export default () => {
         return {
           name: dep,
           value,
-          color: color ? color?.[0]?.color : "",
+          color: color ? color?.[0]?.color : '',
         };
       });
-      salesTodayTotal = _.sumBy(todaySales, "value");
+      salesTodayTotal = _.sumBy(todaySales, 'value');
     }
     if (todayEventsData) {
       eventsTodayCount = todayEventsData.length;
     }
     todayEvents = todayEventsData;
-
     if (monthsSales) {
-      const mdata = _.groupBy(monthsSales, "month");
+      const mdata = _.groupBy(monthsSales, 'month');
       const monthsKeys = Object.keys(mdata);
       const monthsSale = monthsKeys.map((month: any) => {
         const departs = _(mdata[month])
           .groupBy(dfname)
           .map((array, key) => ({
             name: key,
-            count: _.sumBy(array, "count"),
-            amount: _.sumBy(array, "amount"),
+            count: _.sumBy(array, 'count'),
+            amount: _.sumBy(array, 'amount'),
           }))
-          .orderBy("name")
+          .orderBy('name')
           .value();
 
         const employees = _(mdata[month])
           .groupBy(efname)
           .map((array, key) => ({
             name: key,
-            count: _.sumBy(array, "count"),
-            amount: _.sumBy(array, "amount"),
+            count: _.sumBy(array, 'count'),
+            amount: _.sumBy(array, 'amount'),
             color: array[0].color,
           }))
-          .orderBy("name")
+          .orderBy('name')
           .value();
         const time: any = mdata[month]?.[0]?.date;
-        const total = _.sumBy(mdata[month], "amount");
-        const count = _.sumBy(mdata[month], "count");
+        const total = _.sumBy(mdata[month], 'amount');
+        const count = _.sumBy(mdata[month], 'count');
         const name = getDateMonthFormat(time, isRTL);
         return {
           name,
@@ -225,7 +224,7 @@ export default () => {
       salesMonthTotal = salesMonth?.total;
     }
     if (monthsEvents) {
-      const mdata = _.groupBy(monthsEvents, "month");
+      const mdata = _.groupBy(monthsEvents, 'month');
       const monthsKeys = Object.keys(mdata);
 
       const monthsEvent = monthsKeys.map((month: any) => {
@@ -233,33 +232,33 @@ export default () => {
           .groupBy(dfname)
           .map((array, key) => ({
             name: key,
-            count: _.sumBy(array, "count"),
-            amount: _.sumBy(array, "amount"),
+            count: _.sumBy(array, 'count'),
+            amount: _.sumBy(array, 'amount'),
           }))
-          .orderBy("name")
+          .orderBy('name')
           .value();
 
         const employees = _(mdata[month])
           .groupBy(efname)
           .map((array, key) => ({
             name: key,
-            count: _.sumBy(array, "count"),
-            amount: _.sumBy(array, "amount"),
+            count: _.sumBy(array, 'count'),
+            amount: _.sumBy(array, 'amount'),
           }))
-          .orderBy("name")
+          .orderBy('name')
           .value();
         const status = _(mdata[month])
           .groupBy(sfname)
           .map((array, key) => ({
             name: key,
-            count: _.sumBy(array, "count"),
-            amount: _.sumBy(array, "amount"),
+            count: _.sumBy(array, 'count'),
+            amount: _.sumBy(array, 'amount'),
           }))
-          .orderBy("count")
+          .orderBy('count')
           .value();
         const time: any = mdata[month]?.[0]?.date;
-        const total = _.sumBy(mdata[month], "amount");
-        const count = _.sumBy(mdata[month], "count");
+        const total = _.sumBy(mdata[month], 'amount');
+        const count = _.sumBy(mdata[month], 'count');
         const name = getDateMonthFormat(time, isRTL);
         return {
           name,
@@ -290,7 +289,6 @@ export default () => {
       eventsMonthCount = eventsMonth.count;
     }
   }
-
   return {
     salesDays,
     eventDays,

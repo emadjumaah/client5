@@ -39,6 +39,17 @@ export const mainmenu = [
     dep: 'pos',
   },
   {
+    id: 1.2,
+    name: 'manageprojects',
+    uri: 'manageprojects',
+    titleAr: words?.projects,
+    titleEn: words?.projects,
+    icon: 'project',
+    req: 'cal',
+    dep: 'pos',
+    hide: options?.noPro,
+  },
+  {
     id: 1.5,
     name: 'tasks',
     uri: 'tasks',
@@ -47,6 +58,7 @@ export const mainmenu = [
     icon: 'work',
     req: 'cal',
     dep: 'pos',
+    hide: options?.noTsk,
   },
   {
     id: 2,
@@ -58,16 +70,7 @@ export const mainmenu = [
     req: null,
     dep: null,
   },
-  {
-    id: 3,
-    name: 'customers',
-    uri: 'customers',
-    titleAr: words?.customers,
-    titleEn: words?.customers,
-    icon: 'business',
-    req: 'pos',
-    dep: null,
-  },
+
   {
     id: 4,
     name: 'manageemployees',
@@ -89,7 +92,16 @@ export const mainmenu = [
     dep: null,
     hide: options?.noRes,
   },
-
+  {
+    id: 5.5,
+    name: 'customers',
+    uri: 'customers',
+    titleAr: words?.customers,
+    titleEn: words?.customers,
+    icon: 'business',
+    req: 'pos',
+    dep: null,
+  },
   {
     id: 6,
     name: 'finance',

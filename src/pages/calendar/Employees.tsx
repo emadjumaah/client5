@@ -1,11 +1,11 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import * as React from "react";
+import * as React from 'react';
 import {
   ViewState,
   GroupingState,
   IntegratedGrouping,
-} from "@devexpress/dx-react-scheduler";
+} from '@devexpress/dx-react-scheduler';
 import {
   Scheduler,
   Appointments,
@@ -14,13 +14,13 @@ import {
   CurrentTimeIndicator,
   Resources,
   GroupingPanel,
-} from "@devexpress/dx-react-scheduler-material-ui";
-import { useContext, useEffect, useState } from "react";
+} from '@devexpress/dx-react-scheduler-material-ui';
+import { useContext, useEffect, useState } from 'react';
 
-import { RenderToolTip } from "./common/AppointTooltip";
-import { AppointmentContent } from "./common";
-import { useLazyQuery } from "@apollo/client";
-import { getEvents } from "../../graphql";
+import { RenderToolTip } from './common/AppointTooltip';
+import { AppointmentContent } from './common';
+import { useLazyQuery } from '@apollo/client';
+import { getEvents } from '../../graphql';
 import {
   Box,
   fade,
@@ -31,14 +31,14 @@ import {
   Radio,
   RadioGroup,
   useMediaQuery,
-} from "@material-ui/core";
-import { getStartEndEventView } from "../../common/time";
-import { DateNavigator } from "../../components";
-import LoadingInline from "../../Shared/LoadingInline";
-import CalendarReportContext from "../../contexts/calendarReport";
-import RefreshOutlinedIcon from "@material-ui/icons/RefreshOutlined";
-import { getResourses } from "../../common";
-import { eventStatus } from "../../constants";
+} from '@material-ui/core';
+import { getStartEndEventView } from '../../common/time';
+import { DateNavigator } from '../../components';
+import LoadingInline from '../../Shared/LoadingInline';
+import CalendarReportContext from '../../contexts/calendarReport';
+import RefreshOutlinedIcon from '@material-ui/icons/RefreshOutlined';
+import { eventStatus } from '../../constants';
+import { getCalendarResourses } from '../../common/helpers';
 
 const EmployeesAppoints = (props: any) => {
   const [resourseData, setResourseData] = useState<any>([]);
@@ -51,7 +51,7 @@ const EmployeesAppoints = (props: any) => {
     state: { currentDate, currentViewName, mainResourceName },
     dispatch,
   } = useContext(CalendarReportContext);
-  const isMobile = useMediaQuery("(max-width:600px)");
+  const isMobile = useMediaQuery('(max-width:600px)');
 
   const [getCalEvents, evnData] = useLazyQuery(getEvents);
   const {
@@ -67,17 +67,17 @@ const EmployeesAppoints = (props: any) => {
   } = props;
 
   useEffect(() => {
-    const resourses = getResourses(
-      mainResourceName === "employeeId" ? employees : eventStatus,
+    const resourses = getCalendarResourses(
+      mainResourceName === 'employeeId' ? employees : eventStatus,
       mainResourceName,
-      "Data",
+      'Data',
       isRTL
     );
     setResourseData(resourses);
   }, [employees]);
 
   useEffect(() => {
-    const eventsData = evnData?.data?.["getEvents"]?.data || [];
+    const eventsData = evnData?.data?.['getEvents']?.data || [];
     const events =
       eventsData.length > 0
         ? eventsData.map((ap: any) => {
@@ -128,21 +128,21 @@ const EmployeesAppoints = (props: any) => {
   }, [currentDate, currentViewName]);
 
   const setMainResourceNameDispatch = (value: any) => {
-    dispatch({ type: "setMainResourceName", payload: value });
+    dispatch({ type: 'setMainResourceName', payload: value });
 
-    const resourses = getResourses(
-      value === "employeeId" ? employees : eventStatus,
+    const resourses = getCalendarResourses(
+      value === 'employeeId' ? employees : eventStatus,
       value,
-      "Data"
+      'Data'
     );
     setResourseData(resourses);
   };
 
   const currentViewNameChange = (e: any) => {
-    dispatch({ type: "setCurrentViewName", payload: e.target.value });
+    dispatch({ type: 'setCurrentViewName', payload: e.target.value });
   };
   const currentDateChange = (curDate: any) => {
-    dispatch({ type: "setCurrentDate", payload: curDate });
+    dispatch({ type: 'setCurrentDate', payload: curDate });
   };
   console.log();
 
@@ -158,7 +158,7 @@ const EmployeesAppoints = (props: any) => {
 
   return (
     <Box
-      style={{ backgroundColor: "#fff", marginTop: isMobile ? 47 : undefined }}
+      style={{ backgroundColor: '#fff', marginTop: isMobile ? 47 : undefined }}
     >
       <Grid container spacing={0}>
         <Grid item xs={12} md={4}>
@@ -185,15 +185,15 @@ const EmployeesAppoints = (props: any) => {
               onChange={(e: any) => setMainResourceNameDispatch(e.target.value)}
             >
               <FormControlLabel
-                value={"employeeId"}
+                value={'employeeId'}
                 control={<Radio color="primary" />}
-                label={isRTL ? "الموظف" : "Employee"}
+                label={isRTL ? 'الموظف' : 'Employee'}
               />
 
               <FormControlLabel
                 value="status"
                 control={<Radio color="primary" />}
-                label={isRTL ? "الحالة" : "Status"}
+                label={isRTL ? 'الحالة' : 'Status'}
               />
             </RadioGroup>
             {refresh && (
@@ -218,7 +218,7 @@ const EmployeesAppoints = (props: any) => {
         data={rows}
         height={isMobile ? window.innerHeight : window.innerHeight - 60}
         firstDayOfWeek={6}
-        locale={isRTL ? "ar" : "en"}
+        locale={isRTL ? 'ar' : 'en'}
       >
         <GroupingState grouping={grouping} />
         <ViewState

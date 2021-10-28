@@ -17,6 +17,7 @@ import { PopupTextField } from '../../Shared';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { ImageOnlineUpload, uploadPhotoOnline } from '../../common/upload';
 import Package from './Package';
+import { useTemplate } from '../../hooks';
 
 const phoneRegExp =
   /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
@@ -51,6 +52,8 @@ const Company = ({ words, editCompany, company, isRTL }) => {
       address: company?.address,
     },
   });
+
+  const { tempwords } = useTemplate();
 
   useEffect(() => {
     if (company?.logo) {
@@ -205,7 +208,13 @@ const Company = ({ words, editCompany, company, isRTL }) => {
             ></ImageOnlineUpload>
           </Grid>
           <Grid item xs={8}>
-            {company && <Package company={company} isRTL={isRTL}></Package>}
+            {company && (
+              <Package
+                tempwords={tempwords}
+                company={company}
+                isRTL={isRTL}
+              ></Package>
+            )}
           </Grid>
           <Grid item xs={12}>
             <Box

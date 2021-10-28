@@ -31,6 +31,8 @@ import {
   getCustomers,
   getDepartments,
   getEmployees,
+  getProjects,
+  getResourses,
   updateEvent,
 } from '../graphql';
 import { Command } from './Command';
@@ -72,6 +74,7 @@ export default function EventsCustomer({
   isRTL,
   words,
   isEditor,
+  resourses,
   employees,
   departments,
   customers,
@@ -114,9 +117,18 @@ export default function EventsCustomer({
       },
       {
         query: getEmployees,
+        variables: { isRTL, resType: 1 },
       },
       {
         query: getDepartments,
+        variables: { isRTL, depType: 1 },
+      },
+      {
+        query: getResourses,
+        variables: { isRTL, resType: 1 },
+      },
+      {
+        query: getProjects,
       },
     ],
   };
@@ -212,6 +224,7 @@ export default function EventsCustomer({
 
           <PopupEditing addAction={addEvent} editAction={editEvent}>
             <PopupAppointmentCustomer
+              resourses={resourses}
               employees={employees}
               departments={departments}
               customers={customers}

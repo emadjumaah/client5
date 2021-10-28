@@ -81,6 +81,7 @@ const PopupTaskView = ({
   item,
   tasks,
   isNew,
+  resourses,
   employees,
   departments,
   customers,
@@ -147,6 +148,10 @@ const PopupTaskView = ({
             employeeName,
             employeeNameAr,
             employeeColor,
+            resourseId,
+            resourseName,
+            resourseNameAr,
+            resourseColor,
           } = item;
           const serv = servlist.filter((se: any) => se._id === item.itemId)[0];
           return {
@@ -162,6 +167,10 @@ const PopupTaskView = ({
             employeeName,
             employeeNameAr,
             employeeColor,
+            resourseId,
+            resourseName,
+            resourseNameAr,
+            resourseColor,
             index,
             itemprice: item.itemPrice,
             itemqty: item.qty,
@@ -262,6 +271,7 @@ const PopupTaskView = ({
                 <Box style={{ marginBottom: 20 }}>
                   <TabPanel value={value} index={0}>
                     <EventsCustomer
+                      resourses={resourses}
                       employees={employees}
                       departments={departments}
                       customers={customers}
@@ -281,6 +291,7 @@ const PopupTaskView = ({
                       isRTL={isRTL}
                       words={words}
                       isEditor={isEditor}
+                      resourses={resourses}
                       employees={employees}
                       departments={departments}
                       company={company}
@@ -509,6 +520,7 @@ const PopupTaskView = ({
             onClose={() => setOpenEvent(false)}
             row={null}
             isNew={true}
+            resourses={resourses}
             employees={employees}
             departments={departments}
             customers={customers}
@@ -524,6 +536,7 @@ const PopupTaskView = ({
             task={row}
             customers={customers}
             services={servicesproducts}
+            resourses={resourses}
             employees={employees}
             departments={departments}
             company={company}

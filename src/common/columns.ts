@@ -39,6 +39,12 @@ export const getColumns = ({ isRTL, words }: any) => {
       name: isRTL ? 'departmentNameAr' : 'departmentName',
       title: tempwords?.department,
     },
+    resourse: {
+      id: 9,
+      ref: 'resourse',
+      name: isRTL ? 'resourseNameAr' : 'resourseName',
+      title: tempwords?.resourse,
+    },
     category: {
       id: 9,
       ref: 'category',

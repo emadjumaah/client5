@@ -4,13 +4,10 @@ import React, { useContext, useEffect, useState } from 'react';
 import {
   Box,
   Button,
-  FormControlLabel,
   IconButton,
   ListItem,
   ListItemText,
   Paper,
-  Radio,
-  RadioGroup,
   Typography,
 } from '@material-ui/core';
 import { PopupCustomer } from '../../../pubups';
@@ -54,6 +51,7 @@ export const AppointForm = (props: any) => {
     departments,
     tasks,
     employees,
+    resourses,
     theme,
     servicesproducts,
   } = props;
@@ -75,14 +73,12 @@ export const AppointForm = (props: any) => {
 
   const [taskvalue, setTaskvalue] = useState<any>(null);
   const [emplvalue, setEmplvalue] = useState<any>(null);
+  const [resovalue, setResovalue] = useState<any>(null);
 
   const [openAction, setOpenAction] = useState(false);
   const [actionslist, setActionslist] = useState([]);
   const [selected, setSelected] = useState(null);
   const [tasktitle, setTasktitle]: any = useState();
-
-  const [resKind, setResKind] = useState<any>(null);
-  const [emplslist, setEmplslist] = useState<any>([]);
 
   const { customers, addCustomer, editCustomer } = useCustomers();
   const { tempwords, tempoptions } = useTemplate();
@@ -112,15 +108,6 @@ export const AppointForm = (props: any) => {
   }, [user]);
 
   useEffect(() => {
-    if (employees && employees.length > 0) {
-      const filtered = employees.filter(
-        (emp: any) => emp.resKind === resKind && emp.resType === 1
-      );
-      setEmplslist(filtered);
-    }
-  }, [resKind, employees]);
-
-  useEffect(() => {
     const items = itemsData?.data?.['getOperationItems']?.data || [];
     const actions = actionsData?.data?.['getActions']?.data || [];
 
@@ -143,6 +130,10 @@ export const AppointForm = (props: any) => {
           employeeName,
           employeeNameAr,
           employeeColor,
+          resourseId,
+          resourseName,
+          resourseNameAr,
+          resourseColor,
         } = item;
         const serv = servlist.filter((se: any) => se._id === item.itemId)[0];
         return {
@@ -158,6 +149,10 @@ export const AppointForm = (props: any) => {
           employeeName,
           employeeNameAr,
           employeeColor,
+          resourseId,
+          resourseName,
+          resourseNameAr,
+          resourseColor,
           index,
           itemprice: item.itemPrice,
           itemqty: item.qty,
@@ -194,6 +189,12 @@ export const AppointForm = (props: any) => {
           (emp: any) => emp._id === row?.employee?._id
         )?.[0];
         setEmplvalue(empl);
+      }
+      if (row.resourse) {
+        const empl = resourses.filter(
+          (emp: any) => emp._id === row?.resourse?._id
+        )?.[0];
+        setResovalue(empl);
       }
     }
   }, []);
@@ -320,6 +321,23 @@ export const AppointForm = (props: any) => {
     onNewFieldChange(newValue, 'employee');
     setEmplvalue(newValue);
   };
+  const selectResourse = (value: any) => {
+    let newValue = value;
+    if (!value) {
+      newValue = {
+        resourseId: undefined,
+        resourseName: undefined,
+        resourseNameAr: undefined,
+        resourseColor: undefined,
+      };
+      onNewFieldChange(value, 'resourseId');
+      onNewFieldChange(value, 'resourseName');
+      onNewFieldChange(value, 'resourseNameAr');
+      onNewFieldChange(value, 'resourseColor');
+    }
+    onNewFieldChange(newValue, 'resourse');
+    setResovalue(newValue);
+  };
   const selectTask = (value: any) => {
     let newValue = value?.id;
     setTaskvalue(value);
@@ -334,6 +352,13 @@ export const AppointForm = (props: any) => {
         )?.[0];
         onNewFieldChange(empl, 'employee');
         setEmplvalue(empl);
+      }
+      if (taskvalue?.resourseId) {
+        const empl = resourses.filter(
+          (em: any) => em._id === taskvalue?.resourseId
+        )?.[0];
+        onNewFieldChange(empl, 'resourse');
+        setResovalue(empl);
       }
       if (taskvalue) {
         if (taskvalue?.departmentId) {
@@ -391,15 +416,20 @@ export const AppointForm = (props: any) => {
 
   return (
     <>
-      <Box>
-        <Typography style={{ fontWeight: 'bold' }} variant="body2">
-          {row?.docNo}
-        </Typography>
-      </Box>
       <Grid container spacing={0}>
         <Grid item xs={8}>
           <Grid container spacing={1}>
-            <Grid item xs={12} md={6}>
+            <Grid item xs={12} md={2}>
+              <Box>
+                <Typography
+                  style={{ fontWeight: 'bold', marginTop: 15 }}
+                  variant="body2"
+                >
+                  {row?.docNo}
+                </Typography>
+              </Box>
+            </Grid>
+            <Grid item xs={12} md={5}>
               <CalenderLocal
                 isRTL={isRTL}
                 label={words.start}
@@ -412,7 +442,7 @@ export const AppointForm = (props: any) => {
                 time
               ></CalenderLocal>
             </Grid>
-            <Grid item xs={12} md={6}>
+            <Grid item xs={12} md={5}>
               <CalenderLocal
                 isRTL={isRTL}
                 label={words.end}
@@ -466,66 +496,46 @@ export const AppointForm = (props: any) => {
                 fullWidth
               ></AutoFieldLocal>
             </Grid>
-            {!isemployee && !tempoptions?.noRes && (
-              <Grid item xs={6}>
-                <Box style={{ marginRight: 10, marginTop: 0, marginBottom: 0 }}>
-                  <RadioGroup
-                    aria-label="Views"
-                    name="views"
-                    row
-                    value={resKind}
-                    onChange={(e: any) => {
-                      setResKind(Number(e.target.value));
-                      setEmplvalue(null);
-                    }}
-                  >
-                    <FormControlLabel
-                      value={1}
-                      control={
-                        <Radio
-                          style={{ padding: 0, margin: 0 }}
-                          color="primary"
-                        />
-                      }
-                      label={tempwords.employee}
-                    />
 
-                    <FormControlLabel
-                      value={2}
-                      control={
-                        <Radio
-                          style={{ padding: 0, margin: 0 }}
-                          color="primary"
-                        />
-                      }
-                      label={tempwords.resourse}
-                    />
-                  </RadioGroup>
-                </Box>
+            {!tempoptions?.noEmp && (
+              <Grid item xs={4}>
+                <AutoFieldLocal
+                  name="employee"
+                  title={tempwords.employee}
+                  words={words}
+                  options={employees}
+                  disabled={isemployee}
+                  value={emplvalue}
+                  setSelectValue={selectEmployee}
+                  noPlus
+                  isRTL={isRTL}
+                  fullWidth
+                  day={day}
+                ></AutoFieldLocal>
               </Grid>
             )}
-            {!isemployee && !tempoptions?.noRes && <Grid item xs={6}></Grid>}
-            <Grid item xs={6}>
-              <AutoFieldLocal
-                name="employee"
-                title={resKind === 2 ? tempwords.resourse : tempwords.employee}
-                words={words}
-                options={!tempoptions?.noRes ? emplslist : employees}
-                disabled={!resKind && !tempoptions?.noRes}
-                value={emplvalue}
-                setSelectValue={selectEmployee}
-                noPlus
-                isRTL={isRTL}
-                fullWidth
-                day={day}
-              ></AutoFieldLocal>
-            </Grid>
-            <Grid item xs={6}>
+            {!tempoptions?.noRes && (
+              <Grid item xs={4}>
+                <AutoFieldLocal
+                  name="resourse"
+                  title={tempwords.resourse}
+                  words={words}
+                  options={resourses}
+                  value={resovalue}
+                  setSelectValue={selectResourse}
+                  noPlus
+                  isRTL={isRTL}
+                  fullWidth
+                  day={day}
+                ></AutoFieldLocal>
+              </Grid>
+            )}
+            <Grid item xs={4}>
               <AutoFieldLocal
                 name="department"
                 title={tempwords.department}
                 words={words}
-                options={departments.filter((dep: any) => dep.depType === 1)}
+                options={departments}
                 value={row.department}
                 setSelectValue={selectDepartment}
                 noPlus
@@ -535,62 +545,63 @@ export const AppointForm = (props: any) => {
             </Grid>
           </Grid>
         </Grid>
-        <Grid
-          item
-          xs={4}
-          style={{
-            backgroundColor: '#eee',
-            borderRadius: 5,
-            padding: 7,
-          }}
-        >
-          <Button
-            variant="outlined"
+        <Grid item xs={4}>
+          <Box
             style={{
-              marginBottom: 5,
-              fontSize: 14,
-              minWidth: 80,
-            }}
-            onClick={() => {
-              setSelected(null);
-              setOpenAction(true);
+              backgroundColor: '#eee',
+              borderRadius: 5,
+              padding: 7,
+              margin: 10,
             }}
           >
-            {isRTL ? 'اضافة تنبيه' : 'Add Reminder'}
-          </Button>
-          <Paper style={{ height: 150, overflow: 'auto' }}>
-            {actionslist.map((act: any) => {
-              return (
-                <ListItem>
-                  <ListItemText
-                    primary={actionTypeFormatter({ row: act })}
-                    secondary={getDateDayTimeFormat(act.sendtime, isRTL)}
-                  />
-                  <IconButton
-                    onClick={() => removeActionFromList(act)}
-                    title="Delete row"
-                    style={{ padding: 5, margin: 5 }}
-                  >
-                    <DeleteOutlinedIcon
-                      style={{ fontSize: 22, color: '#a76f9a' }}
+            <Button
+              variant="outlined"
+              style={{
+                marginBottom: 5,
+                fontSize: 14,
+                minWidth: 80,
+              }}
+              onClick={() => {
+                setSelected(null);
+                setOpenAction(true);
+              }}
+            >
+              {isRTL ? 'اضافة تنبيه' : 'Add Reminder'}
+            </Button>
+            <Paper style={{ height: 170, overflow: 'auto' }}>
+              {actionslist.map((act: any) => {
+                return (
+                  <ListItem>
+                    <ListItemText
+                      primary={actionTypeFormatter({ row: act })}
+                      secondary={getDateDayTimeFormat(act.sendtime, isRTL)}
                     />
-                  </IconButton>
-                  <IconButton
-                    style={{ padding: 5 }}
-                    onClick={() => {
-                      setSelected(act);
-                      setOpenAction(true);
-                    }}
-                    title="Edit row"
-                  >
-                    <EditOutlinedIcon
-                      style={{ fontSize: 22, color: '#729aaf' }}
-                    />
-                  </IconButton>
-                </ListItem>
-              );
-            })}
-          </Paper>
+                    <IconButton
+                      onClick={() => removeActionFromList(act)}
+                      title="Delete row"
+                      style={{ padding: 5, margin: 5 }}
+                    >
+                      <DeleteOutlinedIcon
+                        style={{ fontSize: 22, color: '#a76f9a' }}
+                      />
+                    </IconButton>
+                    <IconButton
+                      style={{ padding: 5 }}
+                      onClick={() => {
+                        setSelected(act);
+                        setOpenAction(true);
+                      }}
+                      title="Edit row"
+                    >
+                      <EditOutlinedIcon
+                        style={{ fontSize: 22, color: '#729aaf' }}
+                      />
+                    </IconButton>
+                  </ListItem>
+                );
+              })}
+            </Paper>
+          </Box>
         </Grid>
 
         <Grid item xs={12}>
@@ -610,8 +621,6 @@ export const AppointForm = (props: any) => {
                 options={servicesproducts}
                 addItem={addItemToList}
                 words={words}
-                employees={employees}
-                departments={departments}
                 classes={classes}
                 user={user}
                 isRTL={isRTL}

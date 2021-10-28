@@ -7,15 +7,7 @@ import { useCustomers, useLastNos, useTemplate } from '../hooks';
 import { dublicateAlert, errorAlert, messageAlert } from '../Shared';
 import { GContextTypes } from '../types';
 import { GlobalContext } from '../contexts';
-import {
-  Box,
-  colors,
-  FormControlLabel,
-  Radio,
-  RadioGroup,
-  TextField,
-  Typography,
-} from '@material-ui/core';
+import { Box, colors, TextField, Typography } from '@material-ui/core';
 import ServiceItemForm from '../Shared/ServiceItemForm';
 import ItemsTable from '../Shared/ItemsTable';
 import { PriceTotal } from '../Shared/TotalPrice';
@@ -53,6 +45,7 @@ const PopupInvoice = ({
   isNew,
   addAction,
   editAction,
+  resourses,
   employees,
   departments,
   servicesproducts,
@@ -89,6 +82,12 @@ const PopupInvoice = ({
   const [emplError, setEmplError] = useState<any>(false);
   const emplRef: any = React.useRef();
 
+  const [resovalue, setResovalue] = useState<any>(
+    name === 'resourseId' ? value : null
+  );
+  const [resoError, setResoError] = useState<any>(false);
+  const resoRef: any = React.useRef();
+
   const [custvalue, setCustvalue] = useState<any>(
     name === 'customerId' ? value : null
   );
@@ -100,8 +99,6 @@ const PopupInvoice = ({
   const [newtext, setNewtext] = useState('');
 
   const [isCash, setIsCash] = useState(false);
-  const [resKind, setResKind] = useState<any>(null);
-  const [emplslist, setEmplslist] = useState<any>([]);
   const { tempwords, tempoptions } = useTemplate();
 
   const {
@@ -128,15 +125,6 @@ const PopupInvoice = ({
   }, [user, employees]);
 
   useEffect(() => {
-    if (employees && employees.length > 0) {
-      const filtered = employees.filter(
-        (emp: any) => emp.resKind === resKind && emp.resType === 1
-      );
-      setEmplslist(filtered);
-    }
-  }, [resKind, employees]);
-
-  useEffect(() => {
     if (isNew && !isemployee) {
       if (taskvalue) {
         if (taskvalue?.departmentId && name !== 'departmentId') {
@@ -150,6 +138,12 @@ const PopupInvoice = ({
             (dep: any) => dep._id === taskvalue?.employeeId
           )?.[0];
           setEmplvalue(dept);
+        }
+        if (taskvalue?.resourseId && name !== 'resourseId') {
+          const dept = resourses.filter(
+            (dep: any) => dep._id === taskvalue?.resourseId
+          )?.[0];
+          setResovalue(dept);
         }
       }
     }
@@ -189,6 +183,10 @@ const PopupInvoice = ({
           employeeName,
           employeeNameAr,
           employeeColor,
+          resourseId,
+          resourseName,
+          resourseNameAr,
+          resourseColor,
         } = item;
         const serv = servlist.filter((se: any) => se._id === item.itemId)[0];
         return {
@@ -204,6 +202,10 @@ const PopupInvoice = ({
           employeeName,
           employeeNameAr,
           employeeColor,
+          resourseId,
+          resourseName,
+          resourseNameAr,
+          resourseColor,
           index,
           itemprice: item.itemPrice,
           itemqty: item.qty,
@@ -242,7 +244,7 @@ const PopupInvoice = ({
     setSelectedDate(new Date());
     setDepartvalue(null);
     setEmplvalue(null);
-    setResKind(null);
+    setResovalue(null);
   };
 
   const addItemToList = (item: any) => {
@@ -291,6 +293,12 @@ const PopupInvoice = ({
           )?.[0];
           setEmplvalue(dept);
         }
+        if (value?.resourseId) {
+          const dept = resourses.filter(
+            (dep: any) => dep._id === value?.resourseId
+          )?.[0];
+          setResovalue(dept);
+        }
         if (value?.customerId) {
           const dept = customers.filter(
             (dep: any) => dep._id === value?.customerId
@@ -317,6 +325,7 @@ const PopupInvoice = ({
 
       const depId = row.departmentId;
       const empId = row.employeeId;
+      const resId = row.resourseId;
       if (depId) {
         const depart = departments.filter((dep: any) => dep._id === depId)[0];
         setDepartvalue(depart);
@@ -324,6 +333,10 @@ const PopupInvoice = ({
       if (empId) {
         const empl = employees.filter((emp: any) => emp._id === empId)[0];
         setEmplvalue(empl);
+      }
+      if (resId) {
+        const empl = resourses.filter((emp: any) => emp._id === resId)[0];
+        setResovalue(empl);
       }
 
       if (!task && row.taskId) {
@@ -470,6 +483,19 @@ const PopupInvoice = ({
             employeeColor: undefined,
             employeePhone: undefined,
           },
+      resourse: resovalue
+        ? {
+            resourseId: resovalue._id,
+            resourseName: resovalue.name,
+            resourseNameAr: resovalue.nameAr,
+            resourseColor: resovalue.color,
+          }
+        : {
+            resourseId: undefined,
+            resourseName: undefined,
+            resourseNameAr: undefined,
+            resourseColor: undefined,
+          },
       items: JSON.stringify(itemsList),
       costAmount,
       total,
@@ -566,7 +592,7 @@ const PopupInvoice = ({
       mb={50}
       bgcolor={colors.green[500]}
     >
-      <Grid container spacing={0}>
+      <Grid container spacing={1}>
         <Grid item xs={4}>
           <CalenderLocal
             isRTL={isRTL}
@@ -646,65 +672,53 @@ const PopupInvoice = ({
             />
           </Box>
         </Grid>
-        {!isemployee && !tempoptions?.noRes && (
-          <Grid item xs={6}>
-            <Box style={{ marginRight: 10, marginTop: 0, marginBottom: 0 }}>
-              <RadioGroup
-                aria-label="Views"
-                name="views"
-                row
-                value={resKind}
-                onChange={(e: any) => {
-                  setResKind(Number(e.target.value));
-                  setEmplvalue(null);
-                }}
-              >
-                <FormControlLabel
-                  value={1}
-                  control={
-                    <Radio style={{ padding: 0, margin: 0 }} color="primary" />
-                  }
-                  label={tempwords.employee}
-                />
 
-                <FormControlLabel
-                  value={2}
-                  control={
-                    <Radio style={{ padding: 0, margin: 0 }} color="primary" />
-                  }
-                  label={tempwords.resourse}
-                />
-              </RadioGroup>
-            </Box>
+        {!tempoptions?.noEmp && (
+          <Grid item xs={3}>
+            <AutoFieldLocal
+              name="employee"
+              title={tempwords.employee}
+              words={words}
+              options={employees}
+              value={emplvalue}
+              disabled={isemployee || name === 'employeeId'}
+              setSelectValue={setEmplvalue}
+              setSelectError={setEmplError}
+              selectError={emplError}
+              refernce={emplRef}
+              noPlus
+              isRTL={isRTL}
+              fullWidth
+              day={day}
+            ></AutoFieldLocal>
           </Grid>
         )}
-        {!isemployee && !tempoptions?.noRes && <Grid item xs={6}></Grid>}
-        <Grid item xs={6}>
-          <AutoFieldLocal
-            name="employee"
-            title={resKind === 2 ? tempwords.resourse : tempwords.employee}
-            words={words}
-            options={!tempoptions?.noRes ? emplslist : employees}
-            disabled={
-              (!resKind && !tempoptions?.noRes) || name === 'employeeId'
-            }
-            value={emplvalue}
-            setSelectValue={setEmplvalue}
-            setSelectError={setEmplError}
-            selectError={emplError}
-            refernce={emplRef}
-            noPlus
-            isRTL={isRTL}
-            fullWidth
-            day={day}
-          ></AutoFieldLocal>
-        </Grid>
-        <Grid item xs={6}>
+        {!tempoptions?.noRes && (
+          <Grid item xs={3}>
+            <AutoFieldLocal
+              name="resourse"
+              title={tempwords.resourse}
+              words={words}
+              options={resourses}
+              value={resovalue}
+              disabled={name === 'resourseId'}
+              setSelectValue={setResovalue}
+              setSelectError={setResoError}
+              selectError={resoError}
+              refernce={resoRef}
+              noPlus
+              isRTL={isRTL}
+              fullWidth
+              day={day}
+            ></AutoFieldLocal>
+          </Grid>
+        )}
+        <Grid item xs={4}>
           <AutoFieldLocal
             name="department"
             title={tempwords.department}
             words={words}
-            options={departments.filter((dep: any) => dep.depType === 1)}
+            options={departments}
             value={departvalue}
             setSelectValue={setDepartvalue}
             setSelectError={setDepartError}
@@ -712,7 +726,7 @@ const PopupInvoice = ({
             refernce={departRef}
             noPlus
             isRTL={isRTL}
-            width={420}
+            fullWidth
             disabled={name === 'departmentId'}
           ></AutoFieldLocal>
         </Grid>
@@ -732,8 +746,6 @@ const PopupInvoice = ({
                 options={servicesproducts}
                 addItem={addItemToList}
                 words={words}
-                employees={employees}
-                departments={departments}
                 classes={classes}
                 user={user}
                 isRTL={isRTL}

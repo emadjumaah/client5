@@ -1,4 +1,4 @@
-import { gql } from "@apollo/client";
+import { gql } from '@apollo/client';
 
 export default gql`
   query getServices($isRTL: Boolean) {
@@ -39,6 +39,11 @@ export default gql`
         employeeNameAr
         employeeColor
         employeePhone
+
+        resourseId
+        resourseName
+        resourseNameAr
+        resourseColor
 
         userId
 

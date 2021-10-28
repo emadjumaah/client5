@@ -66,6 +66,7 @@ import PopupTaskView from '../../pubups/PopupTaskView';
 import PopupCustomerView from '../../pubups/PopupCustomerView';
 import React from 'react';
 import getEmplEvents from '../../graphql/query/getEmplEvents';
+import useResoursesUp from '../../hooks/useResoursesUp';
 
 export default function AppointmentsEmpl({
   isRTL,
@@ -157,6 +158,7 @@ export default function AppointmentsEmpl({
   const { customers, addCustomer, editCustomer } = useCustomers();
   const { departments, addDepartment, editDepartment } = useDepartments();
   const { employees, addEmployee, editEmployee } = useEmployees();
+  const { resourses } = useResoursesUp();
 
   const {
     state: { currentDate, currentViewName, endDate },
@@ -502,6 +504,7 @@ export default function AppointmentsEmpl({
           departments={departments}
           company={company}
           employees={employees}
+          resourses={resourses}
           servicesproducts={servicesproducts}
           customers={customers}
           tasks={tasks}
@@ -518,6 +521,7 @@ export default function AppointmentsEmpl({
           departments={departments}
           company={company}
           employees={employees}
+          resourses={resourses}
           servicesproducts={servicesproducts}
           customers={customers}
           tasks={tasks}
@@ -529,6 +533,7 @@ export default function AppointmentsEmpl({
           tasks={tasks}
           isNew={false}
           theme={theme}
+          resourses={resourses}
           employees={employees}
           departments={departments}
           customers={customers}
@@ -550,6 +555,7 @@ export default function AppointmentsEmpl({
           departments={departments}
           company={company}
           employees={employees}
+          resourses={resourses}
           servicesproducts={servicesproducts}
           customers={rows}
           tasks={tasks}

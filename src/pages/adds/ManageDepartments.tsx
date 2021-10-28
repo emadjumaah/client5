@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import React, { useEffect, useState } from "react";
-import Paper from "@material-ui/core/Paper";
+import React, { useEffect, useState } from 'react';
+import Paper from '@material-ui/core/Paper';
 import {
   EditingState,
   SortingState,
@@ -9,7 +9,7 @@ import {
   DataTypeProvider,
   SearchState,
   IntegratedFiltering,
-} from "@devexpress/dx-react-grid";
+} from '@devexpress/dx-react-grid';
 import {
   Grid,
   TableHeaderRow,
@@ -19,11 +19,11 @@ import {
   SearchPanel,
   TableColumnVisibility,
   ColumnChooser,
-} from "@devexpress/dx-react-grid-material-ui";
-import { Command, errorAlert, Loading, PopupEditing } from "../../Shared";
-import { useCustomers, useDepartments, useEmployees } from "../../hooks";
-import { getRowId } from "../../common";
-import { PopupDeprtment } from "../../pubups";
+} from '@devexpress/dx-react-grid-material-ui';
+import { Command, errorAlert, Loading, PopupEditing } from '../../Shared';
+import { useCustomers } from '../../hooks';
+import { getRowId } from '../../common';
+import { PopupDeprtment } from '../../pubups';
 import {
   avatarPatternFormatter,
   currencyFormatterEmpty,
@@ -31,13 +31,16 @@ import {
   incomeAmountFormatter,
   nameLinkFormat,
   progressFormatter,
-} from "../../Shared/colorFormat";
-import { AlertLocal, SearchTable } from "../../components";
-import { errorDeleteAlert } from "../../Shared/helpers";
-import PageLayout from "../main/PageLayout";
-import { getColumns } from "../../common/columns";
-import useTasks from "../../hooks/useTasks";
-import PopupDepartmentView from "../../pubups/PopupDepartmentView";
+} from '../../Shared/colorFormat';
+import { AlertLocal, SearchTable } from '../../components';
+import { errorDeleteAlert } from '../../Shared/helpers';
+import PageLayout from '../main/PageLayout';
+import { getColumns } from '../../common/columns';
+import useTasks from '../../hooks/useTasks';
+import PopupDepartmentView from '../../pubups/PopupDepartmentView';
+import useDepartmentsUp from '../../hooks/useDepartmentsUp';
+import useEmployeesUp from '../../hooks/useEmployeesUp';
+import useResoursesUp from '../../hooks/useResoursesUp';
 
 export default function ManageDepartments({
   isRTL,
@@ -49,13 +52,14 @@ export default function ManageDepartments({
   servicesproducts,
 }: any) {
   const [loading, setLoading] = useState(false);
-  const [alrt, setAlrt] = useState({ show: false, msg: "", type: undefined });
+  const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
   const [item, setItem] = useState(null);
   const [openItem, setOpenItem] = useState(false);
   const col = getColumns({ isRTL, words });
 
   const { tasks } = useTasks();
-  const { employees } = useEmployees();
+  const { employees } = useEmployeesUp();
+  const { resourses } = useResoursesUp();
   const { customers } = useCustomers();
 
   const onCloseItem = () => {
@@ -64,25 +68,25 @@ export default function ManageDepartments({
   };
 
   const [columns] = useState([
-    { name: isRTL ? "nameAr" : "name", title: words.name },
-    { name: "avatar", title: words.color },
-    { name: "desc", title: words.description },
-    { name: "amount", title: isRTL ? "الاجمالي" : "Total" },
+    { name: isRTL ? 'nameAr' : 'name', title: words.name },
+    { name: 'avatar', title: words.color },
+    { name: 'desc', title: words.description },
+    { name: 'amount', title: isRTL ? 'الاجمالي' : 'Total' },
     col.progress,
     col.totalinvoiced,
     col.totalpaid,
     {
       id: 40,
-      ref: "due",
-      name: "due",
-      title: isRTL ? "المتبقي" : "Due Payment",
+      ref: 'due',
+      name: 'due',
+      title: isRTL ? 'المتبقي' : 'Due Payment',
     },
     col.toatlExpenses,
     {
       id: 38,
-      ref: "income",
-      name: "income",
-      title: isRTL ? "صافي الايراد" : "Total Income",
+      ref: 'income',
+      name: 'income',
+      title: isRTL ? 'صافي الايراد' : 'Total Income',
     },
   ]);
 
@@ -92,7 +96,7 @@ export default function ManageDepartments({
     editDepartment,
     removeDepartment,
     refreshdepartment,
-  } = useDepartments();
+  } = useDepartmentsUp();
 
   useEffect(() => {
     if (openItem) {
@@ -111,7 +115,7 @@ export default function ManageDepartments({
       setLoading(true);
       const res = await removeDepartment({ variables: { _id } });
       if (res?.data?.deleteDepartment?.ok === false) {
-        if (res?.data?.deleteDepartment?.error.includes("related")) {
+        if (res?.data?.deleteDepartment?.error.includes('related')) {
           await errorDeleteAlert(setAlrt, isRTL);
         } else {
           await errorAlert(setAlrt, isRTL);
@@ -133,11 +137,7 @@ export default function ManageDepartments({
       <Paper>
         {loading && <Loading isRTL={isRTL}></Loading>}
 
-        <Grid
-          rows={departments.filter((em: any) => em.depType === 1)}
-          columns={columns}
-          getRowId={getRowId}
-        >
+        <Grid rows={departments} columns={columns} getRowId={getRowId}>
           <SortingState />
           <SearchState />
           <EditingState onCommitChanges={commitChanges} />
@@ -148,43 +148,43 @@ export default function ManageDepartments({
           <VirtualTable
             height={window.innerHeight - 133}
             messages={{
-              noData: isRTL ? "لا يوجد بيانات" : "no data",
+              noData: isRTL ? 'لا يوجد بيانات' : 'no data',
             }}
             estimatedRowHeight={40}
           />
 
           <TableHeaderRow showSortingControls />
           <TableColumnVisibility
-            defaultHiddenColumnNames={["avatar", "depType", "desc"]}
+            defaultHiddenColumnNames={['avatar', 'depType', 'desc']}
           />
           <DataTypeProvider
-            for={["avatar"]}
+            for={['avatar']}
             formatterComponent={avatarPatternFormatter}
           ></DataTypeProvider>
           <DataTypeProvider
-            for={["nameAr", "name"]}
+            for={['nameAr', 'name']}
             formatterComponent={(props: any) =>
               nameLinkFormat({ ...props, setItem, setOpenItem })
             }
           ></DataTypeProvider>
           <DataTypeProvider
-            for={["amount", "toatlExpenses", "totalpaid", "totalinvoiced"]}
+            for={['amount', 'toatlExpenses', 'totalpaid', 'totalinvoiced']}
             formatterComponent={currencyFormatterEmpty}
           ></DataTypeProvider>
           <DataTypeProvider
-            for={["due"]}
+            for={['due']}
             formatterComponent={dueAmountFormatter}
           ></DataTypeProvider>
           <DataTypeProvider
-            for={["avatar"]}
+            for={['avatar']}
             formatterComponent={avatarPatternFormatter}
           ></DataTypeProvider>
           <DataTypeProvider
-            for={["income"]}
+            for={['income']}
             formatterComponent={incomeAmountFormatter}
           ></DataTypeProvider>
           <DataTypeProvider
-            for={["progress"]}
+            for={['progress']}
             formatterComponent={progressFormatter}
           ></DataTypeProvider>
 
@@ -233,6 +233,7 @@ export default function ManageDepartments({
           isEditor={isEditor}
           departments={departments}
           company={company}
+          resourses={resourses}
           employees={employees}
           servicesproducts={servicesproducts}
           customers={customers}

@@ -19,7 +19,7 @@ import PopupLayout from '../pages/main/PopupLayout';
 import { Grid } from '@material-ui/core';
 import { TextFieldLocal } from '../components';
 import AutoFieldLocal from '../components/fields/AutoFieldLocal';
-import { useDepartments } from '../hooks';
+import { useDepartments, useTemplate } from '../hooks';
 import { getPopupTitle } from '../constants/menu';
 
 const PopupEmployee = ({
@@ -32,7 +32,6 @@ const PopupEmployee = ({
   editAction,
   newtext,
   theme,
-  resKind,
   resType,
 }: any) => {
   const [saving, setSaving] = useState(false);
@@ -41,6 +40,7 @@ const PopupEmployee = ({
   const [depError, setDepError] = useState<any>(false);
   const [color, setColor] = useState<any>('#000000');
   const [daysoff, setDaysoff] = React.useState(weekdays);
+  const { tempwords } = useTemplate();
 
   const daysoffChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setDaysoff({ ...daysoff, [event.target.name]: event.target.checked });
@@ -91,7 +91,6 @@ const PopupEmployee = ({
       _id: row && row._id ? row._id : undefined, // is it new or edit
       name,
       nameAr,
-      resKind,
       resType,
       email,
       color,
@@ -217,9 +216,9 @@ const PopupEmployee = ({
           />
           <AutoFieldLocal
             name="department"
-            title={words.department}
+            title={tempwords.department}
             words={words}
-            options={departments.filter((dep: any) => dep.depType === resType)}
+            options={departments}
             value={departvalue}
             setSelectValue={setDepartvalue}
             setSelectError={setDepError}

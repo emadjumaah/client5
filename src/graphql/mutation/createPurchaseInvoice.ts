@@ -1,4 +1,4 @@
-import { gql } from "@apollo/client";
+import { gql } from '@apollo/client';
 
 export default gql`
   mutation createPurchaseInvoice(
@@ -11,6 +11,8 @@ export default gql`
     $supplier: SupplierInput
     $department: DepartmentInput
     $employee: EmployeeInput
+    $project: ProjectInput
+    $resourse: ResourseInput
     $accounts: [AccountInput]
     $items: String
     $total: Float
@@ -37,6 +39,8 @@ export default gql`
       supplier: $supplier
       department: $department
       employee: $employee
+      project: $project
+      resourse: $resourse
       accounts: $accounts
       items: $items
       total: $total

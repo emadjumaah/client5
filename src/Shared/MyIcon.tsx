@@ -26,6 +26,7 @@ import Dashboard from '@material-ui/icons/Dashboard';
 import DirectionsCarIcon from '@material-ui/icons/DirectionsCar';
 import RoomIcon from '@material-ui/icons/Room';
 import CloseIcon from '@material-ui/icons/Close';
+import AccountTree from '@material-ui/icons/AccountTree';
 
 export default function MyIcon({ icon, color, size }: any) {
   const style = { color, fontSize: size ? size : undefined };
@@ -88,6 +89,8 @@ export default function MyIcon({ icon, color, size }: any) {
       return <RoomIcon style={style}></RoomIcon>;
     case 'close':
       return <CloseIcon style={style}></CloseIcon>;
+    case 'project':
+      return <AccountTree style={style}></AccountTree>;
 
     default:
       return <div></div>;

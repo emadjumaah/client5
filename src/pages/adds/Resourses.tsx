@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import React, { useState } from "react";
-import Paper from "@material-ui/core/Paper";
+import React, { useState } from 'react';
+import Paper from '@material-ui/core/Paper';
 import {
   EditingState,
   SortingState,
@@ -8,7 +8,7 @@ import {
   DataTypeProvider,
   SearchState,
   IntegratedFiltering,
-} from "@devexpress/dx-react-grid";
+} from '@devexpress/dx-react-grid';
 import {
   Grid,
   TableHeaderRow,
@@ -16,19 +16,19 @@ import {
   VirtualTable,
   Toolbar,
   SearchPanel,
-} from "@devexpress/dx-react-grid-material-ui";
-import { Command, Loading, PopupEditing } from "../../Shared";
-import { getRowId } from "../../common";
+} from '@devexpress/dx-react-grid-material-ui';
+import { Command, Loading, PopupEditing } from '../../Shared';
+import { getRowId } from '../../common';
 import {
   avatarPatternFormatter,
   colorFormatter,
-  daysoffFormatter,
-} from "../../Shared/colorFormat";
-import { AlertLocal, SearchTable } from "../../components";
-import { errorAlert, errorDeleteAlert } from "../../Shared/helpers";
-import PopupResourses from "../../pubups/PopupResourses";
-import PageLayout from "../main/PageLayout";
-import useOResoursesTech from "../../hooks/useOResoursesTech";
+} from '../../Shared/colorFormat';
+import { AlertLocal, SearchTable } from '../../components';
+import { errorAlert, errorDeleteAlert } from '../../Shared/helpers';
+import PopupResourses from '../../pubups/PopupResourses';
+import PageLayout from '../main/PageLayout';
+import { getColumns } from '../../common/columns';
+import useResoursesDown from '../../hooks/useResoursesDown';
 
 export default function Resourses({
   isRTL,
@@ -37,34 +37,33 @@ export default function Resourses({
   theme,
   menuitem,
 }: any) {
+  const col = getColumns({ isRTL, words });
+
   const [loading, setLoading] = useState(false);
-  const [alrt, setAlrt] = useState({ show: false, msg: "", type: undefined });
+  const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
 
   const [columns] = useState([
-    { name: isRTL ? "nameAr" : "name", title: words.name },
-    { name: "avatar", title: words.color },
-    {
-      name: isRTL ? "departmentNameAr" : "departmentName",
-      title: words.department,
-    },
-    { name: "info", title: words.info },
+    { name: isRTL ? 'nameAr' : 'name', title: words.name },
+    { name: 'avatar', title: words.color },
+    col.department,
+    { name: 'info', title: words.info },
   ]);
 
   const {
-    employees,
-    addEmployee,
-    editEmployee,
-    removeEmployee,
-    refreshemployee,
-  } = useOResoursesTech();
+    resourses,
+    refreshresourses,
+    addResourse,
+    editResourse,
+    removeResourse,
+  } = useResoursesDown();
 
   const commitChanges = async ({ deleted }) => {
     if (deleted) {
       const _id = deleted[0];
       setLoading(true);
-      const res = await removeEmployee({ variables: { _id } });
-      if (res?.data?.deleteEmployee?.ok === false) {
-        if (res?.data?.deleteEmployee?.error.includes("related")) {
+      const res = await removeResourse({ variables: { _id } });
+      if (res?.data?.deleteResourse?.ok === false) {
+        if (res?.data?.deleteResourse?.error.includes('related')) {
           await errorDeleteAlert(setAlrt, isRTL);
         } else {
           await errorAlert(setAlrt, isRTL);
@@ -81,11 +80,11 @@ export default function Resourses({
       words={words}
       isEditor={isEditor}
       theme={theme}
-      refresh={refreshemployee}
+      refresh={refreshresourses}
     >
       <Paper>
         {loading && <Loading isRTL={isRTL}></Loading>}
-        <Grid rows={employees} columns={columns} getRowId={getRowId}>
+        <Grid rows={resourses} columns={columns} getRowId={getRowId}>
           <SortingState />
           <SearchState />
 
@@ -97,24 +96,18 @@ export default function Resourses({
           <VirtualTable
             height={window.innerHeight - 133}
             messages={{
-              noData: isRTL ? "لا يوجد بيانات" : "no data",
+              noData: isRTL ? 'لا يوجد بيانات' : 'no data',
             }}
             estimatedRowHeight={40}
           />
           <TableHeaderRow showSortingControls />
           <DataTypeProvider
-            for={["avatar"]}
+            for={['avatar']}
             formatterComponent={avatarPatternFormatter}
           ></DataTypeProvider>
           <DataTypeProvider
-            for={["color"]}
+            for={['color']}
             formatterComponent={colorFormatter}
-          ></DataTypeProvider>
-          <DataTypeProvider
-            for={["daysoff"]}
-            formatterComponent={(props: any) =>
-              daysoffFormatter({ ...props, isRTL })
-            }
           ></DataTypeProvider>
           {isEditor && (
             <TableEditColumn
@@ -133,10 +126,10 @@ export default function Resourses({
 
           <PopupEditing
             theme={theme}
-            addAction={addEmployee}
-            editAction={editEmployee}
+            addAction={addResourse}
+            editAction={editResourse}
           >
-            <PopupResourses resKind={2} resType={2}></PopupResourses>
+            <PopupResourses resType={2}></PopupResourses>
           </PopupEditing>
         </Grid>
         {alrt.show && (

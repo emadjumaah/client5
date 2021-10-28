@@ -6,7 +6,7 @@ import Login from '../login';
 import Content from './Content';
 import EmplContent from './EmplContent';
 import useCompany from '../../hooks/useCompany';
-import LoadingInline from '../../Shared/LoadingInline';
+// import LoadingInline from '../../Shared/LoadingInline';
 
 const Layout = ({ user }: any) => {
   const { company, editCompany, refreshcompany } = useCompany();
@@ -16,15 +16,17 @@ const Layout = ({ user }: any) => {
   return (
     <Router>
       {!user && <Login></Login>}
-      {user && !company && <LoadingInline></LoadingInline>}
-      {user && company && !isEmployee && (
+      {/* {user && !company && <LoadingInline></LoadingInline>} */}
+      {/* {user && company && !isEmployee && ( */}
+      {user && !isEmployee && (
         <Content
           company={company}
           editCompany={editCompany}
           refreshcompany={refreshcompany}
         ></Content>
       )}
-      {user && company && isEmployee && (
+      {/* {user && company && isEmployee && ( */}
+      {user && isEmployee && (
         <EmplContent
           company={company}
           editCompany={editCompany}

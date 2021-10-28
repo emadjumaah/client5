@@ -5,6 +5,8 @@ export default gql`
     $categoryId: String
     $departmentId: String
     $employeeId: String
+    $projectId: String
+    $resourseId: String
     $customerId: String
     $status: Int
     $start: Date
@@ -16,6 +18,8 @@ export default gql`
       categoryId: $categoryId
       departmentId: $departmentId
       employeeId: $employeeId
+      projectId: $projectId
+      resourseId: $resourseId
       customerId: $customerId
       status: $status
       start: $start
@@ -63,6 +67,15 @@ export default gql`
         employeeNameAr
         employeeColor
         employeePhone
+
+        projectId
+        projectName
+        projectNameAr
+        projectColor
+        resourseId
+        resourseName
+        resourseNameAr
+        resourseColor
 
         refNo
         refType

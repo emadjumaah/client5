@@ -30,6 +30,8 @@ import {
   getInvoices,
   getLandingChartData,
   getLastNos,
+  getProjects,
+  getResourses,
   updateInvoice,
 } from '../../graphql';
 import { useLazyQuery, useMutation } from '@apollo/client';
@@ -47,8 +49,10 @@ import { getColumns } from '../../common/columns';
 import useTasks from '../../hooks/useTasks';
 import { TableComponent } from '../reports/SalesReport';
 import { colors } from '@material-ui/core';
-import { useDepartments, useEmployees } from '../../hooks';
 import getTasks from '../../graphql/query/getTasks';
+import useResoursesUp from '../../hooks/useResoursesUp';
+import useDepartmentsUp from '../../hooks/useDepartmentsUp';
+import useEmployeesUp from '../../hooks/useEmployeesUp';
 
 export default function Invoices({
   isRTL,
@@ -79,8 +83,9 @@ export default function Invoices({
   const [end, setEnd] = useState<any>(null);
 
   const { tasks } = useTasks();
-  const { departments } = useDepartments();
-  const { employees } = useEmployees();
+  const { departments } = useDepartmentsUp();
+  const { employees } = useEmployeesUp();
+  const { resourses } = useResoursesUp();
   const {
     state: { currentDate, currentViewName, endDate, sort },
     dispatch,
@@ -124,9 +129,18 @@ export default function Invoices({
       },
       {
         query: getEmployees,
+        variables: { isRTL, resType: 1 },
       },
       {
         query: getDepartments,
+        variables: { isRTL, depType: 1 },
+      },
+      {
+        query: getResourses,
+        variables: { isRTL, resType: 1 },
+      },
+      {
+        query: getProjects,
       },
     ],
   };
@@ -254,6 +268,7 @@ export default function Invoices({
           />
           <PopupEditing addAction={addInvoice} editAction={editInvoice}>
             <PopupInvoice
+              resourses={resourses}
               employees={employees}
               departments={departments}
               company={company}

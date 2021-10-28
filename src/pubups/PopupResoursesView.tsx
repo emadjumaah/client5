@@ -78,6 +78,7 @@ const PopupResoursesView = ({
   departments,
   company,
   employees,
+  resourses,
   servicesproducts,
   customers,
 }: any) => {
@@ -133,13 +134,14 @@ const PopupResoursesView = ({
                     words={words}
                     theme={theme}
                     company={company}
-                    name="employeeId"
+                    name="resourseId"
                     value={row}
                     id={row?._id}
                   ></TasksCustomer>
                 </TabPanel>
                 <TabPanel value={value} index={1}>
                   <EventsCustomer
+                    resourses={resourses}
                     employees={employees}
                     departments={departments}
                     customers={customers}
@@ -149,7 +151,7 @@ const PopupResoursesView = ({
                     words={words}
                     theme={theme}
                     isNew={isNew}
-                    name="employeeId"
+                    name="resourseId"
                     value={row}
                     id={row?._id}
                   ></EventsCustomer>
@@ -159,11 +161,12 @@ const PopupResoursesView = ({
                     isRTL={isRTL}
                     words={words}
                     isEditor={isEditor}
+                    resourses={resourses}
                     employees={employees}
                     departments={departments}
                     company={company}
                     servicesproducts={servicesproducts}
-                    name="employeeId"
+                    name="resourseId"
                     value={row}
                     id={row?._id}
                   ></InvoicesCustomer>
@@ -174,7 +177,7 @@ const PopupResoursesView = ({
                     words={words}
                     isEditor={isEditor}
                     theme={theme}
-                    name="employeeId"
+                    name="resourseId"
                     value={row}
                     id={row?._id}
                   ></ReceiptCustomer>
@@ -185,7 +188,7 @@ const PopupResoursesView = ({
                     words={words}
                     isEditor={isEditor}
                     theme={theme}
-                    name="employeeId"
+                    name="resourseId"
                     value={row}
                     id={row?._id}
                   ></ExpensesCustomer>

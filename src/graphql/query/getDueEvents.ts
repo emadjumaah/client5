@@ -1,4 +1,4 @@
-import { gql } from "@apollo/client";
+import { gql } from '@apollo/client';
 
 export default gql`
   query getDueEvents(
@@ -50,6 +50,15 @@ export default gql`
         employeeNameAr
         employeeColor
         employeePhone
+
+        projectId
+        projectName
+        projectNameAr
+        projectColor
+        resourseId
+        resourseName
+        resourseNameAr
+        resourseColor
 
         refNo
         refType

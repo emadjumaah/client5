@@ -26,6 +26,8 @@ import {
   getDepartments,
   getEmployees,
   getLandingChartData,
+  getProjects,
+  getResourses,
 } from '../../graphql';
 import { useLazyQuery, useMutation } from '@apollo/client';
 import {
@@ -49,12 +51,16 @@ import PopupTask from '../../pubups/PopupTask';
 import createTask from '../../graphql/mutation/createTask';
 import updateTask from '../../graphql/mutation/updateTask';
 import deleteTaskById from '../../graphql/mutation/deleteTaskById';
-import { useCustomers, useDepartments, useEmployees } from '../../hooks';
+import { useCustomers } from '../../hooks';
 import PopupGantt from '../../pubups/PopupGantt';
 import { errorAlert, errorDeleteAlert } from '../../Shared/helpers';
 import { TableComponent } from '../../Shared/TableComponent';
 import DateNavigatorReports from '../../components/filters/DateNavigatorReports';
 import PopupTaskView from '../../pubups/PopupTaskView';
+import useDepartmentsUp from '../../hooks/useDepartmentsUp';
+import useEmployeesUp from '../../hooks/useEmployeesUp';
+import useResoursesUp from '../../hooks/useResoursesUp';
+import useProjects from '../../hooks/useProjects';
 
 export const getRowId = (row: { _id: any }) => row._id;
 
@@ -109,8 +115,10 @@ export default function TasksEmpl({
 
   const [item, setItem] = useState(null);
   const [openItem, setOpenItem] = useState(false);
-  const { departments } = useDepartments();
-  const { employees } = useEmployees();
+  const { departments } = useDepartmentsUp();
+  const { employees } = useEmployeesUp();
+  const { resourses } = useResoursesUp();
+  const { projects } = useProjects();
   const onCloseItem = () => {
     setOpenItem(false);
     setItem(null);
@@ -154,9 +162,18 @@ export default function TasksEmpl({
       },
       {
         query: getEmployees,
+        variables: { isRTL, resType: 1 },
       },
       {
         query: getDepartments,
+        variables: { isRTL, depType: 1 },
+      },
+      {
+        query: getResourses,
+        variables: { isRTL, resType: 1 },
+      },
+      {
+        query: getProjects,
       },
     ],
   };
@@ -346,9 +363,11 @@ export default function TasksEmpl({
 
             <PopupEditing addAction={addTask} editAction={editTask}>
               <PopupTask
+                resourses={resourses}
                 employees={employees}
                 departments={departments}
                 customers={customers}
+                projects={projects}
                 addCustomer={addCustomer}
                 editCustomer={editCustomer}
                 company={company}
@@ -385,6 +404,7 @@ export default function TasksEmpl({
               tasks={rows}
               isNew={false}
               theme={theme}
+              resourses={resourses}
               employees={employees}
               departments={departments}
               customers={customers}

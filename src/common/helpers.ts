@@ -8,7 +8,7 @@ export const isElectron = userAgent.indexOf(' electron/') > -1;
 export const isDEV =
   !process.env.NODE_ENV || process.env.NODE_ENV === 'development';
 
-export const getResourses = (
+export const getCalendarResourses = (
   resourse: any,
   fieldName: any,
   title: any,

@@ -1,8 +1,8 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-shadow */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import React, { useEffect, useState } from "react";
-import Paper from "@material-ui/core/Paper";
+import React, { useEffect, useState } from 'react';
+import Paper from '@material-ui/core/Paper';
 import {
   EditingState,
   SortingState,
@@ -10,7 +10,7 @@ import {
   SearchState,
   IntegratedFiltering,
   DataTypeProvider,
-} from "@devexpress/dx-react-grid";
+} from '@devexpress/dx-react-grid';
 import {
   Grid,
   TableHeaderRow,
@@ -20,43 +20,46 @@ import {
   SearchPanel,
   TableColumnVisibility,
   ColumnChooser,
-} from "@devexpress/dx-react-grid-material-ui";
-import { Command, PopupEditing } from "../../Shared";
-import { getRowId } from "../../common";
-import { PopupCustomer } from "../../pubups";
-import { AlertLocal, SearchTable } from "../../components";
-import { errorAlert, errorDeleteAlert } from "../../Shared/helpers";
-import PageLayout from "../main/PageLayout";
-import { getColumns } from "../../common/columns";
+} from '@devexpress/dx-react-grid-material-ui';
+import { Command, PopupEditing } from '../../Shared';
+import { getRowId } from '../../common';
+import { PopupCustomer } from '../../pubups';
+import { AlertLocal, SearchTable } from '../../components';
+import { errorAlert, errorDeleteAlert } from '../../Shared/helpers';
+import PageLayout from '../main/PageLayout';
+import { getColumns } from '../../common/columns';
 import {
   currencyFormatterEmpty,
   dueAmountFormatter,
   incomeAmountFormatter,
   nameLinkFormat,
   progressFormatter,
-} from "../../Shared/colorFormat";
-import PopupCustomerView from "../../pubups/PopupCustomerView";
-import useTasks from "../../hooks/useTasks";
+} from '../../Shared/colorFormat';
+import PopupCustomerView from '../../pubups/PopupCustomerView';
+import useTasks from '../../hooks/useTasks';
 import {
   createCustomer,
   deleteCustomer,
   getCustomers,
   updateCustomer,
-} from "../../graphql";
-import { useLazyQuery, useMutation } from "@apollo/client";
-import { useDepartments, useEmployees } from "../../hooks";
+} from '../../graphql';
+import { useLazyQuery, useMutation } from '@apollo/client';
+import useEmployeesUp from '../../hooks/useEmployeesUp';
+import useDepartmentsUp from '../../hooks/useDepartmentsUp';
+import useResoursesUp from '../../hooks/useResoursesUp';
 
 export default function Customers(props: any) {
   const { isRTL, words, menuitem, isEditor, theme, company, servicesproducts } =
     props;
-  const [alrt, setAlrt] = useState({ show: false, msg: "", type: undefined });
+  const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
   const [rows, setRows] = useState([]);
   const [item, setItem] = useState(null);
   const [openItem, setOpenItem] = useState(false);
 
   const { tasks } = useTasks();
-  const { departments } = useDepartments();
-  const { employees } = useEmployees();
+  const { departments } = useDepartmentsUp();
+  const { employees } = useEmployeesUp();
+  const { resourses } = useResoursesUp();
   const onCloseItem = () => {
     setOpenItem(false);
     setItem(null);
@@ -64,31 +67,31 @@ export default function Customers(props: any) {
 
   const col = getColumns({ isRTL, words });
   const [columns] = useState([
-    { name: isRTL ? "nameAr" : "name", title: words.name },
-    { name: "phone", title: words.phoneNumber },
-    { name: "email", title: words.email },
-    { name: "address", title: words.address },
-    { name: "amount", title: isRTL ? "الاجمالي" : "Total" },
+    { name: isRTL ? 'nameAr' : 'name', title: words.name },
+    { name: 'phone', title: words.phoneNumber },
+    { name: 'email', title: words.email },
+    { name: 'address', title: words.address },
+    { name: 'amount', title: isRTL ? 'الاجمالي' : 'Total' },
     col.progress,
     col.totalinvoiced,
     col.totalpaid,
     {
       id: 40,
-      ref: "due",
-      name: "due",
-      title: isRTL ? "المتبقي" : "Due Payment",
+      ref: 'due',
+      name: 'due',
+      title: isRTL ? 'المتبقي' : 'Due Payment',
     },
     col.toatlExpenses,
     {
       id: 38,
-      ref: "income",
-      name: "income",
-      title: isRTL ? "صافي الايراد" : "Total Income",
+      ref: 'income',
+      name: 'income',
+      title: isRTL ? 'صافي الايراد' : 'Total Income',
     },
   ]);
 
   const [loadTasks, tasksData]: any = useLazyQuery(getCustomers, {
-    fetchPolicy: "cache-and-network",
+    fetchPolicy: 'cache-and-network',
   });
 
   const refresQuery = {
@@ -102,7 +105,7 @@ export default function Customers(props: any) {
 
   useEffect(() => {
     if (openItem) {
-      const tsks = tasksData?.data?.["getCustomers"]?.data || [];
+      const tsks = tasksData?.data?.['getCustomers']?.data || [];
       if (tsks && tsks.length > 0) {
         const opened = tsks.filter((ts: any) => ts._id === item._id)?.[0];
         setItem(opened);
@@ -123,7 +126,7 @@ export default function Customers(props: any) {
       const _id = deleted[0];
       const res = await removeCustomer({ variables: { _id } });
       if (res?.data?.deleteCustomer?.ok === false) {
-        if (res?.data?.deleteCustomer?.error.includes("related")) {
+        if (res?.data?.deleteCustomer?.error.includes('related')) {
           await errorDeleteAlert(setAlrt, isRTL);
         } else {
           await errorAlert(setAlrt, isRTL);
@@ -163,34 +166,34 @@ export default function Customers(props: any) {
           <VirtualTable
             height={window.innerHeight - 133}
             messages={{
-              noData: isRTL ? "لا يوجد بيانات" : "no data",
+              noData: isRTL ? 'لا يوجد بيانات' : 'no data',
             }}
             estimatedRowHeight={40}
           />
           <TableHeaderRow showSortingControls />
           <TableColumnVisibility
-            defaultHiddenColumnNames={["email", "address"]}
+            defaultHiddenColumnNames={['email', 'address']}
           />
           <DataTypeProvider
-            for={["nameAr", "name"]}
+            for={['nameAr', 'name']}
             formatterComponent={(props: any) =>
               nameLinkFormat({ ...props, setItem, setOpenItem })
             }
           ></DataTypeProvider>
           <DataTypeProvider
-            for={["amount", "toatlExpenses", "totalpaid", "totalinvoiced"]}
+            for={['amount', 'toatlExpenses', 'totalpaid', 'totalinvoiced']}
             formatterComponent={currencyFormatterEmpty}
           ></DataTypeProvider>
           <DataTypeProvider
-            for={["due"]}
+            for={['due']}
             formatterComponent={dueAmountFormatter}
           ></DataTypeProvider>
           <DataTypeProvider
-            for={["income"]}
+            for={['income']}
             formatterComponent={incomeAmountFormatter}
           ></DataTypeProvider>
           <DataTypeProvider
-            for={["progress"]}
+            for={['progress']}
             formatterComponent={progressFormatter}
           ></DataTypeProvider>
           {isEditor && (
@@ -236,6 +239,7 @@ export default function Customers(props: any) {
           departments={departments}
           company={company}
           employees={employees}
+          resourses={resourses}
           servicesproducts={servicesproducts}
           customers={rows}
           tasks={tasks}

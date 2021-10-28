@@ -5,15 +5,7 @@ import { useForm } from 'react-hook-form';
 import { dublicateAlert, errorAlert, messageAlert } from '../Shared';
 import { GContextTypes } from '../types';
 import { GlobalContext } from '../contexts';
-import {
-  Box,
-  Button,
-  colors,
-  FormControlLabel,
-  Radio,
-  RadioGroup,
-  Typography,
-} from '@material-ui/core';
+import { Box, Button, colors, Typography } from '@material-ui/core';
 import PopupLayout from '../pages/main/PopupLayout';
 import { Grid } from '@material-ui/core';
 import AutoFieldLocal from '../components/fields/AutoFieldLocal';
@@ -44,15 +36,13 @@ const PopupTask = ({
   addAction,
   editAction,
   employees,
+  resourses,
   departments,
+  projects,
   customers,
   servicesproducts,
   theme,
-  isEditor,
-  company,
   refresh,
-  startrange,
-  endrange,
   value = null,
   name = null,
 }: any) => {
@@ -68,11 +58,22 @@ const PopupTask = ({
   const [departError, setDepartError] = useState<any>(false);
   const departRef: any = React.useRef();
 
+  const [projvalue, setProjvalue] = useState<any>(
+    name === 'projectId' ? value : null
+  );
+  const [projError, setProjError] = useState<any>(false);
+  const projRef: any = React.useRef();
+
   const [emplvalue, setEmplvalue] = useState<any>(
     name === 'employeeId' ? value : null
   );
   const [emplError, setEmplError] = useState<any>(false);
   const emplRef: any = React.useRef();
+  const [resovalue, setResovalue] = useState<any>(
+    name === 'resourseId' ? value : null
+  );
+  const [resoError, setResoError] = useState<any>(false);
+  const resoRef: any = React.useRef();
 
   const [custvalue, setCustvalue] = useState<any>(
     name === 'customerId' ? value : null
@@ -85,9 +86,6 @@ const PopupTask = ({
   const [openEvent, setOpenEvent] = useState<any>(false);
   const [evList, setEvList] = useState<any>([]);
   const [total, setTotal] = useState<any>(null);
-
-  const [resKind, setResKind] = useState<any>(null);
-  const [emplslist, setEmplslist] = useState<any>([]);
 
   const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
   const { tempwords, tempoptions } = useTemplate();
@@ -122,15 +120,6 @@ const PopupTask = ({
       setEmplvalue(emp);
     }
   }, [user, employees]);
-
-  useEffect(() => {
-    if (!isemployee && employees && employees.length > 0) {
-      const filtered = employees.filter(
-        (emp: any) => emp.resKind === resKind && emp.resType === 1
-      );
-      setEmplslist(filtered);
-    }
-  }, [resKind, employees]);
 
   useEffect(() => {
     if (isNew) {
@@ -179,6 +168,8 @@ const PopupTask = ({
       const depId = row.departmentId;
       const empId = row.employeeId;
       const custId = row.customerId;
+      const proId = row.projectId;
+      const resId = row.resourseId;
 
       setStart(row?.start);
       setEnd(row?.end);
@@ -190,6 +181,14 @@ const PopupTask = ({
       if (empId) {
         const empl = employees.filter((emp: any) => emp._id === empId)[0];
         setEmplvalue(empl);
+      }
+      if (proId) {
+        const empl = projects.filter((emp: any) => emp._id === proId)[0];
+        setProjvalue(empl);
+      }
+      if (resId) {
+        const empl = resourses.filter((emp: any) => emp._id === resId)[0];
+        setResovalue(empl);
       }
       if (custId) {
         const cust = customers.filter((cu: any) => cu._id === custId)[0];
@@ -203,11 +202,12 @@ const PopupTask = ({
     setEnd(null);
     setCustvalue(null);
     setDepartvalue(null);
+    setProjvalue(null);
     setEmplvalue(null);
+    setResovalue(null);
     setStatus(null);
     setTasktitle(null);
     setSaving(false);
-    setResKind(null);
   };
 
   const onSubmit = async () => {
@@ -283,6 +283,19 @@ const PopupTask = ({
             departmentNameAr: undefined,
             departmentColor: undefined,
           },
+      project: projvalue
+        ? {
+            projectId: projvalue._id,
+            projectName: projvalue.name,
+            projectNameAr: projvalue.nameAr,
+            projectColor: projvalue.color,
+          }
+        : {
+            projectId: undefined,
+            projectName: undefined,
+            projectNameAr: undefined,
+            projectColor: undefined,
+          },
       employee: emplvalue
         ? {
             employeeId: emplvalue._id,
@@ -290,6 +303,19 @@ const PopupTask = ({
             employeeNameAr: emplvalue.nameAr,
             employeeColor: emplvalue.color,
             employeePhone: emplvalue.phone,
+          }
+        : {
+            employeeId: undefined,
+            employeeName: undefined,
+            employeeNameAr: undefined,
+            employeeColor: undefined,
+          },
+      resourse: resovalue
+        ? {
+            resourseId: resovalue._id,
+            resourseName: resovalue.name,
+            resourseNameAr: resovalue.nameAr,
+            resourseColor: resovalue.color,
           }
         : {
             employeeId: undefined,
@@ -382,6 +408,37 @@ const PopupTask = ({
           </Grid>
           <Grid item xs={4}>
             <AutoFieldLocal
+              name="project"
+              title={tempwords.project}
+              words={words}
+              options={projects}
+              value={projvalue}
+              setSelectValue={setProjvalue}
+              setSelectError={setProjError}
+              selectError={projError}
+              refernce={projRef}
+              register={register}
+              isRTL={isRTL}
+              fullWidth
+              showphone
+              disabled={name === 'projectId'}
+            ></AutoFieldLocal>
+          </Grid>
+          <Grid item xs={2}></Grid>
+          <Grid item xs={2}>
+            <CalenderLocal
+              isRTL={isRTL}
+              label={words.start}
+              value={start}
+              onChange={(d: any) => setStart(d)}
+              format="dd/MM/yyyy - hh:mm"
+              time
+              mb={0}
+            ></CalenderLocal>
+          </Grid>
+
+          <Grid item xs={3}>
+            <AutoFieldLocal
               name="customer"
               title={tempwords.customer}
               words={words}
@@ -398,84 +455,54 @@ const PopupTask = ({
               disabled={name === 'customerId'}
             ></AutoFieldLocal>
           </Grid>
-          <Grid item xs={2}></Grid>
-          <Grid item xs={2}>
-            <CalenderLocal
-              isRTL={isRTL}
-              label={words.start}
-              value={start}
-              onChange={(d: any) => setStart(d)}
-              format="dd/MM/yyyy - hh:mm"
-              time
-              mb={0}
-            ></CalenderLocal>
-          </Grid>
-          {!isemployee && !tempoptions?.noRes && (
-            <Grid item xs={4}>
-              <Box style={{ marginRight: 10, marginTop: 0, marginBottom: 0 }}>
-                <RadioGroup
-                  aria-label="Views"
-                  name="views"
-                  row
-                  value={resKind}
-                  onChange={(e: any) => {
-                    setResKind(Number(e.target.value));
-                    setEmplvalue(null);
-                  }}
-                >
-                  <FormControlLabel
-                    value={1}
-                    control={
-                      <Radio
-                        style={{ padding: 0, margin: 0 }}
-                        color="primary"
-                      />
-                    }
-                    label={tempwords.employee}
-                  />
-
-                  <FormControlLabel
-                    value={2}
-                    control={
-                      <Radio
-                        style={{ padding: 0, margin: 0 }}
-                        color="primary"
-                      />
-                    }
-                    label={tempwords.resourse}
-                  />
-                </RadioGroup>
-              </Box>
+          {!tempoptions?.noEmp && (
+            <Grid item xs={3}>
+              <AutoFieldLocal
+                name="employee"
+                title={tempwords.employee}
+                words={words}
+                options={employees}
+                disabled={isemployee || name === 'employeeId'}
+                value={emplvalue}
+                setSelectValue={setEmplvalue}
+                setSelectError={setEmplError}
+                selectError={emplError}
+                refernce={emplRef}
+                register={register}
+                noPlus
+                isRTL={isRTL}
+                fullWidth
+                day={day}
+              ></AutoFieldLocal>
             </Grid>
           )}
-          {!isemployee && !tempoptions?.noRes && <Grid item xs={8}></Grid>}
-          <Grid item xs={4}>
-            <AutoFieldLocal
-              name="employee"
-              title={resKind === 2 ? tempwords.resourse : tempwords.employee}
-              words={words}
-              options={!tempoptions?.noRes ? emplslist : employees}
-              disabled={
-                (!resKind && !tempoptions?.noRes) || name === 'employeeId'
-              }
-              value={emplvalue}
-              setSelectValue={setEmplvalue}
-              setSelectError={setEmplError}
-              selectError={emplError}
-              refernce={emplRef}
-              register={register}
-              noPlus
-              isRTL={isRTL}
-              fullWidth
-              day={day}
-            ></AutoFieldLocal>
-          </Grid>
-          <Grid item xs={4}>
+          {!tempoptions?.noRes && (
+            <Grid item xs={3}>
+              <AutoFieldLocal
+                name="resourse"
+                title={tempwords.resourse}
+                words={words}
+                options={resourses}
+                disabled={name === 'resourseId'}
+                value={resovalue}
+                setSelectValue={setResovalue}
+                setSelectError={setResoError}
+                selectError={resoError}
+                refernce={resoRef}
+                register={register}
+                noPlus
+                isRTL={isRTL}
+                fullWidth
+                day={day}
+              ></AutoFieldLocal>
+            </Grid>
+          )}
+          <Grid item xs={3}>
             <AutoFieldLocal
               name="department"
               title={tempwords.department}
               words={words}
-              options={departments.filter((dep: any) => dep.depType === 1)}
+              options={departments}
               value={departvalue}
               setSelectValue={setDepartvalue}
               setSelectError={setDepartError}
@@ -529,25 +556,10 @@ const PopupTask = ({
                 </Box>
                 <Box style={{ marginBottom: 20 }}>
                   <EventsTable
-                    isTaskNew={isNew}
                     rows={evList}
                     removeEventFromList={removeEventFromList}
-                    employees={employees}
-                    departments={departments}
-                    customers={customers}
-                    servicesproducts={servicesproducts}
-                    isEditor={isEditor}
                     isRTL={isRTL}
                     words={words}
-                    theme={theme}
-                    taskId={row.id}
-                    isNew={isNew}
-                    employee={emplvalue}
-                    department={departvalue}
-                    customer={custvalue}
-                    company={company}
-                    start={startrange}
-                    end={endrange}
                   ></EventsTable>
                   <Typography style={{ fontWeight: 'bold', fontSize: 16 }}>
                     {words.total} : {moneyFormat(total)}
@@ -565,9 +577,11 @@ const PopupTask = ({
           employees={employees}
           departments={departments}
           customers={customers}
+          resourses={resourses}
           employee={emplvalue}
           department={departvalue}
           customer={custvalue}
+          resourse={resovalue}
           servicesproducts={servicesproducts}
           theme={theme}
           setEnd={setEnd}

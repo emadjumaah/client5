@@ -17,7 +17,7 @@ import {
   AllDayPanel,
 } from '@devexpress/dx-react-scheduler-material-ui';
 import { useContext, useEffect, useState } from 'react';
-import { getResourses } from '../../common/helpers';
+import { getCalendarResourses } from '../../common/helpers';
 import { commitAppointmentChanges } from '../../common';
 import { AppointForm } from '../calendar/common/AppointForm';
 import { RenderToolTip } from '../calendar/common/AppointTooltip';
@@ -165,7 +165,7 @@ const MainEmpl = (props: any) => {
     if (mainResourceName === 'departmentId') {
       res = departments;
     }
-    const resourses = getResourses(res, mainResourceName, 'Data');
+    const resourses = getCalendarResourses(res, mainResourceName, 'Data');
     setResourseData(resourses);
   }, [mainResourceName, departments]);
 

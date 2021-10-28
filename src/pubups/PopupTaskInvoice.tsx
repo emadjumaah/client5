@@ -3,7 +3,7 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { invoiceClasses } from '../themes';
-import { useLastNos } from '../hooks';
+import { useLastNos, useTemplate } from '../hooks';
 import { dublicateAlert, errorAlert, messageAlert } from '../Shared';
 import { GContextTypes } from '../types';
 import { GlobalContext } from '../contexts';
@@ -22,6 +22,8 @@ import {
   getInvoices,
   getLandingChartData,
   getLastNos,
+  getProjects,
+  getResourses,
 } from '../graphql';
 import { accountCode } from '../constants/kaid';
 import PaymentSelect from '../pages/options/PaymentSelect';
@@ -49,6 +51,7 @@ const PopupTaskInvoice = ({
   task,
   customers,
   services,
+  resourses,
   employees,
   departments,
   company,
@@ -80,7 +83,12 @@ const PopupTaskInvoice = ({
   const [emplError, setEmplError] = useState<any>(false);
   const emplRef: any = React.useRef();
 
+  const [resovalue, setResovalue] = useState<any>(null);
+  const [resoError, setResoError] = useState<any>(false);
+  const resoRef: any = React.useRef();
+
   const [isCash, setIsCash] = useState(false);
+  const { tempwords, tempoptions } = useTemplate();
 
   const { handleSubmit, reset } = useForm({});
   const {
@@ -111,9 +119,18 @@ const PopupTaskInvoice = ({
       },
       {
         query: getEmployees,
+        variables: { isRTL, resType: 1 },
       },
       {
         query: getDepartments,
+        variables: { isRTL, depType: 1 },
+      },
+      {
+        query: getResourses,
+        variables: { isRTL, resType: 1 },
+      },
+      {
+        query: getProjects,
       },
     ],
   };
@@ -133,6 +150,7 @@ const PopupTaskInvoice = ({
     setSelectedDate(new Date());
     setDepartvalue(null);
     setEmplvalue(null);
+    setResovalue(null);
   };
 
   const addItemToList = (item: any) => {
@@ -180,6 +198,7 @@ const PopupTaskInvoice = ({
       setCustvalue(cust);
       const depId = task.departmentId;
       const empId = task.employeeId;
+      const resId = task.resourseId;
       if (depId) {
         const depart = departments.filter((dep: any) => dep._id === depId)[0];
         setDepartvalue(depart);
@@ -187,6 +206,10 @@ const PopupTaskInvoice = ({
       if (empId) {
         const empl = employees.filter((emp: any) => emp._id === empId)[0];
         setEmplvalue(empl);
+      }
+      if (resId) {
+        const empl = resourses.filter((emp: any) => emp._id === resId)[0];
+        setResovalue(empl);
       }
     }
     if (items) {
@@ -321,6 +344,19 @@ const PopupTaskInvoice = ({
             employeeColor: undefined,
             employeePhone: undefined,
           },
+      resourse: resovalue
+        ? {
+            resourseId: resovalue._id,
+            resourseName: resovalue.name,
+            resourseNameAr: resovalue.nameAr,
+            resourseColor: resovalue.color,
+          }
+        : {
+            resourseId: undefined,
+            resourseName: undefined,
+            resourseNameAr: undefined,
+            resourseColor: undefined,
+          },
       items: JSON.stringify(itemsList),
       costAmount,
       total,
@@ -409,7 +445,7 @@ const PopupTaskInvoice = ({
       mb={50}
       bgcolor={colors.green[500]}
     >
-      <Grid container spacing={0}>
+      <Grid container spacing={1}>
         <Grid item xs={4}>
           <CalenderLocal
             isRTL={isRTL}
@@ -478,29 +514,48 @@ const PopupTaskInvoice = ({
           </Box>
         </Grid>
 
-        <Grid item xs={6}>
-          <AutoFieldLocal
-            name="employee"
-            title={words.employee}
-            words={words}
-            options={employees.filter((em: any) => em.resType === 1)}
-            value={emplvalue}
-            setSelectValue={setEmplvalue}
-            setSelectError={setEmplError}
-            selectError={emplError}
-            refernce={emplRef}
-            noPlus
-            isRTL={isRTL}
-            fullWidth
-            day={null}
-          ></AutoFieldLocal>
-        </Grid>
-        <Grid item xs={6}>
+        {!tempoptions?.noEmp && (
+          <Grid item xs={4}>
+            <AutoFieldLocal
+              name="employee"
+              title={tempwords.employee}
+              words={words}
+              options={employees}
+              value={emplvalue}
+              setSelectValue={setEmplvalue}
+              setSelectError={setEmplError}
+              selectError={emplError}
+              refernce={emplRef}
+              noPlus
+              isRTL={isRTL}
+              fullWidth
+            ></AutoFieldLocal>
+          </Grid>
+        )}
+        {!tempoptions?.noRes && (
+          <Grid item xs={4}>
+            <AutoFieldLocal
+              name="resourse"
+              title={tempwords.resourse}
+              words={words}
+              options={resourses}
+              value={resovalue}
+              setSelectValue={setResovalue}
+              setSelectError={setResoError}
+              selectError={resoError}
+              refernce={resoRef}
+              noPlus
+              isRTL={isRTL}
+              fullWidth
+            ></AutoFieldLocal>
+          </Grid>
+        )}
+        <Grid item xs={4}>
           <AutoFieldLocal
             name="department"
             title={words.department}
             words={words}
-            options={departments.filter((em: any) => em.depType === 1)}
+            options={departments}
             value={departvalue}
             setSelectValue={setDepartvalue}
             setSelectError={setDepartError}
@@ -508,7 +563,7 @@ const PopupTaskInvoice = ({
             refernce={departRef}
             noPlus
             isRTL={isRTL}
-            width={420}
+            fullWidth
           ></AutoFieldLocal>
         </Grid>
         <Grid item xs={12}>
@@ -526,8 +581,6 @@ const PopupTaskInvoice = ({
                 options={services}
                 addItem={addItemToList}
                 words={words}
-                employees={employees}
-                departments={departments}
                 classes={classes}
                 user={user}
                 isRTL={isRTL}

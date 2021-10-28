@@ -106,6 +106,7 @@ import Branches from '../adds/Branches';
 import React from 'react';
 import { isEditor as isEditorUser } from '../../common/roles';
 import AlertWithClose from '../../components/fields/AlertWithClose';
+import ManageProjects from '../adds/ManageProjects';
 
 const Content = ({ company, editCompany, refreshcompany }) => {
   const classes = layoutClasses();
@@ -501,6 +502,20 @@ const Content = ({ company, editCompany, refreshcompany }) => {
                 servicesproducts={services}
                 company={company}
               ></ManageDepartments>
+            )}
+          />
+          <Route
+            path="/manageprojects"
+            component={() => (
+              <ManageProjects
+                menuitem={menuitem}
+                isRTL={isRTL}
+                words={words}
+                isEditor={isEditor}
+                theme={theme}
+                servicesproducts={services}
+                company={company}
+              ></ManageProjects>
             )}
           />
           <Route

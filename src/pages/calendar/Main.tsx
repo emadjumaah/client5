@@ -18,7 +18,7 @@ import {
 } from '@devexpress/dx-react-scheduler-material-ui';
 import { useContext, useEffect, useState } from 'react';
 import { AppointForm } from './common/AppointForm';
-import { getResourses } from '../../common/helpers';
+// import { getResourses } from '../../common/helpers';
 import { commitAppointmentChanges } from '../../common';
 import { RenderToolTip } from './common/AppointTooltip';
 import { AppointmentContent } from './common';
@@ -32,6 +32,8 @@ import {
   getEmployees,
   getEvents,
   getLandingChartData,
+  getProjects,
+  getResourses,
   updateEvent,
 } from '../../graphql';
 import { Box, Grid, Hidden, useMediaQuery } from '@material-ui/core';
@@ -44,6 +46,7 @@ import { eventStatus } from '../../constants';
 import useTasks from '../../hooks/useTasks';
 import getTasks from '../../graphql/query/getTasks';
 import { getPopupGeneralTitle } from '../../constants/menu';
+import { getCalendarResourses } from '../../common/helpers';
 
 const Main = (props: any) => {
   const [visible, setVisible] = useState(false);
@@ -54,7 +57,18 @@ const Main = (props: any) => {
 
   const [rows, setRows] = useState([]);
   const isMobile = useMediaQuery('(max-width:600px)');
-
+  const {
+    departments,
+    employees,
+    resourses,
+    calendar,
+    isRTL,
+    words,
+    services,
+    company,
+    isEditor,
+    theme,
+  } = props;
   const {
     state: { currentDate, currentViewName, departvalue, emplvalue, status },
     dispatch,
@@ -84,9 +98,18 @@ const Main = (props: any) => {
       },
       {
         query: getEmployees,
+        variables: { isRTL, resType: 1 },
       },
       {
         query: getDepartments,
+        variables: { isRTL, depType: 1 },
+      },
+      {
+        query: getResourses,
+        variables: { isRTL, resType: 1 },
+      },
+      {
+        query: getProjects,
       },
       {
         query: getTasks,
@@ -103,18 +126,6 @@ const Main = (props: any) => {
   const [removeEvent] = useMutation(deleteEvent, refresQuery);
 
   const [getCalEvents, evnData]: any = useLazyQuery(getEvents);
-
-  const {
-    departments,
-    employees,
-    calendar,
-    isRTL,
-    words,
-    services,
-    company,
-    isEditor,
-    theme,
-  } = props;
 
   useEffect(() => {
     const eventsData = evnData?.data?.['getEvents']?.data || [];
@@ -175,7 +186,7 @@ const Main = (props: any) => {
     if (mainResourceName === 'departmentId') {
       res = departments;
     }
-    const resourses = getResourses(res, mainResourceName, 'Data');
+    const resourses = getCalendarResourses(res, mainResourceName, 'Data');
     setResourseData(resourses);
   }, [mainResourceName, departments]);
 
@@ -339,6 +350,7 @@ const Main = (props: any) => {
                   setVisible={setVisible}
                   departments={departments}
                   employees={employees}
+                  resourses={resourses}
                   services={services}
                   editEvent={editEvent}
                   company={company}
@@ -370,6 +382,7 @@ const Main = (props: any) => {
                   <AppointForm
                     departments={departments}
                     employees={employees}
+                    resourses={resourses}
                     servicesproducts={services}
                     theme={theme}
                     tasks={tasks}

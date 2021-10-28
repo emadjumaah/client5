@@ -34,7 +34,7 @@ import MainCalendarEmpl from '../empl/MainCalendarEmpl';
 import AppointmentsEmpl from '../empl/AppointmentsEmpl';
 import TasksEmpl from '../adds/TasksEmpl';
 
-const Content = ({ company, editCompany, refreshcompany }) => {
+const EmplContent = ({ company, editCompany, refreshcompany }) => {
   const classes = layoutClasses();
   const [menuitem, setMenuitem] = useState(emplmenu[0]);
 
@@ -182,4 +182,4 @@ const Content = ({ company, editCompany, refreshcompany }) => {
     </Box>
   );
 };
-export default Content;
+export default EmplContent;

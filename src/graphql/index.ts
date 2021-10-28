@@ -41,6 +41,8 @@ import {
   getExpenses,
   getReminders,
   getActions,
+  getResourses,
+  getProjects,
 } from './query';
 import {
   createCategory,
@@ -103,6 +105,12 @@ import {
   deleteAction,
   updateAction,
   createBranch,
+  createProject,
+  deleteProject,
+  updateProject,
+  createResourse,
+  deleteResourse,
+  updateResourse,
 } from './mutation';
 
 export { client };
@@ -148,6 +156,8 @@ export {
   getExpenses,
   getReminders,
   getActions,
+  getResourses,
+  getProjects,
 };
 export {
   createCategory,
@@ -210,4 +220,10 @@ export {
   deleteGroup,
   updateGroup,
   createBranch,
+  createProject,
+  deleteProject,
+  updateProject,
+  createResourse,
+  deleteResourse,
+  updateResourse,
 };

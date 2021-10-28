@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import React, { useState } from "react";
-import Paper from "@material-ui/core/Paper";
+import React, { useState } from 'react';
+import Paper from '@material-ui/core/Paper';
 import {
   EditingState,
   SortingState,
@@ -8,7 +8,7 @@ import {
   DataTypeProvider,
   SearchState,
   IntegratedFiltering,
-} from "@devexpress/dx-react-grid";
+} from '@devexpress/dx-react-grid';
 import {
   Grid,
   TableHeaderRow,
@@ -16,15 +16,15 @@ import {
   VirtualTable,
   Toolbar,
   SearchPanel,
-} from "@devexpress/dx-react-grid-material-ui";
-import { Command, errorAlert, Loading, PopupEditing } from "../../Shared";
-import { getRowId } from "../../common";
-import { PopupDeprtment } from "../../pubups";
-import { avatarPatternFormatter } from "../../Shared/colorFormat";
-import { AlertLocal, SearchTable } from "../../components";
-import { errorDeleteAlert } from "../../Shared/helpers";
-import PageLayout from "../main/PageLayout";
-import useDepartmentsTech from "../../hooks/useDepartmentsTech";
+} from '@devexpress/dx-react-grid-material-ui';
+import { Command, errorAlert, Loading, PopupEditing } from '../../Shared';
+import { getRowId } from '../../common';
+import { PopupDeprtment } from '../../pubups';
+import { avatarPatternFormatter } from '../../Shared/colorFormat';
+import { AlertLocal, SearchTable } from '../../components';
+import { errorDeleteAlert } from '../../Shared/helpers';
+import PageLayout from '../main/PageLayout';
+import useDepartmentsDown from '../../hooks/useDepartmentsDown';
 
 export default function Departments({
   isRTL,
@@ -34,14 +34,14 @@ export default function Departments({
   menuitem,
 }: any) {
   const [loading, setLoading] = useState(false);
-  const [alrt, setAlrt] = useState({ show: false, msg: "", type: undefined });
+  const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
 
   const [columns] = useState([
-    { name: isRTL ? "nameAr" : "name", title: words.name },
-    { name: isRTL ? "name" : "nameAr", title: words.name },
-    { name: "desc", title: words.description },
-    { name: "avatar", title: words.color },
-    { id: 11, ref: "status", name: "status", title: " " },
+    { name: isRTL ? 'nameAr' : 'name', title: words.name },
+    { name: isRTL ? 'name' : 'nameAr', title: words.name },
+    { name: 'desc', title: words.description },
+    { name: 'avatar', title: words.color },
+    { id: 11, ref: 'status', name: 'status', title: ' ' },
   ]);
 
   const {
@@ -50,7 +50,7 @@ export default function Departments({
     editDepartment,
     removeDepartment,
     refreshdepartment,
-  } = useDepartmentsTech();
+  } = useDepartmentsDown();
 
   const commitChanges = async ({ deleted }) => {
     if (deleted) {
@@ -58,7 +58,7 @@ export default function Departments({
       setLoading(true);
       const res = await removeDepartment({ variables: { _id } });
       if (res?.data?.deleteDepartment?.ok === false) {
-        if (res?.data?.deleteDepartment?.error.includes("related")) {
+        if (res?.data?.deleteDepartment?.error.includes('related')) {
           await errorDeleteAlert(setAlrt, isRTL);
         } else {
           await errorAlert(setAlrt, isRTL);
@@ -91,14 +91,14 @@ export default function Departments({
           <VirtualTable
             height={window.innerHeight - 133}
             messages={{
-              noData: isRTL ? "لا يوجد بيانات" : "no data",
+              noData: isRTL ? 'لا يوجد بيانات' : 'no data',
             }}
             estimatedRowHeight={40}
           />
 
           <TableHeaderRow showSortingControls />
           <DataTypeProvider
-            for={["avatar"]}
+            for={['avatar']}
             formatterComponent={avatarPatternFormatter}
           ></DataTypeProvider>
           {isEditor && (

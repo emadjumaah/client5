@@ -1,10 +1,10 @@
-import { nameToColor, shadeColor } from "./color";
-import { isElectron, getResourses, groupBy } from "./helpers";
+import { nameToColor, shadeColor } from './color';
+import { isElectron, groupBy } from './helpers';
 import {
   commitAppointmentChanges,
   getSelectedFromAppointment,
   timeToHourMinute,
-} from "./calendar";
+} from './calendar';
 import {
   getRowId,
   userCol,
@@ -20,14 +20,13 @@ import {
   invColExtensions,
   financeCol,
   financeColExtensions,
-} from "./columns";
-import { roles } from "./check";
-import { print, jadwalready } from "./ipc";
+} from './columns';
+import { roles } from './check';
+import { print, jadwalready } from './ipc';
 
 export {
   nameToColor,
   shadeColor,
-  getResourses,
   isElectron,
   commitAppointmentChanges,
   getSelectedFromAppointment,

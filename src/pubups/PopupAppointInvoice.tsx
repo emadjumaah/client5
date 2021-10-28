@@ -3,12 +3,7 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { invoiceClasses } from '../themes';
-import {
-  useCustomers,
-  useDepartments,
-  useEmployees,
-  useLastNos,
-} from '../hooks';
+import { useCustomers, useLastNos, useTemplate } from '../hooks';
 import { dublicateAlert, errorAlert, messageAlert } from '../Shared';
 import { GContextTypes } from '../types';
 import { GlobalContext } from '../contexts';
@@ -27,6 +22,8 @@ import {
   getInvoices,
   getLandingChartData,
   getLastNos,
+  getProjects,
+  getResourses,
 } from '../graphql';
 import { accountCode } from '../constants/kaid';
 import PaymentSelect from '../pages/options/PaymentSelect';
@@ -41,6 +38,9 @@ import useTasks from '../hooks/useTasks';
 import { InvoicePrintA5 } from '../common/InvoicePrintA5';
 import { useReactToPrint } from 'react-to-print';
 import useCompany from '../hooks/useCompany';
+import useEmployeesUp from '../hooks/useEmployeesUp';
+import useDepartmentsUp from '../hooks/useDepartmentsUp';
+import useResoursesUp from '../hooks/useResoursesUp';
 
 export const indexTheList = (list: any) => {
   return list.map((item: any, index: any) => {
@@ -84,6 +84,10 @@ const PopupAppointInvoice = ({
   const [emplError, setEmplError] = useState<any>(false);
   const emplRef: any = React.useRef();
 
+  const [resovalue, setResovalue] = useState<any>(null);
+  const [resoError, setResoError] = useState<any>(false);
+  const resoRef: any = React.useRef();
+
   const [taskvalue, setTaskvalue] = useState<any>(null);
 
   const [openCust, setOpenCust] = useState(false);
@@ -92,9 +96,11 @@ const PopupAppointInvoice = ({
   const [isCash, setIsCash] = useState(false);
   const { customers, addCustomer, editCustomer } = useCustomers();
   const { tasks } = useTasks();
-  const { employees } = useEmployees();
-  const { departments } = useDepartments();
+  const { employees } = useEmployeesUp();
+  const { departments } = useDepartmentsUp();
+  const { resourses } = useResoursesUp();
   const { company } = useCompany();
+  const { tempoptions, tempwords } = useTemplate();
 
   const { handleSubmit, reset } = useForm({});
   const {
@@ -125,9 +131,18 @@ const PopupAppointInvoice = ({
       },
       {
         query: getEmployees,
+        variables: { isRTL, resType: 1 },
       },
       {
         query: getDepartments,
+        variables: { isRTL, depType: 1 },
+      },
+      {
+        query: getResourses,
+        variables: { isRTL, resType: 1 },
+      },
+      {
+        query: getProjects,
       },
     ],
   };
@@ -160,6 +175,7 @@ const PopupAppointInvoice = ({
     setSelectedDate(new Date());
     setDepartvalue(null);
     setEmplvalue(null);
+    setResovalue(null);
   };
 
   const addItemToList = (item: any) => {
@@ -208,6 +224,7 @@ const PopupAppointInvoice = ({
     }
     const depId = appoint.departmentId;
     const empId = appoint.employeeId;
+    const resId = appoint.resourseId;
     if (depId) {
       const depart = departments.filter((dep: any) => dep._id === depId)[0];
       setDepartvalue(depart);
@@ -215,6 +232,10 @@ const PopupAppointInvoice = ({
     if (empId) {
       const empl = employees.filter((emp: any) => emp._id === empId)[0];
       setEmplvalue(empl);
+    }
+    if (resId) {
+      const empl = resourses.filter((emp: any) => emp._id === resId)[0];
+      setResovalue(empl);
     }
     if (appoint.taskId) {
       const empl = tasks.filter((emp: any) => emp.id === appoint.taskId)[0];
@@ -354,6 +375,19 @@ const PopupAppointInvoice = ({
             employeeColor: undefined,
             employeePhone: undefined,
           },
+      resourse: resovalue
+        ? {
+            resourseId: resovalue._id,
+            resourseName: resovalue.name,
+            resourseNameAr: resovalue.nameAr,
+            resourseColor: resovalue.color,
+          }
+        : {
+            resourseId: undefined,
+            resourseName: undefined,
+            resourseNameAr: undefined,
+            resourseColor: undefined,
+          },
       items: JSON.stringify(itemsList),
       costAmount,
       total,
@@ -377,7 +411,7 @@ const PopupAppointInvoice = ({
   const apply = async (mutate: any, variables: any) => {
     try {
       await mutate({ variables });
-      editEvent({ variables: { id: appoint.id, status: 10 } });
+      await editEvent({ variables: { id: appoint.id, status: 10 } });
       freshlastNos();
       onCloseForm();
       onCloseAppoint();
@@ -527,29 +561,50 @@ const PopupAppointInvoice = ({
           </Box>
         </Grid>
 
-        <Grid item xs={6}>
-          <AutoFieldLocal
-            name="employee"
-            title={words.employee}
-            words={words}
-            options={employees.filter((em: any) => em.resType === 1)}
-            value={emplvalue}
-            setSelectValue={setEmplvalue}
-            setSelectError={setEmplError}
-            selectError={emplError}
-            refernce={emplRef}
-            noPlus
-            isRTL={isRTL}
-            fullWidth
-            day={day}
-          ></AutoFieldLocal>
-        </Grid>
-        <Grid item xs={6}>
+        {!tempoptions?.noEmp && (
+          <Grid item xs={4}>
+            <AutoFieldLocal
+              name="employee"
+              title={tempwords.employee}
+              words={words}
+              options={employees}
+              value={emplvalue}
+              setSelectValue={setEmplvalue}
+              setSelectError={setEmplError}
+              selectError={emplError}
+              refernce={emplRef}
+              noPlus
+              isRTL={isRTL}
+              fullWidth
+              day={day}
+            ></AutoFieldLocal>
+          </Grid>
+        )}
+        {!tempoptions?.noRes && (
+          <Grid item xs={4}>
+            <AutoFieldLocal
+              name="resourse"
+              title={tempwords.resourse}
+              words={words}
+              options={resourses}
+              value={resovalue}
+              setSelectValue={setResovalue}
+              setSelectError={setResoError}
+              selectError={resoError}
+              refernce={resoRef}
+              noPlus
+              isRTL={isRTL}
+              fullWidth
+              day={day}
+            ></AutoFieldLocal>
+          </Grid>
+        )}
+        <Grid item xs={4}>
           <AutoFieldLocal
             name="department"
             title={words.department}
             words={words}
-            options={departments.filter((em: any) => em.depType === 1)}
+            options={departments}
             value={departvalue}
             setSelectValue={setDepartvalue}
             setSelectError={setDepartError}
@@ -557,7 +612,7 @@ const PopupAppointInvoice = ({
             refernce={departRef}
             noPlus
             isRTL={isRTL}
-            width={420}
+            fullWidth
           ></AutoFieldLocal>
         </Grid>
         <Grid item xs={12}>
@@ -575,8 +630,6 @@ const PopupAppointInvoice = ({
                 options={services}
                 addItem={addItemToList}
                 words={words}
-                employees={employees}
-                departments={departments}
                 classes={classes}
                 user={user}
                 isRTL={isRTL}

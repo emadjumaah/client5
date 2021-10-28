@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import React, { useContext, useEffect, useState } from "react";
-import Paper from "@material-ui/core/Paper";
+import React, { useContext, useEffect, useState } from 'react';
+import Paper from '@material-ui/core/Paper';
 import {
   EditingState,
   SortingState,
@@ -9,7 +9,7 @@ import {
   DataTypeProvider,
   SearchState,
   IntegratedFiltering,
-} from "@devexpress/dx-react-grid";
+} from '@devexpress/dx-react-grid';
 import {
   Grid,
   TableHeaderRow,
@@ -19,15 +19,17 @@ import {
   SearchPanel,
   TableColumnVisibility,
   ColumnChooser,
-} from "@devexpress/dx-react-grid-material-ui";
-import { Command, Loading, PopupEditing } from "../../Shared";
+} from '@devexpress/dx-react-grid-material-ui';
+import { Command, Loading, PopupEditing } from '../../Shared';
 import {
   getCustomers,
   getDepartments,
   getEmployees,
   getLandingChartData,
-} from "../../graphql";
-import { useLazyQuery, useMutation } from "@apollo/client";
+  getProjects,
+  getResourses,
+} from '../../graphql';
+import { useLazyQuery, useMutation } from '@apollo/client';
 import {
   createdAtFormatter,
   currencyFormatterEmpty,
@@ -38,23 +40,27 @@ import {
   progressFormatter,
   taskNameFormatter,
   // taskStatusFormatter,
-} from "../../Shared/colorFormat";
-import PageLayout from "../main/PageLayout";
-import { AlertLocal, SearchTable } from "../../components";
-import { getColumns } from "../../common/columns";
-import { Box, Button, colors } from "@material-ui/core";
-import TasksContext from "../../contexts/tasks";
-import getTasks from "../../graphql/query/getTasks";
-import PopupTask from "../../pubups/PopupTask";
-import createTask from "../../graphql/mutation/createTask";
-import updateTask from "../../graphql/mutation/updateTask";
-import deleteTaskById from "../../graphql/mutation/deleteTaskById";
-import { useCustomers, useDepartments, useEmployees } from "../../hooks";
-import PopupGantt from "../../pubups/PopupGantt";
-import { errorAlert, errorDeleteAlert } from "../../Shared/helpers";
-import { TableComponent } from "../../Shared/TableComponent";
-import DateNavigatorReports from "../../components/filters/DateNavigatorReports";
-import PopupTaskView from "../../pubups/PopupTaskView";
+} from '../../Shared/colorFormat';
+import PageLayout from '../main/PageLayout';
+import { AlertLocal, SearchTable } from '../../components';
+import { getColumns } from '../../common/columns';
+import { Box, Button, colors } from '@material-ui/core';
+import TasksContext from '../../contexts/tasks';
+import getTasks from '../../graphql/query/getTasks';
+import PopupTask from '../../pubups/PopupTask';
+import createTask from '../../graphql/mutation/createTask';
+import updateTask from '../../graphql/mutation/updateTask';
+import deleteTaskById from '../../graphql/mutation/deleteTaskById';
+import { useCustomers } from '../../hooks';
+import PopupGantt from '../../pubups/PopupGantt';
+import { errorAlert, errorDeleteAlert } from '../../Shared/helpers';
+import { TableComponent } from '../../Shared/TableComponent';
+import DateNavigatorReports from '../../components/filters/DateNavigatorReports';
+import PopupTaskView from '../../pubups/PopupTaskView';
+import useDepartmentsUp from '../../hooks/useDepartmentsUp';
+import useEmployeesUp from '../../hooks/useEmployeesUp';
+import useResoursesUp from '../../hooks/useResoursesUp';
+import useProjects from '../../hooks/useProjects';
 
 export const getRowId = (row: { _id: any }) => row._id;
 
@@ -67,7 +73,7 @@ export default function Tasks({
   company,
   servicesproducts,
 }) {
-  const [alrt, setAlrt] = useState({ show: false, msg: "", type: undefined });
+  const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
 
   const col = getColumns({ isRTL, words });
 
@@ -82,21 +88,21 @@ export default function Tasks({
     col.employee,
     col.evQty,
     col.progress,
-    { name: "amount", title: isRTL ? "الاجمالي" : "Total" },
+    { name: 'amount', title: isRTL ? 'الاجمالي' : 'Total' },
     col.totalinvoiced,
     col.totalpaid,
     {
       id: 40,
-      ref: "due",
-      name: "due",
-      title: isRTL ? "المتبقي" : "Due Payment",
+      ref: 'due',
+      name: 'due',
+      title: isRTL ? 'المتبقي' : 'Due Payment',
     },
     col.toatlExpenses,
     {
       id: 38,
-      ref: "income",
-      name: "income",
-      title: isRTL ? "صافي الايراد" : "Total Income",
+      ref: 'income',
+      name: 'income',
+      title: isRTL ? 'صافي الايراد' : 'Total Income',
     },
   ]);
 
@@ -109,8 +115,10 @@ export default function Tasks({
 
   const [item, setItem] = useState(null);
   const [openItem, setOpenItem] = useState(false);
-  const { departments } = useDepartments();
-  const { employees } = useEmployees();
+  const { departments } = useDepartmentsUp();
+  const { employees } = useEmployeesUp();
+  const { resourses } = useResoursesUp();
+  const { projects } = useProjects();
   const onCloseItem = () => {
     setOpenItem(false);
     setItem(null);
@@ -121,17 +129,17 @@ export default function Tasks({
   } = useContext(TasksContext);
 
   const currentViewNameChange = (e: any) => {
-    dispatch({ type: "setCurrentViewName", payload: e.target.value });
+    dispatch({ type: 'setCurrentViewName', payload: e.target.value });
   };
   const currentDateChange = (curDate: any) => {
-    dispatch({ type: "setCurrentDate", payload: curDate });
+    dispatch({ type: 'setCurrentDate', payload: curDate });
   };
   const endDateChange = (curDate: any) => {
-    dispatch({ type: "setEndDate", payload: curDate });
+    dispatch({ type: 'setEndDate', payload: curDate });
   };
 
   const [loadTasks, tasksData]: any = useLazyQuery(getTasks, {
-    fetchPolicy: "cache-and-network",
+    fetchPolicy: 'cache-and-network',
   });
 
   const refresQuery = {
@@ -154,9 +162,18 @@ export default function Tasks({
       },
       {
         query: getEmployees,
+        variables: { isRTL, resType: 1 },
       },
       {
         query: getDepartments,
+        variables: { isRTL, depType: 1 },
+      },
+      {
+        query: getResourses,
+        variables: { isRTL, resType: 1 },
+      },
+      {
+        query: getProjects,
       },
     ],
   };
@@ -189,7 +206,7 @@ export default function Tasks({
       setLoading(true);
       const res = await removeTaskById({ variables: { _id } });
       if (res?.data?.deleteTaskById?.ok === false) {
-        if (res?.data?.deleteTaskById?.error.includes("related")) {
+        if (res?.data?.deleteTaskById?.error.includes('related')) {
           await errorDeleteAlert(setAlrt, isRTL);
         } else {
           await errorAlert(setAlrt, isRTL);
@@ -230,10 +247,10 @@ export default function Tasks({
         <Box
           display="flex"
           style={{
-            position: "absolute",
+            position: 'absolute',
             zIndex: 111,
-            flexDirection: "row",
-            alignItems: "center",
+            flexDirection: 'row',
+            alignItems: 'center',
           }}
         >
           <DateNavigatorReports
@@ -258,7 +275,7 @@ export default function Tasks({
               color="primary"
               onClick={() => setOpenGantt(true)}
             >
-              {isRTL ? "عرض المهمات" : "Task View"}
+              {isRTL ? 'عرض المهمات' : 'Task View'}
             </Button>
           </Box>
         </Box>
@@ -275,7 +292,7 @@ export default function Tasks({
             <VirtualTable
               height={window.innerHeight - 133}
               messages={{
-                noData: isRTL ? "لا يوجد بيانات" : "no data",
+                noData: isRTL ? 'لا يوجد بيانات' : 'no data',
               }}
               estimatedRowHeight={40}
               tableComponent={TableComponent}
@@ -293,37 +310,37 @@ export default function Tasks({
               ]}
             />
             <DataTypeProvider
-              for={["title"]}
+              for={['title']}
               formatterComponent={(props: any) =>
                 nameLinkFormat({ ...props, setItem, setOpenItem })
               }
             ></DataTypeProvider>
             <DataTypeProvider
-              for={["start", "end", "createdAt"]}
+              for={['start', 'end', 'createdAt']}
               formatterComponent={createdAtFormatter}
             ></DataTypeProvider>
             <DataTypeProvider
-              for={["due"]}
+              for={['due']}
               formatterComponent={dueAmountFormatter}
             ></DataTypeProvider>
             <DataTypeProvider
-              for={["amount", "toatlExpenses", "totalpaid"]}
+              for={['amount', 'toatlExpenses', 'totalpaid']}
               formatterComponent={currencyFormatterEmpty}
             ></DataTypeProvider>
             <DataTypeProvider
-              for={["totalinvoiced"]}
+              for={['totalinvoiced']}
               formatterComponent={invoiceReceiptFormatter}
             ></DataTypeProvider>
             <DataTypeProvider
-              for={["income"]}
+              for={['income']}
               formatterComponent={incomeAmountFormatter}
             ></DataTypeProvider>
             <DataTypeProvider
-              for={["tasktype"]}
+              for={['tasktype']}
               formatterComponent={taskNameFormatter}
             ></DataTypeProvider>
             <DataTypeProvider
-              for={["progress"]}
+              for={['progress']}
               formatterComponent={progressFormatter}
             ></DataTypeProvider>
 
@@ -346,8 +363,10 @@ export default function Tasks({
 
             <PopupEditing addAction={addTask} editAction={editTask}>
               <PopupTask
+                resourses={resourses}
                 employees={employees}
                 departments={departments}
+                projects={projects}
                 customers={customers}
                 addCustomer={addCustomer}
                 editCustomer={editCustomer}
@@ -385,6 +404,7 @@ export default function Tasks({
               tasks={rows}
               isNew={false}
               theme={theme}
+              resourses={resourses}
               employees={employees}
               departments={departments}
               customers={customers}

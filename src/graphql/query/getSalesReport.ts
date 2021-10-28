@@ -1,4 +1,4 @@
-import { gql } from "@apollo/client";
+import { gql } from '@apollo/client';
 
 export default gql`
   query getSalesReport(
@@ -6,6 +6,8 @@ export default gql`
     $categoryId: String
     $departmentId: String
     $employeeId: String
+    $projectId: String
+    $resourseId: String
     $customerId: String
     $supplierId: String
     $start: Date
@@ -16,6 +18,8 @@ export default gql`
       categoryId: $categoryId
       departmentId: $departmentId
       employeeId: $employeeId
+      projectId: $projectId
+      resourseId: $resourseId
       customerId: $customerId
       supplierId: $supplierId
       start: $start
@@ -43,6 +47,15 @@ export default gql`
         employeeId
         employeeName
         employeeNameAr
+
+        projectId
+        projectName
+        projectNameAr
+        projectColor
+        resourseId
+        resourseName
+        resourseNameAr
+        resourseColor
 
         categoryId
         categoryName

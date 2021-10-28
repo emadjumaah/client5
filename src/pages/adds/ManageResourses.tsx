@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import React, { useEffect, useState } from "react";
-import Paper from "@material-ui/core/Paper";
+import React, { useEffect, useState } from 'react';
+import Paper from '@material-ui/core/Paper';
 import {
   EditingState,
   SortingState,
@@ -9,7 +9,7 @@ import {
   DataTypeProvider,
   SearchState,
   IntegratedFiltering,
-} from "@devexpress/dx-react-grid";
+} from '@devexpress/dx-react-grid';
 import {
   Grid,
   TableHeaderRow,
@@ -19,9 +19,9 @@ import {
   SearchPanel,
   TableColumnVisibility,
   ColumnChooser,
-} from "@devexpress/dx-react-grid-material-ui";
-import { Command, Loading, PopupEditing } from "../../Shared";
-import { getRowId } from "../../common";
+} from '@devexpress/dx-react-grid-material-ui';
+import { Command, Loading, PopupEditing } from '../../Shared';
+import { getRowId } from '../../common';
 import {
   avatarPatternFormatter,
   currencyFormatterEmpty,
@@ -30,16 +30,18 @@ import {
   incomeAmountFormatter,
   nameLinkFormat,
   progressFormatter,
-} from "../../Shared/colorFormat";
-import { AlertLocal, SearchTable } from "../../components";
-import { errorAlert, errorDeleteAlert } from "../../Shared/helpers";
-import PageLayout from "../main/PageLayout";
-import { getColumns } from "../../common/columns";
-import useTasks from "../../hooks/useTasks";
-import { useCustomers, useDepartments } from "../../hooks";
-import useOResourses from "../../hooks/useOResourses";
-import PopupResoursesView from "../../pubups/PopupResoursesView";
-import PopupResourses from "../../pubups/PopupResourses";
+} from '../../Shared/colorFormat';
+import { AlertLocal, SearchTable } from '../../components';
+import { errorAlert, errorDeleteAlert } from '../../Shared/helpers';
+import PageLayout from '../main/PageLayout';
+import { getColumns } from '../../common/columns';
+import useTasks from '../../hooks/useTasks';
+import { useCustomers } from '../../hooks';
+import PopupResoursesView from '../../pubups/PopupResoursesView';
+import PopupResourses from '../../pubups/PopupResourses';
+import useResoursesUp from '../../hooks/useResoursesUp';
+import useDepartmentsUp from '../../hooks/useDepartmentsUp';
+import useEmployeesUp from '../../hooks/useEmployeesUp';
 
 export default function ManageResourses({
   isRTL,
@@ -51,71 +53,73 @@ export default function ManageResourses({
   company,
 }: any) {
   const [loading, setLoading] = useState(false);
-  const [alrt, setAlrt] = useState({ show: false, msg: "", type: undefined });
+  const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
   const [item, setItem] = useState(null);
   const [openItem, setOpenItem] = useState(false);
   const col = getColumns({ isRTL, words });
 
   const { tasks } = useTasks();
-  const { departments } = useDepartments();
+  const { departments } = useDepartmentsUp();
+  const { employees } = useEmployeesUp();
   const { customers } = useCustomers();
+
   const onCloseItem = () => {
     setOpenItem(false);
     setItem(null);
   };
 
   const [columns] = useState([
-    { name: isRTL ? "nameAr" : "name", title: words.name },
-    { name: "avatar", title: words.color },
+    { name: isRTL ? 'nameAr' : 'name', title: words.name },
+    { name: 'avatar', title: words.color },
     {
-      name: isRTL ? "departmentNameAr" : "departmentName",
+      name: isRTL ? 'departmentNameAr' : 'departmentName',
       title: words.department,
     },
-    { name: "info", title: words.info },
-    { name: "amount", title: isRTL ? "الاجمالي" : "Total" },
+    { name: 'info', title: words.info },
+    { name: 'amount', title: isRTL ? 'الاجمالي' : 'Total' },
     col.progress,
     col.totalinvoiced,
     col.totalpaid,
     {
       id: 40,
-      ref: "due",
-      name: "due",
-      title: isRTL ? "المتبقي" : "Due Payment",
+      ref: 'due',
+      name: 'due',
+      title: isRTL ? 'المتبقي' : 'Due Payment',
     },
     col.toatlExpenses,
     {
       id: 38,
-      ref: "income",
-      name: "income",
-      title: isRTL ? "صافي الايراد" : "Total Income",
+      ref: 'income',
+      name: 'income',
+      title: isRTL ? 'صافي الايراد' : 'Total Income',
     },
   ]);
 
   const {
-    employees,
-    addEmployee,
-    editEmployee,
-    removeEmployee,
-    refreshemployee,
-  } = useOResourses();
+    resourses,
+    addResourse,
+    editResourse,
+    removeResourse,
+    refreshresourse,
+  } = useResoursesUp();
 
   useEffect(() => {
     if (openItem) {
-      if (employees && employees.length > 0) {
-        const opened = employees.filter((ts: any) => ts._id === item._id)?.[0];
+      if (resourses && resourses.length > 0) {
+        const opened = resourses.filter((ts: any) => ts._id === item._id)?.[0];
         setItem(opened);
       }
     }
-  }, [employees]);
+  }, [resourses]);
 
   const commitChanges = async ({ deleted }) => {
     if (deleted) {
       const _id = deleted[0];
       setLoading(true);
 
-      const res = await removeEmployee({ variables: { _id } });
-      if (res?.data?.deleteEmployee?.ok === false) {
-        if (res?.data?.deleteEmployee?.error.includes("related")) {
+      const res = await removeResourse({ variables: { _id } });
+      if (res?.data?.deleteResourse?.ok === false) {
+        if (res?.data?.deleteResourse?.error.includes('related')) {
           await errorDeleteAlert(setAlrt, isRTL);
         } else {
           await errorAlert(setAlrt, isRTL);
@@ -132,15 +136,11 @@ export default function ManageResourses({
       words={words}
       isEditor={isEditor}
       theme={theme}
-      refresh={refreshemployee}
+      refresh={refreshresourse}
     >
       <Paper>
         {loading && <Loading isRTL={isRTL}></Loading>}
-        <Grid
-          rows={employees.filter((em: any) => em.resType === 1)}
-          columns={columns}
-          getRowId={getRowId}
-        >
+        <Grid rows={resourses} columns={columns} getRowId={getRowId}>
           <SortingState />
           <SearchState />
           <EditingState onCommitChanges={commitChanges} />
@@ -151,45 +151,45 @@ export default function ManageResourses({
           <VirtualTable
             height={window.innerHeight - 133}
             messages={{
-              noData: isRTL ? "لا يوجد بيانات" : "no data",
+              noData: isRTL ? 'لا يوجد بيانات' : 'no data',
             }}
             estimatedRowHeight={40}
           />
           <TableHeaderRow showSortingControls />
           <TableColumnVisibility
-            defaultHiddenColumnNames={["info", "avatar"]}
+            defaultHiddenColumnNames={['info', 'avatar']}
           />
 
           <DataTypeProvider
-            for={["daysoff"]}
+            for={['daysoff']}
             formatterComponent={(props: any) =>
               daysoffFormatter({ ...props, isRTL })
             }
           ></DataTypeProvider>
           <DataTypeProvider
-            for={["nameAr", "name"]}
+            for={['nameAr', 'name']}
             formatterComponent={(props: any) =>
               nameLinkFormat({ ...props, setItem, setOpenItem })
             }
           ></DataTypeProvider>
           <DataTypeProvider
-            for={["amount", "toatlExpenses", "totalpaid", "totalinvoiced"]}
+            for={['amount', 'toatlExpenses', 'totalpaid', 'totalinvoiced']}
             formatterComponent={currencyFormatterEmpty}
           ></DataTypeProvider>
           <DataTypeProvider
-            for={["due"]}
+            for={['due']}
             formatterComponent={dueAmountFormatter}
           ></DataTypeProvider>
           <DataTypeProvider
-            for={["avatar"]}
+            for={['avatar']}
             formatterComponent={avatarPatternFormatter}
           ></DataTypeProvider>
           <DataTypeProvider
-            for={["income"]}
+            for={['income']}
             formatterComponent={incomeAmountFormatter}
           ></DataTypeProvider>
           <DataTypeProvider
-            for={["progress"]}
+            for={['progress']}
             formatterComponent={progressFormatter}
           ></DataTypeProvider>
 
@@ -211,8 +211,8 @@ export default function ManageResourses({
 
           <PopupEditing
             theme={theme}
-            addAction={addEmployee}
-            editAction={editEmployee}
+            addAction={addResourse}
+            editAction={editResourse}
           >
             <PopupResourses resKind={2} resType={1}></PopupResourses>
           </PopupEditing>
@@ -230,13 +230,14 @@ export default function ManageResourses({
           onClose={onCloseItem}
           row={item}
           isNew={false}
-          addAction={addEmployee}
-          editAction={editEmployee}
+          addAction={addResourse}
+          editAction={editResourse}
           theme={theme}
           isEditor={isEditor}
           departments={departments}
           company={company}
           employees={employees}
+          resourses={employees}
           servicesproducts={servicesproducts}
           customers={customers}
           tasks={tasks}

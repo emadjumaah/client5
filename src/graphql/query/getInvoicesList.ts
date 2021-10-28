@@ -1,16 +1,20 @@
-import { gql } from "@apollo/client";
+import { gql } from '@apollo/client';
 export default gql`
   query getInvoicesList(
     $taskId: Int
     $customerId: String
     $departmentId: String
     $employeeId: String
+    $projectId: String
+    $resourseId: String
   ) {
     getInvoicesList(
       taskId: $taskId
       customerId: $customerId
       departmentId: $departmentId
       employeeId: $employeeId
+      projectId: $projectId
+      resourseId: $resourseId
     ) {
       ok
       error
@@ -46,6 +50,15 @@ export default gql`
         employeeNameAr
         employeeColor
         employeePhone
+
+        projectId
+        projectName
+        projectNameAr
+        projectColor
+        resourseId
+        resourseName
+        resourseNameAr
+        resourseColor
 
         refNo
         refType

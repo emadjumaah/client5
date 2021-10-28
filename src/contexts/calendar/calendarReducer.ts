@@ -1,37 +1,37 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import { CalendarTypes } from "../../types";
+import { CalendarTypes } from '../../types';
 
 export const initCalendar = {
-  mainResourceName: "status",
-  currentViewName: "3Days",
+  mainResourceName: 'status',
+  currentViewName: 'Week',
   currentDate: new Date(),
   departvalue: null,
   emplvalue: null,
   status: null,
   data: null,
-  sort: [{ columnName: "startDate", direction: "desc" }],
+  sort: [{ columnName: 'startDate', direction: 'desc' }],
 };
 
 export const calendarReducer = (state: CalendarTypes, action: any) => {
   switch (action.type) {
-    case "setMainResourceName":
+    case 'setMainResourceName':
       return { ...state, mainResourceName: action.payload };
-    case "setCurrentViewName":
+    case 'setCurrentViewName':
       return { ...state, currentViewName: action.payload };
-    case "setCurrentDate":
+    case 'setCurrentDate':
       return { ...state, currentDate: action.payload };
-    case "setDepartvalue":
+    case 'setDepartvalue':
       return { ...state, departvalue: action.payload };
-    case "setEmplvalue":
+    case 'setEmplvalue':
       return { ...state, emplvalue: action.payload };
-    case "setStatus":
+    case 'setStatus':
       return { ...state, status: action.payload };
-    case "setData":
+    case 'setData':
       return { ...state, data: action.payload };
-    case "setSort":
+    case 'setSort':
       return { ...state, sort: action.payload };
 
     default:
-      throw new Error("Unexpected action");
+      throw new Error('Unexpected action');
   }
 };

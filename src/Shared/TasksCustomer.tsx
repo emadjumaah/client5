@@ -1,28 +1,30 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import React, { useEffect, useState } from "react";
-import Paper from "@material-ui/core/Paper";
+import React, { useEffect, useState } from 'react';
+import Paper from '@material-ui/core/Paper';
 import {
   EditingState,
   SortingState,
   IntegratedSorting,
   DataTypeProvider,
-} from "@devexpress/dx-react-grid";
+} from '@devexpress/dx-react-grid';
 import {
   Grid,
   TableHeaderRow,
   TableEditColumn,
   VirtualTable,
   TableColumnVisibility,
-} from "@devexpress/dx-react-grid-material-ui";
-import { Command, PopupEditing } from ".";
+} from '@devexpress/dx-react-grid-material-ui';
+import { Command, PopupEditing } from '.';
 import {
   getCustomers,
   getDepartments,
   getEmployees,
   getLandingChartData,
-} from "../graphql";
-import { useLazyQuery, useMutation } from "@apollo/client";
+  getProjects,
+  getResourses,
+} from '../graphql';
+import { useLazyQuery, useMutation } from '@apollo/client';
 import {
   createdAtFormatter,
   currencyFormatterEmpty,
@@ -33,19 +35,22 @@ import {
   progressFormatter,
   taskNameFormatter,
   // taskStatusFormatter,
-} from "./colorFormat";
-import { AlertLocal } from "../components";
-import { getColumns } from "../common/columns";
-import getTasks from "../graphql/query/getTasks";
-import PopupTask from "../pubups/PopupTask";
-import createTask from "../graphql/mutation/createTask";
-import updateTask from "../graphql/mutation/updateTask";
-import deleteTaskById from "../graphql/mutation/deleteTaskById";
-import { useCustomers, useDepartments, useEmployees } from "../hooks";
-import { errorAlert, errorDeleteAlert } from "./helpers";
-import { TableComponent } from "./TableComponent";
-import PopupTaskView from "../pubups/PopupTaskView";
-import useTasks from "../hooks/useTasks";
+} from './colorFormat';
+import { AlertLocal } from '../components';
+import { getColumns } from '../common/columns';
+import getTasks from '../graphql/query/getTasks';
+import PopupTask from '../pubups/PopupTask';
+import createTask from '../graphql/mutation/createTask';
+import updateTask from '../graphql/mutation/updateTask';
+import deleteTaskById from '../graphql/mutation/deleteTaskById';
+import { useCustomers, useDepartments } from '../hooks';
+import { errorAlert, errorDeleteAlert } from './helpers';
+import { TableComponent } from './TableComponent';
+import PopupTaskView from '../pubups/PopupTaskView';
+import useTasks from '../hooks/useTasks';
+import useEmployeesUp from '../hooks/useEmployeesUp';
+import useResoursesUp from '../hooks/useResoursesUp';
+import useProjects from '../hooks/useProjects';
 
 export const getRowId = (row: { _id: any }) => row._id;
 
@@ -60,7 +65,7 @@ export default function TasksCustomer({
   name,
   id,
 }) {
-  const [alrt, setAlrt] = useState({ show: false, msg: "", type: undefined });
+  const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
   const col = getColumns({ isRTL, words });
   const [columns] = useState([
     col.title,
@@ -72,21 +77,21 @@ export default function TasksCustomer({
     col.employee,
     col.evQty,
     col.progress,
-    { name: "amount", title: isRTL ? "الاجمالي" : "Total" },
+    { name: 'amount', title: isRTL ? 'الاجمالي' : 'Total' },
     col.totalinvoiced,
     col.totalpaid,
     {
       id: 40,
-      ref: "due",
-      name: "due",
-      title: isRTL ? "المتبقي" : "Due Payment",
+      ref: 'due',
+      name: 'due',
+      title: isRTL ? 'المتبقي' : 'Due Payment',
     },
     col.toatlExpenses,
     {
       id: 38,
-      ref: "income",
-      name: "income",
-      title: isRTL ? "صافي الايراد" : "Total Income",
+      ref: 'income',
+      name: 'income',
+      title: isRTL ? 'صافي الايراد' : 'Total Income',
     },
   ]);
 
@@ -97,7 +102,9 @@ export default function TasksCustomer({
 
   const { customers, addCustomer, editCustomer } = useCustomers();
   const { departments } = useDepartments();
-  const { employees } = useEmployees();
+  const { employees } = useEmployeesUp();
+  const { resourses } = useResoursesUp();
+  const { projects } = useProjects();
   const { tasks } = useTasks();
 
   const onCloseItem = () => {
@@ -106,7 +113,7 @@ export default function TasksCustomer({
   };
 
   const [loadTasks, tasksData]: any = useLazyQuery(getTasks, {
-    fetchPolicy: "cache-and-network",
+    fetchPolicy: 'cache-and-network',
   });
 
   const refresQuery = {
@@ -123,9 +130,18 @@ export default function TasksCustomer({
       },
       {
         query: getEmployees,
+        variables: { isRTL, resType: 1 },
       },
       {
         query: getDepartments,
+        variables: { isRTL, depType: 1 },
+      },
+      {
+        query: getResourses,
+        variables: { isRTL, resType: 1 },
+      },
+      {
+        query: getProjects,
       },
       {
         query: getLandingChartData,
@@ -135,7 +151,7 @@ export default function TasksCustomer({
 
   useEffect(() => {
     if (openItem) {
-      const tsks = tasksData?.data?.["getTasks"]?.data || [];
+      const tsks = tasksData?.data?.['getTasks']?.data || [];
       if (tsks && tsks.length > 0) {
         const opened = tsks.filter((ts: any) => ts._id === item._id)?.[0];
         setItem(opened);
@@ -165,7 +181,7 @@ export default function TasksCustomer({
       const _id = deleted[0];
       const res = await removeTaskById({ variables: { _id } });
       if (res?.data?.deleteTaskById?.ok === false) {
-        if (res?.data?.deleteTaskById?.error.includes("related")) {
+        if (res?.data?.deleteTaskById?.error.includes('related')) {
           await errorDeleteAlert(setAlrt, isRTL);
         } else {
           await errorAlert(setAlrt, isRTL);
@@ -189,7 +205,7 @@ export default function TasksCustomer({
     <Paper
       style={{
         maxHeight: 600,
-        overflow: "auto",
+        overflow: 'auto',
         margin: 10,
         minHeight: 600,
       }}
@@ -201,7 +217,7 @@ export default function TasksCustomer({
         <VirtualTable
           height={600}
           messages={{
-            noData: isRTL ? "لا يوجد بيانات" : "no data",
+            noData: isRTL ? 'لا يوجد بيانات' : 'no data',
           }}
           estimatedRowHeight={40}
           tableComponent={TableComponent}
@@ -218,37 +234,37 @@ export default function TasksCustomer({
           ]}
         />
         <DataTypeProvider
-          for={["title"]}
+          for={['title']}
           formatterComponent={(props: any) =>
             nameLinkFormat({ ...props, setItem, setOpenItem })
           }
         ></DataTypeProvider>
         <DataTypeProvider
-          for={["start", "end"]}
+          for={['start', 'end']}
           formatterComponent={createdAtFormatter}
         ></DataTypeProvider>
         <DataTypeProvider
-          for={["due"]}
+          for={['due']}
           formatterComponent={dueAmountFormatter}
         ></DataTypeProvider>
         <DataTypeProvider
-          for={["amount", "toatlExpenses", "totalpaid"]}
+          for={['amount', 'toatlExpenses', 'totalpaid']}
           formatterComponent={currencyFormatterEmpty}
         ></DataTypeProvider>
         <DataTypeProvider
-          for={["totalinvoiced"]}
+          for={['totalinvoiced']}
           formatterComponent={invoiceReceiptFormatter}
         ></DataTypeProvider>
         <DataTypeProvider
-          for={["income"]}
+          for={['income']}
           formatterComponent={incomeAmountFormatter}
         ></DataTypeProvider>
         <DataTypeProvider
-          for={["tasktype"]}
+          for={['tasktype']}
           formatterComponent={taskNameFormatter}
         ></DataTypeProvider>
         <DataTypeProvider
-          for={["progress"]}
+          for={['progress']}
           formatterComponent={progressFormatter}
         ></DataTypeProvider>
 
@@ -265,11 +281,13 @@ export default function TasksCustomer({
             value={value}
             name={name}
             employees={employees}
+            resourses={resourses}
             departments={departments}
             customers={customers}
             addCustomer={addCustomer}
             editCustomer={editCustomer}
             company={company}
+            projects={projects}
             servicesproducts={servicesproducts}
             theme={theme}
             isEditor={isEditor}
@@ -293,6 +311,7 @@ export default function TasksCustomer({
           tasks={tasks}
           isNew={false}
           theme={theme}
+          resourses={resourses}
           employees={employees}
           departments={departments}
           customers={customers}

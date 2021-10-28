@@ -1,4 +1,4 @@
-import { gql } from "@apollo/client";
+import { gql } from '@apollo/client';
 
 export default gql`
   mutation updateItem(
@@ -16,6 +16,7 @@ export default gql`
     $category: CategoryInput
     $brand: BrandInput
     $employee: EmployeeInput
+    $resourse: ResourseInput
     $department: DepartmentInput
   ) {
     updateItem(
@@ -33,6 +34,7 @@ export default gql`
       category: $category
       brand: $brand
       employee: $employee
+      resourse: $resourse
       department: $department
     ) {
       ok

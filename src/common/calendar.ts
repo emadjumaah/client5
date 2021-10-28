@@ -20,6 +20,7 @@ export const commitAppointmentChanges = async ({
         customer,
         department,
         employee,
+        resourse,
         ...rest
       } = added;
       const { startPeriod, endPeriod } = getAppStartEndPeriod();
@@ -63,6 +64,14 @@ export const commitAppointmentChanges = async ({
                 employeePhone: employee.phone,
               }
             : undefined,
+          resourse: resourse
+            ? {
+                resourseId: resourse._id,
+                resourseName: resourse.name,
+                resourseNameAr: resourse.nameAr,
+                resourseColor: resourse.color,
+              }
+            : undefined,
           ...rest,
         };
         await addEvent({ variables });
@@ -71,18 +80,17 @@ export const commitAppointmentChanges = async ({
     if (changed) {
       const id = Object.keys(changed)[0];
       const data = changed[id];
-      const { items, customer, department, employee, ...rest } = data;
+      const { items, customer, department, employee, resourse, ...rest } = data;
 
       const variables = {
         id: Number(id),
         items,
-        employee: employee
+        customer: customer
           ? {
-              employeeId: employee._id,
-              employeeName: employee.name,
-              employeeNameAr: employee.nameAr,
-              employeeColor: employee.color,
-              employeePhone: employee.phone,
+              customerId: customer._id,
+              customerName: customer.name,
+              customerNameAr: customer.nameAr,
+              customerPhone: customer.phone,
             }
           : undefined,
         department: department
@@ -93,16 +101,26 @@ export const commitAppointmentChanges = async ({
               departmentColor: department.color,
             }
           : undefined,
-        customer: customer
+        employee: employee
           ? {
-              customerId: customer._id,
-              customerName: customer.name,
-              customerNameAr: customer.nameAr,
-              customerPhone: customer.phone,
+              employeeId: employee._id,
+              employeeName: employee.name,
+              employeeNameAr: employee.nameAr,
+              employeeColor: employee.color,
+              employeePhone: employee.phone,
+            }
+          : undefined,
+        resourse: resourse
+          ? {
+              resourseId: resourse._id,
+              resourseName: resourse.name,
+              resourseNameAr: resourse.nameAr,
+              resourseColor: resourse.color,
             }
           : undefined,
         ...rest,
       };
+
       await editEvent({
         variables,
         optimisticResponse: {
@@ -176,6 +194,10 @@ export const setRowFromAppointment = (row: any) => {
     employeeName,
     employeeNameAr,
     employeeColor,
+    resourseId,
+    resourseName,
+    resourseNameAr,
+    resourseColor,
     itemId,
     itemName,
     itemNameAr,
@@ -205,6 +227,16 @@ export const setRowFromAppointment = (row: any) => {
           name: row.employeeName,
           nameAr: row.employeeNameAr,
           color: row.employeeColor,
+        };
+  }
+  if (resourseId) {
+    newrow.resourse = row.resourse
+      ? row.resourse
+      : {
+          _id: row.resourseId,
+          name: row.resourseName,
+          nameAr: row.resourseNameAr,
+          color: row.resourseColor,
         };
   }
   if (itemId) {

@@ -1,8 +1,8 @@
 import React from 'react';
 import { Box, Grid, Typography } from '@material-ui/core';
-import { quantityFormat } from '../../Shared/colorFormat';
+import { covertToDate, quantityFormat } from '../../Shared/colorFormat';
 import { packages } from '../../constants/roles';
-export default function Package({ company, isRTL }: any) {
+export default function Package({ company, tempwords, isRTL }: any) {
   const pack = packages.filter((pa: any) => pa.name === company.packName)?.[0];
   return (
     <Box
@@ -11,6 +11,8 @@ export default function Package({ company, isRTL }: any) {
         flex: 1,
         backgroundColor: '#eaefee',
         height: 200,
+        borderRadius: 5,
+        padding: 10,
       }}
     >
       <Grid container spacing={2}>
@@ -20,44 +22,41 @@ export default function Package({ company, isRTL }: any) {
           </Typography>
         </Grid>
         <Grid item xs={8}>
-          <Typography variant="subtitle1">
+          <Typography
+            style={{ color: '#8a2be2', fontWeight: 'bold' }}
+            variant="subtitle1"
+          >
             {isRTL ? pack?.titleAr : pack?.title}
           </Typography>
         </Grid>
         <Grid item xs={4}>
+          <Typography>{isRTL ? 'من تاريخ' : 'From'}</Typography>
+          <Typography>{covertToDate(company?.packStart)}</Typography>
+        </Grid>
+        <Grid item xs={8}>
+          <Typography>{isRTL ? 'الى تاريخ' : 'To'}</Typography>
+          <Typography>{covertToDate(company?.packEnd)}</Typography>
+        </Grid>
+
+        <Grid item xs={4}>
           <Typography>
-            {isRTL ? 'المستخدمين' : 'Users'} :{' '}
+            {isRTL ? 'مستخدمين' : 'Users'} :{' '}
+            {quantityFormat(company.usedUsers, isRTL)} /{' '}
             {quantityFormat(company.users, isRTL)}
           </Typography>
         </Grid>
         <Grid item xs={4}>
           <Typography>
-            {isRTL ? 'المواعيد/أنشطة' : 'Activities'} :{' '}
+            {tempwords.appointments} :{' '}
+            {quantityFormat(company.usedEvents, isRTL)} /{' '}
             {quantityFormat(company.packQty, isRTL)}
           </Typography>
         </Grid>
         <Grid item xs={4}>
           <Typography>
-            {isRTL ? 'الوثائق' : 'Doocuments'} :{' '}
+            {isRTL ? 'وثائق' : 'Doocuments'} :{' '}
+            {quantityFormat(company.usedDocs, isRTL)} /{' '}
             {quantityFormat(company.packDocsQty, isRTL)}
-          </Typography>
-        </Grid>
-        <Grid item xs={4}>
-          <Typography>
-            {isRTL ? 'المستخدمين' : 'Users'} :{' '}
-            {quantityFormat(company.usedUsers, isRTL)}
-          </Typography>
-        </Grid>
-        <Grid item xs={4}>
-          <Typography>
-            {isRTL ? 'المواعيد/أنشطة' : 'Activities'} :{' '}
-            {quantityFormat(company.usedEvents, isRTL)}
-          </Typography>
-        </Grid>
-        <Grid item xs={4}>
-          <Typography>
-            {isRTL ? 'الوثائق' : 'Doocuments'} :{' '}
-            {quantityFormat(company.usedDocs, isRTL)}
           </Typography>
         </Grid>
       </Grid>

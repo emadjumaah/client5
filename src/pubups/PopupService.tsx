@@ -12,11 +12,13 @@ import {
 import { GContextTypes } from '../types';
 import { GlobalContext } from '../contexts';
 import PopupLayout from '../pages/main/PopupLayout';
-import { FormControlLabel, Grid, Radio, RadioGroup } from '@material-ui/core';
+import { Grid } from '@material-ui/core';
 import { TextFieldLocal } from '../components';
 import AutoFieldLocal from '../components/fields/AutoFieldLocal';
-import useDepartmentsTech from '../hooks/useDepartmentsTech';
-import { useEmployees, useTemplate } from '../hooks';
+import { useTemplate } from '../hooks';
+import useEmployeesDown from '../hooks/useEmployeesDown';
+import useResoursesDown from '../hooks/useResoursesDown';
+import useDepartmentsDown from '../hooks/useDepartmentsDown';
 
 const PopupService = ({
   open,
@@ -40,7 +42,10 @@ const PopupService = ({
   const [emplError, setEmplError] = useState<any>(false);
   const emplRef: any = React.useRef();
 
-  const [resKind, setResKind] = useState<any>(null);
+  const [resovalue, setResovalue] = useState<any>(null);
+  const [resoError, setResoError] = useState<any>(false);
+  const resoRef: any = React.useRef();
+
   const [emplslist, setEmplslist] = useState<any>([]);
 
   const { register, handleSubmit, errors, reset } = useForm(yup.itmResolver);
@@ -49,24 +54,23 @@ const PopupService = ({
     store: { user },
   }: GContextTypes = useContext(GlobalContext);
 
-  const { tempoptions } = useTemplate();
-  const { departments } = useDepartmentsTech();
-  const { employees } = useEmployees();
+  const { tempoptions, tempwords } = useTemplate();
+  const { departments } = useDepartmentsDown();
+  const { employees } = useEmployeesDown();
+  const { resourses } = useResoursesDown();
 
   useEffect(() => {
     if (employees && employees.length > 0) {
-      const filtered = employees.filter(
-        (emp: any) => emp.resKind === resKind && emp.resType === 2
-      );
+      const filtered = employees.filter((emp: any) => emp.resType === 2);
       setEmplslist(filtered);
     }
-  }, [resKind, employees]);
+  }, [employees]);
 
   useEffect(() => {
     if (row && row._id) {
       const depId = row.departmentId;
       const empId = row.employeeId;
-      setResKind(null);
+      const resId = row.resourseId;
       // const catId = row.categoryId;
       if (depId) {
         const depart = departments.filter((dep: any) => dep._id === depId)[0];
@@ -75,6 +79,10 @@ const PopupService = ({
       if (empId) {
         const empl = employees.filter((emp: any) => emp._id === empId)[0];
         setEmplvalue(empl);
+      }
+      if (resId) {
+        const reso = resourses.filter((emp: any) => emp._id === resId)[0];
+        setResovalue(reso);
       }
     }
   }, [row]);
@@ -85,7 +93,8 @@ const PopupService = ({
     setDepartError(false);
     setEmplvalue(null);
     setEmplError(false);
-    setResKind(null);
+    setResovalue(null);
+    setResoError(false);
     setEmplslist([]);
   };
 
@@ -120,6 +129,19 @@ const PopupService = ({
           employeeNameAr: undefined,
           employeeColor: undefined,
         };
+    const resourse = resovalue
+      ? {
+          resourseId: resovalue._id,
+          resourseName: resovalue.name,
+          resourseNameAr: resovalue.nameAr,
+          resourseColor: resovalue.color,
+        }
+      : {
+          resourseId: undefined,
+          resourseName: undefined,
+          resourseNameAr: undefined,
+          resourseColor: undefined,
+        };
     const variables: any = {
       _id: row && row._id ? row._id : undefined, // is it new or edit
       itemType: 2,
@@ -130,6 +152,7 @@ const PopupService = ({
       desc,
       department,
       employee,
+      resourse,
       branch: user.branch,
       userId: user._id,
     };
@@ -247,7 +270,7 @@ const PopupService = ({
           {!tempoptions?.noServDep && (
             <AutoFieldLocal
               name="department"
-              title={words.department}
+              title={tempwords.department}
               words={words}
               options={departments}
               value={departvalue}
@@ -260,35 +283,11 @@ const PopupService = ({
               mb={20}
             ></AutoFieldLocal>
           )}
-          {!tempoptions?.noServEmp && !tempoptions?.noServRes && (
-            <RadioGroup
-              aria-label="Views"
-              name="views"
-              row
-              value={resKind}
-              onChange={(e: any) => {
-                setResKind(Number(e.target.value));
-                setEmplvalue(null);
-              }}
-            >
-              <FormControlLabel
-                value={1}
-                control={<Radio color="primary" />}
-                label={isRTL ? 'الموظفين' : 'Employees'}
-              />
 
-              <FormControlLabel
-                value={2}
-                control={<Radio color="primary" />}
-                label={isRTL ? 'الموارد' : 'Resourses'}
-              />
-            </RadioGroup>
-          )}
-          {!tempoptions?.noServEmp && !tempoptions?.noServRes && (
+          {!tempoptions?.noServEmp && (
             <AutoFieldLocal
               name="employee"
-              title={resKind === 2 ? words.resourses : words.employee}
-              disabled={!resKind}
+              title={tempwords.employee}
               words={words}
               options={emplslist}
               value={emplvalue}
@@ -296,6 +295,22 @@ const PopupService = ({
               setSelectError={setEmplError}
               selectError={emplError}
               refernce={emplRef}
+              register={register}
+              isRTL={isRTL}
+              mb={20}
+            ></AutoFieldLocal>
+          )}
+          {!tempoptions?.noServRes && (
+            <AutoFieldLocal
+              name="resourse"
+              title={tempwords.resourse}
+              words={words}
+              options={resourses}
+              value={resovalue}
+              setSelectValue={setResovalue}
+              setSelectError={setResoError}
+              selectError={resoError}
+              refernce={resoRef}
               register={register}
               isRTL={isRTL}
               mb={20}

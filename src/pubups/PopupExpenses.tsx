@@ -5,7 +5,6 @@ import { useForm } from 'react-hook-form';
 import { dublicateAlert, errorAlert, yup, messageAlert } from '../Shared';
 import { GContextTypes } from '../types';
 import { GlobalContext } from '../contexts';
-import { Box, FormControlLabel, Radio, RadioGroup } from '@material-ui/core';
 import useAccounts from '../hooks/useAccounts';
 import { parents } from '../constants/kaid';
 import PopupLayout from '../pages/main/PopupLayout';
@@ -13,7 +12,10 @@ import { Grid } from '@material-ui/core';
 import { CalenderLocal, TextFieldLocal } from '../components';
 // import { getAppStartEndPeriod } from "../common/time";
 import AutoFieldLocal from '../components/fields/AutoFieldLocal';
-import { useDepartments, useEmployees, useTemplate } from '../hooks';
+import { useTemplate } from '../hooks';
+import useEmployeesUp from '../hooks/useEmployeesUp';
+import useDepartmentsUp from '../hooks/useDepartmentsUp';
+import useResoursesUp from '../hooks/useResoursesUp';
 
 const PopupExpenses = ({
   open,
@@ -40,8 +42,10 @@ const PopupExpenses = ({
   );
   const [emplError, setEmplError] = useState<any>(false);
 
-  const [resKind, setResKind] = useState<any>(null);
-  const [emplslist, setEmplslist] = useState<any>([]);
+  const [resovalue, setResovalue] = useState<any>(
+    name === 'resourseId' ? value : null
+  );
+  const [resoError, setResoError] = useState<any>(false);
 
   const [departvalue, setDepartvalue] = useState<any>(
     name === 'departmentId' ? value : null
@@ -52,8 +56,9 @@ const PopupExpenses = ({
     name === 'taskId' ? value : null
   );
 
-  const { employees } = useEmployees();
-  const { departments } = useDepartments();
+  const { employees } = useEmployeesUp();
+  const { departments } = useDepartmentsUp();
+  const { resourses } = useResoursesUp();
   const { tempwords, tempoptions } = useTemplate();
 
   const { register, handleSubmit, errors, reset } = useForm(
@@ -92,6 +97,12 @@ const PopupExpenses = ({
           )?.[0];
           setEmplvalue(dept);
         }
+        if (taskvalue?.resourseId && name !== 'resourseId') {
+          const dept = resourses.filter(
+            (dep: any) => dep._id === taskvalue?.resourseId
+          )?.[0];
+          setResovalue(dept);
+        }
       }
     }
   }, [taskvalue]);
@@ -110,15 +121,6 @@ const PopupExpenses = ({
   }, [emplvalue]);
 
   useEffect(() => {
-    if (employees && employees.length > 0) {
-      const filtered = employees.filter(
-        (emp: any) => emp.resKind === resKind && emp.resType === 1
-      );
-      setEmplslist(filtered);
-    }
-  }, [resKind, employees]);
-
-  useEffect(() => {
     if (isNew) {
       if (name === 'taskId') {
         if (value?.departmentId) {
@@ -132,6 +134,12 @@ const PopupExpenses = ({
             (dep: any) => dep._id === value?.employeeId
           )?.[0];
           setEmplvalue(dept);
+        }
+        if (value?.resourseId) {
+          const dept = resourses.filter(
+            (dep: any) => dep._id === value?.resourseId
+          )?.[0];
+          setResovalue(dept);
         }
       }
       if (name === 'employeeId') {
@@ -152,6 +160,7 @@ const PopupExpenses = ({
       const depId = row.departmentId;
       const empId = row.employeeId;
       const taskId = row.taskId;
+      const resId = row.resourseId;
 
       if (depId) {
         const depart = departments.filter((dep: any) => dep._id === depId)[0];
@@ -160,6 +169,10 @@ const PopupExpenses = ({
       if (empId) {
         const empl = employees.filter((emp: any) => emp._id === empId)[0];
         setEmplvalue(empl);
+      }
+      if (resId) {
+        const empl = resourses.filter((emp: any) => emp._id === resId)[0];
+        setResovalue(empl);
       }
       if (taskId) {
         const tsk = tasks.filter((ts: any) => ts.id === taskId)[0];
@@ -252,6 +265,19 @@ const PopupExpenses = ({
           employeeNameAr: undefined,
           employeeColor: undefined,
         };
+    const resourse = resovalue
+      ? {
+          resourseId: resovalue._id,
+          resourseName: resovalue.name,
+          resourseNameAr: resovalue.nameAr,
+          resourseColor: resovalue.color,
+        }
+      : {
+          resourseId: undefined,
+          resourseName: undefined,
+          resourseNameAr: undefined,
+          resourseColor: undefined,
+        };
 
     const variables: any = {
       _id: row && row._id ? row._id : undefined, // is it new or edit
@@ -263,6 +289,7 @@ const PopupExpenses = ({
       customer,
       department,
       employee,
+      resourse,
       desc,
       branch: user.branch,
       userId: user._id,
@@ -298,10 +325,10 @@ const PopupExpenses = ({
     setCridaccounts([]);
     setEmplvalue(null);
     setEmplError(false);
+    setResovalue(null);
+    setResoError(false);
     setDepartvalue(null);
     setDepartError(false);
-    setResKind(null);
-    setEmplslist([]);
     setTaskvalue(null);
   };
   const closeModal = () => {
@@ -391,58 +418,40 @@ const PopupExpenses = ({
                 disabled={name === 'taskId'}
               ></AutoFieldLocal>
 
-              {!isemployee && !tempoptions?.noRes && (
-                <Box style={{ marginRight: 10, marginTop: 0, marginBottom: 0 }}>
-                  <RadioGroup
-                    aria-label="Views"
-                    name="views"
-                    row
-                    value={resKind}
-                    onChange={(e: any) => {
-                      setResKind(Number(e.target.value));
-                      setEmplvalue(null);
-                    }}
-                  >
-                    <FormControlLabel
-                      value={1}
-                      control={
-                        <Radio
-                          style={{ padding: 0, margin: 0 }}
-                          color="primary"
-                        />
-                      }
-                      label={tempwords.employee}
-                    />
-
-                    <FormControlLabel
-                      value={2}
-                      control={
-                        <Radio
-                          style={{ padding: 0, margin: 0 }}
-                          color="primary"
-                        />
-                      }
-                      label={tempwords.resourse}
-                    />
-                  </RadioGroup>
-                </Box>
+              {!tempoptions?.noEmp && (
+                <AutoFieldLocal
+                  name="employee"
+                  title={tempwords.employee}
+                  words={words}
+                  options={employees}
+                  value={emplvalue}
+                  disabled={isemployee || name === 'employeeId'}
+                  setSelectValue={setEmplvalue}
+                  setSelectError={setEmplError}
+                  selectError={emplError}
+                  register={register}
+                  noPlus
+                  isRTL={isRTL}
+                  fullWidth
+                ></AutoFieldLocal>
               )}
-              <AutoFieldLocal
-                name="employee"
-                title={resKind === 2 ? tempwords.resourse : tempwords.employee}
-                options={!tempoptions?.noRes ? emplslist : employees}
-                disabled={
-                  (!resKind && !tempoptions?.noRes) || name === 'employeeId'
-                }
-                words={words}
-                value={emplvalue}
-                setSelectValue={setEmplvalue}
-                setSelectError={setEmplError}
-                selectError={emplError}
-                register={register}
-                isRTL={isRTL}
-                mb={20}
-              ></AutoFieldLocal>
+              {!tempoptions?.noRes && (
+                <AutoFieldLocal
+                  name="resourse"
+                  title={tempwords.resourse}
+                  words={words}
+                  options={resourses}
+                  value={resovalue}
+                  disabled={name === 'resourseId'}
+                  setSelectValue={setResovalue}
+                  setSelectError={setResoError}
+                  selectError={resoError}
+                  register={register}
+                  noPlus
+                  isRTL={isRTL}
+                  fullWidth
+                ></AutoFieldLocal>
+              )}
               <AutoFieldLocal
                 name="department"
                 title={tempwords.department}

@@ -1,13 +1,6 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import React, { useEffect, useState } from 'react';
-import {
-  Box,
-  Fab,
-  FormControlLabel,
-  Radio,
-  RadioGroup,
-  TextField,
-} from '@material-ui/core';
+import { Box, Fab, TextField } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import { useForm } from 'react-hook-form';
 
@@ -17,13 +10,14 @@ import { yup } from '../constants';
 import AutoField from './AutoField';
 import AutoPopper from './AutoPopper';
 import { useTemplate } from '../hooks';
+import useDepartmentsDown from '../hooks/useDepartmentsDown';
+import useEmployeesDown from '../hooks/useEmployeesDown';
+import useResoursesDown from '../hooks/useResoursesDown';
 
 export default function ServiceItemForm({
   options,
   addItem,
   words,
-  employees,
-  departments,
   classes,
   user,
   isRTL,
@@ -38,32 +32,34 @@ export default function ServiceItemForm({
   const [emplError, setEmplError] = useState<any>(false);
   const emplRef: any = React.useRef();
 
+  const [resovalue, setResovalue] = useState<any>(null);
+  const [resoError, setResoError] = useState<any>(false);
+  const resoRef: any = React.useRef();
+
   const [departvalue, setDepartvalue] = useState<any>(null);
   const [depError, setDepError] = useState<any>(false);
   const departRef: any = React.useRef();
-
-  const [resKind, setResKind] = useState<any>(null);
-  const [emplslist, setEmplslist] = useState<any>([]);
 
   const { register, handleSubmit, errors } = useForm(yup.invItemResolver);
   const { tempoptions, tempwords } = useTemplate();
 
   const itemRef: any = React.useRef();
 
-  useEffect(() => {
-    if (employees && employees.length > 0) {
-      const filtered = employees.filter(
-        (emp: any) => emp.resKind === resKind && emp.resType === 2
-      );
-      setEmplslist(filtered);
-    }
-  }, [resKind, employees]);
+  const { departments } = useDepartmentsDown();
+  const { employees } = useEmployeesDown();
+  const { resourses } = useResoursesDown();
 
   useEffect(() => {
     if (itemvalue) {
       if (itemvalue.employeeId) {
         const itememp = employees.filter(
           (emp: any) => emp._id === itemvalue.employeeId
+        )[0];
+        setEmplvalue(itememp);
+      }
+      if (itemvalue.resourseId) {
+        const itememp = resourses.filter(
+          (emp: any) => emp._id === itemvalue.resourseId
         )[0];
         setEmplvalue(itememp);
       }
@@ -74,15 +70,15 @@ export default function ServiceItemForm({
         setDepartvalue(itemdep);
       }
     }
-  }, [employees, departments, itemvalue]);
+  }, [employees, departments, resourses, itemvalue]);
 
   const resetAll = () => {
     setItemprice(0);
     setItemqty(1);
     setItemvalue(null);
     setEmplvalue(null);
+    setResovalue(null);
     setDepartvalue(null);
-    setResKind(null);
   };
 
   const addLocalItem = () => {
@@ -91,14 +87,7 @@ export default function ServiceItemForm({
       itemRef.current.focus();
       return;
     }
-    const employee = emplvalue
-      ? {
-          employeeId: emplvalue._id,
-          employeeName: emplvalue.name,
-          employeeNameAr: emplvalue.nameAr,
-          employeeColor: emplvalue.color,
-        }
-      : undefined;
+
     const department = departvalue
       ? {
           departmentId: departvalue._id,
@@ -106,9 +95,43 @@ export default function ServiceItemForm({
           departmentNameAr: departvalue.nameAr,
           departmentColor: departvalue.color,
         }
-      : undefined;
+      : {
+          departmentId: undefined,
+          departmentName: undefined,
+          departmentNameAr: undefined,
+          departmentColor: undefined,
+        };
+    const employee = emplvalue
+      ? {
+          employeeId: emplvalue._id,
+          employeeName: emplvalue.name,
+          employeeNameAr: emplvalue.nameAr,
+          employeeColor: emplvalue.color,
+          employeePhone: emplvalue.phone,
+        }
+      : {
+          employeeId: undefined,
+          employeeName: undefined,
+          employeeNameAr: undefined,
+          employeeColor: undefined,
+          employeePhone: undefined,
+        };
+    const resourse = resovalue
+      ? {
+          resourseId: resovalue._id,
+          resourseName: resovalue.name,
+          resourseNameAr: resovalue.nameAr,
+          resourseColor: resovalue.color,
+        }
+      : {
+          resourseId: undefined,
+          resourseName: undefined,
+          resourseNameAr: undefined,
+          resourseColor: undefined,
+        };
     const itemdata = {
       ...itemvalue,
+      ...resourse,
       ...employee,
       ...department,
       itemqty,
@@ -174,8 +197,8 @@ export default function ServiceItemForm({
               style={{
                 width:
                   !tempoptions?.noServEmp && !tempoptions?.noServRes
-                    ? 220
-                    : 420,
+                    ? 200
+                    : 400,
               }}
               inputRef={(ref) => {
                 itemRef.current = ref;
@@ -187,72 +210,59 @@ export default function ServiceItemForm({
           )}
         />
 
-        <Box>
-          {!tempoptions?.noServEmp && !tempoptions?.noServRes && (
-            <Box style={{ marginRight: 10, marginTop: -20 }}>
-              <RadioGroup
-                aria-label="Views"
-                name="views"
-                row
-                value={resKind}
-                onChange={(e: any) => {
-                  setResKind(Number(e.target.value));
-                  setEmplvalue(null);
-                }}
-              >
-                <FormControlLabel
-                  value={1}
-                  control={
-                    <Radio style={{ padding: 0, margin: 0 }} color="primary" />
-                  }
-                  label={tempwords.employee}
-                />
-
-                <FormControlLabel
-                  value={2}
-                  control={
-                    <Radio style={{ padding: 0, margin: 0 }} color="primary" />
-                  }
-                  label={tempwords.resourse}
-                />
-              </RadioGroup>
-            </Box>
-          )}
-          {!tempoptions?.noServEmp && !tempoptions?.noServRes && (
-            <AutoField
-              name="employee"
-              // title={words.employee}
-              words={words}
-              options={emplslist}
-              disabled={!resKind}
-              value={emplvalue}
-              setSelectValue={setEmplvalue}
-              setSelectError={setEmplError}
-              selectError={emplError}
-              refernce={emplRef}
-              register={register}
-              width={180}
-              ms={0}
-              nolabel
-              noPlus
-              classes={classes}
-              isRTL={isRTL}
-            ></AutoField>
-          )}
-        </Box>
+        {!tempoptions?.noServEmp && (
+          <AutoField
+            name="employee"
+            title={tempwords.employee}
+            words={words}
+            options={employees}
+            value={emplvalue}
+            setSelectValue={setEmplvalue}
+            setSelectError={setEmplError}
+            selectError={emplError}
+            refernce={emplRef}
+            register={register}
+            width={130}
+            ms={0}
+            nolabel
+            noPlus
+            classes={classes}
+            isRTL={isRTL}
+          ></AutoField>
+        )}
+        {!tempoptions?.noServRes && (
+          <AutoField
+            name="resourse"
+            title={tempwords.resourse}
+            words={words}
+            options={resourses}
+            value={resovalue}
+            setSelectValue={setResovalue}
+            setSelectError={setResoError}
+            selectError={resoError}
+            refernce={resoRef}
+            register={register}
+            width={130}
+            ms={0}
+            nolabel
+            noPlus
+            classes={classes}
+            isRTL={isRTL}
+          ></AutoField>
+        )}
         {!tempoptions?.noServDep && (
           <AutoField
             name="department"
             title={words.department}
             words={words}
-            options={departments.filter((dep: any) => dep.depType === 2)}
+            options={departments}
             value={departvalue}
             setSelectValue={setDepartvalue}
             setSelectError={setDepError}
             selectError={depError}
             refernce={departRef}
             register={register}
-            width={200}
+            width={130}
             ms={0}
             nolabel
             noPlus
