@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Box, Fab, TextField } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import { useForm } from 'react-hook-form';
@@ -7,12 +7,12 @@ import { useForm } from 'react-hook-form';
 import { Autocomplete } from '@material-ui/lab';
 import OptionItemData from './OptionItemData';
 import { yup } from '../constants';
-import AutoField from './AutoField';
+// import AutoField from './AutoField';
 import AutoPopper from './AutoPopper';
-import { useTemplate } from '../hooks';
-import useDepartmentsDown from '../hooks/useDepartmentsDown';
-import useEmployeesDown from '../hooks/useEmployeesDown';
-import useResoursesDown from '../hooks/useResoursesDown';
+// import { useTemplate } from '../hooks';
+// import useDepartmentsDown from '../hooks/useDepartmentsDown';
+// import useEmployeesDown from '../hooks/useEmployeesDown';
+// import useResoursesDown from '../hooks/useResoursesDown';
 
 export default function ServiceItemForm({
   options,
@@ -28,57 +28,57 @@ export default function ServiceItemForm({
   const [itemqty, setItemqty] = useState(1);
   const [itemprice, setItemprice] = useState(0);
 
-  const [emplvalue, setEmplvalue] = useState<any>(null);
-  const [emplError, setEmplError] = useState<any>(false);
-  const emplRef: any = React.useRef();
+  // const [emplvalue, setEmplvalue] = useState<any>(null);
+  // const [emplError, setEmplError] = useState<any>(false);
+  // const emplRef: any = React.useRef();
 
-  const [resovalue, setResovalue] = useState<any>(null);
-  const [resoError, setResoError] = useState<any>(false);
-  const resoRef: any = React.useRef();
+  // const [resovalue, setResovalue] = useState<any>(null);
+  // const [resoError, setResoError] = useState<any>(false);
+  // const resoRef: any = React.useRef();
 
-  const [departvalue, setDepartvalue] = useState<any>(null);
-  const [depError, setDepError] = useState<any>(false);
-  const departRef: any = React.useRef();
+  // const [departvalue, setDepartvalue] = useState<any>(null);
+  // const [depError, setDepError] = useState<any>(false);
+  // const departRef: any = React.useRef();
 
   const { register, handleSubmit, errors } = useForm(yup.invItemResolver);
-  const { tempoptions, tempwords } = useTemplate();
+  // const { tempoptions, tempwords } = useTemplate();
 
   const itemRef: any = React.useRef();
 
-  const { departments } = useDepartmentsDown();
-  const { employees } = useEmployeesDown();
-  const { resourses } = useResoursesDown();
+  // const { departments } = useDepartmentsDown();
+  // const { employees } = useEmployeesDown();
+  // const { resourses } = useResoursesDown();
 
-  useEffect(() => {
-    if (itemvalue) {
-      if (itemvalue.employeeId) {
-        const itememp = employees.filter(
-          (emp: any) => emp._id === itemvalue.employeeId
-        )[0];
-        setEmplvalue(itememp);
-      }
-      if (itemvalue.resourseId) {
-        const itememp = resourses.filter(
-          (emp: any) => emp._id === itemvalue.resourseId
-        )[0];
-        setResovalue(itememp);
-      }
-      if (itemvalue.departmentId) {
-        const itemdep = departments.filter(
-          (it: any) => it._id === itemvalue.departmentId
-        )[0];
-        setDepartvalue(itemdep);
-      }
-    }
-  }, [employees, departments, resourses, itemvalue]);
+  // useEffect(() => {
+  //   if (itemvalue) {
+  //     if (itemvalue.employeeId) {
+  //       const itememp = employees.filter(
+  //         (emp: any) => emp._id === itemvalue.employeeId
+  //       )[0];
+  //       setEmplvalue(itememp);
+  //     }
+  //     if (itemvalue.resourseId) {
+  //       const itememp = resourses.filter(
+  //         (emp: any) => emp._id === itemvalue.resourseId
+  //       )[0];
+  //       setResovalue(itememp);
+  //     }
+  //     if (itemvalue.departmentId) {
+  //       const itemdep = departments.filter(
+  //         (it: any) => it._id === itemvalue.departmentId
+  //       )[0];
+  //       setDepartvalue(itemdep);
+  //     }
+  //   }
+  // }, [employees, departments, resourses, itemvalue]);
 
   const resetAll = () => {
     setItemprice(0);
     setItemqty(1);
     setItemvalue(null);
-    setEmplvalue(null);
-    setResovalue(null);
-    setDepartvalue(null);
+    // setEmplvalue(null);
+    // setResovalue(null);
+    // setDepartvalue(null);
   };
 
   const addLocalItem = () => {
@@ -88,52 +88,52 @@ export default function ServiceItemForm({
       return;
     }
 
-    const department = departvalue
-      ? {
-          departmentId: departvalue._id,
-          departmentName: departvalue.name,
-          departmentNameAr: departvalue.nameAr,
-          departmentColor: departvalue.color,
-        }
-      : {
-          departmentId: undefined,
-          departmentName: undefined,
-          departmentNameAr: undefined,
-          departmentColor: undefined,
-        };
-    const employee = emplvalue
-      ? {
-          employeeId: emplvalue._id,
-          employeeName: emplvalue.name,
-          employeeNameAr: emplvalue.nameAr,
-          employeeColor: emplvalue.color,
-          employeePhone: emplvalue.phone,
-        }
-      : {
-          employeeId: undefined,
-          employeeName: undefined,
-          employeeNameAr: undefined,
-          employeeColor: undefined,
-          employeePhone: undefined,
-        };
-    const resourse = resovalue
-      ? {
-          resourseId: resovalue._id,
-          resourseName: resovalue.name,
-          resourseNameAr: resovalue.nameAr,
-          resourseColor: resovalue.color,
-        }
-      : {
-          resourseId: undefined,
-          resourseName: undefined,
-          resourseNameAr: undefined,
-          resourseColor: undefined,
-        };
+    // const department = departvalue
+    //   ? {
+    //       departmentId: departvalue._id,
+    //       departmentName: departvalue.name,
+    //       departmentNameAr: departvalue.nameAr,
+    //       departmentColor: departvalue.color,
+    //     }
+    //   : {
+    //       departmentId: undefined,
+    //       departmentName: undefined,
+    //       departmentNameAr: undefined,
+    //       departmentColor: undefined,
+    //     };
+    // const employee = emplvalue
+    //   ? {
+    //       employeeId: emplvalue._id,
+    //       employeeName: emplvalue.name,
+    //       employeeNameAr: emplvalue.nameAr,
+    //       employeeColor: emplvalue.color,
+    //       employeePhone: emplvalue.phone,
+    //     }
+    //   : {
+    //       employeeId: undefined,
+    //       employeeName: undefined,
+    //       employeeNameAr: undefined,
+    //       employeeColor: undefined,
+    //       employeePhone: undefined,
+    //     };
+    // const resourse = resovalue
+    //   ? {
+    //       resourseId: resovalue._id,
+    //       resourseName: resovalue.name,
+    //       resourseNameAr: resovalue.nameAr,
+    //       resourseColor: resovalue.color,
+    //     }
+    //   : {
+    //       resourseId: undefined,
+    //       resourseName: undefined,
+    //       resourseNameAr: undefined,
+    //       resourseColor: undefined,
+    //     };
     const itemdata = {
       ...itemvalue,
-      ...resourse,
-      ...employee,
-      ...department,
+      // ...resourse,
+      // ...employee,
+      // ...department,
       itemqty,
       itemprice,
       itemtotal: itemqty * itemprice,
@@ -151,8 +151,7 @@ export default function ServiceItemForm({
       display="flex"
       style={{
         flex: 1,
-        marginTop: 10,
-        marginBottom: 10,
+        margin: 10,
         borderRadius: 5,
       }}
     >
@@ -194,12 +193,7 @@ export default function ServiceItemForm({
               label={`${words.service}`}
               error={itemError}
               variant="outlined"
-              style={{
-                width:
-                  !tempoptions?.noServEmp && !tempoptions?.noServRes
-                    ? 200
-                    : 400,
-              }}
+              style={{ width: 400 }}
               inputRef={(ref) => {
                 itemRef.current = ref;
               }}
@@ -210,7 +204,7 @@ export default function ServiceItemForm({
           )}
         />
 
-        {!tempoptions?.noServEmp && (
+        {/* {!tempoptions?.noServEmp && (
           <AutoField
             name="employee"
             title={tempwords.employee}
@@ -269,7 +263,7 @@ export default function ServiceItemForm({
             classes={classes}
             isRTL={isRTL}
           ></AutoField>
-        )}
+        )} */}
         <TextField
           name="qty"
           onChange={(e: any) => setItemqty(Number(e.target.value))}
@@ -279,7 +273,7 @@ export default function ServiceItemForm({
           inputRef={register}
           type="number"
           error={errors.qty ? true : false}
-          style={{ width: 80 }}
+          style={{ width: 150 }}
           margin="dense"
           onFocus={(e) => e.target.select()}
           inputProps={{
@@ -295,7 +289,7 @@ export default function ServiceItemForm({
           variant="outlined"
           inputRef={register}
           type="number"
-          style={{ width: 100 }}
+          style={{ width: 150 }}
           margin="dense"
           onFocus={(e) => e.target.select()}
           inputProps={{

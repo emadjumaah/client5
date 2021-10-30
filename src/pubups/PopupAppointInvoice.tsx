@@ -401,7 +401,7 @@ const PopupAppointInvoice = ({
       paymentType: ptype,
       userId: user._id,
       eventId: appoint.id,
-      taskId: taskvalue ? taskvalue.id : undefined,
+      taskId: taskvalue ? taskvalue.id : null,
       eventNo: appoint.docNo,
     };
 
@@ -411,7 +411,12 @@ const PopupAppointInvoice = ({
   const apply = (mutate: any, variables: any) => {
     try {
       mutate({ variables });
-      editEvent({ variables: { id: appoint.id, status: 10 } });
+      editEvent({
+        variables: {
+          id: appoint.id,
+          status: 10,
+        },
+      });
       freshlastNos();
       onCloseForm();
       onCloseAppoint();

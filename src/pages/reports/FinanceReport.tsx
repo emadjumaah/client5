@@ -47,6 +47,8 @@ import { FinanceContext } from '../../contexts';
 import FilterSelectCkeckBox from '../../Shared/FilterSelectCkeckBox';
 import useTasks from '../../hooks/useTasks';
 import _ from 'lodash';
+import useProjects from '../../hooks/useProjects';
+import { useTemplate } from '../../hooks';
 
 const styles = (theme) => ({
   tableStriped: {
@@ -87,7 +89,7 @@ export default function FinanceReport({
     // col.kaidType,
     col.opAcc,
     // col.accType,
-    // col.customer,
+    col.project,
     col.opType,
     col.employee,
     col.opDocNo,
@@ -116,6 +118,7 @@ export default function FinanceReport({
       custvalue,
       catvalue,
       accvalue,
+      projvalue,
       taskvalue,
       group,
       groupby,
@@ -124,7 +127,9 @@ export default function FinanceReport({
     },
     dispatch,
   } = useContext(FinanceContext);
+  const { projects } = useProjects();
   const { tasks } = useTasks();
+  const { tempwords } = useTemplate();
 
   const currentViewNameChange = (e: any) => {
     dispatch({ type: 'setCurrentViewName', payload: e.target.value });
@@ -141,6 +146,9 @@ export default function FinanceReport({
   };
   const setTaskvalueDispatch = (value: any) => {
     dispatch({ type: 'setTaskvalue', payload: value ? [value] : [] });
+  };
+  const setProjvalueDispatch = (value: any) => {
+    dispatch({ type: 'setProjvalue', payload: value ? [value] : [] });
   };
 
   useEffect(() => {}, [rows]);
@@ -200,6 +208,7 @@ export default function FinanceReport({
       serviceIds: getIds(servicevalue),
       categoryIds: getIds(catvalue),
       departmentIds: getIds(departvalue),
+      projectIds: getIds(projvalue),
       employeeIds: getIds(emplvalue),
       customerIds: getIds(custvalue),
       taskIds: getTaskIds(taskvalue),
@@ -292,14 +301,26 @@ export default function FinanceReport({
           >
             <Box style={{ marginLeft: 10, marginRight: 10 }}>
               <FilterSelectCkeckBox
+                options={projects}
+                value={projvalue?.[0]}
+                setValue={setProjvalueDispatch}
+                words={tempwords}
+                isRTL={isRTL}
+                name="project"
+                nomulti
+                width={220}
+              ></FilterSelectCkeckBox>
+            </Box>
+            <Box style={{ marginLeft: 10, marginRight: 10 }}>
+              <FilterSelectCkeckBox
                 options={tasks}
                 value={taskvalue?.[0]}
                 setValue={setTaskvalueDispatch}
-                words={words}
+                words={tempwords}
                 isRTL={isRTL}
                 name="task"
                 nomulti
-                width={250}
+                width={220}
               ></FilterSelectCkeckBox>
             </Box>
             <FilterSelectCkeckBox
@@ -310,7 +331,7 @@ export default function FinanceReport({
               isRTL={isRTL}
               name="account"
               nomulti
-              width={250}
+              width={220}
             ></FilterSelectCkeckBox>
           </Box>
           {accvalue && accvalue.length > 0 && (

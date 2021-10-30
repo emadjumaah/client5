@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import React, { useEffect } from "react";
+import React, { useEffect } from 'react';
 import {
   Box,
   Button,
@@ -10,12 +10,14 @@ import {
   DialogTitle,
   IconButton,
   Typography,
-} from "@material-ui/core";
-import { moneyFormat } from "./colorFormat";
-import FilterSelectMulti from "./FilterSelectMulti";
-import CloseIcon from "@material-ui/icons/Close";
+} from '@material-ui/core';
+import { moneyFormat } from './colorFormat';
+import FilterSelectMulti from './FilterSelectMulti';
+import CloseIcon from '@material-ui/icons/Close';
 // import SelectServProd from "./SelectServProd";
 export default function SalesFilter({
+  resovalue,
+  setResovalue,
   emplvalue,
   setEmplvalue,
   servicevalue,
@@ -26,8 +28,12 @@ export default function SalesFilter({
   setCustvalue,
   itemType,
   tasks,
+  projects,
+  projvalue,
+  setProjvalue,
   taskvalue,
   setTaskvalue,
+  resourses,
   employees,
   departments,
   services,
@@ -39,31 +45,39 @@ export default function SalesFilter({
   types,
   setTypes,
 }: any) {
+  const [resovalueLocal, setResovalueLocal] = React.useState([]);
   const [emplvalueLocal, setEmplvalueLocal] = React.useState([]);
   const [servicevalueLocal, setServicevalueLocal] = React.useState([]);
   const [departvalueLocal, setDepartvalueLocal] = React.useState([]);
+  const [projvalueLocal, setProjvalueLocal] = React.useState([]);
   const [custvalueLocal, setCustvalueLocal] = React.useState([]);
   const [taskvalueLocal, setTaskvalueLocal] = React.useState([]);
   const [typesvalueLocal, setTypesvalueLocal] = React.useState([]);
 
   const [open, setOpen] = React.useState(false);
-  const [scroll, setScroll] = React.useState<any>("paper");
+  const [scroll, setScroll] = React.useState<any>('paper');
 
   useEffect(() => {
     if (open === true) {
+      setResovalueLocal(resovalue);
       setEmplvalueLocal(emplvalue);
       setServicevalueLocal(servicevalue);
       setDepartvalueLocal(departvalue);
+      setProjvalueLocal(projvalue);
       setCustvalueLocal(custvalue);
       setTaskvalueLocal(taskvalue);
-      setTypesvalueLocal(types);
+      if (types) {
+        setTypesvalueLocal(types);
+      }
     }
   }, [open]);
 
   const reset = () => {
+    setResovalueLocal([]);
     setEmplvalueLocal([]);
     setServicevalueLocal([]);
     setDepartvalueLocal([]);
+    setProjvalueLocal([]);
     setCustvalueLocal([]);
     setTaskvalueLocal([]);
     setTypesvalueLocal([]);
@@ -74,12 +88,16 @@ export default function SalesFilter({
   };
   const handleResetAll = () => {
     reset();
+    setResovalue([]);
     setEmplvalue([]);
     setServicevalue([]);
     setDepartvalue([]);
+    setProjvalue([]);
     setCustvalue([]);
     setTaskvalue([]);
-    setTypes([]);
+    if (setTypes) {
+      setTypes([]);
+    }
   };
   const handleClickOpen = (scrollType: any) => () => {
     setOpen(true);
@@ -98,18 +116,24 @@ export default function SalesFilter({
 
   const onSubmit = () => {
     setEmplvalue(emplvalueLocal);
+    setResovalue(resovalueLocal);
     setServicevalue(servicevalueLocal);
     setDepartvalue(departvalueLocal);
+    setProjvalue(projvalueLocal);
     setCustvalue(custvalueLocal);
     setTaskvalue(taskvalueLocal);
-    setTypes(typesvalueLocal);
+    if (setTypes) {
+      setTypes(typesvalueLocal);
+    }
     setOpen(false);
   };
   const tt = types ? types : [];
   const filtercounts = [
+    ...resovalue,
     ...emplvalue,
     ...servicevalue,
     ...departvalue,
+    ...projvalue,
     ...custvalue,
     ...taskvalue,
     ...tt,
@@ -119,11 +143,11 @@ export default function SalesFilter({
   return (
     <Box
       style={{
-        alignItems: "center",
-        justifyContent: "center",
+        alignItems: 'center',
+        justifyContent: 'center',
         marginLeft: 20,
         marginRight: 20,
-        direction: isRTL ? "rtl" : "ltr",
+        direction: isRTL ? 'rtl' : 'ltr',
         marginTop: 2,
         height: 38,
       }}
@@ -134,17 +158,17 @@ export default function SalesFilter({
           height: 38,
           width: 160,
           backgroundColor:
-            filtercounts.length > 0 || itemType ? "#FFF5D6" : undefined,
+            filtercounts.length > 0 || itemType ? '#FFF5D6' : undefined,
         }}
-        onClick={handleClickOpen("paper")}
+        onClick={handleClickOpen('paper')}
       >
         <Box
           style={{
-            display: "flex",
+            display: 'flex',
             flex: 1,
-            flexDirection: "row",
-            alignItems: "center",
-            justifyContent: "space-between",
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'space-between',
           }}
         >
           <Typography style={{}} variant="button">
@@ -169,15 +193,15 @@ export default function SalesFilter({
       >
         <DialogTitle
           id="scroll-dialog-title"
-          style={{ direction: isRTL ? "rtl" : "ltr", backgroundColor: "#eee" }}
+          style={{ direction: isRTL ? 'rtl' : 'ltr', backgroundColor: '#eee' }}
         >
           {isRTL
             ? `الفلاتر - (${filtercounts.length})`
             : `Filters - (${filtercounts.length})`}
         </DialogTitle>
         <DialogContent
-          style={{ width: 600, height: 450, direction: isRTL ? "rtl" : "ltr" }}
-          dividers={scroll === "paper"}
+          style={{ width: 600, height: 450, direction: isRTL ? 'rtl' : 'ltr' }}
+          dividers={scroll === 'paper'}
         >
           <Box>
             <Box>
@@ -201,6 +225,17 @@ export default function SalesFilter({
                 name="employee"
                 width={350}
               ></FilterSelectMulti>
+              {resourses && resourses.length > 0 && (
+                <FilterSelectMulti
+                  options={resourses}
+                  value={resovalueLocal}
+                  setValue={setResovalueLocal}
+                  words={words}
+                  isRTL={isRTL}
+                  name="resourse"
+                  width={350}
+                ></FilterSelectMulti>
+              )}
               <FilterSelectMulti
                 options={departments}
                 value={departvalueLocal}
@@ -218,6 +253,17 @@ export default function SalesFilter({
                   words={words}
                   isRTL={isRTL}
                   name="task"
+                  width={350}
+                ></FilterSelectMulti>
+              )}
+              {projects && projects.length > 0 && (
+                <FilterSelectMulti
+                  options={projects}
+                  value={projvalueLocal}
+                  setValue={setProjvalueLocal}
+                  words={words}
+                  isRTL={isRTL}
+                  name="project"
                   width={350}
                 ></FilterSelectMulti>
               )}
@@ -247,8 +293,8 @@ export default function SalesFilter({
                   display="flex"
                   style={{
                     flex: 1,
-                    alignItems: "center",
-                    justifyContent: "flex-end",
+                    alignItems: 'center',
+                    justifyContent: 'flex-end',
                   }}
                 >
                   <Box style={{ marginRight: 20, marginLeft: 20 }}>
@@ -263,11 +309,11 @@ export default function SalesFilter({
         </DialogContent>
         <DialogActions
           style={{
-            direction: isRTL ? "rtl" : "ltr",
-            backgroundColor: "#f8f8f8",
+            direction: isRTL ? 'rtl' : 'ltr',
+            backgroundColor: '#f8f8f8',
             height: 60,
-            alignItems: "center",
-            justifyContent: "space-around",
+            alignItems: 'center',
+            justifyContent: 'space-around',
           }}
         >
           <Button
@@ -276,7 +322,7 @@ export default function SalesFilter({
             onClick={onSubmit}
             color="primary"
           >
-            {isRTL ? "تطبيق" : "Submit"}
+            {isRTL ? 'تطبيق' : 'Submit'}
           </Button>
           <Button
             style={{ width: 100, height: 36 }}
@@ -284,7 +330,7 @@ export default function SalesFilter({
             onClick={handleClose}
             color="primary"
           >
-            {isRTL ? "الغاء" : "Cancel"}
+            {isRTL ? 'الغاء' : 'Cancel'}
           </Button>
         </DialogActions>
       </Dialog>

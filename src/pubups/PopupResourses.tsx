@@ -36,7 +36,7 @@ const PopupResourses = ({
   const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
   const [departvalue, setDepartvalue] = useState<any>(null);
   const [depError, setDepError] = useState<any>(false);
-  const [color, setColor] = useState<any>('#000000');
+  const [color, setColor] = useState<any>('#252B3B');
 
   const emplRef: any = React.useRef();
   const { tempwords } = useTemplate();
@@ -94,7 +94,7 @@ const PopupResourses = ({
 
   const apply = async (mutate: any, mutateName: string, variables: any) => {
     try {
-      const res = await mutate({ variables });
+      const res = mutate({ variables });
       const nitem = getReturnItem(res, mutateName);
       if (setNewValue && nitem) setNewValue(nitem, 'resourse');
       setSaving(false);

@@ -39,7 +39,7 @@ const PopupEmployee = ({
   const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
   const [departvalue, setDepartvalue] = useState<any>(null);
   const [depError, setDepError] = useState<any>(false);
-  const [color, setColor] = useState<any>('#000000');
+  const [color, setColor] = useState<any>('#252B3B');
   const [daysoff, setDaysoff] = React.useState(weekdays);
   const { tempwords } = useTemplate();
 
@@ -109,7 +109,7 @@ const PopupEmployee = ({
 
   const apply = async (mutate: any, mutateName: string, variables: any) => {
     try {
-      const res = await mutate({ variables });
+      const res = mutate({ variables });
       const nitem = getReturnItem(res, mutateName);
       if (setNewValue && nitem) setNewValue(nitem, 'employee');
       setSaving(false);

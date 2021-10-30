@@ -31,12 +31,10 @@ import {
 import { getRowId } from '../../common';
 import {
   calculateAmount,
-  covertToDate,
   covertToTimeDateDigit,
   createdAtFormatter,
   currencyFormatter,
   currencyFormatterEmpty,
-  moneyFormat,
   opTypeFormatter,
   taskIdFormatter,
 } from '../../Shared/colorFormat';
@@ -79,25 +77,9 @@ export default function CustomerReport({
   const [end, setEnd] = useState<any>(null);
 
   const [rows, setRows] = useState([]);
-  const [_, setPrintRows]: any = useState([]);
   const [total, setTotal]: any = useState(null);
 
   const col = getColumns({ isRTL, words });
-
-  const [activecolumns, setActivecolumns] = useState([
-    col.opTime,
-    col.customer,
-    // col.acc,
-    // col.kaidType,
-    col.opType,
-    col.taskId,
-    col.opDocNo,
-    col.opAcc,
-    // col.accType,
-    col.refNo,
-    col.amountdebit,
-    col.amountcredit,
-  ]);
 
   const [columns] = useState([
     col.opTime,
@@ -105,6 +87,7 @@ export default function CustomerReport({
     // col.acc,
     // col.kaidType,
     col.opType,
+    col.project,
     col.taskId,
     col.opDocNo,
     col.opAcc,
@@ -122,6 +105,7 @@ export default function CustomerReport({
     fetchPolicy: 'cache-and-network',
   });
   const { customers } = useCustomers();
+  const { tasks } = useTasks();
 
   const {
     state: {
@@ -130,6 +114,8 @@ export default function CustomerReport({
       endDate,
       servicevalue,
       departvalue,
+      projvalue,
+      resovalue,
       emplvalue,
       custvalue,
       catvalue,
@@ -141,7 +127,6 @@ export default function CustomerReport({
     },
     dispatch,
   } = useContext(CustomerReportContext);
-  const { tasks } = useTasks();
 
   const currentViewNameChange = (e: any) => {
     dispatch({ type: 'setCurrentViewName', payload: e.target.value });
@@ -198,6 +183,8 @@ export default function CustomerReport({
       serviceIds: getIds(servicevalue),
       categoryIds: getIds(catvalue),
       departmentIds: getIds(departvalue),
+      projectIds: getIds(projvalue),
+      resourseIds: getIds(resovalue),
       employeeIds: getIds(emplvalue),
       customerIds: getIds(custvalue),
       start: start ? start.setHours(0, 0, 0, 0) : undefined,
@@ -230,83 +217,6 @@ export default function CustomerReport({
       );
     });
   };
-
-  const inActiveColumns = (name: any) => {
-    const fc = activecolumns.filter((ac: any) => ac.ref === name);
-    if (fc && fc.length > 0) {
-      return true;
-    } else {
-      return false;
-    }
-  };
-
-  useEffect(() => {
-    const sortRows = _.orderBy(rows, [sort[0].columnName], [sort[0].direction]);
-
-    const printrows = sortRows.map((row: any) => {
-      return {
-        opTime: inActiveColumns('opTime')
-          ? covertToDate(row.opTime)
-          : undefined,
-        opDocNo: inActiveColumns('opDocNo') ? row.opDocNo : undefined,
-        employee: inActiveColumns('employee')
-          ? row[col.employee.name]
-          : undefined,
-        service: inActiveColumns('service') ? row[col.service.name] : undefined,
-        department: inActiveColumns('department')
-          ? row[col.department.name]
-          : undefined,
-        category: inActiveColumns('category')
-          ? row[col.category.name]
-          : undefined,
-        customer: inActiveColumns('customer')
-          ? row[col.customer.name]
-          : undefined,
-        amount: inActiveColumns('amount') ? moneyFormat(row.amount) : undefined,
-      };
-    });
-
-    setPrintRows(printrows);
-  }, [activecolumns, rows, sort]);
-
-  // const arrangeParing = () => {
-  //   const cols = activecolumns.map((co: any) => {
-  //     return { name: co.title };
-  //   });
-
-  //   const filters: any = [];
-  //   if (emplvalue) {
-  //     filters.push({ name: isRTL ? emplvalue?.nameAr : emplvalue?.name });
-  //   }
-  //   if (departvalue) {
-  //     filters.push({ name: isRTL ? departvalue?.nameAr : departvalue?.name });
-  //   }
-  //   if (servicevalue) {
-  //     filters.push({ name: isRTL ? servicevalue?.nameAr : servicevalue?.name });
-  //   }
-  //   if (catvalue) {
-  //     filters.push({ name: isRTL ? catvalue?.nameAr : catvalue?.name });
-  //   }
-
-  //   const rest = {
-  //     isRTL,
-  //     totl: words.total,
-  //     totalamount: total ? total : "",
-  //     reportname: isRTL ? "تقرير المالية" : "Finance Report",
-  //     logo: company.logo,
-  //     phone: company.tel1,
-  //     mobile: company.mob,
-  //     address: company.address,
-  //     company: isRTL ? company.nameAr : company.name,
-  //     start: start ? covertToDate(start) : "",
-  //     end: end ? covertToDate(end) : "",
-  //     filters,
-  //     color: "#b2e2be",
-  //     now: covertToTimeDateDigit(new Date()),
-  //   };
-
-  //   reportprint({ rows: printRows, cols, ...rest });
-  // };
 
   const refresh = () => {
     summaryData?.refetch();
@@ -467,7 +377,6 @@ export default function CustomerReport({
                 newcol.sort((a: any, b: any) =>
                   a.id > b.id ? 1 : b.id > a.id ? -1 : 0
                 );
-                setActivecolumns(newcol);
               }}
             />
             <DataTypeProvider

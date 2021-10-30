@@ -28,7 +28,6 @@ export const RenderToolTip = ({
   setVisible,
   departments,
   employees,
-  resourses,
   services,
   editEvent,
   company,

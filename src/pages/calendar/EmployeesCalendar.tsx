@@ -1,12 +1,14 @@
 import React from 'react';
 import { useEffect, useState } from 'react';
-import { useCustomers, useDepartments, useEmployees } from '../../hooks';
+import { useCustomers } from '../../hooks';
+import useDepartmentsUp from '../../hooks/useDepartmentsUp';
+import useEmployeesUp from '../../hooks/useEmployeesUp';
 import EmployeesAppoints from './Employees';
 
 const EmployeesCalendar = (props: any) => {
   const [state, setstate] = useState([]);
-  const { employees } = useEmployees();
-  const { departments } = useDepartments();
+  const { employees } = useEmployeesUp();
+  const { departments } = useDepartmentsUp();
   const { customers } = useCustomers();
 
   useEffect(() => {

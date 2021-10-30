@@ -470,7 +470,7 @@ const PopupAppointment = ({
       status: status ? status.id : 2,
       items: JSON.stringify(itemsList),
       actions: JSON.stringify(actionslist),
-      taskId: taskvalue ? taskvalue.id : undefined,
+      taskId: taskvalue ? taskvalue.id : null,
       customer: custvalue
         ? {
             customerId: custvalue._id,
@@ -535,7 +535,7 @@ const PopupAppointment = ({
 
   const apply = async (mutate: any, variables: any) => {
     try {
-      await mutate({ variables });
+      mutate({ variables });
       onCloseForm();
     } catch (error) {
       onError(error);

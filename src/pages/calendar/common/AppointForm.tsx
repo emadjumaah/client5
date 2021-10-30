@@ -341,7 +341,7 @@ export const AppointForm = (props: any) => {
   const selectTask = (value: any) => {
     let newValue = value?.id;
     setTaskvalue(value);
-    onNewFieldChange(newValue, 'taskId');
+    onNewFieldChange(newValue ? newValue : null, 'taskId');
   };
 
   useEffect(() => {
@@ -485,6 +485,18 @@ export const AppointForm = (props: any) => {
             </Grid>
             <Grid item xs={6}>
               <AutoFieldLocal
+                name="task"
+                title={tempwords.task}
+                words={words}
+                options={tasks}
+                value={taskvalue}
+                setSelectValue={selectTask}
+                isRTL={isRTL}
+                fullWidth
+              ></AutoFieldLocal>
+            </Grid>
+            <Grid item xs={6}>
+              <AutoFieldLocal
                 name="customer"
                 title={tempwords.customer}
                 words={words}
@@ -495,18 +507,6 @@ export const AppointForm = (props: any) => {
                 openAdd={openCustomer}
                 fullWidth
                 showphone
-              ></AutoFieldLocal>
-            </Grid>
-            <Grid item xs={6}>
-              <AutoFieldLocal
-                name="task"
-                title={tempwords.task}
-                words={words}
-                options={tasks}
-                value={taskvalue}
-                setSelectValue={selectTask}
-                isRTL={isRTL}
-                fullWidth
               ></AutoFieldLocal>
             </Grid>
 

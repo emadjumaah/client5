@@ -1,8 +1,8 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import React, { useContext, useState } from "react";
-import { useForm } from "react-hook-form";
-import { departmentClasses } from "../themes";
+import React, { useContext, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { departmentClasses } from '../themes';
 import {
   CloseCancel,
   AlertMsg,
@@ -15,9 +15,9 @@ import {
   PopupDialog,
   PopupDialogContent,
   PopupTextField,
-} from "../Shared";
-import { GContextTypes } from "../types";
-import { GlobalContext } from "../contexts";
+} from '../Shared';
+import { GContextTypes } from '../types';
+import { GlobalContext } from '../contexts';
 
 const PopupCompany = ({
   open,
@@ -29,7 +29,7 @@ const PopupCompany = ({
   editAction,
   newtext,
 }: any) => {
-  const [alrt, setAlrt] = useState({ show: false, msg: "", type: undefined });
+  const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
   const { register, handleSubmit, errors, reset } = useForm(yup.custResolver);
   const {
     translate: { words, isRTL },
@@ -51,15 +51,15 @@ const PopupCompany = ({
       userId: user._id,
     };
     const mutate = isNew ? addAction : editAction;
-    const mutateName = isNew ? "createCustomer" : "updateCustomer";
+    const mutateName = isNew ? 'createCustomer' : 'updateCustomer';
     apply(mutate, mutateName, variables);
   };
 
   const apply = async (mutate: any, mutateName: string, variables: any) => {
     try {
-      const res = await mutate({ variables });
+      const res = mutate({ variables });
       const nitem = getReturnItem(res, mutateName);
-      if (setNewValue && nitem) setNewValue(nitem, "customer");
+      if (setNewValue && nitem) setNewValue(nitem, 'customer');
       reset();
       await successAlert(setAlrt, isRTL);
       onClose();
@@ -69,7 +69,7 @@ const PopupCompany = ({
   };
 
   const onError = async (error: any) => {
-    if (error.message.includes("duplicate")) {
+    if (error.message.includes('duplicate')) {
       await dublicateAlert(setAlrt, isRTL);
     } else {
       await errorAlert(setAlrt, isRTL);
@@ -82,10 +82,10 @@ const PopupCompany = ({
     <PopupDialog
       open={open}
       onClose={onClose}
-      maxWidth={"md"}
+      maxWidth={'md'}
       classes={classes}
     >
-      <div dir={isRTL ? "rtl" : undefined} style={{ padding: 20 }}>
+      <div dir={isRTL ? 'rtl' : undefined} style={{ padding: 20 }}>
         {alrt.show && <AlertMsg type={alrt.type} msg={alrt.msg}></AlertMsg>}
         <PopupTitle title={words.customer} />
         <PopupDialogContent>

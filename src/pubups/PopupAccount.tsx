@@ -158,7 +158,7 @@ const PopupAccount = ({
 
   const apply = async (mutate: any, variables: any) => {
     try {
-      await mutate({ variables });
+      mutate({ variables });
       setSaving(false);
       closeForm();
     } catch (error) {

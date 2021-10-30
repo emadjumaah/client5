@@ -67,7 +67,7 @@ const PopupDeprtment = ({
 
   const apply = async (mutate: any, mutateName: string, variables: any) => {
     try {
-      const res = await mutate({ variables });
+      const res = mutate({ variables });
       const nitem = getReturnItem(res, mutateName);
       if (setNewValue && nitem) setNewValue(nitem);
       setSaving(false);

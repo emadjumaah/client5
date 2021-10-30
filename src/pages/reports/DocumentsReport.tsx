@@ -58,10 +58,14 @@ import { documentTypes, groupList } from '../../constants/reports';
 import FilterSelectCkeckBox from '../../Shared/FilterSelectCkeckBox';
 import { eventStatus } from '../../constants';
 import { groupSumCount } from '../../common/reports';
-import { useCustomers, useDepartments, useEmployees } from '../../hooks';
+import { useCustomers, useTemplate } from '../../hooks';
 import useTasks from '../../hooks/useTasks';
 import getReportDocuments from '../../graphql/query/getReportDocuments';
 import DocumentsReportContext from '../../contexts/documentsReport';
+import useDepartmentsUp from '../../hooks/useDepartmentsUp';
+import useEmployeesUp from '../../hooks/useEmployeesUp';
+import useResoursesUp from '../../hooks/useResoursesUp';
+import useProjects from '../../hooks/useProjects';
 
 const styles = (theme) => ({
   tableStriped: {
@@ -107,8 +111,10 @@ export default function DocumentsReport({
     col.docNo,
     col.refNo,
     col.customer,
+    col.project,
     col.taskId,
     col.employee,
+    col.resourse,
     col.department,
     col.amount,
   ]);
@@ -119,8 +125,10 @@ export default function DocumentsReport({
     col.docNo,
     col.refNo,
     col.customer,
+    col.project,
     col.taskId,
     col.employee,
+    col.resourse,
     col.department,
     col.amount,
   ]);
@@ -134,14 +142,21 @@ export default function DocumentsReport({
     fetchPolicy: 'cache-and-network',
   });
   const { customers } = useCustomers();
-  const { departments } = useDepartments();
-  const { employees } = useEmployees();
+  const { departments } = useDepartmentsUp();
+  const { employees } = useEmployeesUp();
+  const { resourses } = useResoursesUp();
+  const { projects } = useProjects();
+  const { tasks } = useTasks();
+  const { tempoptions } = useTemplate();
+
   const {
     state: {
       currentDate,
       currentViewName,
       endDate,
       departvalue,
+      projvalue,
+      resovalue,
       emplvalue,
       custvalue,
       taskvalue,
@@ -154,7 +169,6 @@ export default function DocumentsReport({
     },
     dispatch,
   } = useContext(DocumentsReportContext);
-  const { tasks } = useTasks();
   const currentViewNameChange = (e: any) => {
     dispatch({ type: 'setCurrentViewName', payload: e.target.value });
   };
@@ -168,8 +182,14 @@ export default function DocumentsReport({
   const setDepartvalueDispatch = (value: any) => {
     dispatch({ type: 'setDepartvalue', payload: value });
   };
+  const setProjvalueDispatch = (value: any) => {
+    dispatch({ type: 'setProjvalue', payload: value });
+  };
   const setEmplvalueDispatch = (value: any) => {
     dispatch({ type: 'setEmplvalue', payload: value });
+  };
+  const setResovalueDispatch = (value: any) => {
+    dispatch({ type: 'setResovalue', payload: value });
   };
   const setCustvalueDispatch = (value: any) => {
     dispatch({ type: 'setCustvalue', payload: value });
@@ -219,7 +239,9 @@ export default function DocumentsReport({
   const fetchData = () => {
     const variables = {
       departmentIds: getIds(departvalue),
+      projectIds: getIds(projvalue),
       employeeIds: getIds(emplvalue),
+      resourseIds: getIds(resovalue),
       customerIds: getIds(custvalue),
       taskIds: getTaskIds(taskvalue),
       types: getTypesValue(types),
@@ -450,7 +472,17 @@ export default function DocumentsReport({
       alignByColumn: true,
     },
   ];
-  const groupOptions = groupList(isRTL).filter(
+
+  const projres = groupList(isRTL).filter((item: any) =>
+    tempoptions.noPro && tempoptions.noRes
+      ? item.id !== 10 && item.id !== 11
+      : tempoptions.noPro && !tempoptions.noRes
+      ? item.id !== 10
+      : !tempoptions.noPro && tempoptions.noRes
+      ? item.id !== 11
+      : true
+  );
+  const groupOptions = projres.filter(
     (item: any) => item.id !== 6 && item.id !== 4 && item.id !== 7
   );
 
@@ -472,6 +504,7 @@ export default function DocumentsReport({
             top: 68,
             zIndex: 100,
           }}
+          display="none"
         >
           <IconButton
             onClick={group ? arrangeGroupParing : arrangeParing}
@@ -515,15 +548,21 @@ export default function DocumentsReport({
             }}
           >
             <ReportsFilter
+              services={services}
               servicevalue={[]}
               setServicevalue={() => null}
+              departments={departments}
               departvalue={departvalue}
               setDepartvalue={setDepartvalueDispatch}
+              employees={employees}
               emplvalue={emplvalue}
               setEmplvalue={setEmplvalueDispatch}
-              departments={departments}
-              employees={employees}
-              services={services}
+              resourses={resourses}
+              resovalue={resovalue}
+              setResovalue={setResovalueDispatch}
+              projects={projects}
+              projvalue={projvalue}
+              setProjvalue={setProjvalueDispatch}
               customers={customers}
               custvalue={custvalue}
               setCustvalue={setCustvalueDispatch}

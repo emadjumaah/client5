@@ -55,10 +55,14 @@ import { ReportGroupBySwitcher } from '../calendar/common/ReportGroupBySwitcher'
 import DateNavigatorReports from '../../components/filters/DateNavigatorReports';
 import { documentTypes, groupList } from '../../constants/reports';
 import { groupSumCount } from '../../common/reports';
-import { useCustomers, useDepartments, useEmployees } from '../../hooks';
+import { useCustomers, useTemplate } from '../../hooks';
 import useTasks from '../../hooks/useTasks';
 import getReportServices from '../../graphql/query/getReportServices';
 import ServicesReportContext from '../../contexts/servicesReport';
+import useDepartmentsUp from '../../hooks/useDepartmentsUp';
+import useEmployeesUp from '../../hooks/useEmployeesUp';
+import useResoursesUp from '../../hooks/useResoursesUp';
+import useProjects from '../../hooks/useProjects';
 
 const styles = (theme) => ({
   tableStriped: {
@@ -104,8 +108,10 @@ export default function ServicesReport({
     col.opType,
     col.opDocNo,
     col.customer,
+    col.project,
     col.taskId,
     col.employee,
+    col.resourse,
     col.department,
     { name: 'qty', title: words.qty },
     { name: 'total', title: words.amount },
@@ -118,7 +124,9 @@ export default function ServicesReport({
     col.opDocNo,
     col.customer,
     col.taskId,
+    col.project,
     col.employee,
+    col.resourse,
     col.department,
     { name: 'qty', title: words.qty },
     { name: 'total', title: words.amount },
@@ -133,8 +141,9 @@ export default function ServicesReport({
     fetchPolicy: 'cache-and-network',
   });
   const { customers } = useCustomers();
-  const { departments } = useDepartments();
-  const { employees } = useEmployees();
+  const { departments } = useDepartmentsUp();
+  const { employees } = useEmployeesUp();
+  const { resourses } = useResoursesUp();
   const {
     state: {
       currentDate,
@@ -142,6 +151,8 @@ export default function ServicesReport({
       endDate,
       servicevalue,
       departvalue,
+      projvalue,
+      resovalue,
       emplvalue,
       custvalue,
       taskvalue,
@@ -155,6 +166,8 @@ export default function ServicesReport({
     dispatch,
   } = useContext(ServicesReportContext);
   const { tasks } = useTasks();
+  const { projects } = useProjects();
+  const { tempoptions } = useTemplate();
   const currentViewNameChange = (e: any) => {
     dispatch({ type: 'setCurrentViewName', payload: e.target.value });
   };
@@ -167,6 +180,12 @@ export default function ServicesReport({
 
   const setDepartvalueDispatch = (value: any) => {
     dispatch({ type: 'setDepartvalue', payload: value });
+  };
+  const setProjvalueDispatch = (value: any) => {
+    dispatch({ type: 'setProjvalue', payload: value });
+  };
+  const setResovalueDispatch = (value: any) => {
+    dispatch({ type: 'setResovalue', payload: value });
   };
   const setEmplvalueDispatch = (value: any) => {
     dispatch({ type: 'setEmplvalue', payload: value });
@@ -220,6 +239,8 @@ export default function ServicesReport({
     const variables = {
       serviceIds: getIds(servicevalue),
       departmentIds: getIds(departvalue),
+      projectIds: getIds(projvalue),
+      resourseIds: getIds(resovalue),
       employeeIds: getIds(emplvalue),
       customerIds: getIds(custvalue),
       taskIds: getTaskIds(taskvalue),
@@ -446,7 +467,17 @@ export default function ServicesReport({
       alignByColumn: true,
     },
   ];
-  const groupOptions = groupList(isRTL).filter(
+
+  const projres = groupList(isRTL).filter((item: any) =>
+    tempoptions.noPro && tempoptions.noRes
+      ? item.id !== 10 && item.id !== 11
+      : tempoptions.noPro && !tempoptions.noRes
+      ? item.id !== 10
+      : !tempoptions.noPro && tempoptions.noRes
+      ? item.id !== 11
+      : true
+  );
+  const groupOptions = projres.filter(
     (item: any) => item.id !== 6 && item.id !== 7
   );
 
@@ -468,6 +499,7 @@ export default function ServicesReport({
             top: 68,
             zIndex: 100,
           }}
+          display="none"
         >
           <IconButton
             onClick={group ? arrangeGroupParing : arrangeParing}
@@ -519,6 +551,12 @@ export default function ServicesReport({
               setEmplvalue={setEmplvalueDispatch}
               departments={departments}
               employees={employees}
+              projects={projects}
+              projvalue={projvalue}
+              setProjvalue={setProjvalueDispatch}
+              resourses={resourses}
+              resovalue={resovalue}
+              setResovalue={setResovalueDispatch}
               services={services}
               customers={customers}
               custvalue={custvalue}

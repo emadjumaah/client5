@@ -211,7 +211,7 @@ const PopupReceipt = ({
       time: selectedDate,
       debitAcc: debitAcc.code,
       creditAcc: creditAcc.code,
-      taskId: invoicevalue ? invoicevalue.taskId : undefined,
+      taskId: invoicevalue ? invoicevalue.taskId : null,
       refNo: invoicevalue ? invoicevalue.docNo : undefined,
       customer,
       department,

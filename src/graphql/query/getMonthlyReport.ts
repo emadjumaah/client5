@@ -1,4 +1,4 @@
-import { gql } from "@apollo/client";
+import { gql } from '@apollo/client';
 
 export default gql`
   query getMonthlyReport(
@@ -8,6 +8,8 @@ export default gql`
     $serviceIds: [String]
     $categoryIds: [String]
     $departmentIds: [String]
+    $projectIds: [String]
+    $resourseIds: [String]
     $employeeIds: [String]
     $customerIds: [String]
     $supplierIds: [String]
@@ -22,6 +24,8 @@ export default gql`
       serviceIds: $serviceIds
       categoryIds: $categoryIds
       departmentIds: $departmentIds
+      projectIds: $projectIds
+      resourseIds: $resourseIds
       employeeIds: $employeeIds
       customerIds: $customerIds
       supplierIds: $supplierIds
@@ -54,6 +58,14 @@ export default gql`
         employeeId
         employeeName
         employeeNameAr
+
+        projectId
+        projectName
+        projectNameAr
+
+        resourseId
+        resourseName
+        resourseNameAr
 
         categoryId
         categoryName

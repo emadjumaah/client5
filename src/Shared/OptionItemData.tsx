@@ -29,34 +29,6 @@ const OptionItemData = ({ item, isRTL }: any) => {
           </Typography>
         </Box>
         <Box display="flex" flexDirection="row" style={{ marginBottom: 5 }}>
-          {item.categoryName && (
-            <Typography
-              style={{
-                color: '#20A4F3',
-                width: 100,
-                fontSize: 11,
-                paddingRight: 10,
-                paddingLeft: 10,
-                textAlign: isRTL ? 'right' : 'left',
-              }}
-              variant={isRTL ? 'subtitle1' : 'caption'}
-            >
-              {isRTL ? item.categoryNameAr : item.categoryName}
-            </Typography>
-          )}
-          {item.brandName && (
-            <Typography
-              style={{
-                marginRight: 20,
-                color: '#844257',
-                width: 100,
-                fontSize: 11,
-              }}
-              variant={isRTL ? 'subtitle1' : 'caption'}
-            >
-              {isRTL ? item.brandNameAr : item.brandName}
-            </Typography>
-          )}
           <Typography
             style={{ color: '#00B77C', width: 100, fontSize: 11 }}
             variant={isRTL ? 'subtitle1' : 'caption'}

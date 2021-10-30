@@ -24,20 +24,21 @@ import { PopupService } from '../../pubups';
 import { currencyFormatter } from '../../Shared/colorFormat';
 import { AlertLocal, SearchTable } from '../../components';
 import { errorAlert, errorDeleteAlert } from '../../Shared/helpers';
-import { getColumns } from '../../common/columns';
+// import { getColumns } from '../../common/columns';
 
 export default function Services({ isRTL, words, theme, isEditor }: any) {
-  const col = getColumns({ isRTL, words });
+  // const col = getColumns({ isRTL, words });
 
   const [loading, setLoading] = useState(false);
   const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
 
   const [columns] = useState([
     { name: isRTL ? 'nameAr' : 'name', title: words.name },
-    col.department,
-    col.employee,
-    col.resourse,
+    // col.department,
+    // col.employee,
+    // col.resourse,
     { name: 'desc', title: words.description },
+    { name: 'unit', title: words.unit },
     { name: 'price', title: words.price },
   ]);
 

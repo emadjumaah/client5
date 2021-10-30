@@ -31,11 +31,9 @@ import {
 import { getRowId } from '../../common';
 import {
   calculateAmount,
-  covertToDate,
   covertToTimeDateDigit,
   createdAtFormatter,
   currencyFormatter,
-  moneyFormat,
   opTypeFormatter,
   taskIdFormatter,
 } from '../../Shared/colorFormat';
@@ -83,25 +81,9 @@ export default function ExpensesReport({
   const [end, setEnd] = useState<any>(null);
 
   const [rows, setRows] = useState([]);
-  const [_, setPrintRows]: any = useState([]);
   const [total, setTotal]: any = useState(null);
 
   const col = getColumns({ isRTL, words });
-
-  const [activecolumns, setActivecolumns] = useState([
-    col.opTime,
-    col.opDocNo,
-    col.acc,
-    // col.refNo,
-    // col.kaidType,
-    col.opAcc,
-    // col.accType,
-    // col.customer,
-    col.taskId,
-    col.desc,
-    col.opType,
-    col.amount,
-  ]);
 
   const [columns] = useState([
     col.opTime,
@@ -111,7 +93,7 @@ export default function ExpensesReport({
     // col.kaidType,
     col.opAcc,
     // col.accType,
-    // col.customer,
+    col.project,
     col.taskId,
     col.desc,
     col.opType,
@@ -241,44 +223,6 @@ export default function ExpensesReport({
       );
     });
   };
-
-  const inActiveColumns = (name: any) => {
-    const fc = activecolumns.filter((ac: any) => ac.ref === name);
-    if (fc && fc.length > 0) {
-      return true;
-    } else {
-      return false;
-    }
-  };
-
-  useEffect(() => {
-    const sortRows = _.orderBy(rows, [sort[0].columnName], [sort[0].direction]);
-
-    const printrows = sortRows.map((row: any) => {
-      return {
-        opTime: inActiveColumns('opTime')
-          ? covertToDate(row.opTime)
-          : undefined,
-        opDocNo: inActiveColumns('opDocNo') ? row.opDocNo : undefined,
-        employee: inActiveColumns('employee')
-          ? row[col.employee.name]
-          : undefined,
-        service: inActiveColumns('service') ? row[col.service.name] : undefined,
-        department: inActiveColumns('department')
-          ? row[col.department.name]
-          : undefined,
-        category: inActiveColumns('category')
-          ? row[col.category.name]
-          : undefined,
-        customer: inActiveColumns('customer')
-          ? row[col.customer.name]
-          : undefined,
-        amount: inActiveColumns('amount') ? moneyFormat(row.amount) : undefined,
-      };
-    });
-
-    setPrintRows(printrows);
-  }, [activecolumns, rows, sort]);
 
   //  const arrangeParing = () => {
   //   const cols = activecolumns.map((co: any) => {
@@ -485,7 +429,6 @@ export default function ExpensesReport({
                 newcol.sort((a: any, b: any) =>
                   a.id > b.id ? 1 : b.id > a.id ? -1 : 0
                 );
-                setActivecolumns(newcol);
               }}
             />
             <DataTypeProvider

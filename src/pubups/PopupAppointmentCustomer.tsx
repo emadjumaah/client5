@@ -476,7 +476,7 @@ const PopupAppointmentCustomer = ({
       items: JSON.stringify(itemsList),
       actions: JSON.stringify(actionslist),
       rRule,
-      taskId: taskvalue ? taskvalue.id : undefined,
+      taskId: taskvalue ? taskvalue.id : null,
       customer: custvalue
         ? {
             customerId: custvalue._id,
@@ -540,7 +540,7 @@ const PopupAppointmentCustomer = ({
 
   const apply = async (mutate: any, variables: any) => {
     try {
-      await mutate({ variables });
+      mutate({ variables });
       onCloseForm();
     } catch (error) {
       onError(error);
@@ -633,6 +633,20 @@ const PopupAppointmentCustomer = ({
                   </Grid>
                   <Grid item xs={6}>
                     <AutoFieldLocal
+                      name="task"
+                      title={tempwords.task}
+                      words={words}
+                      options={tasks}
+                      value={taskvalue}
+                      setSelectValue={setTaskvalue}
+                      register={register}
+                      isRTL={isRTL}
+                      fullWidth
+                      disabled={name === 'taskId'}
+                    ></AutoFieldLocal>
+                  </Grid>
+                  <Grid item xs={6}>
+                    <AutoFieldLocal
                       name="customer"
                       title={tempwords.customer}
                       words={words}
@@ -647,20 +661,6 @@ const PopupAppointmentCustomer = ({
                       fullWidth
                       showphone
                       disabled={name === 'customerId'}
-                    ></AutoFieldLocal>
-                  </Grid>
-                  <Grid item xs={6}>
-                    <AutoFieldLocal
-                      name="task"
-                      title={tempwords.task}
-                      words={words}
-                      options={tasks}
-                      value={taskvalue}
-                      setSelectValue={setTaskvalue}
-                      register={register}
-                      isRTL={isRTL}
-                      fullWidth
-                      disabled={name === 'taskId'}
                     ></AutoFieldLocal>
                   </Grid>
 

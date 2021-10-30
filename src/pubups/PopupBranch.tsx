@@ -142,7 +142,7 @@ const PopupBranch = ({
 
   const apply = async (mutate: any, variables: any) => {
     try {
-      await mutate({ variables });
+      mutate({ variables });
       closeForm();
     } catch (error) {
       onError(error);

@@ -116,7 +116,7 @@ const PopupUser = ({
 
   const apply = async (mutate: any, variables: any) => {
     try {
-      await mutate({ variables });
+      mutate({ variables });
       onFormClose();
     } catch (error) {
       onError(error);

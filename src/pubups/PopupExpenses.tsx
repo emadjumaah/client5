@@ -298,7 +298,7 @@ const PopupExpenses = ({
       debitAcc: debitAcc.code,
       creditAcc: creditAcc.code,
       amount,
-      taskId: taskvalue ? taskvalue.id : undefined,
+      taskId: taskvalue ? taskvalue.id : null,
       customer,
       department,
       employee,
@@ -314,7 +314,7 @@ const PopupExpenses = ({
 
   const apply = async (mutate: any, variables: any) => {
     try {
-      await mutate({ variables });
+      mutate({ variables });
       closeModal();
     } catch (error) {
       onError(error);

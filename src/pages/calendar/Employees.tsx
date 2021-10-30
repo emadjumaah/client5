@@ -39,6 +39,7 @@ import CalendarReportContext from '../../contexts/calendarReport';
 import RefreshOutlinedIcon from '@material-ui/icons/RefreshOutlined';
 import { eventStatus } from '../../constants';
 import { getCalendarResourses } from '../../common/helpers';
+import useTasks from '../../hooks/useTasks';
 
 const EmployeesAppoints = (props: any) => {
   const [resourseData, setResourseData] = useState<any>([]);
@@ -52,6 +53,7 @@ const EmployeesAppoints = (props: any) => {
     dispatch,
   } = useContext(CalendarReportContext);
   const isMobile = useMediaQuery('(max-width:600px)');
+  const { tasks } = useTasks();
 
   const [getCalEvents, evnData] = useLazyQuery(getEvents);
   const {
@@ -158,115 +160,131 @@ const EmployeesAppoints = (props: any) => {
 
   return (
     <Box
-      style={{ backgroundColor: '#fff', marginTop: isMobile ? 47 : undefined }}
+      style={{
+        backgroundColor: '#fff',
+        marginTop: isMobile ? 47 : undefined,
+        // height: window.innerHeight - 60,
+        overflow: 'auto',
+      }}
     >
-      <Grid container spacing={0}>
-        <Grid item xs={12} md={4}>
-          <DateNavigator
-            setStart={() => null}
-            setEnd={() => null}
-            isRTL={isRTL}
-            words={words}
-            theme={theme}
-            currentViewNameChange={currentViewNameChange}
-            currentDateChange={currentDateChange}
-            currentViewName={currentViewName}
-            currentDate={currentDate}
-            views={[1, 3]}
-          ></DateNavigator>
-        </Grid>
-        <Grid item xs={12} md={8}>
-          <Hidden xsDown implementation="css">
-            <RadioGroup
-              aria-label="Views"
-              name="views"
-              row
-              value={mainResourceName}
-              onChange={(e: any) => setMainResourceNameDispatch(e.target.value)}
-            >
-              <FormControlLabel
-                value={'employeeId'}
-                control={<Radio color="primary" />}
-                label={isRTL ? 'الموظف' : 'Employee'}
-              />
-
-              <FormControlLabel
-                value="status"
-                control={<Radio color="primary" />}
-                label={isRTL ? 'الحالة' : 'Status'}
-              />
-            </RadioGroup>
-            {refresh && (
-              <IconButton
-                style={{
-                  backgroundColor: fade(theme.palette.secondary.main, 0.5),
-                  padding: 7,
-                }}
-                onClick={refresh}
+      <Box style={{ margin: 10 }}>
+        <Grid container spacing={0}>
+          <Grid item xs={12} md={4}>
+            <DateNavigator
+              setStart={() => null}
+              setEnd={() => null}
+              isRTL={isRTL}
+              words={words}
+              theme={theme}
+              currentViewNameChange={currentViewNameChange}
+              currentDateChange={currentDateChange}
+              currentViewName={currentViewName}
+              currentDate={currentDate}
+              views={[1, 3]}
+            ></DateNavigator>
+          </Grid>
+          <Grid item xs={12} md={8}>
+            <Hidden xsDown implementation="css">
+              <RadioGroup
+                aria-label="Views"
+                name="views"
+                row
+                value={mainResourceName}
+                onChange={(e: any) =>
+                  setMainResourceNameDispatch(e.target.value)
+                }
               >
-                <RefreshOutlinedIcon
-                  style={{ fontSize: 24 }}
-                  color="primary"
-                ></RefreshOutlinedIcon>
-              </IconButton>
-            )}
-          </Hidden>
-        </Grid>
-      </Grid>
+                <FormControlLabel
+                  value={'employeeId'}
+                  control={<Radio color="primary" />}
+                  label={isRTL ? 'الموظف' : 'Employee'}
+                />
 
-      <Scheduler
-        data={rows}
-        height={isMobile ? window.innerHeight : window.innerHeight - 60}
-        firstDayOfWeek={6}
-        locale={isRTL ? 'ar' : 'en'}
-      >
-        <GroupingState grouping={grouping} />
-        <ViewState
-          currentViewName={currentViewName}
-          onCurrentViewNameChange={currentViewNameChange}
-          currentDate={currentDate}
-          onCurrentDateChange={currentDateChange}
-        />
-        <DayView
-          name="Day"
-          displayName="Day"
-          cellDuration={calendar ? calendar?.duration : 30}
-          startDayHour={calendar ? calendar?.start : 8.5}
-          endDayHour={calendar ? calendar?.end : 21.5}
-        />
-        <DayView
-          name="3Days"
-          displayName="3 Days"
-          intervalCount={3}
-          cellDuration={calendar ? calendar?.duration : 30}
-          startDayHour={calendar ? calendar?.start : 8.5}
-          endDayHour={calendar ? calendar?.end : 21.5}
-        />
-        {/* <Toolbar /> */}
-        <Appointments appointmentContentComponent={AppointmentContent} />
-        <Resources data={resourseData} mainResourceName={mainResourceName} />
-        <IntegratedGrouping />
-        <AppointmentTooltip
-          showCloseButton
-          visible={visible}
-          onVisibilityChange={() => setVisible(!visible)}
-          contentComponent={({ appointmentData }) => (
-            <RenderToolTip
-              appointmentData={appointmentData}
-              setVisible={setVisible}
-              departments={departments}
-              employees={employees}
-              customers={customers}
-              services={services}
-              editEvent={() => null}
-              company={company}
-              viewonly
-            ></RenderToolTip>
-          )}
-        />
-        <GroupingPanel />
-        <CurrentTimeIndicator shadePreviousCells></CurrentTimeIndicator>
-      </Scheduler>
+                <FormControlLabel
+                  value="status"
+                  control={<Radio color="primary" />}
+                  label={isRTL ? 'الحالة' : 'Status'}
+                />
+              </RadioGroup>
+              {refresh && (
+                <Box style={{ position: 'absolute', top: 10, left: 20 }}>
+                  <IconButton
+                    style={{
+                      backgroundColor: fade(theme.palette.secondary.main, 0.5),
+                      padding: 7,
+                    }}
+                    onClick={refresh}
+                  >
+                    <RefreshOutlinedIcon
+                      style={{ fontSize: 24 }}
+                      color="primary"
+                    ></RefreshOutlinedIcon>
+                  </IconButton>
+                </Box>
+              )}
+            </Hidden>
+          </Grid>
+        </Grid>
+        <Box style={{ overflow: 'auto', width: window.innerWidth - 270 }}>
+          <Scheduler
+            data={rows}
+            height={isMobile ? window.innerHeight : window.innerHeight - 70}
+            firstDayOfWeek={6}
+            locale={isRTL ? 'ar' : 'en'}
+          >
+            <GroupingState grouping={grouping} />
+            <ViewState
+              currentViewName={currentViewName}
+              onCurrentViewNameChange={currentViewNameChange}
+              currentDate={currentDate}
+              onCurrentDateChange={currentDateChange}
+            />
+            <DayView
+              name="Day"
+              displayName="Day"
+              cellDuration={calendar ? calendar?.duration : 30}
+              startDayHour={calendar ? calendar?.start : 8.5}
+              endDayHour={calendar ? calendar?.end : 21.5}
+            />
+            <DayView
+              name="3Days"
+              displayName="3 Days"
+              intervalCount={3}
+              cellDuration={calendar ? calendar?.duration : 30}
+              startDayHour={calendar ? calendar?.start : 8.5}
+              endDayHour={calendar ? calendar?.end : 21.5}
+            />
+            {/* <Toolbar /> */}
+            <Appointments appointmentContentComponent={AppointmentContent} />
+            <Resources
+              data={resourseData}
+              mainResourceName={mainResourceName}
+            />
+            <IntegratedGrouping />
+            <AppointmentTooltip
+              showCloseButton
+              visible={visible}
+              onVisibilityChange={() => setVisible(!visible)}
+              contentComponent={({ appointmentData }) => (
+                <RenderToolTip
+                  appointmentData={appointmentData}
+                  setVisible={setVisible}
+                  departments={departments}
+                  employees={employees}
+                  customers={customers}
+                  services={services}
+                  editEvent={() => null}
+                  company={company}
+                  tasks={tasks}
+                  viewonly
+                ></RenderToolTip>
+              )}
+            />
+            <GroupingPanel />
+            <CurrentTimeIndicator shadePreviousCells></CurrentTimeIndicator>
+          </Scheduler>
+        </Box>
+      </Box>
     </Box>
   );
 };

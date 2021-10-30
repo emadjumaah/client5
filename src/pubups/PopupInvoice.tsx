@@ -520,7 +520,7 @@ const PopupInvoice = ({
       amountPaid: isCash ? amount : 0,
       accounts,
       paymentType: ptype,
-      taskId: taskvalue ? taskvalue.id : undefined,
+      taskId: taskvalue ? taskvalue.id : null,
       userId: user._id,
     };
     const mutate = isNew ? addAction : editAction;
@@ -530,7 +530,7 @@ const PopupInvoice = ({
 
   const apply = async (mutate: any, variables: any) => {
     try {
-      await mutate({ variables });
+      mutate({ variables });
       if (row && row._id) {
         itemsData?.refetch();
       }
