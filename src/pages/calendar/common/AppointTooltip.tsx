@@ -352,8 +352,7 @@ export const RenderToolTip = ({
             }}
             onClick={() => {
               window.open(
-                `https://www.google.com/maps/dir/?api=1&destination=${location?.lat}, ${location?.lng}&travelmode="driving&dir_action=navigate`,
-                '_blank'
+                `https://www.google.com/maps/search/?api=1&query=${location?.lat}, ${location?.lng}`
               );
             }}
           >
