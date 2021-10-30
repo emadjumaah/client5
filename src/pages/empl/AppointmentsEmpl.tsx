@@ -29,6 +29,8 @@ import {
   getDepartments,
   getEmployees,
   getLandingChartData,
+  getProjects,
+  getResourses,
   // getReminders,
   updateEvent,
 } from '../../graphql';
@@ -199,9 +201,18 @@ export default function AppointmentsEmpl({
       },
       {
         query: getEmployees,
+        variables: { isRTL, resType: 1 },
       },
       {
         query: getDepartments,
+        variables: { isRTL, depType: 1 },
+      },
+      {
+        query: getResourses,
+        variables: { isRTL, resType: 1 },
+      },
+      {
+        query: getProjects,
       },
     ],
   };
@@ -463,6 +474,7 @@ export default function AppointmentsEmpl({
 
           <PopupEditing addAction={addEvent} editAction={editEvent}>
             <PopupAppointment
+              resourses={resourses}
               employees={employees}
               departments={departments}
               company={company}

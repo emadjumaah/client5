@@ -21,6 +21,7 @@ import { getCalendarResourses } from '../../common/helpers';
 import { commitAppointmentChanges } from '../../common';
 import { AppointForm } from '../calendar/common/AppointForm';
 import { RenderToolTip } from '../calendar/common/AppointTooltip';
+import { AppointTooltipEmpl } from '../calendar/common/AppointTooltipEmpl';
 import { AppointmentContent } from '../calendar/common';
 import { CommandAppointment } from '../../Shared';
 import { useLazyQuery, useMutation } from '@apollo/client';
@@ -31,6 +32,8 @@ import {
   getDepartments,
   getEmployees,
   getLandingChartData,
+  getProjects,
+  getResourses,
   updateEvent,
 } from '../../graphql';
 import { Box, Grid, useMediaQuery } from '@material-ui/core';
@@ -59,6 +62,20 @@ const MainEmpl = (props: any) => {
   } = useContext(CalendarContext);
   const { tasks } = useTasks();
 
+  const {
+    departments,
+    employees,
+    resourses,
+    calendar,
+    isRTL,
+    words,
+    services,
+    company,
+    isEditor,
+    theme,
+    user,
+  } = props;
+
   const refresQuery = {
     refetchQueries: [
       {
@@ -79,9 +96,18 @@ const MainEmpl = (props: any) => {
       },
       {
         query: getEmployees,
+        variables: { isRTL, resType: 1 },
       },
       {
         query: getDepartments,
+        variables: { isRTL, depType: 1 },
+      },
+      {
+        query: getResourses,
+        variables: { isRTL, resType: 1 },
+      },
+      {
+        query: getProjects,
       },
       {
         query: getTasks,
@@ -98,19 +124,6 @@ const MainEmpl = (props: any) => {
   const [removeEvent] = useMutation(deleteEvent, refresQuery);
 
   const [getCalEvents, evnData]: any = useLazyQuery(getEmplEvents);
-
-  const {
-    departments,
-    employees,
-    calendar,
-    isRTL,
-    words,
-    services,
-    company,
-    isEditor,
-    theme,
-    user,
-  } = props;
 
   useEffect(() => {
     const eventsData = evnData?.data?.['getEmplEvents']?.data || [];
@@ -194,7 +207,7 @@ const MainEmpl = (props: any) => {
       style={{
         backgroundColor: '#fff',
         marginTop: isMobile ? 47 : undefined,
-        height: window.innerHeight - 10,
+        height: isMobile ? window.innerHeight - 47 : window.innerHeight - 10,
         overflow: 'auto',
       }}
     >
@@ -211,7 +224,7 @@ const MainEmpl = (props: any) => {
               currentDateChange={currentDateChange}
               currentViewName={currentViewName}
               currentDate={currentDate}
-              views={[1, 3, 7, 30]}
+              views={isMobile ? [1, 3, 7] : [1, 3, 7, 30]}
             ></DateNavigator>
           </Grid>
           <Grid item xs={12} md={8}></Grid>
@@ -223,7 +236,7 @@ const MainEmpl = (props: any) => {
               isMonth
                 ? 'auto'
                 : isMobile
-                ? window.innerHeight
+                ? window.innerHeight - 120
                 : window.innerHeight - 90
             }
             firstDayOfWeek={6}
@@ -276,7 +289,7 @@ const MainEmpl = (props: any) => {
               startDayHour={calendar ? calendar?.start : 8.5}
               endDayHour={calendar ? calendar?.end : 21.5}
             />
-            <MonthView intervalCount={1} />
+            {!isMobile && <MonthView intervalCount={1} />}
             {/* <Toolbar /> */}
             <Appointments appointmentContentComponent={AppointmentContent} />
             <Resources
@@ -285,23 +298,43 @@ const MainEmpl = (props: any) => {
             />
             <AppointmentTooltip
               showCloseButton
-              showOpenButton={isEditor ? true : false}
+              showOpenButton={isEditor && !isMobile ? true : false}
               // showDeleteButton
               visible={visible}
               onVisibilityChange={() => setVisible(!visible)}
               contentComponent={({ appointmentData }) => (
-                <RenderToolTip
-                  appointmentData={appointmentData}
-                  setVisible={setVisible}
-                  departments={departments}
-                  employees={employees}
-                  services={services}
-                  editEvent={editEvent}
-                  company={company}
-                  theme={theme}
-                  viewonly={isMobile}
-                  tasks={tasks}
-                ></RenderToolTip>
+                <Box>
+                  {isMobile ? (
+                    <AppointTooltipEmpl
+                      appointmentData={appointmentData}
+                      setVisible={setVisible}
+                      departments={departments}
+                      employees={employees}
+                      resourses={resourses}
+                      services={services}
+                      editEvent={editEvent}
+                      company={company}
+                      theme={theme}
+                      viewonly={isMobile}
+                      tasks={tasks}
+                      updateEvent={updateEvent}
+                    ></AppointTooltipEmpl>
+                  ) : (
+                    <RenderToolTip
+                      appointmentData={appointmentData}
+                      setVisible={setVisible}
+                      departments={departments}
+                      employees={employees}
+                      resourses={resourses}
+                      services={services}
+                      editEvent={editEvent}
+                      company={company}
+                      theme={theme}
+                      viewonly={isMobile}
+                      tasks={tasks}
+                    ></RenderToolTip>
+                  )}
+                </Box>
               )}
             />
             {/* {!isMonth && <AppointmentForm />} */}
@@ -326,6 +359,7 @@ const MainEmpl = (props: any) => {
                   <AppointForm
                     departments={departments}
                     employees={employees}
+                    resourses={resourses}
                     servicesproducts={services}
                     theme={theme}
                     tasks={tasks.filter(
@@ -338,7 +372,7 @@ const MainEmpl = (props: any) => {
                 commandButtonComponent={CommandAppointment}
               />
             )}
-            <AllDayPanel />
+            {!isMobile && <AllDayPanel />}
             {!isMonth && <DragDropProvider></DragDropProvider>}
             <CurrentTimeIndicator shadePreviousCells></CurrentTimeIndicator>
           </Scheduler>

@@ -408,10 +408,10 @@ const PopupAppointInvoice = ({
     apply(addInvoice, variables);
   };
 
-  const apply = async (mutate: any, variables: any) => {
+  const apply = (mutate: any, variables: any) => {
     try {
-      await mutate({ variables });
-      await editEvent({ variables: { id: appoint.id, status: 10 } });
+      mutate({ variables });
+      editEvent({ variables: { id: appoint.id, status: 10 } });
       freshlastNos();
       onCloseForm();
       onCloseAppoint();

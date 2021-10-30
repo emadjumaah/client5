@@ -19,7 +19,7 @@ import PopupLayout from '../pages/main/PopupLayout';
 import { Grid } from '@material-ui/core';
 import { TextFieldLocal } from '../components';
 import AutoFieldLocal from '../components/fields/AutoFieldLocal';
-import { useDepartments, useTemplate } from '../hooks';
+import { useTemplate } from '../hooks';
 import { getPopupTitle } from '../constants/menu';
 
 const PopupEmployee = ({
@@ -33,6 +33,7 @@ const PopupEmployee = ({
   newtext,
   theme,
   resType,
+  departments,
 }: any) => {
   const [saving, setSaving] = useState(false);
   const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
@@ -53,7 +54,6 @@ const PopupEmployee = ({
     translate: { words, isRTL },
     store: { user },
   }: GContextTypes = useContext(GlobalContext);
-  const { departments } = useDepartments();
 
   useEffect(() => {
     if (row && row._id) {

@@ -1,13 +1,13 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 /* eslint-disable react/jsx-no-undef */
-import { Box, Typography } from "@material-ui/core";
-import React from "react";
-import Avatar from "./Avatar";
-import MyIcon from "./MyIcon";
+import { Box, Hidden, Typography } from '@material-ui/core';
+import React from 'react';
+import Avatar from './Avatar';
+import MyIcon from './MyIcon';
 
 export default function UserBox(props: any) {
   const { theme, user, network, mobile, logout, client, history } = props;
-  const isWeb = network === "web";
+  const isWeb = network === 'web';
   const color = isWeb
     ? theme.palette.background.default
     : theme.palette.background.default;
@@ -15,7 +15,7 @@ export default function UserBox(props: any) {
   return (
     <Box
       style={{
-        display: "flex",
+        display: 'flex',
       }}
     >
       {user && (
@@ -24,7 +24,8 @@ export default function UserBox(props: any) {
             display="flex"
             alignItems="center"
             style={{
-              justifyContent: mobile ? "flex-start" : "space-between",
+              flexDirection: 'row',
+              justifyContent: 'flex-end',
               flex: 1,
               paddingRight: mobile ? undefined : 10,
               paddingLeft: mobile ? undefined : 10,
@@ -32,16 +33,11 @@ export default function UserBox(props: any) {
             }}
           >
             <Box display="flex">
-              <Avatar
-                username={user.username}
-                name={user.name}
-                size={34}
-              ></Avatar>
               <Box
                 display="flex"
                 style={{
-                  alignItems: "center",
-                  justifyContent: "center",
+                  alignItems: 'center',
+                  justifyContent: 'center',
                   marginLeft: 10,
                   marginRight: 10,
                   marginTop: 2,
@@ -51,24 +47,31 @@ export default function UserBox(props: any) {
                   {user.name ? user.name : user.username}
                 </Typography>
               </Box>
+              <Avatar
+                username={user.username}
+                name={user.name}
+                size={34}
+              ></Avatar>
             </Box>
-            <Box
-              display="flex"
-              style={{
-                width: 34,
-                height: 34,
-                alignItems: "center",
-                justifyContent: "center",
-                cursor: "pointer",
-              }}
-              onClick={async () => {
-                logout();
-                await client.resetStore();
-                history.push("/");
-              }}
-            >
-              <MyIcon size={24} color={"#eee"} icon={"logout"}></MyIcon>
-            </Box>
+            <Hidden xsDown implementation="js">
+              <Box
+                display="flex"
+                style={{
+                  width: 34,
+                  height: 34,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  cursor: 'pointer',
+                }}
+                onClick={async () => {
+                  logout();
+                  await client.resetStore();
+                  history.push('/');
+                }}
+              >
+                <MyIcon size={24} color={'#eee'} icon={'logout'}></MyIcon>
+              </Box>
+            </Hidden>
           </Box>
         </React.Fragment>
       )}

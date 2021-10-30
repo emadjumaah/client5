@@ -170,7 +170,7 @@ const PopupAppointmentCustomer = ({
   useEffect(() => {
     if (isNew) {
       if (emplvalue) {
-        if (emplvalue?.departmentId && name !== 'departmentId') {
+        if (emplvalue?.departmentId) {
           const dept = departments.filter(
             (dep: any) => dep._id === emplvalue?.departmentId
           )?.[0];
@@ -179,6 +179,19 @@ const PopupAppointmentCustomer = ({
       }
     }
   }, [emplvalue]);
+
+  useEffect(() => {
+    if (isNew) {
+      if (resovalue) {
+        if (resovalue?.departmentId) {
+          const dept = departments.filter(
+            (dep: any) => dep._id === resovalue?.departmentId
+          )?.[0];
+          setDepartvalue(dept);
+        }
+      }
+    }
+  }, [resovalue]);
 
   useEffect(() => {
     const items = itemsData?.data?.['getOperationItems']?.data || [];

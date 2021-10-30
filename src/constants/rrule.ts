@@ -1,72 +1,72 @@
-import RRule from "rrule";
+import RRule from 'rrule';
 
 export const freqOptions = [
   {
     id: 2,
-    name: "Daily",
-    nameAr: "يومي",
+    name: 'Daily',
+    nameAr: 'يومي',
     value: RRule.DAILY,
   },
   {
     id: 3,
-    name: "Weekly",
-    nameAr: "اسبوعي",
+    name: 'Weekly',
+    nameAr: 'اسبوعي',
     value: RRule.WEEKLY,
   },
   {
     id: 4,
-    name: "Monthly",
-    nameAr: "شهري",
+    name: 'Monthly',
+    nameAr: 'شهري',
     value: RRule.MONTHLY,
   },
   {
     id: 5,
-    name: "Yearly",
-    nameAr: "سنوي",
+    name: 'Yearly',
+    nameAr: 'سنوي',
     value: RRule.YEARLY,
   },
 ];
 export const byweekdayOptions = [
   {
     id: 2,
-    name: "Saturday",
-    nameAr: "السبت",
+    name: 'Saturday',
+    nameAr: 'السبت',
     value: RRule.SA,
   },
   {
     id: 3,
-    name: "Sunday",
-    nameAr: "الاحد",
+    name: 'Sunday',
+    nameAr: 'الاحد',
     value: RRule.SU,
   },
   {
     id: 4,
-    name: "Monday",
-    nameAr: "الاثنين",
+    name: 'Monday',
+    nameAr: 'الاثنين',
     value: RRule.MO,
   },
   {
     id: 5,
-    name: "Tuesday",
-    nameAr: "الثلاثاء",
+    name: 'Tuesday',
+    nameAr: 'الثلاثاء',
     value: RRule.TU,
   },
   {
     id: 5,
-    name: "Wednesday",
-    nameAr: "الاربعاء",
+    name: 'Wednesday',
+    nameAr: 'الاربعاء',
     value: RRule.WE,
   },
   {
     id: 5,
-    name: "Thursday",
-    nameAr: "الخميس",
+    name: 'Thursday',
+    nameAr: 'الخميس',
     value: RRule.TH,
   },
   {
     id: 5,
-    name: "Friday",
-    nameAr: "الجمعة",
+    name: 'Friday',
+    nameAr: 'الجمعة',
     value: RRule.FR,
   },
 ];
@@ -74,61 +74,61 @@ export const byweekdayOptions = [
 export const actionOptions = [
   {
     id: 1,
-    name: "SMS",
-    nameAr: "رسالة SMS",
+    name: 'SMS',
+    nameAr: 'رسالة SMS',
     value: 1,
   },
   {
     id: 2,
-    name: "Email",
-    nameAr: "بريد الكتروني",
+    name: 'Email',
+    nameAr: 'بريد الكتروني',
     value: 2,
   },
   {
     id: 3,
-    name: "Notification",
-    nameAr: "تنبيه",
+    name: 'Notification',
+    nameAr: 'تنبيه',
     value: 3,
   },
 ];
 export const timeRelationOptions = [
   {
     id: 1,
-    name: "Befor Appointment Start",
-    nameAr: "قبل الموعد",
-    value: "bstart",
+    name: 'Befor Appointment Start',
+    nameAr: 'قبل الموعد',
+    value: 'bstart',
   },
   {
     id: 2,
-    name: "After Appointment End",
-    nameAr: "بعد نهاية الموعد",
-    value: "aend",
+    name: 'After Appointment End',
+    nameAr: 'بعد نهاية الموعد',
+    value: 'aend',
   },
   {
     id: 3,
-    name: "After Appointment Start",
-    nameAr: "بعد بداية الموعد",
-    value: "astart",
+    name: 'After Appointment Start',
+    nameAr: 'بعد بداية الموعد',
+    value: 'astart',
   },
 ];
 export const timeUnitOptions = [
   {
     id: 1,
-    name: "Minutes",
-    nameAr: "دقيقة",
-    value: "minute",
+    name: 'Minutes',
+    nameAr: 'دقيقة',
+    value: 'minute',
   },
   {
     id: 2,
-    name: "Hours",
-    nameAr: "ساعة",
-    value: "hour",
+    name: 'Hours',
+    nameAr: 'ساعة',
+    value: 'hour',
   },
   {
     id: 3,
-    name: "Days",
-    nameAr: "يوم",
-    value: "day",
+    name: 'Days',
+    nameAr: 'يوم',
+    value: 'day',
   },
 ];
 
@@ -139,7 +139,7 @@ export const getSBfromEvent = (event: any, isRTL: boolean) => {
   const b = `${isRTL ? event.customerNameAr : event.customerName}
 ${isRTL ? event.departmentNameAr : event.departmentName}
 ${isRTL ? event.employeeNameAr : event.employeeName}
-${isRTL ? "المجموع" : "Amount"}: ${event.amount}
+${isRTL ? 'المجموع' : 'Amount'}: ${event.amount}
 `;
   return { s, b };
 };
@@ -148,110 +148,96 @@ export const manamentTabs = [
   {
     id: 0,
     value: 0,
-    nameAr: "المهمات",
-    name: "Tasks",
+    nameAr: 'المشاريع',
+    name: 'Projects',
   },
   {
     id: 1,
     value: 1,
-    nameAr: "المواعيد",
-    name: "Appointments",
+    nameAr: 'المهمات',
+    name: 'Tasks',
   },
   {
     id: 2,
     value: 2,
-    nameAr: "الفواتيير",
-    name: "Invoices",
+    nameAr: 'المواعيد',
+    name: 'Appointments',
   },
   {
     id: 3,
     value: 3,
-    nameAr: "المقبوضات",
-    name: "Receipts",
+    nameAr: 'الفواتيير',
+    name: 'Invoices',
   },
   {
     id: 4,
     value: 4,
-    nameAr: "المصاريف",
-    name: "Expenses",
+    nameAr: 'المقبوضات',
+    name: 'Receipts',
+  },
+  {
+    id: 5,
+    value: 5,
+    nameAr: 'المصاريف',
+    name: 'Expenses',
   },
 ];
-export const customerTabs = [
-  {
-    id: 0,
-    value: 0,
-    nameAr: "المهمات",
-    name: "Tasks",
-  },
-  {
-    id: 1,
-    value: 1,
-    nameAr: "المواعيد",
-    name: "Appointments",
-  },
-  {
-    id: 2,
-    value: 2,
-    nameAr: "الفواتيير",
-    name: "Invoices",
-  },
-  {
-    id: 3,
-    value: 3,
-    nameAr: "المقبوضات",
-    name: "Receipts",
-  },
-];
-export const employeeTabs = [
-  {
-    id: 0,
-    value: 0,
-    nameAr: "المهمات",
-    name: "Tasks",
-  },
-  {
-    id: 1,
-    value: 1,
-    nameAr: "المواعيد",
-    name: "Appointments",
-  },
-  {
-    id: 2,
-    value: 2,
-    nameAr: "الفواتيير",
-    name: "Invoices",
-  },
 
-  {
-    id: 3,
-    value: 3,
-    nameAr: "المصاريف",
-    name: "Expenses",
-  },
-];
 export const taskManamentTabs = [
   {
     id: 0,
     value: 0,
-    nameAr: "المواعيد",
-    name: "Appointments",
+    nameAr: 'المواعيد',
+    name: 'Appointments',
   },
   {
     id: 1,
     value: 1,
-    nameAr: "الفواتيير",
-    name: "Invoices",
+    nameAr: 'الفواتيير',
+    name: 'Invoices',
   },
   {
     id: 2,
     value: 2,
-    nameAr: "المقبوضات",
-    name: "Receipts",
+    nameAr: 'المقبوضات',
+    name: 'Receipts',
   },
   {
     id: 3,
     value: 3,
-    nameAr: "المصاريف",
-    name: "Expenses",
+    nameAr: 'المصاريف',
+    name: 'Expenses',
+  },
+];
+export const projectManamentTabs = [
+  {
+    id: 0,
+    value: 0,
+    nameAr: 'المهمات',
+    name: 'Tasks',
+  },
+  {
+    id: 1,
+    value: 1,
+    nameAr: 'المواعيد',
+    name: 'Appointments',
+  },
+  {
+    id: 2,
+    value: 2,
+    nameAr: 'الفواتيير',
+    name: 'Invoices',
+  },
+  {
+    id: 3,
+    value: 3,
+    nameAr: 'المقبوضات',
+    name: 'Receipts',
+  },
+  {
+    id: 4,
+    value: 4,
+    nameAr: 'المصاريف',
+    name: 'Expenses',
   },
 ];

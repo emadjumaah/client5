@@ -1,14 +1,14 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import * as React from "react";
+import * as React from 'react';
 import {
   Box,
   FormControl,
   MenuItem,
   Select,
   Typography,
-} from "@material-ui/core";
-import { eventStatus } from "../../../constants";
-import { renderStatusIcon } from "./StatusIcon";
+} from '@material-ui/core';
+import { eventStatus } from '../../../constants';
+import { renderStatusIcon } from './StatusIcon';
 
 export const StatusSelect = ({
   status,
@@ -16,6 +16,7 @@ export const StatusSelect = ({
   onNewFieldChange,
   title,
   isRTL,
+  noTitle = false,
 }: any) => {
   return (
     <Box display="flex">
@@ -27,7 +28,7 @@ export const StatusSelect = ({
           onChange={(e) => {
             const value = Number(e.target.value);
             setStatus(value);
-            onNewFieldChange(value, "status");
+            onNewFieldChange(value, 'status');
           }}
           variant="outlined"
           style={{ maxHeight: 38, minWidth: 140 }}
@@ -41,19 +42,21 @@ export const StatusSelect = ({
           })}
         </Select>
       </FormControl>
-      <Box
-        style={{
-          display: "flex",
-          minWidth: 70,
-          alignItems: "center",
-          height: 40,
-          padding: 10,
-          marginTop: 8,
-        }}
-      >
-        <Typography>{title}</Typography>
-        {renderStatusIcon(status, "#777", 30)}
-      </Box>
+      {!noTitle && (
+        <Box
+          style={{
+            display: 'flex',
+            minWidth: 70,
+            alignItems: 'center',
+            height: 40,
+            padding: 10,
+            marginTop: 8,
+          }}
+        >
+          <Typography>{title}</Typography>
+          {renderStatusIcon(status, '#777', 30)}
+        </Box>
+      )}
     </Box>
   );
 };

@@ -25,6 +25,8 @@ import {
   getEmployees,
   getLandingChartData,
   getLastNos,
+  getProjects,
+  getResourses,
   updateFinance,
 } from '../graphql';
 import {
@@ -84,9 +86,18 @@ export default function ReceiptTask({ isRTL, words, isEditor, theme, taskId }) {
       },
       {
         query: getEmployees,
+        variables: { isRTL, resType: 1 },
       },
       {
         query: getDepartments,
+        variables: { isRTL, depType: 1 },
+      },
+      {
+        query: getResourses,
+        variables: { isRTL, resType: 1 },
+      },
+      {
+        query: getProjects,
       },
     ],
   };

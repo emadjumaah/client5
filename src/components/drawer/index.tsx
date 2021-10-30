@@ -1,15 +1,15 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import React from "react";
+import React from 'react';
 import {
   makeStyles,
   createStyles,
   Theme,
   useTheme,
   fade,
-} from "@material-ui/core/styles";
-import { useHistory } from "react-router-dom";
-import { client } from "../../graphql";
+} from '@material-ui/core/styles';
+import { useHistory } from 'react-router-dom';
+import { client } from '../../graphql';
 
 import {
   AppBar,
@@ -18,27 +18,27 @@ import {
   Hidden,
   IconButton,
   Toolbar,
-} from "@material-ui/core";
-import clsx from "clsx";
-import MenuIcon from "@material-ui/icons/Menu";
-import Menu from "./Menu";
-import { drawerWidth } from "../../constants";
-import { UserBox } from "../../Shared";
+} from '@material-ui/core';
+import clsx from 'clsx';
+import MenuIcon from '@material-ui/icons/Menu';
+import Menu from './Menu';
+import { drawerWidth } from '../../constants';
+import { UserBox } from '../../Shared';
 
 const drawerClasses = makeStyles((theme: Theme) =>
   createStyles({
     txtrtl: {
-      textAlign: "start",
-      "& span, & svg": {
-        fontSize: "1rem",
+      textAlign: 'start',
+      '& span, & svg': {
+        fontSize: '1rem',
         // fontWeight: "500",
       },
       color: fade(theme.palette.background.default, 0.8),
     },
     txtltr: {
-      textAlign: "start",
-      "& span, & svg": {
-        fontSize: "1rem",
+      textAlign: 'start',
+      '& span, & svg': {
+        fontSize: '1rem',
         // fontWeight: "bold",
       },
       color: fade(theme.palette.background.default, 0.8),
@@ -49,20 +49,20 @@ const drawerClasses = makeStyles((theme: Theme) =>
       backgroundColor: theme.palette.primary.main,
     },
     drawerContainer: {
-      overflow: "auto",
+      overflow: 'auto',
     },
     drawer: {
-      [theme.breakpoints.up("sm")]: {
+      [theme.breakpoints.up('sm')]: {
         width: drawerWidth,
         flexShrink: 0,
       },
       backgroundColor: theme.palette.primary.main,
     },
     child: {
-      fontSize: "1.5em",
+      fontSize: '1.5em',
       paddingTop: 15,
       paddingBottom: 15,
-      "&:hover": {
+      '&:hover': {
         backgroundColor: theme.palette.primary.light,
       },
     },
@@ -70,29 +70,29 @@ const drawerClasses = makeStyles((theme: Theme) =>
       padding: 10,
       paddingLeft: 55,
       backgroundColor: theme.palette.primary.main,
-      "&:hover": {
+      '&:hover': {
         backgroundColor: theme.palette.primary.light,
       },
     },
     hide: {
-      display: "none",
+      display: 'none',
     },
     icon: {
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "flex-end",
-      backgroundColor: "#21d19f",
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'flex-end',
+      backgroundColor: '#21d19f',
     },
     appBar: {
-      [theme.breakpoints.up("sm")]: {
+      [theme.breakpoints.up('sm')]: {
         width: `calc(100% - ${drawerWidth}px)`,
         marginLeft: drawerWidth,
       },
     },
     menuButton: {
       marginRight: theme.spacing(2),
-      [theme.breakpoints.up("sm")]: {
-        display: "none",
+      [theme.breakpoints.up('sm')]: {
+        display: 'none',
       },
     },
     content: {
@@ -100,15 +100,15 @@ const drawerClasses = makeStyles((theme: Theme) =>
       padding: theme.spacing(3),
     },
 
-    "@global": {
-      "*::-webkit-scrollbar": {
-        width: "0.4em",
+    '@global': {
+      '*::-webkit-scrollbar': {
+        width: '0.4em',
       },
-      "*::-webkit-scrollbar-track": {
-        "-webkit-box-shadow": "inset 0 0 6px rgba(0,0,0,0.3)",
+      '*::-webkit-scrollbar-track': {
+        '-webkit-box-shadow': 'inset 0 0 6px rgba(0,0,0,0.3)',
       },
-      "*::-webkit-scrollbar-thumb": {
-        backgroundColor: "rgba(0,0,0,.3)",
+      '*::-webkit-scrollbar-thumb': {
+        backgroundColor: 'rgba(0,0,0,.3)',
         // outline: "1px solid #333",
       },
     },
@@ -132,7 +132,7 @@ function AppDrawer(props: any): any {
 
   return (
     <>
-      <Hidden smUp implementation="css">
+      <Hidden smUp implementation="js">
         <AppBar position="fixed" className={classes.appBar}>
           <Toolbar>
             <IconButton
@@ -158,7 +158,7 @@ function AppDrawer(props: any): any {
       </Hidden>
 
       <nav className={clsx(classes.drawer)} aria-label="mailbox folders">
-        <Hidden smUp implementation="css">
+        <Hidden smUp implementation="js">
           <Drawer
             container={container}
             variant="temporary"
@@ -186,7 +186,7 @@ function AppDrawer(props: any): any {
             ></Menu>
           </Drawer>
         </Hidden>
-        <Hidden xsDown implementation="css">
+        <Hidden xsDown implementation="js">
           <Drawer
             classes={{
               paper: classes.drawerPaper,
@@ -208,7 +208,7 @@ function AppDrawer(props: any): any {
               style={{
                 height: 1,
                 marginTop: 10,
-                backgroundColor: "#ddd",
+                backgroundColor: '#ddd',
               }}
             ></Box>
             <Menu

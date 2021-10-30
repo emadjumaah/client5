@@ -61,7 +61,7 @@ export default function ServiceItemForm({
         const itememp = resourses.filter(
           (emp: any) => emp._id === itemvalue.resourseId
         )[0];
-        setEmplvalue(itememp);
+        setResovalue(itememp);
       }
       if (itemvalue.departmentId) {
         const itemdep = departments.filter(

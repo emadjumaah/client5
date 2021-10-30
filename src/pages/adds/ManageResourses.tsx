@@ -237,7 +237,7 @@ export default function ManageResourses({
           departments={departments}
           company={company}
           employees={employees}
-          resourses={employees}
+          resourses={resourses}
           servicesproducts={servicesproducts}
           customers={customers}
           tasks={tasks}

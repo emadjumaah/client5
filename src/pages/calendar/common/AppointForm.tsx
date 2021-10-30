@@ -385,6 +385,19 @@ export const AppointForm = (props: any) => {
   }, [emplvalue]);
 
   useEffect(() => {
+    if (!row._id) {
+      if (resovalue) {
+        if (resovalue?.departmentId) {
+          const dept = departments.filter(
+            (dep: any) => dep._id === resovalue?.departmentId
+          )?.[0];
+          onNewFieldChange(dept, 'department');
+        }
+      }
+    }
+  }, [resovalue]);
+
+  useEffect(() => {
     onFieldChange({ actions: JSON.stringify(actionslist) });
   }, [actionslist]);
 

@@ -38,9 +38,10 @@ import PageLayout from '../main/PageLayout';
 import { getColumns } from '../../common/columns';
 import PopupEmployeeView from '../../pubups/PopupEmployeeView';
 import useTasks from '../../hooks/useTasks';
-import { useCustomers, useDepartments } from '../../hooks';
+import { useCustomers } from '../../hooks';
 import useEmployeesUp from '../../hooks/useEmployeesUp';
 import useResoursesUp from '../../hooks/useResoursesUp';
+import useDepartmentsUp from '../../hooks/useDepartmentsUp';
 
 export default function ManageEmployees({
   isRTL,
@@ -58,8 +59,8 @@ export default function ManageEmployees({
   const col = getColumns({ isRTL, words });
 
   const { tasks } = useTasks();
-  const { departments } = useDepartments();
   const { customers } = useCustomers();
+  const { departments } = useDepartmentsUp();
   const { resourses } = useResoursesUp();
   const onCloseItem = () => {
     setOpenItem(false);
@@ -225,7 +226,10 @@ export default function ManageEmployees({
             addAction={addEmployee}
             editAction={editEmployee}
           >
-            <PopupEmployee resKind={1} resType={1}></PopupEmployee>
+            <PopupEmployee
+              departments={departments}
+              resType={1}
+            ></PopupEmployee>
           </PopupEditing>
         </Grid>
         {alrt.show && (

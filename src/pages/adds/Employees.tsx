@@ -30,6 +30,7 @@ import { errorAlert, errorDeleteAlert } from '../../Shared/helpers';
 import PageLayout from '../main/PageLayout';
 import { getColumns } from '../../common/columns';
 import useEmployeesDown from '../../hooks/useEmployeesDown';
+import useDepartmentsDown from '../../hooks/useDepartmentsDown';
 
 export default function Employees({
   isRTL,
@@ -60,6 +61,7 @@ export default function Employees({
     removeEmployee,
     refreshemployee,
   } = useEmployeesDown();
+  const { departments } = useDepartmentsDown();
 
   const commitChanges = async ({ deleted }) => {
     if (deleted) {
@@ -139,7 +141,10 @@ export default function Employees({
             addAction={addEmployee}
             editAction={editEmployee}
           >
-            <PopupEmployee resType={2}></PopupEmployee>
+            <PopupEmployee
+              departments={departments}
+              resType={2}
+            ></PopupEmployee>
           </PopupEditing>
         </Grid>
         {alrt.show && (

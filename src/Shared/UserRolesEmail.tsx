@@ -71,9 +71,7 @@ export default function UserRolesEmail({
             name="employee"
             title={words.employee}
             words={words}
-            options={employees?.filter(
-              (emp: any) => emp?.resKind === 1 && emp?.resType === 1
-            )}
+            options={employees}
             value={emplvalue}
             setSelectValue={setEmplvalue}
             noPlus

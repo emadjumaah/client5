@@ -147,6 +147,12 @@ const PopupAppointment = ({
           )?.[0];
           setDepartvalue(dept);
         }
+        if (taskvalue?.customerId) {
+          const dept = customers.filter(
+            (dep: any) => dep._id === taskvalue?.customerId
+          )?.[0];
+          setCustvalue(dept);
+        }
         if (taskvalue?.employeeId) {
           const dept = employees.filter(
             (dep: any) => dep._id === taskvalue?.employeeId
@@ -175,6 +181,19 @@ const PopupAppointment = ({
       }
     }
   }, [emplvalue]);
+
+  useEffect(() => {
+    if (isNew) {
+      if (resovalue) {
+        if (resovalue?.departmentId) {
+          const dept = departments.filter(
+            (dep: any) => dep._id === resovalue?.departmentId
+          )?.[0];
+          setDepartvalue(dept);
+        }
+      }
+    }
+  }, [resovalue]);
 
   useEffect(() => {
     const items = itemsData?.data?.['getOperationItems']?.data || [];
@@ -396,7 +415,6 @@ const PopupAppointment = ({
     setTasktitle(null);
     setLocation(null);
   };
-
   const onSubmit = async () => {
     // const { startPeriod, endPeriod } = getAppStartEndPeriod();
     // if (
@@ -609,6 +627,19 @@ const PopupAppointment = ({
                   </Grid>
                   <Grid item xs={6}>
                     <AutoFieldLocal
+                      name="task"
+                      title={tempwords.task}
+                      words={words}
+                      options={tasks}
+                      value={taskvalue}
+                      setSelectValue={setTaskvalue}
+                      register={register}
+                      isRTL={isRTL}
+                      fullWidth
+                    ></AutoFieldLocal>
+                  </Grid>
+                  <Grid item xs={6}>
+                    <AutoFieldLocal
                       name="customer"
                       title={tempwords.customer}
                       words={words}
@@ -619,19 +650,6 @@ const PopupAppointment = ({
                       isRTL={isRTL}
                       openAdd={openCustomer}
                       showphone
-                      fullWidth
-                    ></AutoFieldLocal>
-                  </Grid>
-                  <Grid item xs={6}>
-                    <AutoFieldLocal
-                      name="task"
-                      title={tempwords.task}
-                      words={words}
-                      options={tasks}
-                      value={taskvalue}
-                      setSelectValue={setTaskvalue}
-                      register={register}
-                      isRTL={isRTL}
                       fullWidth
                     ></AutoFieldLocal>
                   </Grid>

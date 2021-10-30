@@ -351,6 +351,16 @@ export const mainmenu = [
     req: null,
     dep: null,
   },
+  {
+    id: 99,
+    name: 'logout',
+    uri: 'logout',
+    titleAr: 'تسجيل الخروج',
+    titleEn: 'Logout',
+    icon: 'logout',
+    req: null,
+    dep: null,
+  },
 ];
 export const emplmenu = [
   {
@@ -391,6 +401,16 @@ export const emplmenu = [
     titleAr: 'الاعدادات',
     titleEn: 'Options',
     icon: 'options',
+    req: null,
+    dep: null,
+  },
+  {
+    id: 99,
+    name: 'logout',
+    uri: 'logout',
+    titleAr: 'تسجيل الخروج',
+    titleEn: 'Logout',
+    icon: 'logout',
     req: null,
     dep: null,
   },

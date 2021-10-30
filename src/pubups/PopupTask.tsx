@@ -47,6 +47,7 @@ const PopupTask = ({
   name = null,
 }: any) => {
   const [saving, setSaving] = useState(false);
+  const [showtable, setShowTable] = useState(isNew);
 
   const [tasktitle, setTasktitle]: any = useState(null);
   const [start, setStart]: any = useState(null);
@@ -208,6 +209,7 @@ const PopupTask = ({
     setStatus(null);
     setTasktitle(null);
     setSaving(false);
+    setShowTable(false);
   };
 
   const onSubmit = async () => {
@@ -234,13 +236,13 @@ const PopupTask = ({
       );
       return;
     }
-    if (isNew && (!evList || evList.length === 0)) {
-      await messageAlert(
-        setAlrt,
-        isRTL ? 'يرجى اضافة موعد' : 'Please add Appointment'
-      );
-      return;
-    }
+    // if (isNew && (!evList || evList.length === 0)) {
+    //   await messageAlert(
+    //     setAlrt,
+    //     isRTL ? 'يرجى اضافة موعد' : 'Please add Appointment'
+    //   );
+    //   return;
+    // }
     setSaving(true);
     const events =
       evList && evList.length > 0 ? compressEvents(evList) : undefined;
@@ -406,7 +408,7 @@ const PopupTask = ({
               mb={0}
             />
           </Grid>
-          <Grid item xs={4}>
+          <Grid item xs={3}>
             <AutoFieldLocal
               name="project"
               title={tempwords.project}
@@ -424,13 +426,24 @@ const PopupTask = ({
               disabled={name === 'projectId'}
             ></AutoFieldLocal>
           </Grid>
-          <Grid item xs={2}></Grid>
+          <Grid item xs={1}></Grid>
           <Grid item xs={2}>
             <CalenderLocal
               isRTL={isRTL}
               label={words.start}
               value={start}
               onChange={(d: any) => setStart(d)}
+              format="dd/MM/yyyy - hh:mm"
+              time
+              mb={0}
+            ></CalenderLocal>
+          </Grid>
+          <Grid item xs={2}>
+            <CalenderLocal
+              isRTL={isRTL}
+              label={words.end}
+              value={end}
+              onChange={(d: any) => setEnd(d)}
               format="dd/MM/yyyy - hh:mm"
               time
               mb={0}
@@ -515,22 +528,31 @@ const PopupTask = ({
               disabled={name === 'departmentId'}
             ></AutoFieldLocal>
           </Grid>
-          <Grid item xs={2}></Grid>
-          <Grid item xs={2}>
-            <CalenderLocal
-              isRTL={isRTL}
-              label={words.end}
-              value={end}
-              onChange={(d: any) => setEnd(d)}
-              format="dd/MM/yyyy - hh:mm"
-              time
-              mb={0}
-            ></CalenderLocal>
-          </Grid>
         </Grid>
         <Grid container spacing={2}>
           <Grid item xs={10}>
-            {isNew && (
+            {!showtable && isNew && (
+              <Box
+                display="flex"
+                style={{
+                  alignItems: 'center',
+                  justifyContent: 'flex-start',
+                  marginInlineStart: 10,
+                }}
+              >
+                <Button
+                  color="primary"
+                  onClick={() => {
+                    setShowTable(true);
+                    setOpenEvent(true);
+                  }}
+                  variant="contained"
+                >
+                  {isRTL ? 'اضافة مواعيد' : 'Add Appointments'}
+                </Button>
+              </Box>
+            )}
+            {showtable && (
               <Box
                 style={{
                   backgroundColor: '#F3F3F3',
@@ -551,7 +573,7 @@ const PopupTask = ({
                     onClick={() => setOpenEvent(true)}
                     variant="contained"
                   >
-                    {isRTL ? 'اضافة مواعيد' : 'Add Appointments'}
+                    {isRTL ? 'اضافة' : 'Add'}
                   </Button>
                 </Box>
                 <Box style={{ marginBottom: 20 }}>

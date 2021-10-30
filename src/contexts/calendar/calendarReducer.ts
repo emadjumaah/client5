@@ -3,7 +3,7 @@ import { CalendarTypes } from '../../types';
 
 export const initCalendar = {
   mainResourceName: 'status',
-  currentViewName: 'Week',
+  currentViewName: window.innerWidth < 600 ? 'Day' : 'Week',
   currentDate: new Date(),
   departvalue: null,
   emplvalue: null,

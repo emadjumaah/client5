@@ -269,15 +269,17 @@ export default function Tasks({
             color={colors.deepPurple[700]}
             bgcolor={colors.deepPurple[50]}
           ></DateNavigatorReports>
-          <Box style={{}}>
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={() => setOpenGantt(true)}
-            >
-              {isRTL ? 'عرض المهمات' : 'Task View'}
-            </Button>
-          </Box>
+          {rows?.length > 0 && (
+            <Box style={{}}>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={() => setOpenGantt(true)}
+              >
+                {isRTL ? 'عرض المهمات' : 'Task View'}
+              </Button>
+            </Box>
+          )}
         </Box>
 
         <Paper>

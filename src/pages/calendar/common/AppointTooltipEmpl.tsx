@@ -11,24 +11,19 @@ import {
   Typography,
 } from '@material-ui/core';
 import { roles, timeToHourMinute } from '../../../common';
-import { eventStatusEn } from '../../../constants';
 import { cardClasses } from '../../../themes/classes';
-import { renderStatusIcon } from './StatusIcon';
 import PopupAppointInvoice from '../../../pubups/PopupAppointInvoice';
-import { Avatar } from '../../../Shared';
 import { GContextTypes } from '../../../types';
 import { GlobalContext } from '../../../contexts';
-import { eventStatusAr } from '../../../constants/datatypes';
 import { useLazyQuery } from '@apollo/client';
 import { getOperationItems } from '../../../graphql';
+import { useTemplate } from '../../../hooks';
+import { StatusSelect } from './StatusSelect';
 import MyIcon from '../../../Shared/MyIcon';
 
-export const RenderToolTip = ({
+export const AppointTooltipEmpl = ({
   appointmentData,
   setVisible,
-  departments,
-  employees,
-  resourses,
   services,
   editEvent,
   company,
@@ -38,6 +33,7 @@ export const RenderToolTip = ({
 }: any) => {
   const [itemsList, setItemsList] = useState<any>([]);
   const [open, setOpen] = useState(false);
+  const [stat] = useState(appointmentData?.status);
   const [isEditor, setIsEditor] = useState(false);
 
   const {
@@ -45,12 +41,23 @@ export const RenderToolTip = ({
   }: GContextTypes = useContext(GlobalContext);
 
   const classes = cardClasses();
-
+  const { tempwords } = useTemplate();
   useEffect(() => {
     const isCalPOSEditor = roles.isEditor();
     const isEmployee = roles.isEmployee();
     setIsEditor(isCalPOSEditor || isEmployee);
   }, []);
+
+  const onStatusChange = async (value: any) => {
+    await editEvent({
+      variables: {
+        id: appointmentData.id,
+        status: value,
+      },
+    });
+    setVisible(false);
+    setOpen(false);
+  };
 
   const {
     startDate,
@@ -59,16 +66,6 @@ export const RenderToolTip = ({
     customerNameAr,
     customerPhone,
     items,
-    employeeId,
-    employeeName,
-    employeeNameAr,
-    employeePhone,
-    departmentId,
-    departmentName,
-    departmentNameAr,
-    // resourseId,
-    // resourseName,
-    // resourseNameAr,
     status,
     amount,
     docNo,
@@ -159,16 +156,6 @@ export const RenderToolTip = ({
     setOpen(true);
   };
 
-  const empColor = employees
-    ? employees.filter((emp: any) => emp._id === employeeId)
-    : '';
-  const employeeColor = empColor?.[0]?.color || '';
-
-  const departColor = departments
-    ? departments.filter((dep: any) => dep._id === departmentId)
-    : '';
-  const departmentColor = departColor?.[0]?.color || '';
-
   const desabledSave = (!customerPhone && !items) || status === 10 || !isEditor;
 
   return (
@@ -189,15 +176,14 @@ export const RenderToolTip = ({
               top: 10,
             }}
           >
-            {renderStatusIcon(status, '#555', 20)}
-            <Typography
-              style={{
-                marginTop: -1,
-                marginLeft: 3,
-              }}
-            >
-              {isRTL ? eventStatusAr[status] : eventStatusEn[status]}
-            </Typography>
+            <StatusSelect
+              status={stat}
+              noTitle={true}
+              setStatus={onStatusChange}
+              onNewFieldChange={() => null}
+              isRTL={isRTL}
+              title={words.status}
+            ></StatusSelect>
           </Box>
         )}
         <Box
@@ -206,14 +192,6 @@ export const RenderToolTip = ({
         >
           <Typography style={{ fontWeight: 'bold' }} variant="body2">
             {docNo}
-          </Typography>
-        </Box>
-        <Box style={{ alignItems: 'center', justifyContent: 'flex-start' }}>
-          <Typography style={{ fontWeight: 'bold' }} variant="body2">
-            {task?.title}
-          </Typography>
-          <Typography style={{ fontWeight: 'bold' }} variant="body2">
-            {title}
           </Typography>
         </Box>
         <Box
@@ -232,8 +210,18 @@ export const RenderToolTip = ({
             <div> {timeToHourMinute(endDate, isRTL ? 'ar-QA' : 'en-US')}</div>
           </Box>
         </Box>
+
+        <Box style={{ alignItems: 'center', justifyContent: 'flex-start' }}>
+          <Typography style={{ fontWeight: 'bold' }} variant="body2">
+            {tempwords.task}: {task?.title}
+          </Typography>
+          <Typography style={{ fontWeight: 'bold' }} variant="body2">
+            {tempwords.appointment}: {title}
+          </Typography>
+        </Box>
+
         <Box>
-          <Typography gutterBottom variant="h5" component="h2">
+          <Typography gutterBottom variant="h6" component="h5">
             {isRTL ? customerNameAr : customerName}
           </Typography>
           <Typography
@@ -272,53 +260,32 @@ export const RenderToolTip = ({
             </Typography>
           )}
         </Box>
-        <Box
-          m={2}
-          display="flex"
-          style={{
-            alignItems: 'center',
-          }}
-        >
+        {location && location?.lat && (
           <Box
+            display="flex"
             style={{
+              marginTop: 10,
+              flexDirection: 'column',
+              cursor: 'pointer',
               width: 40,
-              height: 40,
-              borderRadius: 20,
-              backgroundColor: departmentColor,
+              height: 50,
+              alignItems: 'center',
+              justifyContent: 'space-around',
             }}
-          ></Box>
-          <Typography
-            style={{ marginTop: 8, marginLeft: 10, marginRight: 10 }}
-            gutterBottom
-            variant="body1"
-            component="h2"
+            onClick={() => {
+              window.open(
+                `https://www.google.com/maps/dir/?api=1&destination=${location?.lat}, ${location?.lng}&travelmode="driving&dir_action=navigate`,
+                '_blank'
+              );
+              console.log('drive');
+            }}
           >
-            {isRTL ? departmentNameAr : departmentName}
-          </Typography>
-        </Box>
-        <Box
-          m={3}
-          display="flex"
-          style={{
-            alignItems: 'center',
-          }}
-        >
-          <Avatar name={employeeName} bg={employeeColor} size={26}></Avatar>
-
-          <Typography
-            style={{ marginTop: 5, marginLeft: 10, marginRight: 10 }}
-            gutterBottom
-            variant="body1"
-            component="h2"
-          >
-            {isRTL ? employeeNameAr : employeeName}
-          </Typography>
-        </Box>
-        <Box style={{ marginTop: -25, marginRight: 60 }}>
-          <Typography gutterBottom variant="subtitle2">
-            {employeePhone}
-          </Typography>
-        </Box>
+            <MyIcon size={28} color="#667fb5" icon="resourse"></MyIcon>
+            <Typography variant="caption" style={{ color: '#667fb5' }}>
+              Drive
+            </Typography>
+          </Box>
+        )}
       </CardContent>
       <CardActions>
         {!viewonly && (
@@ -338,31 +305,6 @@ export const RenderToolTip = ({
             </Button>
           </Box>
         )}
-        {location && location?.lat && (
-          <Box
-            display="flex"
-            style={{
-              marginTop: 10,
-              flexDirection: 'column',
-              cursor: 'pointer',
-              width: 40,
-              height: 50,
-              alignItems: 'center',
-              justifyContent: 'space-around',
-            }}
-            onClick={() => {
-              window.open(
-                `https://www.google.com/maps/dir/?api=1&destination=${location?.lat}, ${location?.lng}&travelmode="driving&dir_action=navigate`,
-                '_blank'
-              );
-            }}
-          >
-            <MyIcon size={28} color="#667fb5" icon="resourse"></MyIcon>
-            <Typography variant="caption" style={{ color: '#667fb5' }}>
-              Drive
-            </Typography>
-          </Box>
-        )}
       </CardActions>
       <PopupAppointInvoice
         open={open}
@@ -370,7 +312,6 @@ export const RenderToolTip = ({
           setVisible(false);
           setOpen(false);
         }}
-        onCloseAppoint={() => null}
         appoint={appointmentData}
         services={services}
         editEvent={editEvent}

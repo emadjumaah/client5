@@ -151,6 +151,19 @@ const PopupTaskAppointment = ({
   }, [emplvalue]);
 
   useEffect(() => {
+    if (isNew) {
+      if (resovalue) {
+        if (resovalue?.departmentId) {
+          const dept = departments.filter(
+            (dep: any) => dep._id === resovalue?.departmentId
+          )?.[0];
+          setDepartvalue(dept);
+        }
+      }
+    }
+  }, [resovalue]);
+
+  useEffect(() => {
     getOverallTotal();
   }, [itemsList]);
   useEffect(() => {

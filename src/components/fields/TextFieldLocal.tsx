@@ -32,7 +32,11 @@ export default function TextFieldLocal({
       error={errors ? (errors[name] ? true : false) : false}
       inputRef={register}
       variant="outlined"
-      style={{ width, marginBottom: mb }}
+      style={{
+        width,
+        marginBottom: mb,
+        direction: name.endsWith('Ar') ? 'rtl' : 'ltr',
+      }}
       margin="dense"
       {...res}
     />

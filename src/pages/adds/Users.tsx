@@ -23,7 +23,7 @@ import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { errorAlert, Loading, PopupEditing } from '../../Shared';
 import { Box, Fab, IconButton } from '@material-ui/core';
-import { useEmployees, useUsers } from '../../hooks';
+import { useUsers } from '../../hooks';
 import {
   activeFormatter,
   avatarFormatter,
@@ -33,6 +33,7 @@ import { AlertLocal, SearchTable } from '../../components';
 import PageLayout from '../main/PageLayout';
 import useCompany from '../../hooks/useCompany';
 import PopupUserEmail from '../../pubups/PopupUserEmail';
+import useEmployeesUp from '../../hooks/useEmployeesUp';
 
 const getRowId = (row: { _id: any }) => row._id;
 
@@ -70,7 +71,7 @@ export default function Users({
     refreshuser,
   } = useUsers();
   const { company } = useCompany();
-  const { employees } = useEmployees();
+  const { employees } = useEmployeesUp();
 
   const commitChanges = async ({ deleted }) => {
     if (deleted) {

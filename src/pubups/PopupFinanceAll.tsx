@@ -5,11 +5,11 @@ import { dublicateAlert, errorAlert, messageAlert } from '../Shared';
 import { GContextTypes } from '../types';
 import { GlobalContext } from '../contexts';
 import {
-  Box,
+  // Box,
   Fab,
-  FormControlLabel,
-  Radio,
-  RadioGroup,
+  // FormControlLabel,
+  // Radio,
+  // RadioGroup,
 } from '@material-ui/core';
 import useAccounts from '../hooks/useAccounts';
 import { operationTypes } from '../constants';
@@ -24,7 +24,7 @@ import { useLazyQuery } from '@apollo/client';
 import getOperationKaids from '../graphql/query/getOperationKaids';
 import LoadingInline from '../Shared/LoadingInline';
 import _ from 'lodash';
-import { useDepartments, useEmployees, useTemplate } from '../hooks';
+// import { useDepartments, useEmployees, useTemplate } from '../hooks';
 
 export const indexTheList = (list: any) => {
   return list.map((item: any, index: any) => {
@@ -52,6 +52,7 @@ const PopupFinanceAll = ({
   const [cridaccounts, setCridaccounts] = React.useState([]);
 
   const [amount, setAmount]: any = React.useState(0);
+  const [kaidsum, setKaidsum]: any = React.useState(0);
   const [desc, setDesc]: any = React.useState('');
   const [debitAcc, setDebitAcc]: any = React.useState(null);
   const [creditAcc, setCreditAcc]: any = React.useState(null);
@@ -59,17 +60,17 @@ const PopupFinanceAll = ({
 
   const [itemsList, setItemsList] = useState<any>([]);
 
-  const [departvalue, setDepartvalue] = useState<any>(null);
-  const [departError, setDepartError] = useState<any>(false);
-  const departRef: any = React.useRef();
+  // const [departvalue, setDepartvalue] = useState<any>(null);
+  // const [departError, setDepartError] = useState<any>(false);
+  // const departRef: any = React.useRef();
 
-  const [emplvalue, setEmplvalue] = useState<any>(null);
-  const [emplError, setEmplError] = useState<any>(false);
-  const emplRef: any = React.useRef();
+  // const [emplvalue, setEmplvalue] = useState<any>(null);
+  // const [emplError, setEmplError] = useState<any>(false);
+  // const emplRef: any = React.useRef();
 
-  const [resKind, setResKind] = useState<any>(null);
-  const [emplslist, setEmplslist] = useState<any>([]);
-  const { tempwords, tempoptions } = useTemplate();
+  // const [resKind, setResKind] = useState<any>(null);
+  // const [emplslist, setEmplslist] = useState<any>([]);
+  // const { tempwords, tempoptions } = useTemplate();
 
   const [maindesc, setMaindesc] = useState<any>('');
   const {
@@ -82,30 +83,30 @@ const PopupFinanceAll = ({
   });
 
   const { accounts } = useAccounts();
-  const { departments } = useDepartments();
-  const { employees } = useEmployees();
+  // const { departments } = useDepartments();
+  // const { employees } = useEmployees();
 
-  useEffect(() => {
-    if (employees && employees.length > 0) {
-      const filtered = employees.filter(
-        (emp: any) => emp.resKind === resKind && emp.resType === 1
-      );
-      setEmplslist(filtered);
-    }
-  }, [resKind, employees]);
+  // useEffect(() => {
+  //   if (employees && employees.length > 0) {
+  //     const filtered = employees.filter(
+  //       (emp: any) => emp.resKind === resKind && emp.resType === 1
+  //     );
+  //     setEmplslist(filtered);
+  //   }
+  // }, [resKind, employees]);
 
-  useEffect(() => {
-    if (isNew) {
-      if (emplvalue) {
-        if (emplvalue?.departmentId) {
-          const dept = departments.filter(
-            (dep: any) => dep._id === emplvalue?.departmentId
-          )?.[0];
-          setDepartvalue(dept);
-        }
-      }
-    }
-  }, [emplvalue]);
+  // useEffect(() => {
+  //   if (isNew) {
+  //     if (emplvalue) {
+  //       if (emplvalue?.departmentId) {
+  //         const dept = departments.filter(
+  //           (dep: any) => dep._id === emplvalue?.departmentId
+  //         )?.[0];
+  //         setDepartvalue(dept);
+  //       }
+  //     }
+  //   }
+  // }, [emplvalue]);
 
   useEffect(() => {
     const items = itemsData?.data?.['getOperationKaids']?.data || [];
@@ -130,9 +131,10 @@ const PopupFinanceAll = ({
           };
         })
         .value();
-
       const listwithindex = indexTheList(data);
       setItemsList(listwithindex);
+      const sum = _.sumBy(listwithindex, 'amount');
+      setKaidsum(sum);
       setLoading(false);
     }
   }, [itemsData]);
@@ -221,43 +223,44 @@ const PopupFinanceAll = ({
       );
       return;
     }
-    const department = departvalue
-      ? {
-          departmentId: departvalue._id,
-          departmentName: departvalue.name,
-          departmentNameAr: departvalue.nameAr,
-          departmentColor: departvalue.color,
-        }
-      : {
-          departmentId: undefined,
-          departmentName: undefined,
-          departmentNameAr: undefined,
-          departmentColor: undefined,
-        };
-    const employee = emplvalue
-      ? {
-          employeeId: emplvalue._id,
-          employeeName: emplvalue.name,
-          employeeNameAr: emplvalue.nameAr,
-          employeeColor: emplvalue.color,
-        }
-      : {
-          employeeId: undefined,
-          employeeName: undefined,
-          employeeNameAr: undefined,
-          employeeColor: undefined,
-        };
+    // const department = departvalue
+    //   ? {
+    //       departmentId: departvalue._id,
+    //       departmentName: departvalue.name,
+    //       departmentNameAr: departvalue.nameAr,
+    //       departmentColor: departvalue.color,
+    //     }
+    //   : {
+    //       departmentId: undefined,
+    //       departmentName: undefined,
+    //       departmentNameAr: undefined,
+    //       departmentColor: undefined,
+    //     };
+    // const employee = emplvalue
+    //   ? {
+    //       employeeId: emplvalue._id,
+    //       employeeName: emplvalue.name,
+    //       employeeNameAr: emplvalue.nameAr,
+    //       employeeColor: emplvalue.color,
+    //     }
+    //   : {
+    //       employeeId: undefined,
+    //       employeeName: undefined,
+    //       employeeNameAr: undefined,
+    //       employeeColor: undefined,
+    //     };
 
     const variables: any = {
       _id: row && row._id ? row._id : undefined, // is it new or edit
       opType: operationTypes.kaid,
       time: selectedDate,
       items: JSON.stringify(itemsList),
-      department,
-      employee,
+      // department,
+      // employee,
       desc: maindesc,
       branch: user.branch,
       userId: user._id,
+      amount: kaidsum,
     };
     const mutate = isNew ? addAction : editAction;
     apply(mutate, variables);
@@ -292,12 +295,12 @@ const PopupFinanceAll = ({
     setDebaccounts([]);
     setCridaccounts([]);
     setItemsList([]);
-    setDepartvalue(null);
-    setDepartError(false);
-    setEmplvalue(null);
-    setEmplError(false);
-    setResKind(null);
-    setEmplslist([]);
+    // setDepartvalue(null);
+    // setDepartError(false);
+    // setEmplvalue(null);
+    // setEmplError(false);
+    // setResKind(null);
+    // setEmplslist([]);
     setMaindesc('');
   };
   const closeModal = () => {
@@ -332,14 +335,11 @@ const PopupFinanceAll = ({
           ></CalenderLocal>
           <TextFieldLocal
             name="maindesc"
-            label={words.description}
+            label={isRTL ? 'المرجع' : 'Reference'}
             value={maindesc}
             onChange={(e: any) => setMaindesc(e.target.value)}
             row={row}
             fullWidth
-            multiline
-            rowsMax={2}
-            rows={2}
           />
           <Grid
             style={{
@@ -393,7 +393,7 @@ const PopupFinanceAll = ({
                   />
                 </Grid>
 
-                {!tempoptions?.noRes && (
+                {/* {!tempoptions?.noRes && (
                   <Grid item xs={8}>
                     <Box
                       style={{ marginRight: 10, marginTop: 0, marginBottom: 0 }}
@@ -466,7 +466,7 @@ const PopupFinanceAll = ({
                     isRTL={isRTL}
                     mb={0}
                   ></AutoFieldLocal>
-                </Grid>
+                </Grid> */}
                 <Grid item xs={8}>
                   <TextFieldLocal
                     name="desc"

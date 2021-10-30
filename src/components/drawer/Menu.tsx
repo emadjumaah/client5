@@ -1,11 +1,11 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import React from "react";
-import { List, ListItem, ListItemText } from "@material-ui/core";
-import { Link } from "react-router-dom";
-import { renderIcon } from "./renders";
-import MenuItem from "./MenuItem";
-import { applyRole } from "../../common/roles";
+import React from 'react';
+import { List, ListItem, ListItemText } from '@material-ui/core';
+import { Link } from 'react-router-dom';
+import { renderIcon } from './renders';
+import MenuItem from './MenuItem';
+import { applyRole } from '../../common/roles';
 
 const Menu = ({
   isRTL,
@@ -34,15 +34,15 @@ const Menu = ({
             {!submenu && (
               <Link
                 style={{
-                  textDecoration: "none",
-                  color: isSelected ? "#333" : "#eee",
+                  textDecoration: 'none',
+                  color: isSelected ? '#333' : '#eee',
                 }}
                 to={`${item.uri}`}
                 onClick={async () => {
                   if (item.id === 99) {
                     logout();
                     await client.resetStore();
-                    history.push("/");
+                    history.push('/');
                   } else {
                     setMenuitem(item);
                     if (setMobileOpen) {
@@ -52,10 +52,10 @@ const Menu = ({
                 }}
               >
                 <ListItem
-                  dir={isRTL ? "rtl" : undefined}
+                  dir={isRTL ? 'rtl' : undefined}
                   className={classes.child}
                   style={{
-                    cursor: "pointer",
+                    cursor: 'pointer',
                     backgroundColor: isSelected
                       ? theme.palette.primary.dark
                       : undefined,

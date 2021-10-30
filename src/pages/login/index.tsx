@@ -106,54 +106,68 @@ const Login = (): any => {
           </Typography>
 
           <form className={classes.form} noValidate>
-            <TextField
-              autoFocus
-              label={isRTL ? 'اسم المستخدم' : 'Username'}
-              name="username"
-              variant="outlined"
-              inputRef={register}
-              error={errors.username ? true : false}
-              onKeyDown={keyPress}
-              required
-              fullWidth
-            />
-            <TextField
-              name="password"
-              label={isRTL ? 'كلمة المرور' : 'Password'}
-              type="password"
-              variant="outlined"
-              inputRef={register}
-              error={errors.password ? true : false}
-              onKeyDown={keyPress}
-              helperText={error ? error : undefined}
-              required
-              fullWidth
-            />
+            <Box m={2}>
+              <TextField
+                autoFocus
+                label={isRTL ? 'اسم المستخدم' : 'Username'}
+                name="username"
+                variant="outlined"
+                inputRef={register}
+                error={errors.username ? true : false}
+                onKeyDown={keyPress}
+                style={{ height: 50 }}
+                required
+                fullWidth
+              />
+              <TextField
+                name="password"
+                label={isRTL ? 'كلمة المرور' : 'Password'}
+                type="password"
+                variant="outlined"
+                inputRef={register}
+                error={errors.password ? true : false}
+                onKeyDown={keyPress}
+                helperText={error ? error : undefined}
+                required
+                fullWidth
+              />
 
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              color="primary"
-              className={classes.submit}
-              style={{ height: 40 }}
-              onClick={handleSubmit(onSubmit)}
-            >
-              {isRTL ? 'تسجبل الدخول' : 'Login'}
-            </Button>
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                color="primary"
+                className={classes.submit}
+                style={{ height: 40 }}
+                onClick={handleSubmit(onSubmit)}
+              >
+                {isRTL ? 'تسجبل الدخول' : 'Login'}
+              </Button>
+            </Box>
           </form>
         </div>
-        <Box mt={8}>
-          <Typography variant="body2" color="textSecondary" align="center">
-            {'Copyright © '}
-            <Link color="inherit" href="https://jadwalerp.com/">
-              Jadwal ERP
-            </Link>{' '}
-            {new Date().getFullYear()}
-            {'.'}
-          </Typography>
-        </Box>
       </Container>
+      <Box
+        mt={10}
+        display="flex"
+        style={{
+          position: 'fixed',
+          flex: 1,
+          alignItems: 'center',
+          justifyContent: 'center',
+          bottom: 40,
+          width: '100%',
+        }}
+      >
+        <Typography variant="body2" color="textSecondary" align="center">
+          {'Copyright © '}
+          <Link color="inherit" href="https://jadwalerp.com/">
+            Jadwal ERP
+          </Link>{' '}
+          {new Date().getFullYear()}
+          {'.'}
+        </Typography>
+      </Box>
     </>
   );
 };
