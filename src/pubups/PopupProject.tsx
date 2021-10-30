@@ -16,6 +16,9 @@ import { Grid, TextField } from '@material-ui/core';
 import PopupLayout from '../pages/main/PopupLayout';
 import { TextFieldLocal } from '../components';
 import { getPopupTitle } from '../constants/menu';
+import AutoFieldLocal from '../components/fields/AutoFieldLocal';
+import { useTemplate } from '../hooks';
+import { weekdaysNNo } from '../constants/datatypes';
 
 const PopupProject = ({
   open,
@@ -27,9 +30,29 @@ const PopupProject = ({
   editAction,
   newtext,
   theme,
+  employees,
+  departments,
+  resourses,
+  customers,
 }: any) => {
   const [saving, setSaving] = useState(false);
   const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
+
+  const [departvalue, setDepartvalue] = useState<any>(null);
+  const [departError, setDepartError] = useState<any>(false);
+  const departRef: any = React.useRef();
+
+  const [emplvalue, setEmplvalue] = useState<any>(null);
+  const [emplError, setEmplError] = useState<any>(false);
+  const emplRef: any = React.useRef();
+  const [resovalue, setResovalue] = useState<any>(null);
+  const [resoError, setResoError] = useState<any>(false);
+  const resoRef: any = React.useRef();
+
+  const [custvalue, setCustvalue] = useState<any>(null);
+  const [custError, setCustError] = useState<any>(false);
+  const custRef: any = React.useRef();
+
   const { register, handleSubmit, errors, reset } = useForm(yup.departResolver);
   const {
     translate: { words, isRTL },
@@ -37,6 +60,8 @@ const PopupProject = ({
   }: GContextTypes = useContext(GlobalContext);
 
   const [color, setColor] = useState<any>('#AAAAAA');
+
+  const { tempoptions, tempwords } = useTemplate();
 
   useEffect(() => {
     if (row && row._id) {
@@ -53,6 +78,61 @@ const PopupProject = ({
       _id: row && row._id ? row._id : undefined, // is it new or edit
       name,
       nameAr,
+      customer: custvalue
+        ? {
+            customerId: custvalue._id,
+            customerName: custvalue.name,
+            customerNameAr: custvalue.nameAr,
+            customerPhone: custvalue.phone,
+          }
+        : {
+            customerId: undefined,
+            customerName: undefined,
+            customerNameAr: undefined,
+            customerPhone: undefined,
+          },
+
+      department: departvalue
+        ? {
+            departmentId: departvalue._id,
+            departmentName: departvalue.name,
+            departmentNameAr: departvalue.nameAr,
+            departmentColor: departvalue.color,
+          }
+        : {
+            departmentId: undefined,
+            departmentName: undefined,
+            departmentNameAr: undefined,
+            departmentColor: undefined,
+          },
+      employee: emplvalue
+        ? {
+            employeeId: emplvalue._id,
+            employeeName: emplvalue.name,
+            employeeNameAr: emplvalue.nameAr,
+            employeeColor: emplvalue.color,
+            employeePhone: emplvalue.phone,
+          }
+        : {
+            employeeId: undefined,
+            employeeName: undefined,
+            employeeNameAr: undefined,
+            employeeColor: undefined,
+          },
+      resourse: resovalue
+        ? {
+            resourseId: resovalue._id,
+            resourseName: resovalue.name,
+            resourseNameAr: resovalue.nameAr,
+            resourseColor: resovalue.color,
+          }
+        : {
+            employeeId: undefined,
+            employeeName: undefined,
+            employeeNameAr: undefined,
+            employeeColor: undefined,
+            employeePhone: undefined,
+          },
       desc,
       color,
       branch: user.branch,
@@ -97,6 +177,10 @@ const PopupProject = ({
   const onHandleSubmit = () => {
     handleSubmit(onSubmit)();
   };
+
+  const date = row?.start ? new Date(row?.start) : new Date();
+  const day = weekdaysNNo?.[date.getDay()];
+
   const title = getPopupTitle('department', isNew);
 
   return (
@@ -139,6 +223,80 @@ const PopupProject = ({
                 newtext={newtext}
                 mb={0}
               />
+            </Grid>
+            <Grid item xs={12}>
+              <AutoFieldLocal
+                name="customer"
+                title={tempwords.customer}
+                words={words}
+                options={customers}
+                value={custvalue}
+                setSelectValue={setCustvalue}
+                setSelectError={setCustError}
+                selectError={custError}
+                refernce={custRef}
+                register={register}
+                isRTL={isRTL}
+                fullWidth
+                showphone
+              ></AutoFieldLocal>
+            </Grid>
+            {!tempoptions?.noEmp && (
+              <Grid item xs={12}>
+                <AutoFieldLocal
+                  name="employee"
+                  title={tempwords.employee}
+                  words={words}
+                  options={employees}
+                  value={emplvalue}
+                  setSelectValue={setEmplvalue}
+                  setSelectError={setEmplError}
+                  selectError={emplError}
+                  refernce={emplRef}
+                  register={register}
+                  noPlus
+                  isRTL={isRTL}
+                  fullWidth
+                  day={day}
+                ></AutoFieldLocal>
+              </Grid>
+            )}
+            {!tempoptions?.noRes && (
+              <Grid item xs={12}>
+                <AutoFieldLocal
+                  name="resourse"
+                  title={tempwords.resourse}
+                  words={words}
+                  options={resourses}
+                  value={resovalue}
+                  setSelectValue={setResovalue}
+                  setSelectError={setResoError}
+                  selectError={resoError}
+                  refernce={resoRef}
+                  register={register}
+                  noPlus
+                  isRTL={isRTL}
+                  fullWidth
+                  day={day}
+                ></AutoFieldLocal>
+              </Grid>
+            )}
+            <Grid item xs={12}>
+              <AutoFieldLocal
+                name="department"
+                title={tempwords.department}
+                words={words}
+                options={departments}
+                value={departvalue}
+                setSelectValue={setDepartvalue}
+                setSelectError={setDepartError}
+                selectError={departError}
+                refernce={departRef}
+                register={register}
+                noPlus
+                isRTL={isRTL}
+                fullWidth
+              ></AutoFieldLocal>
             </Grid>
           </Grid>
           <TextFieldLocal

@@ -85,7 +85,7 @@ const PopupCustomerView = ({
 }: any) => {
   const classes = useStyles();
 
-  const [value, setValue] = React.useState(0);
+  const [value, setValue] = React.useState(2);
   const handleChange = (_, newValue) => {
     setValue(newValue);
   };
@@ -322,6 +322,9 @@ const PopupCustomerView = ({
                 className={classes.tabs}
               >
                 {manamentTabs.map((item: any) => {
+                  if (item.hide) {
+                    return <div></div>;
+                  }
                   return (
                     <Tab
                       style={{

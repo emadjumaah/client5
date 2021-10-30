@@ -6,6 +6,7 @@ const store = getStoreItem('store');
 const template = store?.template;
 const lang = store?.lang;
 const tempwords = template?.words?.[lang];
+// const options = template?.options;
 
 export const getRowId = (row: { _id: any }) => row._id;
 
@@ -62,6 +63,12 @@ export const getColumns = ({ isRTL, words }: any) => {
       ref: 'supplier',
       name: isRTL ? 'supplierNameAr' : 'supplierName',
       title: words.supplier,
+    },
+    project: {
+      id: 10.5,
+      ref: 'project',
+      name: isRTL ? 'projectNameAr' : 'projectName',
+      title: tempwords.project,
     },
     status: { id: 11, ref: 'status', name: 'status', title: words.status },
     amount: { id: 12, ref: 'amount', name: 'amount', title: words.amount },

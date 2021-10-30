@@ -42,7 +42,8 @@ const PopupAddMultiEvents = ({
   };
   const onChangeCount = (e: any) => {
     const value = Number(e.target.value);
-    value < 1 ? setCount(1) : setCount(value);
+    const count = value < 1 ? 1 : value > 365 ? 365 : value;
+    setCount(count);
   };
 
   useEffect(() => {

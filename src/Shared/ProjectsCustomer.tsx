@@ -53,7 +53,7 @@ import PopupProjectView from '../pubups/PopupProjectView';
 
 export const getRowId = (row: { _id: any }) => row._id;
 
-export default function TasksCustomer({
+export default function ProjectsCustomer({
   isRTL,
   words,
   isEditor,
@@ -67,7 +67,7 @@ export default function TasksCustomer({
   const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
   const col = getColumns({ isRTL, words });
   const [columns] = useState([
-    col.title,
+    { name: isRTL ? 'nameAr' : 'name', title: words.name },
     // col.docNo,
     col.start,
     col.end,

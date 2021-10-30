@@ -206,7 +206,12 @@ export default function ManageProjects({
             addAction={addProject}
             editAction={editProject}
           >
-            <PopupProject></PopupProject>
+            <PopupProject
+              employees={employees}
+              departments={departments}
+              resourses={resourses}
+              customers={customers}
+            ></PopupProject>
           </PopupEditing>
         </Grid>
         {alrt.show && (

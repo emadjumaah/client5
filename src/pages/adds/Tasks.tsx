@@ -83,6 +83,7 @@ export default function Tasks({
     // col.docNo,
     col.start,
     col.end,
+    col.project,
     col.customer,
     col.department,
     col.employee,
@@ -305,6 +306,7 @@ export default function Tasks({
               defaultHiddenColumnNames={[
                 col.createdAt.name,
                 col.department.name,
+                col.project.name,
                 col.evQty.name,
                 col.toatlExpenses.name,
                 col.start.name,

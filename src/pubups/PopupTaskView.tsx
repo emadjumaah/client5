@@ -26,6 +26,8 @@ import EventsCustomer from '../Shared/EventsCustomer';
 import InvoicesCustomer from '../Shared/InvoicesCustomer';
 import ReceiptCustomer from '../Shared/ReceiptCustomer';
 import ExpensesCustomer from '../Shared/ExpensesCustomer';
+import ProjectsCustomer from '../Shared/ProjectsCustomer';
+import TasksCustomer from '../Shared/TasksCustomer';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -96,7 +98,7 @@ const PopupTaskView = ({
   const [evList, setEvList] = useState<any>([]);
   const [total, setTotal] = useState<any>(null);
   const [row, setRow] = useState(item);
-  const [value, setValue] = React.useState(0);
+  const [value, setValue] = React.useState(2);
 
   const handleChange = (_, newValue) => {
     setValue(newValue);
@@ -270,6 +272,32 @@ const PopupTaskView = ({
               {row && (
                 <Box style={{ marginBottom: 20 }}>
                   <TabPanel value={value} index={0}>
+                    <ProjectsCustomer
+                      servicesproducts={servicesproducts}
+                      isEditor={isEditor}
+                      isRTL={isRTL}
+                      words={words}
+                      theme={theme}
+                      company={company}
+                      name="projectId"
+                      value={row}
+                      id={row?._id}
+                    ></ProjectsCustomer>
+                  </TabPanel>
+                  <TabPanel value={value} index={1}>
+                    <TasksCustomer
+                      servicesproducts={servicesproducts}
+                      isEditor={isEditor}
+                      isRTL={isRTL}
+                      words={words}
+                      theme={theme}
+                      company={company}
+                      name="projectId"
+                      value={row}
+                      id={row?._id}
+                    ></TasksCustomer>
+                  </TabPanel>
+                  <TabPanel value={value} index={2}>
                     <EventsCustomer
                       resourses={resourses}
                       employees={employees}
@@ -286,7 +314,7 @@ const PopupTaskView = ({
                       id={row?.id}
                     ></EventsCustomer>
                   </TabPanel>
-                  <TabPanel value={value} index={1}>
+                  <TabPanel value={value} index={3}>
                     <InvoicesCustomer
                       isRTL={isRTL}
                       words={words}
@@ -301,7 +329,7 @@ const PopupTaskView = ({
                       id={row?.id}
                     ></InvoicesCustomer>
                   </TabPanel>
-                  <TabPanel value={value} index={2}>
+                  <TabPanel value={value} index={4}>
                     <ReceiptCustomer
                       isRTL={isRTL}
                       words={words}
@@ -312,7 +340,7 @@ const PopupTaskView = ({
                       id={row?.id}
                     ></ReceiptCustomer>
                   </TabPanel>
-                  <TabPanel value={value} index={3}>
+                  <TabPanel value={value} index={5}>
                     <ExpensesCustomer
                       isRTL={isRTL}
                       words={words}
@@ -440,6 +468,9 @@ const PopupTaskView = ({
                   className={classes.tabs}
                 >
                   {taskManamentTabs.map((item: any) => {
+                    if (item.hide) {
+                      return <div></div>;
+                    }
                     return (
                       <Tab
                         style={{

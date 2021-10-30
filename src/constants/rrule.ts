@@ -1,5 +1,13 @@
 import RRule from 'rrule';
 
+import { getStoreItem } from '../store';
+
+const store = getStoreItem('store');
+const template = store?.template;
+const lang = store?.lang;
+const words = template?.words?.[lang];
+const options = template?.options;
+
 export const freqOptions = [
   {
     id: 2,
@@ -148,38 +156,46 @@ export const manamentTabs = [
   {
     id: 0,
     value: 0,
-    nameAr: 'المشاريع',
-    name: 'Projects',
+    nameAr: words?.projects,
+    name: words?.projects,
+    ref: 'projects',
+    hide: options?.noPro,
   },
   {
     id: 1,
     value: 1,
-    nameAr: 'المهمات',
-    name: 'Tasks',
+    nameAr: words?.tasks,
+    name: words?.tasks,
+    ref: 'tasks',
+    hide: options?.noTsk,
   },
   {
     id: 2,
     value: 2,
-    nameAr: 'المواعيد',
-    name: 'Appointments',
+    nameAr: words?.appointments,
+    name: words?.appointments,
+    ref: 'events',
   },
   {
     id: 3,
     value: 3,
     nameAr: 'الفواتيير',
     name: 'Invoices',
+    ref: 'invoices',
   },
   {
     id: 4,
     value: 4,
     nameAr: 'المقبوضات',
     name: 'Receipts',
+    ref: 'receipts',
   },
   {
     id: 5,
     value: 5,
     nameAr: 'المصاريف',
     name: 'Expenses',
+    ref: 'expenses',
   },
 ];
 
@@ -187,57 +203,91 @@ export const taskManamentTabs = [
   {
     id: 0,
     value: 0,
-    nameAr: 'المواعيد',
-    name: 'Appointments',
+    nameAr: words?.projects,
+    name: words?.projects,
+    ref: 'projects',
+    hide: true,
   },
   {
     id: 1,
     value: 1,
-    nameAr: 'الفواتيير',
-    name: 'Invoices',
+    nameAr: words?.tasks,
+    name: words?.tasks,
+    ref: 'tasks',
+    hide: true,
   },
   {
     id: 2,
     value: 2,
-    nameAr: 'المقبوضات',
-    name: 'Receipts',
+    nameAr: words?.appointments,
+    name: words?.appointments,
+    ref: 'events',
   },
   {
     id: 3,
     value: 3,
+    nameAr: 'الفواتيير',
+    name: 'Invoices',
+    ref: 'invoices',
+  },
+  {
+    id: 4,
+    value: 4,
+    nameAr: 'المقبوضات',
+    name: 'Receipts',
+    ref: 'receipts',
+  },
+  {
+    id: 5,
+    value: 5,
     nameAr: 'المصاريف',
     name: 'Expenses',
+    ref: 'expenses',
   },
 ];
 export const projectManamentTabs = [
   {
     id: 0,
     value: 0,
-    nameAr: 'المهمات',
-    name: 'Tasks',
+    nameAr: words?.projects,
+    name: words?.projects,
+    ref: 'projects',
+    hide: true,
   },
   {
     id: 1,
     value: 1,
-    nameAr: 'المواعيد',
-    name: 'Appointments',
+    nameAr: words?.tasks,
+    name: words?.tasks,
+    ref: 'tasks',
+    hide: options?.noTsk,
   },
   {
     id: 2,
     value: 2,
-    nameAr: 'الفواتيير',
-    name: 'Invoices',
+    nameAr: words?.appointments,
+    name: words?.appointments,
+    ref: 'events',
   },
   {
     id: 3,
     value: 3,
-    nameAr: 'المقبوضات',
-    name: 'Receipts',
+    nameAr: 'الفواتيير',
+    name: 'Invoices',
+    ref: 'invoices',
   },
   {
     id: 4,
     value: 4,
+    nameAr: 'المقبوضات',
+    name: 'Receipts',
+    ref: 'receipts',
+  },
+  {
+    id: 5,
+    value: 5,
     nameAr: 'المصاريف',
     name: 'Expenses',
+    ref: 'expenses',
   },
 ];

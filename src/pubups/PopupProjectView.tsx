@@ -19,7 +19,8 @@ import InvoicesCustomer from '../Shared/InvoicesCustomer';
 import ReceiptCustomer from '../Shared/ReceiptCustomer';
 import ExpensesCustomer from '../Shared/ExpensesCustomer';
 import TasksCustomer from '../Shared/TasksCustomer';
-import { manamentTabs } from '../constants/rrule';
+import { projectManamentTabs } from '../constants/rrule';
+import ProjectsCustomer from '../Shared/ProjectsCustomer';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -84,7 +85,7 @@ const PopupProjectView = ({
 }: any) => {
   const classes = useStyles();
 
-  const [value, setValue] = React.useState(0);
+  const [value, setValue] = React.useState(2);
   const handleChange = (_, newValue) => {
     setValue(newValue);
   };
@@ -127,6 +128,19 @@ const PopupProjectView = ({
             {row && (
               <Box style={{ marginBottom: 20 }}>
                 <TabPanel value={value} index={0}>
+                  <ProjectsCustomer
+                    servicesproducts={servicesproducts}
+                    isEditor={isEditor}
+                    isRTL={isRTL}
+                    words={words}
+                    theme={theme}
+                    company={company}
+                    name="projectId"
+                    value={row}
+                    id={row?._id}
+                  ></ProjectsCustomer>
+                </TabPanel>
+                <TabPanel value={value} index={1}>
                   <TasksCustomer
                     servicesproducts={servicesproducts}
                     isEditor={isEditor}
@@ -139,7 +153,7 @@ const PopupProjectView = ({
                     id={row?._id}
                   ></TasksCustomer>
                 </TabPanel>
-                <TabPanel value={value} index={1}>
+                <TabPanel value={value} index={2}>
                   <EventsCustomer
                     resourses={resourses}
                     employees={employees}
@@ -156,7 +170,7 @@ const PopupProjectView = ({
                     id={row?._id}
                   ></EventsCustomer>
                 </TabPanel>
-                <TabPanel value={value} index={2}>
+                <TabPanel value={value} index={3}>
                   <InvoicesCustomer
                     isRTL={isRTL}
                     words={words}
@@ -171,7 +185,7 @@ const PopupProjectView = ({
                     id={row?._id}
                   ></InvoicesCustomer>
                 </TabPanel>
-                <TabPanel value={value} index={3}>
+                <TabPanel value={value} index={4}>
                   <ReceiptCustomer
                     isRTL={isRTL}
                     words={words}
@@ -182,7 +196,7 @@ const PopupProjectView = ({
                     id={row?._id}
                   ></ReceiptCustomer>
                 </TabPanel>
-                <TabPanel value={value} index={4}>
+                <TabPanel value={value} index={5}>
                   <ExpensesCustomer
                     isRTL={isRTL}
                     words={words}
@@ -307,7 +321,10 @@ const PopupProjectView = ({
                 aria-label="items"
                 className={classes.tabs}
               >
-                {manamentTabs.map((item: any) => {
+                {projectManamentTabs.map((item: any) => {
+                  if (item.hide) {
+                    return <div></div>;
+                  }
                   return (
                     <Tab
                       style={{

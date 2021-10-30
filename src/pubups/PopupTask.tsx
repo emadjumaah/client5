@@ -409,22 +409,24 @@ const PopupTask = ({
             />
           </Grid>
           <Grid item xs={3}>
-            <AutoFieldLocal
-              name="project"
-              title={tempwords.project}
-              words={words}
-              options={projects}
-              value={projvalue}
-              setSelectValue={setProjvalue}
-              setSelectError={setProjError}
-              selectError={projError}
-              refernce={projRef}
-              register={register}
-              isRTL={isRTL}
-              fullWidth
-              showphone
-              disabled={name === 'projectId'}
-            ></AutoFieldLocal>
+            {!tempoptions.noPro && (
+              <AutoFieldLocal
+                name="project"
+                title={tempwords.project}
+                words={words}
+                options={projects}
+                value={projvalue}
+                setSelectValue={setProjvalue}
+                setSelectError={setProjError}
+                selectError={projError}
+                refernce={projRef}
+                register={register}
+                isRTL={isRTL}
+                fullWidth
+                showphone
+                disabled={name === 'projectId'}
+              ></AutoFieldLocal>
+            )}
           </Grid>
           <Grid item xs={1}></Grid>
           <Grid item xs={2}>
