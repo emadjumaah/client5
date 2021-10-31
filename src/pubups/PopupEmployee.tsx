@@ -21,6 +21,8 @@ import { TextFieldLocal } from '../components';
 import AutoFieldLocal from '../components/fields/AutoFieldLocal';
 import { useTemplate } from '../hooks';
 import { getPopupTitle } from '../constants/menu';
+import PopupDeprtment from './PopupDeprtment';
+import useDepartmentsUp from '../hooks/useDepartmentsUp';
 
 const PopupEmployee = ({
   open,
@@ -41,7 +43,13 @@ const PopupEmployee = ({
   const [depError, setDepError] = useState<any>(false);
   const [color, setColor] = useState<any>('#252B3B');
   const [daysoff, setDaysoff] = React.useState(weekdays);
+
+  const [newtext2, setNewtext2] = useState('');
+
+  const [openDep, setOpenDep] = useState(false);
+
   const { tempwords } = useTemplate();
+  const { addDepartment, editDepartment } = useDepartmentsUp();
 
   const daysoffChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setDaysoff({ ...daysoff, [event.target.name]: event.target.checked });
@@ -54,6 +62,17 @@ const PopupEmployee = ({
     translate: { words, isRTL },
     store: { user },
   }: GContextTypes = useContext(GlobalContext);
+
+  const openDepartment = () => {
+    setOpenDep(true);
+  };
+  const onCloseDepartment = () => {
+    setOpenDep(false);
+    setNewtext2('');
+  };
+  const onNewDepartChange = (nextValue: any) => {
+    setDepartvalue(nextValue);
+  };
 
   useEffect(() => {
     if (row && row._id) {
@@ -225,7 +244,7 @@ const PopupEmployee = ({
             selectError={depError}
             refernce={emplRef}
             register={register}
-            // openAdd={openDepartment}
+            openAdd={openDepartment}
             isRTL={isRTL}
             fullWidth
             mb={20}
@@ -264,6 +283,18 @@ const PopupEmployee = ({
           </Grid>
         </Grid>
         <Grid item xs={1}></Grid>
+
+        <PopupDeprtment
+          newtext={newtext2}
+          open={openDep}
+          onClose={onCloseDepartment}
+          isNew={true}
+          setNewValue={onNewDepartChange}
+          row={null}
+          addAction={addDepartment}
+          editAction={editDepartment}
+          depType={1}
+        ></PopupDeprtment>
       </Grid>
     </PopupLayout>
   );

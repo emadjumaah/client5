@@ -487,7 +487,7 @@ const PopupAppointInvoice = ({
       mb={50}
       bgcolor={colors.green[500]}
     >
-      <Grid container spacing={0}>
+      <Grid container spacing={1}>
         <Grid item xs={4}>
           <CalenderLocal
             isRTL={isRTL}

@@ -19,6 +19,8 @@ import { TextFieldLocal } from '../components';
 import AutoFieldLocal from '../components/fields/AutoFieldLocal';
 import { useDepartments, useTemplate } from '../hooks';
 import { getPopupTitle } from '../constants/menu';
+import PopupDeprtment from './PopupDeprtment';
+import useDepartmentsUp from '../hooks/useDepartmentsUp';
 
 const PopupResourses = ({
   open,
@@ -38,8 +40,13 @@ const PopupResourses = ({
   const [depError, setDepError] = useState<any>(false);
   const [color, setColor] = useState<any>('#252B3B');
 
+  const [newtext2, setNewtext2] = useState('');
+  const [openDep, setOpenDep] = useState(false);
+
   const emplRef: any = React.useRef();
+
   const { tempwords } = useTemplate();
+  const { addDepartment, editDepartment } = useDepartmentsUp();
 
   const { register, handleSubmit, errors, reset } = useForm(yup.emppResolver);
   const {
@@ -47,6 +54,17 @@ const PopupResourses = ({
     store: { user },
   }: GContextTypes = useContext(GlobalContext);
   const { departments } = useDepartments();
+
+  const openDepartment = () => {
+    setOpenDep(true);
+  };
+  const onCloseDepartment = () => {
+    setOpenDep(false);
+    setNewtext2('');
+  };
+  const onNewDepartChange = (nextValue: any) => {
+    setDepartvalue(nextValue);
+  };
 
   useEffect(() => {
     if (row && row._id) {
@@ -182,16 +200,14 @@ const PopupResourses = ({
               name="department"
               title={tempwords.department}
               words={words}
-              options={departments.filter(
-                (dep: any) => dep.depType === resType
-              )}
+              options={departments}
               value={departvalue}
               setSelectValue={setDepartvalue}
               setSelectError={setDepError}
               selectError={depError}
               refernce={emplRef}
               register={register}
-              // openAdd={openDepartment}
+              openAdd={openDepartment}
               isRTL={isRTL}
               fullWidth
               mb={20}
@@ -224,6 +240,17 @@ const PopupResourses = ({
           </React.Fragment>
         </Grid>
         <Grid item xs={1}></Grid>
+        <PopupDeprtment
+          newtext={newtext2}
+          open={openDep}
+          onClose={onCloseDepartment}
+          isNew={true}
+          setNewValue={onNewDepartChange}
+          row={null}
+          addAction={addDepartment}
+          editAction={editDepartment}
+          depType={1}
+        ></PopupDeprtment>
       </Grid>
     </PopupLayout>
   );

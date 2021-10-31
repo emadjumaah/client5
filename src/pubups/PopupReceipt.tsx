@@ -16,6 +16,7 @@ import AutoFieldLocal from '../components/fields/AutoFieldLocal';
 import { useCustomers, useTemplate } from '../hooks';
 import { useLazyQuery } from '@apollo/client';
 import getInvoicesList from '../graphql/query/getInvoicesList';
+import PopupCustomer from './PopupCustomer';
 const PopupReceipt = ({
   open,
   onClose,
@@ -42,7 +43,9 @@ const PopupReceipt = ({
 
   const [invoices, setInvoices] = useState<any>([]);
   const [invoicevalue, setInvoicevalue] = useState<any>(null);
-  const { tempwords } = useTemplate();
+
+  const [newtext, setNewtext] = useState('');
+  const [openCust, setOpenCust] = useState(false);
 
   const { register, handleSubmit, errors, reset } = useForm(
     yup.depositResolver
@@ -54,11 +57,24 @@ const PopupReceipt = ({
   }: GContextTypes = useContext(GlobalContext);
 
   const { accounts } = useAccounts();
-  const { customers } = useCustomers();
+  const { customers, addCustomer, editCustomer } = useCustomers();
+  const { tempwords } = useTemplate();
 
   const [loadInvoices, invoicesData]: any = useLazyQuery(getInvoicesList, {
     fetchPolicy: 'cache-and-network',
   });
+
+  const openCustomer = () => {
+    setOpenCust(true);
+  };
+  const onCloseCustomer = () => {
+    setOpenCust(false);
+    setNewtext('');
+  };
+  const onNewCustChange = (nextValue: any) => {
+    setCustvalue(nextValue);
+  };
+
   useEffect(() => {
     if (custvalue) {
       const variables = { customerId: custvalue._id };
@@ -305,6 +321,7 @@ const PopupReceipt = ({
                 selectError={custError}
                 isRTL={isRTL}
                 fullwidth
+                openAdd={openCustomer}
                 disabled={name === 'customerId'}
               ></AutoFieldLocal>
             </Grid>
@@ -358,6 +375,16 @@ const PopupReceipt = ({
           </Grid>
         </Grid>
         <Grid item xs={1}></Grid>
+        <PopupCustomer
+          newtext={newtext}
+          open={openCust}
+          onClose={onCloseCustomer}
+          isNew={true}
+          setNewValue={onNewCustChange}
+          row={null}
+          addAction={addCustomer}
+          editAction={editCustomer}
+        ></PopupCustomer>
       </Grid>
     </PopupLayout>
   );

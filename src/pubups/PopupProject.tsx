@@ -17,8 +17,15 @@ import PopupLayout from '../pages/main/PopupLayout';
 import { TextFieldLocal } from '../components';
 import { getPopupTitle } from '../constants/menu';
 import AutoFieldLocal from '../components/fields/AutoFieldLocal';
-import { useTemplate } from '../hooks';
+import { useCustomers, useTemplate } from '../hooks';
 import { weekdaysNNo } from '../constants/datatypes';
+import PopupCustomer from './PopupCustomer';
+import PopupDeprtment from './PopupDeprtment';
+import PopupEmployee from './PopupEmployee';
+import PopupResourses from './PopupResourses';
+import useDepartmentsUp from '../hooks/useDepartmentsUp';
+import useEmployeesUp from '../hooks/useEmployeesUp';
+import useResoursesUp from '../hooks/useResoursesUp';
 
 const PopupProject = ({
   open,
@@ -53,6 +60,13 @@ const PopupProject = ({
   const [custError, setCustError] = useState<any>(false);
   const custRef: any = React.useRef();
 
+  const [newtext2, setNewtext2] = useState('');
+
+  const [openCust, setOpenCust] = useState(false);
+  const [openDep, setOpenDep] = useState(false);
+  const [openEmp, setOpenEmp] = useState(false);
+  const [openRes, setOpenRes] = useState(false);
+
   const { register, handleSubmit, errors, reset } = useForm(yup.departResolver);
   const {
     translate: { words, isRTL },
@@ -60,8 +74,53 @@ const PopupProject = ({
   }: GContextTypes = useContext(GlobalContext);
 
   const [color, setColor] = useState<any>('#252B3B');
-
+  const { addCustomer, editCustomer } = useCustomers();
+  const { addDepartment, editDepartment } = useDepartmentsUp();
+  const { addEmployee, editEmployee } = useEmployeesUp();
+  const { addResourse, editResourse } = useResoursesUp();
   const { tempoptions, tempwords } = useTemplate();
+
+  const openDepartment = () => {
+    setOpenDep(true);
+  };
+  const onCloseDepartment = () => {
+    setOpenDep(false);
+    setNewtext2('');
+  };
+  const openEmployee = () => {
+    setOpenEmp(true);
+  };
+  const onCloseEmploee = () => {
+    setOpenEmp(false);
+    setNewtext2('');
+  };
+  const openResourse = () => {
+    setOpenRes(true);
+  };
+  const onCloseResourse = () => {
+    setOpenRes(false);
+    setNewtext2('');
+  };
+  const openCustomer = () => {
+    setOpenCust(true);
+  };
+  const onCloseCustomer = () => {
+    setOpenCust(false);
+    setNewtext2('');
+  };
+
+  const onNewCustChange = (nextValue: any) => {
+    setCustvalue(nextValue);
+  };
+  const onNewDepartChange = (nextValue: any) => {
+    setDepartvalue(nextValue);
+  };
+  const onNewEmplChange = (nextValue: any) => {
+    setEmplvalue(nextValue);
+  };
+  const onNewResoChange = (nextValue: any) => {
+    setResovalue(nextValue);
+  };
 
   useEffect(() => {
     if (row && row._id) {
@@ -139,15 +198,15 @@ const PopupProject = ({
       userId: user._id,
     };
     const mutate = isNew ? addAction : editAction;
-    const mutateName = isNew ? 'createDepartment' : 'updateDepartment';
+    const mutateName = isNew ? 'createProject' : 'updateProject';
     apply(mutate, mutateName, variables);
   };
 
   const apply = async (mutate: any, mutateName: string, variables: any) => {
     try {
-      const res = mutate({ variables });
+      const res = await mutate({ variables });
       const nitem = getReturnItem(res, mutateName);
-      if (setNewValue && nitem) setNewValue(nitem);
+      if (setNewValue && nitem) setNewValue(nitem, 'project');
       setSaving(false);
       await successAlert(setAlrt, isRTL);
       onCloseForm();
@@ -181,7 +240,7 @@ const PopupProject = ({
   const date = row?.start ? new Date(row?.start) : new Date();
   const day = weekdaysNNo?.[date.getDay()];
 
-  const title = getPopupTitle('department', isNew);
+  const title = getPopupTitle('project', isNew);
 
   return (
     <PopupLayout
@@ -220,7 +279,6 @@ const PopupProject = ({
                 errors={errors}
                 row={row}
                 fullWidth
-                newtext={newtext}
                 mb={0}
               />
             </Grid>
@@ -238,6 +296,7 @@ const PopupProject = ({
                 register={register}
                 isRTL={isRTL}
                 fullWidth
+                openAdd={openCustomer}
                 showphone
               ></AutoFieldLocal>
             </Grid>
@@ -254,7 +313,7 @@ const PopupProject = ({
                   selectError={emplError}
                   refernce={emplRef}
                   register={register}
-                  noPlus
+                  openAdd={openEmployee}
                   isRTL={isRTL}
                   fullWidth
                   day={day}
@@ -274,7 +333,7 @@ const PopupProject = ({
                   selectError={resoError}
                   refernce={resoRef}
                   register={register}
-                  noPlus
+                  openAdd={openResourse}
                   isRTL={isRTL}
                   fullWidth
                   day={day}
@@ -293,7 +352,7 @@ const PopupProject = ({
                 selectError={departError}
                 refernce={departRef}
                 register={register}
-                noPlus
+                openAdd={openDepartment}
                 isRTL={isRTL}
                 fullWidth
               ></AutoFieldLocal>
@@ -333,6 +392,52 @@ const PopupProject = ({
           </Grid>
         </Grid>
         <Grid item xs={1}></Grid>
+        <PopupCustomer
+          newtext={newtext2}
+          open={openCust}
+          onClose={onCloseCustomer}
+          isNew={true}
+          setNewValue={onNewCustChange}
+          row={null}
+          addAction={addCustomer}
+          editAction={editCustomer}
+        ></PopupCustomer>
+        <PopupDeprtment
+          newtext={newtext2}
+          open={openDep}
+          onClose={onCloseDepartment}
+          isNew={true}
+          setNewValue={onNewDepartChange}
+          row={null}
+          addAction={addDepartment}
+          editAction={editDepartment}
+          depType={1}
+        ></PopupDeprtment>
+
+        <PopupEmployee
+          newtext={newtext2}
+          departments={departments}
+          open={openEmp}
+          onClose={onCloseEmploee}
+          isNew={true}
+          setNewValue={onNewEmplChange}
+          row={null}
+          resType={1}
+          addAction={addEmployee}
+          editAction={editEmployee}
+        ></PopupEmployee>
+        <PopupResourses
+          newtext={newtext2}
+          departments={departments}
+          open={openRes}
+          onClose={onCloseResourse}
+          isNew={true}
+          setNewValue={onNewResoChange}
+          row={null}
+          resType={1}
+          addAction={addResourse}
+          editAction={editResourse}
+        ></PopupResourses>
       </Grid>
     </PopupLayout>
   );

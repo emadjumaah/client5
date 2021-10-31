@@ -28,6 +28,14 @@ import { InvoicePrintA5 } from '../common/InvoicePrintA5';
 import { weekdaysNNo } from '../constants/datatypes';
 import useTasks from '../hooks/useTasks';
 import useCompany from '../hooks/useCompany';
+import PopupDeprtment from './PopupDeprtment';
+import PopupTask from './PopupTask';
+import PopupEmployee from './PopupEmployee';
+import PopupResourses from './PopupResourses';
+import useDepartmentsUp from '../hooks/useDepartmentsUp';
+import useEmployeesUp from '../hooks/useEmployeesUp';
+import useResoursesUp from '../hooks/useResoursesUp';
+import useProjects from '../hooks/useProjects';
 
 export const indexTheList = (list: any) => {
   return list.map((item: any, index: any) => {
@@ -95,11 +103,25 @@ const PopupInvoice = ({
     name === 'taskId' ? value : null
   );
 
-  const [openCust, setOpenCust] = useState(false);
+  const [isCash, setIsCash] = useState(false);
+
   const [newtext, setNewtext] = useState('');
 
-  const [isCash, setIsCash] = useState(false);
+  const [openCust, setOpenCust] = useState(false);
+  const [openDep, setOpenDep] = useState(false);
+  const [openEmp, setOpenEmp] = useState(false);
+  const [openRes, setOpenRes] = useState(false);
+  const [openTsk, setOpenTsk] = useState(false);
+
+  const { lastNos, freshlastNos } = useLastNos();
+
+  const { customers, addCustomer, editCustomer } = useCustomers();
+  const { addDepartment, editDepartment } = useDepartmentsUp();
+  const { addEmployee, editEmployee } = useEmployeesUp();
+  const { addResourse, editResourse } = useResoursesUp();
+  const { addTask, editTask } = useTasks();
   const { tempwords, tempoptions } = useTemplate();
+  const { projects } = useProjects();
 
   const {
     translate: { words, isRTL },
@@ -112,8 +134,57 @@ const PopupInvoice = ({
     fetchPolicy: 'cache-and-network',
   });
 
-  const { lastNos, freshlastNos } = useLastNos();
-  const { customers, addCustomer, editCustomer } = useCustomers();
+  const openDepartment = () => {
+    setOpenDep(true);
+  };
+  const onCloseDepartment = () => {
+    setOpenDep(false);
+    setNewtext('');
+  };
+  const openEmployee = () => {
+    setOpenEmp(true);
+  };
+  const onCloseEmploee = () => {
+    setOpenEmp(false);
+    setNewtext('');
+  };
+  const openResourse = () => {
+    setOpenRes(true);
+  };
+  const onCloseResourse = () => {
+    setOpenRes(false);
+    setNewtext('');
+  };
+  const openTask = () => {
+    setOpenTsk(true);
+  };
+  const onCloseTask = () => {
+    setOpenTsk(false);
+    setNewtext('');
+  };
+  const openCustomer = () => {
+    setOpenCust(true);
+  };
+  const onCloseCustomer = () => {
+    setOpenCust(false);
+    setNewtext('');
+  };
+
+  const onNewCustChange = (nextValue: any) => {
+    setCustvalue(nextValue);
+  };
+  const onNewDepartChange = (nextValue: any) => {
+    setDepartvalue(nextValue);
+  };
+  const onNewEmplChange = (nextValue: any) => {
+    setEmplvalue(nextValue);
+  };
+  const onNewResoChange = (nextValue: any) => {
+    setResovalue(nextValue);
+  };
+  const onNewTaskChange = (nextValue: any) => {
+    setTaskvalue(nextValue);
+  };
 
   useEffect(() => {
     if (isemployee) {
@@ -234,14 +305,6 @@ const PopupInvoice = ({
   }, [itemsData]);
 
   const { handleSubmit, reset } = useForm({});
-
-  const openCustomer = () => {
-    setOpenCust(true);
-  };
-  const onCloseCustomer = () => {
-    setOpenCust(false);
-    setNewtext('');
-  };
 
   const resetAllForms = () => {
     reset();
@@ -552,10 +615,6 @@ const PopupInvoice = ({
     }
   };
 
-  const onNewFieldChange = (nextValue: any) => {
-    setCustvalue(nextValue);
-  };
-
   const onCloseForm = () => {
     resetAllForms();
     onClose();
@@ -648,6 +707,7 @@ const PopupInvoice = ({
             setSelectValue={setTaskvalue}
             isRTL={isRTL}
             fullWidth
+            openAdd={openTask}
             disabled={name === 'taskId'}
           ></AutoFieldLocal>
         </Grid>
@@ -699,7 +759,7 @@ const PopupInvoice = ({
               setSelectError={setEmplError}
               selectError={emplError}
               refernce={emplRef}
-              noPlus
+              openAdd={openEmployee}
               isRTL={isRTL}
               fullWidth
               day={day}
@@ -719,7 +779,7 @@ const PopupInvoice = ({
               setSelectError={setResoError}
               selectError={resoError}
               refernce={resoRef}
-              noPlus
+              openAdd={openResourse}
               isRTL={isRTL}
               fullWidth
               day={day}
@@ -737,7 +797,7 @@ const PopupInvoice = ({
             setSelectError={setDepartError}
             selectError={departError}
             refernce={departRef}
-            noPlus
+            openAdd={openDepartment}
             isRTL={isRTL}
             fullWidth
             disabled={name === 'departmentId'}
@@ -811,11 +871,61 @@ const PopupInvoice = ({
             open={openCust}
             onClose={onCloseCustomer}
             isNew={true}
-            setNewValue={onNewFieldChange}
+            setNewValue={onNewCustChange}
             row={null}
             addAction={addCustomer}
             editAction={editCustomer}
           ></PopupCustomer>
+          <PopupDeprtment
+            newtext={newtext}
+            open={openDep}
+            onClose={onCloseDepartment}
+            isNew={true}
+            setNewValue={onNewDepartChange}
+            row={null}
+            addAction={addDepartment}
+            editAction={editDepartment}
+            depType={1}
+          ></PopupDeprtment>
+          <PopupTask
+            newtext={newtext}
+            open={openTsk}
+            onClose={onCloseTask}
+            isNew={true}
+            setNewValue={onNewTaskChange}
+            row={null}
+            employees={employees}
+            resourses={resourses}
+            departments={departments}
+            projects={projects}
+            customers={customers}
+            addAction={addTask}
+            editAction={editTask}
+          ></PopupTask>
+          <PopupEmployee
+            newtext={newtext}
+            departments={departments}
+            open={openEmp}
+            onClose={onCloseEmploee}
+            isNew={true}
+            setNewValue={onNewEmplChange}
+            row={null}
+            resType={1}
+            addAction={addEmployee}
+            editAction={editEmployee}
+          ></PopupEmployee>
+          <PopupResourses
+            newtext={newtext}
+            departments={departments}
+            open={openRes}
+            onClose={onCloseResourse}
+            isNew={true}
+            setNewValue={onNewResoChange}
+            row={null}
+            resType={1}
+            addAction={addResourse}
+            editAction={editResourse}
+          ></PopupResourses>
           <Box>
             <div style={{ display: 'none' }}>
               <InvoicePrintA5

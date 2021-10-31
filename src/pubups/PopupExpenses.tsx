@@ -12,10 +12,16 @@ import { Grid } from '@material-ui/core';
 import { CalenderLocal, TextFieldLocal } from '../components';
 // import { getAppStartEndPeriod } from "../common/time";
 import AutoFieldLocal from '../components/fields/AutoFieldLocal';
-import { useTemplate } from '../hooks';
+import { useCustomers, useTemplate } from '../hooks';
 import useEmployeesUp from '../hooks/useEmployeesUp';
 import useDepartmentsUp from '../hooks/useDepartmentsUp';
 import useResoursesUp from '../hooks/useResoursesUp';
+import PopupDeprtment from './PopupDeprtment';
+import PopupTask from './PopupTask';
+import PopupEmployee from './PopupEmployee';
+import PopupResourses from './PopupResourses';
+import useTasks from '../hooks/useTasks';
+import useProjects from '../hooks/useProjects';
 
 const PopupExpenses = ({
   open,
@@ -56,10 +62,21 @@ const PopupExpenses = ({
     name === 'taskId' ? value : null
   );
 
-  const { employees } = useEmployeesUp();
-  const { departments } = useDepartmentsUp();
-  const { resourses } = useResoursesUp();
+  const [newtext, setNewtext] = useState('');
+
+  const [openDep, setOpenDep] = useState(false);
+  const [openEmp, setOpenEmp] = useState(false);
+  const [openRes, setOpenRes] = useState(false);
+  const [openTsk, setOpenTsk] = useState(false);
+
+  const { customers } = useCustomers();
+  const { employees, addEmployee, editEmployee } = useEmployeesUp();
+  const { departments, addDepartment, editDepartment } = useDepartmentsUp();
+  const { resourses, addResourse, editResourse } = useResoursesUp();
   const { tempwords, tempoptions } = useTemplate();
+  const { addTask, editTask } = useTasks();
+  const { projects } = useProjects();
+  const { accounts } = useAccounts();
 
   const { register, handleSubmit, errors, reset } = useForm(
     yup.depositResolver
@@ -71,7 +88,47 @@ const PopupExpenses = ({
   }: GContextTypes = useContext(GlobalContext);
   const isemployee = user?.isEmployee && user?.employeeId;
 
-  const { accounts } = useAccounts();
+  const openDepartment = () => {
+    setOpenDep(true);
+  };
+  const onCloseDepartment = () => {
+    setOpenDep(false);
+    setNewtext('');
+  };
+  const openEmployee = () => {
+    setOpenEmp(true);
+  };
+  const onCloseEmploee = () => {
+    setOpenEmp(false);
+    setNewtext('');
+  };
+  const openResourse = () => {
+    setOpenRes(true);
+  };
+  const onCloseResourse = () => {
+    setOpenRes(false);
+    setNewtext('');
+  };
+  const openTask = () => {
+    setOpenTsk(true);
+  };
+  const onCloseTask = () => {
+    setOpenTsk(false);
+    setNewtext('');
+  };
+
+  const onNewDepartChange = (nextValue: any) => {
+    setDepartvalue(nextValue);
+  };
+  const onNewEmplChange = (nextValue: any) => {
+    setEmplvalue(nextValue);
+  };
+  const onNewResoChange = (nextValue: any) => {
+    setResovalue(nextValue);
+  };
+  const onNewTaskChange = (nextValue: any) => {
+    setTaskvalue(nextValue);
+  };
 
   useEffect(() => {
     if (isemployee) {
@@ -428,6 +485,7 @@ const PopupExpenses = ({
                 register={register}
                 isRTL={isRTL}
                 fullWidth
+                openAdd={openTask}
                 disabled={name === 'taskId'}
               ></AutoFieldLocal>
 
@@ -443,7 +501,7 @@ const PopupExpenses = ({
                   setSelectError={setEmplError}
                   selectError={emplError}
                   register={register}
-                  noPlus
+                  openAdd={openEmployee}
                   isRTL={isRTL}
                   fullWidth
                 ></AutoFieldLocal>
@@ -460,7 +518,7 @@ const PopupExpenses = ({
                   setSelectError={setResoError}
                   selectError={resoError}
                   register={register}
-                  noPlus
+                  openAdd={openResourse}
                   isRTL={isRTL}
                   fullWidth
                 ></AutoFieldLocal>
@@ -476,6 +534,7 @@ const PopupExpenses = ({
                 selectError={departError}
                 register={register}
                 isRTL={isRTL}
+                openAdd={openDepartment}
                 mb={20}
                 disabled={name === 'departmentId'}
               ></AutoFieldLocal>
@@ -493,6 +552,56 @@ const PopupExpenses = ({
           </Grid>
         </Grid>
         <Grid item xs={2}></Grid>
+        <PopupDeprtment
+          newtext={newtext}
+          open={openDep}
+          onClose={onCloseDepartment}
+          isNew={true}
+          setNewValue={onNewDepartChange}
+          row={null}
+          addAction={addDepartment}
+          editAction={editDepartment}
+          depType={1}
+        ></PopupDeprtment>
+        <PopupTask
+          newtext={newtext}
+          open={openTsk}
+          onClose={onCloseTask}
+          isNew={true}
+          setNewValue={onNewTaskChange}
+          row={null}
+          employees={employees}
+          resourses={resourses}
+          departments={departments}
+          projects={projects}
+          customers={customers}
+          addAction={addTask}
+          editAction={editTask}
+        ></PopupTask>
+        <PopupEmployee
+          newtext={newtext}
+          departments={departments}
+          open={openEmp}
+          onClose={onCloseEmploee}
+          isNew={true}
+          setNewValue={onNewEmplChange}
+          row={null}
+          resType={1}
+          addAction={addEmployee}
+          editAction={editEmployee}
+        ></PopupEmployee>
+        <PopupResourses
+          newtext={newtext}
+          departments={departments}
+          open={openRes}
+          onClose={onCloseResourse}
+          isNew={true}
+          setNewValue={onNewResoChange}
+          row={null}
+          resType={1}
+          addAction={addResourse}
+          editAction={editResourse}
+        ></PopupResourses>
       </Grid>
     </PopupLayout>
   );

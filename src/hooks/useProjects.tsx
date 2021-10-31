@@ -20,22 +20,13 @@ export default () => {
   });
 
   const [addProject] = useMutation(createProject, {
-    refetchQueries: [
-      { query: getProjects, variables: { isRTL, depType: 2 } },
-      { query: getProjects, variables: { isRTL } },
-    ],
+    refetchQueries: [{ query: getProjects, variables: { isRTL } }],
   });
   const [editProject] = useMutation(updateProject, {
-    refetchQueries: [
-      { query: getProjects, variables: { isRTL, depType: 2 } },
-      { query: getProjects, variables: { isRTL } },
-    ],
+    refetchQueries: [{ query: getProjects, variables: { isRTL } }],
   });
   const [removeProject] = useMutation(deleteProject, {
-    refetchQueries: [
-      { query: getProjects, variables: { isRTL, depType: 2 } },
-      { query: getProjects, variables: { isRTL } },
-    ],
+    refetchQueries: [{ query: getProjects, variables: { isRTL } }],
   });
 
   useEffect(() => {

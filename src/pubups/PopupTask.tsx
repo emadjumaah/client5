@@ -23,7 +23,16 @@ import PopupTaskAppointment from './PopupTaskAppointment';
 import EventsTable from '../Shared/EventsTable';
 import _ from 'lodash';
 import { getPopupTitle } from '../constants/menu';
-import { useTemplate } from '../hooks';
+import { useCustomers, useTemplate } from '../hooks';
+import PopupCustomer from './PopupCustomer';
+import PopupDeprtment from './PopupDeprtment';
+import PopupEmployee from './PopupEmployee';
+import PopupResourses from './PopupResourses';
+import useDepartmentsUp from '../hooks/useDepartmentsUp';
+import useEmployeesUp from '../hooks/useEmployeesUp';
+import useResoursesUp from '../hooks/useResoursesUp';
+import PopupProject from './PopupProject';
+import useProjects from '../hooks/useProjects';
 
 export const indexTheList = (list: any) => {
   return list.map((item: any, index: any) => {
@@ -95,7 +104,20 @@ const PopupTask = ({
   const [evList, setEvList] = useState<any>([]);
   const [total, setTotal] = useState<any>(null);
 
+  const [newtext, setNewtext] = useState('');
+
+  const [openCust, setOpenCust] = useState(false);
+  const [openDep, setOpenDep] = useState(false);
+  const [openPro, setOpenPro] = useState(false);
+  const [openEmp, setOpenEmp] = useState(false);
+  const [openRes, setOpenRes] = useState(false);
+
   const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
+  const { addCustomer, editCustomer } = useCustomers();
+  const { addDepartment, editDepartment } = useDepartmentsUp();
+  const { addEmployee, editEmployee } = useEmployeesUp();
+  const { addResourse, editResourse } = useResoursesUp();
+  const { addProject, editProject } = useProjects();
   const { tempwords, tempoptions } = useTemplate();
 
   const { register, handleSubmit, reset } = useForm({});
@@ -103,6 +125,58 @@ const PopupTask = ({
     translate: { words, isRTL },
     store: { user },
   }: GContextTypes = useContext(GlobalContext);
+
+  const openDepartment = () => {
+    setOpenDep(true);
+  };
+  const onCloseDepartment = () => {
+    setOpenDep(false);
+    setNewtext('');
+  };
+  const openProject = () => {
+    setOpenPro(true);
+  };
+  const onCloseProject = () => {
+    setOpenPro(false);
+    setNewtext('');
+  };
+  const openEmployee = () => {
+    setOpenEmp(true);
+  };
+  const onCloseEmploee = () => {
+    setOpenEmp(false);
+    setNewtext('');
+  };
+  const openResourse = () => {
+    setOpenRes(true);
+  };
+  const onCloseResourse = () => {
+    setOpenRes(false);
+    setNewtext('');
+  };
+  const openCustomer = () => {
+    setOpenCust(true);
+  };
+  const onCloseCustomer = () => {
+    setOpenCust(false);
+    setNewtext('');
+  };
+
+  const onNewCustChange = (nextValue: any) => {
+    setCustvalue(nextValue);
+  };
+  const onNewDepartChange = (nextValue: any) => {
+    setDepartvalue(nextValue);
+  };
+  const onNewProjChange = (nextValue: any) => {
+    setProjvalue(nextValue);
+  };
+  const onNewEmplChange = (nextValue: any) => {
+    setEmplvalue(nextValue);
+  };
+  const onNewResoChange = (nextValue: any) => {
+    setResovalue(nextValue);
+  };
 
   const addEventsToList = (events: any) => {
     const newArray = [...evList, ...events];
@@ -344,8 +418,6 @@ const PopupTask = ({
       if (evList?.length === 0) {
         const res = await mutate({ variables });
         const nitem = getReturnItem(res, 'createTask');
-        console.log(nitem);
-
         if (setNewValue && nitem) setNewValue(nitem, 'task');
         setSaving(false);
         await successAlert(setAlrt, isRTL);
@@ -441,6 +513,7 @@ const PopupTask = ({
                 register={register}
                 isRTL={isRTL}
                 fullWidth
+                openAdd={openProject}
                 showphone
                 disabled={name === 'projectId'}
               ></AutoFieldLocal>
@@ -485,6 +558,7 @@ const PopupTask = ({
               isRTL={isRTL}
               fullWidth
               showphone
+              openAdd={openCustomer}
               disabled={name === 'customerId'}
             ></AutoFieldLocal>
           </Grid>
@@ -502,7 +576,7 @@ const PopupTask = ({
                 selectError={emplError}
                 refernce={emplRef}
                 register={register}
-                noPlus
+                openAdd={openEmployee}
                 isRTL={isRTL}
                 fullWidth
                 day={day}
@@ -523,7 +597,7 @@ const PopupTask = ({
                 selectError={resoError}
                 refernce={resoRef}
                 register={register}
-                noPlus
+                openAdd={openResourse}
                 isRTL={isRTL}
                 fullWidth
                 day={day}
@@ -542,7 +616,7 @@ const PopupTask = ({
               selectError={departError}
               refernce={departRef}
               register={register}
-              noPlus
+              openAdd={openDepartment}
               isRTL={isRTL}
               fullWidth
               disabled={name === 'departmentId'}
@@ -631,6 +705,65 @@ const PopupTask = ({
           setEnd={setEnd}
           addEventsToList={addEventsToList}
         ></PopupTaskAppointment>
+        <PopupCustomer
+          newtext={newtext}
+          open={openCust}
+          onClose={onCloseCustomer}
+          isNew={true}
+          setNewValue={onNewCustChange}
+          row={null}
+          addAction={addCustomer}
+          editAction={editCustomer}
+        ></PopupCustomer>
+        <PopupDeprtment
+          newtext={newtext}
+          open={openDep}
+          onClose={onCloseDepartment}
+          isNew={true}
+          setNewValue={onNewDepartChange}
+          row={null}
+          addAction={addDepartment}
+          editAction={editDepartment}
+          depType={1}
+        ></PopupDeprtment>
+        <PopupEmployee
+          newtext={newtext}
+          departments={departments}
+          open={openEmp}
+          onClose={onCloseEmploee}
+          isNew={true}
+          setNewValue={onNewEmplChange}
+          row={null}
+          resType={1}
+          addAction={addEmployee}
+          editAction={editEmployee}
+        ></PopupEmployee>
+        <PopupResourses
+          newtext={newtext}
+          departments={departments}
+          open={openRes}
+          onClose={onCloseResourse}
+          isNew={true}
+          setNewValue={onNewResoChange}
+          row={null}
+          resType={1}
+          addAction={addResourse}
+          editAction={editResourse}
+        ></PopupResourses>
+        <PopupProject
+          newtext={newtext}
+          employees={employees}
+          departments={departments}
+          resourses={resourses}
+          customers={customers}
+          open={openPro}
+          onClose={onCloseProject}
+          isNew={true}
+          setNewValue={onNewProjChange}
+          row={null}
+          addAction={addProject}
+          editAction={editProject}
+        ></PopupProject>
       </>
     </PopupLayout>
   );

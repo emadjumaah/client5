@@ -790,9 +790,7 @@ const PopupAppointmentCustomer = ({
                       name="department"
                       title={tempwords.department}
                       words={words}
-                      options={departments.filter(
-                        (em: any) => em.depType === 1
-                      )}
+                      options={departments}
                       value={departvalue}
                       setSelectValue={setDepartvalue}
                       setSelectError={setDepartError}
