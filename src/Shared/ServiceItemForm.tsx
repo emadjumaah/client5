@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import React, { useState } from 'react';
-import { Box, Fab, TextField } from '@material-ui/core';
+import { Box, Fab, IconButton, TextField } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import { useForm } from 'react-hook-form';
 
@@ -9,6 +9,8 @@ import OptionItemData from './OptionItemData';
 import { yup } from '../constants';
 // import AutoField from './AutoField';
 import AutoPopper from './AutoPopper';
+import { PopupService } from '../pubups';
+import { useServices } from '../hooks';
 // import { useTemplate } from '../hooks';
 // import useDepartmentsDown from '../hooks/useDepartmentsDown';
 // import useEmployeesDown from '../hooks/useEmployeesDown';
@@ -27,6 +29,8 @@ export default function ServiceItemForm({
   const [itemvalue, setItemvalue] = useState<any>(null);
   const [itemqty, setItemqty] = useState(1);
   const [itemprice, setItemprice] = useState(0);
+  const [openItem, setOpenItem] = useState(false);
+  const [newtext, setNewtext] = useState('');
 
   // const [emplvalue, setEmplvalue] = useState<any>(null);
   // const [emplError, setEmplError] = useState<any>(false);
@@ -44,7 +48,7 @@ export default function ServiceItemForm({
   // const { tempoptions, tempwords } = useTemplate();
 
   const itemRef: any = React.useRef();
-
+  const { addService, editService } = useServices();
   // const { departments } = useDepartmentsDown();
   // const { employees } = useEmployeesDown();
   // const { resourses } = useResoursesDown();
@@ -71,6 +75,19 @@ export default function ServiceItemForm({
   //     }
   //   }
   // }, [employees, departments, resourses, itemvalue]);
+
+  const onOpenItem = () => {
+    setOpenItem(true);
+  };
+  const onCloseItem = () => {
+    setOpenItem(false);
+    setNewtext('');
+  };
+
+  const onNewItemChange = (nextValue: any) => {
+    setItemvalue(nextValue);
+    setItemprice(nextValue?.price || 0);
+  };
 
   const resetAll = () => {
     setItemprice(0);
@@ -203,6 +220,20 @@ export default function ServiceItemForm({
             ></TextField>
           )}
         />
+        <IconButton
+          disableFocusRipple
+          onClick={onOpenItem}
+          style={{
+            backgroundColor: '#dfdfdf',
+            width: 30,
+            height: 30,
+            position: 'relative',
+            top: 3,
+            left: 35,
+          }}
+        >
+          <AddIcon style={{ color: '#aaa' }}></AddIcon>
+        </IconButton>
 
         {/* {!tempoptions?.noServEmp && (
           <AutoField
@@ -306,6 +337,17 @@ export default function ServiceItemForm({
           <AddIcon />
         </Fab>
       </Box>
+      <PopupService
+        newtext={newtext}
+        open={openItem}
+        onClose={onCloseItem}
+        isNew={true}
+        setNewValue={onNewItemChange}
+        row={null}
+        resType={1}
+        addAction={addService}
+        editAction={editService}
+      ></PopupService>
     </Box>
   );
 }

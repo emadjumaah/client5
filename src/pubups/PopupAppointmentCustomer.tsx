@@ -38,7 +38,17 @@ import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
 import DeleteOutlinedIcon from '@material-ui/icons/DeleteOutlined';
 import PopupAction from './PopupAction';
 import { getPopupTitle } from '../constants/menu';
-import { useTemplate } from '../hooks';
+import { useCustomers, useTemplate } from '../hooks';
+import PopupCustomer from './PopupCustomer';
+import PopupDeprtment from './PopupDeprtment';
+import PopupTask from './PopupTask';
+import PopupEmployee from './PopupEmployee';
+import PopupResourses from './PopupResourses';
+import useDepartmentsUp from '../hooks/useDepartmentsUp';
+import useEmployeesUp from '../hooks/useEmployeesUp';
+import useResoursesUp from '../hooks/useResoursesUp';
+import useTasks from '../hooks/useTasks';
+import useProjects from '../hooks/useProjects';
 
 export const indexTheList = (list: any) => {
   return list.map((item: any, index: any) => {
@@ -116,7 +126,21 @@ const PopupAppointmentCustomer = ({
   const [selected, setSelected] = useState(null);
   const [tasktitle, setTasktitle]: any = useState(null);
 
+  const [newtext, setNewtext] = useState('');
+
+  const [openCust, setOpenCust] = useState(false);
+  const [openDep, setOpenDep] = useState(false);
+  const [openEmp, setOpenEmp] = useState(false);
+  const [openRes, setOpenRes] = useState(false);
+  const [openTsk, setOpenTsk] = useState(false);
+
+  const { addCustomer, editCustomer } = useCustomers();
+  const { addDepartment, editDepartment } = useDepartmentsUp();
+  const { addEmployee, editEmployee } = useEmployeesUp();
+  const { addResourse, editResourse } = useResoursesUp();
+  const { addTask, editTask } = useTasks();
   const { tempwords, tempoptions } = useTemplate();
+  const { projects } = useProjects();
 
   const { register, handleSubmit } = useForm({});
   const {
@@ -132,6 +156,58 @@ const PopupAppointmentCustomer = ({
   const [loadActions, actionsData]: any = useLazyQuery(getActions, {
     fetchPolicy: 'cache-and-network',
   });
+
+  const openDepartment = () => {
+    setOpenDep(true);
+  };
+  const onCloseDepartment = () => {
+    setOpenDep(false);
+    setNewtext('');
+  };
+  const openEmployee = () => {
+    setOpenEmp(true);
+  };
+  const onCloseEmploee = () => {
+    setOpenEmp(false);
+    setNewtext('');
+  };
+  const openResourse = () => {
+    setOpenRes(true);
+  };
+  const onCloseResourse = () => {
+    setOpenRes(false);
+    setNewtext('');
+  };
+  const openTask = () => {
+    setOpenTsk(true);
+  };
+  const onCloseTask = () => {
+    setOpenTsk(false);
+    setNewtext('');
+  };
+  const openCustomer = () => {
+    setOpenCust(true);
+  };
+  const onCloseCustomer = () => {
+    setOpenCust(false);
+    setNewtext('');
+  };
+
+  const onNewCustChange = (nextValue: any) => {
+    setCustvalue(nextValue);
+  };
+  const onNewDepartChange = (nextValue: any) => {
+    setDepartvalue(nextValue);
+  };
+  const onNewEmplChange = (nextValue: any) => {
+    setEmplvalue(nextValue);
+  };
+  const onNewResoChange = (nextValue: any) => {
+    setResovalue(nextValue);
+  };
+  const onNewTaskChange = (nextValue: any) => {
+    setTaskvalue(nextValue);
+  };
 
   useEffect(() => {
     if (isemployee) {
@@ -642,6 +718,7 @@ const PopupAppointmentCustomer = ({
                       register={register}
                       isRTL={isRTL}
                       fullWidth
+                      openAdd={openTask}
                       disabled={name === 'taskId'}
                     ></AutoFieldLocal>
                   </Grid>
@@ -658,6 +735,7 @@ const PopupAppointmentCustomer = ({
                       refernce={custRef}
                       register={register}
                       isRTL={isRTL}
+                      openAdd={openCustomer}
                       fullWidth
                       showphone
                       disabled={name === 'customerId'}
@@ -678,7 +756,7 @@ const PopupAppointmentCustomer = ({
                         refernce={emplRef}
                         register={register}
                         disabled={isemployee || name === 'employeeId'}
-                        noPlus
+                        openAdd={openEmployee}
                         isRTL={isRTL}
                         fullWidth
                         day={day}
@@ -699,7 +777,7 @@ const PopupAppointmentCustomer = ({
                         selectError={resoError}
                         refernce={resoRef}
                         register={register}
-                        noPlus
+                        openAdd={openResourse}
                         isRTL={isRTL}
                         fullWidth
                         day={day}
@@ -721,7 +799,7 @@ const PopupAppointmentCustomer = ({
                       selectError={departError}
                       refernce={departRef}
                       register={register}
-                      noPlus
+                      openAdd={openDepartment}
                       isRTL={isRTL}
                       fullWidth
                       disabled={name === 'departmentId'}
@@ -883,6 +961,66 @@ const PopupAppointmentCustomer = ({
           theme={theme}
           items={itemsList}
         ></PopupAppointInvoice>
+        <PopupCustomer
+          newtext={newtext}
+          open={openCust}
+          onClose={onCloseCustomer}
+          isNew={true}
+          setNewValue={onNewCustChange}
+          row={null}
+          addAction={addCustomer}
+          editAction={editCustomer}
+        ></PopupCustomer>
+        <PopupDeprtment
+          newtext={newtext}
+          open={openDep}
+          onClose={onCloseDepartment}
+          isNew={true}
+          setNewValue={onNewDepartChange}
+          row={null}
+          addAction={addDepartment}
+          editAction={editDepartment}
+          depType={1}
+        ></PopupDeprtment>
+        <PopupTask
+          newtext={newtext}
+          open={openTsk}
+          onClose={onCloseTask}
+          isNew={true}
+          setNewValue={onNewTaskChange}
+          row={null}
+          employees={employees}
+          resourses={resourses}
+          departments={departments}
+          projects={projects}
+          customers={customers}
+          addAction={addTask}
+          editAction={editTask}
+        ></PopupTask>
+        <PopupEmployee
+          newtext={newtext}
+          departments={departments}
+          open={openEmp}
+          onClose={onCloseEmploee}
+          isNew={true}
+          setNewValue={onNewEmplChange}
+          row={null}
+          resType={1}
+          addAction={addEmployee}
+          editAction={editEmployee}
+        ></PopupEmployee>
+        <PopupResourses
+          newtext={newtext}
+          departments={departments}
+          open={openRes}
+          onClose={onCloseResourse}
+          isNew={true}
+          setNewValue={onNewResoChange}
+          row={null}
+          resType={1}
+          addAction={addResourse}
+          editAction={editResourse}
+        ></PopupResourses>
         <PopupAction
           open={openAction}
           onClose={() => setOpenAction(false)}

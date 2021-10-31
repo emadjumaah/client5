@@ -22,18 +22,18 @@ import { eventStatusAr } from '../../../constants/datatypes';
 import { useLazyQuery } from '@apollo/client';
 import { getOperationItems } from '../../../graphql';
 import MyIcon from '../../../Shared/MyIcon';
+import useTasks from '../../../hooks/useTasks';
+import useEmployeesUp from '../../../hooks/useEmployeesUp';
+import useDepartmentsUp from '../../../hooks/useDepartmentsUp';
+import { useServices } from '../../../hooks';
 
 export const RenderToolTip = ({
   appointmentData,
   setVisible,
-  departments,
-  employees,
-  services,
   editEvent,
   company,
   viewonly,
   theme,
-  tasks,
 }: any) => {
   const [itemsList, setItemsList] = useState<any>([]);
   const [open, setOpen] = useState(false);
@@ -44,6 +44,10 @@ export const RenderToolTip = ({
   }: GContextTypes = useContext(GlobalContext);
 
   const classes = cardClasses();
+  const { tasks } = useTasks();
+  const { employees } = useEmployeesUp();
+  const { departments } = useDepartmentsUp();
+  const { services } = useServices();
 
   useEffect(() => {
     const isCalPOSEditor = roles.isEditor();

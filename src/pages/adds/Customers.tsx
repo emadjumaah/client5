@@ -47,10 +47,10 @@ import { useLazyQuery, useMutation } from '@apollo/client';
 import useEmployeesUp from '../../hooks/useEmployeesUp';
 import useDepartmentsUp from '../../hooks/useDepartmentsUp';
 import useResoursesUp from '../../hooks/useResoursesUp';
+import { useServices } from '../../hooks';
 
 export default function Customers(props: any) {
-  const { isRTL, words, menuitem, isEditor, theme, company, servicesproducts } =
-    props;
+  const { isRTL, words, menuitem, isEditor, theme, company } = props;
   const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
   const [rows, setRows] = useState([]);
   const [item, setItem] = useState(null);
@@ -60,6 +60,7 @@ export default function Customers(props: any) {
   const { departments } = useDepartmentsUp();
   const { employees } = useEmployeesUp();
   const { resourses } = useResoursesUp();
+  const { services } = useServices();
   const onCloseItem = () => {
     setOpenItem(false);
     setItem(null);
@@ -240,7 +241,7 @@ export default function Customers(props: any) {
           company={company}
           employees={employees}
           resourses={resourses}
-          servicesproducts={servicesproducts}
+          servicesproducts={services}
           customers={rows}
           tasks={tasks}
         ></PopupCustomerView>

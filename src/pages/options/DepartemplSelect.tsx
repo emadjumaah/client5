@@ -1,10 +1,13 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import * as React from 'react';
+import React, { useEffect } from 'react';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import { Box, fade, Grid, IconButton, Typography } from '@material-ui/core';
 import RefreshOutlinedIcon from '@material-ui/icons/RefreshOutlined';
+import { eventStatus } from '../../constants';
+import { getCalendarResourses } from '../../common/helpers';
 
 const DepartemplSelect = ({
   value,
@@ -14,10 +17,39 @@ const DepartemplSelect = ({
   theme,
   refresh,
   noEmpl,
+  employees,
+  departments,
+  setResourseData,
 }: any) => {
   const onchange = (e: any) => {
-    setValue(e.target.value);
+    const val = e.target.value;
+    setValue(val);
+    let res: any;
+    if (val === 'employeeId') {
+      res = employees;
+    }
+    if (val === 'status') {
+      res = eventStatus;
+    }
+    if (val === 'departmentId') {
+      res = departments;
+    }
+    const resourses = getCalendarResourses(res, val, 'Data');
+    setResourseData(resourses);
   };
+
+  useEffect(() => {
+    if (!value && departments && departments.length > 0) {
+      const resourses = getCalendarResourses(
+        departments,
+        'departmentId',
+        'Data'
+      );
+      setValue('departmentId');
+      setResourseData(resourses);
+    }
+  }, [departments]);
+
   return (
     <Box m={1}>
       <Grid container spacing={1}>

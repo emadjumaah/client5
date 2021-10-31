@@ -2,7 +2,13 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import React, { useContext, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { dublicateAlert, errorAlert, messageAlert } from '../Shared';
+import {
+  dublicateAlert,
+  errorAlert,
+  getReturnItem,
+  messageAlert,
+  successAlert,
+} from '../Shared';
 import { GContextTypes } from '../types';
 import { GlobalContext } from '../contexts';
 import { Box, Button, colors, Typography } from '@material-ui/core';
@@ -45,6 +51,7 @@ const PopupTask = ({
   refresh,
   value = null,
   name = null,
+  setNewValue,
 }: any) => {
   const [saving, setSaving] = useState(false);
   const [showtable, setShowTable] = useState(isNew);
@@ -229,13 +236,13 @@ const PopupTask = ({
       return;
     }
 
-    if (!custvalue) {
-      await messageAlert(
-        setAlrt,
-        isRTL ? 'يرجى اضافة عميل للفاتورة' : 'Please add Customer'
-      );
-      return;
-    }
+    // if (!custvalue) {
+    //   await messageAlert(
+    //     setAlrt,
+    //     isRTL ? 'يرجى اضافة عميل للفاتورة' : 'Please add Customer'
+    //   );
+    //   return;
+    // }
     // if (isNew && (!evList || evList.length === 0)) {
     //   await messageAlert(
     //     setAlrt,
@@ -334,11 +341,22 @@ const PopupTask = ({
 
   const apply = async (mutate: any, variables: any) => {
     try {
-      mutate({ variables });
-      setTimeout(() => {
-        refresh();
+      if (evList?.length === 0) {
+        const res = await mutate({ variables });
+        const nitem = getReturnItem(res, 'createTask');
+        console.log(nitem);
+
+        if (setNewValue && nitem) setNewValue(nitem, 'task');
+        setSaving(false);
+        await successAlert(setAlrt, isRTL);
         onCloseForm();
-      }, 1000);
+      } else {
+        mutate({ variables });
+        setTimeout(() => {
+          refresh();
+          onCloseForm();
+        }, 1000);
+      }
     } catch (error) {
       onError(error);
       console.log(error);
@@ -531,37 +549,10 @@ const PopupTask = ({
             ></AutoFieldLocal>
           </Grid>
         </Grid>
-        <Grid container spacing={2}>
-          <Grid item xs={10}>
-            {!showtable && isNew && (
-              <Box
-                display="flex"
-                style={{
-                  alignItems: 'center',
-                  justifyContent: 'flex-start',
-                  marginInlineStart: 10,
-                }}
-              >
-                <Button
-                  color="primary"
-                  onClick={() => {
-                    setShowTable(true);
-                    setOpenEvent(true);
-                  }}
-                  variant="contained"
-                >
-                  {isRTL ? 'اضافة مواعيد' : 'Add Appointments'}
-                </Button>
-              </Box>
-            )}
-            {showtable && (
-              <Box
-                style={{
-                  backgroundColor: '#F3F3F3',
-                  marginTop: 15,
-                  borderRadius: 10,
-                }}
-              >
+        {!setNewValue && (
+          <Grid container spacing={2}>
+            <Grid item xs={10}>
+              {!showtable && isNew && (
                 <Box
                   display="flex"
                   style={{
@@ -572,27 +563,56 @@ const PopupTask = ({
                 >
                   <Button
                     color="primary"
-                    onClick={() => setOpenEvent(true)}
+                    onClick={() => {
+                      setShowTable(true);
+                      setOpenEvent(true);
+                    }}
                     variant="contained"
                   >
-                    {isRTL ? 'اضافة' : 'Add'}
+                    {isRTL ? 'اضافة مواعيد' : 'Add Appointments'}
                   </Button>
                 </Box>
-                <Box style={{ marginBottom: 20 }}>
-                  <EventsTable
-                    rows={evList}
-                    removeEventFromList={removeEventFromList}
-                    isRTL={isRTL}
-                    words={words}
-                  ></EventsTable>
-                  <Typography style={{ fontWeight: 'bold', fontSize: 16 }}>
-                    {words.total} : {moneyFormat(total)}
-                  </Typography>
+              )}
+              {showtable && (
+                <Box
+                  style={{
+                    backgroundColor: '#F3F3F3',
+                    marginTop: 15,
+                    borderRadius: 10,
+                  }}
+                >
+                  <Box
+                    display="flex"
+                    style={{
+                      alignItems: 'center',
+                      justifyContent: 'flex-start',
+                      marginInlineStart: 10,
+                    }}
+                  >
+                    <Button
+                      color="primary"
+                      onClick={() => setOpenEvent(true)}
+                      variant="contained"
+                    >
+                      {isRTL ? 'اضافة' : 'Add'}
+                    </Button>
+                  </Box>
+                  <Box style={{ marginBottom: 20 }}>
+                    <EventsTable
+                      rows={evList}
+                      removeEventFromList={removeEventFromList}
+                      isRTL={isRTL}
+                      words={words}
+                    ></EventsTable>
+                    <Typography style={{ fontWeight: 'bold', fontSize: 16 }}>
+                      {words.total} : {moneyFormat(total)}
+                    </Typography>
+                  </Box>
                 </Box>
-              </Box>
-            )}
+              )}
+            </Grid>
           </Grid>
-        </Grid>
+        )}
         <PopupTaskAppointment
           open={openEvent}
           onClose={() => setOpenEvent(false)}

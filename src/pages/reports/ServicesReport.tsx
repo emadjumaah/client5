@@ -55,7 +55,7 @@ import { ReportGroupBySwitcher } from '../calendar/common/ReportGroupBySwitcher'
 import DateNavigatorReports from '../../components/filters/DateNavigatorReports';
 import { documentTypes, groupList } from '../../constants/reports';
 import { groupSumCount } from '../../common/reports';
-import { useCustomers, useTemplate } from '../../hooks';
+import { useCustomers, useServices, useTemplate } from '../../hooks';
 import useTasks from '../../hooks/useTasks';
 import getReportServices from '../../graphql/query/getReportServices';
 import ServicesReportContext from '../../contexts/servicesReport';
@@ -87,7 +87,6 @@ export default function ServicesReport({
   isRTL,
   words,
   menuitem,
-  services,
   company,
   theme,
   isEditor,
@@ -144,6 +143,8 @@ export default function ServicesReport({
   const { departments } = useDepartmentsUp();
   const { employees } = useEmployeesUp();
   const { resourses } = useResoursesUp();
+  const { services } = useServices();
+
   const {
     state: {
       currentDate,

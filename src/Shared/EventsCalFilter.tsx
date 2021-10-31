@@ -4,10 +4,10 @@ import { eventStatus } from '../constants';
 import FilterSelect from './FilterSelect';
 import DepartemplSelect from '../pages/options/DepartemplSelect';
 import { Grid } from '@material-ui/core';
+import useEmployeesUp from '../hooks/useEmployeesUp';
+import useDepartmentsUp from '../hooks/useDepartmentsUp';
 
 export default function EventsCalFilter({
-  employees,
-  departments,
   departvalue,
   setDepartvalue,
   emplvalue,
@@ -22,7 +22,10 @@ export default function EventsCalFilter({
   theme,
   refresh,
   noEmpl = false,
+  setResourseData,
 }: any) {
+  const { employees } = useEmployeesUp();
+  const { departments } = useDepartmentsUp();
   return (
     <Grid container spacing={2}>
       {!noEmpl && (
@@ -64,11 +67,14 @@ export default function EventsCalFilter({
         <DepartemplSelect
           value={mainResourceName}
           setValue={setMainResourceName}
+          setResourseData={setResourseData}
           isRTL={isRTL}
           count={count}
           theme={theme}
           refresh={refresh}
           noEmpl={noEmpl}
+          employees={employees}
+          departments={departments}
         ></DepartemplSelect>
       </Grid>
     </Grid>

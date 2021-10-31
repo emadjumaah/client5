@@ -59,7 +59,7 @@ import EventsReportContext from '../../contexts/eventsreport';
 import FilterSelectCkeckBox from '../../Shared/FilterSelectCkeckBox';
 import { eventStatus } from '../../constants';
 // import { groupSumCount } from '../../common/reports';
-import { useCustomers, useTemplate } from '../../hooks';
+import { useCustomers, useServices, useTemplate } from '../../hooks';
 import useTasks from '../../hooks/useTasks';
 import useDepartmentsUp from '../../hooks/useDepartmentsUp';
 import useEmployeesUp from '../../hooks/useEmployeesUp';
@@ -89,7 +89,6 @@ export default function SalesReport({
   isRTL,
   words,
   menuitem,
-  services,
   theme,
   isEditor,
 }: any) {
@@ -140,6 +139,7 @@ export default function SalesReport({
   const { departments } = useDepartmentsUp();
   const { employees } = useEmployeesUp();
   const { resourses } = useResoursesUp();
+  const { services } = useServices();
   const {
     state: {
       currentDate,

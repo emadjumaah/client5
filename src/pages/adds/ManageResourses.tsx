@@ -36,7 +36,7 @@ import { errorAlert, errorDeleteAlert } from '../../Shared/helpers';
 import PageLayout from '../main/PageLayout';
 import { getColumns } from '../../common/columns';
 import useTasks from '../../hooks/useTasks';
-import { useCustomers } from '../../hooks';
+import { useCustomers, useServices } from '../../hooks';
 import PopupResoursesView from '../../pubups/PopupResoursesView';
 import PopupResourses from '../../pubups/PopupResourses';
 import useResoursesUp from '../../hooks/useResoursesUp';
@@ -49,7 +49,6 @@ export default function ManageResourses({
   isEditor,
   theme,
   menuitem,
-  servicesproducts,
   company,
 }: any) {
   const [loading, setLoading] = useState(false);
@@ -62,6 +61,7 @@ export default function ManageResourses({
   const { departments } = useDepartmentsUp();
   const { employees } = useEmployeesUp();
   const { customers } = useCustomers();
+  const { services } = useServices();
 
   const onCloseItem = () => {
     setOpenItem(false);
@@ -238,7 +238,7 @@ export default function ManageResourses({
           company={company}
           employees={employees}
           resourses={resourses}
-          servicesproducts={servicesproducts}
+          servicesproducts={services}
           customers={customers}
           tasks={tasks}
         ></PopupResoursesView>

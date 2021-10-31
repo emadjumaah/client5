@@ -38,7 +38,7 @@ import PageLayout from '../main/PageLayout';
 import { getColumns } from '../../common/columns';
 import PopupEmployeeView from '../../pubups/PopupEmployeeView';
 import useTasks from '../../hooks/useTasks';
-import { useCustomers } from '../../hooks';
+import { useCustomers, useServices } from '../../hooks';
 import useEmployeesUp from '../../hooks/useEmployeesUp';
 import useResoursesUp from '../../hooks/useResoursesUp';
 import useDepartmentsUp from '../../hooks/useDepartmentsUp';
@@ -49,7 +49,6 @@ export default function ManageEmployees({
   isEditor,
   theme,
   menuitem,
-  servicesproducts,
   company,
 }: any) {
   const [loading, setLoading] = useState(false);
@@ -62,6 +61,8 @@ export default function ManageEmployees({
   const { customers } = useCustomers();
   const { departments } = useDepartmentsUp();
   const { resourses } = useResoursesUp();
+  const { services } = useServices();
+
   const onCloseItem = () => {
     setOpenItem(false);
     setItem(null);
@@ -253,7 +254,7 @@ export default function ManageEmployees({
           company={company}
           employees={employees}
           resourses={resourses}
-          servicesproducts={servicesproducts}
+          servicesproducts={services}
           customers={customers}
           tasks={tasks}
         ></PopupEmployeeView>

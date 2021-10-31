@@ -39,7 +39,6 @@ import {
   ReceiptContext,
 } from '../../contexts';
 import { layoutClasses } from '../../themes';
-import MainCalendar from '../calendar/MainCalendar';
 import Options from '../options';
 import {
   Users,
@@ -53,7 +52,7 @@ import {
 import { GContextTypes } from '../../types';
 import Finance from '../adds/Finance';
 
-import { useBranches, useServices, useSuppliers } from '../../hooks';
+import { useBranches, useSuppliers } from '../../hooks';
 import PageLayout from './PageLayout';
 import Appointments from '../adds/Appointments';
 import { CalendarContext } from '../../contexts/calendar';
@@ -107,6 +106,7 @@ import React from 'react';
 import { isEditor as isEditorUser } from '../../common/roles';
 import AlertWithClose from '../../components/fields/AlertWithClose';
 import ManageProjects from '../adds/ManageProjects';
+import Main from '../calendar/Main';
 
 const Content = ({ company, editCompany, refreshcompany }) => {
   const classes = layoutClasses();
@@ -115,7 +115,6 @@ const Content = ({ company, editCompany, refreshcompany }) => {
   const theme = useTheme();
 
   const { branches } = useBranches();
-  const { services, refreshservice, addService, editService } = useServices();
   const { suppliers } = useSuppliers();
   const { accounts, refreshAccount } = useAccounts();
 
@@ -246,7 +245,7 @@ const Content = ({ company, editCompany, refreshcompany }) => {
               <CalendarContext.Provider
                 value={{ state: calendarStore, dispatch: calendarDispatch }}
               >
-                <MainCalendar
+                <Main
                   menuitem={menuitem}
                   isRTL={isRTL}
                   words={words}
@@ -254,10 +253,7 @@ const Content = ({ company, editCompany, refreshcompany }) => {
                   isEditor={isEditor}
                   calendar={calendar}
                   company={company}
-                  services={services}
-                  addService={addService}
-                  editService={editService}
-                ></MainCalendar>
+                ></Main>
               </CalendarContext.Provider>
             )}
           />
@@ -277,7 +273,6 @@ const Content = ({ company, editCompany, refreshcompany }) => {
                   theme={theme}
                   isEditor={isEditor}
                   calendar={calendar}
-                  services={services}
                   company={company}
                 ></EmployeesCalendar>
               </CalendarReportContext.Provider>
@@ -296,7 +291,6 @@ const Content = ({ company, editCompany, refreshcompany }) => {
                   isEditor={isEditor}
                   theme={theme}
                   company={company}
-                  servicesproducts={services}
                 ></Invoices>
               </SalesContext.Provider>
             )}
@@ -314,7 +308,6 @@ const Content = ({ company, editCompany, refreshcompany }) => {
                   isEditor={isEditor}
                   theme={theme}
                   company={company}
-                  servicesproducts={services}
                 ></Tasks>
               </TasksContext.Provider>
             )}
@@ -332,7 +325,6 @@ const Content = ({ company, editCompany, refreshcompany }) => {
                   isEditor={isEditor}
                   theme={theme}
                   company={company}
-                  servicesproducts={services}
                 ></Appointments>
               </EventsContext.Provider>
             )}
@@ -412,7 +404,6 @@ const Content = ({ company, editCompany, refreshcompany }) => {
                 menuitem={menuitem}
                 isEditor={isEditor}
                 company={company}
-                servicesproducts={services}
               ></Customers>
             )}
           />
@@ -499,7 +490,6 @@ const Content = ({ company, editCompany, refreshcompany }) => {
                 words={words}
                 isEditor={isEditor}
                 theme={theme}
-                servicesproducts={services}
                 company={company}
               ></ManageDepartments>
             )}
@@ -513,7 +503,6 @@ const Content = ({ company, editCompany, refreshcompany }) => {
                 words={words}
                 isEditor={isEditor}
                 theme={theme}
-                servicesproducts={services}
                 company={company}
               ></ManageProjects>
             )}
@@ -539,7 +528,6 @@ const Content = ({ company, editCompany, refreshcompany }) => {
                 words={words}
                 isEditor={isEditor}
                 theme={theme}
-                servicesproducts={services}
                 company={company}
               ></ManageEmployees>
             )}
@@ -565,7 +553,6 @@ const Content = ({ company, editCompany, refreshcompany }) => {
                 words={words}
                 isEditor={isEditor}
                 theme={theme}
-                servicesproducts={services}
                 company={company}
               ></ManageResourses>
             )}
@@ -579,7 +566,7 @@ const Content = ({ company, editCompany, refreshcompany }) => {
                 words={words}
                 isEditor={isEditor}
                 theme={theme}
-                refresh={refreshservice}
+                refresh={() => null}
               >
                 <Services></Services>
               </PageLayout>
@@ -600,7 +587,6 @@ const Content = ({ company, editCompany, refreshcompany }) => {
                   menuitem={menuitem}
                   isRTL={isRTL}
                   words={words}
-                  services={services}
                   categories={[]}
                   company={company}
                   theme={theme}
@@ -622,7 +608,6 @@ const Content = ({ company, editCompany, refreshcompany }) => {
                   menuitem={menuitem}
                   isRTL={isRTL}
                   words={words}
-                  services={services}
                   categories={[]}
                   company={company}
                   theme={theme}
@@ -644,7 +629,6 @@ const Content = ({ company, editCompany, refreshcompany }) => {
                   menuitem={menuitem}
                   isRTL={isRTL}
                   words={words}
-                  services={services}
                   categories={[]}
                   company={company}
                   theme={theme}
@@ -667,7 +651,6 @@ const Content = ({ company, editCompany, refreshcompany }) => {
                   isEditor={isEditor}
                   menuitem={menuitem}
                   theme={theme}
-                  services={services}
                   categories={[]}
                   company={company}
                 ></SalesReport>
@@ -689,7 +672,6 @@ const Content = ({ company, editCompany, refreshcompany }) => {
                   isEditor={isEditor}
                   menuitem={menuitem}
                   theme={theme}
-                  services={services}
                   suppliers={suppliers}
                   categories={[]}
                   company={company}
@@ -712,7 +694,6 @@ const Content = ({ company, editCompany, refreshcompany }) => {
                   isEditor={isEditor}
                   menuitem={menuitem}
                   theme={theme}
-                  services={services}
                   categories={[]}
                   company={company}
                   mainaccounts={filteredAccounts}
@@ -735,7 +716,6 @@ const Content = ({ company, editCompany, refreshcompany }) => {
                   isEditor={isEditor}
                   menuitem={menuitem}
                   theme={theme}
-                  services={services}
                   categories={[]}
                   company={company}
                   mainaccounts={filteredAccounts}
@@ -758,7 +738,6 @@ const Content = ({ company, editCompany, refreshcompany }) => {
                   isEditor={isEditor}
                   menuitem={menuitem}
                   theme={theme}
-                  services={services}
                   categories={[]}
                   company={company}
                   mainaccounts={filteredAccounts}

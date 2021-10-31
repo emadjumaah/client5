@@ -42,38 +42,23 @@ import { getStartEndEventView } from '../../common/time';
 import { DateNavigator } from '../../components';
 import { CalendarContext } from '../../contexts';
 import PopupLayoutBox from '../main/PopupLayoutBox';
-import { eventStatus } from '../../constants';
-import useTasks from '../../hooks/useTasks';
 import getTasks from '../../graphql/query/getTasks';
 import { getPopupGeneralTitle } from '../../constants/menu';
-import { getCalendarResourses } from '../../common/helpers';
 
 const Main = (props: any) => {
   const [visible, setVisible] = useState(false);
   const [start, setStart] = useState(new Date());
   const [end, setEnd] = useState(new Date());
   const [resourseData, setResourseData]: any = useState([]);
-  const [mainResourceName, setMainResourceName]: any = useState('departmentId');
+  const [mainResourceName, setMainResourceName]: any = useState(null);
 
   const [rows, setRows] = useState([]);
   const isMobile = useMediaQuery('(max-width:600px)');
-  const {
-    departments,
-    employees,
-    resourses,
-    calendar,
-    isRTL,
-    words,
-    services,
-    company,
-    isEditor,
-    theme,
-  } = props;
+  const { calendar, isRTL, words, company, isEditor, theme } = props;
   const {
     state: { currentDate, currentViewName, departvalue, emplvalue, status },
     dispatch,
   } = useContext(CalendarContext);
-  const { tasks } = useTasks();
 
   const refresQuery = {
     refetchQueries: [
@@ -175,20 +160,20 @@ const Main = (props: any) => {
     status,
   ]);
 
-  useEffect(() => {
-    let res: any;
-    if (mainResourceName === 'employeeId') {
-      res = employees;
-    }
-    if (mainResourceName === 'status') {
-      res = eventStatus;
-    }
-    if (mainResourceName === 'departmentId') {
-      res = departments;
-    }
-    const resourses = getCalendarResourses(res, mainResourceName, 'Data');
-    setResourseData(resourses);
-  }, [mainResourceName, departments]);
+  // useEffect(() => {
+  //   let res: any;
+  //   if (mainResourceName === 'employeeId') {
+  //     res = employees;
+  //   }
+  //   if (mainResourceName === 'status') {
+  //     res = eventStatus;
+  //   }
+  //   if (mainResourceName === 'departmentId') {
+  //     res = departments;
+  //   }
+  //   const resourses = getCalendarResourses(res, mainResourceName, 'Data');
+  //   setResourseData(resourses);
+  // }, [mainResourceName, departments]);
 
   const setDepartvalueDispatch = (value: any) => {
     dispatch({ type: 'setDepartvalue', payload: value });
@@ -254,14 +239,11 @@ const Main = (props: any) => {
                   setDepartvalue={setDepartvalueDispatch}
                   emplvalue={emplvalue}
                   setEmplvalue={setEmplvalueDispatch}
-                  departments={departments.filter(
-                    (dep: any) => dep.depType === 1
-                  )}
-                  employees={employees.filter((dep: any) => dep.resType === 1)}
                   status={status}
                   setStatus={setStatusDispatch}
                   setMainResourceName={setMainResourceName}
                   mainResourceName={mainResourceName}
+                  setResourseData={setResourseData}
                   isRTL={isRTL}
                   words={words}
                   theme={theme}
@@ -348,15 +330,10 @@ const Main = (props: any) => {
                 <RenderToolTip
                   appointmentData={appointmentData}
                   setVisible={setVisible}
-                  departments={departments}
-                  employees={employees}
-                  resourses={resourses}
-                  services={services}
                   editEvent={editEvent}
                   company={company}
                   theme={theme}
                   viewonly={isMobile}
-                  tasks={tasks}
                 ></RenderToolTip>
               )}
             />
@@ -380,12 +357,7 @@ const Main = (props: any) => {
                 )}
                 basicLayoutComponent={(pr: any) => (
                   <AppointForm
-                    departments={departments}
-                    employees={employees}
-                    resourses={resourses}
-                    servicesproducts={services}
                     theme={theme}
-                    tasks={tasks}
                     isMobile={isMobile}
                     {...pr}
                   ></AppointForm>

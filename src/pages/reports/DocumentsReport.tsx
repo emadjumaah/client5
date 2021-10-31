@@ -58,7 +58,7 @@ import { documentTypes, groupList } from '../../constants/reports';
 import FilterSelectCkeckBox from '../../Shared/FilterSelectCkeckBox';
 import { eventStatus } from '../../constants';
 import { groupSumCount } from '../../common/reports';
-import { useCustomers, useTemplate } from '../../hooks';
+import { useCustomers, useServices, useTemplate } from '../../hooks';
 import useTasks from '../../hooks/useTasks';
 import getReportDocuments from '../../graphql/query/getReportDocuments';
 import DocumentsReportContext from '../../contexts/documentsReport';
@@ -90,7 +90,6 @@ export default function DocumentsReport({
   isRTL,
   words,
   menuitem,
-  services,
   company,
   theme,
   isEditor,
@@ -148,6 +147,7 @@ export default function DocumentsReport({
   const { projects } = useProjects();
   const { tasks } = useTasks();
   const { tempoptions } = useTemplate();
+  const { services } = useServices();
 
   const {
     state: {

@@ -49,49 +49,10 @@ export default gql`
       project: $project
       resourse: $resourse
     ) {
-      _id
-      branch
-      autoNo
-      docNo
-      title
-      desc
-
-      id
-      name
-      type
-      start
-      end
-      progress
-      isDisabled
-      tasktype
-
-      priority
-      status
-      amount
-      evQty
-      evDone
-
-      customerId
-      customerName
-      customerNameAr
-      customerPhone
-
-      departmentId
-      departmentName
-      departmentNameAr
-      departmentColor
-
-      employeeId
-      employeeName
-      employeeNameAr
-      employeeColor
-      employeePhone
-
-      userId
-      note
-
-      createdAt
-      updatedAt
+      ok
+      message
+      data
+      error
     }
   }
 `;

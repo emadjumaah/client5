@@ -21,7 +21,7 @@ import {
   ColumnChooser,
 } from '@devexpress/dx-react-grid-material-ui';
 import { Command, errorAlert, Loading, PopupEditing } from '../../Shared';
-import { useCustomers } from '../../hooks';
+import { useCustomers, useServices } from '../../hooks';
 import { getRowId } from '../../common';
 import {
   avatarPatternFormatter,
@@ -50,7 +50,6 @@ export default function ManageProjects({
   theme,
   menuitem,
   company,
-  servicesproducts,
 }: any) {
   const [loading, setLoading] = useState(false);
   const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
@@ -63,6 +62,7 @@ export default function ManageProjects({
   const { departments } = useDepartmentsUp();
   const { resourses } = useResoursesUp();
   const { customers } = useCustomers();
+  const { services } = useServices();
 
   const onCloseItem = () => {
     setOpenItem(false);
@@ -236,7 +236,7 @@ export default function ManageProjects({
           company={company}
           resourses={resourses}
           employees={employees}
-          servicesproducts={servicesproducts}
+          servicesproducts={services}
           customers={customers}
           tasks={tasks}
         ></PopupProjectView>

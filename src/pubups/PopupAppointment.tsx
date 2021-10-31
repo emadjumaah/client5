@@ -43,6 +43,15 @@ import { tafkeet } from '../common/helpers';
 import PopupMaps from './PopupMaps';
 import MyIcon from '../Shared/MyIcon';
 import { getPopupTitle } from '../constants/menu';
+import PopupDeprtment from './PopupDeprtment';
+import PopupEmployee from './PopupEmployee';
+import useDepartmentsUp from '../hooks/useDepartmentsUp';
+import useEmployeesUp from '../hooks/useEmployeesUp';
+import PopupResourses from './PopupResourses';
+import useResoursesUp from '../hooks/useResoursesUp';
+import PopupTask from './PopupTask';
+import useTasks from '../hooks/useTasks';
+import useProjects from '../hooks/useProjects';
 
 export const indexTheList = (list: any) => {
   return list.map((item: any, index: any) => {
@@ -100,6 +109,11 @@ const PopupAppointment = ({
 
   const [openInvoice, setOpenInvoice] = useState(false);
 
+  const [openDep, setOpenDep] = useState(false);
+  const [openEmp, setOpenEmp] = useState(false);
+  const [openRes, setOpenRes] = useState(false);
+  const [openTsk, setOpenTsk] = useState(false);
+
   const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
 
   const [openAction, setOpenAction] = useState(false);
@@ -111,7 +125,12 @@ const PopupAppointment = ({
   const [location, setLocation] = useState(null);
 
   const { customers, addCustomer, editCustomer } = useCustomers();
+  const { addDepartment, editDepartment } = useDepartmentsUp();
+  const { addEmployee, editEmployee } = useEmployeesUp();
+  const { addResourse, editResourse } = useResoursesUp();
+  const { addTask, editTask } = useTasks();
   const { tempwords, tempoptions } = useTemplate();
+  const { projects } = useProjects();
 
   const { register, handleSubmit } = useForm({});
   const {
@@ -129,6 +148,34 @@ const PopupAppointment = ({
 
   const isemployee = user?.isEmployee && user?.employeeId;
 
+  const openDepartment = () => {
+    setOpenDep(true);
+  };
+  const onCloseDepartment = () => {
+    setOpenDep(false);
+    setNewtext('');
+  };
+  const openEmployee = () => {
+    setOpenEmp(true);
+  };
+  const onCloseEmploee = () => {
+    setOpenEmp(false);
+    setNewtext('');
+  };
+  const openResourse = () => {
+    setOpenRes(true);
+  };
+  const onCloseResourse = () => {
+    setOpenRes(false);
+    setNewtext('');
+  };
+  const openTask = () => {
+    setOpenTsk(true);
+  };
+  const onCloseTask = () => {
+    setOpenTsk(false);
+    setNewtext('');
+  };
   useEffect(() => {
     if (isemployee) {
       const emp = employees.filter(
@@ -395,8 +442,20 @@ const PopupAppointment = ({
     setNewtext('');
   };
 
-  const onNewFieldChange = (nextValue: any) => {
+  const onNewCustChange = (nextValue: any) => {
     setCustvalue(nextValue);
+  };
+  const onNewDepartChange = (nextValue: any) => {
+    setDepartvalue(nextValue);
+  };
+  const onNewEmplChange = (nextValue: any) => {
+    setEmplvalue(nextValue);
+  };
+  const onNewResoChange = (nextValue: any) => {
+    setResovalue(nextValue);
+  };
+  const onNewTaskChange = (nextValue: any) => {
+    setTaskvalue(nextValue);
   };
 
   const resetAllForms = () => {
@@ -635,6 +694,7 @@ const PopupAppointment = ({
                       setSelectValue={setTaskvalue}
                       register={register}
                       isRTL={isRTL}
+                      openAdd={openTask}
                       fullWidth
                     ></AutoFieldLocal>
                   </Grid>
@@ -668,7 +728,7 @@ const PopupAppointment = ({
                         selectError={emplError}
                         refernce={emplRef}
                         register={register}
-                        noPlus
+                        openAdd={openEmployee}
                         isRTL={isRTL}
                         fullWidth
                         day={day}
@@ -688,7 +748,7 @@ const PopupAppointment = ({
                         selectError={resoError}
                         refernce={resoRef}
                         register={register}
-                        noPlus
+                        openAdd={openResourse}
                         isRTL={isRTL}
                         fullWidth
                         day={day}
@@ -709,7 +769,7 @@ const PopupAppointment = ({
                       selectError={departError}
                       refernce={departRef}
                       register={register}
-                      noPlus
+                      openAdd={openDepartment}
                       isRTL={isRTL}
                       fullWidth
                     ></AutoFieldLocal>
@@ -892,11 +952,61 @@ const PopupAppointment = ({
           open={openCust}
           onClose={onCloseCustomer}
           isNew={true}
-          setNewValue={onNewFieldChange}
+          setNewValue={onNewCustChange}
           row={null}
           addAction={addCustomer}
           editAction={editCustomer}
         ></PopupCustomer>
+        <PopupDeprtment
+          newtext={newtext}
+          open={openDep}
+          onClose={onCloseDepartment}
+          isNew={true}
+          setNewValue={onNewDepartChange}
+          row={null}
+          addAction={addDepartment}
+          editAction={editDepartment}
+          depType={1}
+        ></PopupDeprtment>
+        <PopupTask
+          newtext={newtext}
+          open={openTsk}
+          onClose={onCloseTask}
+          isNew={true}
+          setNewValue={onNewTaskChange}
+          row={null}
+          employees={employees}
+          resourses={resourses}
+          departments={departments}
+          projects={projects}
+          customers={customers}
+          addAction={addTask}
+          editAction={editTask}
+        ></PopupTask>
+        <PopupEmployee
+          newtext={newtext}
+          departments={departments}
+          open={openEmp}
+          onClose={onCloseEmploee}
+          isNew={true}
+          setNewValue={onNewEmplChange}
+          row={null}
+          resType={1}
+          addAction={addEmployee}
+          editAction={editEmployee}
+        ></PopupEmployee>
+        <PopupResourses
+          newtext={newtext}
+          departments={departments}
+          open={openRes}
+          onClose={onCloseResourse}
+          isNew={true}
+          setNewValue={onNewResoChange}
+          row={null}
+          resType={1}
+          addAction={addResourse}
+          editAction={editResourse}
+        ></PopupResourses>
         <PopupAction
           open={openAction}
           onClose={() => setOpenAction(false)}

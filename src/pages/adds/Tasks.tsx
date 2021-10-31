@@ -51,7 +51,7 @@ import PopupTask from '../../pubups/PopupTask';
 import createTask from '../../graphql/mutation/createTask';
 import updateTask from '../../graphql/mutation/updateTask';
 import deleteTaskById from '../../graphql/mutation/deleteTaskById';
-import { useCustomers } from '../../hooks';
+import { useCustomers, useServices } from '../../hooks';
 import PopupGantt from '../../pubups/PopupGantt';
 import { errorAlert, errorDeleteAlert } from '../../Shared/helpers';
 import { TableComponent } from '../../Shared/TableComponent';
@@ -71,7 +71,6 @@ export default function Tasks({
   isEditor,
   theme,
   company,
-  servicesproducts,
 }) {
   const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
 
@@ -120,6 +119,7 @@ export default function Tasks({
   const { employees } = useEmployeesUp();
   const { resourses } = useResoursesUp();
   const { projects } = useProjects();
+  const { services } = useServices();
   const onCloseItem = () => {
     setOpenItem(false);
     setItem(null);
@@ -375,7 +375,7 @@ export default function Tasks({
                 addCustomer={addCustomer}
                 editCustomer={editCustomer}
                 company={company}
-                servicesproducts={servicesproducts}
+                servicesproducts={services}
                 theme={theme}
                 isEditor={isEditor}
                 refresh={refresh}
@@ -415,7 +415,7 @@ export default function Tasks({
               addCustomer={addCustomer}
               editCustomer={editCustomer}
               company={company}
-              servicesproducts={servicesproducts}
+              servicesproducts={services}
               isEditor={isEditor}
               refresh={refresh}
               startrange={start}

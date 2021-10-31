@@ -53,6 +53,7 @@ import getTasks from '../../graphql/query/getTasks';
 import useResoursesUp from '../../hooks/useResoursesUp';
 import useDepartmentsUp from '../../hooks/useDepartmentsUp';
 import useEmployeesUp from '../../hooks/useEmployeesUp';
+import { useServices } from '../../hooks';
 
 export default function Invoices({
   isRTL,
@@ -61,7 +62,6 @@ export default function Invoices({
   isEditor,
   theme,
   company,
-  servicesproducts,
 }) {
   const col = getColumns({ isRTL, words });
 
@@ -86,6 +86,8 @@ export default function Invoices({
   const { departments } = useDepartmentsUp();
   const { employees } = useEmployeesUp();
   const { resourses } = useResoursesUp();
+  const { services } = useServices();
+
   const {
     state: { currentDate, currentViewName, endDate, sort },
     dispatch,
@@ -272,7 +274,7 @@ export default function Invoices({
               employees={employees}
               departments={departments}
               company={company}
-              servicesproducts={servicesproducts}
+              servicesproducts={services}
               tasks={tasks}
             ></PopupInvoice>
           </PopupEditing>

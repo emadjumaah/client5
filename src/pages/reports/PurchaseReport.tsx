@@ -53,7 +53,7 @@ import DateNavigatorReports from '../../components/filters/DateNavigatorReports'
 import { PurchaseReportContext } from '../../contexts';
 import { groupList } from '../../constants/reports';
 import { groupSumCount } from '../../common/reports';
-import { useDepartments, useEmployees } from '../../hooks';
+import { useDepartments, useEmployees, useServices } from '../../hooks';
 
 const styles = (theme: any) => ({
   tableStriped: {
@@ -78,10 +78,8 @@ export default function PurchaseReport({
   isRTL,
   words,
   menuitem,
-  services,
   suppliers,
   categories,
-
   company,
   theme,
   isEditor,
@@ -128,6 +126,8 @@ export default function PurchaseReport({
   });
   const { departments } = useDepartments();
   const { employees } = useEmployees();
+  const { services } = useServices();
+
   const {
     state: {
       currentDate,

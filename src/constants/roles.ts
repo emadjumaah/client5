@@ -239,7 +239,7 @@ export const templates = [
     nameAr: 'نموذج مركز تعليمي',
     options: {
       noRes: true,
-      noPro: false,
+      noPro: true,
       noTsk: false,
       noEmp: false,
       noDep: false,

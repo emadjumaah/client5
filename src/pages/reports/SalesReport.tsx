@@ -54,7 +54,7 @@ import DateNavigatorReports from '../../components/filters/DateNavigatorReports'
 import { SalesReportContext } from '../../contexts';
 import { groupList } from '../../constants/reports';
 import { groupSumCount } from '../../common/reports';
-import { useCustomers, useTemplate } from '../../hooks';
+import { useCustomers, useServices, useTemplate } from '../../hooks';
 import useTasks from '../../hooks/useTasks';
 import useDepartmentsUp from '../../hooks/useDepartmentsUp';
 import useEmployeesUp from '../../hooks/useEmployeesUp';
@@ -84,7 +84,6 @@ export default function SalesReport({
   isRTL,
   words,
   menuitem,
-  services,
   company,
   theme,
   isEditor,
@@ -140,6 +139,7 @@ export default function SalesReport({
   const { projects } = useProjects();
   const { tasks } = useTasks();
   const { tempoptions } = useTemplate();
+  const { services } = useServices();
 
   const {
     state: {

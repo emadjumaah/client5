@@ -10,7 +10,7 @@ import {
   Paper,
   Typography,
 } from '@material-ui/core';
-import { PopupCustomer } from '../../../pubups';
+import { PopupCustomer, PopupDeprtment, PopupEmployee } from '../../../pubups';
 import { GContextTypes } from '../../../types';
 import { GlobalContext } from '../../../contexts';
 import { StatusSelect } from './StatusSelect';
@@ -30,10 +30,17 @@ import {
   getDateDayTimeFormat,
   moneyFormat,
 } from '../../../Shared/colorFormat';
-import { useCustomers, useTemplate } from '../../../hooks';
+import { useCustomers, useServices, useTemplate } from '../../../hooks';
 import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
 import DeleteOutlinedIcon from '@material-ui/icons/DeleteOutlined';
 import PopupAction from '../../../pubups/PopupAction';
+import PopupTask from '../../../pubups/PopupTask';
+import PopupResourses from '../../../pubups/PopupResourses';
+import useDepartmentsUp from '../../../hooks/useDepartmentsUp';
+import useEmployeesUp from '../../../hooks/useEmployeesUp';
+import useResoursesUp from '../../../hooks/useResoursesUp';
+import useTasks from '../../../hooks/useTasks';
+import useProjects from '../../../hooks/useProjects';
 
 export const indexTheList = (list: any) => {
   return list.map((item: any, index: any) => {
@@ -45,22 +52,11 @@ export const indexTheList = (list: any) => {
 };
 
 export const AppointForm = (props: any) => {
-  const {
-    onFieldChange,
-    appointmentData,
-    departments,
-    tasks,
-    employees,
-    resourses,
-    theme,
-    servicesproducts,
-  } = props;
+  const { onFieldChange, appointmentData, theme } = props;
 
   const row = setRowFromAppointment(appointmentData);
 
   const classes = invoiceClasses();
-
-  const [openCust, setOpenCust] = useState(false);
 
   const [startDate, setStartDate]: any = useState(row?.startDate);
   const [endDate, setEndDate]: any = useState(row?.endDate);
@@ -71,8 +67,10 @@ export const AppointForm = (props: any) => {
   const [totals, setTotals] = useState<any>({});
   const [itemsList, setItemsList] = useState<any>([]);
 
+  const [custvalue, setCustvalue] = useState<any>(null);
   const [taskvalue, setTaskvalue] = useState<any>(null);
   const [emplvalue, setEmplvalue] = useState<any>(null);
+  const [departvalue, setDepartvalue] = useState<any>(null);
   const [resovalue, setResovalue] = useState<any>(null);
 
   const [openAction, setOpenAction] = useState(false);
@@ -80,14 +78,27 @@ export const AppointForm = (props: any) => {
   const [selected, setSelected] = useState(null);
   const [tasktitle, setTasktitle]: any = useState();
 
+  const [newtext, setNewtext] = useState('');
+
+  const [openCust, setOpenCust] = useState(false);
+  const [openDep, setOpenDep] = useState(false);
+  const [openEmp, setOpenEmp] = useState(false);
+  const [openRes, setOpenRes] = useState(false);
+  const [openTsk, setOpenTsk] = useState(false);
+
   const { customers, addCustomer, editCustomer } = useCustomers();
   const { tempwords, tempoptions } = useTemplate();
+  const { departments, addDepartment, editDepartment } = useDepartmentsUp();
+  const { employees, addEmployee, editEmployee } = useEmployeesUp();
+  const { resourses, addResourse, editResourse } = useResoursesUp();
+  const { tasks, addTask, editTask } = useTasks();
+  const { projects } = useProjects();
+  const { services } = useServices();
 
   const {
     translate: { words, isRTL },
     store: { user },
   }: GContextTypes = useContext(GlobalContext);
-  const [newtext, setNewtext] = useState('');
 
   const [getItems, itemsData]: any = useLazyQuery(getOperationItems, {
     fetchPolicy: 'cache-and-network',
@@ -97,6 +108,42 @@ export const AppointForm = (props: any) => {
     fetchPolicy: 'cache-and-network',
   });
   const isemployee = user?.isEmployee && user?.employeeId;
+
+  const openDepartment = () => {
+    setOpenDep(true);
+  };
+  const onCloseDepartment = () => {
+    setOpenDep(false);
+    setNewtext('');
+  };
+  const openEmployee = () => {
+    setOpenEmp(true);
+  };
+  const onCloseEmploee = () => {
+    setOpenEmp(false);
+    setNewtext('');
+  };
+  const openResourse = () => {
+    setOpenRes(true);
+  };
+  const onCloseResourse = () => {
+    setOpenRes(false);
+    setNewtext('');
+  };
+  const openTask = () => {
+    setOpenTsk(true);
+  };
+  const onCloseTask = () => {
+    setOpenTsk(false);
+    setNewtext('');
+  };
+  const openCustomer = () => {
+    setOpenCust(true);
+  };
+  const onCloseCustomer = () => {
+    setOpenCust(false);
+    setNewtext('');
+  };
 
   useEffect(() => {
     if (isemployee) {
@@ -113,9 +160,7 @@ export const AppointForm = (props: any) => {
 
     if (items && items.length > 0) {
       const ids = items.map((it: any) => it.itemId);
-      const servlist = servicesproducts.filter((ser: any) =>
-        ids.includes(ser._id)
-      );
+      const servlist = services.filter((ser: any) => ids.includes(ser._id));
 
       const itemsWqtyprice = items.map((item: any, index: any) => {
         const {
@@ -243,14 +288,6 @@ export const AppointForm = (props: any) => {
     onFieldChange({ items: JSON.stringify(itemsList) });
   };
 
-  const openCustomer = () => {
-    setOpenCust(true);
-  };
-  const onCloseCustomer = () => {
-    setOpenCust(false);
-    setNewtext('');
-  };
-
   const onNewFieldChange = (nextValue: any, name: any) => {
     onFieldChange({ [name]: nextValue });
   };
@@ -287,6 +324,7 @@ export const AppointForm = (props: any) => {
       onNewFieldChange(value, 'customerPhone');
     }
     onNewFieldChange(newValue, 'customer');
+    setCustvalue(newValue);
   };
   const selectDepartment = (value: any) => {
     let newValue = value;
@@ -303,6 +341,7 @@ export const AppointForm = (props: any) => {
       onNewFieldChange(value, 'departmentColor');
     }
     onNewFieldChange(newValue, 'department');
+    setDepartvalue(newValue);
   };
   const selectEmployee = (value: any) => {
     let newValue = value;
@@ -492,6 +531,7 @@ export const AppointForm = (props: any) => {
                 value={taskvalue}
                 setSelectValue={selectTask}
                 isRTL={isRTL}
+                openAdd={openTask}
                 fullWidth
               ></AutoFieldLocal>
             </Grid>
@@ -501,7 +541,7 @@ export const AppointForm = (props: any) => {
                 title={tempwords.customer}
                 words={words}
                 options={customers}
-                value={row.customer}
+                value={custvalue}
                 setSelectValue={selectCustomer}
                 isRTL={isRTL}
                 openAdd={openCustomer}
@@ -520,7 +560,7 @@ export const AppointForm = (props: any) => {
                   disabled={isemployee}
                   value={emplvalue}
                   setSelectValue={selectEmployee}
-                  noPlus
+                  openAdd={openEmployee}
                   isRTL={isRTL}
                   fullWidth
                   day={day}
@@ -536,7 +576,7 @@ export const AppointForm = (props: any) => {
                   options={resourses}
                   value={resovalue}
                   setSelectValue={selectResourse}
-                  noPlus
+                  openAdd={openResourse}
                   isRTL={isRTL}
                   fullWidth
                   day={day}
@@ -549,9 +589,9 @@ export const AppointForm = (props: any) => {
                 title={tempwords.department}
                 words={words}
                 options={departments}
-                value={row.department}
+                value={departvalue}
                 setSelectValue={selectDepartment}
-                noPlus
+                openAdd={openDepartment}
                 isRTL={isRTL}
                 fullWidth
               ></AutoFieldLocal>
@@ -631,7 +671,7 @@ export const AppointForm = (props: any) => {
           >
             <Box display="flex">
               <ServiceItemForm
-                options={servicesproducts}
+                options={services}
                 addItem={addItemToList}
                 words={words}
                 classes={classes}
@@ -672,11 +712,61 @@ export const AppointForm = (props: any) => {
           open={openCust}
           onClose={onCloseCustomer}
           isNew={true}
-          setNewValue={onNewFieldChange}
+          setNewValue={selectCustomer}
           row={null}
           addAction={addCustomer}
           editAction={editCustomer}
         ></PopupCustomer>
+        <PopupDeprtment
+          newtext={newtext}
+          open={openDep}
+          onClose={onCloseDepartment}
+          isNew={true}
+          setNewValue={selectDepartment}
+          row={null}
+          addAction={addDepartment}
+          editAction={editDepartment}
+          depType={1}
+        ></PopupDeprtment>
+        <PopupTask
+          newtext={newtext}
+          open={openTsk}
+          onClose={onCloseTask}
+          isNew={true}
+          setNewValue={selectTask}
+          row={null}
+          employees={employees}
+          resourses={resourses}
+          departments={departments}
+          projects={projects}
+          customers={customers}
+          addAction={addTask}
+          editAction={editTask}
+        ></PopupTask>
+        <PopupEmployee
+          newtext={newtext}
+          departments={departments}
+          open={openEmp}
+          onClose={onCloseEmploee}
+          isNew={true}
+          setNewValue={selectEmployee}
+          row={null}
+          resType={1}
+          addAction={addEmployee}
+          editAction={editEmployee}
+        ></PopupEmployee>
+        <PopupResourses
+          newtext={newtext}
+          departments={departments}
+          open={openRes}
+          onClose={onCloseResourse}
+          isNew={true}
+          setNewValue={selectResourse}
+          row={null}
+          resType={1}
+          addAction={addResourse}
+          editAction={editResourse}
+        ></PopupResourses>
         <PopupAction
           open={openAction}
           onClose={() => setOpenAction(false)}

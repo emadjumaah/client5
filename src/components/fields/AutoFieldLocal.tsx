@@ -1,12 +1,12 @@
 /* eslint-disable react/jsx-no-undef */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import React from "react";
-import { IconButton, TextField } from "@material-ui/core";
-import { Autocomplete } from "@material-ui/lab";
-import AddIcon from "@material-ui/icons/Add";
-import OptionItem from "../../Shared/OptionItem";
-import { Grid } from "@material-ui/core";
-import OptionItemData from "../../Shared/OptionItemData";
+import React from 'react';
+import { IconButton, TextField } from '@material-ui/core';
+import { Autocomplete } from '@material-ui/lab';
+import AddIcon from '@material-ui/icons/Add';
+import OptionItem from '../../Shared/OptionItem';
+import { Grid } from '@material-ui/core';
+import OptionItemData from '../../Shared/OptionItemData';
 
 export default function AutoFieldLocal({
   name,
@@ -49,16 +49,16 @@ export default function AutoFieldLocal({
             } else {
               nm = isRTL ? option?.nameAr : option?.name;
             }
-            const phone = option?.phone ? option?.phone : "";
+            const phone = option?.phone ? option?.phone : '';
             if (phone && showphone) {
               return `${nm} - ${phone}`;
             } else {
-              return nm ? nm : "";
+              return nm ? nm : '';
             }
           }}
           getOptionSelected={(option, values) => option._id === values._id}
           renderOption={(option) => {
-            if (name === "item") {
+            if (name === 'item') {
               return (
                 <OptionItemData isRTL={isRTL} item={option}></OptionItemData>
               );
@@ -91,7 +91,7 @@ export default function AutoFieldLocal({
           style={{
             marginInlineStart: ms ? ms : undefined,
             width: width ? width : undefined,
-            direction: isRTL ? "rtl" : "ltr",
+            direction: isRTL ? 'rtl' : 'ltr',
           }}
           classes={classes ? { input: classes.smallFont } : undefined}
           renderInput={(params) => (
@@ -116,16 +116,23 @@ export default function AutoFieldLocal({
           )}
         />
       </Grid>
-      {openAdd && (
+      {openAdd && !disabled && (
         <Grid item xs={1}>
           <IconButton
             disableFocusRipple
             onClick={() => {
               openAdd();
             }}
-            style={{ width: 30, height: 30, marginTop: 15 }}
+            style={{
+              backgroundColor: '#f4f4f4',
+              width: 30,
+              height: 30,
+              position: 'relative',
+              top: 12,
+              left: 16,
+            }}
           >
-            <AddIcon style={{ color: "#aaa" }}></AddIcon>
+            <AddIcon style={{ color: '#aaa' }}></AddIcon>
           </IconButton>
         </Grid>
       )}

@@ -62,7 +62,7 @@ import useTasks from '../../hooks/useTasks';
 import getTasks from '../../graphql/query/getTasks';
 import { Getter } from '@devexpress/dx-react-core';
 import { TableComponent } from '../../Shared/TableComponent';
-import { useCustomers } from '../../hooks';
+import { useCustomers, useServices } from '../../hooks';
 import PopupDepartmentView from '../../pubups/PopupDepartmentView';
 import PopupEmployeeView from '../../pubups/PopupEmployeeView';
 import PopupTaskView from '../../pubups/PopupTaskView';
@@ -80,7 +80,6 @@ export default function Appointments({
   isEditor,
   theme,
   company,
-  servicesproducts,
 }) {
   const [due, setDue] = useState(false);
   const col = getColumns({ isRTL, words });
@@ -120,6 +119,7 @@ export default function Appointments({
   const { departments, addDepartment, editDepartment } = useDepartmentsUp();
   const { employees, addEmployee, editEmployee } = useEmployeesUp();
   const { resourses, addResourse, editResourse } = useResoursesUp();
+  const { services } = useServices();
   const onCloseTaskItem = () => {
     setOpenTaskItem(false);
     setItem(null);
@@ -509,7 +509,7 @@ export default function Appointments({
               resourses={resourses}
               departments={departments}
               company={company}
-              servicesproducts={servicesproducts}
+              servicesproducts={services}
               theme={theme}
               tasks={tasks}
               isEditor={isEditor}
@@ -546,7 +546,7 @@ export default function Appointments({
           departments={departments}
           employees={employees}
           resourses={resourses}
-          servicesproducts={servicesproducts}
+          servicesproducts={services}
           customers={customers}
           tasks={tasks}
         ></PopupDepartmentView>
@@ -563,7 +563,7 @@ export default function Appointments({
           departments={departments}
           employees={employees}
           resourses={resourses}
-          servicesproducts={servicesproducts}
+          servicesproducts={services}
           customers={customers}
           tasks={tasks}
         ></PopupEmployeeView>
@@ -580,7 +580,7 @@ export default function Appointments({
           departments={departments}
           employees={employees}
           resourses={resourses}
-          servicesproducts={servicesproducts}
+          servicesproducts={services}
           customers={customers}
           tasks={tasks}
         ></PopupResourseView>
@@ -598,7 +598,7 @@ export default function Appointments({
           addCustomer={addCustomer}
           editCustomer={editCustomer}
           company={company}
-          servicesproducts={servicesproducts}
+          servicesproducts={services}
           isEditor={isEditor}
         ></PopupTaskView>
         <PopupCustomerView
@@ -614,7 +614,7 @@ export default function Appointments({
           departments={departments}
           employees={employees}
           resourses={resourses}
-          servicesproducts={servicesproducts}
+          servicesproducts={services}
           customers={rows}
           tasks={tasks}
         ></PopupCustomerView>
