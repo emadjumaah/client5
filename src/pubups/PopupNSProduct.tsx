@@ -255,6 +255,7 @@ const PopupNSProduct = ({
               <TextFieldLocal
                 required
                 name="name"
+                ltr
                 label={words.nameEn}
                 register={register}
                 errors={errors}
@@ -269,6 +270,7 @@ const PopupNSProduct = ({
               <TextFieldLocal
                 required
                 name="name"
+                ltr
                 label={words.name}
                 register={register}
                 errors={errors}

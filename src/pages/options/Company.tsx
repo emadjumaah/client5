@@ -109,6 +109,7 @@ const Company = ({ words, editCompany, company, isRTL }) => {
                   autoFocus
                   required
                   name="name"
+                  ltr
                   label={words.nameEn}
                   register={register}
                   errors={errors}
@@ -122,6 +123,7 @@ const Company = ({ words, editCompany, company, isRTL }) => {
                   autoFocus
                   required
                   name="name"
+                  ltr
                   label={words.name}
                   register={register}
                   errors={errors}

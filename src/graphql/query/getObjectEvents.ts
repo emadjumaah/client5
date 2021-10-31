@@ -32,6 +32,10 @@ export default gql`
         reminder
         exDate
         allowDrag
+        location {
+          lat
+          lng
+        }
 
         autoNo
         docNo

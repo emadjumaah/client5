@@ -24,8 +24,8 @@ export default function UserBox(props: any) {
             display="flex"
             alignItems="center"
             style={{
-              flexDirection: 'row',
-              justifyContent: 'flex-end',
+              flexDirection: 'row-reverse',
+              justifyContent: 'space-between',
               flex: 1,
               paddingRight: mobile ? undefined : 10,
               paddingLeft: mobile ? undefined : 10,

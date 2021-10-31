@@ -10,7 +10,7 @@ const MarkerIcon = (_: any) => {
         transform: 'translate(-50%, -50%)',
       }}
     >
-      <MyIcon size={40} color="#ff80ed" icon="location"></MyIcon>
+      <MyIcon size={32} color="#ff80ed" icon="location"></MyIcon>
     </div>
   );
 };

@@ -93,6 +93,7 @@ const PopupCompany = ({
             autoFocus
             required
             name="name"
+            ltr
             label={words.customerName}
             register={register}
             errors={errors}

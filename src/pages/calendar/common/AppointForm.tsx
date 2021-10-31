@@ -41,6 +41,8 @@ import useEmployeesUp from '../../../hooks/useEmployeesUp';
 import useResoursesUp from '../../../hooks/useResoursesUp';
 import useTasks from '../../../hooks/useTasks';
 import useProjects from '../../../hooks/useProjects';
+import MyIcon from '../../../Shared/MyIcon';
+import PopupMaps from '../../../pubups/PopupMaps';
 
 export const indexTheList = (list: any) => {
   return list.map((item: any, index: any) => {
@@ -77,6 +79,9 @@ export const AppointForm = (props: any) => {
   const [actionslist, setActionslist] = useState([]);
   const [selected, setSelected] = useState(null);
   const [tasktitle, setTasktitle]: any = useState();
+
+  const [openMap, setOpenMap] = useState(false);
+  const [location, setLocation] = useState(null);
 
   const [newtext, setNewtext] = useState('');
 
@@ -225,24 +230,43 @@ export const AppointForm = (props: any) => {
       setLoading(true);
       getItems({ variables: { opId: row._id } });
       loadActions({ variables: { eventId: row.id } });
-      if (row.taskId) {
+      if (row.location) {
+        setLocation({ lat: row?.location?.lat, lng: row?.location?.lng });
+      }
+    }
+  }, []);
+  useEffect(() => {
+    if (row && row._id) {
+      if (row.taskId && tasks.length > 0 && !taskvalue) {
         const tks = tasks.filter((t: any) => t.id === row.taskId)?.[0];
         setTaskvalue(tks);
       }
-      if (row.employee) {
+      if (row.employee && employees.length > 0 && !emplvalue) {
         const empl = employees.filter(
           (emp: any) => emp._id === row?.employee?._id
         )?.[0];
         setEmplvalue(empl);
       }
-      if (row.resourse) {
+      if (row.resourse && resourses.length > 0 && !resovalue) {
         const empl = resourses.filter(
           (emp: any) => emp._id === row?.resourse?._id
         )?.[0];
         setResovalue(empl);
       }
+      if (row.customer && customers.length > 0 && !custvalue) {
+        const empl = customers.filter(
+          (emp: any) => emp._id === row?.customer?._id
+        )?.[0];
+        setCustvalue(empl);
+      }
+      if (row.department && departments.length > 0 && !departvalue) {
+        const empl = departments.filter(
+          (emp: any) => emp._id === row?.department?._id
+        )?.[0];
+        setDepartvalue(empl);
+      }
     }
-  }, []);
+  }, [tasks, employees, resourses, departments, customers]);
 
   const addItemToList = (item: any) => {
     const newArray = [...itemsList, { ...item, userId: user._id }];
@@ -704,6 +728,23 @@ export const AppointForm = (props: any) => {
               isRTL={isRTL}
               title={words.status}
             ></StatusSelect>
+            <Box
+              m={1}
+              display="flex"
+              style={{ flex: 1, justifyContent: 'flex-end' }}
+            >
+              <Button
+                size="medium"
+                color="primary"
+                variant="contained"
+                onClick={() => setOpenMap(true)}
+              >
+                {isRTL ? 'الموقع الجغرافي' : 'Location'}
+              </Button>
+              {location?.lat && (
+                <MyIcon size={32} color="#ff80ed" icon="location"></MyIcon>
+              )}
+            </Box>
           </Box>
         </Grid>
 
@@ -777,6 +818,17 @@ export const AppointForm = (props: any) => {
           theme={theme}
           event={{ ...row, startDate, endDate }}
         ></PopupAction>
+        <PopupMaps
+          open={openMap}
+          onClose={() => setOpenMap(false)}
+          isRTL={isRTL}
+          theme={theme}
+          location={location}
+          setLocation={(value: any) => {
+            setLocation(value);
+            onNewFieldChange(value, 'location');
+          }}
+        ></PopupMaps>
       </Grid>
     </>
   );

@@ -12,16 +12,16 @@ export default function Package({ company, tempwords, isRTL }: any) {
         backgroundColor: '#eaefee',
         height: 200,
         borderRadius: 5,
-        padding: 10,
+        padding: 20,
       }}
     >
       <Grid container spacing={2}>
-        <Grid item xs={4}>
+        <Grid item xs={12}>
           <Typography variant="h5">
-            {isRTL ? 'الإشتراك' : 'Subscriptin'}
+            {isRTL ? 'الإشتراك' : 'Subscription'}
           </Typography>
         </Grid>
-        <Grid item xs={8}>
+        <Grid item xs={6}>
           <Typography
             style={{ color: '#8a2be2', fontWeight: 'bold' }}
             variant="subtitle1"
@@ -29,15 +29,16 @@ export default function Package({ company, tempwords, isRTL }: any) {
             {isRTL ? pack?.titleAr : pack?.title}
           </Typography>
         </Grid>
-        <Grid item xs={4}>
-          <Typography>{isRTL ? 'من تاريخ' : 'From'}</Typography>
-          <Typography>{covertToDate(company?.packStart)}</Typography>
-        </Grid>
-        <Grid item xs={8}>
-          <Typography>{isRTL ? 'الى تاريخ' : 'To'}</Typography>
-          <Typography>{covertToDate(company?.packEnd)}</Typography>
-        </Grid>
 
+        <Grid item xs={6}>
+          <Box
+            display="flex"
+            style={{ alignItems: 'center', justifyContent: 'flex-end' }}
+          >
+            <Typography>{covertToDate(company?.packEnd)}</Typography>
+          </Box>
+        </Grid>
+        <Grid item xs={12}></Grid>
         <Grid item xs={4}>
           <Typography>
             {isRTL ? 'مستخدمين' : 'Users'} :{' '}
@@ -46,18 +47,28 @@ export default function Package({ company, tempwords, isRTL }: any) {
           </Typography>
         </Grid>
         <Grid item xs={4}>
-          <Typography>
-            {tempwords.appointments} :{' '}
-            {quantityFormat(company.usedEvents, isRTL)} /{' '}
-            {quantityFormat(company.packQty, isRTL)}
-          </Typography>
+          <Box
+            display="flex"
+            style={{ alignItems: 'center', justifyContent: 'center' }}
+          >
+            <Typography>
+              {tempwords.appointments} :{' '}
+              {quantityFormat(company.usedEvents, isRTL)} /{' '}
+              {quantityFormat(company.packQty, isRTL)}
+            </Typography>
+          </Box>
         </Grid>
         <Grid item xs={4}>
-          <Typography>
-            {isRTL ? 'وثائق' : 'Doocuments'} :{' '}
-            {quantityFormat(company.usedDocs, isRTL)} /{' '}
-            {quantityFormat(company.packDocsQty, isRTL)}
-          </Typography>
+          <Box
+            display="flex"
+            style={{ alignItems: 'center', justifyContent: 'flex-end' }}
+          >
+            <Typography>
+              {isRTL ? 'وثائق' : 'Doocuments'} :{' '}
+              {quantityFormat(company.usedDocs, isRTL)} /{' '}
+              {quantityFormat(company.packDocsQty, isRTL)}
+            </Typography>
+          </Box>
         </Grid>
       </Grid>
     </Box>

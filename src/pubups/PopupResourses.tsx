@@ -184,6 +184,7 @@ const PopupResourses = ({
               <TextFieldLocal
                 required
                 name="name"
+                ltr
                 label={words.nameEn}
                 register={register}
                 errors={errors}

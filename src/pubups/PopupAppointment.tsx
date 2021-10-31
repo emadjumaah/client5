@@ -910,7 +910,7 @@ const PopupAppointment = ({
                     {isRTL ? 'الموقع الجغرافي' : 'Location'}
                   </Button>
                   {location?.lat && (
-                    <MyIcon size={40} color="#ff80ed" icon="location"></MyIcon>
+                    <MyIcon size={32} color="#ff80ed" icon="location"></MyIcon>
                   )}
                 </Box>
               </Grid>

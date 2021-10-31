@@ -43,6 +43,8 @@ import PopupResourses from './PopupResourses';
 import useDepartmentsUp from '../hooks/useDepartmentsUp';
 import useEmployeesUp from '../hooks/useEmployeesUp';
 import useResoursesUp from '../hooks/useResoursesUp';
+import MyIcon from '../Shared/MyIcon';
+import PopupMaps from './PopupMaps';
 
 export const indexTheList = (list: any) => {
   return list.map((item: any, index: any) => {
@@ -100,6 +102,9 @@ const PopupTaskAppointment = ({
   const [openMulti, setOpenMulti] = useState(false);
 
   const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
+
+  const [openMap, setOpenMap] = useState(false);
+  const [location, setLocation] = useState(null);
 
   const [openAction, setOpenAction] = useState(false);
   const [actionslist, setActionslist] = useState([]);
@@ -301,6 +306,7 @@ const PopupTaskAppointment = ({
     setDepartvalue(null);
     setEmplvalue(null);
     setResovalue(null);
+    setLocation(null);
     setStatus(null);
     setRrule(null);
     setItemsList([]);
@@ -340,6 +346,7 @@ const PopupTaskAppointment = ({
       title: tasktitle,
       startDate,
       endDate,
+      location: location?.lat ? location : undefined,
       amount: totals.amount,
       status: status ? status.id : 2,
       items: JSON.stringify(itemsList),
@@ -670,6 +677,25 @@ const PopupTaskAppointment = ({
                   ></AutoFieldLocal>
                 </Box>
               </Grid>
+              <Grid item xs={4}>
+                <Box
+                  m={1}
+                  display="flex"
+                  style={{ flex: 1, justifyContent: 'flex-end' }}
+                >
+                  <Button
+                    size="medium"
+                    color="primary"
+                    variant="contained"
+                    onClick={() => setOpenMap(true)}
+                  >
+                    {isRTL ? 'الموقع الجغرافي' : 'Location'}
+                  </Button>
+                  {location?.lat && (
+                    <MyIcon size={32} color="#ff80ed" icon="location"></MyIcon>
+                  )}
+                </Box>
+              </Grid>
               <Grid item xs={2}>
                 <Button
                   style={{ minWidth: 100, marginTop: 5 }}
@@ -786,6 +812,14 @@ const PopupTaskAppointment = ({
               addAction={addResourse}
               editAction={editResourse}
             ></PopupResourses>
+            <PopupMaps
+              open={openMap}
+              onClose={() => setOpenMap(false)}
+              isRTL={isRTL}
+              theme={theme}
+              location={location}
+              setLocation={setLocation}
+            ></PopupMaps>
           </Grid>
         </Grid>
       </>

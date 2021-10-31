@@ -17,6 +17,7 @@ export default function TextFieldLocal({
   margin,
   fullWidth,
   mb = 20,
+  ltr,
   ...res
 }: any) {
   return (
@@ -35,7 +36,7 @@ export default function TextFieldLocal({
       style={{
         width,
         marginBottom: mb,
-        direction: name.endsWith('Ar') ? 'rtl' : 'ltr',
+        direction: ltr ? 'ltr' : undefined,
       }}
       margin="dense"
       {...res}

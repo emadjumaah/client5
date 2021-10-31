@@ -72,25 +72,29 @@ function App() {
     : 'you reach users limit of your subscription, please upgrade or contact us';
 
   const errorLink = onError(({ graphQLErrors, networkError }) => {
-    if (graphQLErrors)
-      graphQLErrors.forEach(({ message, locations, path }) => {
-        if (message === 'auth token error') {
-          dispatch({ type: 'logout' });
-        }
-        if (message === 'package time limit exceeded') {
-          dispatch({ type: 'setPackIssue', payload: timeMsg });
-        }
-        if (message === 'package docs limit exceeded') {
-          dispatch({ type: 'setPackIssue', payload: docsMsg });
-        }
-        if (message === 'package users limit exceeded') {
-          dispatch({ type: 'setPackIssue', payload: usersMsg });
-        }
-        console.log(
-          `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`
-        );
-      });
-    if (networkError) console.log(`[Network error]: ${networkError}`);
+    try {
+      if (graphQLErrors)
+        graphQLErrors.forEach(({ message, locations, path }) => {
+          if (message === 'auth token error') {
+            dispatch({ type: 'logout' });
+          }
+          if (message === 'package time limit exceeded') {
+            dispatch({ type: 'setPackIssue', payload: timeMsg });
+          }
+          if (message === 'package docs limit exceeded') {
+            dispatch({ type: 'setPackIssue', payload: docsMsg });
+          }
+          if (message === 'package users limit exceeded') {
+            dispatch({ type: 'setPackIssue', payload: usersMsg });
+          }
+          console.log(
+            `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`
+          );
+        });
+      if (networkError) console.log(`[Network error]: ${networkError}`);
+    } catch (error) {
+      console.log(error);
+    }
   });
 
   const client = new ApolloClient({

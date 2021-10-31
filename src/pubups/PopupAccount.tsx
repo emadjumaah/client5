@@ -262,6 +262,7 @@ const PopupAccount = ({
               <TextFieldLocal
                 required
                 name="name"
+                ltr
                 label={words.nameEn}
                 register={register}
                 errors={errors}
@@ -277,6 +278,7 @@ const PopupAccount = ({
                 autoFocus
                 required
                 name="name"
+                ltr
                 label={words.name}
                 register={register}
                 errors={errors}

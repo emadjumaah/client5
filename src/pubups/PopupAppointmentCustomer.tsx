@@ -49,6 +49,8 @@ import useEmployeesUp from '../hooks/useEmployeesUp';
 import useResoursesUp from '../hooks/useResoursesUp';
 import useTasks from '../hooks/useTasks';
 import useProjects from '../hooks/useProjects';
+import MyIcon from '../Shared/MyIcon';
+import PopupMaps from './PopupMaps';
 
 export const indexTheList = (list: any) => {
   return list.map((item: any, index: any) => {
@@ -108,6 +110,9 @@ const PopupAppointmentCustomer = ({
   const custRef: any = React.useRef();
 
   const [status, setStatus]: any = useState(null);
+
+  const [openMap, setOpenMap] = useState(false);
+  const [location, setLocation] = useState(null);
 
   const [totals, setTotals] = useState<any>({});
   const [itemsList, setItemsList] = useState<any>([]);
@@ -425,6 +430,9 @@ const PopupAppointmentCustomer = ({
         const tsk = tasks.filter((ts: any) => ts.id === taskId)[0];
         setTaskvalue(tsk);
       }
+      if (row.location) {
+        setLocation({ lat: row?.location?.lat, lng: row?.location?.lng });
+      }
     }
   }, [row]);
 
@@ -507,7 +515,10 @@ const PopupAppointmentCustomer = ({
     setActionslist([]);
     setSelected(null);
     setTasktitle(null);
+    setLocation(null);
   };
+
+  console.log(row);
 
   const onSubmit = async () => {
     if (startDate > endDate) {
@@ -547,6 +558,7 @@ const PopupAppointmentCustomer = ({
       title,
       startDate,
       endDate,
+      location: location?.lat ? location : undefined,
       amount: totals.amount,
       status: status ? status.id : 2,
       items: JSON.stringify(itemsList),
@@ -918,6 +930,25 @@ const PopupAppointmentCustomer = ({
                 </Box>
               </Grid>
               <Grid item xs={4}>
+                <Box
+                  m={1}
+                  display="flex"
+                  style={{ flex: 1, justifyContent: 'flex-end' }}
+                >
+                  <Button
+                    size="medium"
+                    color="primary"
+                    variant="contained"
+                    onClick={() => setOpenMap(true)}
+                  >
+                    {isRTL ? 'الموقع الجغرافي' : 'Location'}
+                  </Button>
+                  {location?.lat && (
+                    <MyIcon size={32} color="#ff80ed" icon="location"></MyIcon>
+                  )}
+                </Box>
+              </Grid>
+              <Grid item xs={4}>
                 {!isNew && (
                   <Box
                     m={1}
@@ -1029,6 +1060,14 @@ const PopupAppointmentCustomer = ({
           theme={theme}
           event={{ ...row, startDate, endDate }}
         ></PopupAction>
+        <PopupMaps
+          open={openMap}
+          onClose={() => setOpenMap(false)}
+          isRTL={isRTL}
+          theme={theme}
+          location={location}
+          setLocation={setLocation}
+        ></PopupMaps>
       </>
     </PopupLayout>
   );

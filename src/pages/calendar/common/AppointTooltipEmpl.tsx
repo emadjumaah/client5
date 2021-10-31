@@ -274,7 +274,8 @@ export const AppointTooltipEmpl = ({
             }}
             onClick={() => {
               window.open(
-                `https://www.google.com/maps/search/?api=1&query=${location?.lat}, ${location?.lng}`
+                // `https://www.google.com/maps/search/?api=1&query=${location?.lat}, ${location?.lng}`
+                `https://www.google.com/maps/dir/?api=1&destination=${location?.lat}, ${location?.lng}`
               );
             }}
           >

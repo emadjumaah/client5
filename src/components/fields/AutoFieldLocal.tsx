@@ -56,7 +56,7 @@ export default function AutoFieldLocal({
               return nm ? nm : '';
             }
           }}
-          getOptionSelected={(option, values) => option._id === values._id}
+          getOptionSelected={(option, values) => option?._id === values?._id}
           renderOption={(option) => {
             if (name === 'item') {
               return (
