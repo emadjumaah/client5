@@ -229,7 +229,8 @@ export default function ServiceItemForm({
             height: 30,
             position: 'relative',
             top: 3,
-            left: 35,
+            left: isRTL ? 35 : undefined,
+            right: isRTL ? undefined : 35,
           }}
         >
           <AddIcon style={{ color: '#aaa' }}></AddIcon>

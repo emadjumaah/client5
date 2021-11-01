@@ -34,7 +34,7 @@ export default function FilterSelect({
             display: 'flex',
             flex: 1,
             alignItems: 'center',
-            justifyContent: 'flex-end',
+            justifyContent: isRTL ? 'flex-end' : 'flex-start',
           }}
         >
           {!nomulti && (

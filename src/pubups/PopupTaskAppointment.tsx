@@ -702,14 +702,14 @@ const PopupTaskAppointment = ({
                   variant="outlined"
                   onClick={() => setOpenMulti(true)}
                 >
-                  تكرار
+                  {isRTL ? 'تكرار' : 'Repeate'}
                 </Button>
                 <Button
                   style={{ minWidth: 100, marginTop: 5 }}
                   variant="outlined"
                   onClick={() => setRrule(null)}
                 >
-                  حذف التكرار
+                  {isRTL ? 'الغاء التكرار' : 'Cancel Repeate'}
                 </Button>
               </Grid>
               <Grid item xs={5}>

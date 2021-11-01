@@ -129,7 +129,8 @@ export default function AutoFieldLocal({
               height: 30,
               position: 'relative',
               top: 12,
-              left: 16,
+              left: isRTL ? 16 : undefined,
+              right: isRTL ? undefined : 16,
             }}
           >
             <AddIcon style={{ color: '#aaa' }}></AddIcon>

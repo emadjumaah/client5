@@ -485,7 +485,30 @@ const PopupTask = ({
         </Box>
 
         <Grid container spacing={1}>
-          <Grid item xs={4}>
+          <Grid item xs={3}>
+            <CalenderLocal
+              isRTL={isRTL}
+              label={words.start}
+              value={start}
+              onChange={(d: any) => setStart(d)}
+              format="dd/MM/yyyy - hh:mm"
+              time
+              mb={0}
+            ></CalenderLocal>
+          </Grid>
+          <Grid item xs={3}>
+            <CalenderLocal
+              isRTL={isRTL}
+              label={words.end}
+              value={end}
+              onChange={(d: any) => setEnd(d)}
+              format="dd/MM/yyyy - hh:mm"
+              time
+              mb={0}
+            ></CalenderLocal>
+          </Grid>
+          <Grid item xs={6}></Grid>
+          <Grid item xs={3}>
             <TextFieldLocal
               required
               autoFocus={true}
@@ -519,30 +542,6 @@ const PopupTask = ({
               ></AutoFieldLocal>
             )}
           </Grid>
-          <Grid item xs={1}></Grid>
-          <Grid item xs={2}>
-            <CalenderLocal
-              isRTL={isRTL}
-              label={words.start}
-              value={start}
-              onChange={(d: any) => setStart(d)}
-              format="dd/MM/yyyy - hh:mm"
-              time
-              mb={0}
-            ></CalenderLocal>
-          </Grid>
-          <Grid item xs={2}>
-            <CalenderLocal
-              isRTL={isRTL}
-              label={words.end}
-              value={end}
-              onChange={(d: any) => setEnd(d)}
-              format="dd/MM/yyyy - hh:mm"
-              time
-              mb={0}
-            ></CalenderLocal>
-          </Grid>
-
           <Grid item xs={3}>
             <AutoFieldLocal
               name="customer"
@@ -562,6 +561,7 @@ const PopupTask = ({
               disabled={name === 'customerId'}
             ></AutoFieldLocal>
           </Grid>
+          <Grid item xs={3}></Grid>
           {!tempoptions?.noEmp && (
             <Grid item xs={3}>
               <AutoFieldLocal
@@ -625,7 +625,7 @@ const PopupTask = ({
         </Grid>
         {!setNewValue && (
           <Grid container spacing={2}>
-            <Grid item xs={10}>
+            <Grid item xs={12}>
               {!showtable && isNew && (
                 <Box
                   display="flex"

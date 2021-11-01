@@ -31,15 +31,11 @@ import {
 import PrintIcon from '@material-ui/icons/Print';
 import { getRowId } from '../../common';
 import {
-  covertToDate,
   covertToTimeDateDigit,
-  covertToTimeOnly,
   createdAtFormatter,
   currencyFormatter,
   documentTimeFormatter,
   eventStatusFormatter,
-  eventStatusPrintDataFormatter,
-  moneyFormat,
   opTypeFormatter,
   taskIdFormatter,
 } from '../../Shared/colorFormat';
@@ -49,15 +45,12 @@ import ReportsFilter from '../../Shared/ReportsFilter';
 import { GridExporter } from '@devexpress/dx-react-grid-export';
 import saveAs from 'file-saver';
 import { getColumns } from '../../common/columns';
-import { reportprint } from '../../common/ipc';
-import _ from 'lodash';
 import PageLayout from '../main/PageLayout';
 import { ReportGroupBySwitcher } from '../calendar/common/ReportGroupBySwitcher';
 import DateNavigatorReports from '../../components/filters/DateNavigatorReports';
 import { documentTypes, groupList } from '../../constants/reports';
 import FilterSelectCkeckBox from '../../Shared/FilterSelectCkeckBox';
 import { eventStatus } from '../../constants';
-import { groupSumCount } from '../../common/reports';
 import { useCustomers, useServices, useTemplate } from '../../hooks';
 import useTasks from '../../hooks/useTasks';
 import getReportDocuments from '../../graphql/query/getReportDocuments';
@@ -66,6 +59,8 @@ import useDepartmentsUp from '../../hooks/useDepartmentsUp';
 import useEmployeesUp from '../../hooks/useEmployeesUp';
 import useResoursesUp from '../../hooks/useResoursesUp';
 import useProjects from '../../hooks/useProjects';
+import { ReportPrintComponent } from '../../common/ReportPrintComponent';
+import { useReactToPrint } from 'react-to-print';
 
 const styles = (theme) => ({
   tableStriped: {
@@ -98,25 +93,8 @@ export default function DocumentsReport({
   const [end, setEnd] = useState<any>(null);
 
   const [rows, setRows] = useState([]);
-  const [printRows, setPrintRows]: any = useState([]);
-  const [total, setTotal]: any = useState(null);
-  const [totalRows, setTotalRows]: any = useState(null);
 
   const col = getColumns({ isRTL, words });
-
-  const [activecolumns, setActivecolumns] = useState([
-    { name: 'time', title: words.time },
-    col.opType,
-    col.docNo,
-    col.refNo,
-    col.customer,
-    col.project,
-    col.taskId,
-    col.employee,
-    col.resourse,
-    col.department,
-    col.amount,
-  ]);
 
   const [columns] = useState([
     { name: 'time', title: words.time },
@@ -169,6 +147,15 @@ export default function DocumentsReport({
     },
     dispatch,
   } = useContext(DocumentsReportContext);
+
+  const componentRef: any = useRef();
+
+  const print = useReactToPrint({
+    content: () => componentRef.current,
+    documentTitle: `Documents Report`,
+    removeAfterPrint: true,
+  });
+
   const currentViewNameChange = (e: any) => {
     dispatch({ type: 'setCurrentViewName', payload: e.target.value });
   };
@@ -216,18 +203,7 @@ export default function DocumentsReport({
 
   useEffect(() => {
     const slsData = summaryData?.data?.['getReportDocuments']?.data || [];
-
     setRows(slsData);
-    if (group) {
-      const res = groupSumCount({
-        list: slsData,
-        name: sumcolumn,
-      });
-      setTotalRows(res);
-    }
-    let sum = 0;
-    slsData.forEach((a: any) => (sum += a.amount));
-    setTotal(sum);
   }, [summaryData]);
 
   const getIds = (list: any) =>
@@ -275,164 +251,6 @@ export default function DocumentsReport({
         `${name}.xlsx`
       );
     });
-  };
-
-  const inActiveColumns = (name: any) => {
-    const fc = activecolumns.filter((ac: any) => ac.ref === name);
-    if (fc && fc.length > 0) {
-      return true;
-    } else {
-      return false;
-    }
-  };
-
-  useEffect(() => {
-    if (group) {
-    } else {
-      const sortRows = _.orderBy(
-        rows,
-        [sort[0].columnName],
-        [sort[0].direction]
-      );
-      const printrows = sortRows.map((row: any) => {
-        return {
-          date: inActiveColumns('date')
-            ? row.startDate
-              ? covertToDate(row.startDate)
-              : ' - '
-            : undefined,
-          time: inActiveColumns('time')
-            ? row.startDate
-              ? covertToTimeOnly(row.startDate)
-              : ' - '
-            : undefined,
-          docNo: inActiveColumns('docNo')
-            ? row.docNo
-              ? row.docNo
-              : ' - '
-            : undefined,
-          status: inActiveColumns('status')
-            ? row.status
-              ? eventStatusPrintDataFormatter(row.status)
-              : ' - '
-            : undefined,
-          employee: inActiveColumns('employee')
-            ? row[col.employee.name]
-              ? row[col.employee.name]
-              : ' - '
-            : undefined,
-          service: inActiveColumns('service')
-            ? row[col.service.name]
-              ? row[col.service.name]
-              : ' - '
-            : undefined,
-          department: inActiveColumns('department')
-            ? row[col.department.name]
-              ? row[col.department.name]
-              : ' - '
-            : undefined,
-          customer: inActiveColumns('customer')
-            ? row[col.customer.name]
-              ? row[col.customer.name]
-              : ' - '
-            : undefined,
-          taskId: inActiveColumns('taskId')
-            ? row[col.taskId.name]
-              ? row[col.taskId.name]
-              : ' - '
-            : undefined,
-          types: inActiveColumns('types')
-            ? row[col.taskId.name]
-              ? row[col.taskId.name]
-              : ' - '
-            : undefined,
-          opType: inActiveColumns('opType')
-            ? row[col.opType.name]
-              ? row[col.opType.name]
-              : ' - '
-            : undefined,
-          amount: inActiveColumns('amount')
-            ? row.amount
-              ? moneyFormat(row.amount)
-              : ' - '
-            : undefined,
-        };
-      });
-
-      setPrintRows(printrows);
-    }
-  }, [activecolumns, rows, sort]);
-
-  const arrangeParing = () => {
-    const cols = activecolumns.map((co: any) => {
-      return { name: co.title };
-    });
-
-    const filters: any = [];
-    if (emplvalue) {
-      filters.push({ name: isRTL ? emplvalue?.nameAr : emplvalue?.name });
-    }
-    if (status) {
-      filters.push({ name: isRTL ? status?.nameAr : status?.name });
-    }
-    if (departvalue) {
-      filters.push({ name: isRTL ? departvalue?.nameAr : departvalue?.name });
-    }
-
-    if (taskvalue) {
-      filters.push({ name: isRTL ? taskvalue?.nameAr : taskvalue?.name });
-    }
-
-    const rest = {
-      isRTL,
-      totl: words.total,
-      totalamount: total ? moneyFormat(total) : '',
-      reportname: isRTL ? 'تقرير المواعيد' : 'Appointment Report',
-      logo: company.logo,
-      phone: company.tel1,
-      mobile: company.mob,
-      address: company.address,
-      company: isRTL ? company.nameAr : company.name,
-      start: start ? covertToDate(start) : '',
-      end: end ? covertToDate(end) : '',
-      filters,
-      color: '#afbddf',
-      now: covertToTimeDateDigit(new Date()),
-    };
-
-    reportprint({ rows: printRows, cols, ...rest });
-  };
-
-  const arrangeGroupParing = () => {
-    const cols = [
-      { name: isRTL ? 'الاسم' : 'Name' },
-      { name: isRTL ? 'العدد' : 'Count' },
-      { name: isRTL ? 'المجموع' : 'Total' },
-    ];
-    const readyItems = totalRows.items.map((it: any) => {
-      return {
-        ...it,
-        total: moneyFormat(it.total),
-      };
-    });
-    const rest = {
-      isRTL,
-      totl: words.total,
-      totalamount: total ? moneyFormat(totalRows.total) : '',
-      count: totalRows?.count,
-      reportname: isRTL ? 'تقرير المبيعات' : 'Sales Report',
-      logo: company.logo,
-      phone: company.tel1,
-      mobile: company.mob,
-      address: company.address,
-      company: isRTL ? company.nameAr : company.name,
-      start: start ? covertToDate(start) : '',
-      end: end ? covertToDate(end) : '',
-      color: '#b2e2be',
-      now: covertToTimeDateDigit(new Date()),
-    };
-
-    reportprint({ rows: readyItems, cols, ...rest });
   };
 
   const refresh = () => {
@@ -506,11 +324,7 @@ export default function DocumentsReport({
           }}
           display="none"
         >
-          <IconButton
-            onClick={group ? arrangeGroupParing : arrangeParing}
-            title="Print Report"
-            size="small"
-          >
+          <IconButton onClick={print} title="Print Report" size="small">
             <PrintIcon />
           </IconButton>
         </Box>
@@ -625,14 +439,6 @@ export default function DocumentsReport({
             <TableHeaderRow showSortingControls />
             <TableColumnVisibility
               columnExtensions={tableColumnVisibilityColumnExtensions}
-              onHiddenColumnNamesChange={(hcs: string[]) => {
-                const all = [...columns];
-                const newcol = all.filter((a: any) => !hcs.includes(a.name));
-                newcol.sort((a: any, b: any) =>
-                  a.id > b.id ? 1 : b.id > a.id ? -1 : 0
-                );
-                setActivecolumns(newcol);
-              }}
             />
             <DataTypeProvider
               for={['startDate']}
@@ -688,6 +494,15 @@ export default function DocumentsReport({
           columns={columns}
           onSave={onSave}
         />
+        <Box>
+          <div style={{ display: 'none' }}>
+            <ReportPrintComponent
+              company={company}
+              items={rows}
+              ref={componentRef}
+            />
+          </div>
+        </Box>
       </Paper>
     </PageLayout>
   );

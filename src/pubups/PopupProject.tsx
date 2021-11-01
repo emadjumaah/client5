@@ -8,11 +8,10 @@ import {
   errorAlert,
   getReturnItem,
   yup,
-  ColorPicker,
 } from '../Shared';
 import { GContextTypes } from '../types';
 import { GlobalContext } from '../contexts';
-import { Grid, TextField } from '@material-ui/core';
+import { Grid } from '@material-ui/core';
 import PopupLayout from '../pages/main/PopupLayout';
 import { TextFieldLocal } from '../components';
 import { getPopupTitle } from '../constants/menu';
@@ -35,7 +34,6 @@ const PopupProject = ({
   setNewValue,
   addAction,
   editAction,
-  newtext,
   theme,
   employees,
   departments,
@@ -73,12 +71,36 @@ const PopupProject = ({
     store: { user },
   }: GContextTypes = useContext(GlobalContext);
 
-  const [color, setColor] = useState<any>('#252B3B');
   const { addCustomer, editCustomer } = useCustomers();
   const { addDepartment, editDepartment } = useDepartmentsUp();
   const { addEmployee, editEmployee } = useEmployeesUp();
   const { addResourse, editResourse } = useResoursesUp();
   const { tempoptions, tempwords } = useTemplate();
+
+  useEffect(() => {
+    if (row && row._id) {
+      const custId = row.customerId;
+      const depId = row.departmentId;
+      const empId = row.employeeId;
+      const resId = row.resourseId;
+      if (depId) {
+        const depart = departments.filter((dep: any) => dep._id === depId)[0];
+        setDepartvalue(depart);
+      }
+      if (empId) {
+        const empl = employees.filter((emp: any) => emp._id === empId)[0];
+        setEmplvalue(empl);
+      }
+      if (resId) {
+        const reso = resourses.filter((emp: any) => emp._id === resId)[0];
+        setResovalue(reso);
+      }
+      if (custId) {
+        const reso = customers.filter((emp: any) => emp._id === custId)[0];
+        setCustvalue(reso);
+      }
+    }
+  }, [row]);
 
   const openDepartment = () => {
     setOpenDep(true);
@@ -121,12 +143,6 @@ const PopupProject = ({
   const onNewResoChange = (nextValue: any) => {
     setResovalue(nextValue);
   };
-
-  useEffect(() => {
-    if (row && row._id) {
-      setColor(row.color);
-    }
-  }, [row]);
 
   const onSubmit = async (data: any) => {
     setSaving(true);
@@ -193,7 +209,6 @@ const PopupProject = ({
             employeePhone: undefined,
           },
       desc,
-      color,
       branch: user.branch,
       userId: user._id,
     };
@@ -221,7 +236,6 @@ const PopupProject = ({
     } else {
       await errorAlert(setAlrt, isRTL);
       reset();
-      setColor('#AAAAAA');
       console.log(error);
     }
   };
@@ -229,8 +243,11 @@ const PopupProject = ({
   const onCloseForm = () => {
     onClose();
     reset();
-    setColor('#AAAAAA');
     setSaving(false);
+    setDepartvalue(null);
+    setEmplvalue(null);
+    setResovalue(null);
+    setCustvalue(null);
   };
 
   const onHandleSubmit = () => {
@@ -370,27 +387,6 @@ const PopupProject = ({
             rowsMax={4}
             rows={4}
           />
-          <Grid container spacing={2}>
-            <Grid item xs={8}>
-              <TextField
-                disabled
-                name="color"
-                value={row?.color ? row.color : color}
-                variant="outlined"
-                style={{
-                  backgroundColor: color,
-                  width: 200,
-                }}
-                InputProps={{
-                  style: { borderRadius: 5, color: '#fff' },
-                }}
-                margin="dense"
-              />
-            </Grid>
-            <Grid item xs={8}>
-              <ColorPicker setColor={setColor} color={color}></ColorPicker>
-            </Grid>
-          </Grid>
         </Grid>
         <Grid item xs={1}></Grid>
         <PopupCustomer
