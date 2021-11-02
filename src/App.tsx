@@ -48,7 +48,7 @@ function App() {
   // const uri = process.env.GRAPHQL_URI; // webserver
   // env react
   const httpLink = createHttpLink({
-    uri: process.env.GRAPHQL_URI,
+    uri: process.env.REACT_APP_GRAPHQL_URI,
   });
 
   const authLink = setContext((_, { headers }) => {
