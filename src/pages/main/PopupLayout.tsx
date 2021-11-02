@@ -10,11 +10,11 @@ import {
   IconButton,
   Paper,
   Typography,
-} from "@material-ui/core";
-import React from "react";
-import Draggable from "react-draggable";
-import { AlertLocal } from "../../components";
-import CloseOutlinedIcon from "@material-ui/icons/CloseOutlined";
+} from '@material-ui/core';
+import React from 'react';
+import Draggable from 'react-draggable';
+import { AlertLocal } from '../../components';
+import CloseOutlinedIcon from '@material-ui/icons/CloseOutlined';
 function PaperComponent(props: any) {
   return (
     <Draggable
@@ -40,16 +40,16 @@ export default function PopupLayout(props: any) {
     alrt,
     mt = 30,
     mb = 70,
-    maxWidth = "sm",
+    maxWidth = 'sm',
     onlyclose = false,
     print,
-    savetitle = isRTL ? "حفظ" : "Save",
+    savetitle = isRTL ? 'حفظ' : 'Save',
     taskvalue,
     preventclose = false,
     saving,
     bgcolor,
   } = props;
-  const bgc = bgcolor ? fade(bgcolor, 0.1) : "#eee";
+  const bgc = bgcolor ? fade(bgcolor, 0.1) : '#f5f5f5';
   return (
     <Dialog
       open={open}
@@ -62,15 +62,15 @@ export default function PopupLayout(props: any) {
       <Box
         id="draggable-dialog-title"
         style={{
-          direction: isRTL ? "rtl" : "ltr",
+          direction: isRTL ? 'rtl' : 'ltr',
           backgroundColor: bgc,
-          cursor: "move",
+          cursor: 'move',
           height: 60,
-          display: "flex",
+          display: 'flex',
           flex: 1,
-          flexDirection: "row",
-          alignItems: "center",
-          justifyContent: "space-between",
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'space-between',
         }}
       >
         <Typography
@@ -80,11 +80,11 @@ export default function PopupLayout(props: any) {
             marginLeft: 20,
           }}
         >
-          {title} {taskvalue ? ` - ${taskvalue?.title}` : ""}
+          {title} {taskvalue ? ` - ${taskvalue?.title}` : ''}
         </Typography>
         <IconButton onClick={onClose}>
           <CloseOutlinedIcon
-            style={{ fontSize: 26, color: "#777" }}
+            style={{ fontSize: 26, color: '#777' }}
           ></CloseOutlinedIcon>
         </IconButton>
       </Box>
@@ -92,7 +92,7 @@ export default function PopupLayout(props: any) {
         style={{
           width: width ? width : undefined,
           height: height ? height : undefined,
-          direction: isRTL ? "rtl" : "ltr",
+          direction: isRTL ? 'rtl' : 'ltr',
           paddingTop: mt,
           paddingBottom: mb,
         }}
@@ -110,15 +110,15 @@ export default function PopupLayout(props: any) {
 
       <DialogActions
         style={{
-          direction: isRTL ? "rtl" : "ltr",
+          direction: isRTL ? 'rtl' : 'ltr',
           backgroundColor: theme
             ? fade(theme.palette.primary.main, 0.05)
-            : "#dddd",
+            : '#dddd',
           height: 60,
-          alignItems: "center",
+          alignItems: 'center',
           paddingRight: 5,
           paddingLeft: 5,
-          flexDirection: isRTL ? "row-reverse" : "row",
+          flexDirection: isRTL ? 'row-reverse' : 'row',
         }}
       >
         {onClose && (
@@ -129,7 +129,7 @@ export default function PopupLayout(props: any) {
             color="primary"
           >
             <Typography variant="subtitle2">
-              {isRTL ? "اغلاق" : "Close"}
+              {isRTL ? 'اغلاق' : 'Close'}
             </Typography>
           </Button>
         )}
@@ -141,7 +141,7 @@ export default function PopupLayout(props: any) {
             color="primary"
           >
             <Typography variant="subtitle2">
-              {isRTL ? "طباعة" : "print"}
+              {isRTL ? 'طباعة' : 'print'}
             </Typography>
           </Button>
         )}
@@ -166,7 +166,7 @@ export default function PopupLayout(props: any) {
                   marginLeft: 5,
                   marginRight: 5,
                   fontSize: 10,
-                  color: "#ddd",
+                  color: '#ddd',
                 }}
                 variant="subtitle2"
               >

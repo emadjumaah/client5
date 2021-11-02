@@ -25,13 +25,14 @@ export default function PageLayout(props: any) {
             flex: 1,
             alignItems: 'center',
             justifyContent: 'space-between',
+            backgroundColor: '#f5f5f5',
           }}
         >
           <Typography
             style={{
               color: theme.palette.primary.main,
               fontSize: 22,
-              // color: '#eee',
+              // color: '#f5f5f5',
             }}
           >
             {isRTL ? menuitem.titleAr : menuitem.titleEn}
@@ -45,7 +46,7 @@ export default function PageLayout(props: any) {
               onClick={refresh}
             >
               <RefreshOutlinedIcon
-                style={{ fontSize: 24, color: '#eee' }}
+                style={{ fontSize: 24, color: '#f5f5f5' }}
                 color="primary"
               ></RefreshOutlinedIcon>
             </IconButton>

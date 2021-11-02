@@ -107,6 +107,7 @@ import { isEditor as isEditorUser } from '../../common/roles';
 import AlertWithClose from '../../components/fields/AlertWithClose';
 import ManageProjects from '../adds/ManageProjects';
 import Main from '../calendar/Main';
+import useWindowDimensions from '../../hooks/useWindowDimensions';
 
 const Content = ({ company, editCompany, refreshcompany }) => {
   const classes = layoutClasses();
@@ -123,6 +124,7 @@ const Content = ({ company, editCompany, refreshcompany }) => {
     dispatch,
     translate: { words, isRTL },
   }: GContextTypes = useContext(GlobalContext);
+  const { isMobile } = useWindowDimensions();
 
   const logout = () => {
     dispatch({ type: 'logout' });
@@ -224,7 +226,10 @@ const Content = ({ company, editCompany, refreshcompany }) => {
         logout={logout}
         network={network}
       ></AppDrawer>
-      <main className={classes.content}>
+      <main
+        style={{ marginTop: isMobile ? 50 : undefined }}
+        className={classes.content}
+      >
         <div>
           <Route
             path="/"

@@ -625,7 +625,7 @@ export const AppointForm = (props: any) => {
         <Grid item xs={4}>
           <Box
             style={{
-              backgroundColor: '#eee',
+              backgroundColor: '#f5f5f5',
               borderRadius: 5,
               padding: 7,
               margin: 10,

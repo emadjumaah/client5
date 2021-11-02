@@ -61,7 +61,7 @@ export default function PieChartBox({
                         p={1}
                         m={1}
                         key={k}
-                        style={{ backgroundColor: "#eee", borderRadius: 5 }}
+                        style={{ backgroundColor: "#f5f5f5", borderRadius: 5 }}
                       >
                         <Typography style={{ fontWeight: "bold" }}>
                           {formatKeyToMonth(k, isRTL)}

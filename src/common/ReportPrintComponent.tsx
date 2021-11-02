@@ -155,7 +155,7 @@ export class ReportPrintComponent extends React.PureComponent<any, any> {
             <div
               style={{
                 padding: 10,
-                backgroundColor: '#eee',
+                backgroundColor: '#f5f5f5',
                 borderTopRightRadius: 15,
                 borderTopWidth: 1,
                 borderBottomWidth: 1,

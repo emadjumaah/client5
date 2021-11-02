@@ -569,7 +569,7 @@ const PopupTaskAppointment = ({
                 item
                 xs={4}
                 style={{
-                  backgroundColor: '#eee',
+                  backgroundColor: '#f5f5f5',
                   borderRadius: 5,
                 }}
               >
@@ -730,7 +730,7 @@ const PopupTaskAppointment = ({
                               flexDirection: 'row',
                               alignItems: 'center',
                               justifyContent: 'space-between',
-                              backgroundColor: '#eee',
+                              backgroundColor: '#f5f5f5',
                               margin: 4,
                               padding: 4,
                             }}

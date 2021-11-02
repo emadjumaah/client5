@@ -821,7 +821,7 @@ const PopupAppointmentCustomer = ({
                 item
                 xs={4}
                 style={{
-                  backgroundColor: '#eee',
+                  backgroundColor: '#f5f5f5',
                   borderRadius: 5,
                 }}
               >

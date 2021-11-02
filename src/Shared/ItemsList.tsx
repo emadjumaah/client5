@@ -303,7 +303,7 @@ export default function ItemsList({
               margin: 0,
               padding: 0,
               marginLeft: 10,
-              backgroundColor: '#eee',
+              backgroundColor: '#f5f5f5',
             }}
             inputProps={{ style: { textAlign: 'right' } }}
             variant="outlined"

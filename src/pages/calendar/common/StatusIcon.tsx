@@ -1,13 +1,13 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import React from "react";
-import RadioButtonUncheckedIcon from "@material-ui/icons/RadioButtonUnchecked";
-import ScheduleOutlinedIcon from "@material-ui/icons/ScheduleOutlined";
-import CheckCircleOutlinedIcon from "@material-ui/icons/CheckCircleOutlined";
-import PauseCircleOutlineIcon from "@material-ui/icons/PauseCircleOutline";
-import BlockOutlinedIcon from "@material-ui/icons/BlockOutlined";
+import React from 'react';
+import RadioButtonUncheckedIcon from '@material-ui/icons/RadioButtonUnchecked';
+import ScheduleOutlinedIcon from '@material-ui/icons/ScheduleOutlined';
+import CheckCircleOutlinedIcon from '@material-ui/icons/CheckCircleOutlined';
+import PauseCircleOutlineIcon from '@material-ui/icons/PauseCircleOutline';
+import BlockOutlinedIcon from '@material-ui/icons/BlockOutlined';
 
-export const renderStatusIcon = (status: any, color = "#eee", size = 18) => {
+export const renderStatusIcon = (status: any, color = '#f5f5f5', size = 18) => {
   switch (status) {
     case 1:
       return (

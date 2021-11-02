@@ -264,7 +264,7 @@ const PopupTaskView = ({
           <Grid item xs={11}>
             <Box
               style={{
-                backgroundColor: '#eee',
+                backgroundColor: '#f5f5f5',
               }}
             >
               <Box display="flex" style={{ margin: 10 }}></Box>
@@ -475,7 +475,7 @@ const PopupTaskView = ({
                       <Tab
                         style={{
                           backgroundColor:
-                            value === item.id ? '#eee' : undefined,
+                            value === item.id ? '#f5f5f5' : undefined,
                         }}
                         label={isRTL ? item.nameAr : item.name}
                         {...a11yProps(item.id)}
@@ -486,7 +486,7 @@ const PopupTaskView = ({
               </Box>
               <Box
                 style={{
-                  backgroundColor: '#eee',
+                  backgroundColor: '#f5f5f5',
                   margin: 7,
                   padding: 8,
                   borderRadius: 5,

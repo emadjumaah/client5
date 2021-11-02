@@ -40,9 +40,9 @@ const MenuItem = ({
           style={{ marginLeft: -20, margin: 0 }}
         />
         {open ? (
-          <ExpandLess style={{ color: '#eee', fontSize: 20 }} />
+          <ExpandLess style={{ color: '#f5f5f5', fontSize: 20 }} />
         ) : (
-          <ExpandMore style={{ color: '#eee', fontSize: 20 }} />
+          <ExpandMore style={{ color: '#f5f5f5', fontSize: 20 }} />
         )}
       </ListItem>
       <Collapse in={open} timeout="auto" unmountOnExit>

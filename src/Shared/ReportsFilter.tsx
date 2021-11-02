@@ -193,7 +193,10 @@ export default function SalesFilter({
       >
         <DialogTitle
           id="scroll-dialog-title"
-          style={{ direction: isRTL ? 'rtl' : 'ltr', backgroundColor: '#eee' }}
+          style={{
+            direction: isRTL ? 'rtl' : 'ltr',
+            backgroundColor: '#f5f5f5',
+          }}
         >
           {isRTL
             ? `الفلاتر - (${filtercounts.length})`

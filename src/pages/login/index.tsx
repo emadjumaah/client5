@@ -113,7 +113,7 @@ const Login = (): any => {
               alignItems: 'center',
               justifyContent: 'center',
               marginBottom: 60,
-              backgroundColor: fade(theme.palette.primary.light, 0.7),
+              backgroundColor: fade(theme.palette.primary.light, 0.8),
               zIndex: 113,
               borderRadius: 15,
             }}
@@ -133,7 +133,7 @@ const Login = (): any => {
             />
           </Paper>
           <Paper
-            elevation={6}
+            elevation={4}
             style={{
               paddingTop: 90,
               marginTop: isMobile ? -100 : -120,

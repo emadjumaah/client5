@@ -122,7 +122,6 @@ function AppDrawer(props: any): any {
   const { menuitem, setMenuitem, menu, isRTL, user, network, logout } = props;
   const theme = useTheme();
   const [mobileOpen, setMobileOpen] = React.useState(false);
-
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
@@ -192,7 +191,6 @@ function AppDrawer(props: any): any {
             }}
             variant="permanent"
             open
-            style={{ paddingTop: 40 }}
           >
             <UserBox
               isRTL={isRTL}
@@ -203,12 +201,6 @@ function AppDrawer(props: any): any {
               client={client}
               history={history}
             ></UserBox>
-            <Box
-              style={{
-                height: 1,
-                backgroundColor: '#aaa',
-              }}
-            ></Box>
             <Menu
               menu={menu}
               menuitem={menuitem}

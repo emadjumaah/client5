@@ -317,7 +317,7 @@ const PopupBranch = ({
                   <Card
                     style={{
                       minWidth: 150,
-                      backgroundColor: selected ? '#b6fcd5' : '#eee',
+                      backgroundColor: selected ? '#b6fcd5' : '#f5f5f5',
                       cursor: 'pointer',
                     }}
                     onClick={() => setPack(pk)}
@@ -370,7 +370,7 @@ const PopupBranch = ({
                     style={{
                       width: 150,
                       height: 100,
-                      backgroundColor: selected ? '#b6fcd5' : '#eee',
+                      backgroundColor: selected ? '#b6fcd5' : '#f5f5f5',
                       cursor: 'pointer',
                     }}
                     onClick={() => setTemp(tm)}

@@ -49,7 +49,7 @@ export const subMenuItem = ({
       style={{
         textDecoration: 'none',
         color: isSelected
-          ? '#eee'
+          ? '#f5f5f5'
           : fade(theme.palette.background.default, 0.8),
       }}
       to={`${item.uri}`}

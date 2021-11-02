@@ -53,7 +53,7 @@ export default function PopupLayoutBox(props: any) {
           direction: isRTL ? 'rtl' : 'ltr',
           backgroundColor: theme
             ? fade(theme.palette.primary.main, 0.15)
-            : '#eee',
+            : '#f5f5f5',
           cursor: 'move',
           height: 60,
           display: 'flex',

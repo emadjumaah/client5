@@ -2,22 +2,26 @@
 /* eslint-disable react/jsx-no-undef */
 import { Box, Hidden, Typography } from '@material-ui/core';
 import React from 'react';
+import useWindowDimensions from '../hooks/useWindowDimensions';
 import Avatar from './Avatar';
 import MyIcon from './MyIcon';
 
 export default function UserBox(props: any) {
-  const { theme, user, network, mobile, logout, client, history } = props;
-  const isWeb = network === 'web';
-  const color = isWeb
-    ? theme.palette.background.default
-    : theme.palette.background.default;
+  const { theme, user, mobile, logout, client, history } = props;
+  const color = theme.palette.primary.main;
+  const { isMobile } = useWindowDimensions();
 
   return (
     <Box
       style={{
         display: 'flex',
+        width: isMobile ? undefined : 249,
+        position: isMobile ? undefined : 'fixed',
         height: 50,
+        zIndex: 114,
         alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: isMobile ? undefined : '#f5f5f5',
       }}
     >
       {user && (
@@ -43,7 +47,10 @@ export default function UserBox(props: any) {
                   marginRight: 10,
                 }}
               >
-                <Typography variant="subtitle1" style={{ color }}>
+                <Typography
+                  variant="subtitle1"
+                  style={{ color: isMobile ? '#fff' : color }}
+                >
                   {user.name ? user.name : user.username}
                 </Typography>
               </Box>
@@ -69,7 +76,11 @@ export default function UserBox(props: any) {
                   history.push('/');
                 }}
               >
-                <MyIcon size={24} color={'#eee'} icon={'logout'}></MyIcon>
+                <MyIcon
+                  size={24}
+                  color={isMobile ? '#fff' : color}
+                  icon={'logout'}
+                ></MyIcon>
               </Box>
             </Hidden>
           </Box>

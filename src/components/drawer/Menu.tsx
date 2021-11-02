@@ -21,7 +21,7 @@ const Menu = ({
   history,
 }: any) => {
   return (
-    <List>
+    <List style={{ marginTop: 40 }}>
       {menu.map((item: any, i: any) => {
         const submenu = item.subMenu;
         const isSelected = item.name === menuitem.name;
