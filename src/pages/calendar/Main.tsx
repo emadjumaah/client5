@@ -211,8 +211,7 @@ const Main = (props: any) => {
     <Box
       style={{
         backgroundColor: '#fff',
-        marginTop: isMobile ? 47 : undefined,
-        height: height,
+        height: isMobile ? height - 50 : height,
         overflow: 'auto',
       }}
     >
@@ -258,7 +257,7 @@ const Main = (props: any) => {
         <Box style={{ margin: 0 }}>
           <Scheduler
             data={rows}
-            height={isMonth ? 'auto' : isMobile ? height : height - 85}
+            height={isMonth ? 'auto' : isMobile ? height - 120 : height - 85}
             firstDayOfWeek={6}
             locale={isRTL ? 'ar' : 'en'}
           >
@@ -361,7 +360,7 @@ const Main = (props: any) => {
                 commandButtonComponent={CommandAppointment}
               />
             )}
-            <AllDayPanel />
+            {!isMobile && <AllDayPanel />}
             {!isMonth && <DragDropProvider></DragDropProvider>}
             <CurrentTimeIndicator shadePreviousCells></CurrentTimeIndicator>
           </Scheduler>

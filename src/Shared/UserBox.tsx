@@ -1,27 +1,34 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 /* eslint-disable react/jsx-no-undef */
-import { Box, Hidden, Typography } from '@material-ui/core';
-import React from 'react';
+import { Box, fade, Tooltip, Typography } from '@material-ui/core';
+import React, { useContext } from 'react';
+import { GlobalContext } from '../contexts';
 import useWindowDimensions from '../hooks/useWindowDimensions';
 import Avatar from './Avatar';
 import MyIcon from './MyIcon';
 
 export default function UserBox(props: any) {
-  const { theme, user, mobile, logout, client, history } = props;
-  const color = theme.palette.primary.main;
+  const { theme, user, mobile, logout, client, history, isRTL } = props;
+  const color = theme.palette.primary.dark;
   const { isMobile } = useWindowDimensions();
+  const {
+    store: { lang },
+    dispatch,
+  } = useContext(GlobalContext);
+
+  const uname = user.name ? user.name : user.username;
 
   return (
     <Box
       style={{
         display: 'flex',
-        width: isMobile ? undefined : 249,
+        width: isMobile ? undefined : 250,
         position: isMobile ? undefined : 'fixed',
         height: 50,
         zIndex: 114,
         alignItems: 'center',
         justifyContent: 'center',
-        backgroundColor: isMobile ? undefined : '#f5f5f5',
+        backgroundColor: isMobile ? undefined : theme.palette.secondary.main,
       }}
     >
       {user && (
@@ -37,12 +44,17 @@ export default function UserBox(props: any) {
               paddingLeft: mobile ? undefined : 10,
             }}
           >
-            <Box display="flex">
+            <Box
+              display="flex"
+              style={{
+                flex: 4,
+                alignItems: 'center',
+                justifyContent: 'flex-end',
+              }}
+            >
               <Box
                 display="flex"
                 style={{
-                  alignItems: 'center',
-                  justifyContent: 'center',
                   marginLeft: 10,
                   marginRight: 10,
                 }}
@@ -51,7 +63,7 @@ export default function UserBox(props: any) {
                   variant="subtitle1"
                   style={{ color: isMobile ? '#fff' : color }}
                 >
-                  {user.name ? user.name : user.username}
+                  {uname.substring(0, 10)}
                 </Typography>
               </Box>
               <Avatar
@@ -60,12 +72,43 @@ export default function UserBox(props: any) {
                 size={34}
               ></Avatar>
             </Box>
-            <Hidden xsDown implementation="js">
+            <Tooltip
+              title={
+                lang === 'ar' ? 'Change to English' : 'تغيير الى اللغة العربية'
+              }
+            >
               <Box
                 display="flex"
                 style={{
                   width: 34,
                   height: 34,
+                  flex: 1,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  cursor: 'pointer',
+                }}
+                onClick={async () => {
+                  dispatch({
+                    type: 'setLang',
+                    payload: lang === 'ar' ? 'en' : 'ar',
+                  });
+                  window.location.reload();
+                }}
+              >
+                <MyIcon
+                  size={24}
+                  color={isMobile ? '#fff' : color}
+                  icon={'lang'}
+                ></MyIcon>
+              </Box>
+            </Tooltip>
+            <Tooltip title={isRTL ? 'تسجيل الخروج' : 'Logout'}>
+              <Box
+                display="flex"
+                style={{
+                  width: 34,
+                  height: 34,
+                  flex: 1,
                   alignItems: 'center',
                   justifyContent: 'center',
                   cursor: 'pointer',
@@ -82,10 +125,18 @@ export default function UserBox(props: any) {
                   icon={'logout'}
                 ></MyIcon>
               </Box>
-            </Hidden>
+            </Tooltip>
           </Box>
         </React.Fragment>
       )}
+      <div
+        style={{
+          width: 1,
+          height: 50,
+          backgroundColor: fade(theme.palette.secondary.light, 0.5),
+          display: isMobile ? 'none' : undefined,
+        }}
+      ></div>
     </Box>
   );
 }

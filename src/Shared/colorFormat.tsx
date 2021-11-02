@@ -502,7 +502,7 @@ export const doneFormatter = ({ row, editEvent }: any) => {
   return (
     <span>
       <Checkbox
-        style={{ padding: 5, color: colors.blue[500] }}
+        style={{ padding: 5 }}
         checked={row.status === 10}
         onChange={async () => {
           await editEvent({

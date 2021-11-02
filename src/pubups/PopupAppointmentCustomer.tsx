@@ -8,7 +8,7 @@ import { GlobalContext } from '../contexts';
 import {
   Box,
   Button,
-  colors,
+  // colors,
   IconButton,
   ListItem,
   ListItemText,
@@ -672,7 +672,7 @@ const PopupAppointmentCustomer = ({
       alrt={alrt}
       mt={10}
       maxWidth="md"
-      bgcolor={colors.blue[500]}
+      // bgcolor={colors.blue[500]}
       mb={20}
     >
       <>

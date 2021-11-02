@@ -298,7 +298,7 @@ export default function AppointmentsEmpl({
       refresh={refresh}
       periodvalue={periodvalue}
       setPeriodvalue={setPeriodvalue}
-      bgcolor={colors.blue[500]}
+      // bgcolor={colors.blue[500]}
     >
       <Paper>
         <Box
@@ -329,8 +329,8 @@ export default function AppointmentsEmpl({
               isRTL={isRTL}
               words={words}
               theme={theme}
-              color={colors.blue[700]}
-              bgcolor={colors.blue[50]}
+              // color={colors.blue[700]}
+              // bgcolor={colors.blue[50]}
             ></DateNavigatorReports>
           </Box>
           <Box

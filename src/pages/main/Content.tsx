@@ -108,13 +108,15 @@ import AlertWithClose from '../../components/fields/AlertWithClose';
 import ManageProjects from '../adds/ManageProjects';
 import Main from '../calendar/Main';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
+import useCompany from '../../hooks/useCompany';
 
-const Content = ({ company, editCompany, refreshcompany }) => {
+const Content = () => {
   const classes = layoutClasses();
   const [menuitem, setMenuitem] = useState(mainmenu[0]);
 
   const theme = useTheme();
 
+  const { company, editCompany, refreshcompany } = useCompany();
   const { branches } = useBranches();
   const { suppliers } = useSuppliers();
   const { accounts, refreshAccount } = useAccounts();

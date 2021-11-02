@@ -53,7 +53,7 @@ import DateNavigatorReports from '../../components/filters/DateNavigatorReports'
 import {
   Box,
   Checkbox,
-  colors,
+  fade,
   FormControlLabel,
   Typography,
 } from '@material-ui/core';
@@ -318,7 +318,7 @@ export default function Appointments({
       refresh={refresh}
       periodvalue={periodvalue}
       setPeriodvalue={setPeriodvalue}
-      bgcolor={colors.blue[500]}
+      // bgcolor={colors.blue[500]}
     >
       <Box
         style={{
@@ -357,15 +357,15 @@ export default function Appointments({
               isRTL={isRTL}
               words={words}
               theme={theme}
-              color={colors.blue[700]}
-              bgcolor={colors.blue[50]}
+              // color={colors.blue[700]}
+              // bgcolor={colors.blue[50]}
             ></DateNavigatorReports>
           </Box>
           <Box
             style={{
               padding: 0,
               margin: 0,
-              backgroundColor: colors.blue[50],
+              backgroundColor: fade(theme.palette.secondary.light, 0.7),
               paddingRight: 10,
               marginLeft: 40,
               marginRight: 40,
@@ -383,7 +383,7 @@ export default function Appointments({
               }
               label={
                 <Typography
-                  style={{ color: colors.blue[700] }}
+                  style={{ color: theme.palette.primary.main }}
                   variant="subtitle2"
                 >
                   {isRTL ? 'المواعيد المتأخرة' : 'Due Appointments'}

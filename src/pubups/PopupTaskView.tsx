@@ -256,7 +256,7 @@ const PopupTaskView = ({
       fullWidth
       preventclose
       onlyclose
-      bgcolor={colors.deepPurple[500]}
+      // bgcolor={colors.deepPurple[500]}
       mb={10}
     >
       <>

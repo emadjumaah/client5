@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-redeclare */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 /* eslint-disable react/jsx-no-undef */
-import React from "react";
+import React from 'react';
 import {
   AppBar,
   Box,
@@ -12,14 +12,14 @@ import {
   Toolbar,
   Typography,
   useTheme,
-} from "@material-ui/core";
-import { UserBox } from "../../Shared";
+} from '@material-ui/core';
+import { UserBox } from '../../Shared';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     appBar: {
       zIndex: theme.zIndex.drawer + 1,
-      "-webkit-app-region": "drag",
+      '-webkit-app-region': 'drag',
       backgroundColor: fade(theme.palette.primary.light, 0),
     },
     titleSt: {
@@ -28,19 +28,19 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     appBarButton: {
       color: theme.palette.grey[700],
-      "-webkit-app-region": "no-drag",
+      '-webkit-app-region': 'no-drag',
       top: -3,
-      "&:hover": {
-        backgroundColor: "transparent",
+      '&:hover': {
+        backgroundColor: 'transparent',
       },
     },
     appBarButtonLang: {
       color: theme.palette.grey[700],
       fontSize: 12,
-      "-webkit-app-region": "no-drag",
+      '-webkit-app-region': 'no-drag',
       top: -3,
-      "&:hover": {
-        backgroundColor: "transparent",
+      '&:hover': {
+        backgroundColor: 'transparent',
       },
     },
   })
@@ -57,7 +57,7 @@ export default function ApplicationBar(props: any) {
       ? company?.nameAr
       : company?.name
     : null;
-  const title = companyName ? `${companyName}` : "JADWAL ERP";
+  const title = companyName ? `${companyName}` : 'JADWAL';
 
   return (
     <AppBar
@@ -69,9 +69,9 @@ export default function ApplicationBar(props: any) {
       <Toolbar
         style={{
           flex: 1,
-          alignItems: "center",
-          justifyContent: "space-between",
-          flexDirection: isRTL ? "row-reverse" : "row",
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          flexDirection: isRTL ? 'row-reverse' : 'row',
           padding: 0,
         }}
       >
@@ -91,9 +91,9 @@ export default function ApplicationBar(props: any) {
 
         <Box
           style={{
-            display: "flex",
+            display: 'flex',
             width: 280,
-            justifyContent: isRTL ? "flex-start" : "flex-end",
+            justifyContent: isRTL ? 'flex-start' : 'flex-end',
           }}
         ></Box>
       </Toolbar>

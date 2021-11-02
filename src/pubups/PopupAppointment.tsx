@@ -638,7 +638,7 @@ const PopupAppointment = ({
       mb={20}
       maxWidth="md"
       taskvalue={taskvalue}
-      bgcolor={colors.blue[500]}
+      // bgcolor={colors.blue[500]}
     >
       <>
         <Box display="flex">

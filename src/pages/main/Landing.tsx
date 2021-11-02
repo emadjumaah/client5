@@ -13,12 +13,15 @@ import MonthsEmpChart from '../../components/charts/MonthsEmpChart';
 import InfoBoxDark from '../../components/charts/InfoBoxDark';
 import useLandingChart from '../../hooks/useLandingChart';
 import PageLayout from './PageLayout';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import useEmployeesUp from '../../hooks/useEmployeesUp';
 import useDepartmentsUp from '../../hooks/useDepartmentsUp';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
+import { Loading } from '../../Shared';
 
 export default function Landing(props: any) {
+  const [loading, setLoading] = useState(true);
+
   const { words, isRTL, user, theme, menuitem } = props;
 
   const { departments } = useDepartmentsUp();
@@ -47,6 +50,12 @@ export default function Landing(props: any) {
     }
   };
 
+  useEffect(() => {
+    if (salesMonths) {
+      setLoading(false);
+    }
+  }, [salesMonths]);
+
   const salesColor = theme.palette.primary.light;
   const eventColor = theme.palette.secondary.main;
   const prim = theme.palette.primary.light;
@@ -71,7 +80,15 @@ export default function Landing(props: any) {
           marginRight: 5,
         }}
       >
-        <Box style={{ margin: 10 }}>
+        <Box
+          style={{
+            marginTop: 15,
+            marginLeft: 10,
+            marginRight: 10,
+            marginBottom: 15,
+          }}
+        >
+          {loading && <Loading isRTL={isRTL}></Loading>}
           <Grid container spacing={2}>
             <Grid item xs={12}>
               <Grid container spacing={2}>

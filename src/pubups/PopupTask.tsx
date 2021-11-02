@@ -11,7 +11,7 @@ import {
 } from '../Shared';
 import { GContextTypes } from '../types';
 import { GlobalContext } from '../contexts';
-import { Box, Button, colors, Typography } from '@material-ui/core';
+import { Box, Button, Typography } from '@material-ui/core';
 import PopupLayout from '../pages/main/PopupLayout';
 import { Grid } from '@material-ui/core';
 import AutoFieldLocal from '../components/fields/AutoFieldLocal';
@@ -474,7 +474,7 @@ const PopupTask = ({
       fullWidth
       preventclose
       saving={saving}
-      bgcolor={colors.deepPurple[500]}
+      // bgcolor={colors.deepPurple[500]}
       mb={10}
     >
       <>

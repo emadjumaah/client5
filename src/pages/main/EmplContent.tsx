@@ -33,13 +33,14 @@ import AlertWithClose from '../../components/fields/AlertWithClose';
 import MainCalendarEmpl from '../empl/MainCalendarEmpl';
 import AppointmentsEmpl from '../empl/AppointmentsEmpl';
 import TasksEmpl from '../adds/TasksEmpl';
+import useCompany from '../../hooks/useCompany';
 
-const EmplContent = ({ company, editCompany, refreshcompany }) => {
+const EmplContent = () => {
   const classes = layoutClasses();
   const [menuitem, setMenuitem] = useState(emplmenu[0]);
 
   const theme = useTheme();
-
+  const { company, editCompany, refreshcompany } = useCompany();
   const { services, addService, editService } = useServices();
 
   const {

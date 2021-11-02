@@ -33,7 +33,7 @@ export default function DateNavigatorReports({
   theme,
   views,
   color = theme.palette.primary.main,
-  bgcolor = fade(theme.palette.primary.dark, 0.12),
+  bgcolor = fade(theme.palette.secondary.light, 0.7),
 }: any) {
   const [timeFormat, setTimeFormat] = useState('');
   const [timeFormatEnd, setTimeFormatEnd] = useState('');

@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import {
-  Box,
   fade,
   Hidden,
   IconButton,
   Paper,
+  Tooltip,
   Typography,
 } from '@material-ui/core';
 import React from 'react';
@@ -14,18 +14,18 @@ export default function PageLayout(props: any) {
   const { children, menuitem, isRTL, refresh, theme } = props;
 
   return (
-    <Paper elevation={2} square>
+    <Paper square>
       <Hidden xsDown implementation="css">
-        <Box
+        <div
           style={{
             paddingLeft: 30,
             paddingRight: 30,
-            height: 50,
+            height: 49,
             display: 'flex',
             flex: 1,
             alignItems: 'center',
             justifyContent: 'space-between',
-            backgroundColor: '#f5f5f5',
+            backgroundColor: fade(theme.palette.primary.light, 0.1),
           }}
         >
           <Typography
@@ -38,20 +38,30 @@ export default function PageLayout(props: any) {
             {isRTL ? menuitem.titleAr : menuitem.titleEn}
           </Typography>
           {refresh && (
-            <IconButton
-              style={{
-                backgroundColor: fade(theme.palette.primary.light, 0.7),
-                padding: 7,
-              }}
-              onClick={refresh}
-            >
-              <RefreshOutlinedIcon
-                style={{ fontSize: 24, color: '#f5f5f5' }}
-                color="primary"
-              ></RefreshOutlinedIcon>
-            </IconButton>
+            <Tooltip title={isRTL ? 'تحديث' : 'Refresh'}>
+              <IconButton
+                style={{
+                  backgroundColor: fade(theme.palette.primary.light, 0.5),
+                  padding: 7,
+                }}
+                onClick={refresh}
+              >
+                <RefreshOutlinedIcon
+                  style={{ fontSize: 24, color: '#f5f5f5' }}
+                  color="primary"
+                ></RefreshOutlinedIcon>
+              </IconButton>
+            </Tooltip>
           )}
-        </Box>
+        </div>
+        <div
+          style={{
+            height: 1,
+            display: 'flex',
+            flex: 1,
+            backgroundColor: fade(theme.palette.secondary.main, 0.5),
+          }}
+        ></div>
       </Hidden>
       {React.cloneElement(children, { ...props })}
     </Paper>

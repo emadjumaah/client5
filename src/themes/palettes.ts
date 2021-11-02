@@ -2,29 +2,17 @@ export const palettes = [
   {
     palette: {
       primary: {
-        main: '#0068B8',
+        main: '#231942',
       },
       secondary: {
-        main: '#ffd700',
+        main: '#f2af29',
       },
       background: {
         default: '#fff',
       },
     },
   },
-  {
-    palette: {
-      primary: {
-        main: '#252B3B',
-      },
-      secondary: {
-        main: '#FFC107',
-      },
-      background: {
-        default: '#fff',
-      },
-    },
-  },
+
   {
     palette: {
       primary: {
@@ -48,6 +36,19 @@ export const palettes = [
       },
       background: {
         default: '#F8F5F5',
+      },
+    },
+  },
+  {
+    palette: {
+      primary: {
+        main: '#252B3B',
+      },
+      secondary: {
+        main: '#FFC107',
+      },
+      background: {
+        default: '#fff',
       },
     },
   },

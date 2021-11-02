@@ -7,7 +7,7 @@ import { useCustomers, useLastNos, useTemplate } from '../hooks';
 import { dublicateAlert, errorAlert, messageAlert } from '../Shared';
 import { GContextTypes } from '../types';
 import { GlobalContext } from '../contexts';
-import { Box, colors, TextField, Typography } from '@material-ui/core';
+import { Box, TextField, Typography } from '@material-ui/core';
 import ServiceItemForm from '../Shared/ServiceItemForm';
 import ItemsTable from '../Shared/ItemsTable';
 import { PriceTotal } from '../Shared/TotalPrice';
@@ -662,7 +662,7 @@ const PopupInvoice = ({
       maxWidth="md"
       mt={0}
       mb={50}
-      bgcolor={colors.green[500]}
+      // bgcolor={colors.green[500]}
     >
       <Grid container spacing={1}>
         <Grid item xs={4}>

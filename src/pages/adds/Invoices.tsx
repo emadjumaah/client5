@@ -47,7 +47,7 @@ import DateNavigatorReports from '../../components/filters/DateNavigatorReports'
 import { getColumns } from '../../common/columns';
 import useTasks from '../../hooks/useTasks';
 import { TableComponent } from '../reports/SalesReport';
-import { Box, colors } from '@material-ui/core';
+import { Box } from '@material-ui/core';
 import getTasks from '../../graphql/query/getTasks';
 import useResoursesUp from '../../hooks/useResoursesUp';
 import useDepartmentsUp from '../../hooks/useDepartmentsUp';
@@ -196,7 +196,7 @@ export default function Invoices({
       isEditor={isEditor}
       theme={theme}
       refresh={refresh}
-      bgcolor={colors.green[500]}
+      // bgcolor={colors.green[500]}
     >
       <Box
         style={{

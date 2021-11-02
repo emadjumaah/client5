@@ -8,7 +8,7 @@ import { GlobalContext } from '../contexts';
 import {
   Box,
   Button,
-  colors,
+  // colors,
   IconButton,
   ListItem,
   ListItemText,
@@ -439,7 +439,7 @@ const PopupTaskAppointment = ({
       mt={10}
       maxWidth="md"
       saving={saving}
-      bgcolor={colors.blue[500]}
+      // bgcolor={colors.blue[500]}
       savetitle={isRTL ? 'متابعة' : 'Proceed'}
     >
       <>

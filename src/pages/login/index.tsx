@@ -7,12 +7,10 @@ import Button from '@material-ui/core/Button';
 import {
   Box,
   Container,
-  fade,
   Link,
   Paper,
   TextField,
   Typography,
-  useTheme,
 } from '@material-ui/core';
 import { login } from '../../graphql/mutation';
 import { yup } from '../../constants';
@@ -29,7 +27,6 @@ const possibleWrong = 15;
 
 const Login = (): any => {
   const classes = loginClasses();
-  const theme = useTheme();
   const [error, seterror] = useState(null);
 
   const { register, handleSubmit, errors }: any = useForm(yup.loginResolver);
@@ -100,45 +97,54 @@ const Login = (): any => {
       display="flex"
       style={{
         flex: 1,
-        height: height - 40,
-        alignItems: 'center',
+        height: height - 80,
         justifyContent: 'center',
+        paddingTop: 60,
       }}
     >
       <Container component="main" maxWidth="xs">
         <div className={classes.paper}>
-          <Paper
-            elevation={8}
+          <Typography
+            color="primary"
+            variant="h2"
+            style={{
+              zIndex: 115,
+              marginBottom: 20,
+              marginTop: -40,
+              opacity: 0.9,
+            }}
+          >
+            JADWAL
+          </Typography>
+          <Box
             style={{
               alignItems: 'center',
               justifyContent: 'center',
-              marginBottom: 60,
-              backgroundColor: fade(theme.palette.primary.light, 0.8),
+              marginBottom: 50,
               zIndex: 113,
-              borderRadius: 15,
             }}
           >
             <img
               src={
-                'https://www.jadwalerp.com/_next/image?url=%2Fassets%2Fimages%2Flogo.png&w=256&q=100'
+                'https://res.cloudinary.com/fivegstore/image/upload/v1635853109/256x256_fwxwfx.png'
               }
               alt={'JADWAL'}
-              height={isMobile ? 60 : 90}
+              height={isMobile ? 130 : 150}
               style={{
-                objectFit: 'contain',
+                objectFit: 'cover',
                 borderRadius: 10,
-                marginTop: 5,
-                margin: 10,
+                opacity: 0.9,
               }}
             />
-          </Paper>
+          </Box>
+
           <Paper
-            elevation={4}
+            elevation={3}
             style={{
               paddingTop: 90,
-              marginTop: isMobile ? -100 : -120,
+              marginTop: -120,
               borderRadius: 15,
-              paddingBottom: 40,
+              paddingBottom: 20,
             }}
           >
             <form className={classes.form} noValidate>
@@ -154,8 +160,8 @@ const Login = (): any => {
                   size="medium"
                   inputProps={{
                     style: {
-                      height: 26,
-                      fontSize: 18,
+                      height: 22,
+                      fontSize: 16,
                       margin: 0,
                       paddingLeft: 10,
                       paddingRight: 10,
@@ -176,14 +182,14 @@ const Login = (): any => {
                   helperText={error ? error : undefined}
                   inputProps={{
                     style: {
-                      height: 26,
-                      fontSize: 18,
+                      height: 22,
+                      fontSize: 16,
                       margin: 0,
                       paddingLeft: 10,
                       paddingRight: 10,
                     },
                   }}
-                  style={{ marginBottom: 30 }}
+                  style={{ marginBottom: 20 }}
                   required
                   fullWidth
                 />
@@ -194,7 +200,7 @@ const Login = (): any => {
                   variant="contained"
                   color="primary"
                   className={classes.submit}
-                  style={{ height: 50, fontSize: 18 }}
+                  style={{ height: 40, fontSize: 16 }}
                   onClick={handleSubmit(onSubmit)}
                 >
                   {isRTL ? 'تسجبل الدخول' : 'Login'}
@@ -215,7 +221,7 @@ const Login = (): any => {
           <Typography variant="body2" color="textSecondary" align="center">
             {'Copyright © '}
             <Link color="inherit" href="https://jadwalerp.com/">
-              Jadwal ERP
+              Jadwal
             </Link>{' '}
             {new Date().getFullYear()}
             {'.'}

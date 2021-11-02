@@ -34,7 +34,6 @@ import {
 } from '@material-ui/core';
 import { getStartEndEventView } from '../../common/time';
 import { DateNavigator } from '../../components';
-import LoadingInline from '../../Shared/LoadingInline';
 import CalendarReportContext from '../../contexts/calendarReport';
 import RefreshOutlinedIcon from '@material-ui/icons/RefreshOutlined';
 import { eventStatus } from '../../constants';
@@ -157,7 +156,19 @@ const EmployeesAppoints = (props: any) => {
     !resourseData?.[0]?.instances ||
     resourseData?.[0]?.instances?.length === 0
   ) {
-    return <LoadingInline></LoadingInline>;
+    return (
+      <div
+        style={{
+          display: 'flex',
+          flex: 1,
+          marginTop: 100,
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        <h3>{isRTL ? 'لا يوجد بيانات ...' : 'no data ...'}</h3>
+      </div>
+    );
   }
 
   return (

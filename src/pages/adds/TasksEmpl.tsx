@@ -44,7 +44,7 @@ import {
 import PageLayout from '../main/PageLayout';
 import { AlertLocal, SearchTable } from '../../components';
 import { getColumns } from '../../common/columns';
-import { Box, Button, colors } from '@material-ui/core';
+import { Box, Button } from '@material-ui/core';
 import TasksContext from '../../contexts/tasks';
 import getEmplTasks from '../../graphql/query/getEmplTasks';
 import PopupTask from '../../pubups/PopupTask';
@@ -243,7 +243,7 @@ export default function TasksEmpl({
       refresh={refresh}
       periodvalue={periodvalue}
       setPeriodvalue={setPeriodvalue}
-      bgcolor={colors.deepPurple[400]}
+      // bgcolor={colors.deepPurple[400]}
     >
       <Paper>
         <Box
@@ -268,8 +268,8 @@ export default function TasksEmpl({
             isRTL={isRTL}
             words={words}
             theme={theme}
-            color={colors.deepPurple[700]}
-            bgcolor={colors.deepPurple[50]}
+            // color={colors.deepPurple[700]}
+            // bgcolor={colors.deepPurple[50]}
           ></DateNavigatorReports>
           <Box style={{}}>
             <Button
