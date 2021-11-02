@@ -16,6 +16,8 @@ export default function UserBox(props: any) {
     <Box
       style={{
         display: 'flex',
+        height: 50,
+        alignItems: 'center',
       }}
     >
       {user && (
@@ -29,7 +31,6 @@ export default function UserBox(props: any) {
               flex: 1,
               paddingRight: mobile ? undefined : 10,
               paddingLeft: mobile ? undefined : 10,
-              marginTop: mobile ? undefined : 10,
             }}
           >
             <Box display="flex">
@@ -40,10 +41,9 @@ export default function UserBox(props: any) {
                   justifyContent: 'center',
                   marginLeft: 10,
                   marginRight: 10,
-                  marginTop: 2,
                 }}
               >
-                <Typography style={{ color }}>
+                <Typography variant="subtitle1" style={{ color }}>
                   {user.name ? user.name : user.username}
                 </Typography>
               </Box>

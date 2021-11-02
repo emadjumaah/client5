@@ -31,6 +31,7 @@ import PageLayout from '../main/PageLayout';
 import { getColumns } from '../../common/columns';
 import useEmployeesDown from '../../hooks/useEmployeesDown';
 import useDepartmentsDown from '../../hooks/useDepartmentsDown';
+import useWindowDimensions from '../../hooks/useWindowDimensions';
 
 export default function Employees({
   isRTL,
@@ -62,7 +63,7 @@ export default function Employees({
     refreshemployee,
   } = useEmployeesDown();
   const { departments } = useDepartmentsDown();
-
+  const { height } = useWindowDimensions();
   const commitChanges = async ({ deleted }) => {
     if (deleted) {
       const _id = deleted[0];
@@ -100,7 +101,7 @@ export default function Employees({
           <IntegratedFiltering />
 
           <VirtualTable
-            height={window.innerHeight - 133}
+            height={height - 100}
             messages={{
               noData: isRTL ? 'لا يوجد بيانات' : 'no data',
             }}

@@ -49,6 +49,8 @@ import { SearchTable } from '../../components';
 import { FinanceContext } from '../../contexts';
 import DateNavigatorReports from '../../components/filters/DateNavigatorReports';
 import getTasks from '../../graphql/query/getTasks';
+import useWindowDimensions from '../../hooks/useWindowDimensions';
+import { TableComponent } from '../../Shared/TableComponent';
 
 export default function Finance({ isRTL, words, menuitem, isEditor, theme }) {
   const [columns] = useState([
@@ -66,6 +68,7 @@ export default function Finance({ isRTL, words, menuitem, isEditor, theme }) {
 
   const [start, setStart] = useState<any>(null);
   const [end, setEnd] = useState<any>(null);
+  const { height } = useWindowDimensions();
 
   const {
     state: { currentDate, currentViewName, endDate, sort },
@@ -201,11 +204,12 @@ export default function Finance({ isRTL, words, menuitem, isEditor, theme }) {
           <IntegratedSorting />
           <IntegratedFiltering />
           <VirtualTable
-            height={window.innerHeight - 181}
+            height={height - 181}
             messages={{
               noData: isRTL ? 'لا يوجد بيانات' : 'no data',
             }}
             estimatedRowHeight={40}
+            tableComponent={TableComponent}
           />
           <TableHeaderRow showSortingControls />
           <DataTypeProvider

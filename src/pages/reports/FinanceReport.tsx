@@ -7,7 +7,6 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import Paper from '@material-ui/core/Paper';
 import {
   SortingState,
   IntegratedSorting,
@@ -49,6 +48,7 @@ import useTasks from '../../hooks/useTasks';
 import _ from 'lodash';
 import useProjects from '../../hooks/useProjects';
 import { useTemplate } from '../../hooks';
+import useWindowDimensions from '../../hooks/useWindowDimensions';
 
 const styles = (theme) => ({
   tableStriped: {
@@ -130,6 +130,7 @@ export default function FinanceReport({
   const { projects } = useProjects();
   const { tasks } = useTasks();
   const { tempwords } = useTemplate();
+  const { height } = useWindowDimensions();
 
   const currentViewNameChange = (e: any) => {
     dispatch({ type: 'setCurrentViewName', payload: e.target.value });
@@ -265,7 +266,15 @@ export default function FinanceReport({
       theme={theme}
       refresh={refresh}
     >
-      <Paper>
+      <Box
+        style={{
+          height: height - 50,
+          overflow: 'auto',
+          backgroundColor: '#fff',
+          marginLeft: 5,
+          marginRight: 5,
+        }}
+      >
         <Box
           display="flex"
           style={{
@@ -350,66 +359,64 @@ export default function FinanceReport({
             </Box>
           )}
         </Box>
-        <Paper style={{ height: window.innerHeight - 85, overflow: 'auto' }}>
-          <Grid rows={rows} columns={columns} getRowId={getRowId}>
-            <SortingState
-              defaultSorting={sort}
-              onSortingChange={(srt: any) => setSortDispatch(srt)}
-            />
-            <SummaryState totalItems={totalSummaryItems} />
-            <IntegratedSummary />
-            <IntegratedSorting />
+        <Grid rows={rows} columns={columns} getRowId={getRowId}>
+          <SortingState
+            defaultSorting={sort}
+            onSortingChange={(srt: any) => setSortDispatch(srt)}
+          />
+          <SummaryState totalItems={totalSummaryItems} />
+          <IntegratedSummary />
+          <IntegratedSorting />
 
-            <VirtualTable
-              height={window.innerHeight - 133}
-              tableComponent={TableComponent}
-              messages={{
-                noData: isRTL ? 'لا يوجد بيانات' : 'no data',
-              }}
-              estimatedRowHeight={30}
-            />
-            <TableHeaderRow showSortingControls />
-            <TableColumnVisibility
-              columnExtensions={tableColumnVisibilityColumnExtensions}
-              defaultHiddenColumnNames={[col.amount.name]}
-            />
-            <DataTypeProvider
-              for={['opTime']}
-              formatterComponent={createdAtFormatter}
-            ></DataTypeProvider>
-            <DataTypeProvider
-              for={['credit', 'debit']}
-              formatterComponent={currencyFormatterEmpty}
-            ></DataTypeProvider>
-            <DataTypeProvider
-              for={['opType']}
-              formatterComponent={opTypeFormatter}
-            ></DataTypeProvider>
-            <DataTypeProvider
-              for={['taskId']}
-              formatterComponent={(props: any) =>
-                taskIdFormatter({ ...props, tasks })
-              }
-            ></DataTypeProvider>
-            <Toolbar />
-            <ColumnChooser />
-            <ExportPanel startExport={startExport} />
+          <VirtualTable
+            height={height - 100}
+            tableComponent={TableComponent}
+            messages={{
+              noData: isRTL ? 'لا يوجد بيانات' : 'no data',
+            }}
+            estimatedRowHeight={30}
+          />
+          <TableHeaderRow showSortingControls />
+          <TableColumnVisibility
+            columnExtensions={tableColumnVisibilityColumnExtensions}
+            defaultHiddenColumnNames={[col.amount.name]}
+          />
+          <DataTypeProvider
+            for={['opTime']}
+            formatterComponent={createdAtFormatter}
+          ></DataTypeProvider>
+          <DataTypeProvider
+            for={['credit', 'debit']}
+            formatterComponent={currencyFormatterEmpty}
+          ></DataTypeProvider>
+          <DataTypeProvider
+            for={['opType']}
+            formatterComponent={opTypeFormatter}
+          ></DataTypeProvider>
+          <DataTypeProvider
+            for={['taskId']}
+            formatterComponent={(props: any) =>
+              taskIdFormatter({ ...props, tasks })
+            }
+          ></DataTypeProvider>
+          <Toolbar />
+          <ColumnChooser />
+          <ExportPanel startExport={startExport} />
 
-            <TableSummaryRow
-              messages={{
-                sum: isRTL ? 'المجموع' : 'Total',
-                count: isRTL ? 'العدد' : 'Count',
-              }}
-            ></TableSummaryRow>
-          </Grid>
-        </Paper>
+          <TableSummaryRow
+            messages={{
+              sum: isRTL ? 'المجموع' : 'Total',
+              count: isRTL ? 'العدد' : 'Count',
+            }}
+          ></TableSummaryRow>
+        </Grid>
         <GridExporter
           ref={exporterRef}
           rows={rows}
           columns={columns}
           onSave={onSave}
         />
-      </Paper>
+      </Box>
     </PageLayout>
   );
 }

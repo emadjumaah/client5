@@ -1,7 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import React, { useContext, useEffect, useState } from 'react';
-import Paper from '@material-ui/core/Paper';
 import {
   EditingState,
   SortingState,
@@ -49,6 +48,9 @@ import { FinanceContext } from '../../contexts';
 import DateNavigatorReports from '../../components/filters/DateNavigatorReports';
 import PopupFinanceAll from '../../pubups/PopupFinanceAll';
 import getTasks from '../../graphql/query/getTasks';
+import { Box } from '@material-ui/core';
+import useWindowDimensions from '../../hooks/useWindowDimensions';
+import { TableComponent } from '../../Shared/TableComponent';
 
 export default function FinanceAll({
   isRTL,
@@ -70,6 +72,7 @@ export default function FinanceAll({
 
   const [start, setStart] = useState<any>(null);
   const [end, setEnd] = useState<any>(null);
+  const { height } = useWindowDimensions();
 
   const {
     state: { currentDate, currentViewName, endDate, sort },
@@ -180,21 +183,39 @@ export default function FinanceAll({
       theme={theme}
       refresh={refresh}
     >
-      <Paper>
-        <DateNavigatorReports
-          setStart={setStart}
-          setEnd={setEnd}
-          currentDate={currentDate}
-          currentDateChange={currentDateChange}
-          currentViewName={currentViewName}
-          currentViewNameChange={currentViewNameChange}
-          endDate={endDate}
-          endDateChange={endDateChange}
-          views={[1, 7, 30, 365, 1000]}
-          isRTL={isRTL}
-          words={words}
-          theme={theme}
-        ></DateNavigatorReports>
+      <Box
+        style={{
+          height: height - 50,
+          overflow: 'auto',
+          backgroundColor: '#fff',
+          marginLeft: 5,
+          marginRight: 5,
+        }}
+      >
+        <Box
+          display="flex"
+          style={{
+            position: 'absolute',
+            zIndex: 111,
+            flexDirection: 'row',
+            alignItems: 'center',
+          }}
+        >
+          <DateNavigatorReports
+            setStart={setStart}
+            setEnd={setEnd}
+            currentDate={currentDate}
+            currentDateChange={currentDateChange}
+            currentViewName={currentViewName}
+            currentViewNameChange={currentViewNameChange}
+            endDate={endDate}
+            endDateChange={endDateChange}
+            views={[1, 7, 30, 365, 1000]}
+            isRTL={isRTL}
+            words={words}
+            theme={theme}
+          ></DateNavigatorReports>
+        </Box>
         <Grid rows={rows} columns={columns} getRowId={getRowId}>
           <SortingState
             defaultSorting={sort}
@@ -205,11 +226,12 @@ export default function FinanceAll({
           <IntegratedSorting />
           <IntegratedFiltering />
           <VirtualTable
-            height={window.innerHeight - 181}
+            height={height - 181}
             messages={{
               noData: isRTL ? 'لا يوجد بيانات' : 'no data',
             }}
             estimatedRowHeight={40}
+            tableComponent={TableComponent}
           />
           <TableHeaderRow showSortingControls />
           <DataTypeProvider
@@ -264,7 +286,7 @@ export default function FinanceAll({
           </PopupEditing>
         </Grid>
         {loading && <Loading isRTL={isRTL} />}
-      </Paper>
+      </Box>
     </PageLayout>
   );
 }

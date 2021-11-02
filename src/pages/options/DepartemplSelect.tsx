@@ -53,7 +53,7 @@ const DepartemplSelect = ({
   return (
     <Box m={1}>
       <Grid container spacing={1}>
-        <Grid item xs={7}>
+        <Grid item xs={9}>
           <RadioGroup
             aria-label="Views"
             name="views"
@@ -80,14 +80,14 @@ const DepartemplSelect = ({
             />
           </RadioGroup>
         </Grid>
-        <Grid item xs={3}>
+        <Grid item xs={2}>
           {count > 0 && (
             <Box display="flex">
-              <Typography
+              {/* <Typography
                 style={{ marginTop: 10, marginLeft: 10, marginRight: 10 }}
               >
                 {isRTL ? 'المواعيد: ' : 'Appointments: '}
-              </Typography>
+              </Typography> */}
               <Typography
                 style={{
                   marginTop: 10,
@@ -101,7 +101,7 @@ const DepartemplSelect = ({
             </Box>
           )}
         </Grid>
-        <Grid item xs={2}>
+        <Grid item xs={1}>
           <Box
             display="flex"
             style={{

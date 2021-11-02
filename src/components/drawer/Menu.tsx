@@ -35,7 +35,7 @@ const Menu = ({
               <Link
                 style={{
                   textDecoration: 'none',
-                  color: isSelected ? '#333' : '#eee',
+                  color: isSelected ? '#333' : '#fff',
                 }}
                 to={`${item.uri}`}
                 onClick={async () => {

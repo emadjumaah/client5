@@ -1,39 +1,40 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import React, { useEffect, useState } from "react";
-import Paper from "@material-ui/core/Paper";
+import React, { useEffect, useState } from 'react';
+import Paper from '@material-ui/core/Paper';
 import {
   SortingState,
   IntegratedSorting,
   DataTypeProvider,
   SearchState,
   IntegratedFiltering,
-} from "@devexpress/dx-react-grid";
+} from '@devexpress/dx-react-grid';
 import {
   Grid,
   TableHeaderRow,
   VirtualTable,
   Toolbar,
   SearchPanel,
-} from "@devexpress/dx-react-grid-material-ui";
-import { Loading } from "../../Shared";
-import { getRowId } from "../../common";
-import { getReminders } from "../../graphql";
-import { useLazyQuery } from "@apollo/client";
+} from '@devexpress/dx-react-grid-material-ui';
+import { Loading } from '../../Shared';
+import { getRowId } from '../../common';
+import { getReminders } from '../../graphql';
+import { useLazyQuery } from '@apollo/client';
 import {
   createdAtFormatter,
   currencyFormatter,
   eventStatusFormatter,
-} from "../../Shared/colorFormat";
+} from '../../Shared/colorFormat';
 
-import { SearchTable } from "../../components";
-import { getColumns } from "../../common/columns";
+import { SearchTable } from '../../components';
+import { getColumns } from '../../common/columns';
 
-import { useMediaQuery } from "@material-ui/core";
+import { useMediaQuery } from '@material-ui/core';
+import useWindowDimensions from '../../hooks/useWindowDimensions';
 
 export default function Reminders({ isRTL, words }) {
   const col = getColumns({ isRTL, words });
-  const isMobile = useMediaQuery("(max-width:600px)");
+  const isMobile = useMediaQuery('(max-width:600px)');
 
   const [columns] = useState([
     col.startDate,
@@ -49,7 +50,7 @@ export default function Reminders({ isRTL, words }) {
 
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(false);
-
+  const { height } = useWindowDimensions();
   const [loadEvents, eventsData]: any = useLazyQuery(getReminders);
 
   useEffect(() => {
@@ -77,24 +78,24 @@ export default function Reminders({ isRTL, words }) {
         {!isMobile && <IntegratedFiltering />}
 
         <VirtualTable
-          height={window.innerHeight - 133}
+          height={height - 100}
           messages={{
-            noData: isRTL ? "لا يوجد بيانات" : "no data",
+            noData: isRTL ? 'لا يوجد بيانات' : 'no data',
           }}
           estimatedRowHeight={40}
         />
         <TableHeaderRow showSortingControls />
 
         <DataTypeProvider
-          for={["startDate"]}
+          for={['startDate']}
           formatterComponent={createdAtFormatter}
         ></DataTypeProvider>
         <DataTypeProvider
-          for={["status"]}
+          for={['status']}
           formatterComponent={eventStatusFormatter}
         ></DataTypeProvider>
         <DataTypeProvider
-          for={["amount"]}
+          for={['amount']}
           formatterComponent={currencyFormatter}
         ></DataTypeProvider>
 

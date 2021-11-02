@@ -69,6 +69,7 @@ import PopupCustomerView from '../../pubups/PopupCustomerView';
 import React from 'react';
 import getEmplEvents from '../../graphql/query/getEmplEvents';
 import useResoursesUp from '../../hooks/useResoursesUp';
+import useWindowDimensions from '../../hooks/useWindowDimensions';
 
 export default function AppointmentsEmpl({
   isRTL,
@@ -110,6 +111,7 @@ export default function AppointmentsEmpl({
   const [openCustomerItem, setOpenCustomerItem] = useState(false);
   const [openEmployeeItem, setOpenEmployeeItem] = useState(false);
   const [openDepartmentItem, setOpenDepartmentItem] = useState(false);
+  const { height } = useWindowDimensions();
 
   const onCloseTaskItem = () => {
     setOpenTaskItem(false);
@@ -372,7 +374,7 @@ export default function AppointmentsEmpl({
           <IntegratedFiltering />
 
           <VirtualTable
-            height={window.innerHeight - 133}
+            height={height - 100}
             messages={{
               noData: isRTL ? 'لا يوجد بيانات' : 'no data',
             }}

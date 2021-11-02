@@ -1,13 +1,13 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import React, { useState } from "react";
-import Paper from "@material-ui/core/Paper";
+import React, { useState } from 'react';
+import Paper from '@material-ui/core/Paper';
 import {
   EditingState,
   SortingState,
   IntegratedSorting,
   SearchState,
   IntegratedFiltering,
-} from "@devexpress/dx-react-grid";
+} from '@devexpress/dx-react-grid';
 import {
   Grid,
   TableHeaderRow,
@@ -15,23 +15,24 @@ import {
   VirtualTable,
   Toolbar,
   SearchPanel,
-} from "@devexpress/dx-react-grid-material-ui";
-import { Command, Loading, PopupEditing } from "../../Shared";
-import { useCategories } from "../../hooks";
-import { getRowId } from "../../common";
-import { PopupCategory } from "../../pubups";
-import { AlertLocal, SearchTable } from "../../components";
-import { errorAlert, errorDeleteAlert } from "../../Shared/helpers";
+} from '@devexpress/dx-react-grid-material-ui';
+import { Command, Loading, PopupEditing } from '../../Shared';
+import { useCategories } from '../../hooks';
+import { getRowId } from '../../common';
+import { PopupCategory } from '../../pubups';
+import { AlertLocal, SearchTable } from '../../components';
+import { errorAlert, errorDeleteAlert } from '../../Shared/helpers';
+import useWindowDimensions from '../../hooks/useWindowDimensions';
 
 export default function Categories({ isRTL, words, isEditor, theme }: any) {
   const [loading, setLoading] = useState(false);
-  const [alrt, setAlrt] = useState({ show: false, msg: "", type: undefined });
+  const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
 
   const [columns] = useState([
-    { name: isRTL ? "nameAr" : "name", title: words.name },
-    { name: isRTL ? "name" : "nameAr", title: words.name },
+    { name: isRTL ? 'nameAr' : 'name', title: words.name },
+    { name: isRTL ? 'name' : 'nameAr', title: words.name },
   ]);
-
+  const { height } = useWindowDimensions();
   const { categories, addCategory, editCategory, removeCategory } =
     useCategories();
 
@@ -42,7 +43,7 @@ export default function Categories({ isRTL, words, isEditor, theme }: any) {
 
       const res = await removeCategory({ variables: { _id } });
       if (res?.data?.deleteCategory?.ok === false) {
-        if (res?.data?.deleteCategory?.error.includes("related")) {
+        if (res?.data?.deleteCategory?.error.includes('related')) {
           await errorDeleteAlert(setAlrt, isRTL);
         } else {
           await errorAlert(setAlrt, isRTL);
@@ -65,9 +66,9 @@ export default function Categories({ isRTL, words, isEditor, theme }: any) {
         <IntegratedFiltering />
 
         <VirtualTable
-          height={window.innerHeight - 133}
+          height={height - 100}
           messages={{
-            noData: isRTL ? "لا يوجد بيانات" : "no data",
+            noData: isRTL ? 'لا يوجد بيانات' : 'no data',
           }}
           estimatedRowHeight={40}
         />

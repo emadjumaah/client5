@@ -1,7 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import React, { useEffect, useState } from 'react';
-import Paper from '@material-ui/core/Paper';
 import {
   EditingState,
   SortingState,
@@ -42,6 +41,9 @@ import { useCustomers, useServices } from '../../hooks';
 import useEmployeesUp from '../../hooks/useEmployeesUp';
 import useResoursesUp from '../../hooks/useResoursesUp';
 import useDepartmentsUp from '../../hooks/useDepartmentsUp';
+import { Box } from '@material-ui/core';
+import useWindowDimensions from '../../hooks/useWindowDimensions';
+import { TableComponent } from '../../Shared/TableComponent';
 
 export default function ManageEmployees({
   isRTL,
@@ -62,7 +64,7 @@ export default function ManageEmployees({
   const { departments } = useDepartmentsUp();
   const { resourses } = useResoursesUp();
   const { services } = useServices();
-
+  const { height } = useWindowDimensions();
   const onCloseItem = () => {
     setOpenItem(false);
     setItem(null);
@@ -141,7 +143,15 @@ export default function ManageEmployees({
       theme={theme}
       refresh={refreshemployee}
     >
-      <Paper>
+      <Box
+        style={{
+          height: height - 50,
+          overflow: 'auto',
+          backgroundColor: '#fff',
+          marginLeft: 5,
+          marginRight: 5,
+        }}
+      >
         {loading && <Loading isRTL={isRTL}></Loading>}
         <Grid
           rows={employees.filter((em: any) => em.resType === 1)}
@@ -156,11 +166,12 @@ export default function ManageEmployees({
           <IntegratedFiltering />
 
           <VirtualTable
-            height={window.innerHeight - 133}
+            height={height - 100}
             messages={{
               noData: isRTL ? 'لا يوجد بيانات' : 'no data',
             }}
             estimatedRowHeight={40}
+            tableComponent={TableComponent}
           />
           <TableHeaderRow showSortingControls />
           <TableColumnVisibility
@@ -258,7 +269,7 @@ export default function ManageEmployees({
           customers={customers}
           tasks={tasks}
         ></PopupEmployeeView>
-      </Paper>
+      </Box>
     </PageLayout>
   );
 }

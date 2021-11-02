@@ -29,6 +29,7 @@ import PopupResourses from '../../pubups/PopupResourses';
 import PageLayout from '../main/PageLayout';
 import { getColumns } from '../../common/columns';
 import useResoursesDown from '../../hooks/useResoursesDown';
+import useWindowDimensions from '../../hooks/useWindowDimensions';
 
 export default function Resourses({
   isRTL,
@@ -56,7 +57,7 @@ export default function Resourses({
     editResourse,
     removeResourse,
   } = useResoursesDown();
-
+  const { height } = useWindowDimensions();
   const commitChanges = async ({ deleted }) => {
     if (deleted) {
       const _id = deleted[0];
@@ -94,7 +95,7 @@ export default function Resourses({
           <IntegratedFiltering />
 
           <VirtualTable
-            height={window.innerHeight - 133}
+            height={height - 100}
             messages={{
               noData: isRTL ? 'لا يوجد بيانات' : 'no data',
             }}

@@ -42,6 +42,7 @@ import { reportprint } from '../../common/ipc';
 import { getColumns } from '../../common/columns';
 import _ from 'lodash';
 import PageLayout from '../main/PageLayout';
+import useWindowDimensions from '../../hooks/useWindowDimensions';
 
 const styles = (theme) => ({
   tableStriped: {
@@ -85,6 +86,7 @@ export default function Events({
   const [rows, setRows] = useState([]);
   const [printRows, setPrintRows]: any = useState([]);
   const [total, setTotal]: any = useState(null);
+  const { height } = useWindowDimensions();
 
   const col = getColumns({ isRTL, words });
 
@@ -329,7 +331,7 @@ export default function Events({
           ></EventsFilter>
         </Box>
         <Box>
-          <Paper style={{ height: window.innerHeight - 85, overflow: 'auto' }}>
+          <Paper style={{ height: height - 85, overflow: 'auto' }}>
             <Box style={{ marginTop: 40 }}>
               <Grid rows={rows} columns={columns} getRowId={getRowId}>
                 <SortingState

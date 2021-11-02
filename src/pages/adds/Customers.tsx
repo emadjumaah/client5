@@ -2,7 +2,6 @@
 /* eslint-disable no-shadow */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import React, { useEffect, useState } from 'react';
-import Paper from '@material-ui/core/Paper';
 import {
   EditingState,
   SortingState,
@@ -48,6 +47,9 @@ import useEmployeesUp from '../../hooks/useEmployeesUp';
 import useDepartmentsUp from '../../hooks/useDepartmentsUp';
 import useResoursesUp from '../../hooks/useResoursesUp';
 import { useServices } from '../../hooks';
+import { Box } from '@material-ui/core';
+import useWindowDimensions from '../../hooks/useWindowDimensions';
+import { TableComponent } from '../../Shared/TableComponent';
 
 export default function Customers(props: any) {
   const { isRTL, words, menuitem, isEditor, theme, company } = props;
@@ -55,7 +57,7 @@ export default function Customers(props: any) {
   const [rows, setRows] = useState([]);
   const [item, setItem] = useState(null);
   const [openItem, setOpenItem] = useState(false);
-
+  const { height } = useWindowDimensions();
   const { tasks } = useTasks();
   const { departments } = useDepartmentsUp();
   const { employees } = useEmployeesUp();
@@ -155,7 +157,15 @@ export default function Customers(props: any) {
       theme={theme}
       refresh={refresh}
     >
-      <Paper>
+      <Box
+        style={{
+          height: height - 50,
+          overflow: 'auto',
+          backgroundColor: '#fff',
+          marginLeft: 5,
+          marginRight: 5,
+        }}
+      >
         <Grid rows={rows} columns={columns} getRowId={getRowId}>
           <SortingState />
           <SearchState />
@@ -165,11 +175,12 @@ export default function Customers(props: any) {
           <IntegratedFiltering />
 
           <VirtualTable
-            height={window.innerHeight - 133}
+            height={height - 100}
             messages={{
               noData: isRTL ? 'لا يوجد بيانات' : 'no data',
             }}
             estimatedRowHeight={40}
+            tableComponent={TableComponent}
           />
           <TableHeaderRow showSortingControls />
           <TableColumnVisibility
@@ -245,7 +256,7 @@ export default function Customers(props: any) {
           customers={rows}
           tasks={tasks}
         ></PopupCustomerView>
-      </Paper>
+      </Box>
     </PageLayout>
   );
 }

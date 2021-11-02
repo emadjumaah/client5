@@ -54,6 +54,7 @@ import { PurchaseReportContext } from '../../contexts';
 import { groupList } from '../../constants/reports';
 import { groupSumCount } from '../../common/reports';
 import { useDepartments, useEmployees, useServices } from '../../hooks';
+import useWindowDimensions from '../../hooks/useWindowDimensions';
 
 const styles = (theme: any) => ({
   tableStriped: {
@@ -145,6 +146,7 @@ export default function PurchaseReport({
     },
     dispatch,
   } = useContext(PurchaseReportContext);
+  const { height } = useWindowDimensions();
 
   const currentViewNameChange = (e: any) => {
     dispatch({ type: 'setCurrentViewName', payload: e.target.value });
@@ -506,7 +508,7 @@ export default function PurchaseReport({
             isRTL={isRTL}
           ></ReportGroupBySwitcher>
         </Box>
-        <Paper style={{ height: window.innerHeight - 85, overflow: 'auto' }}>
+        <Paper style={{ height: height - 85, overflow: 'auto' }}>
           <Grid rows={rows} columns={columns} getRowId={getRowId}>
             <SortingState
               defaultSorting={sort}
@@ -522,7 +524,7 @@ export default function PurchaseReport({
             <IntegratedSorting />
 
             <VirtualTable
-              height={window.innerHeight - 133}
+              height={height - 100}
               tableComponent={!group ? TableComponent : TableComponent2}
               messages={{
                 noData: isRTL ? 'لا يوجد بيانات' : 'no data',

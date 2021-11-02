@@ -6,46 +6,32 @@ import {
   IconButton,
   Paper,
   Typography,
-} from "@material-ui/core";
-import React from "react";
-import RefreshOutlinedIcon from "@material-ui/icons/RefreshOutlined";
-import useMediaQuery from "@material-ui/core/useMediaQuery";
+} from '@material-ui/core';
+import React from 'react';
+import RefreshOutlinedIcon from '@material-ui/icons/RefreshOutlined';
 
 export default function PageLayout(props: any) {
-  const {
-    children,
-    menuitem,
-    isRTL,
-    refresh,
-    theme,
-    bgcolor = theme.palette.primary.light,
-  } = props;
-  const isMobile = useMediaQuery("(max-width:600px)");
+  const { children, menuitem, isRTL, refresh, theme } = props;
 
   return (
-    <Box p={isMobile ? 0 : 2} pt={isMobile ? 6 : undefined}>
+    <Paper elevation={2} square>
       <Hidden xsDown implementation="css">
-        <Paper
-          elevation={0}
+        <Box
           style={{
-            backgroundColor: fade(bgcolor, 0.2),
-            paddingLeft: 20,
-            paddingRight: 20,
+            paddingLeft: 30,
+            paddingRight: 30,
             height: 50,
-            display: "flex",
+            display: 'flex',
             flex: 1,
-            alignItems: "center",
-            justifyContent: "space-between",
-            borderTopRightRadius: 10,
-            borderTopLeftRadius: 10,
-            borderBottomLeftRadius: 0,
-            borderBottomRightRadius: 0,
+            alignItems: 'center',
+            justifyContent: 'space-between',
           }}
         >
           <Typography
             style={{
               color: theme.palette.primary.main,
               fontSize: 22,
+              // color: '#eee',
             }}
           >
             {isRTL ? menuitem.titleAr : menuitem.titleEn}
@@ -53,33 +39,20 @@ export default function PageLayout(props: any) {
           {refresh && (
             <IconButton
               style={{
-                backgroundColor: fade(bgcolor, 0.5),
+                backgroundColor: fade(theme.palette.primary.light, 0.7),
                 padding: 7,
               }}
               onClick={refresh}
             >
               <RefreshOutlinedIcon
-                style={{ fontSize: 24, color: "#eee" }}
+                style={{ fontSize: 24, color: '#eee' }}
                 color="primary"
               ></RefreshOutlinedIcon>
             </IconButton>
           )}
-        </Paper>
+        </Box>
       </Hidden>
-      <Paper
-        style={{
-          // height: window.innerHeight - 85,
-          // overflow: "auto",
-          backgroundColor: fade(theme.palette.primary.light, 0.05),
-          // borderTopRightRadius: 0,
-          // borderTopLeftRadius: 0,
-          borderBottomLeftRadius: isMobile ? undefined : 10,
-          borderBottomRightRadius: isMobile ? undefined : 10,
-        }}
-        elevation={0}
-      >
-        {React.cloneElement(children, { ...props })}
-      </Paper>
-    </Box>
+      {React.cloneElement(children, { ...props })}
+    </Paper>
   );
 }

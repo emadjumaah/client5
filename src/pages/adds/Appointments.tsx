@@ -1,7 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import { useContext, useEffect, useState } from 'react';
-import Paper from '@material-ui/core/Paper';
 import {
   EditingState,
   SortingState,
@@ -72,6 +71,7 @@ import PopupResourseView from '../../pubups/PopupResourseView';
 import useResoursesUp from '../../hooks/useResoursesUp';
 import useEmployeesUp from '../../hooks/useEmployeesUp';
 import useDepartmentsUp from '../../hooks/useDepartmentsUp';
+import useWindowDimensions from '../../hooks/useWindowDimensions';
 
 export default function Appointments({
   isRTL,
@@ -82,6 +82,7 @@ export default function Appointments({
   company,
 }) {
   const [due, setDue] = useState(false);
+  const { height } = useWindowDimensions();
   const col = getColumns({ isRTL, words });
 
   const [columns] = useState([
@@ -319,7 +320,15 @@ export default function Appointments({
       setPeriodvalue={setPeriodvalue}
       bgcolor={colors.blue[500]}
     >
-      <Paper>
+      <Box
+        style={{
+          height: height - 50,
+          overflow: 'auto',
+          backgroundColor: '#fff',
+          marginLeft: 5,
+          marginRight: 5,
+        }}
+      >
         <Box
           display="flex"
           style={{
@@ -393,7 +402,7 @@ export default function Appointments({
           <IntegratedFiltering />
 
           <VirtualTable
-            height={window.innerHeight - 133}
+            height={height - 100}
             messages={{
               noData: isRTL ? 'لا يوجد بيانات' : 'no data',
             }}
@@ -618,7 +627,7 @@ export default function Appointments({
           customers={rows}
           tasks={tasks}
         ></PopupCustomerView>
-      </Paper>
+      </Box>
     </PageLayout>
   );
 }

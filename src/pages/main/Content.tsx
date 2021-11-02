@@ -2,7 +2,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import { useContext, useReducer, useState } from 'react';
-import { fade, useTheme } from '@material-ui/core/styles';
+import { useTheme } from '@material-ui/core/styles';
 import { Box, CssBaseline } from '@material-ui/core';
 import { Route } from 'react-router-dom';
 import { AppDrawer } from '../../components';
@@ -210,7 +210,7 @@ const Content = ({ company, editCompany, refreshcompany }) => {
       display="flex"
       style={{
         flex: 1,
-        backgroundColor: fade(theme.palette.info.light, 0.05),
+        // backgroundColor: fade(theme.palette.info.light, 0.05),
       }}
     >
       <CssBaseline />

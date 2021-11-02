@@ -44,6 +44,7 @@ import { CalendarContext } from '../../contexts';
 import PopupLayoutBox from '../main/PopupLayoutBox';
 import getTasks from '../../graphql/query/getTasks';
 import { getPopupGeneralTitle } from '../../constants/menu';
+import useWindowDimensions from '../../hooks/useWindowDimensions';
 
 const Main = (props: any) => {
   const [visible, setVisible] = useState(false);
@@ -59,6 +60,7 @@ const Main = (props: any) => {
     state: { currentDate, currentViewName, departvalue, emplvalue, status },
     dispatch,
   } = useContext(CalendarContext);
+  const { height } = useWindowDimensions();
 
   const refresQuery = {
     refetchQueries: [
@@ -210,7 +212,7 @@ const Main = (props: any) => {
       style={{
         backgroundColor: '#fff',
         marginTop: isMobile ? 47 : undefined,
-        height: window.innerHeight - 10,
+        height: height,
         overflow: 'auto',
       }}
     >
@@ -256,13 +258,7 @@ const Main = (props: any) => {
         <Box style={{ margin: 0 }}>
           <Scheduler
             data={rows}
-            height={
-              isMonth
-                ? 'auto'
-                : isMobile
-                ? window.innerHeight
-                : window.innerHeight - 90
-            }
+            height={isMonth ? 'auto' : isMobile ? height : height - 85}
             firstDayOfWeek={6}
             locale={isRTL ? 'ar' : 'en'}
           >

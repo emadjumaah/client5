@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import React, { useState } from "react";
-import Paper from "@material-ui/core/Paper";
+import React, { useState } from 'react';
 import {
   EditingState,
   DataTypeProvider,
@@ -8,7 +7,7 @@ import {
   IntegratedSorting,
   IntegratedFiltering,
   SearchState,
-} from "@devexpress/dx-react-grid";
+} from '@devexpress/dx-react-grid';
 import {
   Grid,
   TableHeaderRow,
@@ -16,30 +15,34 @@ import {
   VirtualTable,
   Toolbar,
   SearchPanel,
-} from "@devexpress/dx-react-grid-material-ui";
-import { PopupEditing, Command, errorAlert, Loading } from "../../Shared";
-import { PopupAccount } from "../../pubups";
-import useAccounts from "../../hooks/useAccounts";
-import { useBranches } from "../../hooks";
-import { AlertLocal, SearchTable } from "../../components";
-import { errorAccountAlert, errorDeleteAlert } from "../../Shared/helpers";
+} from '@devexpress/dx-react-grid-material-ui';
+import { PopupEditing, Command, errorAlert, Loading } from '../../Shared';
+import { PopupAccount } from '../../pubups';
+import useAccounts from '../../hooks/useAccounts';
+import { useBranches } from '../../hooks';
+import { AlertLocal, SearchTable } from '../../components';
+import { errorAccountAlert, errorDeleteAlert } from '../../Shared/helpers';
+import { Box } from '@material-ui/core';
+import useWindowDimensions from '../../hooks/useWindowDimensions';
+import { TableComponent } from '../../Shared/TableComponent';
 
 export const getRowId = (row: { _id: any }) => row._id;
 
 export default function Accounts({ isRTL, accounts }: any) {
   const [loading, setLoading] = useState(false);
-  const [alrt, setAlrt] = useState({ show: false, msg: "", type: undefined });
+  const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
+  const { height } = useWindowDimensions();
 
   const [columns] = useState([
-    { name: isRTL ? "nameAr" : "name", title: isRTL ? "اسم الحساب" : "Name" },
-    { name: "code", title: isRTL ? "رقم الحساب" : "Code" },
+    { name: isRTL ? 'nameAr' : 'name', title: isRTL ? 'اسم الحساب' : 'Name' },
+    { name: 'code', title: isRTL ? 'رقم الحساب' : 'Code' },
     {
-      name: isRTL ? "parentAr" : "parent",
-      title: isRTL ? "الحساب الرئيسي" : "Main Account",
+      name: isRTL ? 'parentAr' : 'parent',
+      title: isRTL ? 'الحساب الرئيسي' : 'Main Account',
     },
     {
-      name: "parentcode",
-      title: isRTL ? "الحساب الرئيسي" : "Main Account",
+      name: 'parentcode',
+      title: isRTL ? 'الحساب الرئيسي' : 'Main Account',
     },
   ]);
   const { addAccount, editAccount, removeAccount } = useAccounts();
@@ -53,7 +56,7 @@ export default function Accounts({ isRTL, accounts }: any) {
       if (account && account?.canedit) {
         const res = await removeAccount({ variables: { _id } });
         if (res?.data?.deleteAccount?.ok === false) {
-          if (res?.data?.deleteAccount?.error.includes("related")) {
+          if (res?.data?.deleteAccount?.error.includes('related')) {
             await errorDeleteAlert(setAlrt, isRTL);
           } else {
             await errorAlert(setAlrt, isRTL);
@@ -68,18 +71,26 @@ export default function Accounts({ isRTL, accounts }: any) {
 
   const branchFormatter = ({ value }) => {
     const branch = branches.filter((br: any) => br.basename === value)[0];
-    const name = isRTL ? "nameAr" : "name";
-    return <div>{branch ? branch[name] : ""}</div>;
+    const name = isRTL ? 'nameAr' : 'name';
+    return <div>{branch ? branch[name] : ''}</div>;
   };
 
   return (
-    <Paper>
+    <Box
+      style={{
+        height: height - 50,
+        overflow: 'auto',
+        backgroundColor: '#fff',
+        marginLeft: 5,
+        marginRight: 5,
+      }}
+    >
       {loading && <Loading isRTL={isRTL}></Loading>}
       <Grid rows={accounts} columns={columns} getRowId={getRowId}>
         <SortingState
           defaultSorting={[
-            { columnName: "branch", direction: "asc" },
-            { columnName: "code", direction: "asc" },
+            { columnName: 'branch', direction: 'asc' },
+            { columnName: 'code', direction: 'asc' },
           ]}
         />
         <SearchState />
@@ -90,15 +101,16 @@ export default function Accounts({ isRTL, accounts }: any) {
         <IntegratedFiltering />
 
         <VirtualTable
-          height={window.innerHeight - 133}
+          height={height - 100}
           messages={{
-            noData: isRTL ? "لا يوجد بيانات" : "no data",
+            noData: isRTL ? 'لا يوجد بيانات' : 'no data',
           }}
           estimatedRowHeight={40}
+          tableComponent={TableComponent}
         />
         <TableHeaderRow showSortingControls />
         <DataTypeProvider
-          for={["branch"]}
+          for={['branch']}
           formatterComponent={branchFormatter}
         ></DataTypeProvider>
 
@@ -127,6 +139,6 @@ export default function Accounts({ isRTL, accounts }: any) {
           top
         ></AlertLocal>
       )}
-    </Paper>
+    </Box>
   );
 }

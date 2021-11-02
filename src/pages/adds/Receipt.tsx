@@ -1,7 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import React, { useContext, useEffect, useState } from 'react';
-import Paper from '@material-ui/core/Paper';
 import {
   EditingState,
   SortingState,
@@ -49,6 +48,9 @@ import getReceipts from '../../graphql/query/getReceipts';
 import PopupReceipt from '../../pubups/PopupReceipt';
 import useTasks from '../../hooks/useTasks';
 import getTasks from '../../graphql/query/getTasks';
+import { Box } from '@material-ui/core';
+import useWindowDimensions from '../../hooks/useWindowDimensions';
+import { TableComponent } from '../../Shared/TableComponent';
 
 export default function Receipt({ isRTL, words, menuitem, isEditor, theme }) {
   const [columns] = useState([
@@ -68,7 +70,7 @@ export default function Receipt({ isRTL, words, menuitem, isEditor, theme }) {
   const [end, setEnd] = useState<any>(null);
 
   const { tasks } = useTasks();
-
+  const { height } = useWindowDimensions();
   const {
     state: { currentDate, currentViewName, endDate, sort },
     dispatch,
@@ -178,21 +180,39 @@ export default function Receipt({ isRTL, words, menuitem, isEditor, theme }) {
       theme={theme}
       refresh={refresh}
     >
-      <Paper>
-        <DateNavigatorReports
-          setStart={setStart}
-          setEnd={setEnd}
-          currentDate={currentDate}
-          currentDateChange={currentDateChange}
-          currentViewName={currentViewName}
-          currentViewNameChange={currentViewNameChange}
-          endDate={endDate}
-          endDateChange={endDateChange}
-          views={[1, 7, 30, 365, 1000]}
-          isRTL={isRTL}
-          words={words}
-          theme={theme}
-        ></DateNavigatorReports>
+      <Box
+        style={{
+          height: height - 50,
+          overflow: 'auto',
+          backgroundColor: '#fff',
+          marginLeft: 5,
+          marginRight: 5,
+        }}
+      >
+        <Box
+          display="flex"
+          style={{
+            position: 'absolute',
+            zIndex: 111,
+            flexDirection: 'row',
+            alignItems: 'center',
+          }}
+        >
+          <DateNavigatorReports
+            setStart={setStart}
+            setEnd={setEnd}
+            currentDate={currentDate}
+            currentDateChange={currentDateChange}
+            currentViewName={currentViewName}
+            currentViewNameChange={currentViewNameChange}
+            endDate={endDate}
+            endDateChange={endDateChange}
+            views={[1, 7, 30, 365, 1000]}
+            isRTL={isRTL}
+            words={words}
+            theme={theme}
+          ></DateNavigatorReports>
+        </Box>
         <Grid rows={rows} columns={columns} getRowId={getRowId}>
           <SortingState
             defaultSorting={sort}
@@ -203,11 +223,12 @@ export default function Receipt({ isRTL, words, menuitem, isEditor, theme }) {
           <IntegratedSorting />
           <IntegratedFiltering />
           <VirtualTable
-            height={window.innerHeight - 181}
+            height={height - 100}
             messages={{
               noData: isRTL ? 'لا يوجد بيانات' : 'no data',
             }}
             estimatedRowHeight={40}
+            tableComponent={TableComponent}
           />
           <TableHeaderRow showSortingControls />
           <DataTypeProvider
@@ -258,7 +279,7 @@ export default function Receipt({ isRTL, words, menuitem, isEditor, theme }) {
           </PopupEditing>
         </Grid>
         {loading && <Loading isRTL={isRTL} />}
-      </Paper>
+      </Box>
     </PageLayout>
   );
 }

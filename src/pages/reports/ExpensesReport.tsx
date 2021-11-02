@@ -7,7 +7,6 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import Paper from '@material-ui/core/Paper';
 import {
   SortingState,
   IntegratedSorting,
@@ -49,6 +48,7 @@ import DateNavigatorReports from '../../components/filters/DateNavigatorReports'
 import { ExpensesReportContext } from '../../contexts';
 import FilterSelectCkeckBox from '../../Shared/FilterSelectCkeckBox';
 import useTasks from '../../hooks/useTasks';
+import useWindowDimensions from '../../hooks/useWindowDimensions';
 
 const styles = (theme) => ({
   tableStriped: {
@@ -129,6 +129,7 @@ export default function ExpensesReport({
     dispatch,
   } = useContext(ExpensesReportContext);
   const { tasks } = useTasks();
+  const { height } = useWindowDimensions();
 
   const currentViewNameChange = (e: any) => {
     dispatch({ type: 'setCurrentViewName', payload: e.target.value });
@@ -319,7 +320,15 @@ export default function ExpensesReport({
       theme={theme}
       refresh={refresh}
     >
-      <Paper>
+      <Box
+        style={{
+          height: height - 50,
+          overflow: 'auto',
+          backgroundColor: '#fff',
+          marginLeft: 5,
+          marginRight: 5,
+        }}
+      >
         {/* <Box
           style={{
             position: "absolute",
@@ -333,34 +342,44 @@ export default function ExpensesReport({
             <PrintIcon />
           </IconButton>
         </Box> */}
-        <DateNavigatorReports
-          setStart={setStart}
-          setEnd={setEnd}
-          currentDate={currentDate}
-          currentDateChange={currentDateChange}
-          currentViewName={currentViewName}
-          currentViewNameChange={currentViewNameChange}
-          endDate={endDate}
-          endDateChange={endDateChange}
-          views={[1, 7, 30, 365, 1000]}
-          isRTL={isRTL}
-          words={words}
-          theme={theme}
-        ></DateNavigatorReports>
+        <Box
+          display="flex"
+          style={{
+            position: 'absolute',
+            zIndex: 111,
+            flexDirection: 'row',
+            alignItems: 'center',
+          }}
+        >
+          <DateNavigatorReports
+            setStart={setStart}
+            setEnd={setEnd}
+            currentDate={currentDate}
+            currentDateChange={currentDateChange}
+            currentViewName={currentViewName}
+            currentViewNameChange={currentViewNameChange}
+            endDate={endDate}
+            endDateChange={endDateChange}
+            views={[1, 7, 30, 365, 1000]}
+            isRTL={isRTL}
+            words={words}
+            theme={theme}
+          ></DateNavigatorReports>{' '}
+        </Box>
+
         <Box
           display="flex"
           style={{
             position: 'absolute',
             left: isRTL ? 200 : undefined,
             right: isRTL ? undefined : 200,
-            top: 65,
+            top: 50,
             height: 38,
             zIndex: 111,
             alignItems: 'center',
             justifyContent: 'flex-start',
             paddingLeft: 20,
             paddingRight: 20,
-            marginTop: 8,
           }}
         >
           <Box style={{ marginLeft: 10, marginRight: 10 }}>
@@ -397,79 +416,77 @@ export default function ExpensesReport({
             </Typography>
           </Box>
         </Box>
-        <Paper style={{ height: window.innerHeight - 133, overflow: 'auto' }}>
-          <Grid rows={rows} columns={columns} getRowId={getRowId}>
-            <SortingState
-              defaultSorting={sort}
-              onSortingChange={(srt: any) => setSortDispatch(srt)}
-            />
-            {group && <GroupingState grouping={grouping} />}
-            <SummaryState
-              totalItems={totalSummaryItems}
-              groupItems={groupSummaryItems}
-            />
-            {group && <IntegratedGrouping />}
-            <IntegratedSummary />
-            <IntegratedSorting />
+        <Grid rows={rows} columns={columns} getRowId={getRowId}>
+          <SortingState
+            defaultSorting={sort}
+            onSortingChange={(srt: any) => setSortDispatch(srt)}
+          />
+          {group && <GroupingState grouping={grouping} />}
+          <SummaryState
+            totalItems={totalSummaryItems}
+            groupItems={groupSummaryItems}
+          />
+          {group && <IntegratedGrouping />}
+          <IntegratedSummary />
+          <IntegratedSorting />
 
-            <VirtualTable
-              height={window.innerHeight - 181}
-              tableComponent={TableComponent}
+          <VirtualTable
+            height={height - 100}
+            tableComponent={TableComponent}
+            messages={{
+              noData: isRTL ? 'لا يوجد بيانات' : 'no data',
+            }}
+            estimatedRowHeight={40}
+          />
+          <TableHeaderRow showSortingControls />
+          <TableColumnVisibility
+            columnExtensions={tableColumnVisibilityColumnExtensions}
+            onHiddenColumnNamesChange={(hcs: string[]) => {
+              const all = [...columns];
+              const newcol = all.filter((a: any) => !hcs.includes(a.name));
+              newcol.sort((a: any, b: any) =>
+                a.id > b.id ? 1 : b.id > a.id ? -1 : 0
+              );
+            }}
+          />
+          <DataTypeProvider
+            for={['opTime']}
+            formatterComponent={createdAtFormatter}
+          ></DataTypeProvider>
+          <DataTypeProvider
+            for={['amount']}
+            formatterComponent={currencyFormatter}
+          ></DataTypeProvider>
+          <DataTypeProvider
+            for={['opType']}
+            formatterComponent={opTypeFormatter}
+          ></DataTypeProvider>
+          <DataTypeProvider
+            for={['taskId']}
+            formatterComponent={(props: any) =>
+              taskIdFormatter({ ...props, tasks })
+            }
+          ></DataTypeProvider>
+          <Toolbar />
+          <ColumnChooser />
+          <ExportPanel startExport={startExport} />
+          {group && <TableGroupRow showColumnsWhenGrouped />}
+          {group && (
+            <TableSummaryRow
               messages={{
-                noData: isRTL ? 'لا يوجد بيانات' : 'no data',
+                sum: isRTL ? 'المجموع' : 'Total',
+                count: isRTL ? 'العدد' : 'Count',
               }}
-              estimatedRowHeight={40}
-            />
-            <TableHeaderRow showSortingControls />
-            <TableColumnVisibility
-              columnExtensions={tableColumnVisibilityColumnExtensions}
-              onHiddenColumnNamesChange={(hcs: string[]) => {
-                const all = [...columns];
-                const newcol = all.filter((a: any) => !hcs.includes(a.name));
-                newcol.sort((a: any, b: any) =>
-                  a.id > b.id ? 1 : b.id > a.id ? -1 : 0
-                );
-              }}
-            />
-            <DataTypeProvider
-              for={['opTime']}
-              formatterComponent={createdAtFormatter}
-            ></DataTypeProvider>
-            <DataTypeProvider
-              for={['amount']}
-              formatterComponent={currencyFormatter}
-            ></DataTypeProvider>
-            <DataTypeProvider
-              for={['opType']}
-              formatterComponent={opTypeFormatter}
-            ></DataTypeProvider>
-            <DataTypeProvider
-              for={['taskId']}
-              formatterComponent={(props: any) =>
-                taskIdFormatter({ ...props, tasks })
-              }
-            ></DataTypeProvider>
-            <Toolbar />
-            <ColumnChooser />
-            <ExportPanel startExport={startExport} />
-            {group && <TableGroupRow showColumnsWhenGrouped />}
-            {group && (
-              <TableSummaryRow
-                messages={{
-                  sum: isRTL ? 'المجموع' : 'Total',
-                  count: isRTL ? 'العدد' : 'Count',
-                }}
-              ></TableSummaryRow>
-            )}
-          </Grid>
-        </Paper>
+            ></TableSummaryRow>
+          )}
+        </Grid>
         <GridExporter
           ref={exporterRef}
           rows={rows}
           columns={columns}
           onSave={onSave}
         />
-      </Paper>
+      </Box>
     </PageLayout>
   );
 }

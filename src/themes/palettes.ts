@@ -2,65 +2,78 @@ export const palettes = [
   {
     palette: {
       primary: {
-        main: "#252B3B",
+        main: '#0068B8',
       },
       secondary: {
-        main: "#FFC107",
+        main: '#ffd700',
       },
       background: {
-        default: "#F8F5F5",
+        default: '#fff',
       },
     },
   },
   {
     palette: {
       primary: {
-        main: "#be0c5f",
+        main: '#252B3B',
       },
       secondary: {
-        main: "#ce93d8",
+        main: '#FFC107',
       },
       background: {
-        default: "#F8F5F5",
+        default: '#fff',
       },
     },
   },
   {
     palette: {
       primary: {
-        main: "#472D30",
+        main: '#be0c5f',
       },
       secondary: {
-        main: "#929487",
+        main: '#ce93d8',
       },
       background: {
-        default: "#F8F5F5",
+        default: '#F8F5F5',
       },
     },
   },
   {
     palette: {
       primary: {
-        main: "#0068B8",
+        main: '#472D30',
       },
       secondary: {
-        main: "#FFC107",
+        main: '#929487',
       },
       background: {
-        default: "#F8F5F5",
+        default: '#F8F5F5',
       },
     },
   },
   {
     palette: {
       primary: {
-        main: "#874cbe",
+        main: '#0068B8',
       },
       secondary: {
-        main: "#59c783",
+        main: '#FFC107',
       },
       background: {
-        default: "#F8F5F5",
+        default: '#F8F5F5',
+      },
+    },
+  },
+  {
+    palette: {
+      primary: {
+        main: '#874cbe',
+      },
+      secondary: {
+        main: '#59c783',
+      },
+      background: {
+        default: '#F8F5F5',
       },
     },
   },

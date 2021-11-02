@@ -9,9 +9,9 @@ export default function Package({ company, tempwords, isRTL }: any) {
       p={1}
       style={{
         flex: 1,
-        backgroundColor: '#eaefee',
+        backgroundColor: '#f5f5f5',
         height: 200,
-        borderRadius: 5,
+        borderRadius: 10,
         padding: 20,
       }}
     >

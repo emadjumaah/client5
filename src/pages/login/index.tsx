@@ -3,16 +3,16 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { useMutation } from '@apollo/client';
 import { useForm } from 'react-hook-form';
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Button from '@material-ui/core/Button';
 import {
-  Avatar,
   Box,
   Container,
-  CssBaseline,
+  fade,
   Link,
+  Paper,
   TextField,
   Typography,
+  useTheme,
 } from '@material-ui/core';
 import { login } from '../../graphql/mutation';
 import { yup } from '../../constants';
@@ -22,13 +22,14 @@ import { loginClasses } from '../../themes';
 import { client } from '../../graphql';
 import CountDown from '../../Shared/CountDown';
 import { templates } from '../../constants/roles';
+import useWindowDimensions from '../../hooks/useWindowDimensions';
 
 const timeToWait = 900000;
 const possibleWrong = 15;
 
 const Login = (): any => {
   const classes = loginClasses();
-
+  const theme = useTheme();
   const [error, seterror] = useState(null);
 
   const { register, handleSubmit, errors }: any = useForm(yup.loginResolver);
@@ -42,6 +43,7 @@ const Login = (): any => {
   const timeFromBlock = Date.now() - startBlock;
   const validtime = startBlock ? timeFromBlock > timeToWait : true;
   const remaningTime = Math.floor((timeToWait - timeFromBlock) / 1000);
+  const { height, isMobile } = useWindowDimensions();
 
   const initStoreState = () => {
     dispatch({ type: 'setLastSuccess', payload: Date.now() });
@@ -94,81 +96,133 @@ const Login = (): any => {
   }
 
   return (
-    <>
+    <Box
+      display="flex"
+      style={{
+        flex: 1,
+        height: height - 40,
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}
+    >
       <Container component="main" maxWidth="xs">
-        <CssBaseline />
         <div className={classes.paper}>
-          <Avatar className={classes.avatar}>
-            <LockOutlinedIcon />
-          </Avatar>
-          <Typography component="h1" variant="h5">
-            {isRTL ? 'تسجيل الدخول' : 'Sign in'}
-          </Typography>
+          <Paper
+            elevation={8}
+            style={{
+              alignItems: 'center',
+              justifyContent: 'center',
+              marginBottom: 60,
+              backgroundColor: fade(theme.palette.primary.light, 0.7),
+              zIndex: 113,
+              borderRadius: 15,
+            }}
+          >
+            <img
+              src={
+                'https://www.jadwalerp.com/_next/image?url=%2Fassets%2Fimages%2Flogo.png&w=256&q=100'
+              }
+              alt={'JADWAL'}
+              height={isMobile ? 60 : 90}
+              style={{
+                objectFit: 'contain',
+                borderRadius: 10,
+                marginTop: 5,
+                margin: 10,
+              }}
+            />
+          </Paper>
+          <Paper
+            elevation={6}
+            style={{
+              paddingTop: 90,
+              marginTop: isMobile ? -100 : -120,
+              borderRadius: 15,
+              paddingBottom: 40,
+            }}
+          >
+            <form className={classes.form} noValidate>
+              <Box m={3}>
+                <TextField
+                  autoFocus
+                  label={isRTL ? 'اسم المستخدم' : 'Username'}
+                  name="username"
+                  variant="outlined"
+                  inputRef={register}
+                  error={errors.username ? true : false}
+                  onKeyDown={keyPress}
+                  size="medium"
+                  inputProps={{
+                    style: {
+                      height: 26,
+                      fontSize: 18,
+                      margin: 0,
+                      paddingLeft: 10,
+                      paddingRight: 10,
+                    },
+                  }}
+                  style={{ marginBottom: 20 }}
+                  required
+                  fullWidth
+                />
+                <TextField
+                  name="password"
+                  label={isRTL ? 'كلمة المرور' : 'Password'}
+                  type="password"
+                  variant="outlined"
+                  inputRef={register}
+                  error={errors.password ? true : false}
+                  onKeyDown={keyPress}
+                  helperText={error ? error : undefined}
+                  inputProps={{
+                    style: {
+                      height: 26,
+                      fontSize: 18,
+                      margin: 0,
+                      paddingLeft: 10,
+                      paddingRight: 10,
+                    },
+                  }}
+                  style={{ marginBottom: 30 }}
+                  required
+                  fullWidth
+                />
 
-          <form className={classes.form} noValidate>
-            <Box m={2}>
-              <TextField
-                autoFocus
-                label={isRTL ? 'اسم المستخدم' : 'Username'}
-                name="username"
-                variant="outlined"
-                inputRef={register}
-                error={errors.username ? true : false}
-                onKeyDown={keyPress}
-                style={{ height: 50 }}
-                required
-                fullWidth
-              />
-              <TextField
-                name="password"
-                label={isRTL ? 'كلمة المرور' : 'Password'}
-                type="password"
-                variant="outlined"
-                inputRef={register}
-                error={errors.password ? true : false}
-                onKeyDown={keyPress}
-                helperText={error ? error : undefined}
-                required
-                fullWidth
-              />
-
-              <Button
-                type="submit"
-                fullWidth
-                variant="contained"
-                color="primary"
-                className={classes.submit}
-                style={{ height: 40 }}
-                onClick={handleSubmit(onSubmit)}
-              >
-                {isRTL ? 'تسجبل الدخول' : 'Login'}
-              </Button>
-            </Box>
-          </form>
+                <Button
+                  type="submit"
+                  fullWidth
+                  variant="contained"
+                  color="primary"
+                  className={classes.submit}
+                  style={{ height: 50, fontSize: 18 }}
+                  onClick={handleSubmit(onSubmit)}
+                >
+                  {isRTL ? 'تسجبل الدخول' : 'Login'}
+                </Button>
+              </Box>
+            </form>
+          </Paper>
         </div>
+        <Box
+          mt={4}
+          display="flex"
+          style={{
+            flex: 1,
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          <Typography variant="body2" color="textSecondary" align="center">
+            {'Copyright © '}
+            <Link color="inherit" href="https://jadwalerp.com/">
+              Jadwal ERP
+            </Link>{' '}
+            {new Date().getFullYear()}
+            {'.'}
+          </Typography>
+        </Box>
       </Container>
-      <Box
-        mt={10}
-        display="flex"
-        style={{
-          position: 'fixed',
-          flex: 1,
-          alignItems: 'center',
-          justifyContent: 'center',
-          bottom: 40,
-          width: '100%',
-        }}
-      >
-        <Typography variant="body2" color="textSecondary" align="center">
-          {'Copyright © '}
-          <Link color="inherit" href="https://jadwalerp.com/">
-            Jadwal ERP
-          </Link>{' '}
-          {new Date().getFullYear()}
-          {'.'}
-        </Typography>
-      </Box>
-    </>
+    </Box>
   );
 };
 export default Login;

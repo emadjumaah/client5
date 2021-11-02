@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import React, { useState } from 'react';
-import Paper from '@material-ui/core/Paper';
 import {
   EditingState,
   SortingState,
@@ -24,6 +23,9 @@ import { PopupService } from '../../pubups';
 import { currencyFormatter } from '../../Shared/colorFormat';
 import { AlertLocal, SearchTable } from '../../components';
 import { errorAlert, errorDeleteAlert } from '../../Shared/helpers';
+import { Box } from '@material-ui/core';
+import useWindowDimensions from '../../hooks/useWindowDimensions';
+import { TableComponent } from '../../Shared/TableComponent';
 // import { getColumns } from '../../common/columns';
 
 export default function Services({ isRTL, words, theme, isEditor }: any) {
@@ -43,7 +45,7 @@ export default function Services({ isRTL, words, theme, isEditor }: any) {
   ]);
 
   const { services, addService, editService, removeService } = useServices();
-
+  const { height } = useWindowDimensions();
   const commitChanges = async ({ deleted }) => {
     if (deleted) {
       const _id = deleted[0];
@@ -62,7 +64,15 @@ export default function Services({ isRTL, words, theme, isEditor }: any) {
   };
 
   return (
-    <Paper>
+    <Box
+      style={{
+        height: height - 50,
+        overflow: 'auto',
+        backgroundColor: '#fff',
+        marginLeft: 5,
+        marginRight: 5,
+      }}
+    >
       {loading && <Loading isRTL={isRTL}></Loading>}
       <Grid rows={services} columns={columns} getRowId={getRowId}>
         <SortingState />
@@ -73,11 +83,12 @@ export default function Services({ isRTL, words, theme, isEditor }: any) {
         <IntegratedFiltering />
 
         <VirtualTable
-          height={window.innerHeight - 133}
+          height={height - 100}
           messages={{
             noData: isRTL ? 'لا يوجد بيانات' : 'no data',
           }}
           estimatedRowHeight={40}
+          tableComponent={TableComponent}
         />
         <TableHeaderRow showSortingControls />
 
@@ -116,6 +127,6 @@ export default function Services({ isRTL, words, theme, isEditor }: any) {
           top
         ></AlertLocal>
       )}
-    </Paper>
+    </Box>
   );
 }

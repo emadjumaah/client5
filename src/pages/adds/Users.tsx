@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import React from 'react';
 import { useState } from 'react';
-import Paper from '@material-ui/core/Paper';
 import {
   EditingState,
   SortingState,
@@ -34,6 +33,8 @@ import PageLayout from '../main/PageLayout';
 import useCompany from '../../hooks/useCompany';
 import PopupUserEmail from '../../pubups/PopupUserEmail';
 import useEmployeesUp from '../../hooks/useEmployeesUp';
+import useWindowDimensions from '../../hooks/useWindowDimensions';
+import { TableComponent } from '../../Shared/TableComponent';
 
 const getRowId = (row: { _id: any }) => row._id;
 
@@ -72,6 +73,7 @@ export default function Users({
   } = useUsers();
   const { company } = useCompany();
   const { employees } = useEmployeesUp();
+  const { height } = useWindowDimensions();
 
   const commitChanges = async ({ deleted }) => {
     if (deleted) {
@@ -136,7 +138,15 @@ export default function Users({
       theme={theme}
       refresh={refreshuser}
     >
-      <Paper>
+      <Box
+        style={{
+          height: height - 50,
+          overflow: 'auto',
+          backgroundColor: '#fff',
+          marginLeft: 5,
+          marginRight: 5,
+        }}
+      >
         {loading && <Loading isRTL={isRTL}></Loading>}
         <Grid rows={users} columns={columns} getRowId={getRowId}>
           <SortingState />
@@ -148,11 +158,12 @@ export default function Users({
           <IntegratedFiltering />
 
           <VirtualTable
-            height={window.innerHeight - 133}
+            height={height - 100}
             messages={{
               noData: isRTL ? 'لا يوجد بيانات' : 'no data',
             }}
-            estimatedRowHeight={40}
+            estimatedRowHeight={50}
+            tableComponent={TableComponent}
           />
           <TableHeaderRow showSortingControls />
           <DataTypeProvider
@@ -200,7 +211,7 @@ export default function Users({
             top
           ></AlertLocal>
         )}
-      </Paper>
+      </Box>
     </PageLayout>
   );
 }

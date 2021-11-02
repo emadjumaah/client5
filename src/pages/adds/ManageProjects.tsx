@@ -1,7 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import React, { useEffect, useState } from 'react';
-import Paper from '@material-ui/core/Paper';
 import {
   EditingState,
   SortingState,
@@ -42,6 +41,9 @@ import useProjects from '../../hooks/useProjects';
 import PopupProjectView from '../../pubups/PopupProjectView';
 import useDepartmentsUp from '../../hooks/useDepartmentsUp';
 import PopupProject from '../../pubups/PopupProject';
+import { Box } from '@material-ui/core';
+import useWindowDimensions from '../../hooks/useWindowDimensions';
+import { TableComponent } from '../../Shared/TableComponent';
 
 export default function ManageProjects({
   isRTL,
@@ -63,7 +65,7 @@ export default function ManageProjects({
   const { resourses } = useResoursesUp();
   const { customers } = useCustomers();
   const { services } = useServices();
-
+  const { height } = useWindowDimensions();
   const onCloseItem = () => {
     setOpenItem(false);
     setItem(null);
@@ -129,7 +131,15 @@ export default function ManageProjects({
       theme={theme}
       refresh={refreshproject}
     >
-      <Paper>
+      <Box
+        style={{
+          height: height - 50,
+          overflow: 'auto',
+          backgroundColor: '#fff',
+          marginLeft: 5,
+          marginRight: 5,
+        }}
+      >
         {loading && <Loading isRTL={isRTL}></Loading>}
 
         <Grid rows={projects} columns={columns} getRowId={getRowId}>
@@ -141,11 +151,12 @@ export default function ManageProjects({
           <IntegratedFiltering />
 
           <VirtualTable
-            height={window.innerHeight - 133}
+            height={height - 100}
             messages={{
               noData: isRTL ? 'لا يوجد بيانات' : 'no data',
             }}
             estimatedRowHeight={40}
+            tableComponent={TableComponent}
           />
 
           <TableHeaderRow showSortingControls />
@@ -240,7 +251,7 @@ export default function ManageProjects({
           customers={customers}
           tasks={tasks}
         ></PopupProjectView>
-      </Paper>
+      </Box>
     </PageLayout>
   );
 }

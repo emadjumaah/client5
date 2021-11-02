@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import React, { useState } from "react";
-import Paper from "@material-ui/core/Paper";
+import React, { useState } from 'react';
+import Paper from '@material-ui/core/Paper';
 import {
   EditingState,
   SortingState,
@@ -8,7 +8,7 @@ import {
   DataTypeProvider,
   SearchState,
   IntegratedFiltering,
-} from "@devexpress/dx-react-grid";
+} from '@devexpress/dx-react-grid';
 import {
   Grid,
   TableHeaderRow,
@@ -16,40 +16,41 @@ import {
   Toolbar,
   VirtualTable,
   SearchPanel,
-} from "@devexpress/dx-react-grid-material-ui";
-import { Command, Loading, PopupEditing } from "../../Shared";
-import { getRowId } from "../../common";
-import { PopupProduct } from "../../pubups";
-import { currencyFormatter } from "../../Shared/colorFormat";
-import { errorAlert, errorDeleteAlert } from "../../Shared/helpers";
-import { AlertLocal, SearchTable } from "../../components";
-import { useProducts } from "../../hooks";
+} from '@devexpress/dx-react-grid-material-ui';
+import { Command, Loading, PopupEditing } from '../../Shared';
+import { getRowId } from '../../common';
+import { PopupProduct } from '../../pubups';
+import { currencyFormatter } from '../../Shared/colorFormat';
+import { errorAlert, errorDeleteAlert } from '../../Shared/helpers';
+import { AlertLocal, SearchTable } from '../../components';
+import { useProducts } from '../../hooks';
+import useWindowDimensions from '../../hooks/useWindowDimensions';
 
 export default function Products({ isRTL, words, isEditor, theme }: any) {
   const [loading, setLoading] = useState(false);
-  const [alrt, setAlrt] = useState({ show: false, msg: "", type: undefined });
+  const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
 
   const [columns] = useState([
-    { name: isRTL ? "nameAr" : "name", title: words.name },
-    { name: isRTL ? "name" : "nameAr", title: words.name },
-    { name: isRTL ? "categoryNameAr" : "categoryName", title: words.category },
-    { name: isRTL ? "brandNameAr" : "brandName", title: words.brand },
+    { name: isRTL ? 'nameAr' : 'name', title: words.name },
+    { name: isRTL ? 'name' : 'nameAr', title: words.name },
+    { name: isRTL ? 'categoryNameAr' : 'categoryName', title: words.category },
+    { name: isRTL ? 'brandNameAr' : 'brandName', title: words.brand },
     {
-      name: isRTL ? "departmentNameAr" : "departmentName",
+      name: isRTL ? 'departmentNameAr' : 'departmentName',
       title: words.department,
     },
-    { name: "price", title: words.price },
+    { name: 'price', title: words.price },
   ]);
 
   const { products, addProduct, editProduct, removeProduct } = useProducts();
-
+  const { height } = useWindowDimensions();
   const commitChanges = async ({ deleted }) => {
     if (deleted) {
       const _id = deleted[0];
       setLoading(true);
       const res = await removeProduct({ variables: { _id } });
       if (res?.data?.deleteItem?.ok === false) {
-        if (res?.data?.deleteItem?.error.includes("related")) {
+        if (res?.data?.deleteItem?.error.includes('related')) {
           await errorDeleteAlert(setAlrt, isRTL);
         } else {
           await errorAlert(setAlrt, isRTL);
@@ -71,15 +72,15 @@ export default function Products({ isRTL, words, isEditor, theme }: any) {
         <IntegratedFiltering />
 
         <VirtualTable
-          height={window.innerHeight - 133}
+          height={height - 100}
           messages={{
-            noData: isRTL ? "لا يوجد بيانات" : "no data",
+            noData: isRTL ? 'لا يوجد بيانات' : 'no data',
           }}
           estimatedRowHeight={40}
         />
         <TableHeaderRow showSortingControls />
         <DataTypeProvider
-          for={["price"]}
+          for={['price']}
           formatterComponent={currencyFormatter}
         ></DataTypeProvider>
 

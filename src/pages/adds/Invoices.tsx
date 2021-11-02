@@ -1,7 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import React, { useContext, useEffect, useState } from 'react';
-import Paper from '@material-ui/core/Paper';
 import {
   EditingState,
   SortingState,
@@ -48,12 +47,13 @@ import DateNavigatorReports from '../../components/filters/DateNavigatorReports'
 import { getColumns } from '../../common/columns';
 import useTasks from '../../hooks/useTasks';
 import { TableComponent } from '../reports/SalesReport';
-import { colors } from '@material-ui/core';
+import { Box, colors } from '@material-ui/core';
 import getTasks from '../../graphql/query/getTasks';
 import useResoursesUp from '../../hooks/useResoursesUp';
 import useDepartmentsUp from '../../hooks/useDepartmentsUp';
 import useEmployeesUp from '../../hooks/useEmployeesUp';
 import { useServices } from '../../hooks';
+import useWindowDimensions from '../../hooks/useWindowDimensions';
 
 export default function Invoices({
   isRTL,
@@ -76,12 +76,12 @@ export default function Invoices({
     { name: 'discount', title: words.discount },
     { name: 'amount', title: words.amount },
   ]);
-
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(false);
   const [start, setStart] = useState<any>(null);
   const [end, setEnd] = useState<any>(null);
 
+  const { height } = useWindowDimensions();
   const { tasks } = useTasks();
   const { departments } = useDepartmentsUp();
   const { employees } = useEmployeesUp();
@@ -198,21 +198,39 @@ export default function Invoices({
       refresh={refresh}
       bgcolor={colors.green[500]}
     >
-      <Paper>
-        <DateNavigatorReports
-          setStart={setStart}
-          setEnd={setEnd}
-          currentDate={currentDate}
-          currentDateChange={currentDateChange}
-          currentViewName={currentViewName}
-          currentViewNameChange={currentViewNameChange}
-          endDate={endDate}
-          endDateChange={endDateChange}
-          views={[1, 7, 30, 365, 1000]}
-          isRTL={isRTL}
-          words={words}
-          theme={theme}
-        ></DateNavigatorReports>
+      <Box
+        style={{
+          height: height - 50,
+          overflow: 'auto',
+          backgroundColor: '#fff',
+          marginLeft: 5,
+          marginRight: 5,
+        }}
+      >
+        <Box
+          display="flex"
+          style={{
+            position: 'absolute',
+            zIndex: 111,
+            flexDirection: 'row',
+            alignItems: 'center',
+          }}
+        >
+          <DateNavigatorReports
+            setStart={setStart}
+            setEnd={setEnd}
+            currentDate={currentDate}
+            currentDateChange={currentDateChange}
+            currentViewName={currentViewName}
+            currentViewNameChange={currentViewNameChange}
+            endDate={endDate}
+            endDateChange={endDateChange}
+            views={[1, 7, 30, 365, 1000]}
+            isRTL={isRTL}
+            words={words}
+            theme={theme}
+          ></DateNavigatorReports>
+        </Box>
         <Grid rows={rows} columns={columns} getRowId={getRowId}>
           <SortingState
             defaultSorting={sort}
@@ -225,7 +243,7 @@ export default function Invoices({
           <IntegratedFiltering />
 
           <VirtualTable
-            height={window.innerHeight - 181}
+            height={height - 100}
             messages={{
               noData: isRTL ? 'لا يوجد بيانات' : 'no data',
             }}
@@ -280,7 +298,7 @@ export default function Invoices({
           </PopupEditing>
         </Grid>
         {loading && <Loading isRTL={isRTL} />}
-      </Paper>
+      </Box>
     </PageLayout>
   );
 }

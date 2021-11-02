@@ -40,6 +40,7 @@ import RefreshOutlinedIcon from '@material-ui/icons/RefreshOutlined';
 import { eventStatus } from '../../constants';
 import { getCalendarResourses } from '../../common/helpers';
 import useTasks from '../../hooks/useTasks';
+import useWindowDimensions from '../../hooks/useWindowDimensions';
 
 const EmployeesAppoints = (props: any) => {
   const [resourseData, setResourseData] = useState<any>([]);
@@ -54,6 +55,7 @@ const EmployeesAppoints = (props: any) => {
   } = useContext(CalendarReportContext);
   const isMobile = useMediaQuery('(max-width:600px)');
   const { tasks } = useTasks();
+  const { height, width } = useWindowDimensions();
 
   const [getCalEvents, evnData] = useLazyQuery(getEvents);
   const {
@@ -163,7 +165,7 @@ const EmployeesAppoints = (props: any) => {
       style={{
         backgroundColor: '#fff',
         marginTop: isMobile ? 47 : undefined,
-        // height: window.innerHeight - 60,
+        // height: height - 60,
         overflow: 'auto',
       }}
     >
@@ -225,10 +227,10 @@ const EmployeesAppoints = (props: any) => {
             </Hidden>
           </Grid>
         </Grid>
-        <Box style={{ overflow: 'auto', width: window.innerWidth - 270 }}>
+        <Box style={{ overflow: 'auto', width: width - 270 }}>
           <Scheduler
             data={rows}
-            height={isMobile ? window.innerHeight : window.innerHeight - 70}
+            height={isMobile ? height : height - 70}
             firstDayOfWeek={6}
             locale={isRTL ? 'ar' : 'en'}
           >

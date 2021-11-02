@@ -11,6 +11,7 @@ import CalendarOptions from './CalendarOptions';
 import Company from './Company';
 // import Names from './Names';
 import React from 'react';
+import useWindowDimensions from '../../hooks/useWindowDimensions';
 
 const initcalendar = {
   duration: 30,
@@ -21,6 +22,7 @@ const initcalendar = {
 const Options = ({ isRTL, words, isEditor, company, editCompany }: any) => {
   const { store, dispatch }: GContextTypes = useContext(GlobalContext);
   const { lang, themeId, calendar } = store;
+  const { height } = useWindowDimensions();
 
   const setLang = (lang: any) => {
     dispatch({ type: 'setLang', payload: lang });
@@ -40,41 +42,47 @@ const Options = ({ isRTL, words, isEditor, company, editCompany }: any) => {
   return (
     <Box
       style={{
-        padding: 10,
+        height: height - 50,
+        overflow: 'auto',
+        backgroundColor: '#f5f5f5',
+        marginLeft: 5,
+        marginRight: 5,
       }}
     >
-      <Grid container spacing={2}>
-        {isEditor && (
+      <Box style={{ margin: 10 }}>
+        <Grid container spacing={2}>
+          {isEditor && (
+            <Grid item xs={12} md={10}>
+              <Company
+                company={company}
+                editCompany={editCompany}
+                words={words}
+                isRTL={isRTL}
+              ></Company>
+            </Grid>
+          )}
           <Grid item xs={12} md={10}>
-            <Company
-              company={company}
-              editCompany={editCompany}
-              words={words}
-              isRTL={isRTL}
-            ></Company>
+            <Language lang={lang} setLang={setLang} isRTL={isRTL}></Language>
           </Grid>
-        )}
-        <Grid item xs={12} md={10}>
-          <Language lang={lang} setLang={setLang} isRTL={isRTL}></Language>
-        </Grid>
 
-        <Grid item xs={12} md={10}>
-          <CalendarOptions
-            calendar={calendar}
-            words={words}
-            setCalendar={setCalendar}
-            isRTL={isRTL}
-          ></CalendarOptions>
-        </Grid>
+          <Grid item xs={12} md={10}>
+            <CalendarOptions
+              calendar={calendar}
+              words={words}
+              setCalendar={setCalendar}
+              isRTL={isRTL}
+            ></CalendarOptions>
+          </Grid>
 
-        <Grid item xs={12} md={10}>
-          <GenTheme
-            isRTL={isRTL}
-            themeId={themeId}
-            setThemeId={setThemeId}
-          ></GenTheme>
+          <Grid item xs={12} md={10}>
+            <GenTheme
+              isRTL={isRTL}
+              themeId={themeId}
+              setThemeId={setThemeId}
+            ></GenTheme>
+          </Grid>
         </Grid>
-      </Grid>
+      </Box>
     </Box>
   );
 };

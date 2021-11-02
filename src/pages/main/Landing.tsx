@@ -16,12 +16,14 @@ import PageLayout from './PageLayout';
 import React from 'react';
 import useEmployeesUp from '../../hooks/useEmployeesUp';
 import useDepartmentsUp from '../../hooks/useDepartmentsUp';
+import useWindowDimensions from '../../hooks/useWindowDimensions';
 
 export default function Landing(props: any) {
   const { words, isRTL, user, theme, menuitem } = props;
 
   const { departments } = useDepartmentsUp();
   const { employees } = useEmployeesUp();
+  const { height } = useWindowDimensions();
 
   const {
     salesDays,
@@ -62,11 +64,14 @@ export default function Landing(props: any) {
     >
       <Box
         style={{
-          height: window.innerHeight - 90,
+          height: height - 50,
           overflow: 'auto',
+          backgroundColor: '#f5f5f5',
+          marginLeft: 5,
+          marginRight: 5,
         }}
       >
-        <Box style={{ margin: 20, marginBottom: 20 }}>
+        <Box style={{ margin: 10 }}>
           <Grid container spacing={2}>
             <Grid item xs={12}>
               <Grid container spacing={2}>

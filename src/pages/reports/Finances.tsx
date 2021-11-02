@@ -36,6 +36,7 @@ import { getColumns } from '../../common/columns';
 import { reportprint } from '../../common/ipc';
 import _ from 'lodash';
 import PageLayout from '../main/PageLayout';
+import useWindowDimensions from '../../hooks/useWindowDimensions';
 
 const styles = (theme) => ({
   tableStriped: {
@@ -112,6 +113,7 @@ export default function Finances({
   ]);
 
   const [getFinances, financesData]: any = useLazyQuery(getFinanceReport);
+  const { height } = useWindowDimensions();
 
   useEffect(() => {
     const d = new Date();
@@ -319,7 +321,7 @@ export default function Finances({
             setPeriodvalue={setPeriodvalue}
           ></SalesFilter>
         </Box>
-        <Paper style={{ height: window.innerHeight - 85, overflow: 'auto' }}>
+        <Paper style={{ height: height - 85, overflow: 'auto' }}>
           <Box style={{ marginTop: 40 }}>
             <Grid rows={rows} columns={columns} getRowId={getRowId}>
               <SortingState

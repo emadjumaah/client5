@@ -6,7 +6,6 @@ import {
   createStyles,
   Theme,
   useTheme,
-  fade,
 } from '@material-ui/core/styles';
 import { useHistory } from 'react-router-dom';
 import { client } from '../../graphql';
@@ -33,7 +32,7 @@ const drawerClasses = makeStyles((theme: Theme) =>
         fontSize: '1rem',
         // fontWeight: "500",
       },
-      color: fade(theme.palette.background.default, 0.8),
+      color: '#fff',
     },
     txtltr: {
       textAlign: 'start',
@@ -41,7 +40,7 @@ const drawerClasses = makeStyles((theme: Theme) =>
         fontSize: '1rem',
         // fontWeight: "bold",
       },
-      color: fade(theme.palette.background.default, 0.8),
+      color: '#fff',
     },
     toolbar: theme.mixins.toolbar,
     drawerPaper: {
@@ -119,8 +118,8 @@ function AppDrawer(props: any): any {
   const { window } = props;
   const history = useHistory();
 
-  const { menuitem, setMenuitem, menu, isRTL, user, network, logout } = props;
   const classes = drawerClasses();
+  const { menuitem, setMenuitem, menu, isRTL, user, network, logout } = props;
   const theme = useTheme();
   const [mobileOpen, setMobileOpen] = React.useState(false);
 
@@ -207,8 +206,7 @@ function AppDrawer(props: any): any {
             <Box
               style={{
                 height: 1,
-                marginTop: 10,
-                backgroundColor: '#ddd',
+                backgroundColor: '#aaa',
               }}
             ></Box>
             <Menu

@@ -7,7 +7,6 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import Paper from '@material-ui/core/Paper';
 import {
   SortingState,
   IntegratedSorting,
@@ -61,6 +60,7 @@ import useResoursesUp from '../../hooks/useResoursesUp';
 import useProjects from '../../hooks/useProjects';
 import { ReportPrintComponent } from '../../common/ReportPrintComponent';
 import { useReactToPrint } from 'react-to-print';
+import useWindowDimensions from '../../hooks/useWindowDimensions';
 
 const styles = (theme) => ({
   tableStriped: {
@@ -126,6 +126,7 @@ export default function DocumentsReport({
   const { tasks } = useTasks();
   const { tempoptions } = useTemplate();
   const { services } = useServices();
+  const { height } = useWindowDimensions();
 
   const {
     state: {
@@ -313,7 +314,15 @@ export default function DocumentsReport({
       theme={theme}
       refresh={refresh}
     >
-      <Paper>
+      <Box
+        style={{
+          height: height - 50,
+          overflow: 'auto',
+          backgroundColor: '#fff',
+          marginLeft: 5,
+          marginRight: 5,
+        }}
+      >
         <Box
           style={{
             position: 'absolute',
@@ -414,80 +423,78 @@ export default function DocumentsReport({
             ></FilterSelectCkeckBox>
           </Box>
         </Box>
-        <Paper style={{ height: window.innerHeight - 85, overflow: 'auto' }}>
-          <Grid rows={rows} columns={columns} getRowId={getRowId}>
-            <SortingState
-              defaultSorting={sort}
-              onSortingChange={(srt: any) => setSortDispatch(srt)}
-            />
-            {group && <GroupingState grouping={grouping} />}
-            <SummaryState
-              totalItems={totalSummaryItems}
-              groupItems={groupSummaryItems}
-            />
-            {group && <IntegratedGrouping />}
-            <IntegratedSummary />
-            <IntegratedSorting />
-            <VirtualTable
-              height={window.innerHeight - 133}
-              tableComponent={!group ? TableComponent : TableComponent2}
-              messages={{
-                noData: isRTL ? 'لا يوجد بيانات' : 'no data',
-              }}
-              estimatedRowHeight={40}
-            />
-            <TableHeaderRow showSortingControls />
-            <TableColumnVisibility
-              columnExtensions={tableColumnVisibilityColumnExtensions}
-            />
-            <DataTypeProvider
-              for={['startDate']}
-              formatterComponent={createdAtFormatter}
-            ></DataTypeProvider>
-            <DataTypeProvider
-              for={['time']}
-              formatterComponent={documentTimeFormatter}
-            ></DataTypeProvider>
-            <DataTypeProvider
-              for={['status']}
-              formatterComponent={eventStatusFormatter}
-            ></DataTypeProvider>
-            <DataTypeProvider
-              for={['amount']}
-              formatterComponent={currencyFormatter}
-            ></DataTypeProvider>{' '}
-            <DataTypeProvider
-              for={['taskId']}
-              formatterComponent={(props: any) =>
-                taskIdFormatter({ ...props, tasks })
-              }
-            ></DataTypeProvider>{' '}
-            <DataTypeProvider
-              for={['opType']}
-              formatterComponent={opTypeFormatter}
-            ></DataTypeProvider>
-            <Toolbar />
-            <ColumnChooser />
-            <ExportPanel startExport={startExport} />
-            {group && (
-              <TableGroupRow
-                messages={{
-                  sum: isRTL ? 'المجموع' : 'Total',
-                  count: isRTL ? 'العدد' : 'Count',
-                  sumOf: isRTL ? 'المجموع' : 'Total',
-                  countOf: isRTL ? 'العدد' : 'Count',
-                }}
-                showColumnsWhenGrouped
-              />
-            )}
-            <TableSummaryRow
+        <Grid rows={rows} columns={columns} getRowId={getRowId}>
+          <SortingState
+            defaultSorting={sort}
+            onSortingChange={(srt: any) => setSortDispatch(srt)}
+          />
+          {group && <GroupingState grouping={grouping} />}
+          <SummaryState
+            totalItems={totalSummaryItems}
+            groupItems={groupSummaryItems}
+          />
+          {group && <IntegratedGrouping />}
+          <IntegratedSummary />
+          <IntegratedSorting />
+          <VirtualTable
+            height={height - 100}
+            tableComponent={!group ? TableComponent : TableComponent2}
+            messages={{
+              noData: isRTL ? 'لا يوجد بيانات' : 'no data',
+            }}
+            estimatedRowHeight={40}
+          />
+          <TableHeaderRow showSortingControls />
+          <TableColumnVisibility
+            columnExtensions={tableColumnVisibilityColumnExtensions}
+          />
+          <DataTypeProvider
+            for={['startDate']}
+            formatterComponent={createdAtFormatter}
+          ></DataTypeProvider>
+          <DataTypeProvider
+            for={['time']}
+            formatterComponent={documentTimeFormatter}
+          ></DataTypeProvider>
+          <DataTypeProvider
+            for={['status']}
+            formatterComponent={eventStatusFormatter}
+          ></DataTypeProvider>
+          <DataTypeProvider
+            for={['amount']}
+            formatterComponent={currencyFormatter}
+          ></DataTypeProvider>{' '}
+          <DataTypeProvider
+            for={['taskId']}
+            formatterComponent={(props: any) =>
+              taskIdFormatter({ ...props, tasks })
+            }
+          ></DataTypeProvider>{' '}
+          <DataTypeProvider
+            for={['opType']}
+            formatterComponent={opTypeFormatter}
+          ></DataTypeProvider>
+          <Toolbar />
+          <ColumnChooser />
+          <ExportPanel startExport={startExport} />
+          {group && (
+            <TableGroupRow
               messages={{
                 sum: isRTL ? 'المجموع' : 'Total',
                 count: isRTL ? 'العدد' : 'Count',
+                sumOf: isRTL ? 'المجموع' : 'Total',
+                countOf: isRTL ? 'العدد' : 'Count',
               }}
-            ></TableSummaryRow>
-          </Grid>
-        </Paper>
+              showColumnsWhenGrouped
+            />
+          )}
+          <TableSummaryRow
+            messages={{
+              sum: isRTL ? 'المجموع' : 'Total',
+              count: isRTL ? 'العدد' : 'Count',
+            }}
+          ></TableSummaryRow>
+        </Grid>
         <GridExporter
           ref={exporterRef}
           rows={rows}
@@ -503,7 +510,7 @@ export default function DocumentsReport({
             />
           </div>
         </Box>
-      </Paper>
+      </Box>
     </PageLayout>
   );
 }

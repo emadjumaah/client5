@@ -61,6 +61,7 @@ import useDepartmentsUp from '../../hooks/useDepartmentsUp';
 import useEmployeesUp from '../../hooks/useEmployeesUp';
 import useResoursesUp from '../../hooks/useResoursesUp';
 import useProjects from '../../hooks/useProjects';
+import useWindowDimensions from '../../hooks/useWindowDimensions';
 
 export const getRowId = (row: { _id: any }) => row._id;
 
@@ -119,6 +120,7 @@ export default function TasksEmpl({
   const { employees } = useEmployeesUp();
   const { resourses } = useResoursesUp();
   const { projects } = useProjects();
+  const { height } = useWindowDimensions();
   const onCloseItem = () => {
     setOpenItem(false);
     setItem(null);
@@ -290,7 +292,7 @@ export default function TasksEmpl({
             <IntegratedFiltering />
 
             <VirtualTable
-              height={window.innerHeight - 133}
+              height={height - 100}
               messages={{
                 noData: isRTL ? 'لا يوجد بيانات' : 'no data',
               }}

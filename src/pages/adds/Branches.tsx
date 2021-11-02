@@ -26,6 +26,7 @@ import {
   logoFormatter,
 } from '../../Shared/colorFormat';
 import { SearchTable } from '../../components';
+import useWindowDimensions from '../../hooks/useWindowDimensions';
 
 export const getRowId = (row: { _id: any }) => row._id;
 
@@ -43,6 +44,7 @@ export default function Branches({ isRTL, theme, words }: any) {
   ];
 
   const [columns] = useState(branchCol);
+  const { height } = useWindowDimensions();
 
   const commitChanges = async () => {
     //
@@ -60,7 +62,7 @@ export default function Branches({ isRTL, theme, words }: any) {
         <IntegratedSorting />
         <IntegratedFiltering />
         <VirtualTable
-          height={window.innerHeight - 133}
+          height={height - 100}
           messages={{
             noData: isRTL ? 'لا يوجد بيانات' : 'no data',
           }}

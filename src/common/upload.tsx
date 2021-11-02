@@ -198,13 +198,13 @@ export const ImageOnlineUpload = ({
         <Box
           display="flex"
           style={{
-            marginTop: 5,
-            borderRadius: 5,
+            marginTop: 10,
+            borderRadius: 10,
             overflow: 'hidden',
             width: width,
             height: height,
             cursor: 'pointer',
-            backgroundColor: '#eaeaea',
+            backgroundColor: '#f5f5f5',
             alignItems: 'center',
             justifyContent: 'center',
           }}

@@ -7,7 +7,6 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import Paper from '@material-ui/core/Paper';
 import {
   SortingState,
   IntegratedSorting,
@@ -50,6 +49,7 @@ import { CustomerReportContext } from '../../contexts';
 import FilterSelectCkeckBox from '../../Shared/FilterSelectCkeckBox';
 import { useCustomers } from '../../hooks';
 import useTasks from '../../hooks/useTasks';
+import useWindowDimensions from '../../hooks/useWindowDimensions';
 
 const styles = (theme) => ({
   tableStriped: {
@@ -106,7 +106,7 @@ export default function CustomerReport({
   });
   const { customers } = useCustomers();
   const { tasks } = useTasks();
-
+  const { height } = useWindowDimensions();
   const {
     state: {
       currentDate,
@@ -273,20 +273,15 @@ export default function CustomerReport({
       theme={theme}
       refresh={refresh}
     >
-      <Paper>
-        {/* <Box
-          style={{
-            position: "absolute",
-            left: isRTL ? 145 : undefined,
-            right: isRTL ? undefined : 145,
-            top: 65,
-            zIndex: 100,
-          }}
-        >
-          <IconButton onClick={arrangeParing} title="Print Report" size="small">
-            <PrintIcon />
-          </IconButton>
-        </Box> */}
+      <Box
+        style={{
+          height: height - 50,
+          overflow: 'auto',
+          backgroundColor: '#fff',
+          marginLeft: 5,
+          marginRight: 5,
+        }}
+      >
         <Box
           display="flex"
           style={{
@@ -345,80 +340,78 @@ export default function CustomerReport({
             </Typography>
           </Box>
         </Box>
-        <Paper style={{ height: window.innerHeight - 85, overflow: 'auto' }}>
-          <Grid rows={rows} columns={columns} getRowId={getRowId}>
-            <SortingState
-              defaultSorting={sort}
-              onSortingChange={(srt: any) => setSortDispatch(srt)}
-            />
-            {group && <GroupingState grouping={grouping} />}
-            <SummaryState
-              totalItems={totalSummaryItems}
-              groupItems={groupSummaryItems}
-            />
-            {group && <IntegratedGrouping />}
-            <IntegratedSummary />
-            <IntegratedSorting />
+        <Grid rows={rows} columns={columns} getRowId={getRowId}>
+          <SortingState
+            defaultSorting={sort}
+            onSortingChange={(srt: any) => setSortDispatch(srt)}
+          />
+          {group && <GroupingState grouping={grouping} />}
+          <SummaryState
+            totalItems={totalSummaryItems}
+            groupItems={groupSummaryItems}
+          />
+          {group && <IntegratedGrouping />}
+          <IntegratedSummary />
+          <IntegratedSorting />
 
-            <VirtualTable
-              height={window.innerHeight - 133}
-              tableComponent={TableComponent}
-              messages={{
-                noData: isRTL ? 'لا يوجد بيانات' : 'no data',
-              }}
-              estimatedRowHeight={40}
-            />
-            <TableHeaderRow showSortingControls />
-            <TableColumnVisibility
-              columnExtensions={tableColumnVisibilityColumnExtensions}
-              onHiddenColumnNamesChange={(hcs: string[]) => {
-                const all = [...columns];
-                const newcol = all.filter((a: any) => !hcs.includes(a.name));
-                newcol.sort((a: any, b: any) =>
-                  a.id > b.id ? 1 : b.id > a.id ? -1 : 0
-                );
-              }}
-            />
-            <DataTypeProvider
-              for={['opTime']}
-              formatterComponent={createdAtFormatter}
-            ></DataTypeProvider>
-            <DataTypeProvider
-              for={['credit', 'debit']}
-              formatterComponent={currencyFormatterEmpty}
-            ></DataTypeProvider>
-            <DataTypeProvider
-              for={['opType']}
-              formatterComponent={opTypeFormatter}
-            ></DataTypeProvider>
-            <DataTypeProvider
-              for={['taskId']}
-              formatterComponent={(props: any) =>
-                taskIdFormatter({ ...props, tasks })
-              }
-            ></DataTypeProvider>
-            <Toolbar />
-            <ColumnChooser />
-            <ExportPanel startExport={startExport} />
-            {group && <TableGroupRow showColumnsWhenGrouped />}
-            <TableSummaryRow
-              messages={{
-                sum: '',
-              }}
-              // messages={{
-              //   sum: isRTL ? "المجموع" : "Total",
-              //   count: isRTL ? "العدد" : "Count",
-              // }}
-            ></TableSummaryRow>
-          </Grid>
-        </Paper>
+          <VirtualTable
+            height={height - 100}
+            tableComponent={TableComponent}
+            messages={{
+              noData: isRTL ? 'لا يوجد بيانات' : 'no data',
+            }}
+            estimatedRowHeight={40}
+          />
+          <TableHeaderRow showSortingControls />
+          <TableColumnVisibility
+            columnExtensions={tableColumnVisibilityColumnExtensions}
+            onHiddenColumnNamesChange={(hcs: string[]) => {
+              const all = [...columns];
+              const newcol = all.filter((a: any) => !hcs.includes(a.name));
+              newcol.sort((a: any, b: any) =>
+                a.id > b.id ? 1 : b.id > a.id ? -1 : 0
+              );
+            }}
+          />
+          <DataTypeProvider
+            for={['opTime']}
+            formatterComponent={createdAtFormatter}
+          ></DataTypeProvider>
+          <DataTypeProvider
+            for={['credit', 'debit']}
+            formatterComponent={currencyFormatterEmpty}
+          ></DataTypeProvider>
+          <DataTypeProvider
+            for={['opType']}
+            formatterComponent={opTypeFormatter}
+          ></DataTypeProvider>
+          <DataTypeProvider
+            for={['taskId']}
+            formatterComponent={(props: any) =>
+              taskIdFormatter({ ...props, tasks })
+            }
+          ></DataTypeProvider>
+          <Toolbar />
+          <ColumnChooser />
+          <ExportPanel startExport={startExport} />
+          {group && <TableGroupRow showColumnsWhenGrouped />}
+          <TableSummaryRow
+            messages={{
+              sum: '',
+            }}
+            // messages={{
+            //   sum: isRTL ? "المجموع" : "Total",
+            //   count: isRTL ? "العدد" : "Count",
+            // }}
+          ></TableSummaryRow>
+        </Grid>
         <GridExporter
           ref={exporterRef}
           rows={rows}
           columns={columns}
           onSave={onSave}
         />
-      </Paper>
+      </Box>
     </PageLayout>
   );
 }

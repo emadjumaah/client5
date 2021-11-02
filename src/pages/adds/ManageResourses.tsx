@@ -1,7 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import React, { useEffect, useState } from 'react';
-import Paper from '@material-ui/core/Paper';
 import {
   EditingState,
   SortingState,
@@ -42,6 +41,9 @@ import PopupResourses from '../../pubups/PopupResourses';
 import useResoursesUp from '../../hooks/useResoursesUp';
 import useDepartmentsUp from '../../hooks/useDepartmentsUp';
 import useEmployeesUp from '../../hooks/useEmployeesUp';
+import { Box } from '@material-ui/core';
+import useWindowDimensions from '../../hooks/useWindowDimensions';
+import { TableComponent } from '../../Shared/TableComponent';
 
 export default function ManageResourses({
   isRTL,
@@ -102,7 +104,7 @@ export default function ManageResourses({
     removeResourse,
     refreshresourse,
   } = useResoursesUp();
-
+  const { height } = useWindowDimensions();
   useEffect(() => {
     if (openItem) {
       if (resourses && resourses.length > 0) {
@@ -138,7 +140,15 @@ export default function ManageResourses({
       theme={theme}
       refresh={refreshresourse}
     >
-      <Paper>
+      <Box
+        style={{
+          height: height - 50,
+          overflow: 'auto',
+          backgroundColor: '#fff',
+          marginLeft: 5,
+          marginRight: 5,
+        }}
+      >
         {loading && <Loading isRTL={isRTL}></Loading>}
         <Grid rows={resourses} columns={columns} getRowId={getRowId}>
           <SortingState />
@@ -149,11 +159,12 @@ export default function ManageResourses({
           <IntegratedFiltering />
 
           <VirtualTable
-            height={window.innerHeight - 133}
+            height={height - 100}
             messages={{
               noData: isRTL ? 'لا يوجد بيانات' : 'no data',
             }}
             estimatedRowHeight={40}
+            tableComponent={TableComponent}
           />
           <TableHeaderRow showSortingControls />
           <TableColumnVisibility
@@ -242,7 +253,7 @@ export default function ManageResourses({
           customers={customers}
           tasks={tasks}
         ></PopupResoursesView>
-      </Paper>
+      </Box>
     </PageLayout>
   );
 }

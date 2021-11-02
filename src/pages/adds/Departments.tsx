@@ -25,6 +25,7 @@ import { AlertLocal, SearchTable } from '../../components';
 import { errorDeleteAlert } from '../../Shared/helpers';
 import PageLayout from '../main/PageLayout';
 import useDepartmentsDown from '../../hooks/useDepartmentsDown';
+import useWindowDimensions from '../../hooks/useWindowDimensions';
 
 export default function Departments({
   isRTL,
@@ -43,7 +44,7 @@ export default function Departments({
     { name: 'avatar', title: words.color },
     { id: 11, ref: 'status', name: 'status', title: ' ' },
   ]);
-
+  const { height } = useWindowDimensions();
   const {
     departments,
     addDepartment,
@@ -89,7 +90,7 @@ export default function Departments({
           <IntegratedFiltering />
 
           <VirtualTable
-            height={window.innerHeight - 133}
+            height={height - 100}
             messages={{
               noData: isRTL ? 'لا يوجد بيانات' : 'no data',
             }}

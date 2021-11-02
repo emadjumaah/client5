@@ -1,7 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import React, { useEffect, useState } from 'react';
-import Paper from '@material-ui/core/Paper';
 import {
   EditingState,
   SortingState,
@@ -41,6 +40,9 @@ import PopupDepartmentView from '../../pubups/PopupDepartmentView';
 import useDepartmentsUp from '../../hooks/useDepartmentsUp';
 import useEmployeesUp from '../../hooks/useEmployeesUp';
 import useResoursesUp from '../../hooks/useResoursesUp';
+import { Box } from '@material-ui/core';
+import useWindowDimensions from '../../hooks/useWindowDimensions';
+import { TableComponent } from '../../Shared/TableComponent';
 
 export default function ManageDepartments({
   isRTL,
@@ -61,7 +63,7 @@ export default function ManageDepartments({
   const { resourses } = useResoursesUp();
   const { customers } = useCustomers();
   const { services } = useServices();
-
+  const { height } = useWindowDimensions();
   const onCloseItem = () => {
     setOpenItem(false);
     setItem(null);
@@ -134,7 +136,15 @@ export default function ManageDepartments({
       theme={theme}
       refresh={refreshdepartment}
     >
-      <Paper>
+      <Box
+        style={{
+          height: height - 50,
+          overflow: 'auto',
+          backgroundColor: '#fff',
+          marginLeft: 5,
+          marginRight: 5,
+        }}
+      >
         {loading && <Loading isRTL={isRTL}></Loading>}
 
         <Grid rows={departments} columns={columns} getRowId={getRowId}>
@@ -146,11 +156,12 @@ export default function ManageDepartments({
           <IntegratedFiltering />
 
           <VirtualTable
-            height={window.innerHeight - 133}
+            height={height - 100}
             messages={{
               noData: isRTL ? 'لا يوجد بيانات' : 'no data',
             }}
             estimatedRowHeight={40}
+            tableComponent={TableComponent}
           />
 
           <TableHeaderRow showSortingControls />
@@ -239,7 +250,7 @@ export default function ManageDepartments({
           customers={customers}
           tasks={tasks}
         ></PopupDepartmentView>
-      </Paper>
+      </Box>
     </PageLayout>
   );
 }

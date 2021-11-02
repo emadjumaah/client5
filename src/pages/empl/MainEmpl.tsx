@@ -45,6 +45,7 @@ import { eventStatus } from '../../constants';
 import useTasks from '../../hooks/useTasks';
 import getTasks from '../../graphql/query/getTasks';
 import getEmplEvents from '../../graphql/query/getEmplEvents';
+import useWindowDimensions from '../../hooks/useWindowDimensions';
 
 const MainEmpl = (props: any) => {
   const [visible, setVisible] = useState(false);
@@ -61,6 +62,7 @@ const MainEmpl = (props: any) => {
     dispatch,
   } = useContext(CalendarContext);
   const { tasks } = useTasks();
+  const { height } = useWindowDimensions();
 
   const {
     departments,
@@ -207,7 +209,7 @@ const MainEmpl = (props: any) => {
       style={{
         backgroundColor: '#fff',
         marginTop: isMobile ? 47 : undefined,
-        height: isMobile ? window.innerHeight - 47 : window.innerHeight - 10,
+        height: isMobile ? height - 47 : height - 10,
         overflow: 'auto',
       }}
     >
@@ -232,13 +234,7 @@ const MainEmpl = (props: any) => {
         <Box style={{ margin: 0 }}>
           <Scheduler
             data={rows}
-            height={
-              isMonth
-                ? 'auto'
-                : isMobile
-                ? window.innerHeight - 120
-                : window.innerHeight - 90
-            }
+            height={isMonth ? 'auto' : isMobile ? height - 120 : height - 90}
             firstDayOfWeek={6}
             locale={isRTL ? 'ar' : 'en'}
           >

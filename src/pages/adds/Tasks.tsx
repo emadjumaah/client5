@@ -61,6 +61,7 @@ import useDepartmentsUp from '../../hooks/useDepartmentsUp';
 import useEmployeesUp from '../../hooks/useEmployeesUp';
 import useResoursesUp from '../../hooks/useResoursesUp';
 import useProjects from '../../hooks/useProjects';
+import useWindowDimensions from '../../hooks/useWindowDimensions';
 
 export const getRowId = (row: { _id: any }) => row._id;
 
@@ -120,6 +121,7 @@ export default function Tasks({
   const { resourses } = useResoursesUp();
   const { projects } = useProjects();
   const { services } = useServices();
+  const { height } = useWindowDimensions();
   const onCloseItem = () => {
     setOpenItem(false);
     setItem(null);
@@ -244,7 +246,15 @@ export default function Tasks({
       setPeriodvalue={setPeriodvalue}
       bgcolor={colors.deepPurple[400]}
     >
-      <Paper>
+      <Box
+        style={{
+          height: height - 50,
+          overflow: 'auto',
+          backgroundColor: '#fff',
+          marginLeft: 5,
+          marginRight: 5,
+        }}
+      >
         <Box
           display="flex"
           style={{
@@ -293,7 +303,7 @@ export default function Tasks({
             <IntegratedFiltering />
 
             <VirtualTable
-              height={window.innerHeight - 133}
+              height={height - 98}
               messages={{
                 noData: isRTL ? 'لا يوجد بيانات' : 'no data',
               }}
@@ -425,7 +435,7 @@ export default function Tasks({
             ></PopupTaskView>
           )}
         </Paper>
-      </Paper>
+      </Box>
     </PageLayout>
   );
 }
