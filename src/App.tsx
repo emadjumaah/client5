@@ -46,7 +46,7 @@ function App() {
   // const uri = 'https://jadwal-web.herokuapp.com/graphql'; // desktop prod and vercel
   // const uri = 'http://jadwal-main:4000/graphql'; // localserver
   // const uri = process.env.GRAPHQL_URI; // webserver
-
+  // env react
   const httpLink = createHttpLink({
     uri: process.env.GRAPHQL_URI,
   });
