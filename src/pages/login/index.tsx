@@ -4,14 +4,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { useMutation } from '@apollo/client';
 import { useForm } from 'react-hook-form';
 import Button from '@material-ui/core/Button';
-import {
-  Box,
-  Container,
-  Link,
-  Paper,
-  TextField,
-  Typography,
-} from '@material-ui/core';
+import { Box, Container, Link, TextField, Typography } from '@material-ui/core';
 import { login } from '../../graphql/mutation';
 import { yup } from '../../constants';
 import { GContextTypes } from '../../types';
@@ -40,7 +33,7 @@ const Login = (): any => {
   const timeFromBlock = Date.now() - startBlock;
   const validtime = startBlock ? timeFromBlock > timeToWait : true;
   const remaningTime = Math.floor((timeToWait - timeFromBlock) / 1000);
-  const { height, isMobile } = useWindowDimensions();
+  const { height } = useWindowDimensions();
 
   const initStoreState = () => {
     dispatch({ type: 'setLastSuccess', payload: Date.now() });
@@ -104,46 +97,60 @@ const Login = (): any => {
     >
       <Container component="main" maxWidth="xs">
         <div className={classes.paper}>
-          <Typography
-            color="primary"
-            variant="h2"
-            style={{
-              zIndex: 115,
-              marginBottom: 20,
-              marginTop: -40,
-              opacity: 0.9,
-            }}
-          >
-            JADWAL
-          </Typography>
           <Box
+            display="flex"
             style={{
+              flexDirection: 'row',
+              flex: 1,
               alignItems: 'center',
               justifyContent: 'center',
-              marginBottom: 50,
-              zIndex: 113,
+              marginBottom: 40,
             }}
           >
-            <img
-              src={
-                'https://res.cloudinary.com/fivegstore/image/upload/v1635853109/256x256_fwxwfx.png'
-              }
-              alt={'JADWAL'}
-              height={isMobile ? 130 : 150}
+            <Box
               style={{
-                objectFit: 'cover',
-                borderRadius: 10,
-                opacity: 0.9,
+                alignItems: 'center',
+                justifyContent: 'center',
+                zIndex: 113,
               }}
-            />
+            >
+              <img
+                src={
+                  'https://res.cloudinary.com/fivegstore/image/upload/v1635853109/256x256_fwxwfx.png'
+                }
+                alt={'JADWAL'}
+                height={80}
+                style={{
+                  objectFit: 'cover',
+                  borderRadius: 10,
+                  opacity: 0.9,
+                }}
+              />
+            </Box>
+            <Box>
+              <Typography
+                color="primary"
+                style={{
+                  zIndex: 115,
+                  marginBottom: 20,
+                  marginLeft: 20,
+                  marginRight: 20,
+                  opacity: 0.9,
+                  fontSize: 54,
+                  fontWeight: 'lighter',
+                }}
+              >
+                JADWAL
+              </Typography>
+            </Box>
           </Box>
 
-          <Paper
-            elevation={3}
+          <Box
+            border={1}
+            borderColor="#ddd"
             style={{
-              paddingTop: 90,
-              marginTop: -120,
-              borderRadius: 15,
+              paddingTop: 30,
+              borderRadius: 10,
               paddingBottom: 20,
             }}
           >
@@ -153,7 +160,6 @@ const Login = (): any => {
                   autoFocus
                   label={isRTL ? 'اسم المستخدم' : 'Username'}
                   name="username"
-                  variant="outlined"
                   inputRef={register}
                   error={errors.username ? true : false}
                   onKeyDown={keyPress}
@@ -175,7 +181,6 @@ const Login = (): any => {
                   name="password"
                   label={isRTL ? 'كلمة المرور' : 'Password'}
                   type="password"
-                  variant="outlined"
                   inputRef={register}
                   error={errors.password ? true : false}
                   onKeyDown={keyPress}
@@ -200,17 +205,16 @@ const Login = (): any => {
                   variant="contained"
                   color="primary"
                   className={classes.submit}
-                  style={{ height: 40, fontSize: 16 }}
+                  style={{ height: 42, fontSize: 16 }}
                   onClick={handleSubmit(onSubmit)}
                 >
                   {isRTL ? 'تسجبل الدخول' : 'Login'}
                 </Button>
               </Box>
             </form>
-          </Paper>
+          </Box>
         </div>
         <Box
-          mt={4}
           display="flex"
           style={{
             flex: 1,
@@ -218,9 +222,9 @@ const Login = (): any => {
             justifyContent: 'center',
           }}
         >
-          <Typography variant="body2" color="textSecondary" align="center">
+          <Typography variant="body1" color="textSecondary" align="center">
             {'Copyright © '}
-            <Link color="inherit" href="https://jadwalerp.com/">
+            <Link color="inherit" href="https://jadwalweb.com/">
               Jadwal
             </Link>{' '}
             {new Date().getFullYear()}
