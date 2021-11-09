@@ -43,6 +43,8 @@ import useTasks from '../../../hooks/useTasks';
 import useProjects from '../../../hooks/useProjects';
 import MyIcon from '../../../Shared/MyIcon';
 import PopupMaps from '../../../pubups/PopupMaps';
+import { SelectLocal } from './SelectLocal';
+import { eventLengthOptions } from '../../../constants/rrule';
 
 export const indexTheList = (list: any) => {
   return list.map((item: any, index: any) => {
@@ -62,6 +64,9 @@ export const AppointForm = (props: any) => {
 
   const [startDate, setStartDate]: any = useState(row?.startDate);
   const [endDate, setEndDate]: any = useState(row?.endDate);
+  const [eventLength, setEventLength]: any = useState(
+    eventLengthOptions[1].value
+  );
 
   const [status, setStatus] = useState(row?.status || 2);
 
@@ -383,6 +388,13 @@ export const AppointForm = (props: any) => {
     }
     onNewFieldChange(newValue, 'employee');
     setEmplvalue(newValue);
+    if (newValue?.departmentId) {
+      const dept = departments.filter(
+        (dep: any) => dep._id === newValue?.departmentId
+      )?.[0];
+      onNewFieldChange(dept, 'department');
+      setDepartvalue(dept);
+    }
   };
   const selectResourse = (value: any) => {
     let newValue = value;
@@ -400,11 +412,40 @@ export const AppointForm = (props: any) => {
     }
     onNewFieldChange(newValue, 'resourse');
     setResovalue(newValue);
+    if (newValue?.departmentId) {
+      const dept = departments.filter(
+        (dep: any) => dep._id === newValue?.departmentId
+      )?.[0];
+      onNewFieldChange(dept, 'department');
+      setDepartvalue(dept);
+    }
   };
   const selectTask = (value: any) => {
     let newValue = value?.id;
     setTaskvalue(value);
     onNewFieldChange(newValue ? newValue : null, 'taskId');
+    if (value?.employeeId) {
+      const empl = employees.filter(
+        (em: any) => em._id === value?.employeeId
+      )?.[0];
+      onNewFieldChange(empl, 'employee');
+      setEmplvalue(empl);
+    }
+    if (value?.departmentId) {
+      const dept = departments.filter(
+        (dep: any) => dep._id === value?.departmentId
+      )?.[0];
+      onNewFieldChange(dept, 'department');
+      setDepartvalue(dept);
+    }
+
+    if (value?.resourseId) {
+      const empl = resourses.filter(
+        (em: any) => em._id === value?.resourseId
+      )?.[0];
+      onNewFieldChange(empl, 'resourse');
+      setResovalue(empl);
+    }
   };
 
   useEffect(() => {
@@ -492,20 +533,18 @@ export const AppointForm = (props: any) => {
 
   return (
     <>
+      <Box style={{ position: 'absolute', top: 50, left: 30 }}>
+        <Typography
+          style={{ fontWeight: 'bold', marginTop: 15 }}
+          variant="body2"
+        >
+          {row?.docNo}
+        </Typography>
+      </Box>
       <Grid container spacing={0}>
         <Grid item xs={8}>
           <Grid container spacing={1}>
-            <Grid item xs={12} md={2}>
-              <Box>
-                <Typography
-                  style={{ fontWeight: 'bold', marginTop: 15 }}
-                  variant="body2"
-                >
-                  {row?.docNo}
-                </Typography>
-              </Box>
-            </Grid>
-            <Grid item xs={12} md={5}>
+            <Grid item xs={12} md={4}>
               <CalenderLocal
                 isRTL={isRTL}
                 label={words.start}
@@ -513,23 +552,49 @@ export const AppointForm = (props: any) => {
                 onChange={(d: any) => {
                   setStartDate(d);
                   onNewFieldChange(d, 'startDate');
+                  const end = eventLength
+                    ? new Date(d).getTime() + eventLength * 60 * 1000
+                    : null;
+                  if (end) {
+                    setEndDate(new Date(end));
+                    onNewFieldChange(new Date(end), 'endDate');
+                  }
                 }}
                 format="dd/MM/yyyy - hh:mm"
                 time
               ></CalenderLocal>
             </Grid>
-            <Grid item xs={12} md={5}>
-              <CalenderLocal
-                isRTL={isRTL}
-                label={words.end}
-                value={endDate}
-                onChange={(d: any) => {
-                  setEndDate(d);
-                  onNewFieldChange(d, 'endDate');
+            <Grid item xs={12} md={4}>
+              <SelectLocal
+                options={eventLengthOptions}
+                value={eventLength}
+                onChange={(e: any) => {
+                  const { value } = e.target;
+                  setEventLength(value);
+                  const end = startDate
+                    ? new Date(startDate).getTime() + value * 60 * 1000
+                    : null;
+                  if (end) {
+                    setEndDate(new Date(end));
+                    onNewFieldChange(new Date(end), 'endDate');
+                  }
                 }}
-                format="dd/MM/yyyy - hh:mm"
-                time
-              ></CalenderLocal>
+                isRTL={isRTL}
+              ></SelectLocal>
+            </Grid>
+            <Grid item xs={12} md={4}>
+              <div style={{ pointerEvents: 'none', opacity: 0.3 }}>
+                <CalenderLocal
+                  isRTL={isRTL}
+                  label={words.end}
+                  value={endDate}
+                  onChange={(d: any) => {
+                    setEndDate(d);
+                  }}
+                  format="dd/MM/yyyy - hh:mm"
+                  time
+                ></CalenderLocal>
+              </div>
             </Grid>
             <Grid item xs={12}>
               <TextFieldLocal
@@ -742,7 +807,18 @@ export const AppointForm = (props: any) => {
                 {isRTL ? 'الموقع الجغرافي' : 'Location'}
               </Button>
               {location?.lat && (
-                <MyIcon size={32} color="#ff80ed" icon="location"></MyIcon>
+                <>
+                  <MyIcon size={32} color="#ff80ed" icon="location"></MyIcon>
+                  <Box
+                    onClick={() => {
+                      setLocation(null);
+                      onNewFieldChange(null, 'location');
+                    }}
+                    style={{ cursor: 'pointer', padding: 4 }}
+                  >
+                    <MyIcon size={28} color="#777" icon="close"></MyIcon>
+                  </Box>
+                </>
               )}
             </Box>
           </Box>

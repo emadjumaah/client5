@@ -51,6 +51,8 @@ import useTasks from '../hooks/useTasks';
 import useProjects from '../hooks/useProjects';
 import MyIcon from '../Shared/MyIcon';
 import PopupMaps from './PopupMaps';
+import { SelectLocal } from '../pages/calendar/common/SelectLocal';
+import { eventLengthOptions } from '../constants/rrule';
 
 export const indexTheList = (list: any) => {
   return list.map((item: any, index: any) => {
@@ -85,6 +87,9 @@ const PopupAppointmentCustomer = ({
 
   const [startDate, setStartDate]: any = useState(null);
   const [endDate, setEndDate]: any = useState(null);
+  const [eventLength, setEventLength]: any = useState(
+    eventLengthOptions[1].value
+  );
 
   const [departvalue, setDepartvalue] = useState<any>(
     name === 'departmentId' ? value : null
@@ -516,6 +521,7 @@ const PopupAppointmentCustomer = ({
     setSelected(null);
     setTasktitle(null);
     setLocation(null);
+    setEventLength(null);
   };
 
   console.log(row);
@@ -558,7 +564,7 @@ const PopupAppointmentCustomer = ({
       title,
       startDate,
       endDate,
-      location: location?.lat ? location : undefined,
+      location: location?.lat ? location : null,
       amount: totals.amount,
       status: status ? status.id : 2,
       items: JSON.stringify(itemsList),
@@ -687,25 +693,52 @@ const PopupAppointmentCustomer = ({
             <Grid container spacing={2}>
               <Grid item xs={8}>
                 <Grid container spacing={1}>
-                  <Grid item xs={12} md={6}>
+                  <Grid item xs={12} md={4}>
                     <CalenderLocal
                       isRTL={isRTL}
                       label={words.start}
                       value={startDate}
-                      onChange={(d: any) => setStartDate(d)}
+                      onChange={(d: any) => {
+                        setStartDate(d);
+                        const end = eventLength
+                          ? new Date(d).getTime() + eventLength * 60 * 1000
+                          : null;
+                        if (end) {
+                          setEndDate(new Date(end));
+                        }
+                      }}
                       format="dd/MM/yyyy - hh:mm"
                       time
                     ></CalenderLocal>
                   </Grid>
-                  <Grid item xs={12} md={6}>
-                    <CalenderLocal
+                  <Grid item xs={12} md={4}>
+                    <SelectLocal
+                      options={eventLengthOptions}
+                      value={eventLength}
+                      onChange={(e: any) => {
+                        const { value } = e.target;
+                        setEventLength(value);
+                        const end = startDate
+                          ? new Date(startDate).getTime() + value * 60 * 1000
+                          : null;
+                        if (end) {
+                          setEndDate(new Date(end));
+                        }
+                      }}
                       isRTL={isRTL}
-                      label={words.end}
-                      value={endDate}
-                      onChange={(d: any) => setEndDate(d)}
-                      format="dd/MM/yyyy - hh:mm"
-                      time
-                    ></CalenderLocal>
+                    ></SelectLocal>
+                  </Grid>
+                  <Grid item xs={12} md={4}>
+                    <div style={{ pointerEvents: 'none', opacity: 0.3 }}>
+                      <CalenderLocal
+                        isRTL={isRTL}
+                        label={words.end}
+                        value={endDate}
+                        onChange={(d: any) => setEndDate(d)}
+                        format="dd/MM/yyyy - hh:mm"
+                        time
+                      ></CalenderLocal>
+                    </div>
                   </Grid>
                   <Grid item xs={12}>
                     <TextFieldLocal
@@ -944,7 +977,19 @@ const PopupAppointmentCustomer = ({
                     {isRTL ? 'الموقع الجغرافي' : 'Location'}
                   </Button>
                   {location?.lat && (
-                    <MyIcon size={32} color="#ff80ed" icon="location"></MyIcon>
+                    <>
+                      <MyIcon
+                        size={32}
+                        color="#ff80ed"
+                        icon="location"
+                      ></MyIcon>
+                      <Box
+                        onClick={() => setLocation(null)}
+                        style={{ cursor: 'pointer', padding: 4 }}
+                      >
+                        <MyIcon size={28} color="#777" icon="close"></MyIcon>
+                      </Box>
+                    </>
                   )}
                 </Box>
               </Grid>

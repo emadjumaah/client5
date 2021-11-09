@@ -50,12 +50,16 @@ import { useServices } from '../../hooks';
 import { Box } from '@material-ui/core';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
 import { TableComponent } from '../../Shared/TableComponent';
+import PopupCustomerImport from '../../pubups/PopupCustomerImport';
+import ImportBtn from '../../common/ImportBtn';
+import createMultiCustomers from '../../graphql/mutation/createMultiCustomers';
 
 export default function Customers(props: any) {
   const { isRTL, words, menuitem, isEditor, theme, company } = props;
   const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
   const [rows, setRows] = useState([]);
   const [item, setItem] = useState(null);
+  const [openImport, setOpenImport] = useState(false);
   const [openItem, setOpenItem] = useState(false);
   const { height } = useWindowDimensions();
   const { tasks } = useTasks();
@@ -63,6 +67,7 @@ export default function Customers(props: any) {
   const { employees } = useEmployeesUp();
   const { resourses } = useResoursesUp();
   const { services } = useServices();
+
   const onCloseItem = () => {
     setOpenItem(false);
     setItem(null);
@@ -121,6 +126,7 @@ export default function Customers(props: any) {
   }, []);
 
   const [addCustomer] = useMutation(createCustomer, refresQuery);
+  const [addMultiCustomers] = useMutation(createMultiCustomers, refresQuery);
   const [editCustomer] = useMutation(updateCustomer, refresQuery);
   const [removeCustomer] = useMutation(deleteCustomer, refresQuery);
 
@@ -166,6 +172,11 @@ export default function Customers(props: any) {
           marginRight: 5,
         }}
       >
+        <ImportBtn
+          open={() => setOpenImport(true)}
+          isRTL={isRTL}
+          theme={theme}
+        ></ImportBtn>
         <Grid rows={rows} columns={columns} getRowId={getRowId}>
           <SortingState />
           <SearchState />
@@ -256,6 +267,14 @@ export default function Customers(props: any) {
           customers={rows}
           tasks={tasks}
         ></PopupCustomerView>
+        <PopupCustomerImport
+          open={openImport}
+          onClose={() => setOpenImport(false)}
+          addMultiItems={addMultiCustomers}
+          isRTL={isRTL}
+          theme={theme}
+          words={words}
+        ></PopupCustomerImport>
       </Box>
     </PageLayout>
   );

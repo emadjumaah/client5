@@ -28,6 +28,11 @@ import RoomIcon from '@material-ui/icons/Room';
 import CloseIcon from '@material-ui/icons/Close';
 import AccountTree from '@material-ui/icons/AccountTree';
 import LanguageIcon from '@material-ui/icons/Language';
+import ArrowDownward from '@material-ui/icons/ArrowDownward';
+import MarkEmailReadIcon from '@material-ui/icons/Email';
+import NotificationsActive from '@material-ui/icons/NotificationsActive';
+import ListAltIcon from '@material-ui/icons/ListAlt';
+import CampaignIcon from '@material-ui/icons/Telegram';
 
 export default function MyIcon({ icon, color, size }: any) {
   const style = { color, fontSize: size ? size : undefined };
@@ -94,6 +99,16 @@ export default function MyIcon({ icon, color, size }: any) {
       return <AccountTree style={style}></AccountTree>;
     case 'lang':
       return <LanguageIcon style={style}></LanguageIcon>;
+    case 'import':
+      return <ArrowDownward style={style}></ArrowDownward>;
+    case 'email':
+      return <MarkEmailReadIcon style={style}></MarkEmailReadIcon>;
+    case 'bell':
+      return <NotificationsActive style={style}></NotificationsActive>;
+    case 'list':
+      return <ListAltIcon style={style}></ListAltIcon>;
+    case 'camp':
+      return <CampaignIcon style={style}></CampaignIcon>;
 
     default:
       return <div></div>;

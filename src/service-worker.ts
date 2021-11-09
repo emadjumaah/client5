@@ -57,7 +57,8 @@ registerRoute(
 // precache, in this case same-origin .png requests like those from in public/
 registerRoute(
   // Add in any other file extensions or routing criteria as needed.
-  ({ url }) => url.origin === self.location.origin && url.pathname.endsWith('.png'),
+  ({ url }) =>
+    url.origin === self.location.origin && url.pathname.endsWith('.png'),
   // Customize this strategy as needed, e.g., by changing to CacheFirst.
   new StaleWhileRevalidate({
     cacheName: 'images',
@@ -78,3 +79,23 @@ self.addEventListener('message', (event) => {
 });
 
 // Any other custom service worker logic can go here.
+
+// notifications
+self.addEventListener('push', function (e) {
+  const strdata = e?.data?.text();
+  const data = JSON.parse(strdata);
+  const { body, image, title } = data;
+  const icon =
+    'https://res.cloudinary.com/fivegstore/image/upload/v1635853109/256x256_fwxwfx.png';
+  var options = {
+    body,
+    icon,
+    image,
+    vibrate: [100, 50, 100],
+    data: {
+      dateOfArrival: Date.now(),
+      primaryKey: 1,
+    },
+  };
+  e.waitUntil(self.registration.showNotification(title, options));
+});

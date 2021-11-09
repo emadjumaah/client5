@@ -171,6 +171,7 @@ export interface LanguageType {
     subject: string;
     body: string;
     weekdays: string;
+    group: string;
   };
   messages: {
     itemadded: string;

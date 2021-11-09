@@ -14,15 +14,22 @@ import {
   AppBar,
   Box,
   Drawer,
+  FormControlLabel,
   Hidden,
   IconButton,
+  Switch,
   Toolbar,
+  Tooltip,
 } from '@material-ui/core';
 import clsx from 'clsx';
 import MenuIcon from '@material-ui/icons/Menu';
 import Menu from './Menu';
 import { drawerWidth } from '../../constants';
 import { UserBox } from '../../Shared';
+import MainVav from '../../Shared/MainVav';
+import { subscribePushToken } from '../../common/helpers';
+import { useMutation } from '@apollo/client';
+import updatePushToken from '../../graphql/mutation/updatePushToken';
 
 const drawerClasses = makeStyles((theme: Theme) =>
   createStyles({
@@ -44,7 +51,7 @@ const drawerClasses = makeStyles((theme: Theme) =>
     },
     toolbar: theme.mixins.toolbar,
     drawerPaper: {
-      width: drawerWidth,
+      // width: drawerWidth,
       backgroundColor: theme.palette.primary.main,
     },
     drawerContainer: {
@@ -58,15 +65,15 @@ const drawerClasses = makeStyles((theme: Theme) =>
       backgroundColor: theme.palette.primary.main,
     },
     child: {
-      fontSize: '1.5em',
-      paddingTop: 15,
-      paddingBottom: 15,
+      fontSize: '1.3em',
+      paddingTop: 12,
+      paddingBottom: 12,
       '&:hover': {
         backgroundColor: theme.palette.primary.light,
       },
     },
     child2: {
-      padding: 10,
+      padding: 7,
       paddingLeft: 55,
       backgroundColor: theme.palette.primary.main,
       '&:hover': {
@@ -117,14 +124,39 @@ const drawerClasses = makeStyles((theme: Theme) =>
 function AppDrawer(props: any): any {
   const { window } = props;
   const history = useHistory();
-
   const classes = drawerClasses();
-  const { menuitem, setMenuitem, menu, isRTL, user, network, logout } = props;
+  const {
+    menuitem,
+    setMenuitem,
+    menu,
+    isRTL,
+    user,
+    network,
+    logout,
+    mmenu,
+    setMmenu,
+    notify,
+    dispatch,
+  } = props;
   const theme = useTheme();
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
+  const [updatePush] = useMutation(updatePushToken);
+
+  const handleNotification = async (e: any) => {
+    const { checked } = e.target;
+    dispatch({ type: 'setNotify', payload: checked });
+    try {
+      const pushToken = checked ? await subscribePushToken() : undefined;
+      const variables = { pushToken, notify: checked };
+      updatePush({ variables });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const container =
     window !== undefined ? () => window().document.body : undefined;
 
@@ -213,6 +245,54 @@ function AppDrawer(props: any): any {
               client={client}
               history={history}
             ></Menu>
+            {mmenu === 3 && (
+              <Box
+                display="flex"
+                style={{
+                  flex: 1,
+                  minHeight: 50,
+                  paddingLeft: 20,
+                  paddingRight: 20,
+                  alignItems: 'center',
+                  justifyContent: 'start',
+                }}
+              >
+                <FormControlLabel
+                  control={
+                    <Tooltip
+                      title={
+                        isRTL
+                          ? notify
+                            ? 'ايقاف التبيهات'
+                            : 'تفعيل التنبيهات'
+                          : !notify
+                          ? 'Activate Notifications'
+                          : 'Stop Notifications'
+                      }
+                    >
+                      <Switch
+                        checked={notify}
+                        onChange={handleNotification}
+                        name="checkedA"
+                        inputProps={{ 'aria-label': 'secondary checkbox' }}
+                      />
+                    </Tooltip>
+                  }
+                  style={{ color: '#eee' }}
+                  labelPlacement="end"
+                  label={
+                    isRTL
+                      ? notify
+                        ? 'التبيهات فعالة'
+                        : 'التنبيهات متوقفة'
+                      : !notify
+                      ? 'Notifications Activated'
+                      : 'Notifications Stoped'
+                  }
+                />
+              </Box>
+            )}
+            <MainVav setMmenu={setMmenu} theme={theme} isRTL={isRTL}></MainVav>
           </Drawer>
         </Hidden>
       </nav>

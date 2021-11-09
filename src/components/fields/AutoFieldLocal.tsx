@@ -7,6 +7,8 @@ import AddIcon from '@material-ui/icons/Add';
 import OptionItem from '../../Shared/OptionItem';
 import { Grid } from '@material-ui/core';
 import OptionItemData from '../../Shared/OptionItemData';
+import AutoPopper from '../../Shared/AutoPopper';
+import _ from 'lodash';
 
 export default function AutoFieldLocal({
   name,
@@ -32,6 +34,8 @@ export default function AutoFieldLocal({
   width,
   showphone,
 }: any) {
+  const sorted = _.sortBy(options, isRTL ? 'nameAr' : 'name');
+
   return (
     <Grid container spacing={0}>
       <Grid item xs={openAdd ? 11 : 12}>
@@ -39,7 +43,8 @@ export default function AutoFieldLocal({
           openOnFocus={openOnFocus}
           autoSelect
           fullWidth
-          options={options}
+          PopperComponent={AutoPopper}
+          options={sorted}
           getOptionLabel={(option: any) => {
             let nm;
             if (basename) {

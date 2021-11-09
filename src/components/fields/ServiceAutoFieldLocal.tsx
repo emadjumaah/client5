@@ -5,6 +5,8 @@ import AddIcon from '@material-ui/icons/Add';
 
 import { Autocomplete } from '@material-ui/lab';
 import OptionItemData from '../../Shared/OptionItemData';
+import AutoPopper from '../../Shared/AutoPopper';
+import _ from 'lodash';
 
 export default function ServiceAutoFieldLocal({
   name,
@@ -17,6 +19,8 @@ export default function ServiceAutoFieldLocal({
   open,
   isRTL,
 }: any) {
+  const sorted = _.sortBy(options, isRTL ? 'nameAr' : 'name');
+
   return (
     <Box>
       <Box
@@ -42,7 +46,8 @@ export default function ServiceAutoFieldLocal({
       >
         <Autocomplete
           autoSelect
-          options={options}
+          options={sorted}
+          PopperComponent={AutoPopper}
           getOptionLabel={(option: any) =>
             isRTL ? option.nameAr : option.name
           }
@@ -60,6 +65,7 @@ export default function ServiceAutoFieldLocal({
               onNewFieldChange(newValue?.price, 'amount');
             }
           }}
+          style={{ direction: isRTL ? 'rtl' : 'ltr' }}
           renderInput={(params) => (
             <TextField
               {...params}

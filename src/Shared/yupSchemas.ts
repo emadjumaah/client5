@@ -31,6 +31,14 @@ const catSchema = yup.object().shape({
 });
 
 export const catResolver = { resolver: yupResolver(catSchema) };
+
+const smsSchema = yup.object().shape({
+  title: yup.string().required().min(3).max(100),
+  body: yup.string().required().min(3).max(500),
+});
+
+export const smsResolver = { resolver: yupResolver(smsSchema) };
+
 const passSchema = yup.object().shape({
   // password: yup.string().required().min(3).max(100),
   newPassword: yup.string().required().min(3).max(100),
@@ -45,6 +53,15 @@ const departSchema = yup.object().shape({
   color: yup.string(),
 });
 export const departResolver = { resolver: yupResolver(departSchema) };
+
+const smsTempSchema = yup.object().shape({
+  phone: yup
+    .string()
+    .matches(phoneRegExp, 'Phone number is not valid')
+    .required(),
+  body: yup.string().required().min(3).max(70),
+});
+export const smsTempResolver = { resolver: yupResolver(smsTempSchema) };
 
 const custSchema = yup.object().shape({
   name: yup.string().required().min(3).max(100),

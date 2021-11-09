@@ -308,18 +308,20 @@ export default function FinanceReport({
               paddingRight: 20,
             }}
           >
-            <Box style={{ marginLeft: 10, marginRight: 10 }}>
-              <FilterSelectCkeckBox
-                options={projects}
-                value={projvalue?.[0]}
-                setValue={setProjvalueDispatch}
-                words={tempwords}
-                isRTL={isRTL}
-                name="project"
-                nomulti
-                width={220}
-              ></FilterSelectCkeckBox>
-            </Box>
+            {projects && projects.length > 0 && (
+              <Box style={{ marginLeft: 10, marginRight: 10 }}>
+                <FilterSelectCkeckBox
+                  options={projects}
+                  value={projvalue?.[0]}
+                  setValue={setProjvalueDispatch}
+                  words={tempwords}
+                  isRTL={isRTL}
+                  name="project"
+                  nomulti
+                  width={220}
+                ></FilterSelectCkeckBox>
+              </Box>
+            )}
             <Box style={{ marginLeft: 10, marginRight: 10 }}>
               <FilterSelectCkeckBox
                 options={tasks}

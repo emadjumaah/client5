@@ -39,14 +39,13 @@ const PopupCustomer = ({
     setSaving(true);
     const name = data.name.trim();
     const nameAr = data.nameAr.trim();
-    const { phone, email, mobile, address } = data;
+    const { phone, email, address } = data;
     const variables: any = {
       _id: row && row._id ? row._id : undefined, // is it new or edit
       name,
       nameAr,
       phone,
       email,
-      mobile,
       address,
       branch: user.branch,
       userId: user._id,
@@ -138,17 +137,6 @@ const PopupCustomer = ({
                 required
                 name="phone"
                 label={words.phoneNumber}
-                register={register}
-                errors={errors}
-                row={row}
-                newtext={newtext}
-                fullWidth
-              />
-            </Grid>
-            <Grid item xs={6}>
-              <TextFieldLocal
-                name="mobile"
-                label={words.mobile}
                 register={register}
                 errors={errors}
                 row={row}

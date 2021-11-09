@@ -1,13 +1,8 @@
-import { gql } from "@apollo/client";
+import { gql } from '@apollo/client';
 
 export default gql`
-  mutation createGroup(
-    $branch: String
-    $name: String
-    $nameAr: String
-    $tasks: [Int]
-  ) {
-    createGroup(branch: $branch, name: $name, nameAr: $nameAr, tasks: $tasks) {
+  mutation createGroup($name: String, $nameAr: String, $conttype: Int) {
+    createGroup(name: $name, nameAr: $nameAr, conttype: $conttype) {
       ok
       message
       data

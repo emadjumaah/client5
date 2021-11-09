@@ -145,9 +145,11 @@ export const ImageOnlineUpload = ({
           <div
             onClick={() => removeImage()}
             style={{
-              position: 'absolute',
-              marginTop: 10,
-              marginLeft: 5,
+              position: 'relative',
+              marginTop: 15,
+              marginBottom: -30,
+              zIndex: 115,
+              marginLeft: 10,
               cursor: 'pointer',
             }}
           >
@@ -172,9 +174,11 @@ export const ImageOnlineUpload = ({
           <div
             onClick={() => removeImage()}
             style={{
-              position: 'absolute',
-              marginTop: 10,
-              marginLeft: 5,
+              position: 'relative',
+              marginTop: 15,
+              marginBottom: -30,
+              zIndex: 115,
+              marginLeft: 10,
               cursor: 'pointer',
             }}
           >

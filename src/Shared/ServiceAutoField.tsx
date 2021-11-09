@@ -1,10 +1,12 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import React from "react";
-import { Box, IconButton, TextField, Typography } from "@material-ui/core";
-import AddIcon from "@material-ui/icons/Add";
+import React from 'react';
+import { Box, IconButton, TextField, Typography } from '@material-ui/core';
+import AddIcon from '@material-ui/icons/Add';
 
-import { Autocomplete } from "@material-ui/lab";
-import OptionItemData from "./OptionItemData";
+import { Autocomplete } from '@material-ui/lab';
+import OptionItemData from './OptionItemData';
+import AutoPopper from './AutoPopper';
+import _ from 'lodash';
 
 export default function ServiceAutoField({
   name,
@@ -19,13 +21,15 @@ export default function ServiceAutoField({
   isRTL,
   canAdd,
 }: any) {
+  const sorted = _.sortBy(options, isRTL ? 'nameAr' : 'name');
+
   return (
     <Box>
       <Box
         style={{
-          display: "flex",
+          display: 'flex',
           width: 120,
-          alignItems: "center",
+          alignItems: 'center',
           height: 40,
           padding: 10,
         }}
@@ -35,16 +39,17 @@ export default function ServiceAutoField({
 
       <Box
         style={{
-          display: "flex",
-          flexDirection: "row",
-          justifyContent: "space-between",
-          alignItems: "center",
+          display: 'flex',
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          alignItems: 'center',
           marginTop: -15,
         }}
       >
         <Autocomplete
           autoSelect
-          options={options}
+          options={sorted}
+          PopperComponent={AutoPopper}
           getOptionLabel={(option: any) =>
             isRTL ? option.nameAr : option.name
           }
@@ -59,9 +64,10 @@ export default function ServiceAutoField({
             if (setPricevalue) {
               setPricevalue(newValue?.price);
             } else {
-              onNewFieldChange(newValue?.price, "amount");
+              onNewFieldChange(newValue?.price, 'amount');
             }
           }}
+          style={{ direction: isRTL ? 'rtl' : 'ltr' }}
           renderInput={(params) => (
             <TextField
               {...params}
@@ -80,7 +86,7 @@ export default function ServiceAutoField({
             if (setPricevalue) {
               setPricevalue(Number(e.target.value));
             } else {
-              onNewFieldChange(Number(e.target.value), "amount");
+              onNewFieldChange(Number(e.target.value), 'amount');
             }
           }}
           value={priceValue}

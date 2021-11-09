@@ -11,6 +11,7 @@ import { yup } from '../constants';
 import AutoPopper from './AutoPopper';
 import { PopupService } from '../pubups';
 import { useServices } from '../hooks';
+import _ from 'lodash';
 // import { useTemplate } from '../hooks';
 // import useDepartmentsDown from '../hooks/useDepartmentsDown';
 // import useEmployeesDown from '../hooks/useEmployeesDown';
@@ -31,6 +32,7 @@ export default function ServiceItemForm({
   const [itemprice, setItemprice] = useState(0);
   const [openItem, setOpenItem] = useState(false);
   const [newtext, setNewtext] = useState('');
+  const sorted = _.sortBy(options, isRTL ? 'nameAr' : 'name');
 
   // const [emplvalue, setEmplvalue] = useState<any>(null);
   // const [emplError, setEmplError] = useState<any>(false);
@@ -181,11 +183,10 @@ export default function ServiceItemForm({
         }}
       >
         <Autocomplete
-          // openOnFocus
           PopperComponent={AutoPopper}
           autoSelect
           size="small"
-          options={options}
+          options={sorted}
           getOptionLabel={(option: any) =>
             isRTL ? option.nameAr : option.name
           }
@@ -201,6 +202,7 @@ export default function ServiceItemForm({
               setItemError(false);
             }
           }}
+          style={{ direction: isRTL ? 'rtl' : 'ltr' }}
           classes={{ input: classes.smallFont }}
           renderInput={(params) => (
             <TextField

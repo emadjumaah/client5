@@ -135,7 +135,7 @@ const PopupEmployeeView = ({
                     words={words}
                     theme={theme}
                     company={company}
-                    name="resourseId"
+                    name="employeeId"
                     value={row}
                     id={row?._id}
                   ></ProjectsCustomer>

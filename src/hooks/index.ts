@@ -23,6 +23,7 @@ import useTodayData from './useTodayData';
 import useMothsData from './useMothsData';
 import useSuppliers from './useSuppliers';
 import useTemplate from './useTemplate';
+import useConntacts from './useContacts';
 
 export {
   useTemplate,
@@ -50,4 +51,5 @@ export {
   useTodayData,
   useMothsData,
   useSuppliers,
+  useConntacts,
 };

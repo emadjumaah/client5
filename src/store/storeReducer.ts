@@ -5,6 +5,10 @@ export const storeReducer = (state: StoreTypes, action: any) => {
   switch (action.type) {
     case 'setLang':
       return { ...state, lang: action.payload };
+    case 'setNotify':
+      return { ...state, notify: action.payload };
+    case 'setLoading':
+      return { ...state, loading: action.payload };
     case 'setCalendar':
       return { ...state, calendar: action.payload };
     case 'setThemeId':

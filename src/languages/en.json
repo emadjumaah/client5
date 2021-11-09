@@ -138,7 +138,8 @@
     "reminder": "Reminder",
     "subject": "Subject",
     "body": "Body",
-    "weekdays": "Weekdays"
+    "weekdays": "Weekdays",
+    "group": "Contact Lists"
   },
   "messages": {
     "itemadded": "Item Added",

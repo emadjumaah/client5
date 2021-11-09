@@ -21,21 +21,25 @@ export const MonthsEmpChart = (props: any) => {
   if (data?.employees && employee) {
     data?.employees.map((emp: any) => {
       const { name, amount } = emp;
-      rdata.push({
-        name,
-        value: amount,
-      });
+      if (name && name !== 'null') {
+        rdata.push({
+          name,
+          value: amount,
+        });
+      }
     });
   }
 
   if (data?.departments && department) {
     data?.departments.map((dep: any) => {
       const { name, amount } = dep;
-      rdata.push({
-        name,
-        value: amount,
-        // color,
-      });
+      if (name && name !== 'null') {
+        rdata.push({
+          name,
+          value: amount,
+          // color,
+        });
+      }
     });
   }
 

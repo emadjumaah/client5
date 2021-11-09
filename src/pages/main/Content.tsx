@@ -1,7 +1,7 @@
 /* eslint-disable no-var */
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import { useContext, useReducer, useState } from 'react';
+import { useContext, useEffect, useReducer, useState } from 'react';
 import { useTheme } from '@material-ui/core/styles';
 import { Box, CssBaseline } from '@material-ui/core';
 import { Route } from 'react-router-dom';
@@ -109,12 +109,22 @@ import ManageProjects from '../adds/ManageProjects';
 import Main from '../calendar/Main';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
 import useCompany from '../../hooks/useCompany';
+import Contacts from '../adds/Contacts';
+import Groups from '../adds/Groups';
+import Sendreqs from '../adds/Sendreqs';
+import { useHistory } from 'react-router-dom';
+import { remindermenu, smsmenu } from '../../constants/menu';
+import Reminders from '../adds/Reminders';
+import RemindCal from '../calendar/RemindCal';
 
 const Content = () => {
   const classes = layoutClasses();
+  const [mmenu, setMmenu] = useState(1);
+  const [menu, setmenu] = useState(filterMenu());
   const [menuitem, setMenuitem] = useState(mainmenu[0]);
 
   const theme = useTheme();
+  const history = useHistory();
 
   const { company, editCompany, refreshcompany } = useCompany();
   const { branches } = useBranches();
@@ -122,7 +132,7 @@ const Content = () => {
   const { accounts, refreshAccount } = useAccounts();
 
   const {
-    store: { user, calendar, network, packIssue, packIssueMsg },
+    store: { user, calendar, network, packIssue, packIssueMsg, notify },
     dispatch,
     translate: { words, isRTL },
   }: GContextTypes = useContext(GlobalContext);
@@ -197,7 +207,6 @@ const Content = () => {
     initCalendarReportContext
   );
 
-  const menu = filterMenu();
   const accs = user.isSuperAdmin
     ? accounts
     : accounts.filter((acc: any) => acc.branch === user.branch);
@@ -207,6 +216,30 @@ const Content = () => {
       ? accs.filter((acc: any) => mainaccounts.includes(acc.parentcode))
       : [];
   filteredAccounts.sort((a: any, b: any) => a.code - b.code);
+
+  useEffect(() => {
+    switch (mmenu) {
+      case 1:
+        setmenu(filterMenu());
+        history.push('/');
+        setMenuitem(mainmenu[0]);
+        return;
+      case 2:
+        setmenu(smsmenu);
+        history.push('/groups');
+        setMenuitem(smsmenu[0]);
+        return;
+      case 3:
+        setmenu(remindermenu);
+        history.push('/reminders');
+        setMenuitem(remindermenu[0]);
+        return;
+
+      default:
+        return;
+    }
+  }, [mmenu]);
+
   return (
     <Box
       className={classes.root}
@@ -227,6 +260,10 @@ const Content = () => {
         menu={menu}
         logout={logout}
         network={network}
+        setMmenu={setMmenu}
+        mmenu={mmenu}
+        notify={notify}
+        dispatch={dispatch}
       ></AppDrawer>
       <main
         style={{ marginTop: isMobile ? 50 : undefined }}
@@ -261,6 +298,24 @@ const Content = () => {
                   calendar={calendar}
                   company={company}
                 ></Main>
+              </CalendarContext.Provider>
+            )}
+          />
+          <Route
+            path="/remindcal"
+            component={() => (
+              <CalendarContext.Provider
+                value={{ state: calendarStore, dispatch: calendarDispatch }}
+              >
+                <RemindCal
+                  menuitem={menuitem}
+                  isRTL={isRTL}
+                  words={words}
+                  theme={theme}
+                  isEditor={isEditor}
+                  calendar={calendar}
+                  company={company}
+                ></RemindCal>
               </CalendarContext.Provider>
             )}
           />
@@ -412,6 +467,54 @@ const Content = () => {
                 isEditor={isEditor}
                 company={company}
               ></Customers>
+            )}
+          />
+          <Route
+            path="/contacts"
+            component={() => (
+              <Contacts
+                isRTL={isRTL}
+                words={words}
+                theme={theme}
+                menuitem={menuitem}
+                isEditor={isEditor}
+              ></Contacts>
+            )}
+          />
+          <Route
+            path="/groups"
+            component={() => (
+              <Groups
+                isRTL={isRTL}
+                words={words}
+                theme={theme}
+                menuitem={menuitem}
+                isEditor={isEditor}
+              ></Groups>
+            )}
+          />
+          <Route
+            path="/managereminders"
+            component={() => (
+              <Reminders
+                isRTL={isRTL}
+                words={words}
+                theme={theme}
+                menuitem={menuitem}
+                isEditor={isEditor}
+              ></Reminders>
+            )}
+          />
+          <Route
+            path="/sendreqs"
+            component={() => (
+              <Sendreqs
+                isRTL={isRTL}
+                words={words}
+                theme={theme}
+                menuitem={menuitem}
+                isEditor={isEditor}
+              ></Sendreqs>
             )}
           />
           <Route

@@ -43,6 +43,8 @@ import {
   getActions,
   getResourses,
   getProjects,
+  getContacts,
+  getSendreqs,
 } from './query';
 import {
   createCategory,
@@ -111,6 +113,18 @@ import {
   createResourse,
   deleteResourse,
   updateResourse,
+  createContact,
+  createMultiContacts,
+  updateContact,
+  addGroupToContact,
+  removeGroupFromContact,
+  deleteContact,
+  createSendreq,
+  deleteSendreq,
+  updateSendreq,
+  createReminder,
+  updateReminder,
+  deleteReminder,
 } from './mutation';
 
 export { client };
@@ -158,6 +172,8 @@ export {
   getActions,
   getResourses,
   getProjects,
+  getContacts,
+  getSendreqs,
 };
 export {
   createCategory,
@@ -226,4 +242,16 @@ export {
   createResourse,
   deleteResourse,
   updateResourse,
+  createContact,
+  createMultiContacts,
+  updateContact,
+  addGroupToContact,
+  removeGroupFromContact,
+  deleteContact,
+  createSendreq,
+  deleteSendreq,
+  updateSendreq,
+  createReminder,
+  updateReminder,
+  deleteReminder,
 };

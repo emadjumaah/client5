@@ -7,6 +7,92 @@ const lang = store?.lang;
 const words = template?.words?.[lang];
 const options = template?.options;
 const isRTL = lang === 'ar';
+
+export const smsmenu: any = [
+  {
+    id: 1,
+    name: 'groups',
+    uri: 'groups',
+    titleAr: 'قوائم الاتصال',
+    titleEn: 'Contact Lists',
+    req: 'pos',
+    icon: 'list',
+    dep: null,
+  },
+  {
+    id: 2,
+    name: 'contacts',
+    uri: 'contacts',
+    titleAr: 'جهات الاتصال',
+    titleEn: 'Contacts',
+    icon: 'group',
+    req: 'pos',
+    dep: null,
+  },
+  {
+    id: 3,
+    name: 'sendreqs',
+    uri: 'sendreqs',
+    titleAr: 'حملات الارسال',
+    titleEn: 'SMS campaign',
+    icon: 'camp',
+    req: 'pos',
+    dep: null,
+  },
+  {
+    id: 4,
+    name: 'messages',
+    uri: 'messages',
+    titleAr: 'الرسائل',
+    titleEn: 'Messages',
+    req: 'pos',
+    icon: 'email',
+    dep: null,
+  },
+];
+export const remindermenu: any = [
+  {
+    id: 1,
+    name: 'reminders',
+    uri: 'reminders',
+    titleAr: 'المفكرة',
+    titleEn: 'Reminders',
+    icon: 'event',
+    req: 'cal',
+    dep: 'pos',
+  },
+  {
+    id: 2,
+    name: 'remindcal',
+    uri: 'remindcal',
+    titleAr: 'تقويم المفكرة',
+    titleEn: 'Calendar',
+    icon: 'calendar',
+    req: 'cal',
+    dep: 'pos',
+  },
+  {
+    id: 3,
+    name: 'managereminders',
+    uri: 'managereminders',
+    titleAr: 'ادارة المفكرة',
+    titleEn: 'Manage Reminders',
+    icon: 'list',
+    req: 'cal',
+    dep: 'pos',
+  },
+  {
+    id: 4,
+    name: 'notifications',
+    uri: 'notifications',
+    titleAr: 'التنبيهات',
+    titleEn: 'Notifications',
+    icon: 'bell',
+    req: 'cal',
+    dep: 'pos',
+  },
+];
+
 export const mainmenu = [
   {
     id: 0,
@@ -295,7 +381,7 @@ export const mainmenu = [
       },
 
       {
-        id: 76,
+        id: 85,
         name: 'expensesreport',
         uri: 'expensesreport',
         titleAr: 'تقرير المصاريف',
@@ -305,7 +391,7 @@ export const mainmenu = [
         dep: null,
       },
       {
-        id: 77,
+        id: 86,
         name: 'financereport',
         uri: 'financereport',
         titleAr: 'تقرير الحسابات',
@@ -361,16 +447,16 @@ export const mainmenu = [
     req: null,
     dep: null,
   },
-  {
-    id: 99,
-    name: 'logout',
-    uri: 'logout',
-    titleAr: 'تسجيل الخروج',
-    titleEn: 'Logout',
-    icon: 'logout',
-    req: null,
-    dep: null,
-  },
+  // {
+  //   id: 99,
+  //   name: 'logout',
+  //   uri: 'logout',
+  //   titleAr: 'تسجيل الخروج',
+  //   titleEn: 'Logout',
+  //   icon: 'logout',
+  //   req: null,
+  //   dep: null,
+  // },
 ];
 export const emplmenu = [
   {

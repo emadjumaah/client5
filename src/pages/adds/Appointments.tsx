@@ -41,6 +41,7 @@ import {
   doneFormatter,
   eventStatusFormatter,
   fromToFormatter,
+  locationFormatter,
   nameLinkFormat,
   taskIdLinkFormat,
 } from '../../Shared/colorFormat';
@@ -87,6 +88,7 @@ export default function Appointments({
 
   const [columns] = useState([
     { id: 4, ref: 'title', name: 'title', title: words.title },
+    col.location,
     col.createdAt,
     col.startDate,
     col.fromto,
@@ -422,6 +424,10 @@ export default function Appointments({
           <DataTypeProvider
             for={['fromto']}
             formatterComponent={fromToFormatter}
+          ></DataTypeProvider>
+          <DataTypeProvider
+            for={['location']}
+            formatterComponent={locationFormatter}
           ></DataTypeProvider>
           <DataTypeProvider
             for={['startDate', 'createdAt']}

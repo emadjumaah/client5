@@ -27,7 +27,7 @@ export default function FilterSelect({
       disableListWrap
       fullWidth
       getOptionLabel={(option: any) => (isRTL ? option.nameAr : option.name)}
-      style={{}}
+      style={{ direction: isRTL ? 'rtl' : 'ltr' }}
       renderOption={(option, { selected }) => (
         <Box
           style={{
@@ -69,6 +69,7 @@ export default function FilterSelect({
             fontSize: 10,
             margin: 0,
             padding: 0,
+            direction: isRTL ? 'rtl' : 'ltr',
           }}
         ></TextField>
       )}

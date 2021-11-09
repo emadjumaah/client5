@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import { Box, Typography } from "@material-ui/core";
-import React from "react";
+import { Box, Typography } from '@material-ui/core';
+import React from 'react';
 
 export default function OptionItem({
   item,
@@ -28,46 +28,50 @@ export default function OptionItem({
   }
   return (
     <Box
+      display="flex"
       style={{
-        display: "flex",
         flex: 1,
-        flexDirection: "row",
-        alignItems: "center",
-        direction: isRTL ? "rtl" : "ltr",
-        backgroundColor: isred ? "#ffc0cb" : undefined,
-        justifyContent: "space-between",
+        flexDirection: 'row',
+        alignItems: 'center',
+        direction: isRTL ? 'rtl' : 'ltr',
+        backgroundColor: isred ? '#ffc0cb' : undefined,
+        justifyContent: 'space-between',
+        position: 'relative',
+        //  dth: 300,
       }}
     >
-      {item.color && !col && (
-        <Box display="flex">
-          <Box
-            display="flex"
-            style={{
-              width: 18,
-              height: 18,
-              borderRadius: 9,
-              backgroundColor: color ? color : "#fff",
-              marginTop: 5,
-            }}
-          ></Box>
-          <Typography
-            style={color ? textstyle : {}}
-            variant={isRTL ? "subtitle1" : "subtitle2"}
-          >
+      <Box style={{ direction: isRTL ? 'rtl' : 'ltr' }}>
+        {item.color && !col && (
+          <Box display="flex">
+            <Box
+              display="flex"
+              style={{
+                width: 18,
+                height: 18,
+                borderRadius: 9,
+                backgroundColor: color ? color : '#fff',
+                marginTop: 5,
+              }}
+            ></Box>
+            <Typography
+              style={color ? textstyle : {}}
+              variant={isRTL ? 'subtitle1' : 'subtitle2'}
+            >
+              {name}
+            </Typography>
+          </Box>
+        )}
+        {!color && (
+          <Typography variant={isRTL ? 'subtitle1' : 'subtitle2'}>
             {name}
           </Typography>
-        </Box>
-      )}
-      {!color && (
-        <Typography variant={isRTL ? "subtitle1" : "subtitle2"}>
-          {name}
-        </Typography>
-      )}
+        )}
+      </Box>
       {showphone && (
         <Typography
           style={{
             fontSize: 11,
-            color: "#999",
+            color: '#999',
             paddingLeft: 10,
             paddingRight: 10,
           }}

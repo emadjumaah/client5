@@ -279,7 +279,7 @@ const PopupTaskView = ({
                       words={words}
                       theme={theme}
                       company={company}
-                      name="projectId"
+                      name="taskId"
                       value={row}
                       id={row?._id}
                     ></ProjectsCustomer>
@@ -292,7 +292,7 @@ const PopupTaskView = ({
                       words={words}
                       theme={theme}
                       company={company}
-                      name="projectId"
+                      name="taskId"
                       value={row}
                       id={row?._id}
                     ></TasksCustomer>

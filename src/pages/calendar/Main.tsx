@@ -139,6 +139,10 @@ const Main = (props: any) => {
   };
 
   useEffect(() => {
+    refresh();
+  }, []);
+
+  useEffect(() => {
     const startend: any = getStartEndEventView({
       time: currentDate,
       view: currentViewName,

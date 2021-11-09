@@ -85,7 +85,10 @@ any) {
             resetRelated(null);
           }
         }}
-        style={{ marginInlineStart: ms ? ms : undefined }}
+        style={{
+          marginInlineStart: ms ? ms : undefined,
+          direction: isRTL ? 'rtl' : 'ltr',
+        }}
         classes={classes ? { input: classes.smallFont } : undefined}
         renderInput={(params) => (
           <TextField
@@ -121,7 +124,7 @@ any) {
             setSelectValue(newValue);
             setSelectError(false);
           }}
-          style={{ marginInlineStart: 30 }}
+          style={{ marginInlineStart: 30, direction: isRTL ? 'rtl' : 'ltr' }}
           renderInput={(params) => (
             <TextField
               {...params}

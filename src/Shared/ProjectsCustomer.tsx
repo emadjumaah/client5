@@ -21,7 +21,6 @@ import {
   getDepartments,
   getEmployees,
   getLandingChartData,
-  getProjects,
   getResourses,
 } from '../graphql';
 import { useLazyQuery, useMutation } from '@apollo/client';
@@ -50,6 +49,7 @@ import useEmployeesUp from '../hooks/useEmployeesUp';
 import useResoursesUp from '../hooks/useResoursesUp';
 import useProjects from '../hooks/useProjects';
 import PopupProjectView from '../pubups/PopupProjectView';
+import getObjectProjects from '../graphql/query/getObjectProjects';
 
 export const getRowId = (row: { _id: any }) => row._id;
 
@@ -111,18 +111,18 @@ export default function ProjectsCustomer({
     setItem(null);
   };
 
-  const [loadTasks, tasksData]: any = useLazyQuery(getProjects, {
+  const [loadTasks, tasksData]: any = useLazyQuery(getObjectProjects, {
     fetchPolicy: 'cache-and-network',
   });
 
   const refresQuery = {
     refetchQueries: [
       {
-        query: getProjects,
+        query: getObjectProjects,
         variables: { [name]: id },
       },
       {
-        query: getProjects,
+        query: getObjectProjects,
       },
       {
         query: getCustomers,
@@ -140,9 +140,6 @@ export default function ProjectsCustomer({
         variables: { isRTL, resType: 1 },
       },
       {
-        query: getProjects,
-      },
-      {
         query: getLandingChartData,
       },
     ],
@@ -150,7 +147,7 @@ export default function ProjectsCustomer({
 
   useEffect(() => {
     if (openItem) {
-      const tsks = tasksData?.data?.['getProjects']?.data || [];
+      const tsks = tasksData?.data?.['getObjectProjects']?.data || [];
       if (tsks && tsks.length > 0) {
         const opened = tsks.filter((ts: any) => ts._id === item._id)?.[0];
         setItem(opened);
@@ -190,8 +187,8 @@ export default function ProjectsCustomer({
   };
 
   useEffect(() => {
-    if (tasksData?.data?.getProjects?.data) {
-      const { data } = tasksData.data.getProjects;
+    if (tasksData?.data?.getObjectProjects?.data) {
+      const { data } = tasksData.data.getObjectProjects;
       setRows(data);
     }
   }, [tasksData]);

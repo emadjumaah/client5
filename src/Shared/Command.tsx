@@ -56,7 +56,7 @@ const DeleteButton = ({ onExecute }) => {
         if (
           window.confirm(
             lang === 'ar'
-              ? 'هل انت متأكد من حذف المدخل ؟'
+              ? 'هل انت متأكد من حذف المدخل؟'
               : 'Are you sure you want to delete this row?'
           )
         ) {

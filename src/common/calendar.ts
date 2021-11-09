@@ -24,6 +24,10 @@ export const commitAppointmentChanges = async ({
         ...rest
       } = added;
       const { startPeriod, endPeriod } = getAppStartEndPeriod();
+      const itemslist = JSON.parse(items);
+      if (!(itemslist.length > 0)) {
+        window.alert(isRTL ? 'يجب اضافة خدمة' : 'Service should be added');
+      }
       if (
         startDate < startPeriod ||
         startDate > endPeriod ||
@@ -33,6 +37,153 @@ export const commitAppointmentChanges = async ({
         startDate.getDate() !== endDate.getDate()
       ) {
         window.alert(isRTL ? 'يجب تعديل التاريخ' : 'Date should be change');
+      } else if (!customer) {
+        window.alert(isRTL ? 'يرجى اضافة عميل' : 'Please add Customer');
+      } else {
+        const variables = {
+          title,
+          startDate,
+          endDate,
+          items,
+          customer: customer
+            ? {
+                customerId: customer._id,
+                customerName: customer.name,
+                customerNameAr: customer.nameAr,
+                customerPhone: customer.phone,
+              }
+            : undefined,
+          department: department
+            ? {
+                departmentId: department._id,
+                departmentName: department.name,
+                departmentNameAr: department.nameAr,
+                departmentColor: department.color,
+              }
+            : undefined,
+          employee: employee
+            ? {
+                employeeId: employee._id,
+                employeeName: employee.name,
+                employeeNameAr: employee.nameAr,
+                employeeColor: employee.color,
+                employeePhone: employee.phone,
+              }
+            : undefined,
+          resourse: resourse
+            ? {
+                resourseId: resourse._id,
+                resourseName: resourse.name,
+                resourseNameAr: resourse.nameAr,
+                resourseColor: resourse.color,
+              }
+            : undefined,
+          ...rest,
+        };
+        await addEvent({ variables });
+      }
+    }
+    if (changed) {
+      const id = Object.keys(changed)[0];
+      const data = changed[id];
+      const { items, customer, department, employee, resourse, ...rest } = data;
+
+      const variables = {
+        id: Number(id),
+        items,
+        customer: customer
+          ? {
+              customerId: customer._id,
+              customerName: customer.name,
+              customerNameAr: customer.nameAr,
+              customerPhone: customer.phone,
+            }
+          : undefined,
+        department: department
+          ? {
+              departmentId: department._id,
+              departmentName: department.name,
+              departmentNameAr: department.nameAr,
+              departmentColor: department.color,
+            }
+          : undefined,
+        employee: employee
+          ? {
+              employeeId: employee._id,
+              employeeName: employee.name,
+              employeeNameAr: employee.nameAr,
+              employeeColor: employee.color,
+              employeePhone: employee.phone,
+            }
+          : undefined,
+        resourse: resourse
+          ? {
+              resourseId: resourse._id,
+              resourseName: resourse.name,
+              resourseNameAr: resourse.nameAr,
+              resourseColor: resourse.color,
+            }
+          : undefined,
+        ...rest,
+      };
+
+      await editEvent({
+        variables,
+        optimisticResponse: {
+          __typename: 'updateEvent',
+          updateEvent: {
+            __typename: 'Operation',
+            id,
+            ...variables,
+          },
+        },
+      });
+    }
+    if (deleted !== undefined) {
+      await removeEvent({ variables: { id: Number(deleted) } });
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+export const commitReminderChanges = async ({
+  added,
+  changed,
+  deleted,
+  addEvent,
+  editEvent,
+  removeEvent,
+  isRTL,
+}: any) => {
+  try {
+    if (added) {
+      const {
+        title,
+        startDate,
+        endDate,
+        items,
+        customer,
+        department,
+        employee,
+        resourse,
+        ...rest
+      } = added;
+      const { startPeriod, endPeriod } = getAppStartEndPeriod();
+      const itemslist = JSON.parse(items);
+      if (!(itemslist.length > 0)) {
+        window.alert(isRTL ? 'يجب اضافة خدمة' : 'Service should be added');
+      }
+      if (
+        startDate < startPeriod ||
+        startDate > endPeriod ||
+        endDate < startPeriod ||
+        endDate > endPeriod ||
+        startDate > endDate ||
+        startDate.getDate() !== endDate.getDate()
+      ) {
+        window.alert(isRTL ? 'يجب تعديل التاريخ' : 'Date should be change');
+      } else if (!customer) {
+        window.alert(isRTL ? 'يرجى اضافة عميل' : 'Please add Customer');
       } else {
         const variables = {
           title,

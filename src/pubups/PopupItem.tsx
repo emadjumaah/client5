@@ -207,6 +207,7 @@ const PopupItem = ({
                 setItemError(false);
               }
             }}
+            style={{ direction: isRTL ? 'rtl' : 'ltr' }}
             classes={{ input: classes.smallFont }}
             renderInput={(params) => (
               <TextField

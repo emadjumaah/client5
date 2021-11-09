@@ -31,6 +31,7 @@ import { sectionTypes } from '../constants/reports';
 import { getStoreItem } from '../store';
 import Avatar from './Avatar';
 import AvatarColor from './AvatarColor';
+import MyIcon from './MyIcon';
 
 export const colorPatternFormatter = ({ value }) => (
   <Box
@@ -299,6 +300,11 @@ export const fromToFormatter = ({ row }: any) => {
 export const actionTimeFormatter = ({ value }: any) => {
   return <div>{covertToTimeDateDigit(value)}</div>;
 };
+export const locationFormatter = ({ value }: any) => {
+  if (value?.lat) {
+    return <MyIcon size={26} color="#ff80ed" icon="location"></MyIcon>;
+  } else return <div></div>;
+};
 export const createdAtPrintFormatter = ({ value }: any) => {
   return <div style={{ fontSize: 12 }}>{covertToDate(value)}</div>;
 };
@@ -523,7 +529,49 @@ export const doneFormatter = ({ row, editEvent }: any) => {
     </span>
   );
 };
+export const addFormatter = ({
+  row,
+  groupId,
+  addGtoContact,
+  removeGfromContact,
+}: any) => {
+  const contactId = row._id;
+  const checked = row.groupIds.includes(groupId);
+  const variables = { contactId, groupId };
+  const mutate = checked ? removeGfromContact : addGtoContact;
+  return (
+    <Checkbox
+      style={{ padding: 5 }}
+      checked={checked}
+      onChange={async () => {
+        await mutate({
+          variables,
+        });
+      }}
+      color="primary"
+    />
+  );
+};
+export const isActiveFormatter = ({ row, editSendreq }: any) => {
+  const checked = row.active;
+  const variables = { _id: row._id, active: row.active ? false : true };
+  return (
+    <Checkbox
+      style={{ padding: 5 }}
+      checked={checked}
+      onChange={async () => {
+        await editSendreq({
+          variables,
+        });
+      }}
+      color="primary"
+    />
+  );
+};
 export const invoiceReceiptFormatter = ({ value, row }: any) => {
+  const store = getStoreItem('store');
+  const { lang } = store;
+  const isRTL = lang === 'ar';
   const { amount } = row;
   const valuePercent = (value / amount) * 100;
   return (
@@ -541,7 +589,14 @@ export const invoiceReceiptFormatter = ({ value, row }: any) => {
           backgroundColor: fade(colors.green[500], 0.5),
         }}
       ></Box>
-      <Box style={{ position: 'relative', bottom: 17, right: 30 }}>
+      <Box
+        style={{
+          position: 'relative',
+          bottom: 17,
+          right: isRTL ? 30 : undefined,
+          left: isRTL ? undefined : 30,
+        }}
+      >
         <Typography
           style={{ direction: 'ltr', fontWeight: 'bold' }}
           variant="caption"
@@ -615,6 +670,23 @@ export const taskIdLinkFormat = ({
           {task.title}
         </Typography>
       </div>
+    );
+  } else {
+    return <span></span>;
+  }
+};
+export const taskIdFormat = ({ value, tasks }: any) => {
+  const task = tasks.filter((tsk: any) => tsk.id === value)?.[0];
+  if (task) {
+    return (
+      <Typography
+        style={{
+          fontSize: 13,
+          textAlign: 'start',
+        }}
+      >
+        {task.title}
+      </Typography>
     );
   } else {
     return <span></span>;
@@ -746,6 +818,16 @@ export const accountFormatter = (props: any, accounts: any, isRTL: any) => {
         : ''}
     </div>
   );
+};
+export const groupFormatter = (props: any, groups: any, isRTL: any) => {
+  const gs = groups.filter((grp: any) => props.value?.includes(grp._id));
+  if (gs && gs.length > 0) {
+    return gs.map((g: any) => (
+      <span style={{ padding: 5 }}>{isRTL ? g.nameAr : g.name}</span>
+    ));
+  } else {
+    return <span></span>;
+  }
 };
 
 export const customerAccountFormatter = (

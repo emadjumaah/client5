@@ -161,3 +161,21 @@ export const sToMAndS = (s: number) => {
   const seconds = (s % 60).toFixed(0);
   return minutes + ':' + (Number(seconds) < 10 ? '0' : '') + seconds;
 };
+
+export const detectURLs = (text: any) => {
+  var urlRegex = /(((https?:\/\/)|(www\.))[^\s]+)/g;
+  return text.match(urlRegex);
+};
+
+// detectURLs("Visit www.cluemediator.com and subscribe us on https://www.cluemediator.com/subscribe for regular updates.")
+// Output: ["www.cluemediator.com", "https://www.cluemediator.com/subscribe"]
+
+export const subscribePushToken = async () => {
+  let sw = await navigator.serviceWorker.ready;
+  let push = await sw.pushManager.subscribe({
+    userVisibleOnly: true,
+    applicationServerKey:
+      'BLatAsE7I0bu7TGClZ7n1aUlHWxQB52erzrrHFA9G-bjEe28ADWSXsq4AA6-o6qZZsOgP2NOhWmPrDhfkOk7EK0',
+  });
+  return JSON.stringify(push);
+};

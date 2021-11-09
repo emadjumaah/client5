@@ -331,7 +331,13 @@ const PopupTaskAppointment = ({
       );
       return;
     }
-
+    if (!custvalue) {
+      await messageAlert(
+        setAlrt,
+        isRTL ? 'يرجى اضافة عميل' : 'Please add Customer'
+      );
+      return;
+    }
     if (!itemsList || itemsList.length === 0) {
       await messageAlert(
         setAlrt,
@@ -346,7 +352,7 @@ const PopupTaskAppointment = ({
       title: tasktitle,
       startDate,
       endDate,
-      location: location?.lat ? location : undefined,
+      location: location?.lat ? location : null,
       amount: totals.amount,
       status: status ? status.id : 2,
       items: JSON.stringify(itemsList),
@@ -692,7 +698,19 @@ const PopupTaskAppointment = ({
                     {isRTL ? 'الموقع الجغرافي' : 'Location'}
                   </Button>
                   {location?.lat && (
-                    <MyIcon size={32} color="#ff80ed" icon="location"></MyIcon>
+                    <>
+                      <MyIcon
+                        size={32}
+                        color="#ff80ed"
+                        icon="location"
+                      ></MyIcon>
+                      <Box
+                        onClick={() => setLocation(null)}
+                        style={{ cursor: 'pointer', padding: 4 }}
+                      >
+                        <MyIcon size={28} color="#777" icon="close"></MyIcon>
+                      </Box>
+                    </>
                   )}
                 </Box>
               </Grid>

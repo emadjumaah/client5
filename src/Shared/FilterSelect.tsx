@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import React from "react";
-import { TextField } from "@material-ui/core";
-import { Autocomplete } from "@material-ui/lab";
-import OptionFilterItem from "./OptionFilterItem";
+import React from 'react';
+import { TextField } from '@material-ui/core';
+import { Autocomplete } from '@material-ui/lab';
+import OptionFilterItem from './OptionFilterItem';
 
 export default function FilterSelectCkeckBox({
   options,
@@ -27,6 +27,7 @@ export default function FilterSelectCkeckBox({
       onChange={(_, newValue: any) => {
         setValue(newValue);
       }}
+      style={{ direction: isRTL ? 'rtl' : 'ltr' }}
       renderInput={(params) => (
         <TextField
           {...params}
@@ -37,7 +38,7 @@ export default function FilterSelectCkeckBox({
           variant="outlined"
           style={{
             width: width ? width : undefined,
-            backgroundColor: value ? "#FFF5D6" : undefined,
+            backgroundColor: value ? '#FFF5D6' : undefined,
             fontSize: 10,
           }}
         ></TextField>

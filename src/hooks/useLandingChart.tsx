@@ -272,6 +272,7 @@ export default () => {
       });
 
       const monthsList = getLastMonths(6, isRTL);
+
       eventMonths = monthsList.map((mon: any) => {
         const is = monthsEvent.filter((ds: any) => ds.name === mon);
         if (is && is.length > 0) {
@@ -300,6 +301,7 @@ export default () => {
     salesMonths,
     eventMonths,
     salesMonth,
+    eventsMonth,
     salesMonthTotal,
     eventsMonthCount,
     raseeds,

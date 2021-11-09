@@ -1,4 +1,4 @@
-import { gql } from "@apollo/client";
+import { gql } from '@apollo/client';
 
 export default gql`
   mutation updateAction(
@@ -14,6 +14,8 @@ export default gql`
     $body: String
     $eventId: Int
     $taskId: Int
+    $smsqty: Int
+    $user: String
     $data: String
     $timeunit: String
     $timerelate: String
@@ -33,6 +35,8 @@ export default gql`
       body: $body
       eventId: $eventId
       taskId: $taskId
+      smsqty: $smsqty
+      user: $user
       data: $data
       timeunit: $timeunit
       timerelate: $timerelate

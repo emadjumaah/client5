@@ -14,6 +14,7 @@ export const getColumns = ({ isRTL, words }: any) => {
   return {
     no: { id: 1, ref: 'no', name: 'no', title: words.no },
     startDate: { id: 1.1, ref: 'date', name: 'startDate', title: words.time },
+    runtime: { id: 1.15, ref: 'date', name: 'runtime', title: words.time },
     start: { id: 1.2, ref: 'date', name: 'start', title: words.start },
     end: { id: 1.3, ref: 'date', name: 'end', title: words.end },
     tasktype: { id: 1.4, ref: 'tasktype', name: 'tasktype', title: words.type },
@@ -195,6 +196,12 @@ export const getColumns = ({ isRTL, words }: any) => {
       ref: 'createdAt',
       name: 'createdAt',
       title: isRTL ? 'تاريخ الانشاء' : 'Created Date',
+    },
+    location: {
+      id: 34,
+      ref: 'location',
+      name: 'location',
+      title: isRTL ? 'الموقع' : 'Lopcation',
     },
   };
 };

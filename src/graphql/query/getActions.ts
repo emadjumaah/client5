@@ -1,4 +1,4 @@
-import { gql } from "@apollo/client";
+import { gql } from '@apollo/client';
 
 export default gql`
   query getActions($type: Int, $active: Boolean, $eventId: Int, $taskId: Int) {
@@ -23,6 +23,8 @@ export default gql`
         userId
         title
         body
+        user
+        smsqty
         eventId
         taskId
         data

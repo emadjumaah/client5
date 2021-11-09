@@ -26,11 +26,13 @@ import { errorAlert, errorDeleteAlert } from '../../Shared/helpers';
 import { Box } from '@material-ui/core';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
 import { TableComponent } from '../../Shared/TableComponent';
+import ImportBtn from '../../common/ImportBtn';
+import PopupServiceImport from '../../pubups/PopupServiceImport';
 // import { getColumns } from '../../common/columns';
 
 export default function Services({ isRTL, words, theme, isEditor }: any) {
   // const col = getColumns({ isRTL, words });
-
+  const [openImport, setOpenImport] = useState(false);
   const [loading, setLoading] = useState(false);
   const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
 
@@ -39,12 +41,13 @@ export default function Services({ isRTL, words, theme, isEditor }: any) {
     // col.department,
     // col.employee,
     // col.resourse,
+    { name: 'price', title: words.price },
     { name: 'desc', title: words.description },
     { name: 'unit', title: words.unit },
-    { name: 'price', title: words.price },
   ]);
 
-  const { services, addService, editService, removeService } = useServices();
+  const { services, addService, addMultiServices, editService, removeService } =
+    useServices();
   const { height } = useWindowDimensions();
   const commitChanges = async ({ deleted }) => {
     if (deleted) {
@@ -74,6 +77,11 @@ export default function Services({ isRTL, words, theme, isEditor }: any) {
       }}
     >
       {loading && <Loading isRTL={isRTL}></Loading>}
+      <ImportBtn
+        open={() => setOpenImport(true)}
+        isRTL={isRTL}
+        theme={theme}
+      ></ImportBtn>
       <Grid rows={services} columns={columns} getRowId={getRowId}>
         <SortingState />
         <EditingState onCommitChanges={commitChanges} />
@@ -127,6 +135,14 @@ export default function Services({ isRTL, words, theme, isEditor }: any) {
           top
         ></AlertLocal>
       )}
+      <PopupServiceImport
+        open={openImport}
+        onClose={() => setOpenImport(false)}
+        addMultiItems={addMultiServices}
+        isRTL={isRTL}
+        theme={theme}
+        words={words}
+      ></PopupServiceImport>
     </Box>
   );
 }

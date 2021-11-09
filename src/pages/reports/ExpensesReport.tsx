@@ -49,6 +49,8 @@ import { ExpensesReportContext } from '../../contexts';
 import FilterSelectCkeckBox from '../../Shared/FilterSelectCkeckBox';
 import useTasks from '../../hooks/useTasks';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
+import useProjects from '../../hooks/useProjects';
+import { useTemplate } from '../../hooks';
 
 const styles = (theme) => ({
   tableStriped: {
@@ -120,6 +122,7 @@ export default function ExpensesReport({
       custvalue,
       catvalue,
       accvalue,
+      projvalue,
       taskvalue,
       group,
       groupby,
@@ -130,6 +133,8 @@ export default function ExpensesReport({
   } = useContext(ExpensesReportContext);
   const { tasks } = useTasks();
   const { height } = useWindowDimensions();
+  const { projects } = useProjects();
+  const { tempwords } = useTemplate();
 
   const currentViewNameChange = (e: any) => {
     dispatch({ type: 'setCurrentViewName', payload: e.target.value });
@@ -147,7 +152,9 @@ export default function ExpensesReport({
   const setTaskvalueDispatch = (value: any) => {
     dispatch({ type: 'setTaskvalue', payload: value ? [value] : [] });
   };
-
+  const setProjvalueDispatch = (value: any) => {
+    dispatch({ type: 'setProjvalue', payload: value ? [value] : [] });
+  };
   useEffect(() => {
     const slsData = summaryData?.data?.['getMonthlyReport']?.data || [];
     const balance = summaryData?.data?.['getMonthlyReport']?.message || null;
@@ -329,19 +336,6 @@ export default function ExpensesReport({
           marginRight: 5,
         }}
       >
-        {/* <Box
-          style={{
-            position: "absolute",
-            left: isRTL ? 145 : undefined,
-            right: isRTL ? undefined : 145,
-            top: 65,
-            zIndex: 100,
-          }}
-        >
-          <IconButton onClick={arrangeParing} title="Print Report" size="small">
-            <PrintIcon />
-          </IconButton>
-        </Box> */}
         <Box
           display="flex"
           style={{
@@ -364,51 +358,62 @@ export default function ExpensesReport({
             isRTL={isRTL}
             words={words}
             theme={theme}
-          ></DateNavigatorReports>{' '}
-        </Box>
+          ></DateNavigatorReports>
 
-        <Box
-          display="flex"
-          style={{
-            position: 'absolute',
-            left: isRTL ? 200 : undefined,
-            right: isRTL ? undefined : 200,
-            top: 50,
-            height: 38,
-            zIndex: 111,
-            alignItems: 'center',
-            justifyContent: 'flex-start',
-            paddingLeft: 20,
-            paddingRight: 20,
-          }}
-        >
-          <Box style={{ marginLeft: 10, marginRight: 10 }}>
+          <Box
+            display="flex"
+            style={{
+              height: 38,
+              alignItems: 'center',
+              justifyContent: 'flex-start',
+              paddingLeft: 20,
+              paddingRight: 20,
+            }}
+          >
+            {projects && projects.length > 0 && (
+              <Box style={{ marginLeft: 10, marginRight: 10 }}>
+                <FilterSelectCkeckBox
+                  options={projects}
+                  value={projvalue?.[0]}
+                  setValue={setProjvalueDispatch}
+                  words={tempwords}
+                  isRTL={isRTL}
+                  name="project"
+                  nomulti
+                  width={220}
+                ></FilterSelectCkeckBox>
+              </Box>
+            )}
+            <Box style={{ marginLeft: 10, marginRight: 10 }}>
+              <FilterSelectCkeckBox
+                options={tasks}
+                value={taskvalue?.[0]}
+                setValue={setTaskvalueDispatch}
+                words={words}
+                isRTL={isRTL}
+                name="task"
+                nomulti
+                width={220}
+              ></FilterSelectCkeckBox>
+            </Box>
             <FilterSelectCkeckBox
-              options={tasks}
-              value={taskvalue?.[0]}
-              setValue={setTaskvalueDispatch}
+              options={expensesAccounts}
+              value={accvalue?.[0]}
+              setValue={setAccvalueDispatch}
               words={words}
               isRTL={isRTL}
-              name="task"
+              name="account"
               nomulti
-              width={300}
+              width={220}
             ></FilterSelectCkeckBox>
           </Box>
-          <FilterSelectCkeckBox
-            options={expensesAccounts}
-            value={accvalue?.[0]}
-            setValue={setAccvalueDispatch}
-            words={words}
-            isRTL={isRTL}
-            name="account"
-            nomulti
-            width={300}
-          ></FilterSelectCkeckBox>
           <Box
+            display="flex"
             style={{
+              alignItems: 'center',
+              justifyContent: 'flex-end',
               minWidth: 120,
-              marginRight: isRTL ? 20 : undefined,
-              marginLeft: isRTL ? undefined : 20,
+              marginRight: 90,
             }}
           >
             <Typography variant="subtitle1" style={{ fontWeight: 'bold' }}>

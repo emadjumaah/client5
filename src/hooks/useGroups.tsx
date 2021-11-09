@@ -1,34 +1,28 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable import/no-anonymous-default-export */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import { useLazyQuery, useMutation } from "@apollo/client";
-import { useEffect } from "react";
-import { createGroup, deleteGroup, getGroups, updateGroup } from "../graphql";
-import { getStoreItem } from "../store";
+import { useLazyQuery, useMutation } from '@apollo/client';
+import { useEffect } from 'react';
+import { createGroup, deleteGroup, getGroups, updateGroup } from '../graphql';
 
 export default () => {
-  const store = getStoreItem("store");
-  const { lang } = store;
-  const isRTL = lang === "ar" ? true : false;
-  const [getDeparts, catpData]: any = useLazyQuery(getGroups, {
-    variables: { isRTL },
-  });
+  const [getDeparts, catpData]: any = useLazyQuery(getGroups);
 
   const [addGroup] = useMutation(createGroup, {
-    refetchQueries: [{ query: getGroups, variables: { isRTL } }],
+    refetchQueries: [{ query: getGroups }],
   });
   const [editGroup] = useMutation(updateGroup, {
-    refetchQueries: [{ query: getGroups, variables: { isRTL } }],
+    refetchQueries: [{ query: getGroups }],
   });
   const [removeGroup] = useMutation(deleteGroup, {
-    refetchQueries: [{ query: getGroups, variables: { isRTL } }],
+    refetchQueries: [{ query: getGroups }],
   });
 
   useEffect(() => {
     getDeparts();
   }, [getDeparts]);
 
-  const groups = catpData?.data?.["getGroups"]?.data || [];
+  const groups = catpData?.data?.['getGroups']?.data || [];
   const refreshgroups = () => catpData?.refetch();
   return { groups, addGroup, editGroup, removeGroup, refreshgroups };
 };

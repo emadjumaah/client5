@@ -29,7 +29,7 @@ export default function FilterSelectMulti({
       disableListWrap
       limitTags={3}
       getOptionLabel={(option: any) => (isRTL ? option.nameAr : option.name)}
-      style={{ padding: 10 }}
+      style={{ direction: isRTL ? 'rtl' : 'ltr', padding: 10 }}
       renderOption={(option, { selected }) => (
         <Box
           style={{

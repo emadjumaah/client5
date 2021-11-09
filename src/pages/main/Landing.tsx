@@ -38,6 +38,7 @@ export default function Landing(props: any) {
     salesMonths,
     eventMonths,
     salesMonth,
+    eventsMonth,
     salesMonthTotal,
     eventsMonthCount,
     raseeds,
@@ -231,6 +232,40 @@ export default function Landing(props: any) {
                     isRTL
                       ? 'مبيعات هذا الشهر بحسب القسم'
                       : 'Month Sales - Department'
+                  }
+                  height={400}
+                  prim={prim}
+                ></MonthsEmpChart>
+              </Grid>
+            )}
+            {eventsMonth && (
+              <Grid item xs={12} md={6}>
+                <MonthsEmpChart
+                  data={eventsMonth}
+                  isRTL={isRTL}
+                  color={eventColor}
+                  employee={true}
+                  title={
+                    isRTL
+                      ? 'مواعيد هذا الشهر بحسب الموظف'
+                      : 'Month Events - Employee'
+                  }
+                  prim={prim}
+                  height={400}
+                ></MonthsEmpChart>
+              </Grid>
+            )}
+            {eventsMonth && (
+              <Grid item xs={12} md={6}>
+                <MonthsEmpChart
+                  data={eventsMonth}
+                  isRTL={isRTL}
+                  color={eventColor}
+                  department={true}
+                  title={
+                    isRTL
+                      ? 'مواعيد هذا الشهر بحسب القسم'
+                      : 'Month Events - Department'
                   }
                   height={400}
                   prim={prim}

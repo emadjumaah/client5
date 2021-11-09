@@ -1,7 +1,7 @@
 /* eslint-disable array-callback-return */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import { Paper } from "@material-ui/core";
-import React from "react";
+import { Paper } from '@material-ui/core';
+import React from 'react';
 import {
   XAxis,
   YAxis,
@@ -11,12 +11,21 @@ import {
   ResponsiveContainer,
   AreaChart,
   Area,
-} from "recharts";
-import ChartHeader from "./ChartHeader";
+} from 'recharts';
+import ChartHeader from './ChartHeader';
 
 export const EventsDaysChart = (props: any) => {
   const { data, pricolor, seccolor, dataKey, height, isRTL, prim } = props;
-  const title = isRTL ? "الموعيد اليومية المنجزة" : "Daily Appointments";
+
+  const ndata = data.map((d: any) => {
+    return {
+      ...d,
+      Completed: d.Completed ? d.Completed : 0,
+      منجز: d['منجز'] ? d['منجز'] : 0,
+    };
+  });
+
+  const title = isRTL ? 'الموعيد اليومية المنجزة' : 'Daily Appointments';
   return (
     <Paper style={{ height }}>
       <ChartHeader title={title} color={prim}></ChartHeader>
@@ -30,7 +39,7 @@ export const EventsDaysChart = (props: any) => {
             bottom: 20,
           }}
           syncId="anyId"
-          data={data}
+          data={ndata}
         >
           <CartesianGrid strokeDasharray="3 3" vertical={false} />
           <XAxis dataKey="name" axisLine={false} tickLine={false} />
@@ -42,18 +51,18 @@ export const EventsDaysChart = (props: any) => {
           <Tooltip
             formatter={(value: any, name: string) => [
               value,
-              name === "count" ? (isRTL ? "الكل" : "All") : name,
+              name === 'count' ? (isRTL ? 'الكل' : 'All') : name,
             ]}
           />
           <Legend
             formatter={(value) => {
-              return value === "count"
+              return value === 'count'
                 ? isRTL
-                  ? "كل المواعيد"
-                  : "All Appointments"
+                  ? 'كل المواعيد'
+                  : 'All Appointments'
                 : isRTL
-                ? "المواعيد المنجزة"
-                : "Completed";
+                ? 'المواعيد المنجزة'
+                : 'Completed';
             }}
           />
 
@@ -65,7 +74,7 @@ export const EventsDaysChart = (props: any) => {
           />
           <Area
             type="monotone"
-            dataKey={isRTL ? "منجز" : "Completed"}
+            dataKey={isRTL ? 'منجز' : 'Completed'}
             stroke={pricolor}
             fill={pricolor}
           />

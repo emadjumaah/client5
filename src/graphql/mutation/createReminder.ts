@@ -1,0 +1,50 @@
+import { gql } from '@apollo/client';
+
+export default gql`
+  mutation createReminder(
+    $type: Int
+    $title: String
+    $body: String
+    $rruledata: String
+    $rRule: String
+    $allDay: Boolean
+    $exDate: String
+    $actions: String
+    $runtime: Date
+    $active: Boolean
+    $eventId: Int
+    $taskId: Int
+    $projectId: String
+    $customerId: String
+    $departmentId: String
+    $employeeId: String
+    $resourseId: String
+    $data: String
+  ) {
+    createReminder(
+      type: $type
+      title: $title
+      body: $body
+      rruledata: $rruledata
+      rRule: $rRule
+      allDay: $allDay
+      exDate: $exDate
+      actions: $actions
+      runtime: $runtime
+      active: $active
+      eventId: $eventId
+      taskId: $taskId
+      projectId: $projectId
+      customerId: $customerId
+      departmentId: $departmentId
+      employeeId: $employeeId
+      resourseId: $resourseId
+      data: $data
+    ) {
+      ok
+      message
+      data
+      error
+    }
+  }
+`;

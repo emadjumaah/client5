@@ -26,6 +26,7 @@ export interface StoreTypes {
   themeId: string;
   user: UserTypes;
   token: string | null;
+  notify: boolean;
   packIssue: any;
   packIssueMsg: any;
   calendar: {
@@ -40,6 +41,7 @@ export interface StoreTypes {
   network: string;
   weburi: string;
   localuri: string;
+  loading: boolean;
 }
 export interface CalendarTypes {
   mainResourceName: string;

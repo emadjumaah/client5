@@ -58,6 +58,7 @@ export default function PopupAutoField({
           onNewFieldChange(newValue, name);
           setcolor(newValue?.color ? newValue.color : '#fff');
         }}
+        style={{ direction: isRTL ? 'rtl' : 'ltr' }}
         renderInput={(params) => (
           <React.Fragment>
             <TextField

@@ -49,6 +49,7 @@ function App() {
   // env react
   const httpLink = createHttpLink({
     uri: process.env.REACT_APP_GRAPHQL_URI,
+    // uri: 'http://jadwal-main:4000/graphql',
   });
 
   const authLink = setContext((_, { headers }) => {

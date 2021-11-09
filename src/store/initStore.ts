@@ -3,6 +3,7 @@ export const initStore = {
   themeId: '0',
   user: null,
   token: null,
+  notify: false,
   calendar: {
     duration: 30,
     start: 8.5,
@@ -17,4 +18,5 @@ export const initStore = {
   startBlock: null,
   template: null,
   localuri: 'jadwal-server:4000', // jadwal-server
+  loading: false,
 };

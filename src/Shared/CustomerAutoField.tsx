@@ -55,6 +55,7 @@ export default function CustomerAutoField({
           onChange={(_, newValue: any) => {
             onNewFieldChange(newValue, name);
           }}
+          style={{ direction: isRTL ? 'rtl' : 'ltr' }}
           renderInput={(params) => (
             <TextField
               {...params}
@@ -74,6 +75,7 @@ export default function CustomerAutoField({
           onChange={(_, newValue: any) => {
             onNewFieldChange(newValue, name);
           }}
+          style={{ direction: isRTL ? 'rtl' : 'ltr' }}
           renderInput={(params) => (
             <TextField
               {...params}

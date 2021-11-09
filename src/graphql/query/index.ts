@@ -41,6 +41,8 @@ import getReminders from './getReminders';
 import getActions from './getActions';
 import getResourses from './getResourses';
 import getProjects from './getProjects';
+import getContacts from './getContacts';
+import getSendreqs from './getSendreqs';
 
 export {
   getResourses,
@@ -86,4 +88,6 @@ export {
   getReminders,
   getActions,
   getGroups,
+  getContacts,
+  getSendreqs,
 };

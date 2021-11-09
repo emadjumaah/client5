@@ -1,19 +1,19 @@
-import { gql } from "@apollo/client";
+import { gql } from '@apollo/client';
 
 export default gql`
-  query getGroups($isRTL: Boolean) {
-    getGroups(isRTL: $isRTL) {
+  query getGroups {
+    getGroups {
       ok
       error
       data {
         _id
         branch
         autoNo
-        docNo
         name
         nameAr
+        qty
+        conttype
         userId
-        tasks
 
         createdAt
         updatedAt

@@ -1,20 +1,13 @@
-import { gql } from "@apollo/client";
+import { gql } from '@apollo/client';
 
 export default gql`
   mutation updateGroup(
     $_id: String
-    $branch: String
     $name: String
     $nameAr: String
-    $tasks: [Int]
+    $conttype: Int
   ) {
-    updateGroup(
-      _id: $_id
-      branch: $branch
-      name: $name
-      nameAr: $nameAr
-      tasks: $tasks
-    ) {
+    updateGroup(_id: $_id, name: $name, nameAr: $nameAr, conttype: $conttype) {
       ok
       message
       data

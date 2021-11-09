@@ -310,20 +310,20 @@ const PopupTask = ({
       return;
     }
 
-    // if (!custvalue) {
-    //   await messageAlert(
-    //     setAlrt,
-    //     isRTL ? 'يرجى اضافة عميل للفاتورة' : 'Please add Customer'
-    //   );
-    //   return;
-    // }
-    // if (isNew && (!evList || evList.length === 0)) {
-    //   await messageAlert(
-    //     setAlrt,
-    //     isRTL ? 'يرجى اضافة موعد' : 'Please add Appointment'
-    //   );
-    //   return;
-    // }
+    if (!custvalue) {
+      await messageAlert(
+        setAlrt,
+        isRTL ? 'يرجى اضافة عميل' : 'Please add Customer'
+      );
+      return;
+    }
+    if (isNew && (!evList || evList.length === 0)) {
+      await messageAlert(
+        setAlrt,
+        isRTL ? 'يرجى اضافة موعد' : 'Please add Appointment'
+      );
+      return;
+    }
     setSaving(true);
     const events =
       evList && evList.length > 0 ? compressEvents(evList) : undefined;

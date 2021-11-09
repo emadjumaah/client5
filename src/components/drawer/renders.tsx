@@ -23,7 +23,7 @@ export const renderIcon = (icon: any, theme: any, isSelected: any) => {
         height: 25,
       }}
     >
-      <MyIcon icon={icon} color={color} size={25}></MyIcon>
+      <MyIcon icon={icon} color={color} size={23}></MyIcon>
     </Box>
   );
 };

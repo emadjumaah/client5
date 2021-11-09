@@ -4,7 +4,8 @@ import React from 'react';
 
 const styles: any = () => ({
   popper: {
-    width: 'fit-content',
+    width: 400,
+    // width: 'fit-content',
   },
 });
 

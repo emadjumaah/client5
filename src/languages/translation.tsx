@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 
-import { LanguageType } from "./langTypes";
+import { LanguageType } from './langTypes';
 
 export const translation = (lang: LanguageType) => {
   const words = {
@@ -142,6 +142,7 @@ export const translation = (lang: LanguageType) => {
     subject: lang.words.subject,
     body: lang.words.body,
     weekdays: lang.words.weekdays,
+    group: lang.words.group,
   };
 
   const messages = {

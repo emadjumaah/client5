@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import React from "react";
-import { Box, Checkbox, TextField } from "@material-ui/core";
-import { Autocomplete } from "@material-ui/lab";
-import CheckBoxOutlineBlankIcon from "@material-ui/icons/CheckBoxOutlineBlank";
-import CheckBoxIcon from "@material-ui/icons/CheckBox";
+import React from 'react';
+import { Box, Checkbox, TextField } from '@material-ui/core';
+import { Autocomplete } from '@material-ui/lab';
+import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
+import CheckBoxIcon from '@material-ui/icons/CheckBox';
 
 const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
@@ -29,10 +29,10 @@ export default function SelectMulti({
       renderOption={(option, { selected }) => (
         <Box
           style={{
-            direction: isRTL ? "rtl" : "ltr",
-            display: "flex",
+            direction: isRTL ? 'rtl' : 'ltr',
+            display: 'flex',
             flex: 1,
-            alignItems: "center",
+            alignItems: 'center',
           }}
         >
           {!nomulti && (
@@ -50,6 +50,7 @@ export default function SelectMulti({
       onChange={(_, newValue: any) => {
         setValue(newValue);
       }}
+      style={{ direction: isRTL ? 'rtl' : 'ltr' }}
       renderInput={(params) => (
         <TextField
           {...params}

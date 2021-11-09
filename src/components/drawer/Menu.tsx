@@ -1,11 +1,12 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import React from 'react';
-import { List, ListItem, ListItemText } from '@material-ui/core';
+import { Box, List, ListItem, ListItemText } from '@material-ui/core';
 import { Link } from 'react-router-dom';
 import { renderIcon } from './renders';
 import MenuItem from './MenuItem';
 import { applyRole } from '../../common/roles';
+import useWindowDimensions from '../../hooks/useWindowDimensions';
 
 const Menu = ({
   isRTL,
@@ -20,81 +21,90 @@ const Menu = ({
   client,
   history,
 }: any) => {
+  const { height } = useWindowDimensions();
   return (
-    <List style={{ marginTop: 40 }}>
-      {menu.map((item: any, i: any) => {
-        const submenu = item.subMenu;
-        const isSelected = item.name === menuitem.name;
-        const role = item.role ? applyRole(item.role, user) : true;
-        if (!role) {
-          return <div key={item.id}></div>;
-        }
-        return (
-          <div key={item.id}>
-            {!submenu && (
-              <Link
-                style={{
-                  textDecoration: 'none',
-                  color: isSelected ? '#333' : '#fff',
-                }}
-                to={`${item.uri}`}
-                onClick={async () => {
-                  if (item.id === 99) {
-                    logout();
-                    await client.resetStore();
-                    history.push('/');
-                  } else {
-                    setMenuitem(item);
-                    if (setMobileOpen) {
-                      setMobileOpen(false);
-                    }
-                  }
-                }}
-              >
-                <ListItem
-                  dir={isRTL ? 'rtl' : undefined}
-                  className={classes.child}
+    <Box
+      style={{
+        marginTop: 40,
+        height: height - 80,
+        overflow: 'auto',
+      }}
+    >
+      <List>
+        {menu.map((item: any, i: any) => {
+          const submenu = item.subMenu;
+          const isSelected = item.name === menuitem.name;
+          const role = item.role ? applyRole(item.role, user) : true;
+          if (!role) {
+            return <div key={item.id}></div>;
+          }
+          return (
+            <div key={item.id}>
+              {!submenu && (
+                <Link
                   style={{
-                    cursor: 'pointer',
-                    backgroundColor: isSelected
-                      ? theme.palette.primary.dark
-                      : undefined,
+                    textDecoration: 'none',
+                    color: isSelected ? '#333' : '#fff',
+                  }}
+                  to={`${item.uri}`}
+                  onClick={async () => {
+                    if (item.id === 99) {
+                      logout();
+                      await client.resetStore();
+                      history.push('/');
+                    } else {
+                      setMenuitem(item);
+                      if (setMobileOpen) {
+                        setMobileOpen(false);
+                      }
+                    }
                   }}
                 >
-                  {renderIcon(item.icon, theme, isSelected)}
-
-                  <ListItemText
-                    primary={isRTL ? item.titleAr : item.titleEn}
-                    className={isRTL ? classes.txtrtl : classes.txtltr}
+                  <ListItem
+                    dir={isRTL ? 'rtl' : undefined}
+                    className={classes.child}
                     style={{
-                      margin: 0,
-                      color: isSelected
-                        ? theme.palette.secondary.main
+                      cursor: 'pointer',
+                      backgroundColor: isSelected
+                        ? theme.palette.primary.dark
                         : undefined,
                     }}
-                  />
-                </ListItem>
-              </Link>
-            )}
-            {submenu && (
-              <MenuItem
-                item={item}
-                classes={classes}
-                isSelected={isSelected}
-                isRTL={isRTL}
-                theme={theme}
-                submenu={submenu}
-                i={i}
-                setMenuitem={setMenuitem}
-                menuitem={menuitem}
-                user={user}
-                setMobileOpen={setMobileOpen}
-              ></MenuItem>
-            )}
-          </div>
-        );
-      })}
-    </List>
+                  >
+                    {renderIcon(item.icon, theme, isSelected)}
+
+                    <ListItemText
+                      primary={isRTL ? item.titleAr : item.titleEn}
+                      className={isRTL ? classes.txtrtl : classes.txtltr}
+                      style={{
+                        margin: 0,
+                        color: isSelected
+                          ? theme.palette.secondary.main
+                          : undefined,
+                      }}
+                    />
+                  </ListItem>
+                </Link>
+              )}
+              {submenu && (
+                <MenuItem
+                  item={item}
+                  classes={classes}
+                  isSelected={isSelected}
+                  isRTL={isRTL}
+                  theme={theme}
+                  submenu={submenu}
+                  i={i}
+                  setMenuitem={setMenuitem}
+                  menuitem={menuitem}
+                  user={user}
+                  setMobileOpen={setMobileOpen}
+                ></MenuItem>
+              )}
+            </div>
+          );
+        })}
+      </List>
+    </Box>
   );
 };
 

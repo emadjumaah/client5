@@ -7,51 +7,32 @@ export default gql`
       error
       data {
         _id
-        id
-        taskId
         branch
+
+        id
+        type
         title
-        startDate
-        endDate
-        allDay
+        body
+
+        rruledata
         rRule
-        reminder
+        allDay
         exDate
-        allowDrag
+        actions
+        runtime
+        lastrun
+        runlog
+        active
 
-        autoNo
-        docNo
-        priority
-        amount
-        status
-
-        customerId
-        customerName
-        customerNameAr
-        customerPhone
-
-        departmentId
-        departmentName
-        departmentNameAr
-        departmentColor
-
-        employeeId
-        employeeName
-        employeeNameAr
-        employeeColor
-        employeePhone
-
+        eventId
+        taskId
         projectId
-        projectName
-        projectNameAr
-        projectColor
+        customerId
+        departmentId
+        employeeId
         resourseId
-        resourseName
-        resourseNameAr
-        resourseColor
 
-        refNo
-        refType
+        userId
 
         createdAt
         updatedAt

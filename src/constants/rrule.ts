@@ -10,25 +10,25 @@ const options = template?.options;
 
 export const freqOptions = [
   {
-    id: 2,
+    id: 1,
     name: 'Daily',
     nameAr: 'يومي',
     value: RRule.DAILY,
   },
   {
-    id: 3,
+    id: 2,
     name: 'Weekly',
     nameAr: 'اسبوعي',
     value: RRule.WEEKLY,
   },
   {
-    id: 4,
+    id: 3,
     name: 'Monthly',
     nameAr: 'شهري',
     value: RRule.MONTHLY,
   },
   {
-    id: 5,
+    id: 4,
     name: 'Yearly',
     nameAr: 'سنوي',
     value: RRule.YEARLY,
@@ -36,25 +36,25 @@ export const freqOptions = [
 ];
 export const byweekdayOptions = [
   {
-    id: 2,
+    id: 1,
     name: 'Saturday',
     nameAr: 'السبت',
     value: RRule.SA,
   },
   {
-    id: 3,
+    id: 2,
     name: 'Sunday',
     nameAr: 'الاحد',
     value: RRule.SU,
   },
   {
-    id: 4,
+    id: 3,
     name: 'Monday',
     nameAr: 'الاثنين',
     value: RRule.MO,
   },
   {
-    id: 5,
+    id: 4,
     name: 'Tuesday',
     nameAr: 'الثلاثاء',
     value: RRule.TU,
@@ -66,13 +66,13 @@ export const byweekdayOptions = [
     value: RRule.WE,
   },
   {
-    id: 5,
+    id: 6,
     name: 'Thursday',
     nameAr: 'الخميس',
     value: RRule.TH,
   },
   {
-    id: 5,
+    id: 7,
     name: 'Friday',
     nameAr: 'الجمعة',
     value: RRule.FR,
@@ -97,6 +97,44 @@ export const actionOptions = [
     name: 'Notification',
     nameAr: 'تنبيه',
     value: 3,
+  },
+];
+export const eventLengthOptions = [
+  {
+    id: 1,
+    name: '30 minutes',
+    nameAr: 'ثلاثون دقيقة',
+    value: 30,
+  },
+  {
+    id: 2,
+    name: 'One Hour',
+    nameAr: 'ساعة واحدة',
+    value: 60,
+  },
+  {
+    id: 3,
+    name: 'One Hour 30 minutes',
+    nameAr: 'ساعة ونصف',
+    value: 90,
+  },
+  {
+    id: 4,
+    name: 'Two Hours',
+    nameAr: 'ساعتين',
+    value: 120,
+  },
+  {
+    id: 5,
+    name: 'Three Hours',
+    nameAr: 'ثلاث ساعات',
+    value: 180,
+  },
+  {
+    id: 6,
+    name: 'Four Hours',
+    nameAr: 'اربع ساعات',
+    value: 240,
   },
 ];
 export const timeRelationOptions = [
