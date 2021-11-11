@@ -224,7 +224,7 @@ const Login = (): any => {
         >
           <Typography variant="body1" color="textSecondary" align="center">
             {'Copyright © '}
-            <Link color="inherit" href="https://jadwalweb.com/">
+            <Link color="inherit" href="https://jadwal.io/">
               Jadwal
             </Link>{' '}
             {new Date().getFullYear()}

@@ -119,7 +119,7 @@ import RemindCal from '../calendar/RemindCal';
 
 const Content = () => {
   const classes = layoutClasses();
-  const [mmenu, setMmenu] = useState(1);
+  const [mmenu, setMmenu] = useState(null);
   const [menu, setmenu] = useState(filterMenu());
   const [menuitem, setMenuitem] = useState(mainmenu[0]);
 
