@@ -234,7 +234,7 @@ const Content = () => {
         return;
       case 3:
         setmenu(remindermenu);
-        history.push('/reminders');
+        history.push('/actions');
         setMenuitem(remindermenu[0]);
         return;
 
