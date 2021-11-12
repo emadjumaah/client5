@@ -521,10 +521,8 @@ const PopupAppointmentCustomer = ({
     setSelected(null);
     setTasktitle(null);
     setLocation(null);
-    setEventLength(null);
+    setEventLength(eventLengthOptions[1].value);
   };
-
-  console.log(row);
 
   const onSubmit = async () => {
     if (startDate > endDate) {

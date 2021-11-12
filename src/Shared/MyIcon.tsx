@@ -33,6 +33,7 @@ import MarkEmailReadIcon from '@material-ui/icons/Email';
 import NotificationsActive from '@material-ui/icons/NotificationsActive';
 import ListAltIcon from '@material-ui/icons/ListAlt';
 import CampaignIcon from '@material-ui/icons/Telegram';
+import SyncIcon from '@material-ui/icons/Sync';
 
 export default function MyIcon({ icon, color, size }: any) {
   const style = { color, fontSize: size ? size : undefined };
@@ -109,6 +110,8 @@ export default function MyIcon({ icon, color, size }: any) {
       return <ListAltIcon style={style}></ListAltIcon>;
     case 'camp':
       return <CampaignIcon style={style}></CampaignIcon>;
+    case 'sync':
+      return <SyncIcon style={style}></SyncIcon>;
 
     default:
       return <div></div>;

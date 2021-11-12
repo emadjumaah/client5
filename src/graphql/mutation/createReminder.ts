@@ -11,6 +11,8 @@ export default gql`
     $exDate: String
     $actions: String
     $runtime: Date
+    $startDate: Date
+    $endDate: Date
     $active: Boolean
     $eventId: Int
     $taskId: Int
@@ -31,6 +33,8 @@ export default gql`
       exDate: $exDate
       actions: $actions
       runtime: $runtime
+      startDate: $startDate
+      endDate: $endDate
       active: $active
       eventId: $eventId
       taskId: $taskId

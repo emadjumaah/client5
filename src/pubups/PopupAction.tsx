@@ -4,34 +4,36 @@ import { useContext, useEffect, useState } from 'react';
 import { GContextTypes } from '../types';
 import { GlobalContext } from '../contexts';
 import PopupLayout from '../pages/main/PopupLayout';
-import { Box, Grid } from '@material-ui/core';
+import { Box, Button, Grid } from '@material-ui/core';
 import { TextFieldLocal } from '../components';
 import { SelectLocal } from '../pages/calendar/common/SelectLocal';
-import {
-  actionOptions,
-  timeRelationOptions,
-  timeUnitOptions,
-} from '../constants/rrule';
+import { timeRelationOptions, timeUnitOptions } from '../constants/rrule';
 import { getSendTime } from '../common/helpers';
 import { getDateDayTimeFormat } from '../Shared/colorFormat';
 import React from 'react';
+import { phoneRegExp } from '../constants/yupSchemas';
+import { messageAlert } from '../Shared';
 
 const PopupAction = ({
   open,
   onClose,
   row,
+  type,
   isNew,
   addAction,
   editAction,
   theme,
   event,
+  customer,
+  isReminder,
 }: any) => {
-  const [saving, setSaving] = useState(false);
-  const [type, setType] = useState(1);
+  const [localtype, setLocatype] = useState(type);
+  const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
   const [timeunit, setTimeunit] = useState('minute');
   const [timerelate, setTimerelate] = useState('bstart');
-  const [qty, setQty] = useState(30);
+  const [qty, setQty] = useState(isReminder ? 0 : 30);
   const [body, setBody] = useState('');
+  const [smsqty, setSmsqty] = useState(0);
   const [address, setAddreess] = useState('');
   const [sendtime, setSendtime] = useState(null);
 
@@ -43,15 +45,23 @@ const PopupAction = ({
   useEffect(() => {
     if (row) {
       setBody(row.body);
-      setType(row.type);
       setAddreess(row.address);
-      setType(row.type);
       setTimeunit(row.timeunit);
       setQty(row.qty);
       setTimerelate(row.timerelate);
       setSendtime(row.sendtime);
+      setLocatype(row.type);
+    } else {
+      setLocatype(type);
     }
   }, [open]);
+
+  useEffect(() => {
+    if (localtype === 1) {
+      const smss = Math.ceil(body.length / 70);
+      setSmsqty(smss);
+    }
+  }, [body]);
 
   useEffect(() => {
     const { startDate, endDate } = event;
@@ -63,29 +73,45 @@ const PopupAction = ({
       qty,
     });
     setSendtime(sendtime);
-  }, [timeunit, timerelate, qty]);
+  }, [timeunit, timerelate, qty, open]);
 
   const onSubmit = async () => {
-    setSaving(true);
-
+    if (body.length < 5) {
+      await messageAlert(
+        setAlrt,
+        isRTL ? `نص الرسالة مطلوب` : `Message body required`
+      );
+      return;
+    }
+    if (localtype === 1) {
+      const regex = new RegExp(phoneRegExp);
+      if (!regex.test(address)) {
+        await messageAlert(
+          setAlrt,
+          isRTL ? `رقم الجوال غير صحيح` : `Mobile number incurrect`
+        );
+        return;
+      }
+    }
     const variables: any = {
+      index: isNew ? undefined : row?.index,
       branch: user.branch,
-      type,
-      phone: type === 1 ? address : undefined,
-      email: type === 2 ? address : undefined,
-      userId: type === 3 ? user._id : undefined,
+      type: localtype,
+      phone: localtype === 1 ? address : undefined,
+      // email: type === 2 ? address : undefined,
+      user: localtype === 3 ? user._id : undefined,
       sendtime,
       body,
+      smsqty,
       timeunit,
       timerelate,
       qty,
       address,
+      userId: user._id,
     };
 
     isNew ? addAction(variables) : editAction(variables);
-    reset();
-    setSaving(false);
-    onClose();
+    onCloseForem();
   };
 
   const onHandleSubmit = () => {
@@ -93,14 +119,13 @@ const PopupAction = ({
   };
 
   const reset = () => {
-    setType(1);
     setTimeunit('minute');
     setTimerelate('bstart');
     setQty(30);
     setBody('');
     setAddreess('');
     setSendtime(null);
-    setSaving(false);
+    setSmsqty(0);
   };
 
   const onCloseForem = () => {
@@ -116,7 +141,11 @@ const PopupAction = ({
     ? 'New Action'
     : 'Edit Action';
   const addresstitle =
-    type === 1 ? words.mobile : type === 2 ? words.email : words.notification;
+    localtype === 1
+      ? words.mobile
+      : localtype === 2
+      ? words.email
+      : words.notification;
 
   return (
     <PopupLayout
@@ -126,8 +155,7 @@ const PopupAction = ({
       title={title}
       onSubmit={onHandleSubmit}
       theme={theme}
-      alrt={{}}
-      saving={saving}
+      alrt={alrt}
     >
       <Grid container spacing={2}>
         <Grid item xs={1}></Grid>
@@ -138,6 +166,7 @@ const PopupAction = ({
                 required
                 name="body"
                 multiline
+                maxLength={210}
                 rows={4}
                 label={words.body}
                 value={body}
@@ -146,18 +175,10 @@ const PopupAction = ({
                 fullWidth
                 mb={0}
               />
-            </Grid>
-            <Grid item xs={5}>
-              <SelectLocal
-                options={actionOptions}
-                value={type}
-                onChange={(e: any) => setType(e.target.value)}
-                isRTL={isRTL}
-                width={160}
-              ></SelectLocal>
+              {localtype === 1 && `SMSs: (${smsqty})`}
             </Grid>
             <Grid item xs={7}>
-              {type !== 3 && (
+              {localtype !== 3 && (
                 <TextFieldLocal
                   name="address"
                   label={addresstitle}
@@ -168,53 +189,69 @@ const PopupAction = ({
                 />
               )}
             </Grid>
+            <Grid item xs={5}>
+              {localtype !== 3 && customer && (
+                <Button
+                  style={{ margin: 10 }}
+                  variant="outlined"
+                  color="secondary"
+                  onClick={() => setAddreess(customer?.phone)}
+                >
+                  {isRTL ? 'استخدم رقم العميل' : 'Use Customer Number'}
+                </Button>
+              )}
+            </Grid>
             <Grid item xs={12}>
+              {!isReminder && (
+                <Grid container spacing={2}>
+                  <Grid item xs={4}>
+                    <SelectLocal
+                      options={timeRelationOptions}
+                      value={timerelate}
+                      onChange={(e: any) => setTimerelate(e.target.value)}
+                      isRTL={isRTL}
+                      width={128}
+                    ></SelectLocal>
+                  </Grid>
+                  <Grid item xs={4}>
+                    <TextFieldLocal
+                      required
+                      name="qty"
+                      label={words.qty}
+                      value={qty}
+                      onChange={(e: any) => setQty(Number(e.target.value))}
+                      type="number"
+                      width={128}
+                    />
+                  </Grid>
+                  <Grid item xs={4}>
+                    <SelectLocal
+                      options={timeUnitOptions}
+                      value={timeunit}
+                      onChange={(e: any) => setTimeunit(e.target.value)}
+                      isRTL={isRTL}
+                      width={128}
+                    ></SelectLocal>
+                  </Grid>
+                </Grid>
+              )}
               <Grid container spacing={2}>
-                <Grid item xs={4}>
-                  <SelectLocal
-                    options={timeRelationOptions}
-                    value={timerelate}
-                    onChange={(e: any) => setTimerelate(e.target.value)}
-                    isRTL={isRTL}
-                    width={128}
-                  ></SelectLocal>
-                </Grid>
-                <Grid item xs={4}>
-                  <TextFieldLocal
-                    required
-                    name="qty"
-                    label={words.qty}
-                    value={qty}
-                    onChange={(e: any) => setQty(Number(e.target.value))}
-                    type="number"
-                    width={128}
-                  />
-                </Grid>
-                <Grid item xs={4}>
-                  <SelectLocal
-                    options={timeUnitOptions}
-                    value={timeunit}
-                    onChange={(e: any) => setTimeunit(e.target.value)}
-                    isRTL={isRTL}
-                    width={128}
-                  ></SelectLocal>
-                </Grid>
-              </Grid>
-              <Grid container spacing={2}>
-                <Grid item xs={12}>
-                  <Box
-                    display="flex"
-                    style={{
-                      flex: 1,
-                      direction: 'ltr',
-                      fontSize: 16,
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                    }}
-                  >
-                    {getDateDayTimeFormat(sendtime, isRTL)}
-                  </Box>
-                </Grid>
+                {!isReminder && (
+                  <Grid item xs={12}>
+                    <Box
+                      display="flex"
+                      style={{
+                        flex: 1,
+                        direction: 'ltr',
+                        fontSize: 16,
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                      }}
+                    >
+                      {getDateDayTimeFormat(sendtime, isRTL)}
+                    </Box>
+                  </Grid>
+                )}
               </Grid>
             </Grid>
           </Grid>

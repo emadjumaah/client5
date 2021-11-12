@@ -12,11 +12,18 @@ import {
 } from '../Shared';
 import { GContextTypes } from '../types';
 import { GlobalContext } from '../contexts';
-import { Checkbox, FormControlLabel, Grid } from '@material-ui/core';
+import {
+  Checkbox,
+  Divider,
+  FormControlLabel,
+  Grid,
+  Typography,
+} from '@material-ui/core';
 import PopupLayout from '../pages/main/PopupLayout';
 import { CalenderLocal, TextFieldLocal } from '../components';
 import useGroups from '../hooks/useGroups';
 import FilterSelectMulti from '../Shared/FilterSelectMulti';
+import _ from 'lodash';
 
 const PopupSendreq = ({
   open,
@@ -33,6 +40,9 @@ const PopupSendreq = ({
   const [runtime, setRuntime] = useState(new Date());
   const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
   const [groupvalue, setGroupvalue] = useState([]);
+  const [body, setBody] = useState('');
+  const [conqty, setConqty] = useState(0);
+  const [smsqty, setSmsqty] = useState(0);
 
   const { register, handleSubmit, errors, reset } = useForm(yup.smsResolver);
   const {
@@ -48,6 +58,16 @@ const PopupSendreq = ({
       setRuntime(row.runtime);
     }
   }, [open]);
+
+  useEffect(() => {
+    const sum = _.sumBy(groupvalue, 'qty');
+    setConqty(sum);
+  }, [groupvalue]);
+
+  useEffect(() => {
+    const smss = Math.ceil(body.length / 70);
+    setSmsqty(smss);
+  }, [body]);
 
   const getIds = (list: any) =>
     list && list?.length > 0 ? list.map((sv: any) => sv._id) : undefined;
@@ -67,9 +87,16 @@ const PopupSendreq = ({
       );
       return;
     }
+    if (body.length < 5) {
+      await messageAlert(
+        setAlrt,
+        isRTL ? `نص الرسالة مطلوب` : `Message body required`
+      );
+      return;
+    }
 
     setSaving(true);
-    const { title, body } = data;
+    const { title } = data;
 
     const variables: any = {
       _id: row && row._id ? row._id : undefined,
@@ -149,7 +176,7 @@ const PopupSendreq = ({
                 autoFocus
                 required
                 name="title"
-                label={words.title}
+                label={isRTL ? 'اسم الحملة' : 'Campaign Name'}
                 register={register}
                 errors={errors}
                 row={row}
@@ -158,30 +185,9 @@ const PopupSendreq = ({
               />
             </Grid>
             <Grid item xs={12}>
-              <TextFieldLocal
-                required
-                name="body"
-                label={isRTL ? 'نص الرسالة' : 'Message'}
-                register={register}
-                errors={errors}
-                row={row}
-                multiline
-                rows={4}
-                fullWidth
-                mb={0}
-              />
+              <Divider></Divider>
             </Grid>
-            <Grid item xs={12}>
-              <CalenderLocal
-                isRTL={isRTL}
-                label={words.time}
-                value={runtime}
-                onChange={(d: any) => setRuntime(d)}
-                format="dd/MM/yyyy - hh:mm"
-                time
-              ></CalenderLocal>
-            </Grid>
-            <Grid item xs={12}>
+            <Grid item xs={9}>
               <FilterSelectMulti
                 options={groups}
                 value={groupvalue}
@@ -189,9 +195,41 @@ const PopupSendreq = ({
                 words={words}
                 isRTL={isRTL}
                 name="group"
-                width={350}
+                width={300}
               ></FilterSelectMulti>
             </Grid>
+            <Grid item xs={3}>
+              <Typography style={{ padding: 5, marginTop: 15 }}>
+                {words.qty} : {conqty}
+              </Typography>
+            </Grid>
+            <Grid item xs={12}>
+              <TextFieldLocal
+                required
+                name="body"
+                label={isRTL ? 'نص الرسالة' : 'Message'}
+                value={body}
+                onChange={(e: any) => setBody(e.target.value)}
+                row={row}
+                multiline
+                rows={4}
+                fullWidth
+                maxLength={500}
+                mb={0}
+              />
+              {`SMSs: (${smsqty})`}
+            </Grid>
+            <Grid item xs={6}>
+              <CalenderLocal
+                isRTL={isRTL}
+                label={isRTL ? 'وقت الارسال' : 'Send Time'}
+                value={runtime}
+                onChange={(d: any) => setRuntime(d)}
+                format="dd/MM/yyyy - hh:mm"
+                time
+              ></CalenderLocal>
+            </Grid>
+            <Grid item xs={6}></Grid>
             <Grid item xs={12}>
               <FormControlLabel
                 control={

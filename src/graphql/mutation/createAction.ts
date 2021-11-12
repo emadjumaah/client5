@@ -11,9 +11,15 @@ export default gql`
     $userId: String
     $title: String
     $body: String
+    $smsqty: Int
+    $reminderId: Int
     $eventId: Int
     $taskId: Int
-    $smsqty: Int
+    $employeeId: String
+    $departmentId: String
+    $customerId: String
+    $resourseId: String
+    $projectId: String
     $user: String
     $data: String
     $timeunit: String
@@ -31,9 +37,15 @@ export default gql`
       userId: $userId
       title: $title
       body: $body
+      smsqty: $smsqty
+      reminderId: $reminderId
       eventId: $eventId
       taskId: $taskId
-      smsqty: $smsqty
+      employeeId: $employeeId
+      departmentId: $departmentId
+      customerId: $customerId
+      resourseId: $resourseId
+      projectId: $projectId
       user: $user
       data: $data
       timeunit: $timeunit

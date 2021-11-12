@@ -34,6 +34,7 @@ import useContacts from '../../hooks/useContacts';
 import PopupContactImport from '../../pubups/PopupContactImport';
 import useGroups from '../../hooks/useGroups';
 import { groupFormatter } from '../../Shared/colorFormat';
+import ImportBtns from '../../common/ImportBtns';
 
 export default function Contacts(props: any) {
   const { isRTL, words, menuitem, isEditor, theme } = props;
@@ -47,6 +48,8 @@ export default function Contacts(props: any) {
     addMultiContacts,
     editContact,
     removeContact,
+    syncCust,
+    syncEmpl,
   } = useContacts();
   const { groups } = useGroups();
   const [columns] = useState([
@@ -93,6 +96,14 @@ export default function Contacts(props: any) {
           isRTL={isRTL}
           theme={theme}
         ></ImportBtn>
+        <ImportBtns
+          open={() => setOpenImport(true)}
+          isRTL={isRTL}
+          theme={theme}
+          syncCust={syncCust}
+          syncEmpl={syncEmpl}
+        ></ImportBtns>
+
         <Grid rows={contacts} columns={columns} getRowId={getRowId}>
           <SortingState />
           <SearchState />

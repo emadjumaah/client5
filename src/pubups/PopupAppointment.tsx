@@ -110,6 +110,7 @@ const PopupAppointment = ({
 
   const [totals, setTotals] = useState<any>({});
   const [itemsList, setItemsList] = useState<any>([]);
+
   const [taskvalue, setTaskvalue] = useState<any>(null);
 
   const [openInvoice, setOpenInvoice] = useState(false);
@@ -122,6 +123,7 @@ const PopupAppointment = ({
   const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
 
   const [openAction, setOpenAction] = useState(false);
+  const [type, setType] = useState(null);
   const [actionslist, setActionslist] = useState([]);
   const [selected, setSelected] = useState(null);
   const [tasktitle, setTasktitle]: any = useState(null);
@@ -341,9 +343,8 @@ const PopupAppointment = ({
       const statNo = row.status;
       const taskId = row.taskId;
       setTasktitle(row?.title);
-
-      setStartDate(row?.startDate);
-      setEndDate(row?.endDate);
+      setStartDate(new Date(row?.startDate));
+      setEndDate(new Date(row?.endDate));
 
       if (depId) {
         const depart = departments.filter((dep: any) => dep._id === depId)[0];
@@ -405,16 +406,23 @@ const PopupAppointment = ({
   };
   const editActionInList = (item: any) => {
     const newArray = actionslist.map((it: any) => {
-      if (it._id === item._id) {
-        return item;
+      if (item._id) {
+        if (it._id === item._id) {
+          return item;
+        } else {
+          return it;
+        }
       } else {
-        return it;
+        if (it.index === item.index) {
+          return item;
+        } else {
+          return it;
+        }
       }
     });
     const listwithindex = indexTheList(newArray);
     setActionslist(listwithindex);
   };
-
   const removeActionFromList = (item: any) => {
     const newlist = actionslist.filter((il: any) => il.index !== item.index);
     const listwithindex = indexTheList(newlist);
@@ -478,7 +486,7 @@ const PopupAppointment = ({
     setSelected(null);
     setTasktitle(null);
     setLocation(null);
-    setEventLength(null);
+    setEventLength(eventLengthOptions[1].value);
   };
   const onSubmit = async () => {
     // const { startPeriod, endPeriod } = getAppStartEndPeriod();
@@ -826,10 +834,28 @@ const PopupAppointment = ({
                   }}
                   onClick={() => {
                     setSelected(null);
+                    setType(3);
                     setOpenAction(true);
                   }}
                 >
                   {isRTL ? 'اضافة تنبيه' : 'Add Reminder'}
+                </Button>
+                <Button
+                  variant="outlined"
+                  style={{
+                    marginBottom: 10,
+                    fontSize: 14,
+                    minWidth: 80,
+                    marginRight: 10,
+                    marginLeft: 10,
+                  }}
+                  onClick={() => {
+                    setSelected(null);
+                    setType(1);
+                    setOpenAction(true);
+                  }}
+                >
+                  {isRTL ? 'اضافة رسالة' : 'Add SMS'}
                 </Button>
                 <Paper style={{ height: 180, overflow: 'auto' }}>
                   {actionslist.map((act: any) => {
@@ -1053,9 +1079,14 @@ const PopupAppointment = ({
         ></PopupResourses>
         <PopupAction
           open={openAction}
-          onClose={() => setOpenAction(false)}
+          onClose={() => {
+            setOpenAction(false);
+            setSelected(null);
+          }}
           row={selected}
+          type={type}
           isNew={selected ? false : true}
+          customer={custvalue}
           addAction={addActionToList}
           editAction={editActionInList}
           theme={theme}

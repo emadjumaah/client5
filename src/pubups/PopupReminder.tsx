@@ -31,8 +31,8 @@ import PopupResourses from './PopupResourses';
 import useDepartmentsUp from '../hooks/useDepartmentsUp';
 import useEmployeesUp from '../hooks/useEmployeesUp';
 import useResoursesUp from '../hooks/useResoursesUp';
-import PopupReminderAction from './PopupReminderAction';
 import PopupAddrRule from './PopupAddrRule';
+import PopupAction from './PopupAction';
 
 export const indexTheList = (list: any) => {
   return list.map((item: any, index: any) => {
@@ -55,6 +55,8 @@ const PopupReminder = ({
   const [saving, setSaving] = useState(false);
 
   const [runtime, setRuntime]: any = useState(null);
+  const [startDate, setStartDate]: any = useState(null);
+  const [endDate, setEndDate]: any = useState(null);
 
   const [departvalue, setDepartvalue] = useState<any>(null);
   const [departError, setDepartError] = useState<any>(false);
@@ -75,6 +77,7 @@ const PopupReminder = ({
 
   const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
 
+  const [type, setType] = useState(null);
   const [openAction, setOpenAction] = useState(false);
   const [actionslist, setActionslist] = useState([]);
   const [selected, setSelected] = useState(null);
@@ -145,6 +148,18 @@ const PopupReminder = ({
   };
 
   useEffect(() => {
+    if (isNew) {
+      const start = new Date();
+      const end = new Date();
+      start.setMinutes(0);
+      end.setHours(end.getHours() + 1);
+      end.setMinutes(0);
+      setStartDate(start);
+      setEndDate(end);
+    }
+  }, [open]);
+
+  useEffect(() => {
     if (row && row._id) {
       const depId = row.departmentId;
       const empId = row.employeeId;
@@ -152,6 +167,8 @@ const PopupReminder = ({
       const custId = row.customerId;
       setRtitle(row?.title);
       setRuntime(new Date(row?.runtime));
+      setStartDate(new Date(row?.startDate));
+      setEndDate(new Date(row?.endDate));
       if (depId) {
         const depart = departments.filter((dep: any) => dep._id === depId)[0];
         setDepartvalue(depart);
@@ -228,10 +245,18 @@ const PopupReminder = ({
   };
   const editActionInList = (item: any) => {
     const newArray = actionslist.map((it: any) => {
-      if (it._id === item._id) {
-        return item;
+      if (item._id) {
+        if (it._id === item._id) {
+          return item;
+        } else {
+          return it;
+        }
       } else {
-        return it;
+        if (it.index === item.index) {
+          return item;
+        } else {
+          return it;
+        }
       }
     });
     const listwithindex = indexTheList(newArray);
@@ -260,6 +285,8 @@ const PopupReminder = ({
     const variables: any = {
       _id: row && row._id ? row._id : undefined, // is it new or edit
       title: rtitle,
+      startDate,
+      endDate,
       runtime,
       rRule: rrule?.str,
       rruledata: rrule ? JSON.stringify(rrule) : undefined,
@@ -340,9 +367,14 @@ const PopupReminder = ({
                   <Grid item xs={12} md={6}>
                     <CalenderLocal
                       isRTL={isRTL}
-                      label={words.time}
-                      value={runtime}
-                      onChange={(d: any) => setRuntime(d)}
+                      label={words.start}
+                      value={startDate}
+                      onChange={(d: any) => {
+                        setStartDate(d);
+                        setRuntime(d);
+                        const end = new Date(d).getTime() + 60 * 60 * 1000;
+                        setEndDate(new Date(end));
+                      }}
                       format="dd/MM/yyyy - hh:mm"
                       time
                     ></CalenderLocal>
@@ -456,10 +488,28 @@ const PopupReminder = ({
                   }}
                   onClick={() => {
                     setSelected(null);
+                    setType(3);
                     setOpenAction(true);
                   }}
                 >
-                  {isRTL ? 'اضافة رسائل نصية' : 'Add SMSs'}
+                  {isRTL ? 'اضافة تنبيه' : 'Add Notification'}
+                </Button>
+                <Button
+                  variant="outlined"
+                  style={{
+                    marginBottom: 10,
+                    fontSize: 14,
+                    minWidth: 80,
+                    marginRight: 10,
+                    marginLeft: 10,
+                  }}
+                  onClick={() => {
+                    setSelected(null);
+                    setType(1);
+                    setOpenAction(true);
+                  }}
+                >
+                  {isRTL ? 'اضافة رسالة' : 'Add SMS'}
                 </Button>
                 <Paper style={{ height: 150, overflow: 'auto' }}>
                   {actionslist.map((act: any) => {
@@ -570,16 +620,23 @@ const PopupReminder = ({
               noStartView={true}
               noEndView={true}
             ></PopupAddrRule>
-            <PopupReminderAction
+
+            <PopupAction
               open={openAction}
-              onClose={() => setOpenAction(false)}
+              onClose={() => {
+                setOpenAction(false);
+                setSelected(null);
+              }}
+              isReminder
               row={selected}
+              type={type}
               isNew={selected ? false : true}
+              customer={custvalue}
               addAction={addActionToList}
               editAction={editActionInList}
               theme={theme}
-              runtime={runtime}
-            ></PopupReminderAction>
+              event={{ ...row, startDate, endDate }}
+            ></PopupAction>
             <PopupCustomer
               newtext={newtext}
               open={openCust}

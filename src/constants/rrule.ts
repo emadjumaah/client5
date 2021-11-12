@@ -87,17 +87,17 @@ export const actionOptions = [
     value: 1,
   },
   {
-    id: 2,
-    name: 'Email',
-    nameAr: 'بريد الكتروني',
-    value: 2,
-  },
-  {
     id: 3,
     name: 'Notification',
     nameAr: 'تنبيه',
     value: 3,
   },
+  // {
+  //   id: 2,
+  //   name: 'Email',
+  //   nameAr: 'بريد الكتروني',
+  //   value: 2,
+  // },
 ];
 export const eventLengthOptions = [
   {

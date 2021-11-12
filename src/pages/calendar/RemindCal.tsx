@@ -7,26 +7,25 @@ import {
   WeekView,
   Appointments,
   AppointmentTooltip,
-  AppointmentForm,
+  // AppointmentForm,
   MonthView,
   DayView,
   CurrentTimeIndicator,
-  DragDropProvider,
+  // DragDropProvider,
   EditRecurrenceMenu,
-  AllDayPanel,
 } from '@devexpress/dx-react-scheduler-material-ui';
 import { useContext, useState } from 'react';
-import { AppointForm } from './common/AppointForm';
-import { commitAppointmentChanges } from '../../common';
-import { RenderToolTip } from './common/AppointTooltip';
 import { AppointmentContent } from './common';
-import { CommandAppointment } from '../../Shared';
+// import { CommandAppointment } from '../../Shared';
 import { Box, Grid, useMediaQuery } from '@material-ui/core';
 import { DateNavigator } from '../../components';
 import { CalendarContext } from '../../contexts';
-import PopupLayoutBox from '../main/PopupLayoutBox';
+// import PopupLayoutBox from '../main/PopupLayoutBox';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
 import useReminders from '../../hooks/useReminders';
+import { commitReminderChanges } from '../../common/calendar';
+import { ReminderTooltip } from './common/ReminderTooltip';
+// import { ReminderForm } from './common/ReminderForm';
 
 const RemindCal = (props: any) => {
   const [visible, setVisible] = useState(false);
@@ -35,7 +34,7 @@ const RemindCal = (props: any) => {
   console.log(start, end);
 
   const isMobile = useMediaQuery('(max-width:600px)');
-  const { calendar, isRTL, words, company, isEditor, theme } = props;
+  const { calendar, isRTL, words, company, theme } = props;
   const {
     state: { currentDate, currentViewName },
     dispatch,
@@ -80,7 +79,7 @@ const RemindCal = (props: any) => {
     dispatch({ type: 'setCurrentDate', payload: curDate });
   };
   const commitChanges = async ({ added, changed, deleted }: any) => {
-    commitAppointmentChanges({
+    commitReminderChanges({
       added,
       changed,
       deleted,
@@ -175,23 +174,23 @@ const RemindCal = (props: any) => {
             <Appointments appointmentContentComponent={AppointmentContent} />
             <AppointmentTooltip
               showCloseButton
-              showOpenButton={isEditor ? true : false}
+              // showOpenButton={isEditor ? true : false}
               // showDeleteButton
               visible={visible}
               onVisibilityChange={() => setVisible(!visible)}
               contentComponent={({ appointmentData }) => (
-                <RenderToolTip
+                <ReminderTooltip
                   appointmentData={appointmentData}
                   setVisible={setVisible}
                   editEvent={editReminder}
                   company={company}
                   theme={theme}
                   viewonly={isMobile}
-                ></RenderToolTip>
+                ></ReminderTooltip>
               )}
             />
             {/* {!isMonth && <AppointmentForm />} */}
-            {!isMonth && (
+            {/* {!isMonth && (
               <AppointmentForm
                 overlayComponent={(args: any) => (
                   <PopupLayoutBox
@@ -209,17 +208,16 @@ const RemindCal = (props: any) => {
                   ></PopupLayoutBox>
                 )}
                 basicLayoutComponent={(pr: any) => (
-                  <AppointForm
+                  <ReminderForm
                     theme={theme}
                     isMobile={isMobile}
                     {...pr}
-                  ></AppointForm>
+                  ></ReminderForm>
                 )}
                 commandButtonComponent={CommandAppointment}
               />
             )}
-            {!isMobile && <AllDayPanel />}
-            {!isMonth && <DragDropProvider></DragDropProvider>}
+            {!isMonth && <DragDropProvider></DragDropProvider>} */}
             <CurrentTimeIndicator shadePreviousCells></CurrentTimeIndicator>
           </Scheduler>
         </Box>

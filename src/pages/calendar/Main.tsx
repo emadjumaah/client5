@@ -14,7 +14,6 @@ import {
   DragDropProvider,
   EditRecurrenceMenu,
   Resources,
-  AllDayPanel,
 } from '@devexpress/dx-react-scheduler-material-ui';
 import { useContext, useEffect, useState } from 'react';
 import { AppointForm } from './common/AppointForm';
@@ -364,7 +363,6 @@ const Main = (props: any) => {
                 commandButtonComponent={CommandAppointment}
               />
             )}
-            {!isMobile && <AllDayPanel />}
             {!isMonth && <DragDropProvider></DragDropProvider>}
             <CurrentTimeIndicator shadePreviousCells></CurrentTimeIndicator>
           </Scheduler>

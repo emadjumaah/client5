@@ -34,7 +34,6 @@ export const catResolver = { resolver: yupResolver(catSchema) };
 
 const smsSchema = yup.object().shape({
   title: yup.string().required().min(3).max(100),
-  body: yup.string().required().min(3).max(500),
 });
 
 export const smsResolver = { resolver: yupResolver(smsSchema) };

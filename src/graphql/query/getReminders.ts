@@ -10,6 +10,8 @@ export default gql`
         branch
 
         id
+        startDate
+        endDate
         type
         title
         body

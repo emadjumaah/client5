@@ -13,6 +13,8 @@ import {
   removeGroupFromContact,
   getGroups,
 } from '../graphql';
+import syncCustomers from '../graphql/mutation/syncCustomers';
+import syncEmployees from '../graphql/mutation/syncEmployees';
 
 export default () => {
   const [getCusts, custData]: any = useLazyQuery(getContacts);
@@ -35,6 +37,12 @@ export default () => {
   const [removeGfromContact] = useMutation(removeGroupFromContact, {
     refetchQueries: [{ query: getContacts }, { query: getGroups }],
   });
+  const [syncCust] = useMutation(syncCustomers, {
+    refetchQueries: [{ query: getContacts }, { query: getGroups }],
+  });
+  const [syncEmpl] = useMutation(syncEmployees, {
+    refetchQueries: [{ query: getContacts }, { query: getGroups }],
+  });
 
   useEffect(() => {
     getCusts();
@@ -51,5 +59,7 @@ export default () => {
     removeContact,
     addGtoContact,
     removeGfromContact,
+    syncCust,
+    syncEmpl,
   };
 };

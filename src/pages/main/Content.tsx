@@ -116,6 +116,9 @@ import { useHistory } from 'react-router-dom';
 import { remindermenu, smsmenu } from '../../constants/menu';
 import Reminders from '../adds/Reminders';
 import RemindCal from '../calendar/RemindCal';
+import Messages from '../adds/Messages';
+import Actions from '../adds/Actions';
+import Notifications from '../adds/Notifications';
 
 const Content = () => {
   const classes = layoutClasses();
@@ -506,6 +509,30 @@ const Content = () => {
             )}
           />
           <Route
+            path="/messages"
+            component={() => (
+              <Messages
+                isRTL={isRTL}
+                words={words}
+                theme={theme}
+                menuitem={menuitem}
+                isEditor={isEditor}
+              ></Messages>
+            )}
+          />
+          <Route
+            path="/notifications"
+            component={() => (
+              <Notifications
+                isRTL={isRTL}
+                words={words}
+                theme={theme}
+                menuitem={menuitem}
+                isEditor={isEditor}
+              ></Notifications>
+            )}
+          />
+          <Route
             path="/sendreqs"
             component={() => (
               <Sendreqs
@@ -515,6 +542,22 @@ const Content = () => {
                 menuitem={menuitem}
                 isEditor={isEditor}
               ></Sendreqs>
+            )}
+          />
+          <Route
+            path="/actions"
+            component={() => (
+              <EventsContext.Provider
+                value={{ state: expensesStore, dispatch: expensesDispatch }}
+              >
+                <Actions
+                  isRTL={isRTL}
+                  words={words}
+                  theme={theme}
+                  menuitem={menuitem}
+                  isEditor={isEditor}
+                ></Actions>
+              </EventsContext.Provider>
             )}
           />
           <Route

@@ -300,6 +300,7 @@ export const fromToFormatter = ({ row }: any) => {
 export const actionTimeFormatter = ({ value }: any) => {
   return <div>{covertToTimeDateDigit(value)}</div>;
 };
+
 export const locationFormatter = ({ value }: any) => {
   if (value?.lat) {
     return <MyIcon size={26} color="#ff80ed" icon="location"></MyIcon>;

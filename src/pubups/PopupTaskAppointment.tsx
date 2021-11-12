@@ -106,6 +106,7 @@ const PopupTaskAppointment = ({
   const [openMap, setOpenMap] = useState(false);
   const [location, setLocation] = useState(null);
 
+  const [type, setType] = useState(null);
   const [openAction, setOpenAction] = useState(false);
   const [actionslist, setActionslist] = useState([]);
   const [selected, setSelected] = useState(null);
@@ -265,10 +266,18 @@ const PopupTaskAppointment = ({
   };
   const editActionInList = (item: any) => {
     const newArray = actionslist.map((it: any) => {
-      if (it._id === item._id) {
-        return item;
+      if (item._id) {
+        if (it._id === item._id) {
+          return item;
+        } else {
+          return it;
+        }
       } else {
-        return it;
+        if (it.index === item.index) {
+          return item;
+        } else {
+          return it;
+        }
       }
     });
     const listwithindex = indexTheList(newArray);
@@ -588,12 +597,30 @@ const PopupTaskAppointment = ({
                   }}
                   onClick={() => {
                     setSelected(null);
+                    setType(3);
                     setOpenAction(true);
                   }}
                 >
                   {isRTL ? 'اضافة تنبيه' : 'Add Reminder'}
                 </Button>
-                <Paper style={{ height: 150, overflow: 'auto' }}>
+                <Button
+                  variant="outlined"
+                  style={{
+                    marginBottom: 10,
+                    fontSize: 14,
+                    minWidth: 80,
+                    marginRight: 10,
+                    marginLeft: 10,
+                  }}
+                  onClick={() => {
+                    setSelected(null);
+                    setType(1);
+                    setOpenAction(true);
+                  }}
+                >
+                  {isRTL ? 'اضافة رسالة' : 'Add SMS'}
+                </Button>
+                <Paper style={{ height: 180, overflow: 'auto' }}>
                   {actionslist.map((act: any) => {
                     return (
                       <ListItem>
@@ -774,11 +801,17 @@ const PopupTaskAppointment = ({
               isRTL={isRTL}
               words={words}
             ></PopupAddMultiEvents>
+
             <PopupAction
               open={openAction}
-              onClose={() => setOpenAction(false)}
+              onClose={() => {
+                setOpenAction(false);
+                setSelected(null);
+              }}
               row={selected}
+              type={type}
               isNew={selected ? false : true}
+              customer={custvalue}
               addAction={addActionToList}
               editAction={editActionInList}
               theme={theme}
