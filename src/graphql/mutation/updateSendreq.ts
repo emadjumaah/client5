@@ -6,6 +6,7 @@ export default gql`
     $title: String
     $body: String
     $qty: Int
+    $smsqty: Int
     $type: Int
     $contacts: [String]
     $groups: [String]
@@ -18,6 +19,7 @@ export default gql`
       title: $title
       body: $body
       qty: $qty
+      smsqty: $smsqty
       type: $type
       contacts: $contacts
       groups: $groups

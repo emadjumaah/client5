@@ -12,6 +12,7 @@ export default gql`
         title
         body
         qty
+        smsqty
         type
         contacts
         groups

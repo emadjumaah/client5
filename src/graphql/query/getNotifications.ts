@@ -21,8 +21,14 @@ export default gql`
         userId
         title
         body
+        reminderId
         eventId
         taskId
+        projectId
+        customerId
+        departmentId
+        employeeId
+        resourseId
         read
         createdAt
         updatedAt

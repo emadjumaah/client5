@@ -104,6 +104,7 @@ const PopupSendreq = ({
       body,
       runtime,
       active,
+      smsqty,
       groups: getIds(groupvalue),
     };
     const mutate = isNew ? addAction : editAction;
