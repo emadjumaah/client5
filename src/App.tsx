@@ -47,7 +47,7 @@ function App() {
   // const uri = 'http://jadwal-main:4000/graphql'; // localserver
   // const uri = process.env.GRAPHQL_URI; // webserver
   // env react
-  // test CI='' yarn build
+  // test CI=false yarn build
   const httpLink = createHttpLink({
     uri: process.env.REACT_APP_GRAPHQL_URI,
     // uri: 'http://jadwal-main:4000/graphql',
