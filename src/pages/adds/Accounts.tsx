@@ -40,10 +40,10 @@ export default function Accounts({ isRTL, accounts }: any) {
       name: isRTL ? 'parentAr' : 'parent',
       title: isRTL ? 'الحساب الرئيسي' : 'Main Account',
     },
-    {
-      name: 'parentcode',
-      title: isRTL ? 'الحساب الرئيسي' : 'Main Account',
-    },
+    // {
+    //   name: 'parentcode',
+    //   title: isRTL ? 'الحساب الرئيسي' : 'Main Account',
+    // },
   ]);
   const { addAccount, editAccount, removeAccount } = useAccounts();
   const { branches } = useBranches();

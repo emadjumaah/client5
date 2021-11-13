@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { Box, Grid } from '@material-ui/core';
 import PopupLayout from '../pages/main/PopupLayout';
-import Maps from '../common/Maps';
+import MapBox from '../common/MapBox';
 
 const PopupMaps = ({
   open,
@@ -55,12 +55,12 @@ const PopupMaps = ({
               direction: 'ltr',
             }}
           >
-            <Maps
+            <MapBox
               onClick={onClick}
               location={marker}
-              width="60vh"
-              height="40vh"
-            ></Maps>
+              width="80vh"
+              height="50vh"
+            ></MapBox>
           </Box>
         </Grid>
       </Grid>
