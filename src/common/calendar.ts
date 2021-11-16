@@ -27,6 +27,7 @@ export const commitAppointmentChanges = async ({
       const itemslist = JSON.parse(items);
       if (!(itemslist.length > 0)) {
         window.alert(isRTL ? 'يجب اضافة خدمة' : 'Service should be added');
+        return;
       }
       if (
         startDate < startPeriod ||
@@ -37,8 +38,10 @@ export const commitAppointmentChanges = async ({
         startDate.getDate() !== endDate.getDate()
       ) {
         window.alert(isRTL ? 'يجب تعديل التاريخ' : 'Date should be change');
+        return;
       } else if (!customer) {
         window.alert(isRTL ? 'يرجى اضافة عميل' : 'Please add Customer');
+        return;
       } else {
         const variables = {
           title,
@@ -172,6 +175,7 @@ export const commitReminderChanges = async ({
       const itemslist = JSON.parse(items);
       if (!(itemslist.length > 0)) {
         window.alert(isRTL ? 'يجب اضافة خدمة' : 'Service should be added');
+        return;
       }
       if (
         startDate < startPeriod ||
@@ -182,8 +186,10 @@ export const commitReminderChanges = async ({
         startDate.getDate() !== endDate.getDate()
       ) {
         window.alert(isRTL ? 'يجب تعديل التاريخ' : 'Date should be change');
+        return;
       } else if (!customer) {
         window.alert(isRTL ? 'يرجى اضافة عميل' : 'Please add Customer');
+        return;
       } else {
         const variables = {
           title,

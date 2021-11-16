@@ -33,26 +33,44 @@ export default function Package({ company, tempwords, isRTL }: any) {
         <Grid item xs={6}>
           <Box
             display="flex"
-            style={{ alignItems: 'center', justifyContent: 'flex-end' }}
+            style={{
+              alignItems: 'center',
+              justifyContent: 'flex-end',
+            }}
           >
             <Typography>{covertToDate(company?.packEnd)}</Typography>
           </Box>
         </Grid>
         <Grid item xs={12}></Grid>
         <Grid item xs={4}>
-          <Typography>
-            {isRTL ? 'مستخدمين' : 'Users'} :{' '}
-            {quantityFormat(company.usedUsers, isRTL)} /{' '}
-            {quantityFormat(company.users, isRTL)}
-          </Typography>
+          <Box
+            display="flex"
+            style={{
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            <Typography variant="button">
+              {isRTL ? 'مستخدمين' : 'Users'}
+            </Typography>
+            <Typography variant="button">
+              {quantityFormat(company.usedUsers, isRTL)} /{' '}
+              {quantityFormat(company.users, isRTL)}
+            </Typography>
+          </Box>
         </Grid>
         <Grid item xs={4}>
           <Box
             display="flex"
-            style={{ alignItems: 'center', justifyContent: 'center' }}
+            style={{
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
           >
-            <Typography>
-              {tempwords.appointments} :{' '}
+            <Typography variant="button">{tempwords.appointments}</Typography>
+            <Typography variant="button">
               {quantityFormat(company.usedEvents, isRTL)} /{' '}
               {quantityFormat(company.packQty, isRTL)}
             </Typography>
@@ -61,10 +79,16 @@ export default function Package({ company, tempwords, isRTL }: any) {
         <Grid item xs={4}>
           <Box
             display="flex"
-            style={{ alignItems: 'center', justifyContent: 'flex-end' }}
+            style={{
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'flex-end',
+            }}
           >
-            <Typography>
-              {isRTL ? 'وثائق' : 'Doocuments'} :{' '}
+            <Typography variant="button">
+              {isRTL ? 'وثائق' : 'Doocuments'}
+            </Typography>
+            <Typography variant="button">
               {quantityFormat(company.usedDocs, isRTL)} /{' '}
               {quantityFormat(company.packDocsQty, isRTL)}
             </Typography>

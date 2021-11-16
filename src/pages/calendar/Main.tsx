@@ -111,7 +111,9 @@ const Main = (props: any) => {
   const [editEvent] = useMutation(updateEvent, refresQuery);
   const [removeEvent] = useMutation(deleteEvent, refresQuery);
 
-  const [getCalEvents, evnData]: any = useLazyQuery(getEvents);
+  const [getCalEvents, evnData]: any = useLazyQuery(getEvents, {
+    fetchPolicy: 'cache-and-network',
+  });
 
   useEffect(() => {
     const eventsData = evnData?.data?.['getEvents']?.data || [];
@@ -208,7 +210,6 @@ const Main = (props: any) => {
       isRTL,
     });
   };
-
   const title = getPopupGeneralTitle('appointment');
   return (
     <Box

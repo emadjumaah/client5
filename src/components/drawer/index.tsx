@@ -51,7 +51,7 @@ const drawerClasses = makeStyles((theme: Theme) =>
     },
     toolbar: theme.mixins.toolbar,
     drawerPaper: {
-      // width: drawerWidth,
+      width: drawerWidth,
       backgroundColor: theme.palette.primary.main,
     },
     drawerContainer: {
@@ -181,6 +181,9 @@ function AppDrawer(props: any): any {
                 theme={theme}
                 user={user}
                 network={network}
+                logout={logout}
+                client={client}
+                history={history}
               ></UserBox>
             </Box>
           </Toolbar>

@@ -317,13 +317,13 @@ const PopupTask = ({
       );
       return;
     }
-    if (isNew && (!evList || evList.length === 0)) {
-      await messageAlert(
-        setAlrt,
-        isRTL ? 'يرجى اضافة موعد' : 'Please add Appointment'
-      );
-      return;
-    }
+    // if (isNew && (!evList || evList.length === 0)) {
+    //   await messageAlert(
+    //     setAlrt,
+    //     isRTL ? 'يرجى اضافة موعد' : 'Please add Appointment'
+    //   );
+    //   return;
+    // }
     setSaving(true);
     const events =
       evList && evList.length > 0 ? compressEvents(evList) : undefined;

@@ -56,7 +56,9 @@ const EmployeesAppoints = (props: any) => {
   const { tasks } = useTasks();
   const { height, width } = useWindowDimensions();
 
-  const [getCalEvents, evnData] = useLazyQuery(getEvents);
+  const [getCalEvents, evnData] = useLazyQuery(getEvents, {
+    fetchPolicy: 'cache-and-network',
+  });
   const {
     theme,
     isRTL,

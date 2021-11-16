@@ -308,7 +308,7 @@ export const getStartEndEventView = ({ time, view, isRTL, endDate }: any) => {
     const start = new Date(time);
     start.setHours(0, 0, 0, 0);
     const end = new Date(time);
-    end.setDate(end.getDate() + 3);
+    end.setDate(end.getDate() + 2);
     end.setHours(23, 59, 59, 999);
     const year = start.getFullYear();
     const period = `${getDateFormat(start, isRTL)} - ${getDateFormat(

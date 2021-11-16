@@ -209,7 +209,7 @@ const Company = ({ words, editCompany, company, isRTL }) => {
               size="400x200"
             ></ImageOnlineUpload>
           </Grid>
-          <Grid item xs={8}>
+          <Grid item xs={12} md={8}>
             {company && (
               <Package
                 tempwords={tempwords}
