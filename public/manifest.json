@@ -1,7 +1,7 @@
 {
   "name": "Jadwal",
   "short_name": "Jadwal",
-  "theme_color": "#252b3b",
+  "theme_color": "#231942",
   "background_color": "#ffffff",
   "display": "standalone",
   "scope": "/",
