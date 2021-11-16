@@ -90,9 +90,9 @@ const Login = (): any => {
       display="flex"
       style={{
         flex: 1,
-        height: height - 80,
+        height: height - 40,
         justifyContent: 'center',
-        paddingTop: 60,
+        paddingTop: 20,
       }}
     >
       <Container component="main" maxWidth="xs">
@@ -119,7 +119,7 @@ const Login = (): any => {
                   'https://res.cloudinary.com/fivegstore/image/upload/v1635853109/256x256_fwxwfx.png'
                 }
                 alt={'JADWAL'}
-                height={80}
+                height={60}
                 style={{
                   objectFit: 'cover',
                   borderRadius: 10,
@@ -132,11 +132,9 @@ const Login = (): any => {
                 color="primary"
                 style={{
                   zIndex: 115,
-                  marginBottom: 20,
-                  marginLeft: 20,
-                  marginRight: 20,
+                  margin: 20,
                   opacity: 0.9,
-                  fontSize: 54,
+                  fontSize: 40,
                   fontWeight: 'lighter',
                 }}
               >
@@ -149,7 +147,7 @@ const Login = (): any => {
             border={1}
             borderColor="#ddd"
             style={{
-              paddingTop: 30,
+              paddingTop: 10,
               borderRadius: 10,
               paddingBottom: 20,
             }}
@@ -157,7 +155,6 @@ const Login = (): any => {
             <form className={classes.form} noValidate>
               <Box m={3}>
                 <TextField
-                  autoFocus
                   label={isRTL ? 'اسم المستخدم' : 'Username'}
                   name="username"
                   inputRef={register}
@@ -205,7 +202,7 @@ const Login = (): any => {
                   variant="contained"
                   color="primary"
                   className={classes.submit}
-                  style={{ height: 42, fontSize: 16 }}
+                  style={{ height: 42, fontSize: 16, marginTop: 30 }}
                   onClick={handleSubmit(onSubmit)}
                 >
                   {isRTL ? 'تسجبل الدخول' : 'Login'}

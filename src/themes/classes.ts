@@ -6,7 +6,7 @@ export const loginClasses = makeStyles((theme) => ({
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    margin: 20,
+    margin: 10,
   },
   avatar: {
     marginTop: theme.spacing(8),
