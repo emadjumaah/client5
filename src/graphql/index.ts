@@ -125,6 +125,9 @@ import {
   createReminder,
   updateReminder,
   deleteReminder,
+  sendVerificationCode,
+  verifyEmail,
+  createUserBranch,
 } from './mutation';
 
 export { client };
@@ -254,4 +257,7 @@ export {
   createReminder,
   updateReminder,
   deleteReminder,
+  sendVerificationCode,
+  verifyEmail,
+  createUserBranch,
 };

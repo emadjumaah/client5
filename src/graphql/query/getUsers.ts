@@ -46,6 +46,7 @@ export default gql`
         employeeColor
 
         block
+        verified
 
         userId
 

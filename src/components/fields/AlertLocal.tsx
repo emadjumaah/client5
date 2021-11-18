@@ -3,7 +3,7 @@ import React from 'react';
 import Alert from '@material-ui/lab/Alert';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
 
-export default function AlertLocal({ type, msg, isRTL, top }: any) {
+export default function AlertLocal({ type, msg, isRTL, top, w }: any) {
   const { width } = useWindowDimensions();
 
   return (
@@ -11,9 +11,10 @@ export default function AlertLocal({ type, msg, isRTL, top }: any) {
       style={{
         direction: isRTL ? 'rtl' : 'ltr',
         position: 'absolute',
+        zIndex: 111,
         bottom: top ? undefined : 60,
         top: top ? 55 : undefined,
-        width: top ? width - 275 : '100%',
+        width: top && !w ? width - 275 : width - 50,
         height: top ? 60 : undefined,
         alignItems: 'center',
         paddingLeft: 20,

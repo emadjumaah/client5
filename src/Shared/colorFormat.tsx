@@ -442,7 +442,7 @@ export const quantityFormat = (amount: number, isRTL: boolean) => {
   if (amount) {
     return amount.toFixed(0).replace(/\d(?=(\d{3})+\.)/g, '$&,');
   } else {
-    return '';
+    return 0;
   }
 };
 

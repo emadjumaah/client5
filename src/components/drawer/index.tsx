@@ -51,7 +51,9 @@ const drawerClasses = makeStyles((theme: Theme) =>
     },
     toolbar: theme.mixins.toolbar,
     drawerPaper: {
-      width: drawerWidth,
+      [theme.breakpoints.down('md')]: {
+        width: drawerWidth,
+      },
       backgroundColor: theme.palette.primary.main,
     },
     drawerContainer: {

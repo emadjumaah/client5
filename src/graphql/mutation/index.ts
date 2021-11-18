@@ -77,6 +77,9 @@ import updateContact from './updateContact';
 import addGroupToContact from './addGroupToContact';
 import removeGroupFromContact from './removeGroupFromContact';
 import deleteContact from './deleteContact';
+import sendVerificationCode from './sendVerificationCode';
+import verifyEmail from './verifyEmail';
+import createUserBranch from './createUserBranch';
 
 export {
   createCategory,
@@ -158,4 +161,7 @@ export {
   createReminder,
   updateReminder,
   deleteReminder,
+  sendVerificationCode,
+  verifyEmail,
+  createUserBranch,
 };

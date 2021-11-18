@@ -62,24 +62,30 @@ const Options = ({ isRTL, words, isEditor, company, editCompany }: any) => {
             </Grid>
           )}
           <Grid item xs={12} md={10}>
-            <Language lang={lang} setLang={setLang} isRTL={isRTL}></Language>
-          </Grid>
-
-          <Grid item xs={12} md={10}>
-            <CalendarOptions
-              calendar={calendar}
-              words={words}
-              setCalendar={setCalendar}
-              isRTL={isRTL}
-            ></CalendarOptions>
-          </Grid>
-
-          <Grid item xs={12} md={10}>
-            <GenTheme
-              isRTL={isRTL}
-              themeId={themeId}
-              setThemeId={setThemeId}
-            ></GenTheme>
+            <Grid container spacing={2}>
+              <Grid item xs={12} md={4}>
+                <GenTheme
+                  isRTL={isRTL}
+                  themeId={themeId}
+                  setThemeId={setThemeId}
+                ></GenTheme>
+              </Grid>
+              <Grid item xs={12} md={4}>
+                <CalendarOptions
+                  calendar={calendar}
+                  words={words}
+                  setCalendar={setCalendar}
+                  isRTL={isRTL}
+                ></CalendarOptions>
+              </Grid>
+              <Grid item xs={12} md={4}>
+                <Language
+                  lang={lang}
+                  setLang={setLang}
+                  isRTL={isRTL}
+                ></Language>
+              </Grid>
+            </Grid>
           </Grid>
         </Grid>
       </Box>

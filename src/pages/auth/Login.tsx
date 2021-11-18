@@ -1,33 +1,34 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useMutation } from '@apollo/client';
 import { useForm } from 'react-hook-form';
 import Button from '@material-ui/core/Button';
 import { Box, Container, Link, TextField, Typography } from '@material-ui/core';
 import { login } from '../../graphql/mutation';
 import { yup } from '../../constants';
-import { GContextTypes } from '../../types';
-import { GlobalContext } from '../../contexts';
 import { loginClasses } from '../../themes';
 import { client } from '../../graphql';
 import CountDown from '../../Shared/CountDown';
 import { templates } from '../../constants/roles';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
+import Logo from './Logo';
 
 const timeToWait = 900000;
 const possibleWrong = 15;
 
-const Login = (): any => {
+const Login = ({
+  setReg,
+  dispatch,
+  wrongTimes,
+  startBlock,
+  isRTL,
+}: any): any => {
   const classes = loginClasses();
   const [error, seterror] = useState(null);
 
   const { register, handleSubmit, errors }: any = useForm(yup.loginResolver);
-  const {
-    dispatch,
-    store: { wrongTimes, startBlock },
-    translate: { isRTL },
-  }: GContextTypes = useContext(GlobalContext);
+
   const [dologin] = useMutation(login);
 
   const timeFromBlock = Date.now() - startBlock;
@@ -64,8 +65,8 @@ const Login = (): any => {
         type: 'login',
         payload: { user, token, template: temp },
       });
-      window.location.reload();
       seterror(null);
+      window.location.reload();
     } else if (userData?.data?.login?.ok === false) {
       seterror(userData.data.login.error);
       dispatch({ type: 'setWrongTimes' });
@@ -97,52 +98,7 @@ const Login = (): any => {
     >
       <Container component="main" maxWidth="xs">
         <div className={classes.paper}>
-          <Box
-            display="flex"
-            style={{
-              flexDirection: 'row',
-              flex: 1,
-              alignItems: 'center',
-              justifyContent: 'center',
-              marginBottom: 40,
-            }}
-          >
-            <Box
-              style={{
-                alignItems: 'center',
-                justifyContent: 'center',
-                zIndex: 113,
-              }}
-            >
-              <img
-                src={
-                  'https://res.cloudinary.com/fivegstore/image/upload/v1635853109/256x256_fwxwfx.png'
-                }
-                alt={'JADWAL'}
-                height={60}
-                style={{
-                  objectFit: 'cover',
-                  borderRadius: 10,
-                  opacity: 0.9,
-                }}
-              />
-            </Box>
-            <Box>
-              <Typography
-                color="primary"
-                style={{
-                  zIndex: 115,
-                  margin: 20,
-                  opacity: 0.9,
-                  fontSize: 40,
-                  fontWeight: 'lighter',
-                }}
-              >
-                JADWAL
-              </Typography>
-            </Box>
-          </Box>
-
+          <Logo></Logo>
           <Box
             border={1}
             borderColor="#ddd"
@@ -208,6 +164,26 @@ const Login = (): any => {
                   {isRTL ? 'تسجبل الدخول' : 'Login'}
                 </Button>
               </Box>
+              <Box
+                display="flex"
+                style={{
+                  flex: 1,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+              >
+                <Button variant="outlined" onClick={() => setReg(true)}>
+                  <Typography>
+                    {isRTL ? 'إنشاء حساب جديد' : 'New Account'}
+                  </Typography>
+                </Button>
+                <Typography
+                  variant="body2"
+                  style={{ paddingLeft: 10, paddingRight: 10 }}
+                >
+                  {isRTL ? 'ليس لديك حساب؟' : "Don't have an account yet?"}
+                </Typography>
+              </Box>
             </form>
           </Box>
         </div>
@@ -217,6 +193,7 @@ const Login = (): any => {
             flex: 1,
             alignItems: 'center',
             justifyContent: 'center',
+            marginTop: 80,
           }}
         >
           <Typography variant="body1" color="textSecondary" align="center">

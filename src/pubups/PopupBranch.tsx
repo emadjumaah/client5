@@ -108,7 +108,7 @@ const PopupBranch = ({
       return;
     }
 
-    const { name, nameAr, password, tel1, email } = data;
+    const { name, nameAr, password, tel1 } = data;
     const variables: any = isNew
       ? {
           username,
@@ -116,7 +116,6 @@ const PopupBranch = ({
           name,
           nameAr,
           tel1,
-          email,
           packStart,
           packEnd,
           users: pack?.users,
@@ -128,7 +127,6 @@ const PopupBranch = ({
           name,
           nameAr,
           tel1,
-          email,
           packStart,
           packEnd,
           users: pack?.users,
