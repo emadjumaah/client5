@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 // This optional code is used to register a service worker.
 // register() is not called by default.
 
@@ -10,8 +9,6 @@
 
 // To learn more about the benefits of this model and instructions on how to
 // opt-in, read https://cra.link/PWA
-import React from 'react';
-import { toast } from 'react-toastify';
 
 const isLocalhost = Boolean(
   window.location.hostname === 'localhost' ||
@@ -22,7 +19,7 @@ const isLocalhost = Boolean(
       /^127(?:\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}$/
     )
 );
-// test after first time
+
 type Config = {
   onSuccess?: (registration: ServiceWorkerRegistration) => void;
   onUpdate?: (registration: ServiceWorkerRegistration) => void;
@@ -66,13 +63,6 @@ function registerValidSW(swUrl: string, config?: Config) {
   navigator.serviceWorker
     .register(swUrl)
     .then((registration) => {
-      // Check for updates at start.
-      registration.update();
-      // Check for updates every 5 min.
-      setInterval(() => {
-        registration.update();
-        console.debug('Checked for update...');
-      }, 1000 * 60 * 5);
       registration.onupdatefound = () => {
         const installingWorker = registration.installing;
         if (installingWorker == null) {
@@ -87,15 +77,6 @@ function registerValidSW(swUrl: string, config?: Config) {
               console.log(
                 'New content is available and will be used when all ' +
                   'tabs for this page are closed. See https://cra.link/PWA.'
-              );
-
-              toast.info(
-                `Update available! To update, close all windows and reopen.`,
-                {
-                  toastId: 'appUpdateAvailable', // Prevent duplicate toasts
-                  onClick: () => window.close(), // Closes windows on click
-                  autoClose: false, // Prevents toast from auto closing
-                }
               );
 
               // Execute callback
