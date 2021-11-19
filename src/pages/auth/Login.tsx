@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { useMutation } from '@apollo/client';
 import { useForm } from 'react-hook-form';
 import Button from '@material-ui/core/Button';
-import { Box, Container, Link, TextField, Typography } from '@material-ui/core';
+import { Box, Link, TextField, Typography } from '@material-ui/core';
 import { login } from '../../graphql/mutation';
 import { yup } from '../../constants';
 import { loginClasses } from '../../themes';
@@ -91,12 +91,12 @@ const Login = ({
       display="flex"
       style={{
         flex: 1,
-        height: height - 40,
+        height: height - 140,
         justifyContent: 'center',
         paddingTop: 20,
       }}
     >
-      <Container component="main" maxWidth="xs">
+      <div>
         <div className={classes.paper}>
           <Logo></Logo>
           <Box
@@ -205,7 +205,7 @@ const Login = ({
             {'.'}
           </Typography>
         </Box>
-      </Container>
+      </div>
     </Box>
   );
 };

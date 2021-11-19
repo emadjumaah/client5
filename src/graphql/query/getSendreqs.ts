@@ -21,6 +21,8 @@ export default gql`
         lastrun
         runlog
         active
+        sendqty
+        failqty
         userId
 
         createdAt

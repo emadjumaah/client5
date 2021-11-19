@@ -92,8 +92,8 @@ export default function Appointments({
     col.createdAt,
     col.startDate,
     col.fromto,
-    col.customer,
     col.docNo,
+    col.customer,
     col.taskId,
     col.employee,
     col.resourse,
@@ -417,7 +417,8 @@ export default function Appointments({
             defaultHiddenColumnNames={[
               col.createdAt.name,
               col.status.name,
-              col.docNo.name,
+              col.resourse.name,
+              col.location.name,
             ]}
           />
 

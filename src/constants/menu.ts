@@ -11,22 +11,22 @@ const isRTL = lang === 'ar';
 export const smsmenu: any = [
   {
     id: 1,
-    name: 'groups',
-    uri: 'groups',
-    titleAr: 'قوائم الاتصال',
-    titleEn: 'Contact Lists',
-    req: 'pos',
-    icon: 'list',
-    dep: null,
-  },
-  {
-    id: 2,
     name: 'contacts',
     uri: 'contacts',
     titleAr: 'جهات الاتصال',
     titleEn: 'Contacts',
     icon: 'group',
     req: 'pos',
+    dep: null,
+  },
+  {
+    id: 2,
+    name: 'groups',
+    uri: 'groups',
+    titleAr: 'قوائم الاتصال',
+    titleEn: 'Contact Lists',
+    req: 'pos',
+    icon: 'list',
     dep: null,
   },
   {

@@ -446,6 +446,13 @@ export const AppointForm = (props: any) => {
       onNewFieldChange(empl, 'resourse');
       setResovalue(empl);
     }
+    if (value?.customerId) {
+      const cust = customers.filter(
+        (ct: any) => ct._id === value?.customerId
+      )?.[0];
+      onNewFieldChange(cust, 'customer');
+      setCustvalue(cust);
+    }
   };
 
   useEffect(() => {
