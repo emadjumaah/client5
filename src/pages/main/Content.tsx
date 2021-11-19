@@ -229,7 +229,7 @@ const Content = () => {
         return;
       case 2:
         setmenu(smsmenu);
-        history.push('/groups');
+        history.push('/contacts');
         setMenuitem(smsmenu[0]);
         return;
       case 3:
