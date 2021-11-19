@@ -12,6 +12,7 @@ export default gql`
     $name: String
     $nameAr: String
     $tel1: String
+    $note: String
   ) {
     createUserBranch(
       pack: $pack
@@ -24,6 +25,7 @@ export default gql`
       name: $name
       nameAr: $nameAr
       tel1: $tel1
+      note: $note
     ) {
       ok
       message

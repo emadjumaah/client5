@@ -26,17 +26,21 @@ export default function Auth() {
           style={{
             display: 'flex',
             flex: 1,
-            flexDirection: 'row',
+            flexDirection: isRTL ? 'row-reverse' : 'row',
             alignItems: 'center',
             justifyContent: 'space-between',
+            marginTop: 10,
           }}
         >
           <Box
+            display="flex"
             style={{
               width: 34,
               height: 34,
               cursor: 'pointer',
               padding: 5,
+              alignItems: 'center',
+              justifyContent: 'center',
             }}
             onClick={async () => {
               dispatch({
@@ -50,12 +54,16 @@ export default function Auth() {
                 lang === 'ar' ? 'Change to English' : 'تغيير الى اللغة العربية'
               }
             >
-              <Box style={{ padding: 5 }}>
+              <Box style={{ padding: 5, marginTop: 5 }}>
                 <MyIcon size={24} icon={'lang'}></MyIcon>
               </Box>
             </Tooltip>
           </Box>
-          <SelectTheme themeId={themeId} onChange={onThemeSelect}></SelectTheme>
+          <SelectTheme
+            isRTL={isRTL}
+            themeId={themeId}
+            onChange={onThemeSelect}
+          ></SelectTheme>
         </div>
         {!reg && (
           <Login

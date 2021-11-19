@@ -8,7 +8,7 @@ export const SelectTheme = ({ isRTL, themeId, onChange }: any) => {
     <Box
       display="flex"
       style={{
-        flexDirection: 'row',
+        flexDirection: isRTL ? 'row-reverse' : 'row',
         alignItems: 'center',
         justifyContent: 'center',
       }}
@@ -20,7 +20,7 @@ export const SelectTheme = ({ isRTL, themeId, onChange }: any) => {
             key={index}
             display="flex"
             style={{
-              flexDirection: 'row',
+              flexDirection: isRTL ? 'row-reverse' : 'row',
               justifyContent: isRTL ? 'flex-end' : 'flex-start',
               backgroundColor: isActive ? '#ccc' : '#fff',
               padding: 3,
@@ -30,7 +30,7 @@ export const SelectTheme = ({ isRTL, themeId, onChange }: any) => {
             <Box
               display="flex"
               style={{
-                flexDirection: 'row',
+                flexDirection: isRTL ? 'row-reverse' : 'row',
                 height: 22,
                 width: 44,
                 alignItems: 'center',

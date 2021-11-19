@@ -1,10 +1,11 @@
 import {
   Box,
   Button,
+  fade,
   Grid,
   IconButton,
-  Paper,
   Typography,
+  useTheme,
 } from '@material-ui/core';
 import React, { useState } from 'react';
 import { TextFieldLocal } from '../../components';
@@ -28,12 +29,15 @@ export default function RegisterCompany({
   const [password, setPassword] = useState('');
   const [viewpass, setViewpass] = useState(null);
   const [tel1, setTel1] = useState(null);
-  const [pack] = useState(packages[0]);
+  const [pack, setPack] = useState(null);
+
   const [temp, setTemp] = useState(null);
   const [loading, setLoading] = useState(false);
 
   const [registerCompany] = useMutation(createUserBranch);
+  const theme = useTheme();
 
+  const color = fade(theme.palette.primary.main, 0.2);
   const onCreateCompany = async () => {
     if (!password || password.length < 6) {
       await messageAlert(
@@ -62,6 +66,13 @@ export default function RegisterCompany({
       );
       return;
     }
+    if (!pack) {
+      await messageAlert(
+        setAlrt,
+        isRTL ? `يرجى اختيار نوع الاشتراك` : `Please select subscription`
+      );
+      return;
+    }
     if (!temp) {
       await messageAlert(
         setAlrt,
@@ -83,9 +94,10 @@ export default function RegisterCompany({
         tel1,
         packStart,
         packEnd,
-        users: pack?.users,
-        pack: JSON.stringify(pack),
+        users: packages[0]?.users,
+        pack: JSON.stringify(packages[0]),
         temp: JSON.stringify(temp),
+        note: JSON.stringify(pack),
       },
     });
     if (res?.data?.createUserBranch?.ok === false) {
@@ -180,12 +192,15 @@ export default function RegisterCompany({
             {templates.map((tm: any) => {
               const selected = tm?.title === temp?.title;
               return (
-                <Paper
+                <Box
+                  border={1}
+                  borderColor="#ddd"
+                  borderRadius={5}
                   style={{
                     width: '100%',
                     marginBottom: 10,
                     height: 40,
-                    backgroundColor: selected ? '#b6fcd5' : '#f9f9f9',
+                    backgroundColor: selected ? color : '#f9f9f9',
                     cursor: 'pointer',
                   }}
                   onClick={() => setTemp(tm)}
@@ -201,7 +216,61 @@ export default function RegisterCompany({
                   >
                     {isRTL ? tm.nameAr : tm.name}
                   </Typography>
-                </Paper>
+                </Box>
+              );
+            })}
+          </Box>
+        </Grid>
+        <Grid item xs={12}>
+          <Typography
+            style={{
+              marginTop: 10,
+              marginBottom: 10,
+              textAlign: 'center',
+              fontWeight: 'bold',
+            }}
+            variant="h5"
+          >
+            الاشتراكات
+          </Typography>
+
+          <Box>
+            {packages.map((pk: any) => {
+              const selected = pk?.name === pack?.name;
+              return (
+                <Box
+                  border={1}
+                  borderColor="#ddd"
+                  borderRadius={5}
+                  display="flex"
+                  style={{
+                    backgroundColor: selected ? color : '#f9f9f9',
+                    cursor: 'pointer',
+                    height: 40,
+                    marginBottom: 20,
+                    paddingLeft: 5,
+                    paddingRight: 5,
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                  }}
+                  onClick={() => setPack(pk)}
+                >
+                  <Typography component="div">
+                    {isRTL ? pk.titleAr : pk.title}
+                  </Typography>
+                  {pk.eventsQty !== -1 && (
+                    <Typography variant="subtitle1">
+                      {pk.eventsQty} موعد
+                    </Typography>
+                  )}
+                  {pk.eventsQty === -1 && (
+                    <Typography variant="subtitle1"></Typography>
+                  )}
+                  <Typography variant="subtitle1">
+                    {pk.cost} ريال قطري
+                  </Typography>
+                </Box>
               );
             })}
           </Box>
