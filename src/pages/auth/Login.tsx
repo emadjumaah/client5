@@ -172,17 +172,17 @@ const Login = ({
                   justifyContent: 'center',
                 }}
               >
-                <Button variant="outlined" onClick={() => setReg(true)}>
-                  <Typography>
-                    {isRTL ? 'إنشاء حساب جديد' : 'New Account'}
-                  </Typography>
-                </Button>
                 <Typography
-                  variant="body2"
+                  variant={isRTL ? 'body2' : 'caption'}
                   style={{ paddingLeft: 10, paddingRight: 10 }}
                 >
                   {isRTL ? 'ليس لديك حساب؟' : "Don't have an account yet?"}
                 </Typography>
+                <Button variant="outlined" onClick={() => setReg(true)}>
+                  <Typography variant={isRTL ? 'body2' : 'caption'}>
+                    {isRTL ? 'إنشاء حساب جديد' : 'New Account'}
+                  </Typography>
+                </Button>
               </Box>
             </form>
           </Box>
