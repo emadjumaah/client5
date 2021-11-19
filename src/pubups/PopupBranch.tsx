@@ -172,6 +172,11 @@ const PopupBranch = ({
     handleSubmit(onSubmit)();
   };
 
+  const newpack =
+    row?.note && row?.note !== row?.pack && row?.note.length > 0
+      ? JSON.parse(row?.note)
+      : null;
+
   const title = isRTL
     ? isNew
       ? 'اضافة شركة'
@@ -323,10 +328,10 @@ const PopupBranch = ({
                     <CardContent>
                       <Typography
                         style={{ marginBottom: 20 }}
-                        variant="h5"
+                        variant="h6"
                         component="div"
                       >
-                        {pk.title}
+                        {isRTL ? pk.titleAr : pk.title}
                       </Typography>
                       <Divider></Divider>
 
@@ -344,6 +349,17 @@ const PopupBranch = ({
                 );
               })}
             </Box>
+          </Grid>
+          <Grid item xs={12}>
+            {newpack && (
+              <Box display="flex">
+                <Typography variant="subtitle1">الاشتراك المطلوب : </Typography>
+                <Typography style={{ color: '#3ae' }} variant="h6">
+                  {' '}
+                  {newpack?.titleAr}
+                </Typography>
+              </Box>
+            )}
           </Grid>
           <Grid item xs={12}>
             <Typography

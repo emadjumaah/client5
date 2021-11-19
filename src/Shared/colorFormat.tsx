@@ -455,6 +455,15 @@ export const amountFormatter = ({ row }: any) => {
 export const currencyFormatter = ({ value }: any) => {
   return <span style={{ color: '#403795' }}>{moneyFormat(value)}</span>;
 };
+export const reqpackFormatter = ({ row }: any) => {
+  const { pack, note } = row;
+  if (pack === note || !note || note.length === 0) {
+    return <span></span>;
+  } else {
+    const newpack = JSON.parse(note);
+    return <span style={{ color: '#403795' }}>{newpack.titleAr}</span>;
+  }
+};
 export const logoFormatter = ({ value }: any) => {
   return value ? (
     <img

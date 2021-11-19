@@ -24,6 +24,7 @@ import {
   createdAtFormatter,
   currencyFormatter,
   logoFormatter,
+  reqpackFormatter,
 } from '../../Shared/colorFormat';
 import { SearchTable } from '../../components';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
@@ -41,6 +42,8 @@ export default function Branches({ isRTL, theme, words }: any) {
     { name: 'packEnd', title: isRTL ? 'نهاية الاشتراك' : 'End' },
     { name: 'packCost', title: words.price },
     { name: 'packQty', title: words.qty },
+    { name: 'username', title: isRTL ? 'المدير' : 'Manager' },
+    { name: 'reqpack', title: isRTL ? 'المطلوب' : 'Requested' },
   ];
 
   const [columns] = useState(branchCol);
@@ -72,6 +75,10 @@ export default function Branches({ isRTL, theme, words }: any) {
         <DataTypeProvider
           for={['packCost']}
           formatterComponent={currencyFormatter}
+        ></DataTypeProvider>
+        <DataTypeProvider
+          for={['reqpack']}
+          formatterComponent={reqpackFormatter}
         ></DataTypeProvider>
         <DataTypeProvider
           for={['logo']}

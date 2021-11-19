@@ -47,6 +47,7 @@ export default gql`
           lng
         }
         userId
+        username
         note
 
         createdAt
