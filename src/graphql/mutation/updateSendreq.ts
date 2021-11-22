@@ -5,6 +5,7 @@ export default gql`
     $_id: String
     $title: String
     $body: String
+    $link: String
     $qty: Int
     $smsqty: Int
     $type: Int
@@ -18,6 +19,7 @@ export default gql`
       _id: $_id
       title: $title
       body: $body
+      link: $link
       qty: $qty
       smsqty: $smsqty
       type: $type

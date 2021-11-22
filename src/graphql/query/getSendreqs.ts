@@ -11,6 +11,7 @@ export default gql`
         id
         title
         body
+        link
         qty
         smsqty
         type

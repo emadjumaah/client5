@@ -4,6 +4,7 @@ export default gql`
   mutation createSendreq(
     $title: String
     $body: String
+    $link: String
     $qty: Int
     $smsqty: Int
     $type: Int
@@ -16,6 +17,7 @@ export default gql`
     createSendreq(
       title: $title
       body: $body
+      link: $link
       qty: $qty
       smsqty: $smsqty
       type: $type

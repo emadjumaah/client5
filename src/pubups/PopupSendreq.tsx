@@ -14,8 +14,8 @@ import {
 import { GContextTypes } from '../types';
 import { GlobalContext } from '../contexts';
 import {
+  Button,
   Checkbox,
-  Divider,
   FormControlLabel,
   Grid,
   Typography,
@@ -25,6 +25,7 @@ import { CalenderLocal, TextFieldLocal } from '../components';
 import useGroups from '../hooks/useGroups';
 import FilterSelectMulti from '../Shared/FilterSelectMulti';
 import _ from 'lodash';
+import { getShortLink, isURL } from '../common/short';
 
 const PopupSendreq = ({
   open,
@@ -45,6 +46,8 @@ const PopupSendreq = ({
   const [body, setBody] = useState('');
   const [conqty, setConqty] = useState(0);
   const [smsqty, setSmsqty] = useState(0);
+  const [link, setLink] = useState(null);
+  const [short, setShort] = useState(null);
 
   const { register, handleSubmit, errors, reset } = useForm(yup.smsResolver);
   const {
@@ -58,6 +61,7 @@ const PopupSendreq = ({
       setGroupvalue(grps);
       setActive(row.active);
       setRuntime(row.runtime);
+      setShort(row.link);
     }
   }, [open]);
 
@@ -114,6 +118,7 @@ const PopupSendreq = ({
       _id: row && row._id ? row._id : undefined,
       title,
       body,
+      link: short,
       runtime,
       active,
       smsqty,
@@ -154,10 +159,22 @@ const PopupSendreq = ({
     setRuntime(null);
     setGroupvalue([]);
     setActive(false);
+    setLink(null);
+    setShort(null);
   };
 
   const onHandleSubmit = () => {
     handleSubmit(onSubmit)();
+  };
+
+  const setShortLink = async () => {
+    const isurl = isURL(link);
+    if (!isurl) {
+      await messageAlert(setAlrt, isRTL ? `الرابط غير صالح` : `incorrect URL`);
+      return;
+    }
+    const sh = await getShortLink(link);
+    setShort(sh);
   };
 
   const title = isRTL
@@ -222,9 +239,6 @@ const PopupSendreq = ({
                     mb={0}
                   />
                 </Grid>
-                <Grid item xs={12}>
-                  <Divider></Divider>
-                </Grid>
                 <Grid item xs={9}>
                   <FilterSelectMulti
                     options={groups}
@@ -240,6 +254,43 @@ const PopupSendreq = ({
                   <Typography style={{ padding: 5, marginTop: 15 }}>
                     {words.qty} : {conqty}
                   </Typography>
+                </Grid>
+                <Grid item xs={12}>
+                  <Typography>
+                    {isRTL
+                      ? 'اختصار اي رابط لوضعه داخل الرسالة النصية'
+                      : 'Link Shorten here'}
+                  </Typography>
+                </Grid>
+                <Grid item xs={7}>
+                  <TextFieldLocal
+                    autoFocus
+                    required
+                    name="link"
+                    label={isRTL ? 'الرابط' : 'Link'}
+                    value={link}
+                    onChange={(e: any) => setLink(e.target.value)}
+                    fullWidth
+                    mb={0}
+                  />
+                </Grid>
+                <Grid item xs={2}>
+                  <Button
+                    style={{ marginTop: 9, width: '100%', height: 36 }}
+                    variant="contained"
+                    onClick={setShortLink}
+                  >
+                    {isRTL ? 'اختصار الرابط' : 'Shot the link'}
+                  </Button>
+                </Grid>
+                <Grid item xs={3}>
+                  <TextFieldLocal
+                    onChange={() => null}
+                    name="title"
+                    value={short}
+                    fullWidth
+                    mb={0}
+                  />
                 </Grid>
                 <Grid item xs={12}>
                   <TextFieldLocal
