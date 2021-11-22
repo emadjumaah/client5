@@ -25,7 +25,7 @@ import { CalenderLocal, TextFieldLocal } from '../components';
 import useGroups from '../hooks/useGroups';
 import FilterSelectMulti from '../Shared/FilterSelectMulti';
 import _ from 'lodash';
-import { getShortLink, isURL } from '../common/short';
+import { getShortLink, getShortLinkInfo, isURL } from '../common/short';
 
 const PopupSendreq = ({
   open,
@@ -48,6 +48,7 @@ const PopupSendreq = ({
   const [smsqty, setSmsqty] = useState(0);
   const [link, setLink] = useState(null);
   const [short, setShort] = useState(null);
+  const [shortInfo, setShortInfo] = useState(null);
 
   const { register, handleSubmit, errors, reset } = useForm(yup.smsResolver);
   const {
@@ -64,6 +65,9 @@ const PopupSendreq = ({
       setShort(row.link);
     }
   }, [open]);
+  useEffect(() => {
+    setShortLinkData();
+  }, [short]);
 
   useEffect(() => {
     const sum = _.sumBy(groupvalue, 'qty');
@@ -176,6 +180,14 @@ const PopupSendreq = ({
     const sh = await getShortLink(link);
     setShort(sh);
   };
+  const setShortLinkData = async () => {
+    if (!short) {
+      return;
+    }
+    const code = short.split('/')[1];
+    const data = await getShortLinkInfo(code);
+    setShortInfo(data);
+  };
 
   const title = isRTL
     ? isNew
@@ -255,43 +267,47 @@ const PopupSendreq = ({
                     {words.qty} : {conqty}
                   </Typography>
                 </Grid>
-                <Grid item xs={12}>
-                  <Typography>
-                    {isRTL
-                      ? 'اختصار اي رابط لوضعه داخل الرسالة النصية'
-                      : 'Link Shorten here'}
-                  </Typography>
-                </Grid>
-                <Grid item xs={7}>
-                  <TextFieldLocal
-                    autoFocus
-                    required
-                    name="link"
-                    label={isRTL ? 'الرابط' : 'Link'}
-                    value={link}
-                    onChange={(e: any) => setLink(e.target.value)}
-                    fullWidth
-                    mb={0}
-                  />
-                </Grid>
-                <Grid item xs={2}>
-                  <Button
-                    style={{ marginTop: 9, width: '100%', height: 36 }}
-                    variant="contained"
-                    onClick={setShortLink}
-                  >
-                    {isRTL ? 'اختصار الرابط' : 'Shot the link'}
-                  </Button>
-                </Grid>
-                <Grid item xs={3}>
-                  <TextFieldLocal
-                    onChange={() => null}
-                    name="title"
-                    value={short}
-                    fullWidth
-                    mb={0}
-                  />
-                </Grid>
+                {isNew && (
+                  <>
+                    <Grid item xs={12}>
+                      <Typography>
+                        {isRTL
+                          ? 'اختصار اي رابط لوضعه داخل الرسالة النصية'
+                          : 'Link Shorten here'}
+                      </Typography>
+                    </Grid>
+                    <Grid item xs={7}>
+                      <TextFieldLocal
+                        autoFocus
+                        required
+                        name="link"
+                        label={isRTL ? 'الرابط' : 'Link'}
+                        value={link}
+                        onChange={(e: any) => setLink(e.target.value)}
+                        fullWidth
+                        mb={0}
+                      />
+                    </Grid>
+                    <Grid item xs={2}>
+                      <Button
+                        style={{ marginTop: 9, width: '100%', height: 36 }}
+                        variant="contained"
+                        onClick={setShortLink}
+                      >
+                        {isRTL ? 'اختصار الرابط' : 'Shot the link'}
+                      </Button>
+                    </Grid>
+                    <Grid item xs={3}>
+                      <TextFieldLocal
+                        onChange={() => null}
+                        name="short"
+                        value={short}
+                        fullWidth
+                        mb={0}
+                      />
+                    </Grid>
+                  </>
+                )}
                 <Grid item xs={12}>
                   <TextFieldLocal
                     required
@@ -308,7 +324,7 @@ const PopupSendreq = ({
                   />
                   {`SMSs: (${smsqty})`}
                 </Grid>
-                <Grid item xs={6}>
+                <Grid item xs={4}>
                   <CalenderLocal
                     isRTL={isRTL}
                     label={isRTL ? 'وقت الارسال' : 'Send Time'}
@@ -317,9 +333,6 @@ const PopupSendreq = ({
                     format="dd/MM/yyyy - hh:mm"
                     time
                   ></CalenderLocal>
-                </Grid>
-                <Grid item xs={6}></Grid>
-                <Grid item xs={12}>
                   <FormControlLabel
                     control={
                       <Checkbox
@@ -331,6 +344,56 @@ const PopupSendreq = ({
                     }
                     label={isRTL ? 'تفعيل الحملة' : 'Activate'}
                   />
+                </Grid>
+                <Grid item xs={8}>
+                  <div
+                    style={{
+                      display: 'flex',
+                      flex: 1,
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      flexDirection: 'column',
+                    }}
+                  >
+                    <Typography variant="h6">{short}</Typography>
+                    <div
+                      style={{
+                        display: 'flex',
+                        flex: 1,
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        width: 250,
+                        marginBottom: 20,
+                      }}
+                    >
+                      <div>
+                        {isRTL ? 'مجموع النفرات' : 'Total'} {shortInfo?.count}
+                      </div>
+                      <div>
+                        {isRTL ? 'عدد المدن' : 'Cities'} {shortInfo?.citycount}
+                      </div>
+                    </div>
+                    {shortInfo?.cities?.length > 0 &&
+                      shortInfo?.cities.map((city: any) => {
+                        return (
+                          <div
+                            style={{
+                              display: 'flex',
+                              flex: 1,
+                              alignItems: 'center',
+                              justifyContent: 'space-between',
+                              width: 250,
+                              backgroundColor: '#eee',
+                              paddingLeft: 10,
+                              paddingRight: 10,
+                            }}
+                          >
+                            <div style={{ margin: 10 }}>{city.name}</div>
+                            <div>{city.qty}</div>
+                          </div>
+                        );
+                      })}
+                  </div>
                 </Grid>
               </Grid>
             </Grid>

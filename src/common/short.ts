@@ -11,6 +11,16 @@ export const getShortLink = async (link: any) => {
   return data.short;
 };
 
+export const getShortLinkInfo = async (code: any) => {
+  const options = {
+    method: 'GET',
+    headers: { 'Content-Type': 'application/json' },
+  };
+  const response = await fetch(`https://jdwl.me/api/inspect/${code}`, options);
+  const data = await response.json();
+  return data;
+};
+
 export const isURL = (str: string) => {
   return validurl.isUri(str);
 };
