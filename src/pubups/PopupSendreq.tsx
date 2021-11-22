@@ -346,54 +346,57 @@ const PopupSendreq = ({
                   />
                 </Grid>
                 <Grid item xs={8}>
-                  <div
-                    style={{
-                      display: 'flex',
-                      flex: 1,
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      flexDirection: 'column',
-                    }}
-                  >
-                    <Typography variant="h6">{short}</Typography>
+                  {short && (
                     <div
                       style={{
                         display: 'flex',
                         flex: 1,
                         alignItems: 'center',
-                        justifyContent: 'space-between',
-                        width: 250,
-                        marginBottom: 20,
+                        justifyContent: 'center',
+                        flexDirection: 'column',
                       }}
                     >
-                      <div>
-                        {isRTL ? 'مجموع النفرات' : 'Total'} {shortInfo?.count}
+                      <Typography variant="h6">{short}</Typography>
+                      <div
+                        style={{
+                          display: 'flex',
+                          flex: 1,
+                          alignItems: 'center',
+                          justifyContent: 'space-between',
+                          width: 250,
+                          marginBottom: 20,
+                        }}
+                      >
+                        <div>
+                          {isRTL ? 'مجموع النفرات' : 'Total'} {shortInfo?.count}
+                        </div>
+                        <div>
+                          {isRTL ? 'عدد المدن' : 'Cities'}{' '}
+                          {shortInfo?.citycount}
+                        </div>
                       </div>
-                      <div>
-                        {isRTL ? 'عدد المدن' : 'Cities'} {shortInfo?.citycount}
-                      </div>
+                      {shortInfo?.cities?.length > 0 &&
+                        shortInfo?.cities.map((city: any) => {
+                          return (
+                            <div
+                              style={{
+                                display: 'flex',
+                                flex: 1,
+                                alignItems: 'center',
+                                justifyContent: 'space-between',
+                                width: 250,
+                                backgroundColor: '#eee',
+                                paddingLeft: 10,
+                                paddingRight: 10,
+                              }}
+                            >
+                              <div style={{ margin: 10 }}>{city.name}</div>
+                              <div>{city.qty}</div>
+                            </div>
+                          );
+                        })}
                     </div>
-                    {shortInfo?.cities?.length > 0 &&
-                      shortInfo?.cities.map((city: any) => {
-                        return (
-                          <div
-                            style={{
-                              display: 'flex',
-                              flex: 1,
-                              alignItems: 'center',
-                              justifyContent: 'space-between',
-                              width: 250,
-                              backgroundColor: '#eee',
-                              paddingLeft: 10,
-                              paddingRight: 10,
-                            }}
-                          >
-                            <div style={{ margin: 10 }}>{city.name}</div>
-                            <div>{city.qty}</div>
-                          </div>
-                        );
-                      })}
-                  </div>
+                  )}
                 </Grid>
               </Grid>
             </Grid>
