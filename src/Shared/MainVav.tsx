@@ -8,9 +8,9 @@ import {
   Theme,
   Tooltip,
 } from '@material-ui/core';
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
+import { isEditor } from '../common/roles';
 import { drawerWidth } from '../constants';
-import { GlobalContext } from '../contexts';
 import MyIcon from './MyIcon';
 
 export const maimenuClasses = makeStyles((theme: Theme) =>
@@ -28,11 +28,8 @@ export default function MainVav(props: any) {
 
   const [activemenu, setActivemenu] = useState(1);
 
-  const { theme, isRTL, setMmenu } = props;
-  const {
-    store: { lang },
-  } = useContext(GlobalContext);
-
+  const { theme, isRTL, setMmenu, user } = props;
+  const editor = isEditor(user);
   const handleMenu = (value: any) => {
     setActivemenu(value);
     setMmenu(value);
@@ -50,7 +47,7 @@ export default function MainVav(props: any) {
         backgroundColor: theme.palette.primary.light,
       }}
     >
-      <Tooltip title={lang === 'ar' ? 'الصفحة الرئيسية' : 'Main Page'}>
+      <Tooltip title={isRTL ? 'الصفحة الرئيسية' : 'Main Page'}>
         <Box
           display="flex"
           style={{
@@ -71,7 +68,30 @@ export default function MainVav(props: any) {
           ></MyIcon>
         </Box>
       </Tooltip>
-      <Tooltip title={isRTL ? 'الرسائل النصية' : 'SMS System'}>
+      {editor && (
+        <Tooltip title={isRTL ? 'الرسائل النصية' : 'SMS System'}>
+          <Box
+            display="flex"
+            style={{
+              height: 40,
+              flex: 1,
+              alignItems: 'center',
+              justifyContent: 'center',
+              cursor: 'pointer',
+              backgroundColor: activemenu === 2 ? activecolor : undefined,
+            }}
+            className={classes.child}
+            onClick={() => handleMenu(2)}
+          >
+            <MyIcon
+              size={24}
+              color={activemenu === 2 ? activeicon : '#fff'}
+              icon={'email'}
+            ></MyIcon>
+          </Box>
+        </Tooltip>
+      )}
+      {!editor && (
         <Box
           display="flex"
           style={{
@@ -79,19 +99,9 @@ export default function MainVav(props: any) {
             flex: 1,
             alignItems: 'center',
             justifyContent: 'center',
-            cursor: 'pointer',
-            backgroundColor: activemenu === 2 ? activecolor : undefined,
           }}
-          className={classes.child}
-          onClick={() => handleMenu(2)}
-        >
-          <MyIcon
-            size={24}
-            color={activemenu === 2 ? activeicon : '#fff'}
-            icon={'email'}
-          ></MyIcon>
-        </Box>
-      </Tooltip>
+        ></Box>
+      )}
       <Tooltip title={isRTL ? 'المفكرة' : 'Reminder'}>
         <Box
           display="flex"

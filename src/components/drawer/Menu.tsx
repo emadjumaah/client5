@@ -7,6 +7,7 @@ import { renderIcon } from './renders';
 import MenuItem from './MenuItem';
 import { applyRole } from '../../common/roles';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
+import { drawerWidth } from '../../constants';
 
 const Menu = ({
   isRTL,
@@ -65,6 +66,7 @@ const Menu = ({
                     className={classes.child}
                     style={{
                       cursor: 'pointer',
+                      width: drawerWidth,
                       backgroundColor: isSelected
                         ? theme.palette.primary.dark
                         : undefined,

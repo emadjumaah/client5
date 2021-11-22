@@ -153,7 +153,6 @@ const Login = ({
                 />
 
                 <Button
-                  type="submit"
                   fullWidth
                   variant="contained"
                   color="primary"

@@ -18,10 +18,12 @@ import {
 import { Loading } from '../../Shared';
 import { getRowId } from '../../common';
 import { useLazyQuery } from '@apollo/client';
-import { getActions } from '../../graphql';
+import getNotificationsList from '../../graphql/query/getNotificationsList';
+
 import {
   actionTimeFormatter,
-  actionTypeFormatter,
+  isActiveViewFormatter,
+  userFormatter,
 } from '../../Shared/colorFormat';
 import PageLayout from '../main/PageLayout';
 import { SearchTable } from '../../components';
@@ -30,21 +32,20 @@ import DateNavigatorReports from '../../components/filters/DateNavigatorReports'
 import { Box } from '@material-ui/core';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
 import { TableComponent } from '../../Shared/TableComponent';
+import { useUsers } from '../../hooks';
 
 export default function Actions({ isRTL, words, menuitem, isEditor, theme }) {
   const [columns] = useState([
     { name: 'sendtime', title: words.time },
-    // { name: 'title', title: words.title },
-    { name: 'type', title: words.type },
+    { name: 'user', title: words.user },
+    { name: 'body', title: words.body },
     { name: 'active', title: words.status },
-    { name: 'sent', title: isRTL ? 'ارسلت' : 'sent' },
-    // { name: 'phone', title: words.phoneNumber },
-    // { name: 'user', title: words.user },
+    { name: 'sent', title: isRTL ? 'تم الارسال' : 'Sent' },
   ]);
 
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(false);
-
+  const { users } = useUsers();
   const [start, setStart] = useState<any>(null);
   const [end, setEnd] = useState<any>(null);
   const { height } = useWindowDimensions();
@@ -64,7 +65,7 @@ export default function Actions({ isRTL, words, menuitem, isEditor, theme }) {
     dispatch({ type: 'setEndDate', payload: curDate });
   };
 
-  const [loadActions, actionsData]: any = useLazyQuery(getActions);
+  const [loadActions, actionsData]: any = useLazyQuery(getNotificationsList);
 
   useEffect(() => {
     const variables = {
@@ -80,8 +81,8 @@ export default function Actions({ isRTL, words, menuitem, isEditor, theme }) {
     if (actionsData?.loading) {
       setLoading(true);
     }
-    if (actionsData?.data?.getActions?.data) {
-      const { data } = actionsData.data.getActions;
+    if (actionsData?.data?.getNotificationsList?.data) {
+      const { data } = actionsData.data.getNotificationsList;
       setRows(data);
       setLoading(false);
     }
@@ -152,10 +153,15 @@ export default function Actions({ isRTL, words, menuitem, isEditor, theme }) {
             formatterComponent={actionTimeFormatter}
           ></DataTypeProvider>
           <DataTypeProvider
-            for={['type']}
-            formatterComponent={actionTypeFormatter}
+            for={['sent', 'active']}
+            formatterComponent={isActiveViewFormatter}
           ></DataTypeProvider>
-
+          <DataTypeProvider
+            for={['user']}
+            formatterComponent={(props: any) =>
+              userFormatter({ ...props, users })
+            }
+          ></DataTypeProvider>
           <Toolbar />
           <SearchPanel
             inputComponent={(props: any) => {

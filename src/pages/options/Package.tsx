@@ -42,7 +42,7 @@ export default function Package({ company, tempwords, isRTL }: any) {
           </Box>
         </Grid>
         <Grid item xs={12}></Grid>
-        <Grid item xs={4}>
+        <Grid item xs={3}>
           <Box
             display="flex"
             style={{
@@ -60,7 +60,7 @@ export default function Package({ company, tempwords, isRTL }: any) {
             </Typography>
           </Box>
         </Grid>
-        <Grid item xs={4}>
+        <Grid item xs={3}>
           <Box
             display="flex"
             style={{
@@ -76,7 +76,7 @@ export default function Package({ company, tempwords, isRTL }: any) {
             </Typography>
           </Box>
         </Grid>
-        <Grid item xs={4}>
+        <Grid item xs={3}>
           <Box
             display="flex"
             style={{
@@ -91,6 +91,23 @@ export default function Package({ company, tempwords, isRTL }: any) {
             <Typography variant="button">
               {quantityFormat(company.usedDocs, isRTL)} /{' '}
               {quantityFormat(company.packDocsQty, isRTL)}
+            </Typography>
+          </Box>
+        </Grid>
+        <Grid item xs={3}>
+          <Box
+            display="flex"
+            style={{
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'flex-end',
+            }}
+          >
+            <Typography variant="button">
+              {isRTL ? 'رسائل SMS' : 'SMS'}
+            </Typography>
+            <Typography variant="button">
+              {quantityFormat(company.smss, isRTL)}
             </Typography>
           </Box>
         </Grid>

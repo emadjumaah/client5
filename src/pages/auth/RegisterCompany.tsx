@@ -37,7 +37,7 @@ export default function RegisterCompany({
   const [registerCompany] = useMutation(createUserBranch);
   const theme = useTheme();
 
-  const color = fade(theme.palette.primary.main, 0.2);
+  const color = fade(theme.palette.secondary.main, 0.4);
   const onCreateCompany = async () => {
     if (!password || password.length < 6) {
       await messageAlert(
@@ -135,12 +135,15 @@ export default function RegisterCompany({
           <IconButton
             style={{
               alignItems: 'center',
-              marginTop: 5,
+              marginTop: 10,
+              backgroundColor: '#eee',
+              padding: 5,
+              margin: 0,
             }}
             onClick={() => setViewpass(!viewpass)}
           >
-            {viewpass && <VisibilityIcon></VisibilityIcon>}
-            {!viewpass && <VisibilityOffIcon></VisibilityOffIcon>}
+            {!viewpass && <VisibilityIcon></VisibilityIcon>}
+            {viewpass && <VisibilityOffIcon></VisibilityOffIcon>}
           </IconButton>
         </Grid>
         <Grid item xs={12}>
@@ -193,27 +196,23 @@ export default function RegisterCompany({
               const selected = tm?.title === temp?.title;
               return (
                 <Box
-                  border={1}
-                  borderColor="#ddd"
+                  boxShadow={1}
                   borderRadius={5}
+                  display="flex"
                   style={{
-                    width: '100%',
-                    marginBottom: 10,
-                    height: 40,
                     backgroundColor: selected ? color : '#f9f9f9',
                     cursor: 'pointer',
+                    height: 40,
+                    marginBottom: 20,
+                    paddingLeft: 10,
+                    paddingRight: 10,
+                    alignItems: 'center',
+                    justifyContent: 'flex-start',
+                    width: 250,
                   }}
                   onClick={() => setTemp(tm)}
                 >
-                  <Typography
-                    style={{
-                      marginBottom: 20,
-                      textAlign: 'center',
-                      padding: 5,
-                    }}
-                    variant="subtitle1"
-                    component="div"
-                  >
+                  <Typography style={{ fontWeight: 'bold' }} component="div">
                     {isRTL ? tm.nameAr : tm.name}
                   </Typography>
                 </Box>
@@ -237,41 +236,36 @@ export default function RegisterCompany({
           <Box>
             {packages.map((pk: any) => {
               const selected = pk?.name === pack?.name;
-              return (
-                <Box
-                  border={1}
-                  borderColor="#ddd"
-                  borderRadius={5}
-                  display="flex"
-                  style={{
-                    backgroundColor: selected ? color : '#f9f9f9',
-                    cursor: 'pointer',
-                    height: 40,
-                    marginBottom: 20,
-                    paddingLeft: 5,
-                    paddingRight: 5,
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                  }}
-                  onClick={() => setPack(pk)}
-                >
-                  <Typography component="div">
-                    {isRTL ? pk.titleAr : pk.title}
-                  </Typography>
-                  {pk.eventsQty !== -1 && (
-                    <Typography variant="subtitle1">
-                      {pk.eventsQty} موعد
+              if (pk?.name === 'custom') {
+                return <div></div>;
+              } else {
+                return (
+                  <Box
+                    boxShadow={1}
+                    borderRadius={5}
+                    display="flex"
+                    style={{
+                      backgroundColor: selected ? color : '#f9f9f9',
+                      cursor: 'pointer',
+                      height: 40,
+                      marginBottom: 20,
+                      paddingLeft: 10,
+                      paddingRight: 10,
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      width: 250,
+                    }}
+                    onClick={() => setPack(pk)}
+                  >
+                    <Typography style={{ fontWeight: 'bold' }} component="div">
+                      {isRTL ? pk.titleAr : pk.title}
                     </Typography>
-                  )}
-                  {pk.eventsQty === -1 && (
-                    <Typography variant="subtitle1"></Typography>
-                  )}
-                  <Typography variant="subtitle1">
-                    {pk.cost} ريال قطري
-                  </Typography>
-                </Box>
-              );
+                    <Typography variant="subtitle1">
+                      {pk.cost} ريال قطري
+                    </Typography>
+                  </Box>
+                );
+              }
             })}
           </Box>
         </Grid>

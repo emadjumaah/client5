@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-no-target-blank */
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import React, { useContext, useEffect, useState } from 'react';
@@ -34,6 +35,7 @@ const PopupSendreq = ({
   addAction,
   editAction,
   theme,
+  smss,
 }: any) => {
   const [saving, setSaving] = useState(false);
   const [active, setActive] = useState(false);
@@ -91,6 +93,16 @@ const PopupSendreq = ({
       await messageAlert(
         setAlrt,
         isRTL ? `نص الرسالة مطلوب` : `Message body required`
+      );
+      return;
+    }
+
+    if (conqty * smsqty > smss) {
+      await messageAlert(
+        setAlrt,
+        isRTL
+          ? `ليس لديك عدد كاف من الرسائل`
+          : `You don't have enough SMS messages`
       );
       return;
     }
@@ -155,6 +167,7 @@ const PopupSendreq = ({
     : isNew
     ? 'New Campaign'
     : 'Edit Campaign';
+  const issms = smss && smss > 0 ? true : false;
 
   return (
     <PopupLayout
@@ -165,89 +178,115 @@ const PopupSendreq = ({
       onSubmit={onHandleSubmit}
       theme={theme}
       alrt={alrt}
+      onlyclose={!issms}
       saving={saving}
-      // maxWidth="md"
+      maxWidth="md"
     >
-      <Grid container spacing={2}>
-        <Grid item xs={1}></Grid>
-        <Grid item xs={10}>
+      <div>
+        {!issms && (
           <Grid container spacing={2}>
-            <Grid item xs={12}>
-              <TextFieldLocal
-                autoFocus
-                required
-                name="title"
-                label={isRTL ? 'اسم الحملة' : 'Campaign Name'}
-                register={register}
-                errors={errors}
-                row={row}
-                fullWidth
-                mb={0}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <Divider></Divider>
-            </Grid>
-            <Grid item xs={9}>
-              <FilterSelectMulti
-                options={groups}
-                value={groupvalue}
-                setValue={setGroupvalue}
-                words={words}
-                isRTL={isRTL}
-                name="group"
-                width={300}
-              ></FilterSelectMulti>
-            </Grid>
-            <Grid item xs={3}>
-              <Typography style={{ padding: 5, marginTop: 15 }}>
-                {words.qty} : {conqty}
-              </Typography>
-            </Grid>
-            <Grid item xs={12}>
-              <TextFieldLocal
-                required
-                name="body"
-                label={isRTL ? 'نص الرسالة' : 'Message'}
-                value={body}
-                onChange={(e: any) => setBody(e.target.value)}
-                row={row}
-                multiline
-                rows={4}
-                fullWidth
-                maxLength={500}
-                mb={0}
-              />
-              {`SMSs: (${smsqty})`}
-            </Grid>
-            <Grid item xs={6}>
-              <CalenderLocal
-                isRTL={isRTL}
-                label={isRTL ? 'وقت الارسال' : 'Send Time'}
-                value={runtime}
-                onChange={(d: any) => setRuntime(d)}
-                format="dd/MM/yyyy - hh:mm"
-                time
-              ></CalenderLocal>
-            </Grid>
-            <Grid item xs={6}></Grid>
-            <Grid item xs={12}>
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={active}
-                    onChange={(e: any) => setActive(e.target.checked)}
-                    name="checkedB"
-                    color="primary"
-                  />
-                }
-                label={isRTL ? 'تفعيل الحملة' : 'Activate'}
-              />
+            <Grid item xs={8}>
+              <div style={{ width: 400 }}>
+                <Typography variant="h6">
+                  {isRTL ? 'الرسائل النصية غير متوفرة' : 'SMS Not Available'}
+                </Typography>
+                <Typography variant="subtitle1">
+                  {isRTL
+                    ? 'يرجى التواصل معنا للحصول على رزمة رسائل'
+                    : 'Please contact us for SMS message package'}
+                </Typography>
+                <div style={{ marginTop: 20 }}>
+                  <a target="_blank" rel="Jadwal.io" href="https://jadwal.io/">
+                    jadwal.io
+                  </a>
+                </div>
+              </div>
             </Grid>
           </Grid>
-        </Grid>
-        <Grid item xs={1}></Grid>
-      </Grid>
+        )}
+        <div style={{ display: !issms ? 'none' : 'block' }}>
+          <Grid container spacing={2}>
+            <Grid item xs={1}></Grid>
+            <Grid item xs={10}>
+              <Grid container spacing={2}>
+                <Grid item xs={12}>
+                  <TextFieldLocal
+                    autoFocus
+                    required
+                    name="title"
+                    label={isRTL ? 'اسم الحملة' : 'Campaign Name'}
+                    register={register}
+                    errors={errors}
+                    row={row}
+                    fullWidth
+                    mb={0}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <Divider></Divider>
+                </Grid>
+                <Grid item xs={9}>
+                  <FilterSelectMulti
+                    options={groups}
+                    value={groupvalue}
+                    setValue={setGroupvalue}
+                    words={words}
+                    isRTL={isRTL}
+                    name="group"
+                    width={300}
+                  ></FilterSelectMulti>
+                </Grid>
+                <Grid item xs={3}>
+                  <Typography style={{ padding: 5, marginTop: 15 }}>
+                    {words.qty} : {conqty}
+                  </Typography>
+                </Grid>
+                <Grid item xs={12}>
+                  <TextFieldLocal
+                    required
+                    name="body"
+                    label={isRTL ? 'نص الرسالة' : 'Message'}
+                    value={body}
+                    onChange={(e: any) => setBody(e.target.value)}
+                    row={row}
+                    multiline
+                    rows={4}
+                    fullWidth
+                    maxLength={500}
+                    mb={0}
+                  />
+                  {`SMSs: (${smsqty})`}
+                </Grid>
+                <Grid item xs={6}>
+                  <CalenderLocal
+                    isRTL={isRTL}
+                    label={isRTL ? 'وقت الارسال' : 'Send Time'}
+                    value={runtime}
+                    onChange={(d: any) => setRuntime(d)}
+                    format="dd/MM/yyyy - hh:mm"
+                    time
+                  ></CalenderLocal>
+                </Grid>
+                <Grid item xs={6}></Grid>
+                <Grid item xs={12}>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        checked={active}
+                        onChange={(e: any) => setActive(e.target.checked)}
+                        name="checkedB"
+                        color="primary"
+                      />
+                    }
+                    label={isRTL ? 'تفعيل الحملة' : 'Activate'}
+                  />
+                </Grid>
+              </Grid>
+            </Grid>
+            <Grid item xs={1}></Grid>
+          </Grid>
+        </div>
+      </div>
     </PopupLayout>
   );
 };

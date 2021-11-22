@@ -297,7 +297,12 @@ function AppDrawer(props: any): any {
                 />
               </Box>
             )}
-            <MainVav setMmenu={setMmenu} theme={theme} isRTL={isRTL}></MainVav>
+            <MainVav
+              setMmenu={setMmenu}
+              theme={theme}
+              isRTL={isRTL}
+              user={user}
+            ></MainVav>
           </Drawer>
         </Hidden>
       </nav>

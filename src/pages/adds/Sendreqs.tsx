@@ -40,7 +40,8 @@ import {
 import useGroups from '../../hooks/useGroups';
 
 export default function Sendreqs(props: any) {
-  const { isRTL, words, menuitem, isEditor, theme } = props;
+  const { isRTL, words, menuitem, isEditor, theme, company } = props;
+
   const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
   const [openItem, setOpenItem] = useState(false);
   const [item, setItem] = useState(null);
@@ -58,7 +59,7 @@ export default function Sendreqs(props: any) {
   ]);
 
   const { groups } = useGroups();
-
+  const smss = company?.smss ? company?.smss : 0;
   const commitChanges = async ({ deleted }) => {
     if (deleted) {
       const _id = deleted[0];
@@ -148,7 +149,7 @@ export default function Sendreqs(props: any) {
             addAction={addSendreq}
             editAction={editSendreq}
           >
-            <PopupSendreq></PopupSendreq>
+            <PopupSendreq smss={smss}></PopupSendreq>
           </PopupEditing>
         </Grid>
         {alrt.show && (

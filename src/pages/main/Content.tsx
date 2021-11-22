@@ -229,12 +229,12 @@ const Content = () => {
         return;
       case 2:
         setmenu(smsmenu);
-        history.push('/contacts');
+        history.push('/sendreqs');
         setMenuitem(smsmenu[0]);
         return;
       case 3:
         setmenu(remindermenu);
-        history.push('/actions');
+        history.push('/notifications');
         setMenuitem(remindermenu[0]);
         return;
 
@@ -511,13 +511,17 @@ const Content = () => {
           <Route
             path="/messages"
             component={() => (
-              <Messages
-                isRTL={isRTL}
-                words={words}
-                theme={theme}
-                menuitem={menuitem}
-                isEditor={isEditor}
-              ></Messages>
+              <EventsContext.Provider
+                value={{ state: calendarStore, dispatch: calendarDispatch }}
+              >
+                <Messages
+                  isRTL={isRTL}
+                  words={words}
+                  theme={theme}
+                  menuitem={menuitem}
+                  isEditor={isEditor}
+                ></Messages>
+              </EventsContext.Provider>
             )}
           />
           <Route
@@ -541,6 +545,7 @@ const Content = () => {
                 theme={theme}
                 menuitem={menuitem}
                 isEditor={isEditor}
+                company={company}
               ></Sendreqs>
             )}
           />

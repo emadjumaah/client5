@@ -33,7 +33,7 @@ export default function Register({
   const validtime = startBlock ? timeFromBlock > timeToWait : true;
   const remaningTime = Math.floor((timeToWait - timeFromBlock) / 1000);
 
-  const [email, setEmail] = useState(null);
+  const [email, setEmail] = useState('');
   const [passcode, setPasscode] = useState(null);
   const [sent, setSent] = useState(null);
   const [verified, setVerified] = useState(null);
@@ -193,7 +193,6 @@ export default function Register({
                 {!sent && !verified && (
                   <>
                     <Button
-                      type="submit"
                       fullWidth
                       variant="contained"
                       color="primary"
@@ -209,7 +208,6 @@ export default function Register({
                 {sent && !verified && (
                   <>
                     <Button
-                      type="submit"
                       fullWidth
                       variant="contained"
                       color="primary"
@@ -244,7 +242,7 @@ export default function Register({
               justifyContent: 'flex-start',
             }}
           >
-            <Button variant="text" onClick={() => setReg(false)}>
+            <Button variant="outlined" onClick={() => setReg(false)}>
               <Typography variant="body2">
                 {isRTL ? 'العودة لصفحة تسجيل الدخول' : 'Back to Login Page'}
               </Typography>

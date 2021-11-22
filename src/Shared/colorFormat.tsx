@@ -300,6 +300,10 @@ export const fromToFormatter = ({ row }: any) => {
 export const actionTimeFormatter = ({ value }: any) => {
   return <div>{covertToTimeDateDigit(value)}</div>;
 };
+export const userFormatter = ({ value, users }: any) => {
+  const user = users.filter((us: any) => us._id === value)?.[0];
+  return <div>{user?.username}</div>;
+};
 
 export const locationFormatter = ({ value }: any) => {
   if (value?.lat) {
@@ -576,6 +580,11 @@ export const isActiveFormatter = ({ row, editSendreq }: any) => {
       }}
       color="primary"
     />
+  );
+};
+export const isActiveViewFormatter = ({ value }: any) => {
+  return (
+    <Checkbox style={{ padding: 5 }} checked={value} disabled color="primary" />
   );
 };
 export const invoiceReceiptFormatter = ({ value, row }: any) => {
