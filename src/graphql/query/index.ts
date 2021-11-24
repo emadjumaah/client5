@@ -43,6 +43,7 @@ import getResourses from './getResourses';
 import getProjects from './getProjects';
 import getContacts from './getContacts';
 import getSendreqs from './getSendreqs';
+import getOoredooSMSlist from './getOoredooSMSlist';
 
 export {
   getResourses,
@@ -90,4 +91,5 @@ export {
   getGroups,
   getContacts,
   getSendreqs,
+  getOoredooSMSlist,
 };

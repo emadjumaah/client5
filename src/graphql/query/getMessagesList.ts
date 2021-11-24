@@ -34,6 +34,8 @@ export default gql`
         sendtime
         sent
         phone
+        phones
+        transres
         title
         body
         smsqty

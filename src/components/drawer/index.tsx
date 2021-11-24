@@ -20,6 +20,7 @@ import {
   Switch,
   Toolbar,
   Tooltip,
+  Typography,
 } from '@material-ui/core';
 import clsx from 'clsx';
 import MenuIcon from '@material-ui/icons/Menu';
@@ -139,6 +140,7 @@ function AppDrawer(props: any): any {
     setMmenu,
     notify,
     dispatch,
+    company,
   } = props;
   const theme = useTheme();
   const [mobileOpen, setMobileOpen] = React.useState(false);
@@ -255,7 +257,7 @@ function AppDrawer(props: any): any {
                 display="flex"
                 style={{
                   flex: 1,
-                  minHeight: 50,
+                  minHeight: 100,
                   paddingLeft: 20,
                   paddingRight: 20,
                   alignItems: 'center',
@@ -295,6 +297,48 @@ function AppDrawer(props: any): any {
                       : 'Notifications Stoped'
                   }
                 />
+              </Box>
+            )}
+            {mmenu === 2 && (
+              <Box
+                style={{
+                  flex: 1,
+                  minHeight: 100,
+                  paddingLeft: 20,
+                  paddingRight: 20,
+                }}
+              >
+                <Box
+                  display="flex"
+                  style={{
+                    flex: 1,
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    marginBottom: 10,
+                  }}
+                >
+                  <Typography style={{ color: '#eee' }} variant="subtitle1">
+                    {isRTL ? 'عدد الرسائل SMS' : 'SMS Messages'}
+                  </Typography>
+                  <Typography style={{ color: '#eee' }} variant="subtitle1">
+                    {company?.smss}
+                  </Typography>
+                </Box>
+                <Box
+                  display="flex"
+                  style={{
+                    flex: 1,
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                  }}
+                >
+                  <Typography style={{ color: '#eee' }} variant="subtitle1">
+                    {isRTL ? 'عدد الرسائل Email' : 'Emails'}
+                  </Typography>
+                  <Typography style={{ color: '#eee' }} variant="subtitle1">
+                    {company?.emails}
+                  </Typography>
+                </Box>
               </Box>
             )}
             <MainVav

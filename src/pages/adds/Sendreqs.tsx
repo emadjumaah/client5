@@ -47,9 +47,14 @@ export default function Sendreqs(props: any) {
   const [item, setItem] = useState(null);
 
   const { height } = useWindowDimensions();
-  const { sendreqs, refreshsendreqs, addSendreq, editSendreq, removeSendreq } =
-    useSendreqs();
-
+  const {
+    sendreqs,
+    refreshsendreqs,
+    addSendreq,
+    editSendreq,
+    removeSendreq,
+    // ooredoo,
+  } = useSendreqs();
   const [columns] = useState([
     { name: 'runtime', title: isRTL ? 'وقت الارسال' : 'Send Time' },
     { name: 'title', title: words.name },

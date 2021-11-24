@@ -27,16 +27,20 @@ export default gql`
         autoNo
         indx
         type
-        active
         sendtime
-        sent
         phone
         email
-        userId
+        user
         title
         body
-        user
+        sent
+        active
         smsqty
+
+        phones
+        emails
+        users
+        transres
 
         reminderId
         eventId
@@ -55,6 +59,7 @@ export default gql`
         qty
         address
 
+        userId
         createdAt
         updatedAt
       }

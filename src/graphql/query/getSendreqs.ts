@@ -17,6 +17,15 @@ export default gql`
         type
         contacts
         groups
+
+        ooListId
+        ooListName
+        ooListNameAr
+
+        from
+        to
+        count
+
         rRule
         runtime
         lastrun

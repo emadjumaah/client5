@@ -52,7 +52,7 @@ const Options = ({ isRTL, words, isEditor, company, editCompany }: any) => {
       <Box style={{ margin: 10 }}>
         <Grid container spacing={2}>
           {isEditor && (
-            <Grid item xs={12} md={10}>
+            <Grid item xs={12}>
               <Company
                 company={company}
                 editCompany={editCompany}
@@ -61,7 +61,7 @@ const Options = ({ isRTL, words, isEditor, company, editCompany }: any) => {
               ></Company>
             </Grid>
           )}
-          <Grid item xs={12} md={10}>
+          <Grid item xs={12}>
             <Grid container spacing={2}>
               <Grid item xs={12} md={4}>
                 <GenTheme

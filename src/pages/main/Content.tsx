@@ -267,6 +267,7 @@ const Content = () => {
         mmenu={mmenu}
         notify={notify}
         dispatch={dispatch}
+        company={company}
       ></AppDrawer>
       <main
         style={{ marginTop: isMobile ? 50 : undefined }}

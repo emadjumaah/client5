@@ -9,9 +9,11 @@ import {
   getSendreqs,
   updateSendreq,
 } from '../graphql';
+import { getOoredooSMSlist } from '../graphql/query';
 
 export default () => {
   const [getDeparts, catpData]: any = useLazyQuery(getSendreqs);
+  const [getOoredooList, ooredooData]: any = useLazyQuery(getOoredooSMSlist);
 
   const [addSendreq] = useMutation(createSendreq, {
     refetchQueries: [{ query: getSendreqs }],
@@ -25,9 +27,18 @@ export default () => {
 
   useEffect(() => {
     getDeparts();
+    getOoredooList();
   }, [getDeparts]);
-
   const sendreqs = catpData?.data?.['getSendreqs']?.data || [];
+  const ooredooList = ooredooData?.data?.['getOoredooSMSlist']?.data || `[]`;
+  const ooredoo = JSON.parse(ooredooList);
   const refreshsendreqs = () => catpData?.refetch();
-  return { sendreqs, addSendreq, editSendreq, removeSendreq, refreshsendreqs };
+  return {
+    sendreqs,
+    addSendreq,
+    editSendreq,
+    removeSendreq,
+    refreshsendreqs,
+    ooredoo,
+  };
 };

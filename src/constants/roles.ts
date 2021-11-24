@@ -50,6 +50,8 @@ export const packages = [
     docsQty: 500,
     cost: 0,
     users: 1,
+    smss: 0,
+    emails: 0,
   },
   {
     name: 'basic',
@@ -61,6 +63,8 @@ export const packages = [
     durationType: 'y',
     cost: 1000,
     users: 3,
+    smss: 100,
+    emails: 1000,
   },
   {
     name: 'standard',
@@ -72,6 +76,8 @@ export const packages = [
     durationType: 'y',
     cost: 1400,
     users: 10,
+    smss: 250,
+    emails: 2500,
   },
   {
     name: 'premium',
@@ -83,6 +89,8 @@ export const packages = [
     durationType: 'y',
     cost: 1800,
     users: 20,
+    smss: 500,
+    emails: 5000,
   },
   {
     name: 'custom',
@@ -94,6 +102,8 @@ export const packages = [
     durationType: 'y',
     cost: 1800,
     users: -1,
+    smss: 500,
+    emails: 5000,
   },
 ];
 

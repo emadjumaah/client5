@@ -95,6 +95,8 @@ export default function RegisterCompany({
         packStart,
         packEnd,
         users: packages[0]?.users,
+        smss: packages[0]?.smss,
+        emails: packages[0]?.emails,
         pack: JSON.stringify(packages[0]),
         temp: JSON.stringify(temp),
         note: JSON.stringify(pack),

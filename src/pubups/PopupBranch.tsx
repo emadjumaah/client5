@@ -119,6 +119,8 @@ const PopupBranch = ({
           packStart,
           packEnd,
           users: pack?.users,
+          smss: pack?.smss,
+          emails: pack?.emails,
           pack: JSON.stringify(pack),
           temp: JSON.stringify(temp),
         }
@@ -130,6 +132,8 @@ const PopupBranch = ({
           packStart,
           packEnd,
           users: pack?.users,
+          smss: pack?.smss,
+          emails: pack?.emails,
           pack: JSON.stringify(pack),
           temp: JSON.stringify(temp),
         };

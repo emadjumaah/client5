@@ -10,6 +10,12 @@ export default gql`
     $type: Int
     $contacts: [String]
     $groups: [String]
+    $ooListId: String
+    $ooListName: String
+    $ooListNameAr: String
+    $from: Int
+    $to: Int
+    $count: Int
     $rRule: String
     $active: Boolean
     $runtime: Date
@@ -23,6 +29,12 @@ export default gql`
       type: $type
       contacts: $contacts
       groups: $groups
+      ooListId: $ooListId
+      ooListName: $ooListName
+      ooListNameAr: $ooListNameAr
+      from: $from
+      to: $to
+      count: $count
       rRule: $rRule
       active: $active
       runtime: $runtime
