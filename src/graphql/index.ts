@@ -1,4 +1,3 @@
-import { client } from './client';
 import {
   getCategories,
   getDepartments,
@@ -130,7 +129,6 @@ import {
   createUserBranch,
 } from './mutation';
 
-export { client };
 export {
   getCategories,
   getDepartments,
