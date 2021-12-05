@@ -17,13 +17,7 @@ import Logo from './Logo';
 const timeToWait = 900000;
 const possibleWrong = 15;
 
-const Login = ({
-  setReg,
-  dispatch,
-  wrongTimes,
-  startBlock,
-  isRTL,
-}: any): any => {
+const Login = ({ dispatch, wrongTimes, startBlock, isRTL }: any): any => {
   const classes = loginClasses();
   const [error, seterror] = useState(null);
 
@@ -161,26 +155,6 @@ const Login = ({
                   onClick={handleSubmit(onSubmit)}
                 >
                   {isRTL ? 'تسجبل الدخول' : 'Login'}
-                </Button>
-              </Box>
-              <Box
-                display="flex"
-                style={{
-                  flex: 1,
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}
-              >
-                <Typography
-                  variant={isRTL ? 'body2' : 'caption'}
-                  style={{ paddingLeft: 10, paddingRight: 10 }}
-                >
-                  {isRTL ? 'ليس لديك حساب؟' : "Don't have an account yet?"}
-                </Typography>
-                <Button variant="outlined" onClick={() => setReg(true)}>
-                  <Typography variant={isRTL ? 'body2' : 'caption'}>
-                    {isRTL ? 'إنشاء حساب جديد' : 'New Account'}
-                  </Typography>
                 </Button>
               </Box>
             </form>

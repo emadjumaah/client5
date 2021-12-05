@@ -101,7 +101,7 @@ import ManageEmployees from '../adds/ManageEmployees';
 import ManageDepartments from '../adds/ManageDepartments';
 import EmployeesCalendar from '../calendar/EmployeesCalendar';
 import ManageResourses from '../adds/ManageResourses';
-import Branches from '../adds/Branches';
+// import Branches from '../adds/Branches';
 import React from 'react';
 import { isEditor as isEditorUser } from '../../common/roles';
 import AlertWithClose from '../../components/fields/AlertWithClose';
@@ -593,7 +593,7 @@ const Content = () => {
               </PageLayout>
             )}
           />
-          {user.isSuperAdmin && (
+          {/* {user.isSuperAdmin && (
             <Route
               path="/branches"
               component={() => (
@@ -610,7 +610,7 @@ const Content = () => {
                 </PageLayout>
               )}
             />
-          )}
+          )} */}
           <Route
             path="/options"
             component={() => (

@@ -1,3 +1,4 @@
+import { client } from './client';
 import {
   getCategories,
   getDepartments,
@@ -130,6 +131,7 @@ import {
 } from './mutation';
 
 export {
+  client,
   getCategories,
   getDepartments,
   getEmployees,

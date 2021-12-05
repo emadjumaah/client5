@@ -46,7 +46,7 @@ function App() {
   const errorLink = onError(({ graphQLErrors, networkError }) => {
     try {
       if (graphQLErrors)
-        graphQLErrors.forEach(({ message, locations, path }) => {
+        graphQLErrors.forEach(({ message }) => {
           if (message === 'auth token error') {
             dispatch({ type: 'logout' });
           }

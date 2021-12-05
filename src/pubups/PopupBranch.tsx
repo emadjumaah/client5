@@ -5,16 +5,9 @@ import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import PopupLayout from '../pages/main/PopupLayout';
-import {
-  Box,
-  Card,
-  CardContent,
-  Divider,
-  Grid,
-  Typography,
-} from '@material-ui/core';
-import { packages, templates } from '../constants/roles';
-import { CalenderLocal, TextFieldLocal } from '../components';
+import { Box, Card, CardContent, Grid, Typography } from '@material-ui/core';
+import { templates } from '../constants/roles';
+import { TextFieldLocal } from '../components';
 import checkUsername from '../graphql/query/checkUsername';
 import { useLazyQuery } from '@apollo/client';
 import _ from 'lodash';
@@ -43,13 +36,10 @@ const PopupBranch = ({
   words,
 }: any) => {
   const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
-  const [pack, setPack] = useState(null);
   const [temp, setTemp] = useState(null);
   const [username, setUsername] = useState(null);
   const [valid, setValid] = useState(null);
 
-  const [packStart, setPackStart]: any = useState(null);
-  const [packEnd, setPackEnd]: any = useState(null);
   const brandchResolver = { resolver: yupResolver(branchSchema) };
 
   const { register, handleSubmit, errors, reset } = useForm(
@@ -59,22 +49,9 @@ const PopupBranch = ({
 
   useEffect(() => {
     if (row && row._id) {
-      if (row?.pack) {
-        setPack(JSON.parse(row?.pack));
-      }
       if (row?.template) {
         setTemp(JSON.parse(row?.template));
       }
-      setPackStart(row?.packStart);
-      setPackEnd(row?.packEnd);
-    }
-    if (isNew) {
-      const start = new Date();
-      const end = new Date(
-        new Date().setFullYear(new Date().getFullYear() + 1)
-      );
-      setPackStart(start);
-      setPackEnd(end);
     }
   }, [row]);
 
@@ -99,10 +76,6 @@ const PopupBranch = ({
       await errorAlertMsg(setAlrt, 'valid email require');
       return;
     }
-    if (!pack) {
-      await errorAlertMsg(setAlrt, 'poackage required');
-      return;
-    }
     if (!temp) {
       await errorAlertMsg(setAlrt, 'template required');
       return;
@@ -116,12 +89,6 @@ const PopupBranch = ({
           name,
           nameAr,
           tel1,
-          packStart,
-          packEnd,
-          users: pack?.users,
-          smss: pack?.smss,
-          emails: pack?.emails,
-          pack: JSON.stringify(pack),
           temp: JSON.stringify(temp),
         }
       : {
@@ -129,12 +96,6 @@ const PopupBranch = ({
           name,
           nameAr,
           tel1,
-          packStart,
-          packEnd,
-          users: pack?.users,
-          smss: pack?.smss,
-          emails: pack?.emails,
-          pack: JSON.stringify(pack),
           temp: JSON.stringify(temp),
         };
     const mutate = isNew ? addAction : editAction;
@@ -160,7 +121,6 @@ const PopupBranch = ({
   };
 
   const resetAll = () => {
-    setPack(null);
     setUsername(null);
     setValid(null);
     setTemp(null);
@@ -175,11 +135,6 @@ const PopupBranch = ({
   const onHandleSubmit = () => {
     handleSubmit(onSubmit)();
   };
-
-  const newpack =
-    row?.note && row?.note !== row?.pack && row?.note.length > 0
-      ? JSON.parse(row?.note)
-      : null;
 
   const title = isRTL
     ? isNew
@@ -242,24 +197,6 @@ const PopupBranch = ({
           </Grid>
 
           <Grid item xs={6}></Grid>
-          <Grid item xs={12} md={6}>
-            <CalenderLocal
-              isRTL={isRTL}
-              label={words.start}
-              value={packStart}
-              onChange={(d: any) => setPackStart(d)}
-              format="dd/MM/yyyy"
-            ></CalenderLocal>
-          </Grid>
-          <Grid item xs={12} md={6}>
-            <CalenderLocal
-              isRTL={isRTL}
-              label={words.end}
-              value={packEnd}
-              onChange={(d: any) => setPackEnd(d)}
-              format="dd/MM/yyyy"
-            ></CalenderLocal>
-          </Grid>
           {isNew && (
             <>
               <Grid item xs={6}>
@@ -302,69 +239,6 @@ const PopupBranch = ({
               </Grid>
             </>
           )}
-          <Grid item xs={12}>
-            <Typography
-              style={{ marginTop: 10, marginBottom: 20 }}
-              variant="h5"
-            >
-              الاشتراكات
-            </Typography>
-
-            <Box
-              display="flex"
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-              }}
-            >
-              {packages.map((pk: any) => {
-                const selected = pk?.name === pack?.name;
-                return (
-                  <Card
-                    style={{
-                      minWidth: 150,
-                      backgroundColor: selected ? '#b6fcd5' : '#f5f5f5',
-                      cursor: 'pointer',
-                    }}
-                    onClick={() => setPack(pk)}
-                  >
-                    <CardContent>
-                      <Typography
-                        style={{ marginBottom: 20 }}
-                        variant="h6"
-                        component="div"
-                      >
-                        {isRTL ? pk.titleAr : pk.title}
-                      </Typography>
-                      <Divider></Divider>
-
-                      <Typography style={{ marginTop: 20 }} variant="subtitle1">
-                        {pk.eventsQty} موعد
-                      </Typography>
-                      <Typography variant="subtitle1">
-                        {pk.docsQty} مسستند
-                      </Typography>
-                      <Typography variant="subtitle1">
-                        {pk.cost} ريال قطري
-                      </Typography>
-                    </CardContent>
-                  </Card>
-                );
-              })}
-            </Box>
-          </Grid>
-          <Grid item xs={12}>
-            {newpack && (
-              <Box display="flex">
-                <Typography variant="subtitle1">الاشتراك المطلوب : </Typography>
-                <Typography style={{ color: '#3ae' }} variant="h6">
-                  {' '}
-                  {newpack?.titleAr}
-                </Typography>
-              </Box>
-            )}
-          </Grid>
           <Grid item xs={12}>
             <Typography
               style={{ marginTop: 10, marginBottom: 20 }}
