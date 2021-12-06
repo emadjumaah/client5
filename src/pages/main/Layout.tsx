@@ -1,5 +1,6 @@
 import React from 'react';
-import { BrowserRouter as Router } from 'react-router-dom';
+// HashRouter for electron to work properly
+import { HashRouter as Router } from 'react-router-dom';
 import Auth from '../auth';
 import Content from './Content';
 import EmplContent from './EmplContent';

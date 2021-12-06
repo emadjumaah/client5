@@ -31,7 +31,7 @@ function App() {
   const token = store ? store.token : null;
 
   const httpLink = createHttpLink({
-    uri: 'http://jadwal-main:4000/graphql',
+    uri: 'http://jadwal-main/graphql',
   });
 
   const authLink = setContext((_, { headers }) => {

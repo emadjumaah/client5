@@ -1,7 +1,7 @@
 import React from 'react';
 import Alert from '@material-ui/lab/Alert';
 
-export default function AlertLocal({ type, msg, isRTL, top, w }: any) {
+export default function AlertLocal({ type, msg, isRTL, top }: any) {
   return (
     <Alert
       style={{

@@ -239,6 +239,9 @@ const Content = () => {
         return;
 
       default:
+        setmenu(filterMenu());
+        history.push('/');
+        setMenuitem(mainmenu[0]);
         return;
     }
   }, [mmenu]);

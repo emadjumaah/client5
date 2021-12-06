@@ -23,7 +23,6 @@ const PopupGroup = ({
   setNewValue,
   addAction,
   editAction,
-  newtext,
   theme,
 }: any) => {
   const [saving, setSaving] = useState(false);

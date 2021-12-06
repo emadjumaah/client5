@@ -97,7 +97,6 @@ export default function Contacts(props: any) {
           theme={theme}
         ></ImportBtn>
         <ImportBtns
-          open={() => setOpenImport(true)}
           isRTL={isRTL}
           theme={theme}
           syncCust={syncCust}

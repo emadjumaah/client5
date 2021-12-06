@@ -2,7 +2,7 @@ import { Box, Typography } from '@material-ui/core';
 import React from 'react';
 import MyIcon from '../Shared/MyIcon';
 
-export default function ImportBtns({ open, isRTL, theme, syncCust, syncEmpl }) {
+export default function ImportBtns({ isRTL, theme, syncCust, syncEmpl }) {
   return (
     <Box
       display="flex"

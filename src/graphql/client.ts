@@ -7,7 +7,7 @@ const store = stringstore ? JSON.parse(stringstore) : null;
 const token = store ? store.token : null;
 
 const httpLink = createHttpLink({
-  uri: 'http://jadwal-main:4000/graphql',
+  uri: 'http://jadwal-main/graphql',
 });
 
 const authLink = setContext((_, { headers }) => {
