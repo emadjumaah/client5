@@ -3,6 +3,7 @@ import useDepartments from './useDepartments';
 import useEmployees from './useEmployees';
 import useItems from './useItems';
 import useServices from './useServices';
+import useExpenseItems from './useExpenseItems';
 import useProducts from './useProducts';
 import useCustomers from './useCustomers';
 import useEvents from './useEvents';
@@ -34,6 +35,7 @@ export {
   useCustomers,
   useEvents,
   useServices,
+  useExpenseItems,
   useProducts,
   useCategories,
   useStore,

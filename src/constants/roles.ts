@@ -143,6 +143,7 @@ export const templates = [
         projects: 'المشاريع',
         service: 'الخدمة',
         services: 'الخدمات',
+        expenseitems: 'المصروف',
         servicesdepart: 'قسم الخدمات',
         servicesdeparts: 'اقسام الخدمات',
         servicesempl: 'فني الخدمات',
@@ -167,6 +168,7 @@ export const templates = [
         projects: 'Projects',
         service: 'Service',
         services: 'Services',
+        expenseitems: 'Expenses Items',
         servicesdepart: 'Services Department',
         servicesdeparts: 'Services Departments',
         servicesempl: 'Services Employee',
@@ -211,6 +213,8 @@ export const templates = [
         projects: 'المشاريع',
         service: 'الخدمة',
         services: 'الخدمات',
+        expenseitems: 'المصروف',
+
         // no service relation
         servicesdepart: 'قسم الخدمات',
         servicesdeparts: 'اقسام الخدمات',
@@ -235,6 +239,8 @@ export const templates = [
         project: 'Project',
         projects: 'Projects',
         service: 'Service',
+        expenseitems: 'Expenses Items',
+
         services: 'Services',
         // no service relation
         servicesdepart: 'Services Department',
@@ -281,6 +287,8 @@ export const templates = [
         projects: 'مشاريع',
         service: 'خدمة',
         services: 'خدمات',
+        expenseitems: 'المصروف',
+
         // no service relation
         servicesdepart: 'قسم الخدمات',
         servicesdeparts: 'اقسام الخدمات',
@@ -306,6 +314,8 @@ export const templates = [
         projects: 'Projects',
         service: 'Service',
         services: 'Services',
+        expenseitems: 'Expenses Items',
+
         // no service relation
         servicesdepart: 'Services Department',
         servicesdeparts: 'Services Departments',
@@ -351,6 +361,8 @@ export const templates = [
         projects: 'مشاريع',
         service: 'خدمة',
         services: 'خدمات',
+        expenseitems: 'المصروف',
+
         // no service relation
         servicesdepart: 'قسم الخدمات',
         servicesdeparts: 'اقسام الخدمات',
@@ -376,6 +388,8 @@ export const templates = [
         projects: 'Projects',
         service: 'Service',
         services: 'Services',
+        expenseitems: 'Expenses Items',
+
         // no service relation
         servicesdepart: 'Services Department',
         servicesdeparts: 'Services Departments',
@@ -421,6 +435,8 @@ export const templates = [
         projects: 'مشاريع',
         service: 'خدمة',
         services: 'خدمات',
+        expenseitems: 'المصروف',
+
         // no service relation
         servicesdepart: 'قسم الخدمات',
         servicesdeparts: 'اقسام الخدمات',
@@ -446,6 +462,8 @@ export const templates = [
         projects: 'Projects',
         service: 'Service',
         services: 'Services',
+        expenseitems: 'Expenses Items',
+
         // no service relation
         servicesdepart: 'Services Department',
         servicesdeparts: 'Services Departments',

@@ -21,6 +21,7 @@ export const translation = (lang: LanguageType) => {
     service: lang.words.service,
     product: lang.words.product,
     services: lang.words.services,
+    expenseitems: lang.words.expenseitems,
     products: lang.words.products,
     serviceproduct: lang.words.serviceproduct,
     newService: lang.words.newService,

@@ -13,6 +13,7 @@ import { Layout } from './pages/main';
 import { initStore, storeReducer } from './store';
 import { GlobalContext } from './contexts';
 import { useTranslate } from './hooks';
+import { graphqlURI } from './constants';
 
 const jss = create({ plugins: [...jssPreset().plugins, rtl()] });
 
@@ -31,7 +32,7 @@ function App() {
   const token = store ? store.token : null;
 
   const httpLink = createHttpLink({
-    uri: 'http://jadwal-main/graphql',
+    uri: graphqlURI,
   });
 
   const authLink = setContext((_, { headers }) => {
@@ -42,7 +43,7 @@ function App() {
       },
     };
   });
-
+  // console.log('store', store);
   const errorLink = onError(({ graphQLErrors, networkError }) => {
     try {
       if (graphQLErrors)

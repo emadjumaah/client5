@@ -14,7 +14,7 @@ import { TableComponent } from '../Shared/ItemsTable';
 
 export const getRowId = (row: any) => row.index;
 
-const PopupServiceImport = ({
+const PopupExpenseItemImport = ({
   open,
   onClose,
   theme,
@@ -130,4 +130,4 @@ const PopupServiceImport = ({
     </PopupLayout>
   );
 };
-export default PopupServiceImport;
+export default PopupExpenseItemImport;

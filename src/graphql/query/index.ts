@@ -6,6 +6,7 @@ import getEmployees from './getEmployees';
 import getCustomers from './getCustomers';
 import getItems from './getItems';
 import getServices from './getServices';
+import getExpenseItems from './getExpenseItems';
 import getProducts from './getProducts';
 import getNoStockProducts from './getNoStockProducts';
 import getEvents from './getEvents';
@@ -56,6 +57,7 @@ export {
   getItems,
   getEvents,
   getServices,
+  getExpenseItems,
   getProducts,
   getNoStockProducts,
   getUsers,

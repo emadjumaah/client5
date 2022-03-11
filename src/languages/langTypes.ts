@@ -51,6 +51,7 @@ export interface LanguageType {
     service: string;
     product: string;
     services: string;
+    expenseitems: string;
     products: string;
     serviceproduct: string;
     newService: string;

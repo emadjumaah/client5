@@ -79,6 +79,12 @@ const itmSchema = yup.object().shape({
   price: yup.number().min(0).required(),
 });
 export const itmResolver = { resolver: yupResolver(itmSchema) };
+const expitmSchema = yup.object().shape({
+  barcode: yup.string(),
+  name: yup.string().required().min(3).max(100),
+  nameAr: yup.string().required(),
+});
+export const expitmResolver = { resolver: yupResolver(expitmSchema) };
 
 const emplSchema = yup.object().shape({
   name: yup.string().required().min(3).max(100),

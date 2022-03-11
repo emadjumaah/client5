@@ -101,7 +101,7 @@ import ManageEmployees from '../adds/ManageEmployees';
 import ManageDepartments from '../adds/ManageDepartments';
 import EmployeesCalendar from '../calendar/EmployeesCalendar';
 import ManageResourses from '../adds/ManageResourses';
-// import Branches from '../adds/Branches';
+import Branches from '../adds/Branches';
 import React from 'react';
 import { isEditor as isEditorUser } from '../../common/roles';
 import AlertWithClose from '../../components/fields/AlertWithClose';
@@ -119,6 +119,7 @@ import RemindCal from '../calendar/RemindCal';
 import Messages from '../adds/Messages';
 import Actions from '../adds/Actions';
 import Notifications from '../adds/Notifications';
+import ExpenseItems from '../adds/ExpenseItems';
 
 const Content = () => {
   const classes = layoutClasses();
@@ -219,7 +220,6 @@ const Content = () => {
       ? accs.filter((acc: any) => mainaccounts.includes(acc.parentcode))
       : [];
   filteredAccounts.sort((a: any, b: any) => a.code - b.code);
-
   useEffect(() => {
     switch (mmenu) {
       case 1:
@@ -578,6 +578,7 @@ const Content = () => {
                 menuitem={menuitem}
                 theme={theme}
                 isRTL={isRTL}
+                user={user}
               ></Users>
             )}
           />
@@ -596,7 +597,7 @@ const Content = () => {
               </PageLayout>
             )}
           />
-          {/* {user.isSuperAdmin && (
+          {user.isSuperAdmin && (
             <Route
               path="/branches"
               component={() => (
@@ -607,13 +608,15 @@ const Content = () => {
                   theme={theme}
                   isEditor={isEditor}
                 >
-                  <Branches isRTL={isRTL} words={words} theme={theme}>
-                    {' '}
-                  </Branches>
+                  <Branches
+                    isRTL={isRTL}
+                    words={words}
+                    theme={theme}
+                  ></Branches>
                 </PageLayout>
               )}
             />
-          )} */}
+          )}
           <Route
             path="/options"
             component={() => (
@@ -731,6 +734,21 @@ const Content = () => {
                 refresh={() => null}
               >
                 <Services></Services>
+              </PageLayout>
+            )}
+          />
+          <Route
+            path="/expenseitems"
+            component={() => (
+              <PageLayout
+                menuitem={menuitem}
+                isRTL={isRTL}
+                words={words}
+                isEditor={isEditor}
+                theme={theme}
+                refresh={() => null}
+              >
+                <ExpenseItems></ExpenseItems>
               </PageLayout>
             )}
           />

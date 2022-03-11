@@ -19,6 +19,7 @@
     "service": "Service",
     "product": "Product",
     "services": "Services",
+    "expenseitems": "Expenses Items",
     "products": "Products",
     "serviceproduct": "Service / Product",
     "newService": "New Service",

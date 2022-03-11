@@ -42,6 +42,7 @@ export default function Users({
   isRTL,
   words,
   theme,
+  user,
   menuitem,
   isEditor,
 }: any) {
@@ -129,6 +130,10 @@ export default function Users({
     return <CommandButton onExecute={onExecute} />;
   };
 
+  const fusers = user.isSuperAdmin
+    ? users
+    : users.filter((us: any) => !us.isSuperAdmin);
+
   return (
     <PageLayout
       menuitem={menuitem}
@@ -148,7 +153,7 @@ export default function Users({
         }}
       >
         {loading && <Loading isRTL={isRTL}></Loading>}
-        <Grid rows={users} columns={columns} getRowId={getRowId}>
+        <Grid rows={fusers} columns={columns} getRowId={getRowId}>
           <SortingState />
           <SearchState />
 

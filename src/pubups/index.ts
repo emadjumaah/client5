@@ -3,6 +3,7 @@ import PopupEmployee from './PopupEmployee';
 import PopupCustomer from './PopupCustomer';
 import PopupProduct from './PopupProduct';
 import PopupService from './PopupService';
+import PopupExpenseItem from './PopupExpenseItem';
 import PopupCategory from './PopupCategory';
 import PopupBrand from './PopupBrand';
 import PopupInvoice from './PopupInvoice';
@@ -17,6 +18,7 @@ export {
   PopupCustomer,
   PopupProduct,
   PopupService,
+  PopupExpenseItem,
   PopupCategory,
   PopupBrand,
   PopupInvoice,

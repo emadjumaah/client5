@@ -4,6 +4,7 @@ import React from 'react';
 import {
   Box,
   Checkbox,
+  Divider,
   FormControlLabel,
   FormGroup,
   Typography,
@@ -32,9 +33,9 @@ export default function UserRolesEmail({
   setEmplvalue,
   employees,
 }) {
-  const manager = isRTL ? 'المدير العام' : 'General Manager';
+  const manager = isRTL ? 'مدير الفرع' : 'Branch Manager';
   const empl = isRTL ? 'موظف متخصص' : 'Employee';
-  const tech = isRTL ? 'قسم العمليات' : 'Operation Section';
+  const tech = isRTL ? 'ادارة العمليات' : 'Operation Section';
   const finance = isRTL ? 'قسم الحسابات' : 'Finance Section';
   return (
     <Box>
@@ -102,22 +103,8 @@ export default function UserRolesEmail({
               </Typography>
             }
           />
-          <FormGroup row>
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={isFinance}
-                  onChange={() => setisFinance(!isFinance)}
-                  name={branch}
-                  color="primary"
-                />
-              }
-              label={
-                <Typography variant="body2" style={{ fontWeight: 'bold' }}>
-                  {finance}
-                </Typography>
-              }
-            />
+          <Divider></Divider>
+          <FormGroup>
             <FormControlLabel
               control={
                 <Checkbox
@@ -133,7 +120,23 @@ export default function UserRolesEmail({
                 </Typography>
               }
             />
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={isFinance}
+                  onChange={() => setisFinance(!isFinance)}
+                  name={branch}
+                  color="primary"
+                />
+              }
+              label={
+                <Typography variant="body2" style={{ fontWeight: 'bold' }}>
+                  {finance}
+                </Typography>
+              }
+            />
           </FormGroup>
+          <Divider></Divider>
           <FormGroup row>
             <FormControlLabel
               control={
