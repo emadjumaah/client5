@@ -3,7 +3,7 @@ import React from 'react';
 import { Box, Typography } from '@material-ui/core';
 import { moneyFormat } from './colorFormat';
 
-export const PriceTotal = ({ amount, total, words }: any) => {
+export const PriceTotal = ({ amount, total, words, totalonly }: any) => {
   return (
     <Box
       display="flex"
@@ -15,15 +15,17 @@ export const PriceTotal = ({ amount, total, words }: any) => {
         height: 65,
       }}
     >
-      <Typography style={{}}>
-        {words.total} : {moneyFormat(total)}
-        {/* {(sum || 0).toLocaleString("en-QA", {
+      {!totalonly && (
+        <Typography style={{}}>
+          {words.total} : {moneyFormat(total)}
+          {/* {(sum || 0).toLocaleString("en-QA", {
           style: "currency",
           currency: "QAR",
         })} */}
-      </Typography>
+        </Typography>
+      )}
       <Typography style={{ fontWeight: 'bold', fontSize: 16 }}>
-        {words.grandtotal} : {moneyFormat(amount)}
+        {totalonly ? words.total : words.grandtotal} : {moneyFormat(amount)}
       </Typography>
     </Box>
   );

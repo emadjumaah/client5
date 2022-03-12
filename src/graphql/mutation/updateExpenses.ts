@@ -8,6 +8,7 @@ export default gql`
     $docNo: String
     $prefix: String
     $title: String
+    $items: String
     $desc: String
     $amount: Float
     $customer: CustomerInput
@@ -27,6 +28,7 @@ export default gql`
       docNo: $docNo
       prefix: $prefix
       title: $title
+      items: $items
       desc: $desc
       amount: $amount
       customer: $customer

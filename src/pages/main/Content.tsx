@@ -72,7 +72,7 @@ import {
   initCalendarReportContext,
 } from '../../contexts/calendarReport/eventsReducer';
 import CalendarReportContext from '../../contexts/calendarReport';
-import Expenses from '../adds/Expenses';
+// import Expenses from '../adds/Expenses';
 import { filterMenu, getparentAccounts } from '../../common/helpers';
 import PurchaseReport from '../reports/PurchaseReport';
 import ExpensesReport from '../reports/ExpensesReport';
@@ -120,6 +120,7 @@ import Messages from '../adds/Messages';
 import Actions from '../adds/Actions';
 import Notifications from '../adds/Notifications';
 import ExpenseItems from '../adds/ExpenseItems';
+import ExpensesDoc from '../adds/ExpensesDoc';
 
 const Content = () => {
   const classes = layoutClasses();
@@ -437,13 +438,14 @@ const Content = () => {
               <ExpensesContext.Provider
                 value={{ state: expensesStore, dispatch: expensesDispatch }}
               >
-                <Expenses
+                <ExpensesDoc
                   menuitem={menuitem}
                   isRTL={isRTL}
                   words={words}
                   isEditor={isEditor}
                   theme={theme}
-                ></Expenses>
+                  company={company}
+                ></ExpensesDoc>
               </ExpensesContext.Provider>
             )}
           />

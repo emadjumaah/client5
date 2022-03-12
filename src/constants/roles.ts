@@ -332,7 +332,7 @@ export const templates = [
     name: 'Rent Car Template',
     nameAr: 'نموذج شركة تأجير سيارات',
     options: {
-      noPro: false,
+      noPro: true,
       noTsk: false,
       noRes: false,
       noEmp: false,
