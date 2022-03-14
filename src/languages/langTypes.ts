@@ -131,6 +131,8 @@ export interface LanguageType {
     timedate: string;
     to: string;
     from: string;
+    amountDebit: string;
+    amountCredit: string;
     type: string;
     description: string;
     ref: string;

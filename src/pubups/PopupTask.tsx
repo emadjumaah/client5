@@ -491,8 +491,6 @@ const PopupTask = ({
               label={words.start}
               value={start}
               onChange={(d: any) => setStart(d)}
-              format="dd/MM/yyyy - hh:mm"
-              time
               mb={0}
             ></CalenderLocal>
           </Grid>
@@ -502,8 +500,7 @@ const PopupTask = ({
               label={words.end}
               value={end}
               onChange={(d: any) => setEnd(d)}
-              format="dd/MM/yyyy - hh:mm"
-              time
+              format="dd/MM/yyyy"
               mb={0}
             ></CalenderLocal>
           </Grid>

@@ -99,6 +99,8 @@
     "timedate": "Time",
     "to": "To",
     "from": "From",
+    "amountDebit": "Debit",
+    "amountCredit": "Credit",
     "type": "Type",
     "description": "Description",
     "ref": "Ref",

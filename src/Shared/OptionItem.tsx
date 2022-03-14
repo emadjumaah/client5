@@ -20,6 +20,7 @@ export default function OptionItem({
   const isred = days && day ? days[day] : false;
 
   const phone = item?.phone ? item?.phone : null;
+  const code = item?.code;
   let name;
   if (basename) {
     name = isRTL ? item?.[`${basename}Ar`] : item?.[basename];
@@ -77,6 +78,18 @@ export default function OptionItem({
           }}
         >
           {phone}
+        </Typography>
+      )}
+      {code && (
+        <Typography
+          style={{
+            fontSize: 11,
+            color: '#999',
+            paddingLeft: 10,
+            paddingRight: 10,
+          }}
+        >
+          {code}
         </Typography>
       )}
     </Box>

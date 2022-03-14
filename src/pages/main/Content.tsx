@@ -78,7 +78,7 @@ import PurchaseReport from '../reports/PurchaseReport';
 import ExpensesReport from '../reports/ExpensesReport';
 import Resourses from '../adds/Resourses';
 import Receipt from '../adds/Receipt';
-import FinanceAll from '../adds/FinanceAll';
+// import FinanceAll from '../adds/FinanceAll';
 import Tasks from '../adds/Tasks';
 import {
   initTasksContext,
@@ -119,6 +119,7 @@ import RemindCal from '../calendar/RemindCal';
 import Messages from '../adds/Messages';
 import Actions from '../adds/Actions';
 import Notifications from '../adds/Notifications';
+import FinanceAllKaid from '../adds/FinanceAllKaid';
 // import ExpenseItems from '../adds/ExpenseItems';
 // import ExpensesDoc from '../adds/ExpensesDoc';
 
@@ -471,13 +472,13 @@ const Content = () => {
               <FinanceContext.Provider
                 value={{ state: financeStore, dispatch: financeDispatch }}
               >
-                <FinanceAll
+                <FinanceAllKaid
                   menuitem={menuitem}
                   isRTL={isRTL}
                   words={words}
                   isEditor={isEditor}
                   theme={theme}
-                ></FinanceAll>
+                ></FinanceAllKaid>
               </FinanceContext.Provider>
             )}
           />

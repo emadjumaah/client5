@@ -35,7 +35,6 @@ export default function AutoFieldLocal({
   showphone,
 }: any) {
   const sorted = _.sortBy(options, isRTL ? 'nameAr' : 'name');
-
   return (
     <Grid container spacing={0}>
       <Grid item xs={openAdd ? 11 : 12}>
@@ -55,8 +54,11 @@ export default function AutoFieldLocal({
               nm = isRTL ? option?.nameAr : option?.name;
             }
             const phone = option?.phone ? option?.phone : '';
+            const code = option?.code;
             if (phone && showphone) {
               return `${nm} - ${phone}`;
+            } else if (code) {
+              return `${nm} - ${code}`;
             } else {
               return nm ? nm : '';
             }

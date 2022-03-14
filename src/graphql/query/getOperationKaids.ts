@@ -1,4 +1,4 @@
-import { gql } from "@apollo/client";
+import { gql } from '@apollo/client';
 export default gql`
   query getOperationKaids($opId: String) {
     getOperationKaids(opId: $opId) {
@@ -29,6 +29,21 @@ export default gql`
         opaccType
         opaccName
         opaccNameAr
+
+        departmentId
+        departmentName
+        departmentNameAr
+        employeeId
+        employeeName
+        employeeNameAr
+        projectId
+        projectName
+        projectNameAr
+        resourseId
+        resourseName
+        resourseNameAr
+        taskId
+
         kaidType
         amount
         debit

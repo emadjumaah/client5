@@ -99,6 +99,8 @@
     "timedate": "الوقت",
     "to": "الحساب المدين",
     "from": "الحساب الدائن",
+    "amountDebit": "المدين",
+    "amountCredit": "الدائن",
     "type": "النوع",
     "description": "البيان",
     "ref": "المرجع",

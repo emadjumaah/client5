@@ -253,7 +253,9 @@ const PopupExpenses = ({
       );
       setDebaccounts(filtereddebits);
       const filteredcredit = accounts.filter(
-        (acc: any) => acc.parentcode === parents.CASH
+        (acc: any) =>
+          acc.parentcode === parents.CASH ||
+          acc.parentcode === parents.ACCOUNTS_PAYABLE
       );
       setCridaccounts(filteredcredit);
 
@@ -272,7 +274,9 @@ const PopupExpenses = ({
       );
       setDebaccounts(filtereddebits);
       const filteredcredit = accounts.filter(
-        (acc: any) => acc.parentcode === parents.CASH
+        (acc: any) =>
+          acc.parentcode === parents.CASH ||
+          acc.parentcode === parents.ACCOUNTS_PAYABLE
       );
       setCridaccounts(filteredcredit);
       setCreditAcc(filteredcredit?.[0]);
@@ -423,6 +427,7 @@ const PopupExpenses = ({
       onSubmit={onHandleSubmit}
       theme={theme}
       alrt={alrt}
+      maxWidth="md"
       mt={10}
     >
       <Grid container spacing={2}>

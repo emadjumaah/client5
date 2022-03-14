@@ -102,6 +102,8 @@ export const translation = (lang: LanguageType) => {
     timedate: lang.words.timedate,
     to: lang.words.to,
     from: lang.words.from,
+    amountDebit: lang.words.amountDebit,
+    amountCredit: lang.words.amountCredit,
     type: lang.words.type,
     description: lang.words.description,
     ref: lang.words.ref,
