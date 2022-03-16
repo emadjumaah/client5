@@ -33,6 +33,12 @@ export default gql`
         employeeColor
         employeePhone
 
+        licenseNo
+        licenseDate
+        national
+        nationalNo
+        nationalDate
+
         userId
 
         createdAt

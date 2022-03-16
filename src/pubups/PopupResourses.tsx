@@ -79,7 +79,7 @@ const PopupResourses = ({
     setSaving(true);
     const name = data.name.trim();
     const nameAr = data.nameAr.trim();
-    const info = data.info;
+    const { info, brand, plate, cost, model, purtime } = data;
     const department = departvalue
       ? {
           departmentId: departvalue._id,
@@ -99,7 +99,12 @@ const PopupResourses = ({
       nameAr,
       resType,
       color,
+      brand,
+      plate,
+      cost: Number(cost),
+      model,
       info,
+      purtime,
       department,
       branch: user.branch,
       userId: user._id,
@@ -165,8 +170,8 @@ const PopupResourses = ({
       <Grid container spacing={2}>
         <Grid item xs={1}></Grid>
         <Grid item xs={10}>
-          <Grid container spacing={2}>
-            <Grid item xs={6}>
+          <Grid container spacing={1}>
+            <Grid item xs={12}>
               <TextFieldLocal
                 required
                 autoFocus
@@ -176,11 +181,10 @@ const PopupResourses = ({
                 errors={errors}
                 row={row}
                 fullWidth
-                margin={20}
-                mb={10}
+                mb={0}
               />
             </Grid>
-            <Grid item xs={6}>
+            <Grid item xs={12}>
               <TextFieldLocal
                 required
                 name="name"
@@ -191,39 +195,105 @@ const PopupResourses = ({
                 row={row}
                 fullWidth
                 newtext={newtext}
-                margin={20}
-                mb={10}
+                mb={0}
+              />
+            </Grid>
+            <Grid item xs={4}>
+              <TextFieldLocal
+                name="plate"
+                label={words.plate}
+                register={register}
+                errors={errors}
+                row={row}
+                fullWidth
+                newtext={newtext}
+                mb={0}
+              />
+            </Grid>
+            <Grid item xs={4}>
+              <TextFieldLocal
+                name="brand"
+                label={words.brand}
+                register={register}
+                errors={errors}
+                row={row}
+                fullWidth
+                newtext={newtext}
+                mb={0}
+              />
+            </Grid>
+            <Grid item xs={4}>
+              <TextFieldLocal
+                name="model"
+                label={words.model}
+                register={register}
+                errors={errors}
+                row={row}
+                fullWidth
+                newtext={newtext}
+                mb={0}
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <TextFieldLocal
+                name="cost"
+                label={words.cost}
+                register={register}
+                errors={errors}
+                row={row}
+                type="number"
+                fullWidth
+                newtext={newtext}
+                mb={0}
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <TextFieldLocal
+                name="purtime"
+                label={words.purtime}
+                register={register}
+                errors={errors}
+                row={row}
+                fullWidth
+                newtext={newtext}
+                mb={0}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <AutoFieldLocal
+                name="department"
+                title={tempwords.department}
+                words={words}
+                options={departments}
+                value={departvalue}
+                setSelectValue={setDepartvalue}
+                setSelectError={setDepError}
+                selectError={depError}
+                refernce={emplRef}
+                register={register}
+                openAdd={openDepartment}
+                isRTL={isRTL}
+                fullWidth
+                mb={0}
+              ></AutoFieldLocal>
+            </Grid>
+
+            <Grid item xs={12}>
+              <TextFieldLocal
+                name="info"
+                label={words.info}
+                register={register}
+                errors={errors}
+                row={row}
+                fullWidth
+                multiline
+                rowsMax={4}
+                rows={4}
               />
             </Grid>
           </Grid>
+
           <React.Fragment>
-            <AutoFieldLocal
-              name="department"
-              title={tempwords.department}
-              words={words}
-              options={departments}
-              value={departvalue}
-              setSelectValue={setDepartvalue}
-              setSelectError={setDepError}
-              selectError={depError}
-              refernce={emplRef}
-              register={register}
-              openAdd={openDepartment}
-              isRTL={isRTL}
-              fullWidth
-              mb={20}
-            ></AutoFieldLocal>
-            <TextFieldLocal
-              name="info"
-              label={words.info}
-              register={register}
-              errors={errors}
-              row={row}
-              fullWidth
-              multiline
-              rowsMax={4}
-              rows={4}
-            />
             <Grid container spacing={0}>
               <Grid item xs={6}>
                 <TextField

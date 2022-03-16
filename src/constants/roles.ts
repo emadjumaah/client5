@@ -177,6 +177,7 @@ export const templates = [
         servicesress: 'Services Resourses',
       },
     },
+    taskExtra: [],
   },
   {
     id: 2,
@@ -251,6 +252,7 @@ export const templates = [
         servicesress: 'Services Resourses',
       },
     },
+    taskExtra: [],
   },
   {
     id: 3,
@@ -325,6 +327,7 @@ export const templates = [
         servicesress: 'Services Resourses',
       },
     },
+    taskExtra: [],
   },
   {
     id: 4,
@@ -399,6 +402,30 @@ export const templates = [
         servicesress: 'Services Resourses',
       },
     },
+    taskExtra: [
+      {
+        id: 1,
+        name: 'Kilometer out',
+        nameAr: 'العداد وقت الخروج',
+        type: 'text',
+        value: '',
+      },
+      {
+        id: 2,
+        name: 'Kilometer in',
+        nameAr: 'العداد وقت العودة',
+        type: 'text',
+        value: '',
+      },
+      {
+        id: 3,
+        name: 'Notes',
+        nameAr: 'ملاحظات',
+        type: 'text',
+        multiline: true,
+        value: '',
+      },
+    ],
   },
   {
     id: 5,
@@ -473,6 +500,7 @@ export const templates = [
         servicesress: 'Services Resourses',
       },
     },
+    taskExtra: [],
   },
   {
     id: 6,
@@ -543,5 +571,6 @@ export const templates = [
         servicesress: 'Services Resourses',
       },
     },
+    taskExtra: [],
   },
 ];

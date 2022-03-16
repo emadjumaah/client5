@@ -19,6 +19,9 @@ export default gql`
     $creditAcc: Int
     $taskId: Int
     $refNo: String
+    $chequeBank: String
+    $chequeNo: String
+    $chequeDate: String
     $userId: String
   ) {
     createFinance(
@@ -39,6 +42,9 @@ export default gql`
       creditAcc: $creditAcc
       refNo: $refNo
       taskId: $taskId
+      chequeBank: $chequeBank
+      chequeNo: $chequeNo
+      chequeDate: $chequeDate
       userId: $userId
     ) {
       ok

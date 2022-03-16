@@ -74,6 +74,10 @@ export default gql`
         creditAccName
         creditAccNameAr
 
+        chequeBank
+        chequeNo
+        chequeDate
+
         userId
         note
 

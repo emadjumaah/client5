@@ -10,6 +10,11 @@ export default gql`
     $email: String
     $address: String
     $employee: EmployeeInput
+    $licenseNo: String
+    $licenseDate: String
+    $national: String
+    $nationalNo: String
+    $nationalDate: String
   ) {
     createCustomer(
       branch: $branch
@@ -20,6 +25,11 @@ export default gql`
       email: $email
       address: $address
       employee: $employee
+      licenseNo: $licenseNo
+      licenseDate: $licenseDate
+      national: $national
+      nationalNo: $nationalNo
+      nationalDate: $nationalDate
     ) {
       ok
       message

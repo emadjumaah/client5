@@ -234,6 +234,7 @@ const PopupReceipt = ({
       employee,
       resourse,
       amount,
+      // title,
       desc,
       branch: user.branch,
       userId: user._id,
@@ -300,7 +301,7 @@ const PopupReceipt = ({
       <Grid container spacing={2}>
         <Grid item xs={1}></Grid>
         <Grid item xs={10}>
-          <Grid container spacing={2}>
+          <Grid container spacing={1}>
             <Grid item xs={12}>
               <CalenderLocal
                 isRTL={isRTL}
@@ -309,7 +310,7 @@ const PopupReceipt = ({
                 onChange={handleDateChange}
               ></CalenderLocal>
             </Grid>
-            <Grid item xs={6}>
+            <Grid item xs={12}>
               <AutoFieldLocal
                 name="customer"
                 title={tempwords.customer}
@@ -323,22 +324,10 @@ const PopupReceipt = ({
                 fullwidth
                 openAdd={openCustomer}
                 disabled={name === 'customerId'}
+                mb={0}
               ></AutoFieldLocal>
             </Grid>
             <Grid item xs={6}>
-              <AutoFieldLocal
-                name="debitAcc"
-                title={isRTL ? 'حساب القبض' : 'Receipt Acc'}
-                words={words}
-                options={debaccounts}
-                value={debitAcc}
-                setSelectValue={setDebitAcc}
-                register={register}
-                isRTL={isRTL}
-                fullwidth
-              ></AutoFieldLocal>
-            </Grid>
-            <Grid item xs={12}>
               <AutoFieldLocal
                 name="invoice"
                 title={isRTL ? 'الفواتير' : 'Invoices'}
@@ -350,7 +339,10 @@ const PopupReceipt = ({
                 isRTL={isRTL}
                 disabled={!custvalue}
                 fullWidth
+                mb={0}
               ></AutoFieldLocal>
+            </Grid>
+            <Grid item xs={6}>
               <TextFieldLocal
                 required
                 name="amount"
@@ -360,7 +352,69 @@ const PopupReceipt = ({
                 row={row}
                 type="number"
                 fullWidth
+                mb={0}
               />
+            </Grid>
+
+            <Grid item xs={12}>
+              <AutoFieldLocal
+                name="debitAcc"
+                title={isRTL ? 'حساب القبض' : 'Receipt Acc'}
+                words={words}
+                options={debaccounts}
+                value={debitAcc}
+                setSelectValue={setDebitAcc}
+                register={register}
+                isRTL={isRTL}
+                fullwidth
+                mb={0}
+              ></AutoFieldLocal>
+            </Grid>
+            <Grid item xs={4}>
+              <TextFieldLocal
+                name="chequeBank"
+                label={words.chequeBank}
+                register={register}
+                errors={errors}
+                row={row}
+                fullWidth
+                mb={0}
+              />
+            </Grid>
+            <Grid item xs={4}>
+              <TextFieldLocal
+                name="chequeNo"
+                label={words.chequeNo}
+                register={register}
+                errors={errors}
+                row={row}
+                fullWidth
+                mb={0}
+              />
+            </Grid>
+            <Grid item xs={4}>
+              <TextFieldLocal
+                name="chequeDate"
+                label={words.chequeDate}
+                register={register}
+                errors={errors}
+                row={row}
+                fullWidth
+                mb={0}
+              />
+            </Grid>
+            {/* <Grid item xs={12}>
+              <TextFieldLocal
+                name="title"
+                label={words.title}
+                register={register}
+                errors={errors}
+                row={row}
+                fullWidth
+                mb={0}
+              />
+            </Grid> */}
+            <Grid item xs={12}>
               <TextFieldLocal
                 name="desc"
                 multiline
@@ -370,6 +424,7 @@ const PopupReceipt = ({
                 errors={errors}
                 row={row}
                 fullWidth
+                mb={0}
               />
             </Grid>
           </Grid>

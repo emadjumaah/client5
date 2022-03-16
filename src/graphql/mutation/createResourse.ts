@@ -12,8 +12,11 @@ export default gql`
     $documentNo: String
     $startDate: Date
     $endDate: Date
+    $brand: String
+    $plate: String
     $cost: Float
     $model: String
+    $purtime: String
     $type: String
   ) {
     createResourse(
@@ -27,8 +30,11 @@ export default gql`
       documentNo: $documentNo
       startDate: $startDate
       endDate: $endDate
+      brand: $brand
+      plate: $plate
       cost: $cost
       model: $model
+      purtime: $purtime
       type: $type
     ) {
       ok

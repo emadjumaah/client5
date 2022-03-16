@@ -39,7 +39,16 @@ const PopupCustomer = ({
     setSaving(true);
     const name = data.name.trim();
     const nameAr = data.nameAr.trim();
-    const { phone, email, address } = data;
+    const {
+      phone,
+      email,
+      address,
+      licenseNo,
+      licenseDate,
+      national,
+      nationalNo,
+      nationalDate,
+    } = data;
     const variables: any = {
       _id: row && row._id ? row._id : undefined, // is it new or edit
       name,
@@ -47,6 +56,11 @@ const PopupCustomer = ({
       phone,
       email,
       address,
+      licenseNo,
+      licenseDate,
+      national,
+      nationalNo,
+      nationalDate,
       branch: user.branch,
       userId: user._id,
     };
@@ -105,8 +119,8 @@ const PopupCustomer = ({
       <Grid container spacing={2}>
         <Grid item xs={1}></Grid>
         <Grid item xs={10}>
-          <Grid container spacing={2}>
-            <Grid item xs={6}>
+          <Grid container spacing={1}>
+            <Grid item xs={12}>
               <TextFieldLocal
                 autoFocus
                 required
@@ -119,7 +133,7 @@ const PopupCustomer = ({
                 mb={0}
               />
             </Grid>
-            <Grid item xs={6}>
+            <Grid item xs={12}>
               <TextFieldLocal
                 required
                 name="name"
@@ -132,7 +146,7 @@ const PopupCustomer = ({
                 mb={0}
               />
             </Grid>
-            <Grid item xs={6}>
+            <Grid item xs={4}>
               <TextFieldLocal
                 required
                 name="phone"
@@ -142,29 +156,87 @@ const PopupCustomer = ({
                 row={row}
                 newtext={newtext}
                 fullWidth
+                mb={0}
+              />
+            </Grid>
+            <Grid item xs={8}>
+              <TextFieldLocal
+                name="email"
+                label={words.email}
+                register={register}
+                errors={errors}
+                row={row}
+                fullWidth
+                mb={0}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextFieldLocal
+                name="address"
+                label={words.theaddress}
+                register={register}
+                errors={errors}
+                row={row}
+                fullWidth
+                mb={0}
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <TextFieldLocal
+                name="licenseNo"
+                label={words.licenseNo}
+                register={register}
+                errors={errors}
+                row={row}
+                fullWidth
+                mb={0}
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <TextFieldLocal
+                name="licenseDate"
+                label={words.licenseDate}
+                register={register}
+                errors={errors}
+                row={row}
+                fullWidth
+                mb={0}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextFieldLocal
+                name="national"
+                label={words.national}
+                register={register}
+                errors={errors}
+                row={row}
+                fullWidth
+                mb={0}
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <TextFieldLocal
+                name="nationalNo"
+                label={words.nationalNo}
+                register={register}
+                errors={errors}
+                row={row}
+                fullWidth
+                mb={0}
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <TextFieldLocal
+                name="nationalDate"
+                label={words.nationalDate}
+                register={register}
+                errors={errors}
+                row={row}
+                fullWidth
+                mb={0}
               />
             </Grid>
           </Grid>
-
-          <TextFieldLocal
-            name="email"
-            label={words.email}
-            register={register}
-            errors={errors}
-            row={row}
-            fullWidth
-          />
-          <TextFieldLocal
-            name="address"
-            label={words.theaddress}
-            register={register}
-            errors={errors}
-            row={row}
-            fullWidth
-            multiline
-            rowsMax={4}
-            rows={4}
-          />
         </Grid>
         <Grid item xs={1}></Grid>
       </Grid>

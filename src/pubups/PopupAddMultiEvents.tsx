@@ -7,9 +7,11 @@ import { Grid } from '@material-ui/core';
 import getRruleData from '../common/getRruleData';
 import { SelectLocal } from '../pages/calendar/common/SelectLocal';
 import RRule from 'rrule';
-import { CalenderLocal, TextFieldLocal } from '../components';
-import SelectMulti from '../Shared/SelectMulti';
-import { byweekdayOptions, freqOptions } from '../constants/rrule';
+// import { CalenderLocal, TextFieldLocal } from '../components';
+import { TextFieldLocal } from '../components';
+// import SelectMulti from '../Shared/SelectMulti';
+// import { byweekdayOptions, freqOptions } from '../constants/rrule';
+import { freqOptions } from '../constants/rrule';
 import React from 'react';
 
 const PopupAddMultiEvents = ({
@@ -36,10 +38,10 @@ const PopupAddMultiEvents = ({
     setFreq(e.target.value);
   };
 
-  const onChangeInterval = (e: any) => {
-    const value = Number(e.target.value);
-    value < 1 ? setInterval(1) : setInterval(value);
-  };
+  // const onChangeInterval = (e: any) => {
+  //   const value = Number(e.target.value);
+  //   value < 1 ? setInterval(1) : setInterval(value);
+  // };
   const onChangeCount = (e: any) => {
     const value = Number(e.target.value);
     const count = value < 1 ? 1 : value > 365 ? 365 : value;
@@ -74,7 +76,7 @@ const PopupAddMultiEvents = ({
     onFormClose();
   };
 
-  const title = isRTL ? 'انشاء مواعيد متعددة' : 'Add Multi Appointments';
+  const title = isRTL ? 'التكرار' : 'Multi';
 
   const onFormClose = () => {
     setFreq(RRule.DAILY);
@@ -103,21 +105,21 @@ const PopupAddMultiEvents = ({
       <Grid container spacing={2}>
         <Grid item xs={1}></Grid>
         <Grid item xs={9}>
-          <Grid item xs={6}>
+          {/* <Grid item xs={6}>
             <CalenderLocal
               isRTL={isRTL}
               label={words.start}
               value={dtstart}
               onChange={(date: any) => setDtstart(date)}
             ></CalenderLocal>
-          </Grid>
+          </Grid> */}
           <SelectLocal
             options={freqOptions}
             value={freq}
             onChange={onChangeFreq}
             isRTL={isRTL}
           ></SelectLocal>
-          {freq === RRule.WEEKLY && (
+          {/* {freq === RRule.WEEKLY && (
             <SelectMulti
               options={byweekdayOptions}
               value={weekdays}
@@ -127,20 +129,18 @@ const PopupAddMultiEvents = ({
               name="weekdays"
               width={240}
             ></SelectMulti>
-          )}
-          <Grid item xs={6}>
-            <TextFieldLocal
-              required
-              name="count"
-              label={words.qty}
-              value={count}
-              onChange={onChangeCount}
-              type="number"
-              width={240}
-            />
-          </Grid>
+          )} */}
+          <TextFieldLocal
+            required
+            name="count"
+            label={words.qty}
+            value={count}
+            onChange={onChangeCount}
+            type="number"
+            width={180}
+          />
 
-          <Grid item xs={6}>
+          {/* <Grid item xs={6}>
             <TextFieldLocal
               required
               name="interval"
@@ -150,15 +150,15 @@ const PopupAddMultiEvents = ({
               type="number"
               width={240}
             />
-          </Grid>
-          <Grid item xs={6}>
+          </Grid> */}
+          {/* <Grid item xs={6}>
             <CalenderLocal
               isRTL={isRTL}
               label={words.end}
               value={until}
               onChange={(date: any) => setUntil(date)}
             ></CalenderLocal>
-          </Grid>
+          </Grid> */}
         </Grid>
 
         <Grid item xs={2}></Grid>

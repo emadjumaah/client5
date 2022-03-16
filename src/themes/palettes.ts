@@ -78,4 +78,21 @@ export const palettes = [
       },
     },
   },
+  {
+    palette: {
+      primary: {
+        main: '#49536E',
+        // main: '#EA3254',
+        // main: '#9DA1A4',
+      },
+      secondary: {
+        main: '#EA3254',
+        // main: '#9DA1A4',
+        // main: '#49536E',
+      },
+      background: {
+        default: '#F3F4F8',
+      },
+    },
+  },
 ];

@@ -81,6 +81,7 @@ export default gql`
 
         userId
         note
+        info
 
         createdAt
         updatedAt

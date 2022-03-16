@@ -20,6 +20,9 @@ export default gql`
     $creditAcc: Int
     $taskId: Int
     $refNo: String
+    $chequeBank: String
+    $chequeNo: String
+    $chequeDate: String
     $userId: String
   ) {
     updateFinance(
@@ -41,6 +44,9 @@ export default gql`
       creditAcc: $creditAcc
       taskId: $taskId
       refNo: $refNo
+      chequeBank: $chequeBank
+      chequeNo: $chequeNo
+      chequeDate: $chequeDate
       userId: $userId
     ) {
       ok

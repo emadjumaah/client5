@@ -120,6 +120,39 @@ export const getEventsList = ({ event, rrule, actionslist, isRTL }) => {
     return list;
   }
 };
+export const getEventsListNoActions = ({ event, rrule, isRTL }) => {
+  if (!rrule || !event?.startDate || !event?.endDate) {
+    return [event];
+  } else {
+    const starthour = event?.startDate.getHours();
+    const startminute = event?.startDate.getMinutes();
+    const endhour = event?.endDate.getHours();
+    const endminute = event?.endDate.getMinutes();
+    const dates = rrule?.all;
+    const ritems = JSON.parse(event.items);
+    const isTitle = event?.title && event?.title?.trim()?.length > 0;
+    const title = isTitle
+      ? event?.title
+      : isRTL
+      ? ritems[0]?.nameAr
+      : ritems[0]?.name;
+    const list = dates.map((da: any) => {
+      const year = da.getFullYear();
+      const month = da.getMonth();
+      const day = da.getDate();
+      const startDate = new Date(year, month, day, starthour, startminute);
+      const endDate = new Date(year, month, day, endhour, endminute, 0, 0);
+
+      return {
+        ...event,
+        title,
+        startDate,
+        endDate,
+      };
+    });
+    return list;
+  }
+};
 
 export const getSendTime = ({
   startDate,

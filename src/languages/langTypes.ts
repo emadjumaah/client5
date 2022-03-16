@@ -69,6 +69,8 @@ export interface LanguageType {
     productName: string;
     newspecialproducts: string;
     serailNo: string;
+    plate: string;
+    purtime: string;
     newSupplier: string;
     supplierName: string;
     phoneNumber: string;
@@ -105,6 +107,15 @@ export interface LanguageType {
     week: string;
     month: string;
     year: string;
+    model: string;
+    licenseNo: string;
+    licenseDate: string;
+    national: string;
+    nationalNo: string;
+    nationalDate: string;
+    chequeBank: string;
+    chequeNo: string;
+    chequeDate: string;
     finance: string;
     cash: string;
     cashbox: string;

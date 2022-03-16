@@ -35,8 +35,13 @@ export default gql`
         documentNo
         startDate
         endDate
+
+        brand
+        plate
         cost
         model
+        purtime
+
         type
 
         createdAt

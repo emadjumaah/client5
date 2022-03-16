@@ -16,5 +16,9 @@ export default () => {
     setTempwords(words);
   }, [lang]);
 
-  return { tempwords, tempoptions: template?.options };
+  return {
+    tempwords,
+    tempoptions: template?.options,
+    taskExtra: template?.taskExtra,
+  };
 };

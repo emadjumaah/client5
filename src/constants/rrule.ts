@@ -27,12 +27,12 @@ export const freqOptions = [
     nameAr: 'شهري',
     value: RRule.MONTHLY,
   },
-  {
-    id: 4,
-    name: 'Yearly',
-    nameAr: 'سنوي',
-    value: RRule.YEARLY,
-  },
+  // {
+  //   id: 4,
+  //   name: 'Yearly',
+  //   nameAr: 'سنوي',
+  //   value: RRule.YEARLY,
+  // },
 ];
 export const byweekdayOptions = [
   {

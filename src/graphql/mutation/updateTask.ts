@@ -24,6 +24,7 @@ export default gql`
     $employee: EmployeeInput
     $project: ProjectInput
     $resourse: ResourseInput
+    $info: String
   ) {
     updateTask(
       id: $id
@@ -48,6 +49,7 @@ export default gql`
       employee: $employee
       project: $project
       resourse: $resourse
+      info: $info
     ) {
       ok
       message

@@ -1,4 +1,4 @@
-import { gql } from "@apollo/client";
+import { gql } from '@apollo/client';
 
 export default gql`
   query getFinances($start: Date, $end: Date, $search: String) {
@@ -33,6 +33,10 @@ export default gql`
         creditAcc
         creditAccName
         creditAccNameAr
+
+        chequeBank
+        chequeNo
+        chequeDate
 
         userId
         note

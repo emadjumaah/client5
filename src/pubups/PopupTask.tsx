@@ -11,16 +11,15 @@ import {
 } from '../Shared';
 import { GContextTypes } from '../types';
 import { GlobalContext } from '../contexts';
-import { Box, Button, Typography } from '@material-ui/core';
+import { Box, Paper, Typography } from '@material-ui/core';
 import PopupLayout from '../pages/main/PopupLayout';
 import { Grid } from '@material-ui/core';
 import AutoFieldLocal from '../components/fields/AutoFieldLocal';
 import { CalenderLocal, TextFieldLocal } from '../components';
 import { eventStatus, weekdaysNNo } from '../constants/datatypes';
 import { compressEvents } from '../common/time';
-import { moneyFormat } from '../Shared/colorFormat';
+import { getDateDayWeek } from '../Shared/colorFormat';
 import PopupTaskAppointment from './PopupTaskAppointment';
-import EventsTable from '../Shared/EventsTable';
 import _ from 'lodash';
 import { getPopupTitle } from '../constants/menu';
 import { useCustomers, useTemplate } from '../hooks';
@@ -33,6 +32,14 @@ import useEmployeesUp from '../hooks/useEmployeesUp';
 import useResoursesUp from '../hooks/useResoursesUp';
 import PopupProject from './PopupProject';
 import useProjects from '../hooks/useProjects';
+import ServiceItemForm from '../Shared/ServiceItemForm';
+import ItemsTable from '../Shared/ItemsTable';
+import { invoiceClasses } from '../themes';
+import { SelectLocal } from '../pages/calendar/common/SelectLocal';
+import { freqOptions } from '../constants/rrule';
+import RRule from 'rrule';
+import getRruleData from '../common/getRruleData';
+import { getEventsListNoActions } from '../common/helpers';
 
 export const indexTheList = (list: any) => {
   return list.map((item: any, index: any) => {
@@ -62,9 +69,9 @@ const PopupTask = ({
   name = null,
   setNewValue,
 }: any) => {
-  const [saving, setSaving] = useState(false);
-  const [showtable, setShowTable] = useState(isNew);
+  const classes = invoiceClasses();
 
+  const [saving, setSaving] = useState(false);
   const [tasktitle, setTasktitle]: any = useState(null);
   const [start, setStart]: any = useState(null);
   const [end, setEnd]: any = useState(null);
@@ -112,19 +119,120 @@ const PopupTask = ({
   const [openEmp, setOpenEmp] = useState(false);
   const [openRes, setOpenRes] = useState(false);
 
+  const [itemsList, setItemsList] = useState<any>([]);
+  const [rrule, setRrule] = useState<any>(null);
+
+  const [freq, setFreq] = useState(RRule.DAILY);
+  const [count, setCount] = useState(1);
+  const [totals, setTotals] = useState<any>({});
+  const [info, setInfo] = useState<any>(null);
+
   const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
   const { addCustomer, editCustomer } = useCustomers();
   const { addDepartment, editDepartment } = useDepartmentsUp();
   const { addEmployee, editEmployee } = useEmployeesUp();
   const { addResourse, editResourse } = useResoursesUp();
   const { addProject, editProject } = useProjects();
-  const { tempwords, tempoptions } = useTemplate();
+  const { tempwords, tempoptions, taskExtra } = useTemplate();
 
   const { register, handleSubmit, reset } = useForm({});
   const {
     translate: { words, isRTL },
     store: { user },
   }: GContextTypes = useContext(GlobalContext);
+
+  const onChangeFreq = (e: any) => {
+    setFreq(e.target.value);
+  };
+
+  const setExtra = ({ item, value }) => {
+    const newitem = { ...item, value };
+    const newinfo = info?.map((initem: any) => {
+      if (initem.id === item.id) {
+        return newitem;
+      } else {
+        return initem;
+      }
+    });
+    setInfo(newinfo);
+  };
+
+  const onChangeCount = (e: any) => {
+    const value = Number(e.target.value);
+    const count = value < 1 ? 1 : value > 365 ? 365 : value;
+    setCount(count);
+  };
+
+  const getEventOverallTotal = () => {
+    const totalsin = itemsList.map((litem: any) => litem.itemtotal);
+    const sum = totalsin.reduce((psum: any, a: any) => psum + a, 0);
+    const costtotals = itemsList.map((litem: any) => litem.itemtotalcost);
+    const costsum = costtotals.reduce((psum: any, a: any) => psum + a, 0);
+    const amount = sum;
+    const profit = sum - costsum;
+    const tots = {
+      itemsSum: amount,
+      itemsCostSum: costsum,
+      costAmount: costsum,
+      total: sum,
+      amount,
+      profit,
+    };
+    setTotals(tots);
+  };
+
+  useEffect(() => {
+    getEventOverallTotal();
+  }, [itemsList]);
+
+  useEffect(() => {
+    if (isNew && !info) {
+      setInfo(taskExtra);
+    }
+  }, [taskExtra]);
+
+  useEffect(() => {
+    if (isNew) {
+      const rdata = getRruleData({
+        freq,
+        byweekday: undefined,
+        dtstart: start,
+        until: null,
+        count,
+      });
+      setRrule(rdata);
+    }
+  }, [start, freq, count]);
+
+  useEffect(() => {
+    if (isNew && rrule?.all && rrule?.all?.length > 0) {
+      setEnd(rrule.all[rrule.all.length - 1]);
+    }
+  }, [rrule]);
+
+  const addItemToList = (item: any) => {
+    const newArray = [...itemsList, { ...item, userId: user._id }];
+    const listwithindex = indexTheList(newArray);
+    setItemsList(listwithindex);
+  };
+  const editItemInList = (item: any) => {
+    const newArray = itemsList.map((it: any) => {
+      if (it._id === item._id) {
+        return item;
+      } else {
+        return it;
+      }
+    });
+    const listwithindex = indexTheList(newArray);
+    setItemsList(listwithindex);
+  };
+
+  const removeItemFromList = (index: any) => {
+    const newList = [...itemsList];
+    newList.splice(index, 1);
+    const listwithindex = indexTheList(newList);
+    setItemsList(listwithindex);
+  };
 
   const openDepartment = () => {
     setOpenDep(true);
@@ -185,13 +293,6 @@ const PopupTask = ({
     setEvList(listwithindex);
   };
 
-  const removeEventFromList = (index: any) => {
-    const newList = [...evList];
-    newList.splice(index, 1);
-    const listwithindex = indexTheList(newList);
-    setEvList(listwithindex);
-  };
-
   const isemployee = user?.isEmployee && user?.employeeId;
 
   useEffect(() => {
@@ -220,7 +321,7 @@ const PopupTask = ({
     if (isNew) {
       const start = new Date();
       const end = new Date();
-      start.setHours(0, 0, 0, 0);
+      // start.setHours(0, 0, 0, 0);
       end.setDate(end.getDate() + 7);
       end.setHours(23, 59, 59, 999);
       setStart(start);
@@ -253,6 +354,12 @@ const PopupTask = ({
       const proId = row.projectId;
       const resId = row.resourseId;
 
+      if (row?.info) {
+        setInfo(JSON.parse(row?.info));
+      } else {
+        setInfo(taskExtra);
+      }
+
       setStart(row?.start);
       setEnd(row?.end);
       setTasktitle(row?.title);
@@ -279,6 +386,108 @@ const PopupTask = ({
     }
   }, [row]);
 
+  const customer = custvalue
+    ? {
+        customerId: custvalue._id,
+        customerName: custvalue.name,
+        customerNameAr: custvalue.nameAr,
+        customerPhone: custvalue.phone,
+      }
+    : {
+        customerId: undefined,
+        customerName: undefined,
+        customerNameAr: undefined,
+        customerPhone: undefined,
+      };
+
+  const department = departvalue
+    ? {
+        departmentId: departvalue._id,
+        departmentName: departvalue.name,
+        departmentNameAr: departvalue.nameAr,
+        departmentColor: departvalue.color,
+      }
+    : {
+        departmentId: undefined,
+        departmentName: undefined,
+        departmentNameAr: undefined,
+        departmentColor: undefined,
+      };
+  const employee = emplvalue
+    ? {
+        employeeId: emplvalue._id,
+        employeeName: emplvalue.name,
+        employeeNameAr: emplvalue.nameAr,
+        employeeColor: emplvalue.color,
+        employeePhone: emplvalue.phone,
+      }
+    : {
+        employeeId: undefined,
+        employeeName: undefined,
+        employeeNameAr: undefined,
+        employeeColor: undefined,
+        employeePhone: undefined,
+      };
+  const resourse = resovalue
+    ? {
+        resourseId: resovalue._id,
+        resourseName: resovalue.name,
+        resourseNameAr: resovalue.nameAr,
+        resourseColor: resovalue.color,
+      }
+    : {
+        resourseId: undefined,
+        resourseName: undefined,
+        resourseNameAr: undefined,
+        resourseColor: undefined,
+      };
+
+  const project = projvalue
+    ? {
+        projectId: projvalue._id,
+        projectName: projvalue.name,
+        projectNameAr: projvalue.nameAr,
+        projectColor: projvalue.color,
+      }
+    : {
+        projectId: undefined,
+        projectName: undefined,
+        projectNameAr: undefined,
+        projectColor: undefined,
+      };
+
+  useEffect(() => {
+    if (isNew) {
+      const event = {
+        title: tasktitle,
+        startDate: start,
+        endDate: end,
+        amount: totals.amount,
+        customer,
+        department,
+        employee,
+        resourse,
+        project,
+        status: 2,
+        items: JSON.stringify(itemsList),
+        user: user._id,
+      };
+      const eventlist = getEventsListNoActions({ event, rrule, isRTL });
+      const sorted = _.sortBy(eventlist, 'startDate');
+      const listwithindex = indexTheList(sorted);
+      setEvList(listwithindex);
+    }
+  }, [
+    itemsList,
+    rrule,
+    projvalue,
+    departvalue,
+    custvalue,
+    emplvalue,
+    start,
+    totals,
+  ]);
+
   const resetAllForms = () => {
     setStart(null);
     setEnd(null);
@@ -290,7 +499,8 @@ const PopupTask = ({
     setStatus(null);
     setTasktitle(null);
     setSaving(false);
-    setShowTable(false);
+    setRrule(null);
+    setItemsList([]);
   };
 
   const onSubmit = async () => {
@@ -302,14 +512,6 @@ const PopupTask = ({
       return;
     }
 
-    if (!tasktitle) {
-      await messageAlert(
-        setAlrt,
-        isRTL ? 'يرجى اضافة اسم للمهمة' : 'Please add Task title'
-      );
-      return;
-    }
-
     if (!custvalue) {
       await messageAlert(
         setAlrt,
@@ -317,17 +519,10 @@ const PopupTask = ({
       );
       return;
     }
-    // if (isNew && (!evList || evList.length === 0)) {
-    //   await messageAlert(
-    //     setAlrt,
-    //     isRTL ? 'يرجى اضافة موعد' : 'Please add Appointment'
-    //   );
-    //   return;
-    // }
+
     setSaving(true);
     const events =
       evList && evList.length > 0 ? compressEvents(evList) : undefined;
-
     const variables: any = {
       id: row && row.id ? row.id : undefined, // is it new or edit
       title: tasktitle ? tasktitle : custvalue?.name,
@@ -339,80 +534,16 @@ const PopupTask = ({
       events,
       evQty: evList ? evList.length : undefined,
       evDone: isNew ? 0 : undefined,
-      customer: custvalue
-        ? {
-            customerId: custvalue._id,
-            customerName: custvalue.name,
-            customerNameAr: custvalue.nameAr,
-            customerPhone: custvalue.phone,
-          }
-        : {
-            customerId: undefined,
-            customerName: undefined,
-            customerNameAr: undefined,
-            customerPhone: undefined,
-          },
-
-      department: departvalue
-        ? {
-            departmentId: departvalue._id,
-            departmentName: departvalue.name,
-            departmentNameAr: departvalue.nameAr,
-            departmentColor: departvalue.color,
-          }
-        : {
-            departmentId: undefined,
-            departmentName: undefined,
-            departmentNameAr: undefined,
-            departmentColor: undefined,
-          },
-      project: projvalue
-        ? {
-            projectId: projvalue._id,
-            projectName: projvalue.name,
-            projectNameAr: projvalue.nameAr,
-            projectColor: projvalue.color,
-          }
-        : {
-            projectId: undefined,
-            projectName: undefined,
-            projectNameAr: undefined,
-            projectColor: undefined,
-          },
-      employee: emplvalue
-        ? {
-            employeeId: emplvalue._id,
-            employeeName: emplvalue.name,
-            employeeNameAr: emplvalue.nameAr,
-            employeeColor: emplvalue.color,
-            employeePhone: emplvalue.phone,
-          }
-        : {
-            employeeId: undefined,
-            employeeName: undefined,
-            employeeNameAr: undefined,
-            employeeColor: undefined,
-          },
-      resourse: resovalue
-        ? {
-            resourseId: resovalue._id,
-            resourseName: resovalue.name,
-            resourseNameAr: resovalue.nameAr,
-            resourseColor: resovalue.color,
-          }
-        : {
-            employeeId: undefined,
-            employeeName: undefined,
-            employeeNameAr: undefined,
-            employeeColor: undefined,
-            employeePhone: undefined,
-          },
+      customer,
+      department,
+      employee,
+      resourse,
+      project,
+      info: JSON.stringify(info),
     };
     const mutate = isNew ? addAction : editAction;
-
     apply(mutate, variables);
   };
-
   const apply = async (mutate: any, variables: any) => {
     try {
       if (evList?.length === 0) {
@@ -474,7 +605,6 @@ const PopupTask = ({
       fullWidth
       preventclose
       saving={saving}
-      // bgcolor={colors.deepPurple[500]}
       mb={10}
     >
       <>
@@ -483,207 +613,264 @@ const PopupTask = ({
             {row?.docNo}
           </Typography>
         </Box>
-
         <Grid container spacing={1}>
-          <Grid item xs={3}>
-            <CalenderLocal
-              isRTL={isRTL}
-              label={words.start}
-              value={start}
-              onChange={(d: any) => setStart(d)}
-              mb={0}
-            ></CalenderLocal>
-          </Grid>
-          <Grid item xs={3}>
-            <CalenderLocal
-              isRTL={isRTL}
-              label={words.end}
-              value={end}
-              onChange={(d: any) => setEnd(d)}
-              format="dd/MM/yyyy"
-              mb={0}
-            ></CalenderLocal>
-          </Grid>
-          <Grid item xs={6}></Grid>
-          <Grid item xs={3}>
-            <TextFieldLocal
-              required
-              autoFocus={true}
-              name="tasktitle"
-              label={words.title}
-              value={tasktitle}
-              onChange={(e: any) => setTasktitle(e.target.value)}
-              row={row}
-              fullWidth
-              mb={0}
-            />
-          </Grid>
-          <Grid item xs={3}>
-            {!tempoptions.noPro && (
-              <AutoFieldLocal
-                name="project"
-                title={tempwords.project}
-                words={words}
-                options={projects}
-                value={projvalue}
-                setSelectValue={setProjvalue}
-                setSelectError={setProjError}
-                selectError={projError}
-                refernce={projRef}
-                register={register}
-                isRTL={isRTL}
-                fullWidth
-                openAdd={openProject}
-                showphone
-                disabled={name === 'projectId'}
-              ></AutoFieldLocal>
-            )}
-          </Grid>
-          <Grid item xs={3}>
-            <AutoFieldLocal
-              name="customer"
-              title={tempwords.customer}
-              words={words}
-              options={customers}
-              value={custvalue}
-              setSelectValue={setCustvalue}
-              setSelectError={setCustError}
-              selectError={custError}
-              refernce={custRef}
-              register={register}
-              isRTL={isRTL}
-              fullWidth
-              showphone
-              openAdd={openCustomer}
-              disabled={name === 'customerId'}
-            ></AutoFieldLocal>
-          </Grid>
-          <Grid item xs={3}></Grid>
-          {!tempoptions?.noEmp && (
-            <Grid item xs={3}>
-              <AutoFieldLocal
-                name="employee"
-                title={tempwords.employee}
-                words={words}
-                options={employees}
-                disabled={isemployee || name === 'employeeId'}
-                value={emplvalue}
-                setSelectValue={setEmplvalue}
-                setSelectError={setEmplError}
-                selectError={emplError}
-                refernce={emplRef}
-                register={register}
-                openAdd={openEmployee}
-                isRTL={isRTL}
-                fullWidth
-                day={day}
-              ></AutoFieldLocal>
-            </Grid>
-          )}
-          {!tempoptions?.noRes && (
-            <Grid item xs={3}>
-              <AutoFieldLocal
-                name="resourse"
-                title={tempwords.resourse}
-                words={words}
-                options={resourses}
-                disabled={name === 'resourseId'}
-                value={resovalue}
-                setSelectValue={setResovalue}
-                setSelectError={setResoError}
-                selectError={resoError}
-                refernce={resoRef}
-                register={register}
-                openAdd={openResourse}
-                isRTL={isRTL}
-                fullWidth
-                day={day}
-              ></AutoFieldLocal>
-            </Grid>
-          )}
-          <Grid item xs={3}>
-            <AutoFieldLocal
-              name="department"
-              title={tempwords.department}
-              words={words}
-              options={departments}
-              value={departvalue}
-              setSelectValue={setDepartvalue}
-              setSelectError={setDepartError}
-              selectError={departError}
-              refernce={departRef}
-              register={register}
-              openAdd={openDepartment}
-              isRTL={isRTL}
-              fullWidth
-              disabled={name === 'departmentId'}
-            ></AutoFieldLocal>
-          </Grid>
-        </Grid>
-        {!setNewValue && (
-          <Grid container spacing={2}>
-            <Grid item xs={12}>
-              {!showtable && isNew && (
-                <Box
-                  display="flex"
-                  style={{
-                    alignItems: 'center',
-                    justifyContent: 'flex-start',
-                    marginInlineStart: 10,
-                  }}
-                >
-                  <Button
-                    color="primary"
-                    onClick={() => {
-                      setShowTable(true);
-                      setOpenEvent(true);
-                    }}
-                    variant="contained"
-                  >
-                    {isRTL ? 'اضافة مواعيد' : 'Add Appointments'}
-                  </Button>
-                </Box>
+          <Grid item xs={6}>
+            <Grid container spacing={1}>
+              <Grid item xs={3}>
+                <CalenderLocal
+                  // isRTL={isRTL}
+                  label={words.start}
+                  value={start}
+                  onChange={(d: any) => setStart(d)}
+                  format="dd/MM/yyyy - hh:mm"
+                  time
+                  mb={0}
+                ></CalenderLocal>
+              </Grid>
+              <Grid item xs={1}></Grid>
+              <Grid item xs={2} style={{ marginTop: 10 }}>
+                {isNew && (
+                  <SelectLocal
+                    options={freqOptions}
+                    value={freq}
+                    onChange={onChangeFreq}
+                    isRTL={isRTL}
+                    width={100}
+                  ></SelectLocal>
+                )}
+              </Grid>
+              <Grid item xs={2} style={{ marginTop: 10 }}>
+                {isNew && (
+                  <TextFieldLocal
+                    required
+                    name="count"
+                    label={words.qty}
+                    value={count}
+                    onChange={onChangeCount}
+                    type="number"
+                    width={100}
+                  />
+                )}
+              </Grid>
+              <Grid item xs={1}></Grid>
+
+              <Grid item xs={3}>
+                {rrule?.all && (
+                  <CalenderLocal
+                    isRTL={isRTL}
+                    label={words.end}
+                    value={end}
+                    disabled
+                    onChange={(d: any) => setEnd(d)}
+                    format="dd/MM/yyyy - hh:mm"
+                    time
+                    mb={0}
+                  ></CalenderLocal>
+                )}
+              </Grid>
+              {!tempoptions?.noRes && (
+                <Grid item xs={6}>
+                  <AutoFieldLocal
+                    name="resourse"
+                    title={tempwords.resourse}
+                    words={words}
+                    options={resourses}
+                    disabled={name === 'resourseId'}
+                    value={resovalue}
+                    setSelectValue={setResovalue}
+                    setSelectError={setResoError}
+                    selectError={resoError}
+                    refernce={resoRef}
+                    register={register}
+                    openAdd={openResourse}
+                    isRTL={isRTL}
+                    fullWidth
+                    day={day}
+                  ></AutoFieldLocal>
+                </Grid>
               )}
-              {showtable && (
-                <Box
-                  style={{
-                    backgroundColor: '#F3F3F3',
-                    marginTop: 15,
-                    borderRadius: 10,
-                  }}
-                >
-                  <Box
-                    display="flex"
-                    style={{
-                      alignItems: 'center',
-                      justifyContent: 'flex-start',
-                      marginInlineStart: 10,
-                    }}
-                  >
-                    <Button
-                      color="primary"
-                      onClick={() => setOpenEvent(true)}
-                      variant="contained"
+              <Grid item xs={6}>
+                <AutoFieldLocal
+                  name="customer"
+                  title={tempwords.customer}
+                  words={words}
+                  options={customers}
+                  value={custvalue}
+                  setSelectValue={setCustvalue}
+                  setSelectError={setCustError}
+                  selectError={custError}
+                  refernce={custRef}
+                  register={register}
+                  isRTL={isRTL}
+                  fullWidth
+                  showphone
+                  openAdd={openCustomer}
+                  disabled={name === 'customerId'}
+                ></AutoFieldLocal>
+              </Grid>
+              {!tempoptions.noPro && (
+                <Grid item xs={6}>
+                  <AutoFieldLocal
+                    name="project"
+                    title={tempwords.project}
+                    words={words}
+                    options={projects}
+                    value={projvalue}
+                    setSelectValue={setProjvalue}
+                    setSelectError={setProjError}
+                    selectError={projError}
+                    refernce={projRef}
+                    register={register}
+                    isRTL={isRTL}
+                    fullWidth
+                    openAdd={openProject}
+                    showphone
+                    disabled={name === 'projectId'}
+                  ></AutoFieldLocal>
+                </Grid>
+              )}
+              <Grid item xs={6}>
+                <AutoFieldLocal
+                  name="department"
+                  title={tempwords.department}
+                  words={words}
+                  options={departments}
+                  value={departvalue}
+                  setSelectValue={setDepartvalue}
+                  setSelectError={setDepartError}
+                  selectError={departError}
+                  refernce={departRef}
+                  register={register}
+                  openAdd={openDepartment}
+                  isRTL={isRTL}
+                  fullWidth
+                  disabled={name === 'departmentId'}
+                ></AutoFieldLocal>
+              </Grid>
+              {!tempoptions?.noEmp && (
+                <Grid item xs={6}>
+                  <AutoFieldLocal
+                    name="employee"
+                    title={tempwords.employee}
+                    words={words}
+                    options={employees}
+                    disabled={isemployee || name === 'employeeId'}
+                    value={emplvalue}
+                    setSelectValue={setEmplvalue}
+                    setSelectError={setEmplError}
+                    selectError={emplError}
+                    refernce={emplRef}
+                    register={register}
+                    openAdd={openEmployee}
+                    isRTL={isRTL}
+                    fullWidth
+                    day={day}
+                  ></AutoFieldLocal>
+                </Grid>
+              )}
+            </Grid>
+          </Grid>
+          {isNew && (
+            <Grid item xs={6}>
+              <Grid container spacing={1}>
+                <Grid item xs={8}>
+                  {rrule?.all && (
+                    <Paper
+                      style={{
+                        maxHeight: 190,
+                        overflow: 'auto',
+                        minHeight: 190,
+                      }}
                     >
-                      {isRTL ? 'اضافة' : 'Add'}
-                    </Button>
-                  </Box>
-                  <Box style={{ marginBottom: 20 }}>
-                    <EventsTable
-                      rows={evList}
-                      removeEventFromList={removeEventFromList}
-                      isRTL={isRTL}
-                      words={words}
-                    ></EventsTable>
-                    <Typography style={{ fontWeight: 'bold', fontSize: 16 }}>
-                      {words.total} : {moneyFormat(total)}
-                    </Typography>
-                  </Box>
-                </Box>
-              )}
+                      <Box style={{ flexDirection: 'row' }}>
+                        {rrule?.all?.map((al: any, index: any) => {
+                          return (
+                            <Box
+                              display="flex"
+                              style={{
+                                flexDirection: 'row',
+                                alignItems: 'center',
+                                justifyContent: 'space-between',
+                                backgroundColor: '#f5f5f5',
+                                margin: 4,
+                                padding: 4,
+                              }}
+                            >
+                              <Typography>
+                                {getDateDayWeek(al, isRTL)}
+                              </Typography>
+                              <Typography variant="caption">
+                                {index + 1}
+                              </Typography>
+                            </Box>
+                          );
+                        })}
+                      </Box>
+                    </Paper>
+                  )}
+                </Grid>
+              </Grid>
             </Grid>
+          )}
+          {isNew && <Grid item xs={6}></Grid>}
+        </Grid>
+        {isNew && (
+          <Grid item xs={10}>
+            <Box
+              style={{
+                backgroundColor: '#f4f4f4',
+                // padding: 10,
+                marginTop: 15,
+                marginBottom: 15,
+                borderRadius: 10,
+              }}
+            >
+              <Box display="flex">
+                <ServiceItemForm
+                  options={servicesproducts}
+                  addItem={addItemToList}
+                  words={words}
+                  classes={classes}
+                  user={user}
+                  isRTL={isRTL}
+                ></ServiceItemForm>
+              </Box>
+              <Box style={{ marginBottom: 20 }}>
+                <ItemsTable
+                  height={200}
+                  rows={itemsList}
+                  editItem={editItemInList}
+                  removeItem={removeItemFromList}
+                  isRTL={isRTL}
+                  words={words}
+                  user={user}
+                ></ItemsTable>
+              </Box>
+            </Box>
           </Grid>
         )}
+        <Grid item xs={10}>
+          <Grid container spacing={1}>
+            {info?.map((extra: any) => (
+              <Grid item xs={extra.multiline ? 6 : 3}>
+                <TextFieldLocal
+                  name={extra.name}
+                  label={isRTL ? extra.nameAr : extra.name}
+                  value={extra.value}
+                  type={extra.type}
+                  multiline={extra.multiline}
+                  rows={extra.multiline ? 3 : 1}
+                  onChange={(e: any) =>
+                    setExtra({ item: extra, value: e.target.value })
+                  }
+                  fullWidth
+                  mb={0}
+                />
+              </Grid>
+            ))}
+          </Grid>
+        </Grid>
+
         <PopupTaskAppointment
           open={openEvent}
           onClose={() => setOpenEvent(false)}

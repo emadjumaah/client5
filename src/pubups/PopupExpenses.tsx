@@ -285,7 +285,7 @@ const PopupExpenses = ({
   }, [row, open]);
 
   const onSubmit = async (data: any) => {
-    const { amount, desc } = data;
+    const { amount, title, desc, chequeBank, chequeNo, chequeDate } = data;
     if (!debitAcc || !creditAcc) {
       await messageAlert(
         setAlrt,
@@ -364,7 +364,11 @@ const PopupExpenses = ({
       department,
       employee,
       resourse,
+      title,
       desc,
+      chequeBank,
+      chequeNo,
+      chequeDate,
       branch: user.branch,
       userId: user._id,
     };
@@ -433,7 +437,7 @@ const PopupExpenses = ({
       <Grid container spacing={2}>
         <Grid item xs={1}></Grid>
         <Grid item xs={9}>
-          <Grid container spacing={2}>
+          <Grid container spacing={1}>
             <Grid item xs={12}>
               <CalenderLocal
                 isRTL={isRTL}
@@ -442,7 +446,7 @@ const PopupExpenses = ({
                 onChange={handleDateChange}
               ></CalenderLocal>
             </Grid>
-            <Grid item xs={6}>
+            <Grid item xs={4}>
               <AutoFieldLocal
                 name="debitAcc"
                 title={isRTL ? 'حساب المصروف' : 'Expenses Acc'}
@@ -453,9 +457,10 @@ const PopupExpenses = ({
                 register={register}
                 isRTL={isRTL}
                 fullwidtth
+                mb={0}
               ></AutoFieldLocal>
             </Grid>
-            <Grid item xs={6}>
+            <Grid item xs={4}>
               <AutoFieldLocal
                 name="creditAcc"
                 title={isRTL ? 'حساب الدفع' : 'Payment Acc'}
@@ -466,10 +471,11 @@ const PopupExpenses = ({
                 register={register}
                 isRTL={isRTL}
                 fullwidtth
+                mb={0}
               ></AutoFieldLocal>
             </Grid>
 
-            <Grid item xs={12}>
+            <Grid item xs={4}>
               <TextFieldLocal
                 required
                 name="amount"
@@ -478,8 +484,68 @@ const PopupExpenses = ({
                 errors={errors}
                 row={row}
                 type="number"
-                width={203}
+                fullWidth
+                mb={0}
               />
+            </Grid>
+            <Grid item xs={12}>
+              <TextFieldLocal
+                name="title"
+                label={words.name}
+                register={register}
+                errors={errors}
+                row={row}
+                fullWidth
+                mb={0}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextFieldLocal
+                name="desc"
+                multiline
+                rows={4}
+                label={words.description}
+                register={register}
+                errors={errors}
+                row={row}
+                fullWidth
+                mb={0}
+              />
+            </Grid>
+            <Grid item xs={4}>
+              <TextFieldLocal
+                name="chequeBank"
+                label={words.chequeBank}
+                register={register}
+                errors={errors}
+                row={row}
+                fullWidth
+                mb={0}
+              />
+            </Grid>
+            <Grid item xs={4}>
+              <TextFieldLocal
+                name="chequeNo"
+                label={words.chequeNo}
+                register={register}
+                errors={errors}
+                row={row}
+                fullWidth
+                mb={0}
+              />
+            </Grid>
+            <Grid item xs={4}>
+              <TextFieldLocal
+                name="chequeDate"
+                label={words.chequeDate}
+                register={register}
+                errors={errors}
+                row={row}
+                fullWidth
+                mb={0}
+              />
+            </Grid>
+            <Grid item xs={6}>
               <AutoFieldLocal
                 name="task"
                 title={tempwords.task}
@@ -492,9 +558,12 @@ const PopupExpenses = ({
                 fullWidth
                 openAdd={openTask}
                 disabled={name === 'taskId'}
+                mb={0}
               ></AutoFieldLocal>
+            </Grid>
 
-              {!tempoptions?.noEmp && (
+            {!tempoptions?.noEmp && (
+              <Grid item xs={6}>
                 <AutoFieldLocal
                   name="employee"
                   title={tempwords.employee}
@@ -509,9 +578,12 @@ const PopupExpenses = ({
                   openAdd={openEmployee}
                   isRTL={isRTL}
                   fullWidth
+                  mb={0}
                 ></AutoFieldLocal>
-              )}
-              {!tempoptions?.noRes && (
+              </Grid>
+            )}
+            {!tempoptions?.noRes && (
+              <Grid item xs={6}>
                 <AutoFieldLocal
                   name="resourse"
                   title={tempwords.resourse}
@@ -526,8 +598,11 @@ const PopupExpenses = ({
                   openAdd={openResourse}
                   isRTL={isRTL}
                   fullWidth
+                  mb={0}
                 ></AutoFieldLocal>
-              )}
+              </Grid>
+            )}
+            <Grid item xs={6}>
               <AutoFieldLocal
                 name="department"
                 title={tempwords.department}
@@ -540,19 +615,9 @@ const PopupExpenses = ({
                 register={register}
                 isRTL={isRTL}
                 openAdd={openDepartment}
-                mb={20}
+                mb={0}
                 disabled={name === 'departmentId'}
               ></AutoFieldLocal>
-              <TextFieldLocal
-                name="desc"
-                multiline
-                rows={4}
-                label={words.description}
-                register={register}
-                errors={errors}
-                row={row}
-                fullWidth
-              />
             </Grid>
           </Grid>
         </Grid>
