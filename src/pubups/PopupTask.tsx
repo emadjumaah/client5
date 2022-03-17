@@ -501,6 +501,7 @@ const PopupTask = ({
     setSaving(false);
     setRrule(null);
     setItemsList([]);
+    setCount(1);
   };
 
   const onSubmit = async () => {
@@ -614,7 +615,7 @@ const PopupTask = ({
           </Typography>
         </Box>
         <Grid container spacing={1}>
-          <Grid item xs={6}>
+          <Grid item xs={8}>
             <Grid container spacing={1}>
               <Grid item xs={3}>
                 <CalenderLocal
@@ -771,9 +772,9 @@ const PopupTask = ({
             </Grid>
           </Grid>
           {isNew && (
-            <Grid item xs={6}>
+            <Grid item xs={4}>
               <Grid container spacing={1}>
-                <Grid item xs={8}>
+                <Grid item xs={12}>
                   {rrule?.all && (
                     <Paper
                       style={{
@@ -815,7 +816,7 @@ const PopupTask = ({
           {isNew && <Grid item xs={6}></Grid>}
         </Grid>
         {isNew && (
-          <Grid item xs={10}>
+          <Grid item xs={12}>
             <Box
               style={{
                 backgroundColor: '#f4f4f4',
@@ -849,7 +850,7 @@ const PopupTask = ({
             </Box>
           </Grid>
         )}
-        <Grid item xs={10}>
+        <Grid item xs={12}>
           <Grid container spacing={1}>
             {info?.map((extra: any) => (
               <Grid item xs={extra.multiline ? 6 : 3}>
@@ -859,7 +860,7 @@ const PopupTask = ({
                   value={extra.value}
                   type={extra.type}
                   multiline={extra.multiline}
-                  rows={extra.multiline ? 3 : 1}
+                  rows={extra.multiline ? 1 : 1}
                   onChange={(e: any) =>
                     setExtra({ item: extra, value: e.target.value })
                   }

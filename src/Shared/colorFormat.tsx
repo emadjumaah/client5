@@ -433,6 +433,17 @@ export const simpleDateFormatter = (time: any) => {
     </div>
   );
 };
+export const simpleSpanDateFormatter = (time: any) => {
+  return (
+    <span>
+      {new Date(time).toLocaleString('en-GB', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+      })}
+    </span>
+  );
+};
 
 export const moneyFormatSimple = (amount: number) => {
   if (amount) {

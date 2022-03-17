@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { dublicateAlert, errorAlert, yup, messageAlert } from '../Shared';
 import { GContextTypes } from '../types';
@@ -8,7 +8,7 @@ import { GlobalContext } from '../contexts';
 import useAccounts from '../hooks/useAccounts';
 import { parents } from '../constants/kaid';
 import PopupLayout from '../pages/main/PopupLayout';
-import { Grid } from '@material-ui/core';
+import { Box, Grid } from '@material-ui/core';
 import { CalenderLocal, TextFieldLocal } from '../components';
 // import { getAppStartEndPeriod } from "../common/time";
 import AutoFieldLocal from '../components/fields/AutoFieldLocal';
@@ -22,6 +22,8 @@ import PopupEmployee from './PopupEmployee';
 import PopupResourses from './PopupResourses';
 import useTasks from '../hooks/useTasks';
 import useProjects from '../hooks/useProjects';
+import { useReactToPrint } from 'react-to-print';
+import { VoucherPrint } from '../print';
 
 const PopupExpenses = ({
   open,
@@ -34,6 +36,7 @@ const PopupExpenses = ({
   tasks,
   name,
   value,
+  company,
 }: any) => {
   const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
   const [selectedDate, setSelectedDate] = React.useState(new Date());
@@ -284,6 +287,20 @@ const PopupExpenses = ({
     }
   }, [row, open]);
 
+  const componentRef: any = useRef();
+  const handleReactPrint = useReactToPrint({
+    content: () => componentRef.current,
+    documentTitle: `Invoice #${row?.docNo}`,
+    removeAfterPrint: true,
+  });
+  const printData = {
+    no: row?.docNo,
+    time: selectedDate,
+    title: row?.title,
+    desc: row?.desc,
+    amount: row?.amount,
+  };
+
   const onSubmit = async (data: any) => {
     const { amount, title, desc, chequeBank, chequeNo, chequeDate } = data;
     if (!debitAcc || !creditAcc) {
@@ -431,6 +448,7 @@ const PopupExpenses = ({
       onSubmit={onHandleSubmit}
       theme={theme}
       alrt={alrt}
+      print={!isNew ? handleReactPrint : undefined}
       maxWidth="md"
       mt={10}
     >
@@ -672,6 +690,16 @@ const PopupExpenses = ({
           addAction={addResourse}
           editAction={editResourse}
         ></PopupResourses>
+        <Box>
+          <div style={{ display: 'none' }}>
+            <VoucherPrint
+              company={company}
+              user={user}
+              printData={printData}
+              ref={componentRef}
+            />
+          </div>
+        </Box>
       </Grid>
     </PopupLayout>
   );

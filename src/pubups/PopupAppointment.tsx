@@ -148,7 +148,6 @@ const PopupAppointment = ({
   const [getItems, itemsData]: any = useLazyQuery(getOperationItems, {
     fetchPolicy: 'cache-and-network',
   });
-
   const [loadActions, actionsData]: any = useLazyQuery(getActions, {
     fetchPolicy: 'cache-and-network',
   });
@@ -276,6 +275,7 @@ const PopupAppointment = ({
           resourseName,
           resourseNameAr,
           resourseColor,
+          note,
         } = item;
         const serv = servlist.filter((se: any) => se._id === item.itemId)[0];
         return {
@@ -299,6 +299,7 @@ const PopupAppointment = ({
           itemprice: item.itemPrice,
           itemqty: item.qty,
           itemtotal: item.total,
+          note,
           // itemtotalcost: item.qty * serv.cost,
         };
       });

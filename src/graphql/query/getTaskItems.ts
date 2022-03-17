@@ -58,6 +58,7 @@ export default gql`
         resourseName
         resourseNameAr
         resourseColor
+        note
         createdAt
         updatedAt
       }

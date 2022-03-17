@@ -24,7 +24,6 @@ import AutoFieldLocal from '../components/fields/AutoFieldLocal';
 import { getAppStartEndPeriod } from '../common/time';
 import { CalenderLocal } from '../components';
 import { useReactToPrint } from 'react-to-print';
-import { InvoicePrintA5 } from '../common/InvoicePrintA5';
 import { weekdaysNNo } from '../constants/datatypes';
 import useTasks from '../hooks/useTasks';
 import useCompany from '../hooks/useCompany';
@@ -36,6 +35,7 @@ import useDepartmentsUp from '../hooks/useDepartmentsUp';
 import useEmployeesUp from '../hooks/useEmployeesUp';
 import useResoursesUp from '../hooks/useResoursesUp';
 import useProjects from '../hooks/useProjects';
+import { InvoicePrint } from '../print';
 
 export const indexTheList = (list: any) => {
   return list.map((item: any, index: any) => {
@@ -271,6 +271,7 @@ const PopupInvoice = ({
           resourseName,
           resourseNameAr,
           resourseColor,
+          note,
         } = item;
         const serv = servlist.filter((se: any) => se._id === item.itemId)[0];
         return {
@@ -294,6 +295,7 @@ const PopupInvoice = ({
           itemprice: item.itemPrice,
           itemqty: item.qty,
           itemtotal: item.total,
+          note,
         };
       });
       itemsWqtyprice.sort((a: any, b: any) =>
@@ -621,18 +623,17 @@ const PopupInvoice = ({
   };
 
   const onHandleSubmit = () => {
-    handleReactPrint();
     handleSubmit(onSubmit)();
   };
 
   const componentRef: any = useRef();
   const handleReactPrint = useReactToPrint({
     content: () => componentRef.current,
-    documentTitle: `Invoice #${row?.invoiceNo}`,
+    documentTitle: `Invoice #${row?.docNo}`,
     removeAfterPrint: true,
   });
   const printData = {
-    invoiceNo: row?.invoiceNo,
+    invoiceNo: row?.docNo,
     time: selectedDate,
     customerName: custvalue?.name,
     customerPhone: custvalue?.phone,
@@ -928,8 +929,9 @@ const PopupInvoice = ({
           ></PopupResourses>
           <Box>
             <div style={{ display: 'none' }}>
-              <InvoicePrintA5
+              <InvoicePrint
                 company={company}
+                user={user}
                 printData={printData}
                 ref={componentRef}
               />

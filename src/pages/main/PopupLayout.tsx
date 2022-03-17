@@ -146,34 +146,64 @@ export default function PopupLayout(props: any) {
           </Button>
         )}
         {!onlyclose && (
-          <Button
-            style={{ width: 100, height: 36, marginRight: 10, marginLeft: 10 }}
-            variant="contained"
-            onClick={onSubmit}
-            color="primary"
-            disabled={saving}
-          >
-            <Typography
-              style={{ marginLeft: 5, marginRight: 5 }}
-              variant="subtitle2"
+          <>
+            <Button
+              style={{
+                width: 100,
+                height: 36,
+                marginRight: 10,
+                marginLeft: 10,
+              }}
+              variant="contained"
+              onClick={() => {
+                onSubmit();
+                if (print) print();
+              }}
+              color="primary"
+              disabled={saving}
             >
-              {savetitle}
-            </Typography>
-            {saving && <CircularProgress color="primary" size={16} />}
-            {print && (
               <Typography
-                style={{
-                  marginLeft: 5,
-                  marginRight: 5,
-                  fontSize: 10,
-                  color: '#ddd',
-                }}
+                style={{ marginLeft: 5, marginRight: 5 }}
                 variant="subtitle2"
               >
-                {isRTL ? `(طباعة)` : `(Print)`}
+                {savetitle}
               </Typography>
-            )}
-          </Button>
+              {saving && <CircularProgress color="primary" size={16} />}
+              {print && (
+                <Typography
+                  style={{
+                    marginLeft: 5,
+                    marginRight: 5,
+                    fontSize: 10,
+                    color: '#ddd',
+                  }}
+                  variant="subtitle2"
+                >
+                  {isRTL ? `(طباعة)` : `(Print)`}
+                </Typography>
+              )}
+            </Button>
+            <Button
+              style={{
+                width: 100,
+                height: 36,
+                marginRight: 10,
+                marginLeft: 10,
+              }}
+              variant="contained"
+              onClick={onSubmit}
+              color="primary"
+              disabled={saving}
+            >
+              <Typography
+                style={{ marginLeft: 5, marginRight: 5 }}
+                variant="subtitle2"
+              >
+                {savetitle}
+              </Typography>
+              {saving && <CircularProgress color="primary" size={16} />}
+            </Button>
+          </>
         )}
       </DialogActions>
     </Dialog>

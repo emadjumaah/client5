@@ -189,6 +189,7 @@ export const AppointForm = (props: any) => {
           resourseName,
           resourseNameAr,
           resourseColor,
+          note,
         } = item;
         const serv = servlist.filter((se: any) => se._id === item.itemId)[0];
         return {
@@ -212,6 +213,7 @@ export const AppointForm = (props: any) => {
           itemprice: item.itemPrice,
           itemqty: item.qty,
           itemtotal: item.total,
+          note,
           // itemtotalcost: item.qty * serv.cost,
         };
       });

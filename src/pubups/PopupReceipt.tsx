@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { dublicateAlert, errorAlert, yup, messageAlert } from '../Shared';
 import { GContextTypes } from '../types';
@@ -9,7 +9,8 @@ import useAccounts from '../hooks/useAccounts';
 import { operationTypes } from '../constants';
 import { parents } from '../constants/kaid';
 import PopupLayout from '../pages/main/PopupLayout';
-import { Grid } from '@material-ui/core';
+import { Box, Grid } from '@material-ui/core';
+import { useReactToPrint } from 'react-to-print';
 import { CalenderLocal, TextFieldLocal } from '../components';
 import { getAppStartEndPeriod } from '../common/time';
 import AutoFieldLocal from '../components/fields/AutoFieldLocal';
@@ -17,6 +18,7 @@ import { useCustomers, useTemplate } from '../hooks';
 import { useLazyQuery } from '@apollo/client';
 import getInvoicesList from '../graphql/query/getInvoicesList';
 import PopupCustomer from './PopupCustomer';
+import { ReceiptPrint } from '../print';
 const PopupReceipt = ({
   open,
   onClose,
@@ -27,6 +29,7 @@ const PopupReceipt = ({
   theme,
   name,
   value,
+  company,
 }: any) => {
   const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
   const [selectedDate, setSelectedDate] = React.useState(new Date());
@@ -149,6 +152,22 @@ const PopupReceipt = ({
       setCreditAcc(filtereddebits?.[0]);
     }
   }, [row, ptype, open]);
+
+  const componentRef: any = useRef();
+  const handleReactPrint = useReactToPrint({
+    content: () => componentRef.current,
+    documentTitle: `Invoice #${row?.docNo}`,
+    removeAfterPrint: true,
+  });
+  const printData = {
+    no: row?.docNo,
+    time: selectedDate,
+    title: row?.title,
+    customerName: custvalue?.name,
+    customerPhone: custvalue?.phone,
+    desc: row?.desc,
+    amount: row?.amount,
+  };
 
   const onSubmit = async (data: any) => {
     const { startPeriod, endPeriod } = getAppStartEndPeriod();
@@ -286,7 +305,6 @@ const PopupReceipt = ({
   const onHandleSubmit = () => {
     handleSubmit(onSubmit)();
   };
-
   return (
     <PopupLayout
       isRTL={isRTL}
@@ -296,6 +314,7 @@ const PopupReceipt = ({
       onSubmit={onHandleSubmit}
       theme={theme}
       alrt={alrt}
+      print={!isNew ? handleReactPrint : undefined}
       mt={10}
     >
       <Grid container spacing={2}>
@@ -440,6 +459,16 @@ const PopupReceipt = ({
           addAction={addCustomer}
           editAction={editCustomer}
         ></PopupCustomer>
+        <Box>
+          <div style={{ display: 'none' }}>
+            <ReceiptPrint
+              company={company}
+              user={user}
+              printData={printData}
+              ref={componentRef}
+            />
+          </div>
+        </Box>
       </Grid>
     </PopupLayout>
   );

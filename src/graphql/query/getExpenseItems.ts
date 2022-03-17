@@ -46,7 +46,7 @@ export default gql`
         resourseColor
 
         userId
-
+        note
         createdAt
         updatedAt
       }

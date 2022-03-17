@@ -52,7 +52,14 @@ import { Box } from '@material-ui/core';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
 import { TableComponent } from '../../Shared/TableComponent';
 
-export default function Receipt({ isRTL, words, menuitem, isEditor, theme }) {
+export default function Receipt({
+  isRTL,
+  words,
+  menuitem,
+  isEditor,
+  theme,
+  company,
+}) {
   const [columns] = useState([
     { name: 'time', title: words.time },
     { name: 'creditAcc', title: words.customer },
@@ -275,7 +282,7 @@ export default function Receipt({ isRTL, words, menuitem, isEditor, theme }) {
             addAction={addFinance}
             editAction={editFinance}
           >
-            <PopupReceipt tasks={tasks}></PopupReceipt>
+            <PopupReceipt company={company} tasks={tasks}></PopupReceipt>
           </PopupEditing>
         </Grid>
         {loading && <Loading isRTL={isRTL} />}

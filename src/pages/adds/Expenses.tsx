@@ -53,7 +53,14 @@ import { Box } from '@material-ui/core';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
 import { TableComponent } from '../../Shared/TableComponent';
 
-export default function Expenses({ isRTL, words, menuitem, isEditor, theme }) {
+export default function Expenses({
+  isRTL,
+  words,
+  menuitem,
+  isEditor,
+  theme,
+  company,
+}) {
   const col = getColumns({ isRTL, words });
 
   const [columns] = useState([

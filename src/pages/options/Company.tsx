@@ -201,9 +201,9 @@ const Company = ({ words, editCompany, company, isRTL }) => {
               setUrl={setIconurl}
               image={iconimage}
               setImage={setIconimage}
-              width={280}
-              height={140}
-              size="400x200"
+              width={960}
+              height={155}
+              size="960x155"
             ></ImageOnlineUpload>
           </Grid>
           <Grid item xs={12} md={8}>

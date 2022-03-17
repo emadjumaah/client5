@@ -252,6 +252,7 @@ const PopupExpensesDoc = ({
           resourseName,
           resourseNameAr,
           resourseColor,
+          note,
         } = item;
         const serv = servlist.filter((se: any) => se._id === item.itemId)[0];
         return {
@@ -275,6 +276,7 @@ const PopupExpensesDoc = ({
           itemprice: item.itemPrice,
           itemqty: item.qty,
           itemtotal: item.total,
+          note,
         };
       });
       itemsWqtyprice.sort((a: any, b: any) =>

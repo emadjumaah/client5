@@ -45,6 +45,7 @@ export default gql`
         resourseNameAr
 
         userId
+        note
 
         createdAt
         updatedAt

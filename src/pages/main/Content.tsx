@@ -429,6 +429,7 @@ const Content = () => {
                   words={words}
                   isEditor={isEditor}
                   theme={theme}
+                  company={company}
                 ></Receipt>
               </ReceiptContext.Provider>
             )}
@@ -445,6 +446,7 @@ const Content = () => {
                   words={words}
                   isEditor={isEditor}
                   theme={theme}
+                  company={company}
                 ></Expenses>
               </ExpensesContext.Provider>
             )}
