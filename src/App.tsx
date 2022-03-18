@@ -31,9 +31,7 @@ function App() {
 
   const token = store ? store.token : null;
 
-  const httpLink = createHttpLink({
-    uri: graphqlURI,
-  });
+  const httpLink = createHttpLink({ uri: graphqlURI });
 
   const authLink = setContext((_, { headers }) => {
     return {

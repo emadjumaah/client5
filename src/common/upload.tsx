@@ -13,7 +13,7 @@ import {
 } from '../constants/sizes';
 import React from 'react';
 
-const serverURL = 'http://jadwal-server:4000';
+const serverURL = 'http://jadwal-main';
 
 export const FileUpload = () => {
   const [data, setFile] = useState({ name: '', path: '' });

@@ -17,6 +17,6 @@ export const initStore = {
   wrongTimes: 0,
   startBlock: null,
   template: null,
-  localuri: 'jadwal-server:4000', // jadwal-server
+  localuri: 'jadwal-main', // jadwal-server
   loading: false,
 };
