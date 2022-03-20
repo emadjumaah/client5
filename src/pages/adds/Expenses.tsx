@@ -290,7 +290,7 @@ export default function Expenses({
             addAction={addExpenses}
             editAction={editExpenses}
           >
-            <PopupExpenses tasks={tasks}></PopupExpenses>
+            <PopupExpenses company={company} tasks={tasks}></PopupExpenses>
           </PopupEditing>
         </Grid>
         {loading && <Loading isRTL={isRTL} />}

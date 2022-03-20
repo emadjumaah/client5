@@ -162,13 +162,18 @@ const PopupReceipt = ({
   const printData = {
     no: row?.docNo,
     time: selectedDate,
-    title: row?.title,
     customerName: custvalue?.name,
+    customerNameAr: custvalue?.nameAr,
     customerPhone: custvalue?.phone,
+    refNo: row?.refNo,
+    title: row?.title,
     desc: row?.desc,
     amount: row?.amount,
+    isRTL: isRTL,
+    chequeBank: row?.chequeBank,
+    chequeNo: row?.chequeNo,
+    chequeDate: row?.chequeDate,
   };
-
   const onSubmit = async (data: any) => {
     const { startPeriod, endPeriod } = getAppStartEndPeriod();
     if (selectedDate < startPeriod || selectedDate > endPeriod) {
@@ -178,7 +183,7 @@ const PopupReceipt = ({
       );
       return;
     }
-    const { amount, desc } = data;
+    const { amount, title, desc, chequeBank, chequeNo, chequeDate } = data;
     if (!debitAcc || !creditAcc || !custvalue) {
       await messageAlert(
         setAlrt,
@@ -253,7 +258,10 @@ const PopupReceipt = ({
       employee,
       resourse,
       amount,
-      // title,
+      chequeBank,
+      chequeNo,
+      chequeDate,
+      title,
       desc,
       branch: user.branch,
       userId: user._id,
@@ -422,17 +430,17 @@ const PopupReceipt = ({
                 mb={0}
               />
             </Grid>
-            {/* <Grid item xs={12}>
+            <Grid item xs={12}>
               <TextFieldLocal
                 name="title"
-                label={words.title}
+                label={words.for}
                 register={register}
                 errors={errors}
                 row={row}
                 fullWidth
                 mb={0}
               />
-            </Grid> */}
+            </Grid>
             <Grid item xs={12}>
               <TextFieldLocal
                 name="desc"

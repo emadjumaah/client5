@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import {
   dublicateAlert,
@@ -40,6 +40,8 @@ import { freqOptions } from '../constants/rrule';
 import RRule from 'rrule';
 import getRruleData from '../common/getRruleData';
 import { getEventsListNoActions } from '../common/helpers';
+import { ContractPrint } from '../print';
+import { useReactToPrint } from 'react-to-print';
 
 export const indexTheList = (list: any) => {
   return list.map((item: any, index: any) => {
@@ -68,6 +70,7 @@ const PopupTask = ({
   value = null,
   name = null,
   setNewValue,
+  company,
 }: any) => {
   const classes = invoiceClasses();
 
@@ -234,6 +237,23 @@ const PopupTask = ({
     setItemsList(listwithindex);
   };
 
+  const componentRef: any = useRef();
+  const handleReactPrint = useReactToPrint({
+    content: () => componentRef.current,
+    documentTitle: `Invoice #${row?.docNo}`,
+    removeAfterPrint: true,
+  });
+  const printData = {
+    ...row,
+    no: row?.docNo,
+    start,
+    end,
+    resovalue,
+    custvalue,
+    info,
+    isRTL: isRTL,
+  };
+
   const openDepartment = () => {
     setOpenDep(true);
   };
@@ -340,7 +360,12 @@ const PopupTask = ({
   }, [open]);
   const getOverallTotal = () => {
     const evssum = _.sumBy(evList, 'amount');
-    setTotal(evssum);
+    if (freq !== RRule.DAILY) {
+      const namount = evssum - totals.amount;
+      setTotal(namount);
+    } else {
+      setTotal(evssum);
+    }
   };
   useEffect(() => {
     getOverallTotal();
@@ -353,6 +378,9 @@ const PopupTask = ({
       const custId = row.customerId;
       const proId = row.projectId;
       const resId = row.resourseId;
+      if (row?.freq) {
+        setFreq(row?.freq);
+      }
 
       if (row?.info) {
         setInfo(JSON.parse(row?.info));
@@ -513,6 +541,14 @@ const PopupTask = ({
       return;
     }
 
+    if (!tasktitle) {
+      await messageAlert(
+        setAlrt,
+        isRTL ? 'يرجى اضافة اسم للمهمة' : 'Please add Task title'
+      );
+      return;
+    }
+
     if (!custvalue) {
       await messageAlert(
         setAlrt,
@@ -541,6 +577,7 @@ const PopupTask = ({
       resourse,
       project,
       info: JSON.stringify(info),
+      freq,
     };
     const mutate = isNew ? addAction : editAction;
     apply(mutate, variables);
@@ -591,7 +628,6 @@ const PopupTask = ({
   const day = weekdaysNNo?.[date.getDay()];
 
   const title = getPopupTitle('task', isNew);
-
   return (
     <PopupLayout
       isRTL={isRTL}
@@ -602,6 +638,7 @@ const PopupTask = ({
       theme={theme}
       alrt={alrt}
       mt={10}
+      print={!isNew ? handleReactPrint : undefined}
       maxWidth={isNew ? 'lg' : 'xl'}
       fullWidth
       preventclose
@@ -668,6 +705,19 @@ const PopupTask = ({
                     mb={0}
                   ></CalenderLocal>
                 )}
+              </Grid>
+              <Grid item xs={12}>
+                <TextFieldLocal
+                  required
+                  autoFocus={true}
+                  name="tasktitle"
+                  label={words.title}
+                  value={tasktitle}
+                  onChange={(e: any) => setTasktitle(e.target.value)}
+                  row={row}
+                  fullWidth
+                  mb={0}
+                />
               </Grid>
               {!tempoptions?.noRes && (
                 <Grid item xs={6}>
@@ -949,6 +999,16 @@ const PopupTask = ({
           addAction={addProject}
           editAction={editProject}
         ></PopupProject>
+        <Box>
+          <div style={{ display: 'none' }}>
+            <ContractPrint
+              company={company}
+              user={user}
+              printData={printData}
+              ref={componentRef}
+            />
+          </div>
+        </Box>
       </>
     </PopupLayout>
   );

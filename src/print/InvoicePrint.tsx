@@ -366,7 +366,7 @@ export class InvoicePrint extends React.PureComponent<any, any> {
   renderHeader = (company: any) => (
     <Grid item xs={12}>
       <img
-        src={company?.logo}
+        src={company?.header}
         alt={company?.name}
         height="auto"
         width="100%"

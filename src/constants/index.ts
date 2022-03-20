@@ -10,12 +10,14 @@ import {
 } from './datatypes';
 import { operationTypes, catTypes } from './datatypes';
 
-// export const graphqlURI = 'http://jadwal-main/graphql';
+// Dev
 // export const graphqlURI = 'http://jadwal-server/graphql';
 
+// Local
+// export const graphqlURI = 'http://jadwal-main/graphql';
+
+// Online
 export const graphqlURI = process.env.REACT_APP_GRAPHQL_URI;
-// export const graphqlURI =
-//   process.env.REACT_APP_GRAPHQL_URI || 'http://jadwal-server/graphql';
 
 export {
   mainmenu,

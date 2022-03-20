@@ -10,6 +10,7 @@ export default gql`
     $end: Date
     $progress: Float
     $tasktype: Int
+    $freq: Int
     $status: Int
     $evQty: Int
     $evDone: Int
@@ -34,6 +35,7 @@ export default gql`
       end: $end
       progress: $progress
       tasktype: $tasktype
+      freq: $freq
       status: $status
       evQty: $evQty
       evDone: $evDone

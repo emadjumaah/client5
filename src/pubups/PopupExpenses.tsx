@@ -299,6 +299,11 @@ const PopupExpenses = ({
     title: row?.title,
     desc: row?.desc,
     amount: row?.amount,
+    isRTL: isRTL,
+    chequeBank: row?.chequeBank,
+    chequeNo: row?.chequeNo,
+    chequeDate: row?.chequeDate,
+    task: taskvalue,
   };
 
   const onSubmit = async (data: any) => {

@@ -35,6 +35,7 @@ export interface LanguageType {
   isRTL: boolean;
   words: {
     all: string;
+    for: string;
     newInvoice: string;
     addInvoice: string;
     addCategory: string;

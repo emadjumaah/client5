@@ -5,6 +5,7 @@ import { LanguageType } from './langTypes';
 export const translation = (lang: LanguageType) => {
   const words = {
     all: lang.words.all,
+    for: lang.words.for,
     newInvoice: lang.words.newInvoice,
     addInvoice: lang.words.addInvoice,
     addCategory: lang.words.addCategory,

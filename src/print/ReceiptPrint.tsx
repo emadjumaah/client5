@@ -1,124 +1,16 @@
 /* eslint-disable jsx-a11y/alt-text */
-import { Grid, Box } from '@material-ui/core';
+import { Grid, Box, Typography } from '@material-ui/core';
 import React from 'react';
+import { tafkeet } from '../common/helpers';
 import { moneyFormat, simpleSpanDateFormatter } from '../Shared/colorFormat';
 
-const printcolor = '#54B9C4';
+const printcolor = '#777';
 
 export class ReceiptPrint extends React.PureComponent<any, any> {
-  renderFooter = () => (
-    <Grid item xs={12} style={{ marginTop: 15 }}>
-      <Grid container spacing={0}>
-        <Grid container spacing={2}></Grid>
-
-        <Grid item xs={1}></Grid>
-        <Grid item xs={3}>
-          <Box
-            border={1}
-            borderColor={printcolor}
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              height: 45,
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-          >
-            <div>Cheque Date تاريخ الشيك</div>
-            <div>________________</div>
-          </Box>
-        </Grid>
-        <Grid item xs={3}>
-          <Box
-            border={1}
-            borderColor={printcolor}
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              height: 45,
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-          >
-            <div>Cheque No رقم الشيك</div>
-            <div>________________</div>
-          </Box>
-        </Grid>
-        <Grid item xs={2}>
-          <Box
-            border={1}
-            borderColor={printcolor}
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              height: 45,
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-          >
-            <div>Bank البنك</div>
-            <div>________________</div>
-          </Box>
-        </Grid>
-        <Grid item xs={2}>
-          <Box
-            border={1}
-            borderColor={printcolor}
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              height: 45,
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-          >
-            <div>Cheque شيك</div>
-            <Box border={1} style={{ height: 20, width: 20 }}></Box>
-          </Box>
-        </Grid>
-        <Grid item xs={1}></Grid>
-        <Grid item xs={12}>
-          <Box height={10}></Box>
-        </Grid>
-        <Grid item xs={1}></Grid>
-        <Grid item xs={2}>
-          <Box
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              height: 45,
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-          >
-            <div>Manager المدير</div>
-            <div>________________</div>
-          </Box>
-        </Grid>
-        <Grid item xs={6}></Grid>
-        <Grid item xs={2}>
-          <Box
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              height: 45,
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-          >
-            <div>Receiver المستلم</div>
-            <div>________________</div>
-          </Box>
-        </Grid>
-        <Grid item xs={1}></Grid>
-      </Grid>
-    </Grid>
-  );
-
   renderHeader = (company: any) => (
     <Grid item xs={12}>
       <img
-        src={company?.logo}
+        src={company?.header}
         alt={company?.name}
         height="auto"
         width="100%"
@@ -172,6 +64,7 @@ export class ReceiptPrint extends React.PureComponent<any, any> {
                   height: 25,
                   marginLeft: 10,
                   marginRight: 10,
+                  backgroundColor: data?.chequeNo ? '#999' : '#fff',
                 }}
               ></Box>
               <span>CHEQUE</span>
@@ -191,6 +84,7 @@ export class ReceiptPrint extends React.PureComponent<any, any> {
                   height: 25,
                   marginLeft: 10,
                   marginRight: 10,
+                  backgroundColor: data?.chequeNo ? '#fff' : '#999',
                 }}
               ></Box>
               <span>CASH</span>
@@ -213,7 +107,7 @@ export class ReceiptPrint extends React.PureComponent<any, any> {
             style={{
               display: 'flex',
               alignItems: 'center',
-              justifyContent: 'flex-end',
+              justifyContent: 'center',
               marginLeft: 25,
               marginRight: 25,
               paddingLeft: 10,
@@ -236,26 +130,24 @@ export class ReceiptPrint extends React.PureComponent<any, any> {
             mt={10}
             style={{
               display: 'flex',
-              alignItems: 'center',
+              alignItems: 'flex-end',
               justifyContent: 'flex-end',
+              flexDirection: 'column',
             }}
           >
-            <span style={{ fontSize: 16 }}>
-              Date: {simpleSpanDateFormatter(data.time)} :التاريخ
-            </span>
+            <div style={{ position: 'absolute', right: 50, top: 150 }}>
+              {data.no} :No / رقم
+            </div>
+            <div style={{ fontSize: 16 }}>
+              {simpleSpanDateFormatter(data.time)} :Date / التاريخ
+            </div>
           </Box>
         </Grid>
       </Grid>
     </Grid>
   );
 
-  renderDivider = (x: number) => (
-    <Grid item xs={12}>
-      <Box m={x}></Box>
-    </Grid>
-  );
-
-  renderRows = () => (
+  renderRows = (data: any) => (
     <Grid item xs={12}>
       <Grid container spacing={2}>
         <Grid item xs={2}>
@@ -263,13 +155,22 @@ export class ReceiptPrint extends React.PureComponent<any, any> {
         </Grid>
         <Grid item xs={8}>
           <Box
-            style={{ display: 'flex', height: 20 }}
+            style={{
+              display: 'flex',
+              height: 20,
+              alignItems: 'center',
+              justifyContent: data.isRTL ? 'flex-end' : undefined,
+            }}
             border={1}
             borderColor="grey.300"
             borderRight={0}
             borderLeft={0}
             borderTop={0}
-          ></Box>
+          >
+            <Typography>
+              {data?.isRTL ? data.customerNameAr : data.customerName}
+            </Typography>
+          </Box>
         </Grid>
         <Grid item xs={2}>
           <div
@@ -289,13 +190,20 @@ export class ReceiptPrint extends React.PureComponent<any, any> {
         </Grid>
         <Grid item xs={8}>
           <Box
-            style={{ display: 'flex', height: 20 }}
+            style={{
+              display: 'flex',
+              height: 20,
+              alignItems: 'center',
+              justifyContent: data.isRTL ? 'flex-end' : undefined,
+            }}
             border={1}
             borderColor="grey.300"
             borderRight={0}
             borderLeft={0}
             borderTop={0}
-          ></Box>
+          >
+            <Typography>{tafkeet(data?.amount)}</Typography>
+          </Box>
         </Grid>
         <Grid item xs={2}>
           <div
@@ -315,13 +223,20 @@ export class ReceiptPrint extends React.PureComponent<any, any> {
         </Grid>
         <Grid item xs={8}>
           <Box
-            style={{ display: 'flex', height: 20 }}
+            style={{
+              display: 'flex',
+              height: 20,
+              alignItems: 'center',
+              justifyContent: data.isRTL ? 'flex-end' : undefined,
+            }}
             border={1}
             borderColor="grey.300"
             borderRight={0}
             borderLeft={0}
             borderTop={0}
-          ></Box>
+          >
+            <Typography>{data.title}</Typography>
+          </Box>
         </Grid>
         <Grid item xs={2}>
           <div
@@ -339,13 +254,22 @@ export class ReceiptPrint extends React.PureComponent<any, any> {
         <Grid item xs={2}></Grid>
         <Grid item xs={8}>
           <Box
-            style={{ display: 'flex', height: 20 }}
+            style={{
+              display: 'flex',
+              height: 20,
+              alignItems: 'center',
+              justifyContent: data.isRTL ? 'flex-end' : undefined,
+            }}
             border={1}
             borderColor="grey.300"
             borderRight={0}
             borderLeft={0}
             borderTop={0}
-          ></Box>
+          >
+            <Typography>
+              {data?.refNo ? `${data?.refNo} :Invoice No فاتورة رقم` : ``}
+            </Typography>
+          </Box>
         </Grid>
         <Grid item xs={2}>
           <div
@@ -362,10 +286,133 @@ export class ReceiptPrint extends React.PureComponent<any, any> {
     </Grid>
   );
 
+  renderFooter = (data: any) => (
+    <Grid item xs={12} style={{ marginTop: 15 }}>
+      <Grid container spacing={0}>
+        <Grid container spacing={2}></Grid>
+
+        <Grid item xs={1}></Grid>
+        <Grid item xs={3}>
+          <Box
+            border={1}
+            borderColor={printcolor}
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              height: 45,
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            <div>Cheque Date تاريخ الشيك</div>
+            <div>
+              {data?.chequeDate ? data?.chequeDate : '________________'}
+            </div>
+          </Box>
+        </Grid>
+        <Grid item xs={3}>
+          <Box
+            border={1}
+            borderColor={printcolor}
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              height: 45,
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            <div>Cheque No رقم الشيك</div>
+            {data?.chequeNo ? data?.chequeNo : '________________'}
+          </Box>
+        </Grid>
+        <Grid item xs={2}>
+          <Box
+            border={1}
+            borderColor={printcolor}
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              height: 45,
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            <div>Bank البنك</div>
+            {data?.chequeBank ? data?.chequeBank : '________________'}
+          </Box>
+        </Grid>
+        <Grid item xs={2}>
+          <Box
+            border={1}
+            borderColor={printcolor}
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              height: 45,
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            <div>Cheque شيك</div>
+            <Box
+              border={1}
+              style={{
+                height: 20,
+                width: 20,
+                backgroundColor: data?.chequeNo ? '#999' : '#fff',
+              }}
+            ></Box>
+          </Box>
+        </Grid>
+        <Grid item xs={1}></Grid>
+        <Grid item xs={12}>
+          <Box height={10}></Box>
+        </Grid>
+        <Grid item xs={1}></Grid>
+        <Grid item xs={2}>
+          <Box
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              height: 45,
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            <div>Manager المدير</div>
+            <div>________________</div>
+          </Box>
+        </Grid>
+        <Grid item xs={6}></Grid>
+        <Grid item xs={2}>
+          <Box
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              height: 45,
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            <div>Receiver المستلم</div>
+            <div>________________</div>
+          </Box>
+        </Grid>
+        <Grid item xs={1}></Grid>
+      </Grid>
+    </Grid>
+  );
+
+  renderDivider = (x: number) => (
+    <Grid item xs={12}>
+      <Box m={x}></Box>
+    </Grid>
+  );
+
   render() {
     const data = this.props.printData;
     const { company } = this.props;
-
     return (
       <Box>
         <Box>
@@ -375,8 +422,8 @@ export class ReceiptPrint extends React.PureComponent<any, any> {
               <Box ml={6} mr={6}>
                 <Grid container spacing={2}>
                   {this.renderTitle(data)}
-                  {this.renderRows()}
-                  {this.renderFooter()}
+                  {this.renderRows(data)}
+                  {this.renderFooter(data)}
                 </Grid>
               </Box>
             </Grid>
@@ -390,8 +437,8 @@ export class ReceiptPrint extends React.PureComponent<any, any> {
                 <Grid container spacing={2}>
                   {this.renderTitle(data)}
                   {this.renderDivider(1)}
-                  {this.renderRows()}
-                  {this.renderFooter()}
+                  {this.renderRows(data)}
+                  {this.renderFooter(data)}
                 </Grid>
               </Box>
             </Grid>

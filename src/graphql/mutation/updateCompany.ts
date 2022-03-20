@@ -1,4 +1,4 @@
-import { gql } from "@apollo/client";
+import { gql } from '@apollo/client';
 
 export default gql`
   mutation updateCompany(
@@ -12,6 +12,9 @@ export default gql`
     $website: String
     $address: String
     $logo: String
+    $header: String
+    $footer: String
+    $color: String
   ) {
     updateCompany(
       name: $name
@@ -24,6 +27,9 @@ export default gql`
       website: $website
       address: $address
       logo: $logo
+      header: $header
+      footer: $footer
+      color: $color
     ) {
       ok
       message

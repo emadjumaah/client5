@@ -178,6 +178,7 @@ export const getSendTime = ({
 };
 
 export const tafkeet = (number: any) => {
+  if (!number) return '';
   const stringText = new Tafgeet(number, 'QAR').parse();
   return stringText;
 };

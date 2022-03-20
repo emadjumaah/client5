@@ -34,6 +34,7 @@ export default gql`
         id
         name
         type
+        freq
         start
         end
         progress

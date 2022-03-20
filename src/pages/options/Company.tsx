@@ -8,12 +8,13 @@ import {
   FormControlLabel,
   Grid,
   Paper,
+  TextField,
   Typography,
 } from '@material-ui/core';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 
-import { PopupTextField } from '../../Shared';
+import { ColorPicker, PopupTextField } from '../../Shared';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { ImageOnlineUpload, uploadPhotoOnline } from '../../common/upload';
 import Package from './Package';
@@ -37,6 +38,13 @@ const Company = ({ words, editCompany, company, isRTL }) => {
   const [iconimage, setIconimage] = useState(null);
   const [iconurl, setIconurl] = useState(null);
 
+  const [headerimage, setHeaderimage] = useState(null);
+  const [headerurl, setHeaderurl] = useState(null);
+
+  const [footerimage, setFooterimage] = useState(null);
+  const [footerurl, setFooterurl] = useState(null);
+  const [color, setColor] = useState<any>(company?.color);
+
   const { register, handleSubmit, errors } = useForm({
     resolver: yupResolver(calSchema),
     defaultValues: {
@@ -51,11 +59,19 @@ const Company = ({ words, editCompany, company, isRTL }) => {
       address: company?.address,
     },
   });
-
   useEffect(() => {
     if (company?.logo) {
       setLogo(company?.logo);
       setIconurl(company?.logo);
+    }
+    if (company?.header) {
+      setHeaderurl(company?.header);
+    }
+    if (company?.footer) {
+      setFooterurl(company?.footer);
+    }
+    if (company?.color) {
+      setColor(company?.color);
     }
   }, [company]);
 
@@ -64,9 +80,19 @@ const Company = ({ words, editCompany, company, isRTL }) => {
     const nameAr = data.nameAr.trim();
     const { tel1, tel2, fax, mob, email, website, address } = data;
     let icon: any;
+    let header: any;
+    let footer: any;
     if (iconimage) {
       icon = await uploadPhotoOnline(iconimage);
       icon = icon.replace('http://', 'https://');
+    }
+    if (headerimage) {
+      header = await uploadPhotoOnline(headerimage);
+      header = header.replace('http://', 'https://');
+    }
+    if (footerimage) {
+      footer = await uploadPhotoOnline(footerimage);
+      footer = footer.replace('http://', 'https://');
     }
     const variables: any = {
       name,
@@ -79,6 +105,9 @@ const Company = ({ words, editCompany, company, isRTL }) => {
       website,
       address,
       logo: icon ? icon : logo,
+      header,
+      footer,
+      color,
     };
 
     await editCompany({ variables });
@@ -195,16 +224,61 @@ const Company = ({ words, editCompany, company, isRTL }) => {
               errors={errors}
               disabled={!active}
             />
+          </Grid>
+          <Grid item xs={8}></Grid>
 
+          <Grid item xs={2}>
+            <Box>Logo</Box>
             <ImageOnlineUpload
               url={iconurl}
               setUrl={setIconurl}
               image={iconimage}
               setImage={setIconimage}
-              width={960}
-              height={155}
-              size="960x155"
+              width={150}
+              height={150}
+              size="400x400"
             ></ImageOnlineUpload>
+          </Grid>
+
+          <Grid item xs={6}>
+            <Grid container spacing={1}>
+              <Grid item xs={12}>
+                <Box>Header</Box>
+                <ImageOnlineUpload
+                  url={headerurl}
+                  setUrl={setHeaderurl}
+                  image={headerimage}
+                  setImage={setHeaderimage}
+                  width={550}
+                  height={80}
+                  size="960x155"
+                ></ImageOnlineUpload>
+              </Grid>
+              <Grid item xs={12}>
+                <Box>Footer</Box>
+                <ImageOnlineUpload
+                  url={footerurl}
+                  setUrl={setFooterurl}
+                  image={footerimage}
+                  setImage={setFooterimage}
+                  width={550}
+                  height={15}
+                  size="960x100"
+                ></ImageOnlineUpload>
+              </Grid>
+            </Grid>
+          </Grid>
+          <Grid item xs={4}>
+            <TextField
+              disabled
+              name="color"
+              value={company?.color ? company.color : color}
+              variant="outlined"
+              style={{ width: 200, backgroundColor: color }}
+              InputProps={{ style: { borderRadius: 5, color: '#fff' } }}
+              margin="dense"
+            />
+            <ColorPicker setColor={setColor} color={color}></ColorPicker>
           </Grid>
           <Grid item xs={12} md={8}>
             {company && <Package company={company} isRTL={isRTL}></Package>}
