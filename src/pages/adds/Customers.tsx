@@ -195,7 +195,15 @@ export default function Customers(props: any) {
           />
           <TableHeaderRow showSortingControls />
           <TableColumnVisibility
-            defaultHiddenColumnNames={['email', 'address']}
+            defaultHiddenColumnNames={[
+              'amount',
+              'progress',
+              'totalinvoiced',
+              'totalpaid',
+              'due',
+              'toatlExpenses',
+              'income',
+            ]}
           />
           <DataTypeProvider
             for={['nameAr', 'name']}

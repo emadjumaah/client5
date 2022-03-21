@@ -23,7 +23,7 @@ import { useLazyQuery } from '@apollo/client';
 import { getActions, getOperationItems } from '../../../graphql';
 import ServiceItemForm from '../../../Shared/ServiceItemForm';
 import ItemsTable from '../../../Shared/ItemsTable';
-import LoadingInline from '../../../Shared/LoadingInline';
+// import LoadingInline from '../../../Shared/LoadingInline';
 import { invoiceClasses } from '../../../themes';
 import {
   actionTypeFormatter,
@@ -789,7 +789,7 @@ export const AppointForm = (props: any) => {
                 ></ItemsTable>
               </Box>
             )}
-            {loading && <LoadingInline></LoadingInline>}
+            {/* {loading && <LoadingInline></LoadingInline>} */}
           </Box>
           <Typography style={{ fontWeight: 'bold', fontSize: 16 }}>
             {words.total} : {moneyFormat(totals.amount)}

@@ -43,6 +43,7 @@ import PopupReceipt from '../pubups/PopupReceipt';
 import useTasks from '../hooks/useTasks';
 import getTasks from '../graphql/query/getTasks';
 import React from 'react';
+import useCompany from '../hooks/useCompany';
 
 export default function ReceiptTask({ isRTL, words, isEditor, theme, taskId }) {
   const [columns] = useState([
@@ -59,6 +60,7 @@ export default function ReceiptTask({ isRTL, words, isEditor, theme, taskId }) {
   const [loading, setLoading] = useState(false);
 
   const { tasks } = useTasks();
+  const { company } = useCompany();
 
   const [loadFinances, financeData]: any = useLazyQuery(getReceipts, {
     fetchPolicy: 'cache-and-network',
@@ -192,7 +194,7 @@ export default function ReceiptTask({ isRTL, words, isEditor, theme, taskId }) {
           addAction={addFinance}
           editAction={editFinance}
         >
-          <PopupReceipt tasks={tasks}></PopupReceipt>
+          <PopupReceipt company={company} tasks={tasks}></PopupReceipt>
         </PopupEditing>
       </Grid>
       {loading && <Loading isRTL={isRTL} />}

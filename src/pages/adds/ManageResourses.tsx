@@ -72,7 +72,7 @@ export default function ManageResourses({
 
   const [columns] = useState([
     { name: isRTL ? 'nameAr' : 'name', title: words.name },
-    { name: 'avatar', title: words.color },
+    { name: 'plate', title: words.plate },
     {
       name: isRTL ? 'departmentNameAr' : 'departmentName',
       title: words.department,
@@ -168,7 +168,16 @@ export default function ManageResourses({
           />
           <TableHeaderRow showSortingControls />
           <TableColumnVisibility
-            defaultHiddenColumnNames={['info', 'avatar']}
+            defaultHiddenColumnNames={[
+              'info',
+              // 'amount',
+              // 'progress',
+              // 'totalinvoiced',
+              // 'totalpaid',
+              // 'due',
+              // 'toatlExpenses',
+              // 'income',
+            ]}
           />
 
           <DataTypeProvider

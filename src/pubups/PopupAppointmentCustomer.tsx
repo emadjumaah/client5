@@ -23,7 +23,7 @@ import { eventStatus, weekdaysNNo } from '../constants/datatypes';
 // import { getAppStartEndPeriod } from "../common/time";
 import ServiceItemForm from '../Shared/ServiceItemForm';
 import ItemsTable from '../Shared/ItemsTable';
-import LoadingInline from '../Shared/LoadingInline';
+// import LoadingInline from '../Shared/LoadingInline';
 import { useLazyQuery } from '@apollo/client';
 import { getActions, getOperationItems } from '../graphql';
 import { invoiceClasses } from '../themes/classes';
@@ -938,7 +938,7 @@ const PopupAppointmentCustomer = ({
                   user={user}
                 ></ItemsTable>
               )}
-              {loading && <LoadingInline></LoadingInline>}
+              {/* {loading && <LoadingInline></LoadingInline>} */}
             </Box>
             <Grid container spacing={2}>
               <Grid item xs={4}>

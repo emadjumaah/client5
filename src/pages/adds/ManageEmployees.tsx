@@ -176,11 +176,15 @@ export default function ManageEmployees({
           <TableHeaderRow showSortingControls />
           <TableColumnVisibility
             defaultHiddenColumnNames={[
-              'email',
               'info',
-              'phone',
               'daysoff',
-              'avatar',
+              'amount',
+              'progress',
+              'totalinvoiced',
+              'totalpaid',
+              'due',
+              'toatlExpenses',
+              'income',
             ]}
           />
 

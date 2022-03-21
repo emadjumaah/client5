@@ -41,6 +41,7 @@ import useAccounts from '../hooks/useAccounts';
 import PopupExpenses from '../pubups/PopupExpenses';
 import useTasks from '../hooks/useTasks';
 import getTasks from '../graphql/query/getTasks';
+import useCompany from '../hooks/useCompany';
 
 export default function ExpensesCustomer({
   isRTL,
@@ -76,6 +77,7 @@ export default function ExpensesCustomer({
   const [loading, setLoading] = useState(false);
 
   const { tasks } = useTasks();
+  const { company } = useCompany();
 
   const [loadExpenses, expensesData]: any = useLazyQuery(getExpenses, {
     fetchPolicy: 'cache-and-network',
@@ -216,6 +218,7 @@ export default function ExpensesCustomer({
           editAction={editExpenses}
         >
           <PopupExpenses
+            company={company}
             name={name}
             value={value}
             tasks={tasks}
