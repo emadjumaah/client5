@@ -7,6 +7,7 @@ export const translation = (lang: LanguageType) => {
     all: lang.words.all,
     for: lang.words.for,
     newInvoice: lang.words.newInvoice,
+    newPeriod: lang.words.newPeriod,
     addInvoice: lang.words.addInvoice,
     addCategory: lang.words.addCategory,
     categoryName: lang.words.categoryName,

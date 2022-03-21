@@ -1,11 +1,12 @@
 /* eslint-disable jsx-a11y/alt-text */
-import { Grid, Box, Typography } from '@material-ui/core';
+import { Grid, Box } from '@material-ui/core';
 import React from 'react';
 import { tafkeet } from '../common/helpers';
 import {
   simpleSpanDateFormatter,
   covertToTimeOnly,
   getDateDayWeek,
+  moneyFormatEmpty,
 } from '../Shared/colorFormat';
 import { carlist, custlist } from './lists';
 
@@ -135,145 +136,6 @@ export class ContractPrint extends React.PureComponent<any, any> {
       </Grid>
       <Grid item xs={8}></Grid>
       <Grid item xs={2}></Grid>
-    </Grid>
-  );
-
-  renderRows = (data: any) => (
-    <Grid item xs={12}>
-      <Grid container spacing={2}>
-        <Grid item xs={2}>
-          <div style={{ fontSize: 14, fontWeight: 'bold' }}>Received From</div>
-        </Grid>
-        <Grid item xs={8}>
-          <Box
-            style={{
-              display: 'flex',
-              height: 20,
-              alignItems: 'center',
-              justifyContent: data.isRTL ? 'flex-end' : undefined,
-            }}
-            border={1}
-            borderColor="grey.300"
-            borderRight={0}
-            borderLeft={0}
-            borderTop={0}
-          >
-            <Typography>
-              {data?.isRTL ? data.customerNameAr : data.customerName}
-            </Typography>
-          </Box>
-        </Grid>
-        <Grid item xs={2}>
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'flex-end',
-              fontSize: 14,
-              fontWeight: 'bold',
-            }}
-          >
-            وصلني من
-          </div>
-        </Grid>
-        <Grid item xs={2}>
-          <div style={{ fontSize: 14, fontWeight: 'bold' }}>Amounty of</div>
-        </Grid>
-        <Grid item xs={8}>
-          <Box
-            style={{
-              display: 'flex',
-              height: 20,
-              alignItems: 'center',
-              justifyContent: data.isRTL ? 'flex-end' : undefined,
-            }}
-            border={1}
-            borderColor="grey.300"
-            borderRight={0}
-            borderLeft={0}
-            borderTop={0}
-          >
-            <Typography>{tafkeet(data?.amount)}</Typography>
-          </Box>
-        </Grid>
-        <Grid item xs={2}>
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'flex-end',
-              fontSize: 14,
-              fontWeight: 'bold',
-            }}
-          >
-            مبلغ وقدره
-          </div>
-        </Grid>
-        <Grid item xs={2}>
-          <div style={{ fontSize: 14, fontWeight: 'bold' }}>For</div>
-        </Grid>
-        <Grid item xs={8}>
-          <Box
-            style={{
-              display: 'flex',
-              height: 20,
-              alignItems: 'center',
-              justifyContent: data.isRTL ? 'flex-end' : undefined,
-            }}
-            border={1}
-            borderColor="grey.300"
-            borderRight={0}
-            borderLeft={0}
-            borderTop={0}
-          >
-            <Typography>{data.title}</Typography>
-          </Box>
-        </Grid>
-        <Grid item xs={2}>
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'flex-end',
-              fontSize: 14,
-              fontWeight: 'bold',
-            }}
-          >
-            وذلك عن
-          </div>
-        </Grid>
-        <Grid item xs={2}></Grid>
-        <Grid item xs={8}>
-          <Box
-            style={{
-              display: 'flex',
-              height: 20,
-              alignItems: 'center',
-              justifyContent: data.isRTL ? 'flex-end' : undefined,
-            }}
-            border={1}
-            borderColor="grey.300"
-            borderRight={0}
-            borderLeft={0}
-            borderTop={0}
-          >
-            <Typography>
-              {data?.refNo ? `${data?.refNo} :Invoice No فاتورة رقم` : ``}
-            </Typography>
-          </Box>
-        </Grid>
-        <Grid item xs={2}>
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'flex-end',
-              fontSize: 14,
-              height: 20,
-            }}
-          ></div>
-        </Grid>
-      </Grid>
     </Grid>
   );
 
@@ -431,10 +293,22 @@ export class ContractPrint extends React.PureComponent<any, any> {
   );
 
   renderPriceType = (data: any) => {
-    const { freq } = data;
-    const isD = freq === 3;
-    const isW = freq === 2;
-    const isM = freq === 1;
+    const { isRTL, freq, amount, evQty } = data;
+
+    const unit =
+      freq === 1
+        ? isRTL
+          ? 'شهري'
+          : 'Monthly'
+        : freq === 2
+        ? isRTL
+          ? 'اسبوعي'
+          : 'Weekly'
+        : isRTL
+        ? 'يومي'
+        : 'Daily';
+    const qty = freq === 3 ? evQty : evQty - 1;
+    const price = freq === 3 ? amount / evQty : amount / (evQty - 1);
     return (
       <Grid container spacing={0}>
         <Grid item xs={8}>
@@ -452,8 +326,8 @@ export class ContractPrint extends React.PureComponent<any, any> {
                   height: 30,
                 }}
               >
-                <Box>شهري</Box>
-                <Box>Monthly</Box>
+                <Box>السعر</Box>
+                <Box>Price</Box>
               </Box>
             </Grid>
             <Grid item xs={4}>
@@ -469,8 +343,8 @@ export class ContractPrint extends React.PureComponent<any, any> {
                   height: 30,
                 }}
               >
-                <Box>اسبوعي</Box>
-                <Box>Weekly</Box>
+                <Box>العدد</Box>
+                <Box>Quantity</Box>
               </Box>
             </Grid>
             <Grid item xs={4}>
@@ -486,8 +360,26 @@ export class ContractPrint extends React.PureComponent<any, any> {
                   height: 30,
                 }}
               >
-                <Box>يومي</Box>
-                <Box>Daily</Box>
+                <Box>الوحدة</Box>
+                <Box>Unit</Box>
+              </Box>
+            </Grid>
+
+            <Grid item xs={4}>
+              <Box
+                border={1}
+                borderColor="grey.400"
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontSize: 12,
+                  fontWeight: 'bold',
+                  flexDirection: 'column',
+                  height: 30,
+                }}
+              >
+                {moneyFormatEmpty(price)}
               </Box>
             </Grid>
             <Grid item xs={4}>
@@ -498,17 +390,13 @@ export class ContractPrint extends React.PureComponent<any, any> {
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  fontSize: 11,
+                  fontSize: 12,
+                  fontWeight: 'bold',
                   flexDirection: 'column',
                   height: 30,
                 }}
               >
-                {' '}
-                {isM && (
-                  <Box
-                    style={{ width: 15, height: 15, backgroundColor: '#888' }}
-                  ></Box>
-                )}
+                {qty}
               </Box>
             </Grid>
             <Grid item xs={4}>
@@ -519,37 +407,13 @@ export class ContractPrint extends React.PureComponent<any, any> {
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  fontSize: 11,
+                  fontSize: 12,
+                  fontWeight: 'bold',
                   flexDirection: 'column',
                   height: 30,
                 }}
               >
-                {isW && (
-                  <Box
-                    style={{ width: 15, height: 15, backgroundColor: '#888' }}
-                  ></Box>
-                )}
-              </Box>
-            </Grid>
-            <Grid item xs={4}>
-              <Box
-                border={1}
-                borderColor="grey.400"
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  fontSize: 11,
-                  flexDirection: 'column',
-                  height: 30,
-                }}
-              >
-                {' '}
-                {isD && (
-                  <Box
-                    style={{ width: 15, height: 15, backgroundColor: '#888' }}
-                  ></Box>
-                )}
+                {unit}
               </Box>
             </Grid>
           </Grid>
@@ -573,6 +437,44 @@ export class ContractPrint extends React.PureComponent<any, any> {
             <Box>Km Price</Box>
           </Box>
         </Grid>
+        <Grid item xs={8}>
+          <Box
+            border={1}
+            borderColor="grey.400"
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontSize: 14,
+              fontWeight: 'bold',
+              flexDirection: 'column',
+              height: 30,
+            }}
+          >
+            {moneyFormatEmpty(amount)}
+          </Box>
+        </Grid>
+        <Grid item xs={4}>
+          <Box
+            border={1}
+            borderRight={0}
+            borderColor="grey.400"
+            style={{
+              display: 'flex',
+              alignItems: 'flex-end',
+              justifyContent: 'center',
+              paddingLeft: 5,
+              paddingRight: 5,
+              fontSize: 10,
+              flexDirection: 'column',
+              backgroundColor: '#eee',
+              height: 30,
+            }}
+          >
+            <Box>القيمة</Box>
+            <Box>Amount</Box>
+          </Box>
+        </Grid>
         <Grid item xs={12}>
           <Box
             border={1}
@@ -581,316 +483,287 @@ export class ContractPrint extends React.PureComponent<any, any> {
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              fontSize: 8,
+              fontSize: 11,
               flexDirection: 'column',
               backgroundColor: '#eee',
               height: 30,
             }}
           >
-            <Box>
-              اذا لم يكن هناك اتفاق مسبق للايجار الاسبوعي او الشهري سوف يتم
-              احتساب الايجار بواقع الايجار اليومي
-            </Box>
+            {amount && <Box>{tafkeet(amount)}</Box>}
           </Box>
         </Grid>
       </Grid>
     );
   };
 
-  renderPeriod = (data: any) => (
-    <Grid container spacing={0}>
-      <Grid item xs={8}>
-        <Box
-          border={1}
-          borderColor="grey.400"
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            fontSize: 10,
-            flexDirection: 'column',
-            height: 30,
-          }}
-        ></Box>
+  renderPeriod = (data: any) => {
+    const { amount, totalpaid } = data;
+    return (
+      <Grid container spacing={0}>
+        <Grid item xs={1}>
+          <Box
+            border={1}
+            borderColor="grey.400"
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontSize: 10,
+              flexDirection: 'column',
+              height: 30,
+            }}
+          >
+            QR
+          </Box>
+        </Grid>
+        <Grid item xs={7}>
+          <Box
+            border={1}
+            borderColor="grey.400"
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontSize: 14,
+              fontWeight: 'bold',
+              flexDirection: 'column',
+              height: 30,
+            }}
+          >
+            {moneyFormatEmpty(totalpaid)}
+          </Box>
+        </Grid>
+        <Grid item xs={4}>
+          <Box
+            border={1}
+            borderRight={0}
+            borderColor="grey.400"
+            style={{
+              display: 'flex',
+              alignItems: 'flex-end',
+              justifyContent: 'center',
+              paddingLeft: 5,
+              paddingRight: 5,
+              fontSize: 10,
+              flexDirection: 'column',
+              backgroundColor: '#eee',
+              height: 30,
+            }}
+          >
+            <Box>مدفوعات</Box>
+            <Box>Payments</Box>
+          </Box>
+        </Grid>
+        <Grid item xs={1}>
+          <Box
+            border={1}
+            borderColor="grey.400"
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontSize: 10,
+              flexDirection: 'column',
+              height: 30,
+            }}
+          >
+            QR
+          </Box>
+        </Grid>
+        <Grid item xs={7}>
+          <Box
+            border={1}
+            borderColor="grey.400"
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontSize: 10,
+              flexDirection: 'column',
+              height: 30,
+            }}
+          ></Box>
+        </Grid>
+        <Grid item xs={4}>
+          <Box
+            border={1}
+            borderRight={0}
+            borderColor="grey.400"
+            style={{
+              display: 'flex',
+              alignItems: 'flex-end',
+              justifyContent: 'center',
+              paddingLeft: 5,
+              paddingRight: 5,
+              fontSize: 10,
+              flexDirection: 'column',
+              backgroundColor: '#eee',
+              height: 30,
+            }}
+          >
+            <Box>توع التأمين</Box>
+            <Box>Insurance Coverage</Box>
+          </Box>
+        </Grid>
+        <Grid item xs={1}>
+          <Box
+            border={1}
+            borderColor="grey.400"
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontSize: 10,
+              flexDirection: 'column',
+              height: 30,
+            }}
+          >
+            QR
+          </Box>
+        </Grid>
+        <Grid item xs={7}>
+          <Box
+            border={1}
+            borderColor="grey.400"
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontSize: 10,
+              flexDirection: 'column',
+              height: 30,
+            }}
+          ></Box>
+        </Grid>
+        <Grid item xs={4}>
+          <Box
+            border={1}
+            borderRight={0}
+            borderColor="grey.400"
+            style={{
+              display: 'flex',
+              alignItems: 'flex-end',
+              justifyContent: 'center',
+              paddingLeft: 5,
+              paddingRight: 5,
+              fontSize: 10,
+              flexDirection: 'column',
+              backgroundColor: '#eee',
+              height: 30,
+            }}
+          >
+            <Box>مبالغ اضافية مستحقة</Box>
+            <Box>Over Charges</Box>
+          </Box>
+        </Grid>
+        <Grid item xs={1}>
+          <Box
+            border={1}
+            borderColor="grey.400"
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontSize: 10,
+              flexDirection: 'column',
+              height: 30,
+            }}
+          >
+            QR
+          </Box>
+        </Grid>
+        <Grid item xs={7}>
+          <Box
+            border={1}
+            borderColor="grey.400"
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontSize: 10,
+              flexDirection: 'column',
+              height: 30,
+            }}
+          ></Box>
+        </Grid>
+        <Grid item xs={4}>
+          <Box
+            border={1}
+            borderRight={0}
+            borderColor="grey.400"
+            style={{
+              display: 'flex',
+              alignItems: 'flex-end',
+              justifyContent: 'center',
+              paddingLeft: 5,
+              paddingRight: 5,
+              fontSize: 10,
+              flexDirection: 'column',
+              backgroundColor: '#eee',
+              height: 30,
+            }}
+          >
+            <Box>أشياء اخرى</Box>
+            <Box>Others</Box>
+          </Box>
+        </Grid>
+        <Grid item xs={1}>
+          <Box
+            border={1}
+            borderColor="grey.400"
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontSize: 10,
+              flexDirection: 'column',
+              height: 30,
+            }}
+          >
+            QR
+          </Box>
+        </Grid>
+        <Grid item xs={7}>
+          <Box
+            border={1}
+            borderColor="grey.400"
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontSize: 14,
+              fontWeight: 'bold',
+              flexDirection: 'column',
+              height: 30,
+            }}
+          >
+            {moneyFormatEmpty(amount - totalpaid)}
+          </Box>
+        </Grid>
+        <Grid item xs={4}>
+          <Box
+            border={1}
+            borderRight={0}
+            borderColor="grey.400"
+            style={{
+              display: 'flex',
+              alignItems: 'flex-end',
+              justifyContent: 'center',
+              paddingLeft: 5,
+              paddingRight: 5,
+              fontSize: 10,
+              flexDirection: 'column',
+              backgroundColor: '#eee',
+              height: 30,
+            }}
+          >
+            <Box>الرصيد المستحق</Box>
+            <Box>Balance Due/Refund</Box>
+          </Box>
+        </Grid>
       </Grid>
-      <Grid item xs={4}>
-        <Box
-          border={1}
-          borderRight={0}
-          borderColor="grey.400"
-          style={{
-            display: 'flex',
-            alignItems: 'flex-end',
-            justifyContent: 'center',
-            paddingLeft: 5,
-            paddingRight: 5,
-            fontSize: 10,
-            flexDirection: 'column',
-            backgroundColor: '#eee',
-            height: 30,
-          }}
-        >
-          <Box>المدة المطلوبة</Box>
-          <Box>Period</Box>
-        </Box>
-      </Grid>
-      <Grid item xs={1}>
-        <Box
-          border={1}
-          borderColor="grey.400"
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            fontSize: 10,
-            flexDirection: 'column',
-            height: 30,
-          }}
-        >
-          QR
-        </Box>
-      </Grid>
-      <Grid item xs={7}>
-        <Box
-          border={1}
-          borderColor="grey.400"
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            fontSize: 10,
-            flexDirection: 'column',
-            height: 30,
-          }}
-        ></Box>
-      </Grid>
-      <Grid item xs={4}>
-        <Box
-          border={1}
-          borderRight={0}
-          borderColor="grey.400"
-          style={{
-            display: 'flex',
-            alignItems: 'flex-end',
-            justifyContent: 'center',
-            paddingLeft: 5,
-            paddingRight: 5,
-            fontSize: 10,
-            flexDirection: 'column',
-            backgroundColor: '#eee',
-            height: 30,
-          }}
-        >
-          <Box>الدفعة المقدمة</Box>
-          <Box>Down Payment</Box>
-        </Box>
-      </Grid>
-      <Grid item xs={1}>
-        <Box
-          border={1}
-          borderColor="grey.400"
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            fontSize: 10,
-            flexDirection: 'column',
-            height: 30,
-          }}
-        >
-          QR
-        </Box>
-      </Grid>
-      <Grid item xs={7}>
-        <Box
-          border={1}
-          borderColor="grey.400"
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            fontSize: 10,
-            flexDirection: 'column',
-            height: 30,
-          }}
-        ></Box>
-      </Grid>
-      <Grid item xs={4}>
-        <Box
-          border={1}
-          borderRight={0}
-          borderColor="grey.400"
-          style={{
-            display: 'flex',
-            alignItems: 'flex-end',
-            justifyContent: 'center',
-            paddingLeft: 5,
-            paddingRight: 5,
-            fontSize: 10,
-            flexDirection: 'column',
-            backgroundColor: '#eee',
-            height: 30,
-          }}
-        >
-          <Box>توع التأمين</Box>
-          <Box>Insurance Coverage</Box>
-        </Box>
-      </Grid>
-      <Grid item xs={1}>
-        <Box
-          border={1}
-          borderColor="grey.400"
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            fontSize: 10,
-            flexDirection: 'column',
-            height: 30,
-          }}
-        >
-          QR
-        </Box>
-      </Grid>
-      <Grid item xs={7}>
-        <Box
-          border={1}
-          borderColor="grey.400"
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            fontSize: 10,
-            flexDirection: 'column',
-            height: 30,
-          }}
-        ></Box>
-      </Grid>
-      <Grid item xs={4}>
-        <Box
-          border={1}
-          borderRight={0}
-          borderColor="grey.400"
-          style={{
-            display: 'flex',
-            alignItems: 'flex-end',
-            justifyContent: 'center',
-            paddingLeft: 5,
-            paddingRight: 5,
-            fontSize: 10,
-            flexDirection: 'column',
-            backgroundColor: '#eee',
-            height: 30,
-          }}
-        >
-          <Box>مبالغ اضافية مستحقة</Box>
-          <Box>Over Charges</Box>
-        </Box>
-      </Grid>
-      <Grid item xs={1}>
-        <Box
-          border={1}
-          borderColor="grey.400"
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            fontSize: 10,
-            flexDirection: 'column',
-            height: 30,
-          }}
-        >
-          QR
-        </Box>
-      </Grid>
-      <Grid item xs={7}>
-        <Box
-          border={1}
-          borderColor="grey.400"
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            fontSize: 10,
-            flexDirection: 'column',
-            height: 30,
-          }}
-        ></Box>
-      </Grid>
-      <Grid item xs={4}>
-        <Box
-          border={1}
-          borderRight={0}
-          borderColor="grey.400"
-          style={{
-            display: 'flex',
-            alignItems: 'flex-end',
-            justifyContent: 'center',
-            paddingLeft: 5,
-            paddingRight: 5,
-            fontSize: 10,
-            flexDirection: 'column',
-            backgroundColor: '#eee',
-            height: 30,
-          }}
-        >
-          <Box>أشياء اخرى</Box>
-          <Box>Others</Box>
-        </Box>
-      </Grid>
-      <Grid item xs={1}>
-        <Box
-          border={1}
-          borderColor="grey.400"
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            fontSize: 10,
-            flexDirection: 'column',
-            height: 30,
-          }}
-        >
-          QR
-        </Box>
-      </Grid>
-      <Grid item xs={7}>
-        <Box
-          border={1}
-          borderColor="grey.400"
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            fontSize: 10,
-            flexDirection: 'column',
-            height: 30,
-          }}
-        ></Box>
-      </Grid>
-      <Grid item xs={4}>
-        <Box
-          border={1}
-          borderRight={0}
-          borderColor="grey.400"
-          style={{
-            display: 'flex',
-            alignItems: 'flex-end',
-            justifyContent: 'center',
-            paddingLeft: 5,
-            paddingRight: 5,
-            fontSize: 10,
-            flexDirection: 'column',
-            backgroundColor: '#eee',
-            height: 30,
-          }}
-        >
-          <Box>الرصيد المستحق</Box>
-          <Box>Balance Due/Refund</Box>
-        </Box>
-      </Grid>
-    </Grid>
-  );
+    );
+  };
 
   renderDivider = (x: number) => (
     <Grid item xs={12}>

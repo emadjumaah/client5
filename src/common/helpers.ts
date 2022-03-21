@@ -213,3 +213,124 @@ export const subscribePushToken = async () => {
   });
   return JSON.stringify(push);
 };
+
+export const getReadyEventData = (
+  event: any,
+  task: any,
+  itemsData: any,
+  servicesproducts: any
+) => {
+  console.log('event', event);
+  console.log('task', task);
+  const freq = task?.freq;
+  if (!task || !event || !freq) {
+    return null;
+  }
+  let itemsList: any;
+  const items = itemsData?.data?.['getOperationItems']?.data || [];
+  if (items && items.length > 0) {
+    const ids = items.map((it: any) => it.itemId);
+    const servlist = servicesproducts.filter((ser: any) =>
+      ids.includes(ser._id)
+    );
+
+    const itemsWqtyprice = items.map((item: any, index: any) => {
+      const {
+        categoryId,
+        categoryName,
+        categoryNameAr,
+        departmentId,
+        departmentName,
+        departmentNameAr,
+        departmentColor,
+        employeeId,
+        employeeName,
+        employeeNameAr,
+        employeeColor,
+        resourseId,
+        resourseName,
+        resourseNameAr,
+        resourseColor,
+        note,
+      } = item;
+      const serv = servlist.filter((se: any) => se._id === item.itemId)[0];
+      return {
+        ...serv,
+        categoryId,
+        categoryName,
+        categoryNameAr,
+        departmentId,
+        departmentName,
+        departmentNameAr,
+        departmentColor,
+        employeeId,
+        employeeName,
+        employeeNameAr,
+        employeeColor,
+        resourseId,
+        resourseName,
+        resourseNameAr,
+        resourseColor,
+        index,
+        itemprice: item.itemPrice,
+        itemqty: item.qty,
+        itemtotal: item.total,
+        note,
+        // itemtotalcost: item.qty * serv.cost,
+      };
+    });
+    itemsWqtyprice.sort((a: any, b: any) =>
+      a.indx > b.indx ? 1 : b.indx > a.indx ? -1 : 0
+    );
+    itemsList = itemsWqtyprice;
+  }
+
+  const start = new Date(event?.startDate);
+  const end = new Date(event?.endDate);
+
+  let startDate: any;
+  let endDate: any;
+
+  if (freq === 3) {
+    startDate = start.setDate(start.getDate() + 1);
+    endDate = end.setDate(end.getDate() + 1);
+  }
+  if (freq === 2) {
+    startDate = start.setDate(start.getDate() + 7);
+    endDate = end.setDate(end.getDate() + 7);
+  }
+  if (freq === 1) {
+    startDate = start.setMonth(start.getMonth() + 1);
+    endDate = end.setMonth(end.getMonth() + 1);
+  }
+
+  const variables = {
+    title: event.title,
+    startDate,
+    endDate,
+    location: { lat: event?.location?.lat, lng: event?.location?.lng },
+    amount: event.amount,
+    status: 2,
+    items: JSON.stringify(itemsList),
+    taskId: event.taskId,
+    customerId: event.customerId,
+    customerName: event.customerName,
+    customerNameAr: event.customerNameAr,
+    customerPhone: event.customerPhone,
+    departmentId: event.departmentId,
+    departmentName: event.departmentName,
+    departmentNameAr: event.departmentNameAr,
+    departmentColor: event.departmentColor,
+    employeeId: event.employeeId,
+    employeeName: event.employeeName,
+    employeeNameAr: event.employeeNameAr,
+    employeeColor: event.employeeColor,
+    employeePhone: event.employeePhone,
+    resourseId: event.resourseId,
+    resourseName: event.resourseName,
+    resourseNameAr: event.resourseNameAr,
+    resourseColor: event.resourseColor,
+  };
+
+  return variables;
+};

@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { GContextTypes } from '../types';
 import { GlobalContext } from '../contexts';
 import {
@@ -15,7 +15,7 @@ import {
 import PopupLayout from '../pages/main/PopupLayout';
 import { Grid } from '@material-ui/core';
 
-import { useLazyQuery } from '@apollo/client';
+import { useLazyQuery, useMutation } from '@apollo/client';
 import { moneyFormat } from '../Shared/colorFormat';
 import PopupTaskAppointment from './PopupTaskAppointment';
 import _ from 'lodash';
@@ -28,6 +28,20 @@ import ReceiptCustomer from '../Shared/ReceiptCustomer';
 import ExpensesCustomer from '../Shared/ExpensesCustomer';
 import ProjectsCustomer from '../Shared/ProjectsCustomer';
 import TasksCustomer from '../Shared/TasksCustomer';
+import getObjectEvents from '../graphql/query/getObjectEvents';
+import {
+  createEvent,
+  getCustomers,
+  getDepartments,
+  getEmployees,
+  getOperationItems,
+  getProjects,
+  getResourses,
+} from '../graphql';
+import getTasks from '../graphql/query/getTasks';
+import { getReadyEventData } from '../common/helpers';
+import { ContractPrint } from '../print';
+import { useReactToPrint } from 'react-to-print';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -95,10 +109,15 @@ const PopupTaskView = ({
   const classes = useStyles();
 
   const [openEvent, setOpenEvent] = useState<any>(false);
-  const [evList, setEvList] = useState<any>([]);
-  const [total, setTotal] = useState<any>(null);
+  const [event, setEvent] = useState<any>(null);
   const [row, setRow] = useState(item);
   const [value, setValue] = React.useState(2);
+
+  const [start, setStart]: any = useState(null);
+  const [end, setEnd]: any = useState(null);
+  const [custvalue, setCustvalue] = useState(null);
+  const [resovalue, setResovalue] = useState(null);
+  const [info, setInfo] = useState<any>(null);
 
   const handleChange = (_, newValue) => {
     setValue(newValue);
@@ -111,6 +130,26 @@ const PopupTaskView = ({
     }
   }, [tasks]);
 
+  useEffect(() => {
+    if (row && row._id) {
+      const custId = row.customerId;
+      const resId = row.resourseId;
+      if (row?.info) {
+        setInfo(JSON.parse(row?.info));
+      }
+      setStart(row?.start);
+      setEnd(row?.end);
+      if (resId) {
+        const empl = resourses.filter((emp: any) => emp._id === resId)[0];
+        setResovalue(empl);
+      }
+      if (custId) {
+        const cust = customers.filter((cu: any) => cu._id === custId)[0];
+        setCustvalue(cust);
+      }
+    }
+  }, [row]);
+
   const [openInvoice, setOpenInvoice] = useState(false);
   const [itemsList, setItemsList] = useState<any>([]);
   const amount = row?.amount ? row.amount : 0;
@@ -122,11 +161,79 @@ const PopupTaskView = ({
 
   const {
     translate: { words, isRTL },
+    store: { user },
   }: GContextTypes = useContext(GlobalContext);
+
+  const refresQuery = {
+    refetchQueries: [
+      {
+        query: getObjectEvents,
+        variables: { taskId: row?.id },
+      },
+      {
+        query: getTasks,
+      },
+      {
+        query: getCustomers,
+      },
+      {
+        query: getEmployees,
+        variables: { isRTL, resType: 1 },
+      },
+      {
+        query: getDepartments,
+        variables: { isRTL, depType: 1 },
+      },
+      {
+        query: getResourses,
+        variables: { isRTL, resType: 1 },
+      },
+      {
+        query: getProjects,
+      },
+    ],
+  };
+
+  const [getEvents, eventsData]: any = useLazyQuery(getObjectEvents, {
+    fetchPolicy: 'cache-and-network',
+  });
+
+  const [getEventItems, eventItemsData]: any = useLazyQuery(getOperationItems, {
+    fetchPolicy: 'cache-and-network',
+  });
+
+  useEffect(() => {
+    const variables = { taskId: row?.id };
+    getEvents({ variables });
+  }, [row?.id]);
+
+  useEffect(() => {
+    const data = eventsData?.data?.['getObjectEvents']?.data;
+    const events = data || [];
+    if (events?.length > 0) {
+      const ev = events[events.length - 1];
+      getEventItems({ variables: { opId: ev._id } });
+      setEvent(events[events.length - 1]);
+    }
+  }, [eventsData]);
+
+  const [addEvent] = useMutation(createEvent, refresQuery);
 
   const [getItems, itemsData]: any = useLazyQuery(getTaskItems, {
     fetchPolicy: 'cache-and-network',
   });
+  const addNewEvent = async () => {
+    if (!event) return;
+    const variables = getReadyEventData(
+      event,
+      row,
+      eventItemsData,
+      servicesproducts
+    );
+    if (!variables) return;
+    console.log('variables', variables);
+    await addEvent({ variables });
+  };
 
   useEffect(() => {
     if (open) {
@@ -214,23 +321,32 @@ const PopupTaskView = ({
   }, [itemsData, open]);
 
   useEffect(() => {
-    getOverallTotal();
-  }, [evList]);
-
-  useEffect(() => {
     if (row && row._id) {
       const variables = { taskId: row.id };
       getItems({ variables });
     }
   }, [row]);
 
-  const getOverallTotal = () => {
-    const evssum = _.sumBy(evList, 'amount');
-    setTotal(evssum);
+  const printData = {
+    ...row,
+    no: row?.docNo,
+    start,
+    end,
+    resovalue,
+    custvalue,
+    info,
+    isRTL: isRTL,
   };
 
+  const componentRef: any = useRef();
+  const handleReactPrint = useReactToPrint({
+    content: () => componentRef.current,
+    documentTitle: `Contract #${row?.docNo}`,
+    removeAfterPrint: true,
+  });
+
   const resetAllForms = () => {
-    setEvList([]);
+    setEvent(null);
     setValue(0);
   };
 
@@ -239,7 +355,7 @@ const PopupTaskView = ({
     onClose();
   };
 
-  const viewtotal = total ? total : amount;
+  const viewtotal = amount;
   const title = `${words.task} : ${row?.title}`;
 
   return (
@@ -256,6 +372,7 @@ const PopupTaskView = ({
       fullWidth
       preventclose
       onlyclose
+      print={!isNew ? handleReactPrint : undefined}
       // bgcolor={colors.deepPurple[500]}
       mb={10}
     >
@@ -542,6 +659,16 @@ const PopupTaskView = ({
                   {words.newInvoice}
                 </Button>
               </Box>
+              <Box style={{ padding: 10 }}>
+                <Button
+                  variant="contained"
+                  fullWidth
+                  color="primary"
+                  onClick={() => addNewEvent()}
+                >
+                  {words.newPeriod}
+                </Button>
+              </Box>
             </Grid>
           )}
         </Grid>
@@ -557,7 +684,6 @@ const PopupTaskView = ({
             customers={customers}
             servicesproducts={servicesproducts}
             theme={theme}
-            setEvList={setEvList}
           ></PopupTaskAppointment>
         )}
         {row && (
@@ -575,6 +701,16 @@ const PopupTaskView = ({
             items={itemsList}
           ></PopupTaskInvoice>
         )}
+        <Box>
+          <div style={{ display: 'none' }}>
+            <ContractPrint
+              company={company}
+              user={user}
+              printData={printData}
+              ref={componentRef}
+            />
+          </div>
+        </Box>
       </>
     </PopupLayout>
   );

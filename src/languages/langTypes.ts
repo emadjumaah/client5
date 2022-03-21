@@ -37,6 +37,7 @@ export interface LanguageType {
     all: string;
     for: string;
     newInvoice: string;
+    newPeriod: string;
     addInvoice: string;
     addCategory: string;
     categoryName: string;

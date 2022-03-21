@@ -411,12 +411,12 @@ const PopupAppointInvoice = ({
   const apply = (mutate: any, variables: any) => {
     try {
       mutate({ variables });
-      editEvent({
-        variables: {
-          id: appoint.id,
-          status: 10,
-        },
-      });
+      // editEvent({
+      //   variables: {
+      //     id: appoint.id,
+      //     status: 10,
+      //   },
+      // });
       freshlastNos();
       onCloseForm();
       onCloseAppoint();

@@ -240,7 +240,7 @@ const PopupTask = ({
   const componentRef: any = useRef();
   const handleReactPrint = useReactToPrint({
     content: () => componentRef.current,
-    documentTitle: `Invoice #${row?.docNo}`,
+    documentTitle: `Contract #${row?.docNo}`,
     removeAfterPrint: true,
   });
   const printData = {
@@ -253,7 +253,6 @@ const PopupTask = ({
     info,
     isRTL: isRTL,
   };
-
   const openDepartment = () => {
     setOpenDep(true);
   };
@@ -530,6 +529,9 @@ const PopupTask = ({
     setRrule(null);
     setItemsList([]);
     setCount(1);
+    setFreq(RRule.DAILY);
+    setTotals({});
+    setInfo(null);
   };
 
   const onSubmit = async () => {
