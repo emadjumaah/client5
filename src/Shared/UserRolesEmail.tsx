@@ -4,12 +4,14 @@ import React from 'react';
 import {
   Box,
   Checkbox,
+  Divider,
   // Divider,
   FormControlLabel,
   FormGroup,
   Grid,
   Typography,
 } from '@material-ui/core';
+import { roles } from '../common';
 // import AutoFieldLocal from '../components/fields/AutoFieldLocal';
 
 export default function UserRolesEmail({
@@ -36,12 +38,12 @@ export default function UserRolesEmail({
   setEmplvalue,
   employees,
 }) {
-  // const manager = isRTL ? 'مدير الفرع' : 'Branch Manager';
+  const manager = isRTL ? 'مدير عام' : 'Branch Manager';
   // const empl = isRTL ? 'موظف متخصص' : 'Employee';
   const tech = isRTL ? 'ادارة العمليات' : 'Operation Section';
   const finance = isRTL ? 'قسم الحسابات' : 'Finance Section';
 
-  if (isBranchAdmin) {
+  if (isBranchAdmin && !roles.isSuperAdmin()) {
     return <div></div>;
   }
 
@@ -106,32 +108,34 @@ export default function UserRolesEmail({
             </Typography>
           </Box>
         </Grid>
-        {/* <Grid item xs={12}>
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={isBranchAdmin}
-                onChange={() => {
-                  setisAdmin(false);
-                  setisEditor(false);
-                  setisWriter(false);
-                  setisViewer(false);
-                  setisOperate(false);
-                  setisFinance(false);
-                  setisBranchAdmin(!isBranchAdmin);
-                }}
-                name={branch}
-                color="primary"
-              />
-            }
-            label={
-              <Typography variant="body2" style={{ fontWeight: 'bold' }}>
-                {manager}
-              </Typography>
-            }
-          />
-          <Divider></Divider>
-        </Grid> */}
+        {roles.isSuperAdmin() && (
+          <Grid item xs={12}>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={isBranchAdmin}
+                  onChange={() => {
+                    setisAdmin(false);
+                    setisEditor(false);
+                    setisWriter(false);
+                    setisViewer(false);
+                    setisOperate(false);
+                    setisFinance(false);
+                    setisBranchAdmin(!isBranchAdmin);
+                  }}
+                  name={branch}
+                  color="primary"
+                />
+              }
+              label={
+                <Typography variant="body2" style={{ fontWeight: 'bold' }}>
+                  {manager}
+                </Typography>
+              }
+            />
+            <Divider></Divider>
+          </Grid>
+        )}
         <Grid item xs={6}>
           <FormGroup>
             <FormControlLabel
