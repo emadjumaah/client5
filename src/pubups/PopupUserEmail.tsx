@@ -46,6 +46,7 @@ const PopupUserEmail = ({
   const [isEmployee, setisEmployee] = useState(false);
   const [isFinance, setisFinance] = useState(false);
   const [isOperate, setisOperate] = useState(false);
+  const [isAdmin, setisAdmin] = useState(false);
   const [isEditor, setisEditor] = useState(false);
   const [isWriter, setisWriter] = useState(false);
   const [isViewer, setisViewer] = useState(false);
@@ -55,7 +56,6 @@ const PopupUserEmail = ({
   const [username, setUsername] = useState(null);
   const [valid, setValid] = useState(null);
   const [checkUser, userData] = useLazyQuery(checkUsername);
-  const isAdmin = row?.isAdmin;
   const { register, handleSubmit, errors, reset } = useForm(
     isNew ? yup.addUserResolver : undefined
   );
@@ -89,6 +89,7 @@ const PopupUserEmail = ({
       setisEmployee(row.isEmployee);
       setisFinance(row.isFinance);
       setisOperate(row.isOperate);
+      setisAdmin(row.isAdmin);
       setisEditor(row.isEditor);
       setisWriter(row.isWriter);
       setisViewer(row.isViewer);
@@ -102,7 +103,6 @@ const PopupUserEmail = ({
   }, [open]);
 
   const onClosePass = () => setOpenPass(false);
-
   const onSubmit = async (data: any) => {
     if (isNew && !valid) {
       await errorAlertMsg(setAlrt, 'valid email require');
@@ -133,6 +133,7 @@ const PopupUserEmail = ({
       isEmployee,
       isFinance,
       isOperate,
+      isAdmin,
       isEditor,
       isWriter,
       isViewer,
@@ -192,6 +193,7 @@ const PopupUserEmail = ({
     setisEmployee(false);
     setisFinance(false);
     setisOperate(false);
+    setisAdmin(false);
     setisEditor(false);
     setisWriter(false);
     setisViewer(false);
@@ -213,7 +215,6 @@ const PopupUserEmail = ({
     : isNew
     ? 'New User'
     : 'Edit User';
-
   return (
     <PopupLayout
       isRTL={isRTL}
@@ -239,6 +240,7 @@ const PopupUserEmail = ({
               onChange={onUsernameChange}
               row={row}
               disabled={!isNew}
+              mb={5}
             />
             {isNew && (
               <Box
@@ -255,15 +257,17 @@ const PopupUserEmail = ({
             )}
           </Box>
           {isNew && (
-            <PopupTextField
-              required
-              name="password"
-              label={words.password}
-              register={register}
-              errors={errors}
-              row={row}
-              type="password"
-            />
+            <Grid item xs={6}>
+              <PopupTextField
+                required
+                name="password"
+                label={words.password}
+                register={register}
+                errors={errors}
+                row={row}
+                type="password"
+              />
+            </Grid>
           )}
           <PopupTextField
             required
@@ -281,7 +285,7 @@ const PopupUserEmail = ({
             row={row}
           />
 
-          {user && !isAdmin && (
+          {user && (
             <UserRolesEmail
               isRTL={isRTL}
               branch={user?.branch}
@@ -290,6 +294,7 @@ const PopupUserEmail = ({
               isEmployee={isEmployee}
               isFinance={isFinance}
               isOperate={isOperate}
+              isAdmin={isAdmin}
               isEditor={isEditor}
               isWriter={isWriter}
               isViewer={isViewer}
@@ -298,6 +303,7 @@ const PopupUserEmail = ({
               setisEmployee={setisEmployee}
               setisFinance={setisFinance}
               setisOperate={setisOperate}
+              setisAdmin={setisAdmin}
               setisEditor={setisEditor}
               setisWriter={setisWriter}
               setisViewer={setisViewer}

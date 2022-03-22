@@ -30,13 +30,7 @@ import {
   isActiveViewFormatter,
 } from '../../Shared/colorFormat';
 
-export default function Messages({
-  isRTL,
-  words,
-  isEditor,
-  theme,
-  menuitem,
-}: any) {
+export default function Messages({ isRTL, words, theme, menuitem }: any) {
   const [rows, setRows] = useState([]);
   const [start, setStart] = useState<any>(null);
   const [end, setEnd] = useState<any>(null);
@@ -89,7 +83,6 @@ export default function Messages({
       menuitem={menuitem}
       isRTL={isRTL}
       words={words}
-      isEditor={isEditor}
       theme={theme}
       refresh={() => null}
     >

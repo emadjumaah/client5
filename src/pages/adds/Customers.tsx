@@ -21,7 +21,7 @@ import {
   ColumnChooser,
 } from '@devexpress/dx-react-grid-material-ui';
 import { Command, PopupEditing } from '../../Shared';
-import { getRowId } from '../../common';
+import { getRowId, roles } from '../../common';
 import { PopupCustomer } from '../../pubups';
 import { AlertLocal, SearchTable } from '../../components';
 import { errorAlert, errorDeleteAlert } from '../../Shared/helpers';
@@ -55,7 +55,7 @@ import ImportBtn from '../../common/ImportBtn';
 import createMultiCustomers from '../../graphql/mutation/createMultiCustomers';
 
 export default function Customers(props: any) {
-  const { isRTL, words, menuitem, isEditor, theme, company } = props;
+  const { isRTL, words, menuitem, theme, company } = props;
   const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
   const [rows, setRows] = useState([]);
   const [item, setItem] = useState(null);
@@ -96,6 +96,13 @@ export default function Customers(props: any) {
       name: 'income',
       title: isRTL ? 'صافي الايراد' : 'Total Income',
     },
+  ]);
+
+  const [columnsViewer] = useState([
+    { name: isRTL ? 'nameAr' : 'name', title: words.name },
+    { name: 'phone', title: words.phoneNumber },
+    { name: 'email', title: words.email },
+    { name: 'address', title: words.address },
   ]);
 
   const [loadTasks, tasksData]: any = useLazyQuery(getCustomers, {
@@ -159,7 +166,6 @@ export default function Customers(props: any) {
       menuitem={menuitem}
       isRTL={isRTL}
       words={words}
-      isEditor={isEditor}
       theme={theme}
       refresh={refresh}
     >
@@ -177,7 +183,11 @@ export default function Customers(props: any) {
           isRTL={isRTL}
           theme={theme}
         ></ImportBtn>
-        <Grid rows={rows} columns={columns} getRowId={getRowId}>
+        <Grid
+          rows={rows}
+          columns={roles.isAdmin() ? columns : columnsViewer}
+          getRowId={getRowId}
+        >
           <SortingState />
           <SearchState />
           <EditingState onCommitChanges={commitChanges} />
@@ -205,12 +215,14 @@ export default function Customers(props: any) {
               'income',
             ]}
           />
-          <DataTypeProvider
-            for={['nameAr', 'name']}
-            formatterComponent={(props: any) =>
-              nameLinkFormat({ ...props, setItem, setOpenItem })
-            }
-          ></DataTypeProvider>
+          {roles.isAdmin() && (
+            <DataTypeProvider
+              for={['nameAr', 'name']}
+              formatterComponent={(props: any) =>
+                nameLinkFormat({ ...props, setItem, setOpenItem })
+              }
+            ></DataTypeProvider>
+          )}
           <DataTypeProvider
             for={['amount', 'toatlExpenses', 'totalpaid', 'totalinvoiced']}
             formatterComponent={currencyFormatterEmpty}
@@ -227,14 +239,12 @@ export default function Customers(props: any) {
             for={['progress']}
             formatterComponent={progressFormatter}
           ></DataTypeProvider>
-          {isEditor && (
-            <TableEditColumn
-              showEditCommand
-              showDeleteCommand
-              showAddCommand
-              commandComponent={Command}
-            ></TableEditColumn>
-          )}
+          <TableEditColumn
+            showEditCommand
+            showDeleteCommand
+            showAddCommand
+            commandComponent={Command}
+          ></TableEditColumn>
           <Toolbar />
           <ColumnChooser />
           <SearchPanel
@@ -266,7 +276,6 @@ export default function Customers(props: any) {
           addAction={addCustomer}
           editAction={editCustomer}
           theme={theme}
-          isEditor={isEditor}
           departments={departments}
           company={company}
           employees={employees}

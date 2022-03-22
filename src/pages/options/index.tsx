@@ -12,6 +12,7 @@ import Company from './Company';
 // import Names from './Names';
 import React from 'react';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
+import { roles } from '../../common';
 
 const initcalendar = {
   duration: 30,
@@ -19,7 +20,7 @@ const initcalendar = {
   end: 21.5,
 };
 
-const Options = ({ isRTL, words, isEditor, company, editCompany }: any) => {
+const Options = ({ isRTL, words, company, editCompany }: any) => {
   const { store, dispatch }: GContextTypes = useContext(GlobalContext);
   const { lang, themeId, calendar } = store;
   const { height } = useWindowDimensions();
@@ -51,7 +52,7 @@ const Options = ({ isRTL, words, isEditor, company, editCompany }: any) => {
     >
       <Box style={{ margin: 10 }}>
         <Grid container spacing={2}>
-          {isEditor && (
+          {roles.isBranchAdmin() && (
             <Grid item xs={12}>
               <Company
                 company={company}

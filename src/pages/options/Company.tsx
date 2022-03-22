@@ -251,7 +251,7 @@ const Company = ({ words, editCompany, company, isRTL }) => {
                   setImage={setHeaderimage}
                   width={550}
                   height={80}
-                  size="960x155"
+                  size="1750x325"
                 ></ImageOnlineUpload>
               </Grid>
               <Grid item xs={12}>
@@ -263,7 +263,7 @@ const Company = ({ words, editCompany, company, isRTL }) => {
                   setImage={setFooterimage}
                   width={550}
                   height={15}
-                  size="960x100"
+                  size="1750x43"
                 ></ImageOnlineUpload>
               </Grid>
             </Grid>

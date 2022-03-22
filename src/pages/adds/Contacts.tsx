@@ -37,7 +37,7 @@ import { groupFormatter } from '../../Shared/colorFormat';
 import ImportBtns from '../../common/ImportBtns';
 
 export default function Contacts(props: any) {
-  const { isRTL, words, menuitem, isEditor, theme } = props;
+  const { isRTL, words, menuitem, theme } = props;
   const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
   const [openImport, setOpenImport] = useState(false);
   const { height } = useWindowDimensions();
@@ -78,7 +78,6 @@ export default function Contacts(props: any) {
       menuitem={menuitem}
       isRTL={isRTL}
       words={words}
-      isEditor={isEditor}
       theme={theme}
       refresh={refreshcontact}
     >
@@ -125,14 +124,12 @@ export default function Contacts(props: any) {
             formatterComponent={(props) => groupFormatter(props, groups, isRTL)}
           ></DataTypeProvider>
           <TableColumnVisibility />
-          {isEditor && (
-            <TableEditColumn
-              showEditCommand
-              showDeleteCommand
-              showAddCommand
-              commandComponent={Command}
-            ></TableEditColumn>
-          )}
+          <TableEditColumn
+            showEditCommand
+            showDeleteCommand
+            showAddCommand
+            commandComponent={Command}
+          ></TableEditColumn>
           <Toolbar />
           <ColumnChooser />
           <SearchPanel

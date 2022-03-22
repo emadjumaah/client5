@@ -30,7 +30,7 @@ import ImportBtn from '../../common/ImportBtn';
 import PopupServiceImport from '../../pubups/PopupServiceImport';
 // import { getColumns } from '../../common/columns';
 
-export default function Services({ isRTL, words, theme, isEditor }: any) {
+export default function Services({ isRTL, words, theme }: any) {
   // const col = getColumns({ isRTL, words });
   const [openImport, setOpenImport] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -105,14 +105,12 @@ export default function Services({ isRTL, words, theme, isEditor }: any) {
           formatterComponent={currencyFormatter}
         ></DataTypeProvider>
 
-        {isEditor && (
-          <TableEditColumn
-            showEditCommand
-            showDeleteCommand
-            showAddCommand
-            commandComponent={Command}
-          ></TableEditColumn>
-        )}
+        <TableEditColumn
+          showEditCommand
+          showDeleteCommand
+          showAddCommand
+          commandComponent={Command}
+        ></TableEditColumn>
         <Toolbar />
         <SearchPanel
           inputComponent={(props: any) => {

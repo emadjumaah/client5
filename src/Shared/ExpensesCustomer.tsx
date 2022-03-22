@@ -46,7 +46,6 @@ import useCompany from '../hooks/useCompany';
 export default function ExpensesCustomer({
   isRTL,
   words,
-  isEditor,
   theme,
   name,
   id,
@@ -204,14 +203,12 @@ export default function ExpensesCustomer({
             accountFormatter(props, accounts, isRTL)
           }
         ></DataTypeProvider>
-        {isEditor && (
-          <TableEditColumn
-            showEditCommand
-            showDeleteCommand
-            showAddCommand
-            commandComponent={Command}
-          ></TableEditColumn>
-        )}
+        <TableEditColumn
+          showEditCommand
+          showDeleteCommand
+          showAddCommand
+          commandComponent={Command}
+        ></TableEditColumn>
         <PopupEditing
           theme={theme}
           addAction={addExpenses}

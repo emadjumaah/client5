@@ -24,15 +24,7 @@ import PopupGroupِAdd from './PopupGroupِAdd';
 
 export const getRowId = (row: any) => row._id;
 
-const PopupGroupView = ({
-  isEditor,
-  open,
-  onClose,
-  theme,
-  isRTL,
-  words,
-  item,
-}: any) => {
+const PopupGroupView = ({ open, onClose, theme, isRTL, words, item }: any) => {
   const [openAdd, setOpenAdd] = useState(false);
 
   const [columns] = useState([
@@ -153,7 +145,6 @@ const PopupGroupView = ({
         <PopupGroupِAdd
           open={openAdd}
           onClose={() => setOpenAdd(false)}
-          isEditor={isEditor}
           isRTL={isRTL}
           theme={theme}
           words={words}

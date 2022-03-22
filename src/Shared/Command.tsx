@@ -9,9 +9,9 @@ import { roles } from '../common';
 import { getStoreItem } from '../store';
 
 const AddButton = ({ onExecute }) => {
-  const isEditor = roles.isEditor();
+  const isWriter = roles.isWriter();
   const isEmployee = roles.isEmployee();
-  if (!isEditor && !isEmployee) {
+  if (!isWriter && !isEmployee) {
     return <div></div>;
   }
   return (
@@ -45,9 +45,9 @@ const EditButton = ({ onExecute }) => {
 const DeleteButton = ({ onExecute }) => {
   const store = getStoreItem('store');
   const { lang } = store;
-  const isEditor = roles.isEditor();
+  const isAdmin = roles.isAdmin();
   const isEmployee = roles.isEmployee();
-  if (!isEditor && !isEmployee) {
+  if (!isAdmin && !isEmployee) {
     return <div></div>;
   }
   return (

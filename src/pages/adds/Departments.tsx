@@ -27,13 +27,7 @@ import PageLayout from '../main/PageLayout';
 import useDepartmentsDown from '../../hooks/useDepartmentsDown';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
 
-export default function Departments({
-  isRTL,
-  words,
-  isEditor,
-  theme,
-  menuitem,
-}: any) {
+export default function Departments({ isRTL, words, theme, menuitem }: any) {
   const [loading, setLoading] = useState(false);
   const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
 
@@ -74,7 +68,6 @@ export default function Departments({
       menuitem={menuitem}
       isRTL={isRTL}
       words={words}
-      isEditor={isEditor}
       theme={theme}
       refresh={refreshdepartment}
     >
@@ -102,14 +95,12 @@ export default function Departments({
             for={['avatar']}
             formatterComponent={avatarPatternFormatter}
           ></DataTypeProvider>
-          {isEditor && (
-            <TableEditColumn
-              showEditCommand
-              showDeleteCommand
-              showAddCommand
-              commandComponent={Command}
-            ></TableEditColumn>
-          )}
+          <TableEditColumn
+            showEditCommand
+            showDeleteCommand
+            showAddCommand
+            commandComponent={Command}
+          ></TableEditColumn>
 
           <Toolbar />
           <SearchPanel

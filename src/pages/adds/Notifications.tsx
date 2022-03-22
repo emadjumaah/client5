@@ -23,13 +23,7 @@ import { useLazyQuery } from '@apollo/client';
 import getNotifications from '../../graphql/query/getNotifications';
 import { TableComponent } from '../../Shared/TableComponent';
 
-export default function Notifications({
-  isRTL,
-  words,
-  isEditor,
-  theme,
-  menuitem,
-}: any) {
+export default function Notifications({ isRTL, words, theme, menuitem }: any) {
   const [rows, setRows] = useState([]);
 
   const [columns] = useState([
@@ -56,7 +50,6 @@ export default function Notifications({
       menuitem={menuitem}
       isRTL={isRTL}
       words={words}
-      isEditor={isEditor}
       theme={theme}
       refresh={() => null}
     >

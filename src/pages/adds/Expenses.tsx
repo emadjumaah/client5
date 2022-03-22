@@ -53,14 +53,7 @@ import { Box } from '@material-ui/core';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
 import { TableComponent } from '../../Shared/TableComponent';
 
-export default function Expenses({
-  isRTL,
-  words,
-  menuitem,
-  isEditor,
-  theme,
-  company,
-}) {
+export default function Expenses({ isRTL, words, menuitem, theme, company }) {
   const col = getColumns({ isRTL, words });
 
   const [columns] = useState([
@@ -185,7 +178,6 @@ export default function Expenses({
       menuitem={menuitem}
       isRTL={isRTL}
       words={words}
-      isEditor={isEditor}
       theme={theme}
       refresh={refresh}
     >
@@ -270,14 +262,12 @@ export default function Expenses({
               accountFormatter(props, accounts, isRTL)
             }
           ></DataTypeProvider>
-          {isEditor && (
-            <TableEditColumn
-              showEditCommand
-              showDeleteCommand
-              showAddCommand
-              commandComponent={Command}
-            ></TableEditColumn>
-          )}
+          <TableEditColumn
+            showEditCommand
+            showDeleteCommand
+            showAddCommand
+            commandComponent={Command}
+          ></TableEditColumn>
           <Toolbar />
           <SearchPanel
             inputComponent={(props: any) => {

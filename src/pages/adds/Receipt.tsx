@@ -52,14 +52,7 @@ import { Box } from '@material-ui/core';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
 import { TableComponent } from '../../Shared/TableComponent';
 
-export default function Receipt({
-  isRTL,
-  words,
-  menuitem,
-  isEditor,
-  theme,
-  company,
-}) {
+export default function Receipt({ isRTL, words, menuitem, theme, company }) {
   const [columns] = useState([
     { name: 'time', title: words.time },
     { name: 'creditAcc', title: words.customer },
@@ -183,7 +176,6 @@ export default function Receipt({
       menuitem={menuitem}
       isRTL={isRTL}
       words={words}
-      isEditor={isEditor}
       theme={theme}
       refresh={refresh}
     >
@@ -262,14 +254,12 @@ export default function Receipt({
               accountFormatter(props, accounts, isRTL)
             }
           ></DataTypeProvider>
-          {isEditor && (
-            <TableEditColumn
-              showEditCommand
-              showDeleteCommand
-              showAddCommand
-              commandComponent={Command}
-            ></TableEditColumn>
-          )}
+          <TableEditColumn
+            showEditCommand
+            showDeleteCommand
+            showAddCommand
+            commandComponent={Command}
+          ></TableEditColumn>
           <Toolbar />
           <SearchPanel
             inputComponent={(props: any) => {

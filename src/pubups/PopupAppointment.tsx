@@ -54,6 +54,7 @@ import useTasks from '../hooks/useTasks';
 import useProjects from '../hooks/useProjects';
 import { SelectLocal } from '../pages/calendar/common/SelectLocal';
 import { eventLengthOptions } from '../constants/rrule';
+import { roles } from '../common';
 
 export const indexTheList = (list: any) => {
   return list.map((item: any, index: any) => {
@@ -78,7 +79,6 @@ const PopupAppointment = ({
   tasks,
   theme,
   company,
-  isEditor,
 }: any) => {
   const classes = invoiceClasses();
 
@@ -637,7 +637,7 @@ const PopupAppointment = ({
   const day = weekdaysNNo?.[date.getDay()];
   const title = getPopupTitle('appointment', isNew);
 
-  const desabledSave = row.status === 10 || !isEditor;
+  const desabledSave = row.status === 10 || !roles.isEditor();
   return (
     <PopupLayout
       isRTL={isRTL}

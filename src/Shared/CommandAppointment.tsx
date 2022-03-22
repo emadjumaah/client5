@@ -36,8 +36,8 @@ const CancelButton = () => <div></div>;
 const DeleteButton = ({ onExecute }: any) => {
   const store = getStoreItem('store');
   const { lang } = store;
-  const isCalEditor = roles.isEditor();
-  if (!isCalEditor) {
+  const isOpAdmin = roles.isOperateAdmin();
+  if (!isOpAdmin) {
     return <div></div>;
   }
 

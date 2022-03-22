@@ -26,7 +26,7 @@ import PopupSupplier from '../../pubups/PopupSupplier';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
 
 export default function Suppliers(props: any) {
-  const { isRTL, words, isEditor, theme } = props;
+  const { isRTL, words, theme } = props;
   const [loading, setLoading] = useState(false);
   const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
 
@@ -75,14 +75,12 @@ export default function Suppliers(props: any) {
           estimatedRowHeight={40}
         />
         <TableHeaderRow showSortingControls />
-        {isEditor && (
-          <TableEditColumn
-            showEditCommand
-            showDeleteCommand
-            showAddCommand
-            commandComponent={Command}
-          ></TableEditColumn>
-        )}
+        <TableEditColumn
+          showEditCommand
+          showDeleteCommand
+          showAddCommand
+          commandComponent={Command}
+        ></TableEditColumn>
         <Toolbar />
         <SearchPanel
           inputComponent={(props: any) => {

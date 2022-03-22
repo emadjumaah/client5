@@ -52,7 +52,7 @@ import getTasks from '../../graphql/query/getTasks';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
 import { TableComponent } from '../../Shared/TableComponent';
 
-export default function Finance({ isRTL, words, menuitem, isEditor, theme }) {
+export default function Finance({ isRTL, words, menuitem, theme }) {
   const [columns] = useState([
     { name: 'time', title: words.time },
     { name: 'debitAcc', title: words.to },
@@ -175,7 +175,6 @@ export default function Finance({ isRTL, words, menuitem, isEditor, theme }) {
       menuitem={menuitem}
       isRTL={isRTL}
       words={words}
-      isEditor={isEditor}
       theme={theme}
       refresh={refresh}
     >
@@ -240,14 +239,12 @@ export default function Finance({ isRTL, words, menuitem, isEditor, theme }) {
               accountFormatter(props, accounts, isRTL)
             }
           ></DataTypeProvider>
-          {isEditor && (
-            <TableEditColumn
-              showEditCommand
-              showDeleteCommand
-              showAddCommand
-              commandComponent={Command}
-            ></TableEditColumn>
-          )}
+          <TableEditColumn
+            showEditCommand
+            showDeleteCommand
+            showAddCommand
+            commandComponent={Command}
+          ></TableEditColumn>
           <Toolbar />
           <SearchPanel
             inputComponent={(props: any) => {

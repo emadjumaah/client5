@@ -12,13 +12,13 @@ export const systems = {
   acc: 'acc',
 };
 
-export const roles = {
-  view: 'view',
-  add: 'add',
-  edit: 'edit',
-  delete: 'delete',
-  report: 'report',
-};
+// const roles = {
+//   view: 'view',
+//   add: 'add',
+//   edit: 'edit',
+//   delete: 'delete',
+//   report: 'report',
+// };
 
 // export const user: any = {
 //   branch: 'brnach1',
@@ -127,14 +127,19 @@ export const isFinance = (user: any) => {
 export const isOperate = (user: any) => {
   return user?.isOperate;
 };
-
+export const isAdmin = (user: any) => {
+  return user?.isSuperAdmin || user?.isBranchAdmin || user?.isAdmin;
+};
 export const isEditor = (user: any) => {
-  return user?.isSuperAdmin || user?.isBranchAdmin || user?.isEditor;
+  return (
+    user?.isSuperAdmin || user?.isBranchAdmin || user?.isAdmin || user?.isEditor
+  );
 };
 export const isWriter = (user: any) => {
   return (
     user?.isSuperAdmin ||
     user?.isBranchAdmin ||
+    user?.isAdmin ||
     user?.isEditor ||
     user?.isWriter
   );
@@ -143,21 +148,122 @@ export const isViewer = (user: any) => {
   return (
     user?.isSuperAdmin ||
     user?.isBranchAdmin ||
+    user?.isAdmin ||
     user?.isEditor ||
     user?.isWriter ||
     user?.isViewer
+  );
+};
+export const isOperateViewer = (user: any) => {
+  return (
+    user?.isSuperAdmin ||
+    user?.isBranchAdmin ||
+    (user?.isOperate &&
+      (user?.isAdmin || user?.isEditor || user?.isWriter || user?.isViewer))
+  );
+};
+export const isOperateWriter = (user: any) => {
+  return (
+    user?.isSuperAdmin ||
+    user?.isBranchAdmin ||
+    (user?.isOperate && (user?.isAdmin || user?.isEditor || user?.isWriter))
+  );
+};
+export const isOperateEditor = (user: any) => {
+  return (
+    user?.isSuperAdmin ||
+    user?.isBranchAdmin ||
+    (user?.isOperate && (user?.isAdmin || user?.isEditor))
+  );
+};
+export const isOperateAdmin = (user: any) => {
+  return (
+    user?.isSuperAdmin ||
+    user?.isBranchAdmin ||
+    (user?.isOperate && user?.isAdmin)
+  );
+};
+export const isFinanceViewer = (user: any) => {
+  return (
+    user?.isSuperAdmin ||
+    user?.isBranchAdmin ||
+    (user?.isFinance &&
+      (user?.isAdmin || user?.isEditor || user?.isWriter || user?.isViewer))
+  );
+};
+export const isFinanceWriter = (user: any) => {
+  return (
+    user?.isSuperAdmin ||
+    user?.isBranchAdmin ||
+    (user?.isFinance && (user?.isAdmin || user?.isEditor || user?.isWriter))
+  );
+};
+export const isFinanceEditor = (user: any) => {
+  return (
+    user?.isSuperAdmin ||
+    user?.isBranchAdmin ||
+    (user?.isFinance && (user?.isAdmin || user?.isEditor))
+  );
+};
+export const isFinanceAdmin = (user: any) => {
+  return (
+    user?.isSuperAdmin ||
+    user?.isBranchAdmin ||
+    (user?.isFinance && user?.isAdmin)
+  );
+};
+export const isFinanceOperateViewer = (user: any) => {
+  return (
+    user?.isSuperAdmin ||
+    user?.isBranchAdmin ||
+    (user?.isFinance &&
+      user?.isOperate &&
+      (user?.isAdmin || user?.isEditor || user?.isWriter || user?.isViewer))
+  );
+};
+export const isFinanceOperateWriter = (user: any) => {
+  return (
+    user?.isSuperAdmin ||
+    user?.isBranchAdmin ||
+    (user?.isFinance &&
+      user?.isOperate &&
+      (user?.isAdmin || user?.isEditor || user?.isWriter))
+  );
+};
+export const isFinanceOperateEditor = (user: any) => {
+  return (
+    user?.isSuperAdmin ||
+    user?.isBranchAdmin ||
+    (user?.isFinance && user?.isOperate && (user?.isAdmin || user?.isEditor))
+  );
+};
+export const isFinanceOperateAdmin = (user: any) => {
+  return (
+    user?.isSuperAdmin ||
+    user?.isBranchAdmin ||
+    (user?.isFinance && user?.isOperate && user?.isAdmin)
   );
 };
 
 export const menuRoles = {
   superAdmin: 'superAdmin',
   branchAdmin: 'branchAdmin',
+  employee: 'employee',
+  finance: 'finance',
+  financeAdmin: 'financeAdmin',
+  financeEditor: 'financeEditor',
+  financeOperateAdmin: 'financeOperateAdmin',
+  financeOperateEditor: 'financeOperateEditor',
+  financeOperateWriter: 'financeOperateWriter',
+  financeWriter: 'financeWriter',
+  operate: 'operate',
+  operateAdmin: 'operateAdmin',
+  operateEditor: 'operateEditor',
+  operateWriter: 'operateWriter',
+  admin: 'admin',
   editor: 'editor',
   writer: 'writer',
   viewer: 'viewer',
-  finance: 'finance',
-  operate: 'operate',
-  employee: 'employee',
 };
 
 export const applyRole = (role: string, user: any) => {
@@ -170,10 +276,30 @@ export const applyRole = (role: string, user: any) => {
       return isEmployee(user);
     case menuRoles.finance:
       return isFinance(user);
+    case menuRoles.financeAdmin:
+      return isFinanceAdmin(user);
+    case menuRoles.financeEditor:
+      return isFinanceEditor(user);
+    case menuRoles.financeWriter:
+      return isFinanceWriter(user);
     case menuRoles.operate:
       return isOperate(user);
+    case menuRoles.operateAdmin:
+      return isOperateAdmin(user);
+    case menuRoles.operateEditor:
+      return isOperateEditor(user);
+    case menuRoles.operateWriter:
+      return isOperateWriter(user);
+    case menuRoles.financeOperateAdmin:
+      return isFinanceOperateAdmin(user);
+    case menuRoles.financeOperateEditor:
+      return isFinanceOperateEditor(user);
+    case menuRoles.financeOperateWriter:
+      return isFinanceOperateWriter(user);
     case menuRoles.editor:
       return isEditor(user);
+    case menuRoles.admin:
+      return isAdmin(user);
     case menuRoles.writer:
       return isWriter(user);
     case menuRoles.viewer:

@@ -40,7 +40,7 @@ import {
 import useGroups from '../../hooks/useGroups';
 
 export default function Sendreqs(props: any) {
-  const { isRTL, words, menuitem, isEditor, theme, company } = props;
+  const { isRTL, words, menuitem, theme, company } = props;
 
   const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
   const [openItem, setOpenItem] = useState(false);
@@ -83,7 +83,6 @@ export default function Sendreqs(props: any) {
       menuitem={menuitem}
       isRTL={isRTL}
       words={words}
-      isEditor={isEditor}
       theme={theme}
       refresh={refreshsendreqs}
     >
@@ -134,14 +133,12 @@ export default function Sendreqs(props: any) {
             }
           ></DataTypeProvider>
           <TableColumnVisibility />
-          {isEditor && (
-            <TableEditColumn
-              showEditCommand
-              showDeleteCommand
-              showAddCommand
-              commandComponent={Command}
-            ></TableEditColumn>
-          )}
+          <TableEditColumn
+            showEditCommand
+            showDeleteCommand
+            showAddCommand
+            commandComponent={Command}
+          ></TableEditColumn>
           <Toolbar />
           <ColumnChooser />
           <SearchPanel
@@ -171,7 +168,6 @@ export default function Sendreqs(props: any) {
             setOpenItem(false);
             setItem(null);
           }}
-          isEditor={isEditor}
           isRTL={isRTL}
           theme={theme}
           words={words}

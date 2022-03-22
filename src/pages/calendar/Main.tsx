@@ -54,7 +54,7 @@ const Main = (props: any) => {
 
   const [rows, setRows] = useState([]);
   const isMobile = useMediaQuery('(max-width:600px)');
-  const { calendar, isRTL, words, company, isEditor, theme } = props;
+  const { calendar, isRTL, words, company, theme } = props;
   const {
     state: { currentDate, currentViewName, departvalue, emplvalue, status },
     dispatch,
@@ -321,7 +321,8 @@ const Main = (props: any) => {
             />
             <AppointmentTooltip
               showCloseButton
-              showOpenButton={isEditor ? true : false}
+              // showOpenButton={ isEditor ? true : false} // TODO:
+              showOpenButton
               // showDeleteButton
               visible={visible}
               onVisibilityChange={() => setVisible(!visible)}

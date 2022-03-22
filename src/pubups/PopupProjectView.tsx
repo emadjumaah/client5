@@ -75,7 +75,6 @@ const PopupProjectView = ({
   row,
   isNew,
   theme,
-  isEditor,
   departments,
   company,
   employees,
@@ -130,7 +129,6 @@ const PopupProjectView = ({
                 <TabPanel value={value} index={0}>
                   <ProjectsCustomer
                     servicesproducts={servicesproducts}
-                    isEditor={isEditor}
                     isRTL={isRTL}
                     words={words}
                     theme={theme}
@@ -143,7 +141,6 @@ const PopupProjectView = ({
                 <TabPanel value={value} index={1}>
                   <TasksCustomer
                     servicesproducts={servicesproducts}
-                    isEditor={isEditor}
                     isRTL={isRTL}
                     words={words}
                     theme={theme}
@@ -160,7 +157,6 @@ const PopupProjectView = ({
                     departments={departments}
                     customers={customers}
                     servicesproducts={servicesproducts}
-                    isEditor={isEditor}
                     isRTL={isRTL}
                     words={words}
                     theme={theme}
@@ -174,7 +170,6 @@ const PopupProjectView = ({
                   <InvoicesCustomer
                     isRTL={isRTL}
                     words={words}
-                    isEditor={isEditor}
                     employees={employees}
                     resourses={resourses}
                     departments={departments}
@@ -189,7 +184,6 @@ const PopupProjectView = ({
                   <ReceiptCustomer
                     isRTL={isRTL}
                     words={words}
-                    isEditor={isEditor}
                     theme={theme}
                     name="projectId"
                     value={row}
@@ -200,7 +194,6 @@ const PopupProjectView = ({
                   <ExpensesCustomer
                     isRTL={isRTL}
                     words={words}
-                    isEditor={isEditor}
                     theme={theme}
                     name="projectId"
                     value={row}

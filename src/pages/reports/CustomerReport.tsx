@@ -66,13 +66,7 @@ export const TableComponent = withStyles(styles, { name: 'TableComponent' })(
   TableComponentBase
 );
 
-export default function CustomerReport({
-  isRTL,
-  words,
-  menuitem,
-  theme,
-  isEditor,
-}: any) {
+export default function CustomerReport({ isRTL, words, menuitem, theme }: any) {
   const [start, setStart] = useState<any>(null);
   const [end, setEnd] = useState<any>(null);
 
@@ -269,7 +263,6 @@ export default function CustomerReport({
       menuitem={menuitem}
       isRTL={isRTL}
       words={words}
-      isEditor={isEditor}
       theme={theme}
       refresh={refresh}
     >

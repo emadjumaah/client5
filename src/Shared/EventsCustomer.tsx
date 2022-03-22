@@ -75,7 +75,6 @@ export const TableComponent = withStyles(styles, { name: 'TableComponent' })(
 export default function EventsCustomer({
   isRTL,
   words,
-  isEditor,
   resourses,
   employees,
   departments,
@@ -230,7 +229,7 @@ export default function EventsCustomer({
           <NumberTypeProvider for={['index']} />
           <TableHeaderRow showSortingControls />
 
-          {isEditor && !isNew && (
+          {!isNew && (
             <TableEditColumn
               showEditCommand
               showDeleteCommand
@@ -248,7 +247,6 @@ export default function EventsCustomer({
               servicesproducts={servicesproducts}
               theme={theme}
               company={company}
-              isEditor={isEditor}
               tasks={tasks}
               name={name}
               value={value}

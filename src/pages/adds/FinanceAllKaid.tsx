@@ -58,13 +58,7 @@ import useEmployeesUp from '../../hooks/useEmployeesUp';
 import useResoursesUp from '../../hooks/useResoursesUp';
 import useProjects from '../../hooks/useProjects';
 
-export default function FinanceAllKaid({
-  isRTL,
-  words,
-  menuitem,
-  isEditor,
-  theme,
-}) {
+export default function FinanceAllKaid({ isRTL, words, menuitem, theme }) {
   const [columns] = useState([
     { name: 'time', title: words.time },
     { name: 'docNo', title: words.no },
@@ -190,7 +184,6 @@ export default function FinanceAllKaid({
       menuitem={menuitem}
       isRTL={isRTL}
       words={words}
-      isEditor={isEditor}
       theme={theme}
       refresh={refresh}
     >
@@ -273,14 +266,12 @@ export default function FinanceAllKaid({
               accountFormatter(props, accounts, isRTL)
             }
           ></DataTypeProvider>
-          {isEditor && (
-            <TableEditColumn
-              showEditCommand
-              showDeleteCommand
-              showAddCommand
-              commandComponent={Command}
-            ></TableEditColumn>
-          )}
+          <TableEditColumn
+            showEditCommand
+            showDeleteCommand
+            showAddCommand
+            commandComponent={Command}
+          ></TableEditColumn>
           <Toolbar />
           <SearchPanel
             inputComponent={(props: any) => {

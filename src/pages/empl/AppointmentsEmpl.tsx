@@ -76,7 +76,6 @@ export default function AppointmentsEmpl({
   isRTL,
   words,
   menuitem,
-  isEditor,
   theme,
   company,
   servicesproducts,
@@ -295,7 +294,6 @@ export default function AppointmentsEmpl({
       menuitem={menuitem}
       isRTL={isRTL}
       words={words}
-      isEditor={isEditor}
       theme={theme}
       refresh={refresh}
       periodvalue={periodvalue}
@@ -462,14 +460,12 @@ export default function AppointmentsEmpl({
             }
           ></DataTypeProvider>
 
-          {isEditor && (
-            <TableEditColumn
-              showEditCommand
-              showDeleteCommand
-              showAddCommand
-              commandComponent={Command}
-            ></TableEditColumn>
-          )}
+          <TableEditColumn
+            showEditCommand
+            showDeleteCommand
+            showAddCommand
+            commandComponent={Command}
+          ></TableEditColumn>
 
           <Toolbar />
           <ColumnChooser />
@@ -491,7 +487,6 @@ export default function AppointmentsEmpl({
               tasks={tasks.filter(
                 (ts: any) => ts.employeeId === user?.employeeId
               )}
-              isEditor={isEditor}
             ></PopupAppointment>
           </PopupEditing>
           <Getter
@@ -520,7 +515,6 @@ export default function AppointmentsEmpl({
           addAction={addDepartment}
           editAction={editDepartment}
           theme={theme}
-          isEditor={isEditor}
           departments={departments}
           company={company}
           employees={employees}
@@ -537,7 +531,6 @@ export default function AppointmentsEmpl({
           addAction={addEmployee}
           editAction={editEmployee}
           theme={theme}
-          isEditor={isEditor}
           departments={departments}
           company={company}
           employees={employees}
@@ -561,7 +554,6 @@ export default function AppointmentsEmpl({
           editCustomer={editCustomer}
           company={company}
           servicesproducts={servicesproducts}
-          isEditor={isEditor}
         ></PopupTaskView>
         <PopupCustomerView
           open={openCustomerItem}
@@ -571,7 +563,6 @@ export default function AppointmentsEmpl({
           addAction={addCustomer}
           editAction={editCustomer}
           theme={theme}
-          isEditor={isEditor}
           departments={departments}
           company={company}
           employees={employees}

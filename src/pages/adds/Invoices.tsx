@@ -55,14 +55,7 @@ import useEmployeesUp from '../../hooks/useEmployeesUp';
 import { useServices } from '../../hooks';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
 
-export default function Invoices({
-  isRTL,
-  words,
-  menuitem,
-  isEditor,
-  theme,
-  company,
-}) {
+export default function Invoices({ isRTL, words, menuitem, theme, company }) {
   const col = getColumns({ isRTL, words });
 
   const [columns] = useState([
@@ -193,7 +186,6 @@ export default function Invoices({
       menuitem={menuitem}
       isRTL={isRTL}
       words={words}
-      isEditor={isEditor}
       theme={theme}
       refresh={refresh}
       // bgcolor={colors.green[500]}
@@ -271,14 +263,12 @@ export default function Invoices({
             }
           ></DataTypeProvider>
 
-          {isEditor && (
-            <TableEditColumn
-              showEditCommand
-              showDeleteCommand
-              showAddCommand
-              commandComponent={Command}
-            ></TableEditColumn>
-          )}
+          <TableEditColumn
+            showEditCommand
+            showDeleteCommand
+            showAddCommand
+            commandComponent={Command}
+          ></TableEditColumn>
 
           <Toolbar />
           <SearchPanel

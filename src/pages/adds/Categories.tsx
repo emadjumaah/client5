@@ -24,7 +24,7 @@ import { AlertLocal, SearchTable } from '../../components';
 import { errorAlert, errorDeleteAlert } from '../../Shared/helpers';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
 
-export default function Categories({ isRTL, words, isEditor, theme }: any) {
+export default function Categories({ isRTL, words, theme }: any) {
   const [loading, setLoading] = useState(false);
   const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
 
@@ -73,14 +73,12 @@ export default function Categories({ isRTL, words, isEditor, theme }: any) {
           estimatedRowHeight={40}
         />
         <TableHeaderRow showSortingControls />
-        {isEditor && (
-          <TableEditColumn
-            showEditCommand
-            showDeleteCommand
-            showAddCommand
-            commandComponent={Command}
-          ></TableEditColumn>
-        )}
+        <TableEditColumn
+          showEditCommand
+          showDeleteCommand
+          showAddCommand
+          commandComponent={Command}
+        ></TableEditColumn>
         <Toolbar />
         <SearchPanel
           inputComponent={(props: any) => {

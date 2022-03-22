@@ -42,6 +42,7 @@ import getTasks from '../graphql/query/getTasks';
 import { getReadyEventData } from '../common/helpers';
 import { ContractPrint } from '../print';
 import { useReactToPrint } from 'react-to-print';
+import LoadingInlineButton from '../Shared/LoadingInlineButton';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -103,7 +104,6 @@ const PopupTaskView = ({
   customers,
   servicesproducts,
   theme,
-  isEditor,
   company,
 }: any) => {
   const classes = useStyles();
@@ -118,6 +118,7 @@ const PopupTaskView = ({
   const [custvalue, setCustvalue] = useState(null);
   const [resovalue, setResovalue] = useState(null);
   const [info, setInfo] = useState<any>(null);
+  const [loading, setLoading] = useState<any>(null);
 
   const handleChange = (_, newValue) => {
     setValue(newValue);
@@ -224,15 +225,19 @@ const PopupTaskView = ({
   });
   const addNewEvent = async () => {
     if (!event) return;
+    setLoading(true);
     const variables = getReadyEventData(
       event,
       row,
       eventItemsData,
       servicesproducts
     );
-    if (!variables) return;
-    console.log('variables', variables);
+    if (!variables) {
+      setLoading(false);
+      return;
+    }
     await addEvent({ variables });
+    setLoading(false);
   };
 
   useEffect(() => {
@@ -391,7 +396,6 @@ const PopupTaskView = ({
                   <TabPanel value={value} index={0}>
                     <ProjectsCustomer
                       servicesproducts={servicesproducts}
-                      isEditor={isEditor}
                       isRTL={isRTL}
                       words={words}
                       theme={theme}
@@ -404,7 +408,6 @@ const PopupTaskView = ({
                   <TabPanel value={value} index={1}>
                     <TasksCustomer
                       servicesproducts={servicesproducts}
-                      isEditor={isEditor}
                       isRTL={isRTL}
                       words={words}
                       theme={theme}
@@ -421,7 +424,6 @@ const PopupTaskView = ({
                       departments={departments}
                       customers={customers}
                       servicesproducts={servicesproducts}
-                      isEditor={isEditor}
                       isRTL={isRTL}
                       words={words}
                       theme={theme}
@@ -435,7 +437,6 @@ const PopupTaskView = ({
                     <InvoicesCustomer
                       isRTL={isRTL}
                       words={words}
-                      isEditor={isEditor}
                       resourses={resourses}
                       employees={employees}
                       departments={departments}
@@ -450,7 +451,6 @@ const PopupTaskView = ({
                     <ReceiptCustomer
                       isRTL={isRTL}
                       words={words}
-                      isEditor={isEditor}
                       theme={theme}
                       name="taskId"
                       value={row}
@@ -461,7 +461,6 @@ const PopupTaskView = ({
                     <ExpensesCustomer
                       isRTL={isRTL}
                       words={words}
-                      isEditor={isEditor}
                       theme={theme}
                       name="taskId"
                       value={row}
@@ -664,10 +663,12 @@ const PopupTaskView = ({
                   variant="contained"
                   fullWidth
                   color="primary"
+                  disabled={loading}
                   onClick={() => addNewEvent()}
                 >
                   {words.newPeriod}
                 </Button>
+                {loading && <LoadingInlineButton></LoadingInlineButton>}
               </Box>
             </Grid>
           )}

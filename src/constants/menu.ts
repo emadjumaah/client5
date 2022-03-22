@@ -18,7 +18,6 @@ export const smsmenu: any = [
     icon: 'camp',
     req: 'pos',
     dep: null,
-    role: menuRoles.branchAdmin,
   },
   {
     id: 2,
@@ -119,6 +118,7 @@ export const mainmenu = [
     req: 'cal',
     dep: 'pos',
     hide: options?.noPro,
+    role: menuRoles.writer,
   },
   {
     id: 1.5,
@@ -130,6 +130,7 @@ export const mainmenu = [
     req: 'cal',
     dep: 'pos',
     hide: options?.noTsk,
+    role: menuRoles.writer,
   },
   {
     id: 2,
@@ -182,6 +183,7 @@ export const mainmenu = [
     icon: 'event',
     req: 'cal',
     dep: 'pos',
+    role: menuRoles.operateWriter,
   },
   {
     id: 5.7,
@@ -192,6 +194,7 @@ export const mainmenu = [
     icon: 'calendar',
     req: 'cal',
     dep: 'pos',
+    role: menuRoles.operateEditor,
   },
 
   {
@@ -223,6 +226,7 @@ export const mainmenu = [
         mainId: 7,
         req: 'pos',
         dep: null,
+        role: menuRoles.writer,
       },
 
       {
@@ -235,6 +239,7 @@ export const mainmenu = [
         mainId: 7,
         req: null,
         dep: null,
+        role: menuRoles.writer,
       },
       {
         id: 74,
@@ -246,6 +251,7 @@ export const mainmenu = [
         mainId: 7,
         req: 'exp',
         dep: null,
+        role: menuRoles.financeWriter,
       },
       {
         id: 75,
@@ -257,6 +263,7 @@ export const mainmenu = [
         mainId: 7,
         req: null,
         dep: null,
+        role: menuRoles.financeWriter,
       },
     ],
   },
@@ -280,6 +287,7 @@ export const mainmenu = [
     icon: 'report',
     req: null,
     dep: null,
+    role: menuRoles.editor,
     subMenu: [
       // {
       //   id: 81,
@@ -308,6 +316,7 @@ export const mainmenu = [
         titleEn: 'Documents Report',
         req: 'cal',
         dep: 'pos',
+        role: menuRoles.admin,
       },
       // {
       //   id: 82.8,
@@ -350,6 +359,7 @@ export const mainmenu = [
         mainId: 7,
         req: 'exp',
         dep: null,
+        role: menuRoles.financeAdmin,
       },
       {
         id: 86,
@@ -357,7 +367,7 @@ export const mainmenu = [
         uri: 'financereport',
         titleAr: 'تقرير الحسابات',
         titleEn: 'Finance Report',
-        role: menuRoles.editor,
+        role: menuRoles.financeEditor,
         mainId: 7,
         req: null,
         dep: null,
@@ -382,7 +392,7 @@ export const mainmenu = [
     titleAr: 'الحسابات',
     titleEn: 'Accounts',
     icon: 'account',
-    role: menuRoles.branchAdmin,
+    role: menuRoles.financeAdmin,
     req: null,
     dep: null,
   },

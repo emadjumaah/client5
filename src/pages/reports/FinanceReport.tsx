@@ -71,7 +71,6 @@ export default function FinanceReport({
   menuitem,
   mainaccounts,
   theme,
-  isEditor,
 }: any) {
   const [start, setStart] = useState<any>(null);
   const [end, setEnd] = useState<any>(null);
@@ -262,7 +261,6 @@ export default function FinanceReport({
       menuitem={menuitem}
       isRTL={isRTL}
       words={words}
-      isEditor={isEditor}
       theme={theme}
       refresh={refresh}
     >

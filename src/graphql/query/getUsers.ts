@@ -28,6 +28,7 @@ export default gql`
         isEmployee
         isFinance
         isOperate
+        isAdmin
         isEditor
         isWriter
         isViewer

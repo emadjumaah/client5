@@ -43,11 +43,11 @@ import useResoursesUp from '../../hooks/useResoursesUp';
 import { Box } from '@material-ui/core';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
 import { TableComponent } from '../../Shared/TableComponent';
+import { roles } from '../../common';
 
 export default function ManageDepartments({
   isRTL,
   words,
-  isEditor,
   theme,
   menuitem,
   company,
@@ -92,6 +92,12 @@ export default function ManageDepartments({
     },
   ]);
 
+  const [columnsViewer] = useState([
+    { name: isRTL ? 'nameAr' : 'name', title: words.name },
+    { name: 'avatar', title: words.color },
+    { name: 'desc', title: words.description },
+  ]);
+
   const {
     departments,
     addDepartment,
@@ -132,7 +138,6 @@ export default function ManageDepartments({
       menuitem={menuitem}
       isRTL={isRTL}
       words={words}
-      isEditor={isEditor}
       theme={theme}
       refresh={refreshdepartment}
     >
@@ -147,7 +152,11 @@ export default function ManageDepartments({
       >
         {loading && <Loading isRTL={isRTL}></Loading>}
 
-        <Grid rows={departments} columns={columns} getRowId={getRowId}>
+        <Grid
+          rows={departments}
+          columns={roles.isAdmin() ? columns : columnsViewer}
+          getRowId={getRowId}
+        >
           <SortingState />
           <SearchState />
           <EditingState onCommitChanges={commitChanges} />
@@ -172,12 +181,14 @@ export default function ManageDepartments({
             for={['avatar']}
             formatterComponent={avatarPatternFormatter}
           ></DataTypeProvider>
-          <DataTypeProvider
-            for={['nameAr', 'name']}
-            formatterComponent={(props: any) =>
-              nameLinkFormat({ ...props, setItem, setOpenItem })
-            }
-          ></DataTypeProvider>
+          {roles.isAdmin() && (
+            <DataTypeProvider
+              for={['nameAr', 'name']}
+              formatterComponent={(props: any) =>
+                nameLinkFormat({ ...props, setItem, setOpenItem })
+              }
+            ></DataTypeProvider>
+          )}
           <DataTypeProvider
             for={['amount', 'toatlExpenses', 'totalpaid', 'totalinvoiced']}
             formatterComponent={currencyFormatterEmpty}
@@ -199,14 +210,12 @@ export default function ManageDepartments({
             formatterComponent={progressFormatter}
           ></DataTypeProvider>
 
-          {isEditor && (
-            <TableEditColumn
-              showEditCommand
-              showDeleteCommand
-              showAddCommand
-              commandComponent={Command}
-            ></TableEditColumn>
-          )}
+          <TableEditColumn
+            showEditCommand
+            showDeleteCommand
+            showAddCommand
+            commandComponent={Command}
+          ></TableEditColumn>
 
           <Toolbar />
           <ColumnChooser />
@@ -241,7 +250,6 @@ export default function ManageDepartments({
           addAction={addDepartment}
           editAction={editDepartment}
           theme={theme}
-          isEditor={isEditor}
           departments={departments}
           company={company}
           resourses={resourses}

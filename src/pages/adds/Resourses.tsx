@@ -31,13 +31,7 @@ import { getColumns } from '../../common/columns';
 import useResoursesDown from '../../hooks/useResoursesDown';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
 
-export default function Resourses({
-  isRTL,
-  words,
-  isEditor,
-  theme,
-  menuitem,
-}: any) {
+export default function Resourses({ isRTL, words, theme, menuitem }: any) {
   const col = getColumns({ isRTL, words });
 
   const [loading, setLoading] = useState(false);
@@ -79,7 +73,6 @@ export default function Resourses({
       menuitem={menuitem}
       isRTL={isRTL}
       words={words}
-      isEditor={isEditor}
       theme={theme}
       refresh={refreshresourses}
     >
@@ -110,14 +103,12 @@ export default function Resourses({
             for={['color']}
             formatterComponent={colorFormatter}
           ></DataTypeProvider>
-          {isEditor && (
-            <TableEditColumn
-              showEditCommand
-              showDeleteCommand
-              showAddCommand
-              commandComponent={Command}
-            ></TableEditColumn>
-          )}
+          <TableEditColumn
+            showEditCommand
+            showDeleteCommand
+            showAddCommand
+            commandComponent={Command}
+          ></TableEditColumn>
           <Toolbar />
           <SearchPanel
             inputComponent={(props: any) => {

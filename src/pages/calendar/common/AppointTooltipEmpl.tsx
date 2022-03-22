@@ -34,7 +34,7 @@ export const AppointTooltipEmpl = ({
   const [itemsList, setItemsList] = useState<any>([]);
   const [open, setOpen] = useState(false);
   const [stat] = useState(appointmentData?.status);
-  const [isEditor, setIsEditor] = useState(false);
+  // const [isEditor, setIsEditor] = useState(false);
 
   const {
     translate: { words, isRTL },
@@ -42,11 +42,11 @@ export const AppointTooltipEmpl = ({
 
   const classes = cardClasses();
   const { tempwords } = useTemplate();
-  useEffect(() => {
-    const isCalPOSEditor = roles.isEditor();
-    const isEmployee = roles.isEmployee();
-    setIsEditor(isCalPOSEditor || isEmployee);
-  }, []);
+  // useEffect(() => {
+  //   const isCalPOSEditor = roles.isEditor();
+  //   const isEmployee = roles.isEmployee();
+  //   setIsEditor(isCalPOSEditor || isEmployee);
+  // }, []);
 
   const onStatusChange = async (value: any) => {
     await editEvent({
@@ -156,7 +156,8 @@ export const AppointTooltipEmpl = ({
     setOpen(true);
   };
 
-  const desabledSave = (!customerPhone && !items) || status === 10 || !isEditor;
+  const desabledSave =
+    (!customerPhone && !items) || status === 10 || !roles.isEditor();
 
   return (
     <Card style={{ direction: isRTL ? 'rtl' : 'ltr' }} className={classes.root}>

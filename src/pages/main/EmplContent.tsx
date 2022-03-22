@@ -28,7 +28,6 @@ import {
 } from '../../contexts/tasks/tasksReducer';
 import TasksContext from '../../contexts/tasks';
 import React from 'react';
-import { isEmployee } from '../../common/roles';
 import AlertWithClose from '../../components/fields/AlertWithClose';
 import MainCalendarEmpl from '../empl/MainCalendarEmpl';
 import AppointmentsEmpl from '../empl/AppointmentsEmpl';
@@ -52,8 +51,6 @@ const EmplContent = () => {
   const logout = () => {
     dispatch({ type: 'logout' });
   };
-
-  const isEditor = isEmployee(user);
 
   const [calendarStore, calendarDispatch] = useReducer(
     calendarReducer,
@@ -104,7 +101,6 @@ const EmplContent = () => {
                   isRTL={isRTL}
                   words={words}
                   theme={theme}
-                  isEditor={isEditor}
                   calendar={calendar}
                   company={company}
                   services={services}
@@ -126,7 +122,6 @@ const EmplContent = () => {
                   menuitem={menuitem}
                   isRTL={isRTL}
                   words={words}
-                  isEditor={isEditor}
                   theme={theme}
                   company={company}
                   servicesproducts={services}
@@ -145,7 +140,6 @@ const EmplContent = () => {
                   menuitem={menuitem}
                   isRTL={isRTL}
                   words={words}
-                  isEditor={isEditor}
                   theme={theme}
                   company={company}
                   servicesproducts={services}
@@ -161,7 +155,6 @@ const EmplContent = () => {
                 menuitem={menuitem}
                 isRTL={isRTL}
                 words={words}
-                isEditor={false}
                 theme={theme}
                 refresh={refreshcompany}
                 editCompany={editCompany}

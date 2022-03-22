@@ -18,7 +18,7 @@ import {
 } from '@devexpress/dx-react-scheduler-material-ui';
 import { useContext, useEffect, useState } from 'react';
 import { getCalendarResourses } from '../../common/helpers';
-import { commitAppointmentChanges } from '../../common';
+import { commitAppointmentChanges, roles } from '../../common';
 import { AppointForm } from '../calendar/common/AppointForm';
 import { RenderToolTip } from '../calendar/common/AppointTooltip';
 import { AppointTooltipEmpl } from '../calendar/common/AppointTooltipEmpl';
@@ -73,7 +73,6 @@ const MainEmpl = (props: any) => {
     words,
     services,
     company,
-    isEditor,
     theme,
     user,
   } = props;
@@ -294,7 +293,7 @@ const MainEmpl = (props: any) => {
             />
             <AppointmentTooltip
               showCloseButton
-              showOpenButton={isEditor && !isMobile ? true : false}
+              showOpenButton={roles.isEditor() && !isMobile ? true : false}
               // showDeleteButton
               visible={visible}
               onVisibilityChange={() => setVisible(!visible)}

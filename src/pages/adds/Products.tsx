@@ -26,7 +26,7 @@ import { AlertLocal, SearchTable } from '../../components';
 import { useProducts } from '../../hooks';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
 
-export default function Products({ isRTL, words, isEditor, theme }: any) {
+export default function Products({ isRTL, words, theme }: any) {
   const [loading, setLoading] = useState(false);
   const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
 
@@ -84,14 +84,12 @@ export default function Products({ isRTL, words, isEditor, theme }: any) {
           formatterComponent={currencyFormatter}
         ></DataTypeProvider>
 
-        {isEditor && (
-          <TableEditColumn
-            showEditCommand
-            showDeleteCommand
-            showAddCommand
-            commandComponent={Command}
-          ></TableEditColumn>
-        )}
+        <TableEditColumn
+          showEditCommand
+          showDeleteCommand
+          showAddCommand
+          commandComponent={Command}
+        ></TableEditColumn>
         <Toolbar />
         <SearchPanel
           inputComponent={(props: any) => {

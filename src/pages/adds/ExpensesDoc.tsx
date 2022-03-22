@@ -61,7 +61,6 @@ export default function ExpensesDoc({
   isRTL,
   words,
   menuitem,
-  isEditor,
   theme,
   company,
 }) {
@@ -194,7 +193,6 @@ export default function ExpensesDoc({
       menuitem={menuitem}
       isRTL={isRTL}
       words={words}
-      isEditor={isEditor}
       theme={theme}
       refresh={refresh}
     >
@@ -279,14 +277,12 @@ export default function ExpensesDoc({
               accountFormatter(props, accounts, isRTL)
             }
           ></DataTypeProvider>
-          {isEditor && (
-            <TableEditColumn
-              showEditCommand
-              showDeleteCommand
-              showAddCommand
-              commandComponent={Command}
-            ></TableEditColumn>
-          )}
+          <TableEditColumn
+            showEditCommand
+            showDeleteCommand
+            showAddCommand
+            commandComponent={Command}
+          ></TableEditColumn>
           <Toolbar />
           <SearchPanel
             inputComponent={(props: any) => {

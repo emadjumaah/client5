@@ -174,8 +174,8 @@ const RemindCal = (props: any) => {
             <Appointments appointmentContentComponent={AppointmentContent} />
             <AppointmentTooltip
               showCloseButton
-              // showOpenButton={isEditor ? true : false}
-              // showDeleteButton
+              showOpenButton // TODO:
+              showDeleteButton
               visible={visible}
               onVisibilityChange={() => setVisible(!visible)}
               contentComponent={({ appointmentData }) => (

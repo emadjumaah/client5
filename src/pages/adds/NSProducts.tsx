@@ -26,7 +26,7 @@ import useNoStockProducts from '../../hooks/useNoStockProducts';
 import PopupNSProduct from '../../pubups/PopupNSProduct';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
 
-export default function NSProducts({ isRTL, words, isEditor, theme }: any) {
+export default function NSProducts({ isRTL, words, theme }: any) {
   const [loading, setLoading] = useState(false);
   const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
 
@@ -87,14 +87,12 @@ export default function NSProducts({ isRTL, words, isEditor, theme }: any) {
           formatterComponent={currencyFormatter}
         ></DataTypeProvider>
 
-        {isEditor && (
-          <TableEditColumn
-            showEditCommand
-            showDeleteCommand
-            showAddCommand
-            commandComponent={Command}
-          ></TableEditColumn>
-        )}
+        <TableEditColumn
+          showEditCommand
+          showDeleteCommand
+          showAddCommand
+          commandComponent={Command}
+        ></TableEditColumn>
         <Toolbar />
         <SearchPanel
           inputComponent={(props: any) => {

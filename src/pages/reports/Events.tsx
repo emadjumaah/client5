@@ -70,7 +70,6 @@ export default function Events({
   categories,
   company,
   theme,
-  isEditor,
 }: any) {
   const [servicevalue, setServicevalue] = useState<any>(null);
   const [departvalue, setDepartvalue] = useState<any>(null);
@@ -280,7 +279,6 @@ export default function Events({
       menuitem={menuitem}
       isRTL={isRTL}
       words={words}
-      isEditor={isEditor}
       theme={theme}
       refresh={refresh}
       periodvalue={periodvalue}

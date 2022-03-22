@@ -33,13 +33,7 @@ import useEmployeesDown from '../../hooks/useEmployeesDown';
 import useDepartmentsDown from '../../hooks/useDepartmentsDown';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
 
-export default function Employees({
-  isRTL,
-  words,
-  isEditor,
-  theme,
-  menuitem,
-}: any) {
+export default function Employees({ isRTL, words, theme, menuitem }: any) {
   const col = getColumns({ isRTL, words });
 
   const [loading, setLoading] = useState(false);
@@ -85,7 +79,6 @@ export default function Employees({
       menuitem={menuitem}
       isRTL={isRTL}
       words={words}
-      isEditor={isEditor}
       theme={theme}
       refresh={refreshemployee}
     >
@@ -122,14 +115,12 @@ export default function Employees({
               daysoffFormatter({ ...props, isRTL })
             }
           ></DataTypeProvider>
-          {isEditor && (
-            <TableEditColumn
-              showEditCommand
-              showDeleteCommand
-              showAddCommand
-              commandComponent={Command}
-            ></TableEditColumn>
-          )}
+          <TableEditColumn
+            showEditCommand
+            showDeleteCommand
+            showAddCommand
+            commandComponent={Command}
+          ></TableEditColumn>
           <Toolbar />
           <SearchPanel
             inputComponent={(props: any) => {

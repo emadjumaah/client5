@@ -43,13 +43,7 @@ import useTasks from '../hooks/useTasks';
 import getTasks from '../graphql/query/getTasks';
 import useCompany from '../hooks/useCompany';
 
-export default function ExpensesTask({
-  isRTL,
-  words,
-  isEditor,
-  theme,
-  taskId,
-}) {
+export default function ExpensesTask({ isRTL, words, theme, taskId }) {
   const [columns] = useState([
     { name: 'time', title: words.time },
     { name: 'debitAcc', title: isRTL ? 'حساب المصروف' : 'Expenses Acc' },
@@ -202,14 +196,12 @@ export default function ExpensesTask({
             accountFormatter(props, accounts, isRTL)
           }
         ></DataTypeProvider>
-        {isEditor && (
-          <TableEditColumn
-            showEditCommand
-            showDeleteCommand
-            showAddCommand
-            commandComponent={Command}
-          ></TableEditColumn>
-        )}
+        <TableEditColumn
+          showEditCommand
+          showDeleteCommand
+          showAddCommand
+          commandComponent={Command}
+        ></TableEditColumn>
         <PopupEditing
           theme={theme}
           addAction={addExpenses}

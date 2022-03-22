@@ -69,7 +69,6 @@ export default function TasksEmpl({
   isRTL,
   words,
   menuitem,
-  isEditor,
   theme,
   company,
   servicesproducts,
@@ -238,7 +237,6 @@ export default function TasksEmpl({
       menuitem={menuitem}
       isRTL={isRTL}
       words={words}
-      isEditor={isEditor}
       theme={theme}
       refresh={refresh}
       periodvalue={periodvalue}
@@ -346,15 +344,12 @@ export default function TasksEmpl({
               formatterComponent={progressFormatter}
             ></DataTypeProvider>
 
-            {isEditor && (
-              <TableEditColumn
-                showEditCommand
-                showDeleteCommand
-                showAddCommand
-                commandComponent={Command}
-              ></TableEditColumn>
-            )}
-
+            <TableEditColumn
+              showEditCommand
+              showDeleteCommand
+              showAddCommand
+              commandComponent={Command}
+            ></TableEditColumn>
             <Toolbar />
             <ColumnChooser />
             <SearchPanel
@@ -375,7 +370,6 @@ export default function TasksEmpl({
                 company={company}
                 servicesproducts={servicesproducts}
                 theme={theme}
-                isEditor={isEditor}
                 refresh={refresh}
                 startrange={start}
                 endrange={end}
@@ -414,7 +408,6 @@ export default function TasksEmpl({
               editCustomer={editCustomer}
               company={company}
               servicesproducts={servicesproducts}
-              isEditor={isEditor}
               refresh={refresh}
               startrange={start}
               endrange={end}

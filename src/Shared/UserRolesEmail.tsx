@@ -4,12 +4,13 @@ import React from 'react';
 import {
   Box,
   Checkbox,
-  Divider,
+  // Divider,
   FormControlLabel,
   FormGroup,
+  Grid,
   Typography,
 } from '@material-ui/core';
-import AutoFieldLocal from '../components/fields/AutoFieldLocal';
+// import AutoFieldLocal from '../components/fields/AutoFieldLocal';
 
 export default function UserRolesEmail({
   branch,
@@ -19,6 +20,7 @@ export default function UserRolesEmail({
   isEmployee,
   isFinance,
   isOperate,
+  isAdmin,
   isEditor,
   isWriter,
   isViewer,
@@ -27,19 +29,33 @@ export default function UserRolesEmail({
   setisEmployee,
   setisFinance,
   setisOperate,
+  setisAdmin,
   setisEditor,
   setisWriter,
   setisViewer,
   setEmplvalue,
   employees,
 }) {
-  const manager = isRTL ? 'مدير الفرع' : 'Branch Manager';
-  const empl = isRTL ? 'موظف متخصص' : 'Employee';
+  // const manager = isRTL ? 'مدير الفرع' : 'Branch Manager';
+  // const empl = isRTL ? 'موظف متخصص' : 'Employee';
   const tech = isRTL ? 'ادارة العمليات' : 'Operation Section';
   const finance = isRTL ? 'قسم الحسابات' : 'Finance Section';
+
+  if (isBranchAdmin) {
+    return <div></div>;
+  }
+
   return (
-    <Box>
-      <Box>
+    <Box
+      style={{
+        padding: 10,
+        backgroundColor: '#f3f3f3',
+        margin: 10,
+        borderRadius: 5,
+        minWidth: 350,
+      }}
+    >
+      {/* <Box>
         <FormControlLabel
           control={
             <Checkbox
@@ -65,8 +81,8 @@ export default function UserRolesEmail({
             </Typography>
           }
         />
-      </Box>
-      {isEmployee && (
+      </Box> */}
+      {/* {isEmployee && (
         <Box style={{ height: 160 }}>
           <AutoFieldLocal
             name="employee"
@@ -80,19 +96,30 @@ export default function UserRolesEmail({
             fullWidth
           ></AutoFieldLocal>
         </Box>
-      )}
-      {!isEmployee && (
-        <Box style={{ height: 150 }}>
+      )} */}
+      {/* {!isEmployee && ( */}
+      <Grid container spacing={2}>
+        <Grid item xs={12}>
           <Box>
             <Typography variant="h6" style={{ marginTop: 10 }}>
               {isRTL ? 'الصلاحيات' : 'Roles'}
             </Typography>
           </Box>
+        </Grid>
+        {/* <Grid item xs={12}>
           <FormControlLabel
             control={
               <Checkbox
                 checked={isBranchAdmin}
-                onChange={() => setisBranchAdmin(!isBranchAdmin)}
+                onChange={() => {
+                  setisAdmin(false);
+                  setisEditor(false);
+                  setisWriter(false);
+                  setisViewer(false);
+                  setisOperate(false);
+                  setisFinance(false);
+                  setisBranchAdmin(!isBranchAdmin);
+                }}
                 name={branch}
                 color="primary"
               />
@@ -104,12 +131,23 @@ export default function UserRolesEmail({
             }
           />
           <Divider></Divider>
+        </Grid> */}
+        <Grid item xs={6}>
           <FormGroup>
             <FormControlLabel
+              disabled={isBranchAdmin}
               control={
                 <Checkbox
                   checked={isOperate}
-                  onChange={() => setisOperate(!isOperate)}
+                  onChange={() => {
+                    if (isOperate && !isFinance) {
+                      setisAdmin(false);
+                      setisEditor(false);
+                      setisWriter(false);
+                      setisViewer(false);
+                    }
+                    setisOperate(!isOperate);
+                  }}
                   name={branch}
                   color="primary"
                 />
@@ -121,10 +159,19 @@ export default function UserRolesEmail({
               }
             />
             <FormControlLabel
+              disabled={isBranchAdmin}
               control={
                 <Checkbox
                   checked={isFinance}
-                  onChange={() => setisFinance(!isFinance)}
+                  onChange={() => {
+                    if (isFinance && !isOperate) {
+                      setisAdmin(false);
+                      setisEditor(false);
+                      setisWriter(false);
+                      setisViewer(false);
+                    }
+                    setisFinance(!isFinance);
+                  }}
                   name={branch}
                   color="primary"
                 />
@@ -136,9 +183,35 @@ export default function UserRolesEmail({
               }
             />
           </FormGroup>
-          <Divider></Divider>
-          <FormGroup row>
+        </Grid>
+        <Grid item xs={1}>
+          <Box style={{ height: 100, width: 1, backgroundColor: '#ddd' }}></Box>
+        </Grid>
+        <Grid item xs={5}>
+          <FormGroup>
             <FormControlLabel
+              disabled={isBranchAdmin || (!isOperate && !isFinance)}
+              control={
+                <Checkbox
+                  checked={isAdmin}
+                  onChange={() => setisAdmin(!isAdmin)}
+                  size="small"
+                  name={`edit`}
+                  color="primary"
+                />
+              }
+              label={
+                <Typography
+                  variant="body2"
+                  color="textSecondary"
+                  style={{ fontWeight: 'bold' }}
+                >
+                  {isRTL ? 'مدير' : 'Admin'}
+                </Typography>
+              }
+            />
+            <FormControlLabel
+              disabled={isBranchAdmin || isAdmin || (!isOperate && !isFinance)}
               control={
                 <Checkbox
                   checked={isEditor}
@@ -149,12 +222,22 @@ export default function UserRolesEmail({
                 />
               }
               label={
-                <Typography variant="body2" color="textSecondary">
+                <Typography
+                  variant="body2"
+                  color="textSecondary"
+                  style={{ fontWeight: 'bold' }}
+                >
                   {isRTL ? 'محرر' : 'Editor'}
                 </Typography>
               }
             />
             <FormControlLabel
+              disabled={
+                isBranchAdmin ||
+                isAdmin ||
+                isEditor ||
+                (!isOperate && !isFinance)
+              }
               control={
                 <Checkbox
                   checked={isWriter}
@@ -165,12 +248,23 @@ export default function UserRolesEmail({
                 />
               }
               label={
-                <Typography variant="body2" color="textSecondary">
+                <Typography
+                  variant="body2"
+                  color="textSecondary"
+                  style={{ fontWeight: 'bold' }}
+                >
                   {isRTL ? 'كاتب' : 'Writer'}
                 </Typography>
               }
             />
             <FormControlLabel
+              disabled={
+                isBranchAdmin ||
+                isAdmin ||
+                isEditor ||
+                isWriter ||
+                (!isOperate && !isFinance)
+              }
               control={
                 <Checkbox
                   checked={isViewer}
@@ -181,14 +275,20 @@ export default function UserRolesEmail({
                 />
               }
               label={
-                <Typography variant="body2" color="textSecondary">
+                <Typography
+                  variant="body2"
+                  color="textSecondary"
+                  style={{ fontWeight: 'bold' }}
+                >
                   {isRTL ? 'مشاهد' : 'Viwer'}
                 </Typography>
               }
             />
           </FormGroup>
-        </Box>
-      )}
+        </Grid>
+      </Grid>
+
+      {/* )} */}
     </Box>
   );
 }

@@ -74,7 +74,6 @@ export default function ExpensesReport({
   mainaccounts,
   // company,
   theme,
-  isEditor,
 }: any) {
   const expensesAccounts = mainaccounts?.filter(
     (acc: any) => acc.parentcode === 15
@@ -323,7 +322,6 @@ export default function ExpensesReport({
       menuitem={menuitem}
       isRTL={isRTL}
       words={words}
-      isEditor={isEditor}
       theme={theme}
       refresh={refresh}
     >

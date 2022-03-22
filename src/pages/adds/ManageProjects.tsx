@@ -21,7 +21,7 @@ import {
 } from '@devexpress/dx-react-grid-material-ui';
 import { Command, errorAlert, Loading, PopupEditing } from '../../Shared';
 import { useCustomers, useServices } from '../../hooks';
-import { getRowId } from '../../common';
+import { getRowId, roles } from '../../common';
 import {
   avatarPatternFormatter,
   currencyFormatterEmpty,
@@ -48,7 +48,6 @@ import { TableComponent } from '../../Shared/TableComponent';
 export default function ManageProjects({
   isRTL,
   words,
-  isEditor,
   theme,
   menuitem,
   company,
@@ -94,6 +93,14 @@ export default function ManageProjects({
     },
   ]);
 
+  const [columnsViewer] = useState([
+    { name: isRTL ? 'nameAr' : 'name', title: words.name },
+    { name: 'avatar', title: words.color },
+    { name: 'desc', title: words.description },
+    { name: 'amount', title: isRTL ? 'الاجمالي' : 'Total' },
+    col.progress,
+  ]);
+
   const { projects, refreshproject, addProject, editProject, removeProject } =
     useProjects();
 
@@ -127,7 +134,6 @@ export default function ManageProjects({
       menuitem={menuitem}
       isRTL={isRTL}
       words={words}
-      isEditor={isEditor}
       theme={theme}
       refresh={refreshproject}
     >
@@ -142,7 +148,11 @@ export default function ManageProjects({
       >
         {loading && <Loading isRTL={isRTL}></Loading>}
 
-        <Grid rows={projects} columns={columns} getRowId={getRowId}>
+        <Grid
+          rows={projects}
+          columns={roles.isAdmin() ? columns : columnsViewer}
+          getRowId={getRowId}
+        >
           <SortingState />
           <SearchState />
           <EditingState onCommitChanges={commitChanges} />
@@ -167,12 +177,14 @@ export default function ManageProjects({
             for={['avatar']}
             formatterComponent={avatarPatternFormatter}
           ></DataTypeProvider>
-          <DataTypeProvider
-            for={['nameAr', 'name']}
-            formatterComponent={(props: any) =>
-              nameLinkFormat({ ...props, setItem, setOpenItem })
-            }
-          ></DataTypeProvider>
+          {roles.isAdmin() && (
+            <DataTypeProvider
+              for={['nameAr', 'name']}
+              formatterComponent={(props: any) =>
+                nameLinkFormat({ ...props, setItem, setOpenItem })
+              }
+            ></DataTypeProvider>
+          )}
           <DataTypeProvider
             for={['amount', 'toatlExpenses', 'totalpaid', 'totalinvoiced']}
             formatterComponent={currencyFormatterEmpty}
@@ -194,14 +206,12 @@ export default function ManageProjects({
             formatterComponent={progressFormatter}
           ></DataTypeProvider>
 
-          {isEditor && (
-            <TableEditColumn
-              showEditCommand
-              showDeleteCommand
-              showAddCommand
-              commandComponent={Command}
-            ></TableEditColumn>
-          )}
+          <TableEditColumn
+            showEditCommand
+            showDeleteCommand
+            showAddCommand
+            commandComponent={Command}
+          ></TableEditColumn>
 
           <Toolbar />
           <ColumnChooser />
@@ -241,7 +251,6 @@ export default function ManageProjects({
           addAction={addProject}
           editAction={editProject}
           theme={theme}
-          isEditor={isEditor}
           projects={projects}
           departments={departments}
           company={company}

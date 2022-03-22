@@ -20,7 +20,7 @@ import {
   ColumnChooser,
 } from '@devexpress/dx-react-grid-material-ui';
 import { Command, Loading, PopupEditing } from '../../Shared';
-import { getRowId } from '../../common';
+import { getRowId, roles } from '../../common';
 import {
   avatarPatternFormatter,
   currencyFormatterEmpty,
@@ -48,7 +48,6 @@ import { TableComponent } from '../../Shared/TableComponent';
 export default function ManageResourses({
   isRTL,
   words,
-  isEditor,
   theme,
   menuitem,
   company,
@@ -97,6 +96,16 @@ export default function ManageResourses({
     },
   ]);
 
+  const [columnsViewer] = useState([
+    { name: isRTL ? 'nameAr' : 'name', title: words.name },
+    { name: 'plate', title: words.plate },
+    {
+      name: isRTL ? 'departmentNameAr' : 'departmentName',
+      title: words.department,
+    },
+    { name: 'info', title: words.info },
+  ]);
+
   const {
     resourses,
     addResourse,
@@ -136,7 +145,6 @@ export default function ManageResourses({
       menuitem={menuitem}
       isRTL={isRTL}
       words={words}
-      isEditor={isEditor}
       theme={theme}
       refresh={refreshresourse}
     >
@@ -150,7 +158,11 @@ export default function ManageResourses({
         }}
       >
         {loading && <Loading isRTL={isRTL}></Loading>}
-        <Grid rows={resourses} columns={columns} getRowId={getRowId}>
+        <Grid
+          rows={resourses}
+          columns={roles.isAdmin() ? columns : columnsViewer}
+          getRowId={getRowId}
+        >
           <SortingState />
           <SearchState />
           <EditingState onCommitChanges={commitChanges} />
@@ -186,12 +198,14 @@ export default function ManageResourses({
               daysoffFormatter({ ...props, isRTL })
             }
           ></DataTypeProvider>
-          <DataTypeProvider
-            for={['nameAr', 'name']}
-            formatterComponent={(props: any) =>
-              nameLinkFormat({ ...props, setItem, setOpenItem })
-            }
-          ></DataTypeProvider>
+          {roles.isAdmin() && (
+            <DataTypeProvider
+              for={['nameAr', 'name']}
+              formatterComponent={(props: any) =>
+                nameLinkFormat({ ...props, setItem, setOpenItem })
+              }
+            ></DataTypeProvider>
+          )}
           <DataTypeProvider
             for={['amount', 'toatlExpenses', 'totalpaid', 'totalinvoiced']}
             formatterComponent={currencyFormatterEmpty}
@@ -213,14 +227,12 @@ export default function ManageResourses({
             formatterComponent={progressFormatter}
           ></DataTypeProvider>
 
-          {isEditor && (
-            <TableEditColumn
-              showEditCommand
-              showDeleteCommand
-              showAddCommand
-              commandComponent={Command}
-            ></TableEditColumn>
-          )}
+          <TableEditColumn
+            showEditCommand
+            showDeleteCommand
+            showAddCommand
+            commandComponent={Command}
+          ></TableEditColumn>
           <Toolbar />
           <ColumnChooser />
           <SearchPanel
@@ -253,7 +265,6 @@ export default function ManageResourses({
           addAction={addResourse}
           editAction={editResourse}
           theme={theme}
-          isEditor={isEditor}
           departments={departments}
           company={company}
           employees={employees}

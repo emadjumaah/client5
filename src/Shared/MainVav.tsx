@@ -9,7 +9,7 @@ import {
   Tooltip,
 } from '@material-ui/core';
 import React, { useState } from 'react';
-import { isEditor } from '../common/roles';
+import { roles } from '../common';
 import { drawerWidth } from '../constants';
 import MyIcon from './MyIcon';
 
@@ -28,8 +28,7 @@ export default function MainVav(props: any) {
 
   const [activemenu, setActivemenu] = useState(1);
 
-  const { theme, isRTL, setMmenu, user } = props;
-  const editor = isEditor(user);
+  const { theme, isRTL, setMmenu } = props;
   const handleMenu = (value: any) => {
     setActivemenu(value);
     setMmenu(value);
@@ -68,7 +67,7 @@ export default function MainVav(props: any) {
           ></MyIcon>
         </Box>
       </Tooltip>
-      {editor && (
+      {roles.isBranchAdmin() && (
         <Tooltip title={isRTL ? 'الرسائل النصية' : 'SMS System'}>
           <Box
             display="flex"
@@ -91,7 +90,7 @@ export default function MainVav(props: any) {
           </Box>
         </Tooltip>
       )}
-      {!editor && (
+      {!roles.isBranchAdmin() && (
         <Box
           display="flex"
           style={{

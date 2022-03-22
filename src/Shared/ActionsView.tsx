@@ -31,7 +31,6 @@ export default function ActionsView({
   event,
   words,
   isRTL,
-  isEditor,
   setActionslist,
   theme,
 }: any) {
@@ -109,14 +108,12 @@ export default function ActionsView({
 
           <Table messages={{ noData: '' }} />
           <TableHeaderRow />
-          {isEditor && (
-            <TableEditColumn
-              showEditCommand
-              showDeleteCommand
-              showAddCommand
-              commandComponent={CommandAddSmall}
-            ></TableEditColumn>
-          )}
+          <TableEditColumn
+            showEditCommand
+            showDeleteCommand
+            showAddCommand
+            commandComponent={CommandAddSmall}
+          ></TableEditColumn>
           <DataTypeProvider
             for={['sendtime']}
             formatterComponent={actionTimeFormatter}

@@ -83,7 +83,6 @@ export default function PurchaseReport({
   categories,
   company,
   theme,
-  isEditor,
 }: any) {
   const [start, setStart] = useState<any>(null);
   const [end, setEnd] = useState<any>(null);
@@ -430,7 +429,6 @@ export default function PurchaseReport({
       menuitem={menuitem}
       isRTL={isRTL}
       words={words}
-      isEditor={isEditor}
       theme={theme}
       refresh={refresh}
     >

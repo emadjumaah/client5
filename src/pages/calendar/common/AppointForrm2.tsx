@@ -37,15 +37,8 @@ export const AppointForm2 = ({ onFieldChange, appointmentData }: any) => {
   const [openCust, setOpenCust] = useState(false);
   const [openItm, setOpenItm] = useState(false);
 
-  const [isEditor, setIsEditor] = useState(false);
-
   const [newtext, setNewtext] = useState('');
   const [status, setStatus] = useState(appointmentData.status || 2);
-
-  useEffect(() => {
-    const isCalPOSEditor = roles.isEditor();
-    setIsEditor(isCalPOSEditor);
-  }, []);
 
   const openDepartment = () => {
     setOpenDep(true);
@@ -168,7 +161,7 @@ export const AppointForm2 = ({ onFieldChange, appointmentData }: any) => {
           open={openCustomer}
           setNewtext={setNewtext}
           isRTL={isRTL}
-          canAdd={isEditor}
+          canAdd={roles.isEditor()}
         ></CustomerAutoField>
         <ServiceAutoField
           setNewtext={setNewtext}
@@ -180,7 +173,7 @@ export const AppointForm2 = ({ onFieldChange, appointmentData }: any) => {
           onNewFieldChange={onSelectServiceChange}
           open={openItem}
           isRTL={isRTL}
-          canAdd={isEditor}
+          canAdd={roles.isEditor()}
         ></ServiceAutoField>
         <Box style={{ marginTop: 30 }}></Box>
         <PopupAutoField
@@ -192,7 +185,7 @@ export const AppointForm2 = ({ onFieldChange, appointmentData }: any) => {
           open={openDepartment}
           setNewtext={setNewtext}
           isRTL={isRTL}
-          canAdd={isEditor}
+          canAdd={roles.isEditor()}
         ></PopupAutoField>
         <PopupAutoFieldEmp
           name="employee"
@@ -204,7 +197,7 @@ export const AppointForm2 = ({ onFieldChange, appointmentData }: any) => {
           setNewtext={setNewtext}
           isRTL={isRTL}
           appointmentData={appointmentData}
-          canAdd={isEditor}
+          canAdd={roles.isEditor()}
         ></PopupAutoFieldEmp>
         <StatusSelect
           status={status}

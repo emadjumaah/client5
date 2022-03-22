@@ -14,10 +14,26 @@ const user = store?.user;
 
 export const roles = {
   isSuperAdmin: () => check.isSuperAdmin(user),
+
   isBranchAdmin: () => check.isBranchAdmin(user),
+
+  isOperateAdmin: () => check.isOperateAdmin(user),
+  isOperateEditor: () => check.isOperateEditor(user),
+  isOperateWriter: () => check.isOperateWriter(user),
+  isOperateViewer: () => check.isOperateViewer(user),
+  isFinanceAdmin: () => check.isFinanceAdmin(user),
+  isFinanceEditor: () => check.isFinanceEditor(user),
+  isFinanceWriter: () => check.isFinanceWriter(user),
+  isFinanceViewer: () => check.isFinanceViewer(user),
+  isFinanceOperateAdmin: () => check.isFinanceOperateAdmin(user),
+  isFinanceOperateEditor: () => check.isFinanceOperateEditor(user),
+  isFinanceOperateWriter: () => check.isFinanceOperateWriter(user),
+  isFinanceOperateViewer: () => check.isFinanceOperateViewer(user),
+
   isEmployee: () => check.isEmployee(user),
   isFinance: () => check.isFinance(user),
   isOperate: () => check.isOperate(user),
+  isAdmin: () => check.isAdmin(user),
   isEditor: () => check.isEditor(user),
   isWriter: () => check.isWriter(user),
   isViewer: () => check.isViewer(user),

@@ -62,17 +62,11 @@ import useEmployeesUp from '../../hooks/useEmployeesUp';
 import useResoursesUp from '../../hooks/useResoursesUp';
 import useProjects from '../../hooks/useProjects';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
+import { roles } from '../../common';
 
 export const getRowId = (row: { _id: any }) => row._id;
 
-export default function Tasks({
-  isRTL,
-  words,
-  menuitem,
-  isEditor,
-  theme,
-  company,
-}) {
+export default function Tasks({ isRTL, words, menuitem, theme, company }) {
   const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
 
   const col = getColumns({ isRTL, words });
@@ -80,7 +74,6 @@ export default function Tasks({
   const [columns] = useState([
     col.title,
     col.createdAt,
-    // col.docNo,
     col.start,
     col.end,
     col.project,
@@ -105,6 +98,16 @@ export default function Tasks({
       name: 'income',
       title: isRTL ? 'صافي الايراد' : 'Total Income',
     },
+  ]);
+  const [columnsViewer] = useState([
+    col.title,
+    col.start,
+    col.project,
+    col.customer,
+    col.department,
+    col.employee,
+    col.progress,
+    { name: 'amount', title: isRTL ? 'الاجمالي' : 'Total' },
   ]);
 
   const [rows, setRows] = useState([]);
@@ -239,7 +242,6 @@ export default function Tasks({
       menuitem={menuitem}
       isRTL={isRTL}
       words={words}
-      isEditor={isEditor}
       theme={theme}
       refresh={refresh}
       periodvalue={periodvalue}
@@ -294,7 +296,11 @@ export default function Tasks({
         </Box>
 
         <Paper>
-          <Grid rows={rows} columns={columns} getRowId={getRowId}>
+          <Grid
+            rows={rows}
+            columns={roles.isAdmin() ? columns : columnsViewer}
+            getRowId={getRowId}
+          >
             <SortingState />
             <EditingState onCommitChanges={commitChanges} />
             <SearchState />
@@ -319,16 +325,22 @@ export default function Tasks({
                 col.project.name,
                 col.evQty.name,
                 col.toatlExpenses.name,
-                col.start.name,
                 col.end.name,
+                'progress',
+                'totalinvoiced',
+                'totalpaid',
+                'due',
+                'income',
               ]}
             />
-            <DataTypeProvider
-              for={['title']}
-              formatterComponent={(props: any) =>
-                nameLinkFormat({ ...props, setItem, setOpenItem })
-              }
-            ></DataTypeProvider>
+            {roles.isAdmin() && (
+              <DataTypeProvider
+                for={['title']}
+                formatterComponent={(props: any) =>
+                  nameLinkFormat({ ...props, setItem, setOpenItem })
+                }
+              ></DataTypeProvider>
+            )}
             <DataTypeProvider
               for={['start', 'end', 'createdAt']}
               formatterComponent={createdAtFormatter}
@@ -358,14 +370,12 @@ export default function Tasks({
               formatterComponent={progressFormatter}
             ></DataTypeProvider>
 
-            {isEditor && (
-              <TableEditColumn
-                showEditCommand
-                showDeleteCommand
-                showAddCommand
-                commandComponent={Command}
-              ></TableEditColumn>
-            )}
+            <TableEditColumn
+              showEditCommand
+              showDeleteCommand
+              showAddCommand
+              commandComponent={Command}
+            ></TableEditColumn>
 
             <Toolbar />
             <ColumnChooser />
@@ -387,7 +397,6 @@ export default function Tasks({
                 company={company}
                 servicesproducts={services}
                 theme={theme}
-                isEditor={isEditor}
                 refresh={refresh}
                 startrange={start}
                 endrange={end}
@@ -426,7 +435,6 @@ export default function Tasks({
               editCustomer={editCustomer}
               company={company}
               servicesproducts={services}
-              isEditor={isEditor}
               refresh={refresh}
               startrange={start}
               endrange={end}

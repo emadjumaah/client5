@@ -220,8 +220,6 @@ export const getReadyEventData = (
   itemsData: any,
   servicesproducts: any
 ) => {
-  console.log('event', event);
-  console.log('task', task);
   const freq = task?.freq;
   if (!task || !event || !freq) {
     return null;

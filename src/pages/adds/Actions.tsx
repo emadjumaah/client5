@@ -34,7 +34,7 @@ import useWindowDimensions from '../../hooks/useWindowDimensions';
 import { TableComponent } from '../../Shared/TableComponent';
 import { useUsers } from '../../hooks';
 
-export default function Actions({ isRTL, words, menuitem, isEditor, theme }) {
+export default function Actions({ isRTL, words, menuitem, theme }) {
   const [columns] = useState([
     { name: 'sendtime', title: words.time },
     { name: 'user', title: words.user },
@@ -97,7 +97,6 @@ export default function Actions({ isRTL, words, menuitem, isEditor, theme }) {
       menuitem={menuitem}
       isRTL={isRTL}
       words={words}
-      isEditor={isEditor}
       theme={theme}
       refresh={refresh}
     >

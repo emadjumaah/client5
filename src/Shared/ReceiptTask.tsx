@@ -45,7 +45,7 @@ import getTasks from '../graphql/query/getTasks';
 import React from 'react';
 import useCompany from '../hooks/useCompany';
 
-export default function ReceiptTask({ isRTL, words, isEditor, theme, taskId }) {
+export default function ReceiptTask({ isRTL, words, theme, taskId }) {
   const [columns] = useState([
     { name: 'time', title: words.time },
     { name: 'creditAcc', title: words.customer },
@@ -181,14 +181,12 @@ export default function ReceiptTask({ isRTL, words, isEditor, theme, taskId }) {
             accountFormatter(props, accounts, isRTL)
           }
         ></DataTypeProvider>
-        {isEditor && (
-          <TableEditColumn
-            showEditCommand
-            showDeleteCommand
-            showAddCommand
-            commandComponent={Command}
-          ></TableEditColumn>
-        )}
+        <TableEditColumn
+          showEditCommand
+          showDeleteCommand
+          showAddCommand
+          commandComponent={Command}
+        ></TableEditColumn>
         <PopupEditing
           theme={theme}
           addAction={addFinance}

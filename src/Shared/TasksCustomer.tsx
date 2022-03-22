@@ -57,7 +57,6 @@ export const getRowId = (row: { _id: any }) => row._id;
 export default function TasksCustomer({
   isRTL,
   words,
-  isEditor,
   theme,
   company,
   servicesproducts,
@@ -268,14 +267,12 @@ export default function TasksCustomer({
           formatterComponent={progressFormatter}
         ></DataTypeProvider>
 
-        {isEditor && (
-          <TableEditColumn
-            showEditCommand
-            showDeleteCommand
-            showAddCommand
-            commandComponent={Command}
-          ></TableEditColumn>
-        )}
+        <TableEditColumn
+          showEditCommand
+          showDeleteCommand
+          showAddCommand
+          commandComponent={Command}
+        ></TableEditColumn>
         <PopupEditing addAction={addTask} editAction={editTask}>
           <PopupTask
             value={value}
@@ -290,7 +287,6 @@ export default function TasksCustomer({
             projects={projects}
             servicesproducts={servicesproducts}
             theme={theme}
-            isEditor={isEditor}
             refresh={refresh}
           ></PopupTask>
         </PopupEditing>
@@ -319,7 +315,6 @@ export default function TasksCustomer({
           editCustomer={editCustomer}
           company={company}
           servicesproducts={servicesproducts}
-          isEditor={isEditor}
           refresh={refresh}
           addAction={addTask}
           editAction={editTask}

@@ -25,7 +25,6 @@ import PopupGroupِAdd from './PopupGroupِAdd';
 export const getRowId = (row: any) => row._id;
 
 const PopupSendreqView = ({
-  isEditor,
   open,
   onClose,
   theme,
@@ -153,7 +152,6 @@ const PopupSendreqView = ({
         <PopupGroupِAdd
           open={openAdd}
           onClose={() => setOpenAdd(false)}
-          isEditor={isEditor}
           isRTL={isRTL}
           theme={theme}
           words={words}

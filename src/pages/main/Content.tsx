@@ -103,7 +103,6 @@ import EmployeesCalendar from '../calendar/EmployeesCalendar';
 import ManageResourses from '../adds/ManageResourses';
 import Branches from '../adds/Branches';
 import React from 'react';
-import { isEditor as isEditorUser } from '../../common/roles';
 import AlertWithClose from '../../components/fields/AlertWithClose';
 import ManageProjects from '../adds/ManageProjects';
 import Main from '../calendar/Main';
@@ -147,8 +146,6 @@ const Content = () => {
   const logout = () => {
     dispatch({ type: 'logout' });
   };
-
-  const isEditor = isEditorUser(user);
 
   const [calendarStore, calendarDispatch] = useReducer(
     calendarReducer,
@@ -303,7 +300,6 @@ const Content = () => {
                   isRTL={isRTL}
                   words={words}
                   theme={theme}
-                  isEditor={isEditor}
                   calendar={calendar}
                   company={company}
                 ></Main>
@@ -321,7 +317,6 @@ const Content = () => {
                   isRTL={isRTL}
                   words={words}
                   theme={theme}
-                  isEditor={isEditor}
                   calendar={calendar}
                   company={company}
                 ></RemindCal>
@@ -342,7 +337,6 @@ const Content = () => {
                   isRTL={isRTL}
                   words={words}
                   theme={theme}
-                  isEditor={isEditor}
                   calendar={calendar}
                   company={company}
                 ></EmployeesCalendar>
@@ -359,7 +353,6 @@ const Content = () => {
                   menuitem={menuitem}
                   isRTL={isRTL}
                   words={words}
-                  isEditor={isEditor}
                   theme={theme}
                   company={company}
                 ></Invoices>
@@ -376,7 +369,6 @@ const Content = () => {
                   menuitem={menuitem}
                   isRTL={isRTL}
                   words={words}
-                  isEditor={isEditor}
                   theme={theme}
                   company={company}
                 ></Tasks>
@@ -393,7 +385,6 @@ const Content = () => {
                   menuitem={menuitem}
                   isRTL={isRTL}
                   words={words}
-                  isEditor={isEditor}
                   theme={theme}
                   company={company}
                 ></Appointments>
@@ -411,7 +402,6 @@ const Content = () => {
                   menuitem={menuitem}
                   isRTL={isRTL}
                   words={words}
-                  isEditor={isEditor}
                   theme={theme}
                 ></Finance>
               </FinanceContext.Provider>
@@ -427,7 +417,6 @@ const Content = () => {
                   menuitem={menuitem}
                   isRTL={isRTL}
                   words={words}
-                  isEditor={isEditor}
                   theme={theme}
                   company={company}
                 ></Receipt>
@@ -444,7 +433,6 @@ const Content = () => {
                   menuitem={menuitem}
                   isRTL={isRTL}
                   words={words}
-                  isEditor={isEditor}
                   theme={theme}
                   company={company}
                 ></Expenses>
@@ -461,7 +449,6 @@ const Content = () => {
                   menuitem={menuitem}
                   isRTL={isRTL}
                   words={words}
-                  isEditor={isEditor}
                   theme={theme}
                   company={company}
                 ></ExpensesDoc>
@@ -478,7 +465,6 @@ const Content = () => {
                   menuitem={menuitem}
                   isRTL={isRTL}
                   words={words}
-                  isEditor={isEditor}
                   theme={theme}
                 ></FinanceAllKaid>
               </FinanceContext.Provider>
@@ -492,7 +478,6 @@ const Content = () => {
                 words={words}
                 theme={theme}
                 menuitem={menuitem}
-                isEditor={isEditor}
                 company={company}
               ></Customers>
             )}
@@ -505,7 +490,6 @@ const Content = () => {
                 words={words}
                 theme={theme}
                 menuitem={menuitem}
-                isEditor={isEditor}
               ></Contacts>
             )}
           />
@@ -517,7 +501,6 @@ const Content = () => {
                 words={words}
                 theme={theme}
                 menuitem={menuitem}
-                isEditor={isEditor}
               ></Groups>
             )}
           />
@@ -529,7 +512,6 @@ const Content = () => {
                 words={words}
                 theme={theme}
                 menuitem={menuitem}
-                isEditor={isEditor}
               ></Reminders>
             )}
           />
@@ -544,7 +526,6 @@ const Content = () => {
                   words={words}
                   theme={theme}
                   menuitem={menuitem}
-                  isEditor={isEditor}
                 ></Messages>
               </EventsContext.Provider>
             )}
@@ -557,7 +538,6 @@ const Content = () => {
                 words={words}
                 theme={theme}
                 menuitem={menuitem}
-                isEditor={isEditor}
               ></Notifications>
             )}
           />
@@ -569,7 +549,6 @@ const Content = () => {
                 words={words}
                 theme={theme}
                 menuitem={menuitem}
-                isEditor={isEditor}
                 company={company}
               ></Sendreqs>
             )}
@@ -585,7 +564,6 @@ const Content = () => {
                   words={words}
                   theme={theme}
                   menuitem={menuitem}
-                  isEditor={isEditor}
                 ></Actions>
               </EventsContext.Provider>
             )}
@@ -595,7 +573,6 @@ const Content = () => {
             component={() => (
               <Users
                 words={words}
-                isEditor={isEditor}
                 menuitem={menuitem}
                 theme={theme}
                 isRTL={isRTL}
@@ -610,7 +587,6 @@ const Content = () => {
                 menuitem={menuitem}
                 isRTL={isRTL}
                 words={words}
-                isEditor={isEditor}
                 theme={theme}
                 refresh={refreshAccount}
               >
@@ -627,7 +603,6 @@ const Content = () => {
                   isRTL={isRTL}
                   words={words}
                   theme={theme}
-                  isEditor={isEditor}
                 >
                   <Branches
                     isRTL={isRTL}
@@ -645,7 +620,6 @@ const Content = () => {
                 menuitem={menuitem}
                 isRTL={isRTL}
                 words={words}
-                isEditor={isEditor}
                 theme={theme}
                 refresh={refreshcompany}
                 editCompany={editCompany}
@@ -662,7 +636,6 @@ const Content = () => {
                 menuitem={menuitem}
                 isRTL={isRTL}
                 words={words}
-                isEditor={isEditor}
                 theme={theme}
               ></Departments>
             )}
@@ -674,7 +647,6 @@ const Content = () => {
                 menuitem={menuitem}
                 isRTL={isRTL}
                 words={words}
-                isEditor={isEditor}
                 theme={theme}
                 company={company}
               ></ManageDepartments>
@@ -687,7 +659,6 @@ const Content = () => {
                 menuitem={menuitem}
                 isRTL={isRTL}
                 words={words}
-                isEditor={isEditor}
                 theme={theme}
                 company={company}
               ></ManageProjects>
@@ -700,7 +671,6 @@ const Content = () => {
                 menuitem={menuitem}
                 isRTL={isRTL}
                 words={words}
-                isEditor={isEditor}
                 theme={theme}
               ></Employees>
             )}
@@ -712,7 +682,6 @@ const Content = () => {
                 menuitem={menuitem}
                 isRTL={isRTL}
                 words={words}
-                isEditor={isEditor}
                 theme={theme}
                 company={company}
               ></ManageEmployees>
@@ -725,7 +694,6 @@ const Content = () => {
                 menuitem={menuitem}
                 isRTL={isRTL}
                 words={words}
-                isEditor={isEditor}
                 theme={theme}
               ></Resourses>
             )}
@@ -737,7 +705,6 @@ const Content = () => {
                 menuitem={menuitem}
                 isRTL={isRTL}
                 words={words}
-                isEditor={isEditor}
                 theme={theme}
                 company={company}
               ></ManageResourses>
@@ -750,7 +717,6 @@ const Content = () => {
                 menuitem={menuitem}
                 isRTL={isRTL}
                 words={words}
-                isEditor={isEditor}
                 theme={theme}
                 refresh={() => null}
               >
@@ -765,7 +731,6 @@ const Content = () => {
                 menuitem={menuitem}
                 isRTL={isRTL}
                 words={words}
-                isEditor={isEditor}
                 theme={theme}
                 refresh={() => null}
               >
@@ -784,7 +749,6 @@ const Content = () => {
                 }}
               >
                 <EventsReport
-                  isEditor={isEditor}
                   menuitem={menuitem}
                   isRTL={isRTL}
                   words={words}
@@ -805,7 +769,6 @@ const Content = () => {
                 }}
               >
                 <DocumentsReport
-                  isEditor={isEditor}
                   menuitem={menuitem}
                   isRTL={isRTL}
                   words={words}
@@ -826,7 +789,6 @@ const Content = () => {
                 }}
               >
                 <ServicesReport
-                  isEditor={isEditor}
                   menuitem={menuitem}
                   isRTL={isRTL}
                   words={words}
@@ -849,7 +811,6 @@ const Content = () => {
                 <SalesReport
                   isRTL={isRTL}
                   words={words}
-                  isEditor={isEditor}
                   menuitem={menuitem}
                   theme={theme}
                   categories={[]}
@@ -870,7 +831,6 @@ const Content = () => {
                 <PurchaseReport
                   isRTL={isRTL}
                   words={words}
-                  isEditor={isEditor}
                   menuitem={menuitem}
                   theme={theme}
                   suppliers={suppliers}
@@ -892,7 +852,6 @@ const Content = () => {
                 <FinanceReport
                   isRTL={isRTL}
                   words={words}
-                  isEditor={isEditor}
                   menuitem={menuitem}
                   theme={theme}
                   categories={[]}
@@ -914,7 +873,6 @@ const Content = () => {
                 <ExpensesReport
                   isRTL={isRTL}
                   words={words}
-                  isEditor={isEditor}
                   menuitem={menuitem}
                   theme={theme}
                   categories={[]}
@@ -936,7 +894,6 @@ const Content = () => {
                 <CustomerReport
                   isRTL={isRTL}
                   words={words}
-                  isEditor={isEditor}
                   menuitem={menuitem}
                   theme={theme}
                   categories={[]}

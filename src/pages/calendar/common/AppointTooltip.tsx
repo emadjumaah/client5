@@ -37,7 +37,7 @@ export const RenderToolTip = ({
 }: any) => {
   const [itemsList, setItemsList] = useState<any>([]);
   const [open, setOpen] = useState(false);
-  const [isEditor, setIsEditor] = useState(false);
+  // const [isEditor, setIsEditor] = useState(false);
 
   const {
     translate: { words, isRTL },
@@ -49,11 +49,11 @@ export const RenderToolTip = ({
   const { departments } = useDepartmentsUp();
   const { services } = useServices();
 
-  useEffect(() => {
-    const isCalPOSEditor = roles.isEditor();
-    const isEmployee = roles.isEmployee();
-    setIsEditor(isCalPOSEditor || isEmployee);
-  }, []);
+  // useEffect(() => {
+  //   const isCalPOSEditor = roles.isEditor();
+  //   const isEmployee = roles.isEmployee();
+  //   setIsEditor(isCalPOSEditor || isEmployee);
+  // }, []);
 
   const {
     startDate,
@@ -172,7 +172,8 @@ export const RenderToolTip = ({
     : '';
   const departmentColor = departColor?.[0]?.color || '';
 
-  const desabledSave = (!customerPhone && !items) || status === 10 || !isEditor;
+  const desabledSave =
+    (!customerPhone && !items) || status === 10 || !roles.isEditor();
 
   return (
     <Card style={{ direction: isRTL ? 'rtl' : 'ltr' }} className={classes.root}>

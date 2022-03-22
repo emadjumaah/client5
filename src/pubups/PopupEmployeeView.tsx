@@ -75,7 +75,6 @@ const PopupEmployeeView = ({
   row,
   isNew,
   theme,
-  isEditor,
   departments,
   company,
   employees,
@@ -130,7 +129,6 @@ const PopupEmployeeView = ({
                 <TabPanel value={value} index={0}>
                   <ProjectsCustomer
                     servicesproducts={servicesproducts}
-                    isEditor={isEditor}
                     isRTL={isRTL}
                     words={words}
                     theme={theme}
@@ -143,7 +141,6 @@ const PopupEmployeeView = ({
                 <TabPanel value={value} index={1}>
                   <TasksCustomer
                     servicesproducts={servicesproducts}
-                    isEditor={isEditor}
                     isRTL={isRTL}
                     words={words}
                     theme={theme}
@@ -160,7 +157,6 @@ const PopupEmployeeView = ({
                     departments={departments}
                     customers={customers}
                     servicesproducts={servicesproducts}
-                    isEditor={isEditor}
                     isRTL={isRTL}
                     words={words}
                     theme={theme}
@@ -174,7 +170,6 @@ const PopupEmployeeView = ({
                   <InvoicesCustomer
                     isRTL={isRTL}
                     words={words}
-                    isEditor={isEditor}
                     resourses={resourses}
                     employees={employees}
                     departments={departments}
@@ -189,7 +184,6 @@ const PopupEmployeeView = ({
                   <ReceiptCustomer
                     isRTL={isRTL}
                     words={words}
-                    isEditor={isEditor}
                     theme={theme}
                     name="employeeId"
                     value={row}
@@ -200,7 +194,6 @@ const PopupEmployeeView = ({
                   <ExpensesCustomer
                     isRTL={isRTL}
                     words={words}
-                    isEditor={isEditor}
                     theme={theme}
                     name="employeeId"
                     value={row}

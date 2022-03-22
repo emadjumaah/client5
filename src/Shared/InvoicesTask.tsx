@@ -46,7 +46,6 @@ import getTasks from '../graphql/query/getTasks';
 export default function InvoicesTask({
   isRTL,
   words,
-  isEditor,
   employees,
   departments,
   company,
@@ -192,14 +191,12 @@ export default function InvoicesTask({
           }
         ></DataTypeProvider>
 
-        {isEditor && (
-          <TableEditColumn
-            showEditCommand
-            showDeleteCommand
-            showAddCommand
-            commandComponent={Command}
-          ></TableEditColumn>
-        )}
+        <TableEditColumn
+          showEditCommand
+          showDeleteCommand
+          showAddCommand
+          commandComponent={Command}
+        ></TableEditColumn>
         <PopupEditing addAction={addInvoice} editAction={editInvoice}>
           <PopupInvoice
             employees={employees}

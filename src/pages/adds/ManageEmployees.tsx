@@ -44,11 +44,11 @@ import useDepartmentsUp from '../../hooks/useDepartmentsUp';
 import { Box } from '@material-ui/core';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
 import { TableComponent } from '../../Shared/TableComponent';
+import { roles } from '../../common';
 
 export default function ManageEmployees({
   isRTL,
   words,
-  isEditor,
   theme,
   menuitem,
   company,
@@ -100,6 +100,19 @@ export default function ManageEmployees({
     },
   ]);
 
+  const [columnsViewer] = useState([
+    { name: isRTL ? 'nameAr' : 'name', title: words.name },
+    { name: 'avatar', title: words.color },
+    { name: 'phone', title: words.phoneNumber },
+    { name: 'email', title: words.email },
+    {
+      name: isRTL ? 'departmentNameAr' : 'departmentName',
+      title: words.department,
+    },
+    { name: 'info', title: words.info },
+    { name: 'daysoff', title: isRTL ? 'يوم العطلة' : 'Day Off' },
+  ]);
+
   const {
     employees,
     addEmployee,
@@ -139,7 +152,6 @@ export default function ManageEmployees({
       menuitem={menuitem}
       isRTL={isRTL}
       words={words}
-      isEditor={isEditor}
       theme={theme}
       refresh={refreshemployee}
     >
@@ -155,7 +167,7 @@ export default function ManageEmployees({
         {loading && <Loading isRTL={isRTL}></Loading>}
         <Grid
           rows={employees.filter((em: any) => em.resType === 1)}
-          columns={columns}
+          columns={roles.isAdmin() ? columns : columnsViewer}
           getRowId={getRowId}
         >
           <SortingState />
@@ -194,12 +206,14 @@ export default function ManageEmployees({
               daysoffFormatter({ ...props, isRTL })
             }
           ></DataTypeProvider>
-          <DataTypeProvider
-            for={['nameAr', 'name']}
-            formatterComponent={(props: any) =>
-              nameLinkFormat({ ...props, setItem, setOpenItem })
-            }
-          ></DataTypeProvider>
+          {roles.isAdmin() && (
+            <DataTypeProvider
+              for={['nameAr', 'name']}
+              formatterComponent={(props: any) =>
+                nameLinkFormat({ ...props, setItem, setOpenItem })
+              }
+            ></DataTypeProvider>
+          )}
           <DataTypeProvider
             for={['amount', 'toatlExpenses', 'totalpaid', 'totalinvoiced']}
             formatterComponent={currencyFormatterEmpty}
@@ -221,14 +235,12 @@ export default function ManageEmployees({
             formatterComponent={progressFormatter}
           ></DataTypeProvider>
 
-          {isEditor && (
-            <TableEditColumn
-              showEditCommand
-              showDeleteCommand
-              showAddCommand
-              commandComponent={Command}
-            ></TableEditColumn>
-          )}
+          <TableEditColumn
+            showEditCommand
+            showDeleteCommand
+            showAddCommand
+            commandComponent={Command}
+          ></TableEditColumn>
           <Toolbar />
           <ColumnChooser />
           <SearchPanel
@@ -264,7 +276,6 @@ export default function ManageEmployees({
           addAction={addEmployee}
           editAction={editEmployee}
           theme={theme}
-          isEditor={isEditor}
           departments={departments}
           company={company}
           employees={employees}

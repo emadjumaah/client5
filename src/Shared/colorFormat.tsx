@@ -10,12 +10,16 @@ import {
   Typography,
 } from '@material-ui/core';
 import React from 'react';
+import { roles } from '../common';
 import {
   isSuperAdmin,
   isBranchAdmin,
   isEditor,
   isWriter,
   isViewer,
+  isFinance,
+  isOperate,
+  isAdmin,
 } from '../common/roles';
 import { operationTypes } from '../constants';
 import { getTaskName } from '../constants/branch';
@@ -77,20 +81,62 @@ export const daysoffFormatter = ({ value, isRTL }: any) => {
 };
 export const rolesFormatter = ({ row, isRTL }: any) => {
   const user = row;
+  const isF = isFinance(user);
+  const isO = isOperate(user);
+  const isA = isAdmin(user);
+  const isE = isEditor(user);
+  const isW = isWriter(user);
+  const isV = isViewer(user);
+
   if (isSuperAdmin(user)) {
     return <Box>{isRTL ? 'الأدمن' : 'Main Admin'}</Box>;
   }
   if (isBranchAdmin(user)) {
-    return <Box>{isRTL ? 'مدير الفرع' : 'Branch Admin'}</Box>;
+    return <Box>{isRTL ? 'مدير عام' : 'Branch Admin'}</Box>;
   }
-  if (isEditor(user)) {
-    return <Box>{isRTL ? 'محرر' : 'Account Admin'}</Box>;
+  if (isA) {
+    if (isF && isO) {
+      return <Box>{isRTL ? 'مدير حسابات وعمليات' : 'Admin / General'}</Box>;
+    } else if (isF) {
+      return <Box>{isRTL ? 'مدير حسابات' : 'Admin / Accountant'}</Box>;
+    } else if (isO) {
+      return <Box>{isRTL ? 'مدير عمليات' : 'Admin / Accountant'}</Box>;
+    } else {
+      return <Box>{isRTL ? 'مدير' : 'Admin'}</Box>;
+    }
   }
-  if (isWriter(user)) {
-    return <Box>{isRTL ? 'كاتب' : 'Editor'}</Box>;
+  if (isE) {
+    if (isF && isO) {
+      return <Box>{isRTL ? 'محرر حسابات وعمليات' : 'Editor / General'}</Box>;
+    } else if (isF) {
+      return <Box>{isRTL ? 'محرر حسابات' : 'Editor / Accountant'}</Box>;
+    } else if (isO) {
+      return <Box>{isRTL ? 'محرر عمليات' : 'Editor / Accountant'}</Box>;
+    } else {
+      return <Box>{isRTL ? 'محرر' : 'Editor'}</Box>;
+    }
   }
-  if (isViewer(user)) {
-    return <Box>{isRTL ? 'زائر' : 'Viewer'}</Box>;
+  if (isW) {
+    if (isF && isO) {
+      return <Box>{isRTL ? 'كاتب حسابات وعمليات' : 'writer / General'}</Box>;
+    } else if (isF) {
+      return <Box>{isRTL ? 'كاتب حسابات' : 'writer / Accountant'}</Box>;
+    } else if (isO) {
+      return <Box>{isRTL ? 'كاتب عمليات' : 'writer / Accountant'}</Box>;
+    } else {
+      return <Box>{isRTL ? 'كاتب' : 'writer'}</Box>;
+    }
+  }
+  if (isV) {
+    if (isF && isO) {
+      return <Box>{isRTL ? 'زائر حسابات وعمليات ' : 'Viewer / General'}</Box>;
+    } else if (isF) {
+      return <Box>{isRTL ? 'زائر حسابات' : 'Viewer / Accountant'}</Box>;
+    } else if (isO) {
+      return <Box>{isRTL ? 'زائر عمليات' : 'Viewer / Accountant'}</Box>;
+    } else {
+      return <Box>{isRTL ? 'زائر' : 'Viewer'}</Box>;
+    }
   }
 
   return <Box></Box>;
@@ -684,17 +730,19 @@ export const taskIdLinkFormat = ({
     return (
       <div
         onClick={() => {
-          setItem(task);
-          setName('task');
-          setOpenItem(true);
+          if (roles.isAdmin()) {
+            setItem(task);
+            setName('task');
+            setOpenItem(true);
+          }
         }}
-        style={{ cursor: 'pointer' }}
+        style={{ cursor: roles.isAdmin() ? 'pointer' : undefined }}
       >
         <Typography
           style={{
             fontSize: 13,
             textAlign: 'start',
-            color: colors.deepPurple[500],
+            color: roles.isAdmin() ? colors.deepPurple[500] : undefined,
           }}
         >
           {task.title}

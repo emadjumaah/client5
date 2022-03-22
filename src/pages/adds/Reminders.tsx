@@ -35,7 +35,7 @@ import { errorAlert, errorDeleteAlert } from '../../Shared/helpers';
 import PopupReminder from '../../pubups/PopupReminder';
 
 export default function Reminders(props: any) {
-  const { isRTL, words, menuitem, isEditor, theme } = props;
+  const { isRTL, words, menuitem, theme } = props;
   const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
 
   const col = getColumns({ isRTL, words });
@@ -76,7 +76,6 @@ export default function Reminders(props: any) {
       menuitem={menuitem}
       isRTL={isRTL}
       words={words}
-      isEditor={isEditor}
       theme={theme}
       refresh={refreshreminders}
     >
@@ -107,14 +106,12 @@ export default function Reminders(props: any) {
               isActiveFormatter({ ...props, editSendreq: editReminder })
             }
           ></DataTypeProvider>
-          {isEditor && (
-            <TableEditColumn
-              showEditCommand
-              showDeleteCommand
-              showAddCommand
-              commandComponent={Command}
-            ></TableEditColumn>
-          )}
+          <TableEditColumn
+            showEditCommand
+            showDeleteCommand
+            showAddCommand
+            commandComponent={Command}
+          ></TableEditColumn>
           <TableHeaderRow showSortingControls />
 
           {!isMobile && <Toolbar />}

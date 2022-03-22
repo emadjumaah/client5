@@ -53,6 +53,7 @@ import MyIcon from '../Shared/MyIcon';
 import PopupMaps from './PopupMaps';
 import { SelectLocal } from '../pages/calendar/common/SelectLocal';
 import { eventLengthOptions } from '../constants/rrule';
+import { roles } from '../common';
 
 export const indexTheList = (list: any) => {
   return list.map((item: any, index: any) => {
@@ -77,7 +78,6 @@ const PopupAppointmentCustomer = ({
   servicesproducts,
   theme,
   company,
-  isEditor,
   tasks,
   name,
   value,
@@ -665,7 +665,7 @@ const PopupAppointmentCustomer = ({
 
   const title = getPopupTitle('appointment', isNew);
 
-  const desabledSave = row.status === 10 || !isEditor;
+  const desabledSave = row.status === 10 || !roles.isEditor();
 
   return (
     <PopupLayout

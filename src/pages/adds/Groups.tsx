@@ -34,7 +34,7 @@ import PopupGroupView from '../../pubups/PopupGroupView';
 import { nameLinkFormat } from '../../Shared/colorFormat';
 
 export default function Groups(props: any) {
-  const { isRTL, words, menuitem, isEditor, theme } = props;
+  const { isRTL, words, menuitem, theme } = props;
   const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
   const [openItem, setOpenItem] = useState(false);
   const [item, setItem] = useState(null);
@@ -68,7 +68,6 @@ export default function Groups(props: any) {
       menuitem={menuitem}
       isRTL={isRTL}
       words={words}
-      isEditor={isEditor}
       theme={theme}
       refresh={refreshgroups}
     >
@@ -105,14 +104,12 @@ export default function Groups(props: any) {
             }
           ></DataTypeProvider>
           <TableColumnVisibility />
-          {isEditor && (
-            <TableEditColumn
-              showEditCommand
-              showDeleteCommand
-              showAddCommand
-              commandComponent={Command}
-            ></TableEditColumn>
-          )}
+          <TableEditColumn
+            showEditCommand
+            showDeleteCommand
+            showAddCommand
+            commandComponent={Command}
+          ></TableEditColumn>
           <Toolbar />
           <ColumnChooser />
           <SearchPanel
@@ -142,7 +139,6 @@ export default function Groups(props: any) {
             setOpenItem(false);
             setItem(null);
           }}
-          isEditor={isEditor}
           isRTL={isRTL}
           theme={theme}
           words={words}

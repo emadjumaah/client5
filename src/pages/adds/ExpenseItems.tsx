@@ -29,7 +29,7 @@ import { TableComponent } from '../../Shared/TableComponent';
 import ImportBtn from '../../common/ImportBtn';
 import PopupExpenseItemImport from '../../pubups/PopupExpenseItemImport';
 
-export default function ExpenseItems({ isRTL, words, theme, isEditor }: any) {
+export default function ExpenseItems({ isRTL, words, theme }: any) {
   const [openImport, setOpenImport] = useState(false);
   const [loading, setLoading] = useState(false);
   const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
@@ -105,14 +105,12 @@ export default function ExpenseItems({ isRTL, words, theme, isEditor }: any) {
           formatterComponent={currencyFormatter}
         ></DataTypeProvider>
 
-        {isEditor && (
-          <TableEditColumn
-            showEditCommand
-            showDeleteCommand
-            showAddCommand
-            commandComponent={Command}
-          ></TableEditColumn>
-        )}
+        <TableEditColumn
+          showEditCommand
+          showDeleteCommand
+          showAddCommand
+          commandComponent={Command}
+        ></TableEditColumn>
         <Toolbar />
         <SearchPanel
           inputComponent={(props: any) => {

@@ -20,7 +20,7 @@ import {
   ColumnChooser,
 } from '@devexpress/dx-react-grid-material-ui';
 import { Command, Loading, PopupEditing } from '../../Shared';
-import { getRowId } from '../../common';
+import { getRowId, roles } from '../../common';
 import {
   createEvent,
   deleteEventById,
@@ -78,7 +78,6 @@ export default function Appointments({
   isRTL,
   words,
   menuitem,
-  isEditor,
   theme,
   company,
 }) {
@@ -315,7 +314,6 @@ export default function Appointments({
       menuitem={menuitem}
       isRTL={isRTL}
       words={words}
-      isEditor={isEditor}
       theme={theme}
       refresh={refresh}
       periodvalue={periodvalue}
@@ -460,55 +458,61 @@ export default function Appointments({
               })
             }
           ></DataTypeProvider>
-          <DataTypeProvider
-            for={['employeeNameAr', 'employeeName']}
-            formatterComponent={(props: any) =>
-              nameLinkFormat({
-                ...props,
-                setItem: setEmployeeItem,
-                setOpenItem: setOpenEmployeeItem,
-              })
-            }
-          ></DataTypeProvider>
-          <DataTypeProvider
-            for={['resourseNameAr', 'resourseName']}
-            formatterComponent={(props: any) =>
-              nameLinkFormat({
-                ...props,
-                setItem: setResourseItem,
-                setOpenItem: setOpenResourseItem,
-              })
-            }
-          ></DataTypeProvider>
-          <DataTypeProvider
-            for={['departmentNameAr', 'departmentName']}
-            formatterComponent={(props: any) =>
-              nameLinkFormat({
-                ...props,
-                setItem: setDepartmentItem,
-                setOpenItem: setOpenDepartmentItem,
-              })
-            }
-          ></DataTypeProvider>
-          <DataTypeProvider
-            for={['customerNameAr', 'customerName']}
-            formatterComponent={(props: any) =>
-              nameLinkFormat({
-                ...props,
-                setItem: setCustomerItem,
-                setOpenItem: setOpenCustomerItem,
-              })
-            }
-          ></DataTypeProvider>
-
-          {isEditor && (
-            <TableEditColumn
-              showEditCommand
-              showDeleteCommand
-              showAddCommand
-              commandComponent={Command}
-            ></TableEditColumn>
+          {roles.isAdmin() && (
+            <DataTypeProvider
+              for={['employeeNameAr', 'employeeName']}
+              formatterComponent={(props: any) =>
+                nameLinkFormat({
+                  ...props,
+                  setItem: setEmployeeItem,
+                  setOpenItem: setOpenEmployeeItem,
+                })
+              }
+            ></DataTypeProvider>
           )}
+          {roles.isAdmin() && (
+            <DataTypeProvider
+              for={['resourseNameAr', 'resourseName']}
+              formatterComponent={(props: any) =>
+                nameLinkFormat({
+                  ...props,
+                  setItem: setResourseItem,
+                  setOpenItem: setOpenResourseItem,
+                })
+              }
+            ></DataTypeProvider>
+          )}
+          {roles.isAdmin() && (
+            <DataTypeProvider
+              for={['departmentNameAr', 'departmentName']}
+              formatterComponent={(props: any) =>
+                nameLinkFormat({
+                  ...props,
+                  setItem: setDepartmentItem,
+                  setOpenItem: setOpenDepartmentItem,
+                })
+              }
+            ></DataTypeProvider>
+          )}
+          {roles.isAdmin() && (
+            <DataTypeProvider
+              for={['customerNameAr', 'customerName']}
+              formatterComponent={(props: any) =>
+                nameLinkFormat({
+                  ...props,
+                  setItem: setCustomerItem,
+                  setOpenItem: setOpenCustomerItem,
+                })
+              }
+            ></DataTypeProvider>
+          )}
+
+          <TableEditColumn
+            showEditCommand
+            showDeleteCommand
+            showAddCommand
+            commandComponent={Command}
+          ></TableEditColumn>
 
           <Toolbar />
           <ColumnChooser />
@@ -528,7 +532,6 @@ export default function Appointments({
               servicesproducts={services}
               theme={theme}
               tasks={tasks}
-              isEditor={isEditor}
             ></PopupAppointment>
           </PopupEditing>
           <Getter
@@ -557,7 +560,6 @@ export default function Appointments({
           addAction={addDepartment}
           editAction={editDepartment}
           theme={theme}
-          isEditor={isEditor}
           company={company}
           departments={departments}
           employees={employees}
@@ -574,7 +576,6 @@ export default function Appointments({
           addAction={addEmployee}
           editAction={editEmployee}
           theme={theme}
-          isEditor={isEditor}
           company={company}
           departments={departments}
           employees={employees}
@@ -591,7 +592,6 @@ export default function Appointments({
           addAction={addResourse}
           editAction={editResourse}
           theme={theme}
-          isEditor={isEditor}
           company={company}
           departments={departments}
           employees={employees}
@@ -615,7 +615,6 @@ export default function Appointments({
           editCustomer={editCustomer}
           company={company}
           servicesproducts={services}
-          isEditor={isEditor}
         ></PopupTaskView>
         <PopupCustomerView
           open={openCustomerItem}
@@ -625,7 +624,6 @@ export default function Appointments({
           addAction={addCustomer}
           editAction={editCustomer}
           theme={theme}
-          isEditor={isEditor}
           company={company}
           departments={departments}
           employees={employees}

@@ -64,7 +64,6 @@ export default function Finances({
   categories,
   company,
   theme,
-  isEditor,
 }: any) {
   const [servicevalue, setServicevalue] = useState<any>(null);
   const [departvalue, setDepartvalue] = useState<any>(null);
@@ -273,7 +272,6 @@ export default function Finances({
       menuitem={menuitem}
       isRTL={isRTL}
       words={words}
-      isEditor={isEditor}
       theme={theme}
       refresh={refresh}
       periodvalue={periodvalue}

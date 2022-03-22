@@ -38,14 +38,7 @@ import { TableComponent } from '../../Shared/TableComponent';
 
 const getRowId = (row: { _id: any }) => row._id;
 
-export default function Users({
-  isRTL,
-  words,
-  theme,
-  user,
-  menuitem,
-  isEditor,
-}: any) {
+export default function Users({ isRTL, words, theme, user, menuitem }: any) {
   const [loading, setLoading] = useState(false);
 
   const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
@@ -80,7 +73,7 @@ export default function Users({
     if (deleted) {
       const _id = deleted[0];
       setLoading(true);
-
+      console.log('_id', _id);
       const res = await removeUser({ variables: { _id } });
       if (res?.data?.deleteUser?.ok === false) {
         await errorAlert(setAlrt, isRTL);
@@ -139,7 +132,6 @@ export default function Users({
       menuitem={menuitem}
       isRTL={isRTL}
       words={words}
-      isEditor={isEditor}
       theme={theme}
       refresh={refreshuser}
     >
