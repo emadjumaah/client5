@@ -9,7 +9,7 @@ import {
 } from '@material-ui/core';
 import React, { useState } from 'react';
 import { TextFieldLocal } from '../../components';
-import { packages, templates } from '../../constants/roles';
+import { packages, templates } from '../../constants';
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
 import { errorAlert, messageAlert } from '../../Shared';

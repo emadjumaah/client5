@@ -10,7 +10,7 @@ import { yup } from '../../constants';
 import { loginClasses } from '../../themes';
 import { client } from '../../graphql';
 import CountDown from '../../Shared/CountDown';
-import { templates } from '../../constants/roles';
+import { templates } from '../../constants';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
 import Logo from './Logo';
 

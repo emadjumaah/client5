@@ -95,7 +95,7 @@ export default function Landing(props: any) {
             <Grid item xs={12}>
               <Grid container spacing={2}>
                 {roles.isBranchAdmin() && (
-                  <Grid item xs={6} md={2}>
+                  <Grid item xs={6} md={4}>
                     <InfoBoxDark
                       title={isRTL ? 'الصندوق' : 'Cash'}
                       value={moneyFormat(raseeds?.cash)}
@@ -107,7 +107,7 @@ export default function Landing(props: any) {
                   </Grid>
                 )}
                 {roles.isBranchAdmin() && (
-                  <Grid item xs={6} md={2}>
+                  <Grid item xs={6} md={4}>
                     <InfoBoxDark
                       title={words.card}
                       value={moneyFormat(raseeds?.card)}
@@ -118,8 +118,9 @@ export default function Landing(props: any) {
                     ></InfoBoxDark>
                   </Grid>
                 )}
+                {roles.isBranchAdmin() && <Grid item xs={6} md={4}></Grid>}
                 {roles.isFinanceAdmin() && (
-                  <Grid item xs={6} md={2}>
+                  <Grid item xs={6} md={4}>
                     <InfoBox
                       title={isRTL ? 'اليوم' : 'Today'}
                       value={moneyFormat(salesTodayTotal)}
@@ -131,7 +132,7 @@ export default function Landing(props: any) {
                 )}
 
                 {roles.isFinanceAdmin() && (
-                  <Grid item xs={6} md={2}>
+                  <Grid item xs={6} md={4}>
                     <InfoBox
                       title={isRTL ? 'هذا الشهر' : 'This Month'}
                       value={moneyFormat(salesMonthTotal)}
@@ -141,8 +142,9 @@ export default function Landing(props: any) {
                     ></InfoBox>
                   </Grid>
                 )}
+                {roles.isFinanceAdmin() && <Grid item xs={6} md={4}></Grid>}
                 {roles.isOperateAdmin() && (
-                  <Grid item xs={6} md={2}>
+                  <Grid item xs={6} md={4}>
                     <InfoBox
                       title={isRTL ? 'اليوم' : 'Today'}
                       value={moneyFormatSimple(eventsTodayCount)}
@@ -153,7 +155,7 @@ export default function Landing(props: any) {
                   </Grid>
                 )}
                 {roles.isOperateAdmin() && (
-                  <Grid item xs={6} md={2}>
+                  <Grid item xs={6} md={4}>
                     <InfoBox
                       title={isRTL ? 'هذا الشهر' : 'This Month'}
                       value={moneyFormatSimple(eventsMonthCount)}
@@ -165,10 +167,11 @@ export default function Landing(props: any) {
                     ></InfoBox>
                   </Grid>
                 )}
+                {roles.isOperateAdmin() && <Grid item xs={6} md={4}></Grid>}
               </Grid>
             </Grid>
             {todayEvents && roles.isOperateAdmin() && (
-              <Grid item xs={12} md={4}>
+              <Grid item xs={12} md={8}>
                 <PercentChart
                   pricolor={salesColor}
                   seccolor={eventColor}
@@ -192,7 +195,7 @@ export default function Landing(props: any) {
               </Grid>
             )}
             {nextEventDays && roles.isOperateAdmin() && (
-              <Grid item xs={12} md={4}>
+              <Grid item xs={12} md={8}>
                 <DaysEvents
                   dataKey="count"
                   theme={theme}
@@ -218,7 +221,7 @@ export default function Landing(props: any) {
               </Grid>
             )}
             {salesMonth && roles.isFinanceAdmin() && (
-              <Grid item xs={12} md={6}>
+              <Grid item xs={12} md={8}>
                 <MonthsEmpChart
                   data={salesMonth}
                   isRTL={isRTL}
@@ -235,7 +238,7 @@ export default function Landing(props: any) {
               </Grid>
             )}
             {salesMonth && roles.isFinanceAdmin() && (
-              <Grid item xs={12} md={6}>
+              <Grid item xs={12} md={8}>
                 <MonthsEmpChart
                   data={salesMonth}
                   isRTL={isRTL}
@@ -252,7 +255,7 @@ export default function Landing(props: any) {
               </Grid>
             )}
             {eventsMonth && roles.isOperateAdmin() && (
-              <Grid item xs={12} md={6}>
+              <Grid item xs={12} md={8}>
                 <MonthsEmpChart
                   data={eventsMonth}
                   isRTL={isRTL}
@@ -269,7 +272,7 @@ export default function Landing(props: any) {
               </Grid>
             )}
             {eventsMonth && roles.isOperateAdmin() && (
-              <Grid item xs={12} md={6}>
+              <Grid item xs={12} md={8}>
                 <MonthsEmpChart
                   data={eventsMonth}
                   isRTL={isRTL}
@@ -286,7 +289,7 @@ export default function Landing(props: any) {
               </Grid>
             )}
             {salesMonths && roles.isFinanceAdmin() && (
-              <Grid item xs={12} md={6}>
+              <Grid item xs={12} md={8}>
                 <MonthsChart
                   data={salesMonths}
                   isRTL={isRTL}
@@ -299,7 +302,7 @@ export default function Landing(props: any) {
               </Grid>
             )}
             {eventMonths && roles.isOperateAdmin() && (
-              <Grid item xs={12} md={6}>
+              <Grid item xs={12} md={8}>
                 <MonthsChart
                   data={eventMonths}
                   isRTL={isRTL}

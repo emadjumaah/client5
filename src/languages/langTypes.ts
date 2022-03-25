@@ -36,6 +36,7 @@ export interface LanguageType {
   words: {
     all: string;
     for: string;
+    template: string;
     newInvoice: string;
     newPeriod: string;
     addInvoice: string;

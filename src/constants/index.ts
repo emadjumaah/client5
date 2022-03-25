@@ -1,3 +1,4 @@
+import { templates } from './templates';
 import { mainmenu, emplmenu, addButtonsList } from './menu';
 import { colors, colorsList, colorsList2 } from './colors';
 import { drawerWidth } from './sizes';
@@ -9,6 +10,7 @@ import {
   paymentTypes,
 } from './datatypes';
 import { operationTypes, catTypes } from './datatypes';
+import { packages } from './roles';
 
 // Dev
 // export const graphqlURI = 'http://jadwal-server/graphql';
@@ -34,4 +36,6 @@ export {
   eventStatus,
   operationTypes,
   paymentTypes,
+  templates,
+  packages,
 };

@@ -204,12 +204,12 @@ export const detectURLs = (text: any) => {
 // detectURLs("Visit www.cluemediator.com and subscribe us on https://www.cluemediator.com/subscribe for regular updates.")
 // Output: ["www.cluemediator.com", "https://www.cluemediator.com/subscribe"]
 
-export const subscribePushToken = async () => {
+export const subscribePushToken = async (company: any) => {
+  console.log('company', company);
   let sw = await navigator.serviceWorker.ready;
   let push = await sw.pushManager.subscribe({
     userVisibleOnly: true,
-    applicationServerKey:
-      'BLatAsE7I0bu7TGClZ7n1aUlHWxQB52erzrrHFA9G-bjEe28ADWSXsq4AA6-o6qZZsOgP2NOhWmPrDhfkOk7EK0',
+    applicationServerKey: company?.publicKey,
   });
   return JSON.stringify(push);
 };

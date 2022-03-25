@@ -6,7 +6,7 @@ import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import PopupLayout from '../pages/main/PopupLayout';
 import { Box, Card, CardContent, Grid, Typography } from '@material-ui/core';
-import { templates } from '../constants/roles';
+import { templates } from '../constants';
 import { TextFieldLocal } from '../components';
 import checkUsername from '../graphql/query/checkUsername';
 import { useLazyQuery } from '@apollo/client';
@@ -246,41 +246,33 @@ const PopupBranch = ({
             >
               النماذج
             </Typography>
-
-            <Box
-              display="flex"
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-              }}
-            >
-              {templates.map((tm: any) => {
-                const selected = tm?.title === temp?.title;
-                return (
-                  <Card
-                    style={{
-                      width: 150,
-                      height: 100,
-                      backgroundColor: selected ? '#b6fcd5' : '#f5f5f5',
-                      cursor: 'pointer',
-                    }}
-                    onClick={() => setTemp(tm)}
-                  >
-                    <CardContent>
-                      <Typography
-                        style={{ marginBottom: 20 }}
-                        variant="subtitle1"
-                        component="div"
-                      >
-                        {isRTL ? tm.nameAr : tm.name}
-                      </Typography>
-                    </CardContent>
-                  </Card>
-                );
-              })}
-            </Box>
           </Grid>
+
+          {templates.map((tm: any) => {
+            const selected = tm?.title === temp?.title;
+            return (
+              <Grid item xs={3}>
+                <Card
+                  style={{
+                    backgroundColor: selected ? '#b6fcd5' : '#f5f5f5',
+                    cursor: 'pointer',
+                    height: 100,
+                  }}
+                  onClick={() => setTemp(tm)}
+                >
+                  <CardContent>
+                    <Typography
+                      style={{ marginBottom: 20, fontWeight: 'bold' }}
+                      variant="subtitle1"
+                      component="div"
+                    >
+                      {isRTL ? tm.nameAr : tm.name}
+                    </Typography>
+                  </CardContent>
+                </Card>
+              </Grid>
+            );
+          })}
         </Grid>
       </div>
     </PopupLayout>

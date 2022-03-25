@@ -25,6 +25,7 @@ import {
   currencyFormatter,
   logoFormatter,
   reqpackFormatter,
+  templateFormatter,
 } from '../../Shared/colorFormat';
 import { SearchTable } from '../../components';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
@@ -35,15 +36,16 @@ export default function Branches({ isRTL, theme, words }: any) {
   const branchCol = [
     { name: 'logo', title: ' ' },
     { name: isRTL ? 'nameAr' : 'name', title: words.name },
+    { name: 'template', title: words.template },
     { name: 'tel1', title: words.phoneNumber },
     { name: 'email', title: words.email },
-    { name: 'packName', title: isRTL ? 'الاشتراك' : 'Package' },
-    { name: 'packStart', title: isRTL ? 'بداية الاشتراك' : 'Start' },
-    { name: 'packEnd', title: isRTL ? 'نهاية الاشتراك' : 'End' },
-    { name: 'packCost', title: words.price },
-    { name: 'packQty', title: words.qty },
-    { name: 'username', title: isRTL ? 'المدير' : 'Manager' },
-    { name: 'reqpack', title: isRTL ? 'المطلوب' : 'Requested' },
+    // { name: 'packName', title: isRTL ? 'الاشتراك' : 'Package' },
+    // { name: 'packStart', title: isRTL ? 'بداية الاشتراك' : 'Start' },
+    // { name: 'packEnd', title: isRTL ? 'نهاية الاشتراك' : 'End' },
+    // { name: 'packCost', title: words.price },
+    // { name: 'packQty', title: words.qty },
+    // { name: 'username', title: isRTL ? 'المدير' : 'Manager' },
+    // { name: 'reqpack', title: isRTL ? 'المطلوب' : 'Requested' },
   ];
 
   const [columns] = useState(branchCol);
@@ -54,7 +56,6 @@ export default function Branches({ isRTL, theme, words }: any) {
   };
 
   const { branches, addBranch, editBranch } = useBranches();
-
   return (
     <Paper>
       <Grid rows={branches} columns={columns} getRowId={getRowId}>
@@ -83,6 +84,10 @@ export default function Branches({ isRTL, theme, words }: any) {
         <DataTypeProvider
           for={['logo']}
           formatterComponent={logoFormatter}
+        ></DataTypeProvider>
+        <DataTypeProvider
+          for={['template']}
+          formatterComponent={templateFormatter}
         ></DataTypeProvider>
         <DataTypeProvider
           for={['packStart', 'packEnd']}

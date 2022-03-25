@@ -543,6 +543,10 @@ export const logoFormatter = ({ value }: any) => {
     <div style={{ width: 100, height: 50 }}></div>
   );
 };
+export const templateFormatter = ({ value }: any) => {
+  const temp = JSON.parse(value);
+  return temp?.nameAr;
+};
 export const currencyFormatterEmpty = ({ value }: any) => {
   return <span style={{ color: '#403795' }}>{moneyFormatEmpty(value)}</span>;
 };

@@ -153,7 +153,8 @@ function AppDrawer(props: any): any {
     const { checked } = e.target;
     dispatch({ type: 'setNotify', payload: checked });
     try {
-      const pushToken = checked ? await subscribePushToken() : undefined;
+      const pushToken = checked ? await subscribePushToken(company) : undefined;
+      console.log('pushToken', pushToken);
       const variables = { pushToken, notify: checked };
       updatePush({ variables });
     } catch (error) {
