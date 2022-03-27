@@ -4,7 +4,7 @@
 import { useContext, useEffect, useReducer, useState } from 'react';
 import { useTheme } from '@material-ui/core/styles';
 import { Box, CssBaseline } from '@material-ui/core';
-import { Route } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 import { AppDrawer } from '../../components';
 import { mainmenu } from '../../constants';
 import Landing from './Landing';
@@ -111,8 +111,8 @@ import useCompany from '../../hooks/useCompany';
 import Contacts from '../adds/Contacts';
 import Groups from '../adds/Groups';
 import Sendreqs from '../adds/Sendreqs';
-import { useHistory } from 'react-router-dom';
-import { remindermenu, smsmenu } from '../../constants/menu';
+import { useNavigate } from 'react-router-dom';
+import { smsmenu } from '../../constants/menu';
 import Reminders from '../adds/Reminders';
 import RemindCal from '../calendar/RemindCal';
 import Messages from '../adds/Messages';
@@ -127,9 +127,11 @@ const Content = () => {
   const [mmenu, setMmenu] = useState(null);
   const [menu, setmenu] = useState(filterMenu());
   const [menuitem, setMenuitem] = useState(mainmenu[0]);
+  // const [mlocation, setMlocation] = useState('/');
 
   const theme = useTheme();
-  const history = useHistory();
+  const navigate = useNavigate();
+  // const location = useLocation();
 
   const { company, editCompany, refreshcompany } = useCompany();
   const { branches } = useBranches();
@@ -223,25 +225,24 @@ const Content = () => {
     switch (mmenu) {
       case 1:
         setmenu(filterMenu());
-        history.push('/');
+        navigate('/');
         setMenuitem(mainmenu[0]);
+        // setMlocation(location?.pathname);
         return;
       case 2:
         setmenu(smsmenu);
-        history.push('/sendreqs');
+        navigate(`/sendreqs`);
         setMenuitem(smsmenu[0]);
         return;
-      case 3:
-        setmenu(remindermenu);
-        history.push('/notifications');
-        setMenuitem(remindermenu[0]);
-        return;
+      // case 3:
+      //   setmenu(remindermenu);
+      //   navigate(`/notifications`);
+      //   setMenuitem(remindermenu[0]);
+      //   return;
 
-      default:
-        setmenu(filterMenu());
-        history.push('/');
-        setMenuitem(mainmenu[0]);
-        return;
+      // default:
+      //   navigate(mlocation);
+      //   return;
     }
   }, [mmenu]);
 
@@ -275,11 +276,10 @@ const Content = () => {
         style={{ marginTop: isMobile ? 50 : undefined }}
         className={classes.content}
       >
-        <div>
+        <Routes>
           <Route
             path="/"
-            exact
-            component={() => (
+            element={
               <Landing
                 menuitem={menuitem}
                 isRTL={isRTL}
@@ -287,11 +287,11 @@ const Content = () => {
                 user={user}
                 theme={theme}
               ></Landing>
-            )}
+            }
           />
           <Route
             path="/calendar"
-            component={() => (
+            element={
               <CalendarContext.Provider
                 value={{ state: calendarStore, dispatch: calendarDispatch }}
               >
@@ -304,11 +304,11 @@ const Content = () => {
                   company={company}
                 ></Main>
               </CalendarContext.Provider>
-            )}
+            }
           />
           <Route
             path="/remindcal"
-            component={() => (
+            element={
               <CalendarContext.Provider
                 value={{ state: calendarStore, dispatch: calendarDispatch }}
               >
@@ -321,11 +321,11 @@ const Content = () => {
                   company={company}
                 ></RemindCal>
               </CalendarContext.Provider>
-            )}
+            }
           />
           <Route
             path="/calendarempl"
-            component={() => (
+            element={
               <CalendarReportContext.Provider
                 value={{
                   state: calendarReportStore,
@@ -341,11 +341,11 @@ const Content = () => {
                   company={company}
                 ></EmployeesCalendar>
               </CalendarReportContext.Provider>
-            )}
+            }
           />
           <Route
             path="/sales"
-            component={() => (
+            element={
               <SalesContext.Provider
                 value={{ state: salesStore, dispatch: salesDispatch }}
               >
@@ -357,11 +357,11 @@ const Content = () => {
                   company={company}
                 ></Invoices>
               </SalesContext.Provider>
-            )}
+            }
           />
           <Route
             path="/tasks"
-            component={() => (
+            element={
               <TasksContext.Provider
                 value={{ state: tasksStore, dispatch: tasksDispatch }}
               >
@@ -373,11 +373,11 @@ const Content = () => {
                   company={company}
                 ></Tasks>
               </TasksContext.Provider>
-            )}
+            }
           />
           <Route
             path="/appointments"
-            component={() => (
+            element={
               <EventsContext.Provider
                 value={{ state: eventsStore, dispatch: eventsDispatch }}
               >
@@ -389,12 +389,12 @@ const Content = () => {
                   company={company}
                 ></Appointments>
               </EventsContext.Provider>
-            )}
+            }
           />
 
           <Route
             path="/cash"
-            component={() => (
+            element={
               <FinanceContext.Provider
                 value={{ state: financeStore, dispatch: financeDispatch }}
               >
@@ -405,11 +405,11 @@ const Content = () => {
                   theme={theme}
                 ></Finance>
               </FinanceContext.Provider>
-            )}
+            }
           />
           <Route
             path="/receipts"
-            component={() => (
+            element={
               <ReceiptContext.Provider
                 value={{ state: receiptStore, dispatch: receiptDispatch }}
               >
@@ -421,11 +421,11 @@ const Content = () => {
                   company={company}
                 ></Receipt>
               </ReceiptContext.Provider>
-            )}
+            }
           />
           <Route
             path="/expenses"
-            component={() => (
+            element={
               <ExpensesContext.Provider
                 value={{ state: expensesStore, dispatch: expensesDispatch }}
               >
@@ -437,11 +437,11 @@ const Content = () => {
                   company={company}
                 ></Expenses>
               </ExpensesContext.Provider>
-            )}
+            }
           />
           {/* <Route
             path="/expenses"
-            component={() => (
+            element={
               <ExpensesContext.Provider
                 value={{ state: expensesStore, dispatch: expensesDispatch }}
               >
@@ -453,11 +453,11 @@ const Content = () => {
                   company={company}
                 ></ExpensesDoc>
               </ExpensesContext.Provider>
-            )}
+            }
           /> */}
           <Route
             path="/financeall"
-            component={() => (
+            element={
               <FinanceContext.Provider
                 value={{ state: financeStore, dispatch: financeDispatch }}
               >
@@ -468,11 +468,11 @@ const Content = () => {
                   theme={theme}
                 ></FinanceAllKaid>
               </FinanceContext.Provider>
-            )}
+            }
           />
           <Route
             path="/customers"
-            component={() => (
+            element={
               <Customers
                 isRTL={isRTL}
                 words={words}
@@ -480,44 +480,44 @@ const Content = () => {
                 menuitem={menuitem}
                 company={company}
               ></Customers>
-            )}
+            }
           />
           <Route
             path="/contacts"
-            component={() => (
+            element={
               <Contacts
                 isRTL={isRTL}
                 words={words}
                 theme={theme}
                 menuitem={menuitem}
               ></Contacts>
-            )}
+            }
           />
           <Route
             path="/groups"
-            component={() => (
+            element={
               <Groups
                 isRTL={isRTL}
                 words={words}
                 theme={theme}
                 menuitem={menuitem}
               ></Groups>
-            )}
+            }
           />
           <Route
             path="/managereminders"
-            component={() => (
+            element={
               <Reminders
                 isRTL={isRTL}
                 words={words}
                 theme={theme}
                 menuitem={menuitem}
               ></Reminders>
-            )}
+            }
           />
           <Route
             path="/messages"
-            component={() => (
+            element={
               <EventsContext.Provider
                 value={{ state: calendarStore, dispatch: calendarDispatch }}
               >
@@ -528,22 +528,25 @@ const Content = () => {
                   menuitem={menuitem}
                 ></Messages>
               </EventsContext.Provider>
-            )}
+            }
           />
           <Route
             path="/notifications"
-            component={() => (
+            element={
               <Notifications
                 isRTL={isRTL}
                 words={words}
                 theme={theme}
                 menuitem={menuitem}
+                notify={notify}
+                dispatch={dispatch}
+                company={company}
               ></Notifications>
-            )}
+            }
           />
           <Route
             path="/sendreqs"
-            component={() => (
+            element={
               <Sendreqs
                 isRTL={isRTL}
                 words={words}
@@ -551,11 +554,11 @@ const Content = () => {
                 menuitem={menuitem}
                 company={company}
               ></Sendreqs>
-            )}
+            }
           />
           <Route
             path="/actions"
-            component={() => (
+            element={
               <EventsContext.Provider
                 value={{ state: expensesStore, dispatch: expensesDispatch }}
               >
@@ -566,11 +569,11 @@ const Content = () => {
                   menuitem={menuitem}
                 ></Actions>
               </EventsContext.Provider>
-            )}
+            }
           />
           <Route
             path="/users"
-            component={() => (
+            element={
               <Users
                 words={words}
                 menuitem={menuitem}
@@ -578,11 +581,11 @@ const Content = () => {
                 isRTL={isRTL}
                 user={user}
               ></Users>
-            )}
+            }
           />
           <Route
             path="/accounts"
-            component={() => (
+            element={
               <PageLayout
                 menuitem={menuitem}
                 isRTL={isRTL}
@@ -592,12 +595,12 @@ const Content = () => {
               >
                 <Accounts accounts={accs}></Accounts>
               </PageLayout>
-            )}
+            }
           />
           {user.isSuperAdmin && (
             <Route
               path="/branches"
-              component={() => (
+              element={
                 <PageLayout
                   menuitem={menuitem}
                   isRTL={isRTL}
@@ -610,12 +613,12 @@ const Content = () => {
                     theme={theme}
                   ></Branches>
                 </PageLayout>
-              )}
+              }
             />
           )}
           <Route
             path="/options"
-            component={() => (
+            element={
               <PageLayout
                 menuitem={menuitem}
                 isRTL={isRTL}
@@ -627,22 +630,22 @@ const Content = () => {
               >
                 <Options></Options>
               </PageLayout>
-            )}
+            }
           />
           <Route
             path="/departments"
-            component={() => (
+            element={
               <Departments
                 menuitem={menuitem}
                 isRTL={isRTL}
                 words={words}
                 theme={theme}
               ></Departments>
-            )}
+            }
           />
           <Route
             path="/managedepartments"
-            component={() => (
+            element={
               <ManageDepartments
                 menuitem={menuitem}
                 isRTL={isRTL}
@@ -650,11 +653,11 @@ const Content = () => {
                 theme={theme}
                 company={company}
               ></ManageDepartments>
-            )}
+            }
           />
           <Route
             path="/manageprojects"
-            component={() => (
+            element={
               <ManageProjects
                 menuitem={menuitem}
                 isRTL={isRTL}
@@ -662,22 +665,22 @@ const Content = () => {
                 theme={theme}
                 company={company}
               ></ManageProjects>
-            )}
+            }
           />
           <Route
             path="/employees"
-            component={() => (
+            element={
               <Employees
                 menuitem={menuitem}
                 isRTL={isRTL}
                 words={words}
                 theme={theme}
               ></Employees>
-            )}
+            }
           />
           <Route
             path="/manageemployees"
-            component={() => (
+            element={
               <ManageEmployees
                 menuitem={menuitem}
                 isRTL={isRTL}
@@ -685,22 +688,22 @@ const Content = () => {
                 theme={theme}
                 company={company}
               ></ManageEmployees>
-            )}
+            }
           />
           <Route
             path="/resourses"
-            component={() => (
+            element={
               <Resourses
                 menuitem={menuitem}
                 isRTL={isRTL}
                 words={words}
                 theme={theme}
               ></Resourses>
-            )}
+            }
           />
           <Route
             path="/manageresourses"
-            component={() => (
+            element={
               <ManageResourses
                 menuitem={menuitem}
                 isRTL={isRTL}
@@ -708,11 +711,11 @@ const Content = () => {
                 theme={theme}
                 company={company}
               ></ManageResourses>
-            )}
+            }
           />
           <Route
             path="/services"
-            component={() => (
+            element={
               <PageLayout
                 menuitem={menuitem}
                 isRTL={isRTL}
@@ -722,11 +725,11 @@ const Content = () => {
               >
                 <Services></Services>
               </PageLayout>
-            )}
+            }
           />
           {/* <Route
             path="/expenseitems"
-            component={() => (
+            element={() => (
               <PageLayout
                 menuitem={menuitem}
                 isRTL={isRTL}
@@ -741,7 +744,7 @@ const Content = () => {
 
           <Route
             path="/calreports"
-            component={() => (
+            element={
               <EventsReportContext.Provider
                 value={{
                   state: eventsReportStore,
@@ -757,11 +760,11 @@ const Content = () => {
                   theme={theme}
                 ></EventsReport>
               </EventsReportContext.Provider>
-            )}
+            }
           />
           <Route
             path="/docreports"
-            component={() => (
+            element={
               <DocumentsReportContext.Provider
                 value={{
                   state: documentsStore,
@@ -777,11 +780,11 @@ const Content = () => {
                   theme={theme}
                 ></DocumentsReport>
               </DocumentsReportContext.Provider>
-            )}
+            }
           />
           <Route
             path="/servicesreports"
-            component={() => (
+            element={
               <ServicesReportContext.Provider
                 value={{
                   state: servicesStore,
@@ -797,11 +800,11 @@ const Content = () => {
                   theme={theme}
                 ></ServicesReport>
               </ServicesReportContext.Provider>
-            )}
+            }
           />
           <Route
             path="/salesreport"
-            component={() => (
+            element={
               <SalesReportContext.Provider
                 value={{
                   state: salesReportStore,
@@ -817,11 +820,11 @@ const Content = () => {
                   company={company}
                 ></SalesReport>
               </SalesReportContext.Provider>
-            )}
+            }
           />
           <Route
             path="/purchasereport"
-            component={() => (
+            element={
               <PurchaseReportContext.Provider
                 value={{
                   state: purchaseReportStore,
@@ -838,11 +841,11 @@ const Content = () => {
                   company={company}
                 ></PurchaseReport>
               </PurchaseReportContext.Provider>
-            )}
+            }
           />
           <Route
             path="/financereport"
-            component={() => (
+            element={
               <FinanceContext.Provider
                 value={{
                   state: financeStore,
@@ -859,11 +862,11 @@ const Content = () => {
                   mainaccounts={filteredAccounts}
                 ></FinanceReport>
               </FinanceContext.Provider>
-            )}
+            }
           />
           <Route
             path="/expensesreport"
-            component={() => (
+            element={
               <ExpensesReportContext.Provider
                 value={{
                   state: expensesReportStore,
@@ -880,11 +883,11 @@ const Content = () => {
                   mainaccounts={filteredAccounts}
                 ></ExpensesReport>
               </ExpensesReportContext.Provider>
-            )}
+            }
           />
           <Route
             path="/customerreport"
-            component={() => (
+            element={
               <CustomerReportContext.Provider
                 value={{
                   state: customerReportStore,
@@ -901,9 +904,9 @@ const Content = () => {
                   mainaccounts={filteredAccounts}
                 ></CustomerReport>
               </CustomerReportContext.Provider>
-            )}
+            }
           />
-        </div>
+        </Routes>
         <AlertWithClose
           open={packIssue}
           dispatch={dispatch}

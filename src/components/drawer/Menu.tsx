@@ -20,7 +20,7 @@ const Menu = ({
   setMobileOpen,
   logout,
   client,
-  history,
+  navigate,
 }: any) => {
   const { height } = useWindowDimensions();
   return (
@@ -52,7 +52,7 @@ const Menu = ({
                     if (item.id === 99) {
                       logout();
                       await client.resetStore();
-                      history.push('/');
+                      navigate('/');
                     } else {
                       setMenuitem(item);
                       if (setMobileOpen) {

@@ -604,6 +604,9 @@ export const doneFormatter = ({ row, editEvent }: any) => {
     </span>
   );
 };
+export const eventFormatter = ({ row }: any) => {
+  return <span>{row?.event?.docNo}</span>;
+};
 export const addFormatter = ({
   row,
   groupId,
@@ -717,6 +720,43 @@ export const nameLinkFormat = ({ row, value, setItem, setOpenItem }: any) => {
         }}
       >
         {value}
+      </Typography>
+    </Box>
+  );
+};
+export const idLinkFormat = ({
+  row,
+  value,
+  list,
+  setItem,
+  setOpenItem,
+  setName,
+  isRTL,
+}: any) => {
+  const empl = list.filter((em: any) => em._id === value)?.[0];
+  if (empl) {
+    setItem(empl);
+  }
+
+  return (
+    <Box
+      onClick={() => {
+        setItem(row);
+        setOpenItem(true);
+      }}
+      style={{
+        cursor: 'pointer',
+        borderRadius: 5,
+      }}
+    >
+      <Typography
+        style={{
+          fontSize: 13,
+          textAlign: 'start',
+          color: colors.deepPurple[500],
+        }}
+      >
+        {isRTL ? empl?.nameAr : empl?.name}
       </Typography>
     </Box>
   );

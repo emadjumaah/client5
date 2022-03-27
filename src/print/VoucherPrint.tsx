@@ -135,9 +135,7 @@ export class VoucherPrint extends React.PureComponent<any, any> {
               flexDirection: 'column',
             }}
           >
-            <div style={{ position: 'absolute', right: 50, top: 150 }}>
-              {data.no} :No / رقم
-            </div>{' '}
+            <div style={{ marginTop: -40 }}>{data.no} :No / رقم</div>
             <div style={{ fontSize: 16 }}>
               {simpleSpanDateFormatter(data.time)} :Date / التاريخ
             </div>

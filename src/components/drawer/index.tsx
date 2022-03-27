@@ -7,7 +7,7 @@ import {
   Theme,
   useTheme,
 } from '@material-ui/core/styles';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { client } from '../../graphql';
 
 import {
@@ -126,7 +126,8 @@ const drawerClasses = makeStyles((theme: Theme) =>
 
 function AppDrawer(props: any): any {
   const { window } = props;
-  const history = useHistory();
+  const navigate = useNavigate();
+
   const classes = drawerClasses();
   const {
     menuitem,
@@ -188,7 +189,7 @@ function AppDrawer(props: any): any {
                 network={network}
                 logout={logout}
                 client={client}
-                history={history}
+                navigate={navigate}
               ></UserBox>
             </Box>
           </Toolbar>
@@ -220,7 +221,7 @@ function AppDrawer(props: any): any {
               setMobileOpen={setMobileOpen}
               logout={logout}
               client={client}
-              history={history}
+              navigate={navigate}
             ></Menu>
           </Drawer>
         </Hidden>
@@ -239,7 +240,7 @@ function AppDrawer(props: any): any {
               network={network}
               logout={logout}
               client={client}
-              history={history}
+              navigate={navigate}
             ></UserBox>
             <Menu
               menu={menu}
@@ -251,7 +252,7 @@ function AppDrawer(props: any): any {
               user={user}
               logout={logout}
               client={client}
-              history={history}
+              navigate={navigate}
             ></Menu>
             {mmenu === 3 && (
               <Box

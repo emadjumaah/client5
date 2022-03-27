@@ -18,6 +18,7 @@ export default gql`
     $cost: Float
     $model: String
     $purtime: String
+    $insurance: String
     $type: String
   ) {
     updateResourse(
@@ -37,6 +38,7 @@ export default gql`
       cost: $cost
       model: $model
       purtime: $purtime
+      insurance: $insurance
       type: $type
     ) {
       ok

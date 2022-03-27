@@ -154,8 +154,14 @@ export class ContractPrint extends React.PureComponent<any, any> {
       d = `${getDateDayWeek(data?.start, data.isRTL)}`;
     } else if (item.id === 4) {
       d = `${covertToTimeOnly(data?.start)}`;
+    } else if (item.id === 5) {
+      d = `${getDateDayWeek(data?.end, data.isRTL)}`;
+    } else if (item.id === 6) {
+      d = `${covertToTimeOnly(data?.end)}`;
     } else if (item.id === 7) {
       d = data?.info?.[0]?.value;
+    } else if (item.id === 10) {
+      d = data?.resovalue?.insurance;
     }
 
     return (
@@ -798,7 +804,7 @@ export class ContractPrint extends React.PureComponent<any, any> {
                     {this.renderDivider(1)}
                     {this.renderPeriod(data)}
                     {this.renderDivider(1)}
-                    <Box style={{ display: 'flex', height: 300 }}>
+                    <Box style={{ display: 'flex', height: 270 }}>
                       {this.renderCarFooter()}
                     </Box>
                   </Grid>

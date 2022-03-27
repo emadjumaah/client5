@@ -51,6 +51,10 @@ export default gql`
         priority
         amount
         status
+        nots
+        activenots
+        smss
+        activesmss
 
         customerId
         customerName

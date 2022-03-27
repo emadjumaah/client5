@@ -325,7 +325,7 @@ export default function Tasks({ isRTL, words, menuitem, theme, company }) {
                 col.project.name,
                 col.evQty.name,
                 col.toatlExpenses.name,
-                col.end.name,
+                // col.end.name,
                 'progress',
                 'totalinvoiced',
                 'totalpaid',

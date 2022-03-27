@@ -79,7 +79,7 @@ const PopupResourses = ({
     setSaving(true);
     const name = data.name.trim();
     const nameAr = data.nameAr.trim();
-    const { info, brand, plate, cost, model, purtime } = data;
+    const { info, brand, plate, cost, model, purtime, insurance } = data;
     const department = departvalue
       ? {
           departmentId: departvalue._id,
@@ -105,6 +105,7 @@ const PopupResourses = ({
       model,
       info,
       purtime,
+      insurance,
       department,
       branch: user.branch,
       userId: user._id,
@@ -234,7 +235,7 @@ const PopupResourses = ({
                 mb={0}
               />
             </Grid>
-            <Grid item xs={6}>
+            <Grid item xs={4}>
               <TextFieldLocal
                 name="cost"
                 label={words.cost}
@@ -247,10 +248,22 @@ const PopupResourses = ({
                 mb={0}
               />
             </Grid>
-            <Grid item xs={6}>
+            <Grid item xs={4}>
               <TextFieldLocal
                 name="purtime"
                 label={words.purtime}
+                register={register}
+                errors={errors}
+                row={row}
+                fullWidth
+                newtext={newtext}
+                mb={0}
+              />
+            </Grid>
+            <Grid item xs={4}>
+              <TextFieldLocal
+                name="insurance"
+                label={words.insurance}
                 register={register}
                 errors={errors}
                 row={row}

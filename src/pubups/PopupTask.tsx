@@ -127,6 +127,7 @@ const PopupTask = ({
 
   const [freq, setFreq] = useState(RRule.DAILY);
   const [count, setCount] = useState(1);
+  const [interval, setInterval] = useState(1);
   const [totals, setTotals] = useState<any>({});
   const [info, setInfo] = useState<any>(null);
 
@@ -165,6 +166,11 @@ const PopupTask = ({
     const count = value < 1 ? 1 : value > 365 ? 365 : value;
     setCount(count);
   };
+  const onChangeInterval = (e: any) => {
+    const value = Number(e.target.value);
+    const interval = value < 1 ? 1 : value > 365 ? 365 : value;
+    setInterval(interval);
+  };
 
   const getEventOverallTotal = () => {
     const totalsin = itemsList.map((litem: any) => litem.itemtotal);
@@ -201,11 +207,12 @@ const PopupTask = ({
         byweekday: undefined,
         dtstart: start,
         until: null,
+        interval,
         count,
       });
       setRrule(rdata);
     }
-  }, [start, freq, count]);
+  }, [start, freq, count, interval]);
 
   useEffect(() => {
     if (isNew && rrule?.all && rrule?.all?.length > 0) {
@@ -339,12 +346,7 @@ const PopupTask = ({
   useEffect(() => {
     if (isNew) {
       const start = new Date();
-      const end = new Date();
-      // start.setHours(0, 0, 0, 0);
-      end.setDate(end.getDate() + 7);
-      end.setHours(23, 59, 59, 999);
       setStart(start);
-      setEnd(end);
       setStatus(eventStatus.filter((es: any) => es.id === 1)?.[0]);
       setEvList([]);
       if (name === 'employeeId') {
@@ -359,7 +361,7 @@ const PopupTask = ({
   }, [open]);
   const getOverallTotal = () => {
     const evssum = _.sumBy(evList, 'amount');
-    if (freq !== RRule.DAILY) {
+    if (freq !== RRule.DAILY || interval !== 1) {
       const namount = evssum - totals.amount;
       setTotal(namount);
     } else {
@@ -529,6 +531,7 @@ const PopupTask = ({
     setRrule(null);
     setItemsList([]);
     setCount(1);
+    setInterval(1);
     setFreq(RRule.DAILY);
     setTotals({});
     setInfo(null);
@@ -579,7 +582,7 @@ const PopupTask = ({
       resourse,
       project,
       info: JSON.stringify(info),
-      freq,
+      freq: freq === RRule.DAILY && interval === 1 ? 3 : 2,
     };
     const mutate = isNew ? addAction : editAction;
     apply(mutate, variables);
@@ -664,10 +667,10 @@ const PopupTask = ({
                   onChange={(d: any) => setStart(d)}
                   format="dd/MM/yyyy - hh:mm"
                   time
+                  disabled={!isNew}
                   mb={0}
                 ></CalenderLocal>
               </Grid>
-              <Grid item xs={1}></Grid>
               <Grid item xs={2} style={{ marginTop: 10 }}>
                 {isNew && (
                   <SelectLocal
@@ -675,7 +678,7 @@ const PopupTask = ({
                     value={freq}
                     onChange={onChangeFreq}
                     isRTL={isRTL}
-                    width={100}
+                    width={120}
                   ></SelectLocal>
                 )}
               </Grid>
@@ -688,11 +691,23 @@ const PopupTask = ({
                     value={count}
                     onChange={onChangeCount}
                     type="number"
-                    width={100}
+                    width={120}
                   />
                 )}
               </Grid>
-              <Grid item xs={1}></Grid>
+              <Grid item xs={2} style={{ marginTop: 10 }}>
+                {isNew && (
+                  <TextFieldLocal
+                    required
+                    name="interval"
+                    label={words.interval}
+                    value={interval}
+                    onChange={onChangeInterval}
+                    type="number"
+                    width={120}
+                  />
+                )}
+              </Grid>
 
               <Grid item xs={3}>
                 {rrule?.all && (

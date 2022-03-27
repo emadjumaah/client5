@@ -130,6 +130,8 @@ export interface LanguageType {
     income: string;
     sales: string;
     appointments: string;
+    appointment: string;
+    insurance: string;
     past: string;
     today: string;
     coming: string;

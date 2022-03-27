@@ -8,7 +8,6 @@ import { GlobalContext } from '../contexts';
 import {
   Box,
   Button,
-  // colors,
   IconButton,
   ListItem,
   ListItemText,
@@ -109,6 +108,7 @@ const PopupTaskAppointment = ({
   const [type, setType] = useState(null);
   const [openAction, setOpenAction] = useState(false);
   const [actionslist, setActionslist] = useState([]);
+  // const [daction, setDaction] = useState(false);
   const [selected, setSelected] = useState(null);
   const [tasktitle, setTasktitle]: any = useState(null);
 
@@ -364,6 +364,7 @@ const PopupTaskAppointment = ({
       location: location?.lat ? location : null,
       amount: totals.amount,
       status: status ? status.id : 2,
+      // daction,
       items: JSON.stringify(itemsList),
       user: user._id,
       customer: custvalue
@@ -620,6 +621,25 @@ const PopupTaskAppointment = ({
                 >
                   {isRTL ? 'اضافة رسالة' : 'Add SMS'}
                 </Button>
+                {/* <FormControlLabel
+                  control={
+                    <Checkbox
+                      style={{ padding: 7 }}
+                      checked={daction}
+                      onChange={() => setDaction(!daction)}
+                      color="primary"
+                    />
+                  }
+                  label={
+                    <Typography
+                      style={{ color: theme.palette.primary.main }}
+                      variant="subtitle2"
+                    >
+                      {isRTL ? 'تنبيه وقت الموعد' : 'Notification'}
+                    </Typography>
+                  }
+                  style={{ fontSize: 14 }}
+                /> */}
                 <Paper style={{ height: 180, overflow: 'auto' }}>
                   {actionslist.map((act: any) => {
                     return (

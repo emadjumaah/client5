@@ -17,6 +17,7 @@ export default gql`
     $amount: Float
     $status: Int
     $items: String
+    $daction: Boolean
     $actions: String
     $customer: CustomerInput
     $department: DepartmentInput
@@ -40,6 +41,7 @@ export default gql`
       amount: $amount
       status: $status
       items: $items
+      daction: $daction
       actions: $actions
       customer: $customer
       department: $department

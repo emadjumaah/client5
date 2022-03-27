@@ -100,6 +100,7 @@ export default function Appointments({
     col.status,
     col.done,
     col.amount,
+    col.nots,
   ]);
 
   const [rows, setRows] = useState([]);
@@ -127,6 +128,7 @@ export default function Appointments({
     setItem(null);
     setName(null);
   };
+
   const onCloseCustomerItem = () => {
     setOpenCustomerItem(false);
     setItem(null);
@@ -290,8 +292,6 @@ export default function Appointments({
       }
     }
     if (name === 'customer') {
-      console.log('customer', item);
-
       if (customers && customers.length > 0) {
         const opened = customers.filter((ts: any) => ts._id === item._id)?.[0];
         setItem(opened);

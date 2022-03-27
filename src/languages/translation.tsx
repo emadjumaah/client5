@@ -101,6 +101,8 @@ export const translation = (lang: LanguageType) => {
     income: lang.words.income,
     sales: lang.words.sales,
     appointments: lang.words.appointments,
+    appointment: lang.words.appointment,
+    insurance: lang.words.insurance,
     past: lang.words.past,
     today: lang.words.today,
     coming: lang.words.coming,

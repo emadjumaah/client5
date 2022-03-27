@@ -4,7 +4,7 @@
 import { useContext, useReducer, useState } from 'react';
 import { fade, useTheme } from '@material-ui/core/styles';
 import { Box, CssBaseline } from '@material-ui/core';
-import { Route } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 import { AppDrawer } from '../../components';
 import { emplmenu } from '../../constants';
 import {
@@ -88,11 +88,10 @@ const EmplContent = () => {
         network={network}
       ></AppDrawer>
       <main className={classes.content}>
-        <div>
+        <Routes>
           <Route
             path="/"
-            exact
-            component={() => (
+            element={
               <CalendarContext.Provider
                 value={{ state: calendarStore, dispatch: calendarDispatch }}
               >
@@ -109,12 +108,12 @@ const EmplContent = () => {
                   user={user}
                 ></MainCalendarEmpl>
               </CalendarContext.Provider>
-            )}
+            }
           />
 
           <Route
             path="/appointments"
-            component={() => (
+            element={
               <EventsContext.Provider
                 value={{ state: eventsStore, dispatch: eventsDispatch }}
               >
@@ -128,11 +127,11 @@ const EmplContent = () => {
                   user={user}
                 ></AppointmentsEmpl>
               </EventsContext.Provider>
-            )}
+            }
           />
           <Route
             path="/tasks"
-            component={() => (
+            element={
               <TasksContext.Provider
                 value={{ state: tasksStore, dispatch: tasksDispatch }}
               >
@@ -145,12 +144,12 @@ const EmplContent = () => {
                   servicesproducts={services}
                 ></TasksEmpl>
               </TasksContext.Provider>
-            )}
+            }
           />
 
           <Route
             path="/options"
-            component={() => (
+            element={
               <PageLayout
                 menuitem={menuitem}
                 isRTL={isRTL}
@@ -162,9 +161,9 @@ const EmplContent = () => {
               >
                 <Options></Options>
               </PageLayout>
-            )}
+            }
           />
-        </div>
+        </Routes>
         <AlertWithClose
           open={packIssue}
           dispatch={dispatch}

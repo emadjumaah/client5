@@ -92,86 +92,79 @@ export default function Landing(props: any) {
         >
           {loading && <Loading isRTL={isRTL}></Loading>}
           <Grid container spacing={2}>
-            <Grid item xs={12}>
-              <Grid container spacing={2}>
-                {roles.isBranchAdmin() && (
-                  <Grid item xs={6} md={4}>
-                    <InfoBoxDark
-                      title={isRTL ? 'الصندوق' : 'Cash'}
-                      value={moneyFormat(raseeds?.cash)}
-                      icon="cash"
-                      color={prim}
-                      salesColor={salesColor}
-                      eventColor={eventColor}
-                    ></InfoBoxDark>
-                  </Grid>
-                )}
-                {roles.isBranchAdmin() && (
-                  <Grid item xs={6} md={4}>
-                    <InfoBoxDark
-                      title={words.card}
-                      value={moneyFormat(raseeds?.card)}
-                      icon="card"
-                      color={prim}
-                      salesColor={salesColor}
-                      eventColor={eventColor}
-                    ></InfoBoxDark>
-                  </Grid>
-                )}
-                {roles.isBranchAdmin() && <Grid item xs={6} md={4}></Grid>}
-                {roles.isFinanceAdmin() && (
-                  <Grid item xs={6} md={4}>
-                    <InfoBox
-                      title={isRTL ? 'اليوم' : 'Today'}
-                      value={moneyFormat(salesTodayTotal)}
-                      icon="sales"
-                      color={salesColor}
-                      desc={isRTL ? 'مبيعات هذا اليوم' : 'Today Sales'}
-                    ></InfoBox>
-                  </Grid>
-                )}
-
-                {roles.isFinanceAdmin() && (
-                  <Grid item xs={6} md={4}>
-                    <InfoBox
-                      title={isRTL ? 'هذا الشهر' : 'This Month'}
-                      value={moneyFormat(salesMonthTotal)}
-                      icon="sales"
-                      color={salesColor}
-                      desc={isRTL ? 'مبيعات هذا الشهر' : 'This Month Sales'}
-                    ></InfoBox>
-                  </Grid>
-                )}
-                {roles.isFinanceAdmin() && <Grid item xs={6} md={4}></Grid>}
-                {roles.isOperateAdmin() && (
-                  <Grid item xs={6} md={4}>
-                    <InfoBox
-                      title={isRTL ? 'اليوم' : 'Today'}
-                      value={moneyFormatSimple(eventsTodayCount)}
-                      icon="event"
-                      color={eventColor}
-                      desc={isRTL ? 'المواعيد اليوم' : 'Appointments Today'}
-                    ></InfoBox>
-                  </Grid>
-                )}
-                {roles.isOperateAdmin() && (
-                  <Grid item xs={6} md={4}>
-                    <InfoBox
-                      title={isRTL ? 'هذا الشهر' : 'This Month'}
-                      value={moneyFormatSimple(eventsMonthCount)}
-                      icon="event"
-                      color={eventColor}
-                      desc={
-                        isRTL ? 'المواعيد هذا الشهر' : 'Appointments This month'
-                      }
-                    ></InfoBox>
-                  </Grid>
-                )}
-                {roles.isOperateAdmin() && <Grid item xs={6} md={4}></Grid>}
+            {roles.isBranchAdmin() && (
+              <Grid item xs={6} md={4}>
+                <InfoBoxDark
+                  title={isRTL ? 'الصندوق' : 'Cash'}
+                  value={moneyFormat(raseeds?.cash)}
+                  icon="cash"
+                  color={prim}
+                  salesColor={salesColor}
+                  eventColor={eventColor}
+                ></InfoBoxDark>
               </Grid>
-            </Grid>
+            )}
+            {roles.isBranchAdmin() && (
+              <Grid item xs={6} md={4}>
+                <InfoBoxDark
+                  title={words.card}
+                  value={moneyFormat(raseeds?.card)}
+                  icon="card"
+                  color={prim}
+                  salesColor={salesColor}
+                  eventColor={eventColor}
+                ></InfoBoxDark>
+              </Grid>
+            )}
+            {roles.isFinanceAdmin() && (
+              <Grid item xs={6} md={4}>
+                <InfoBox
+                  title={isRTL ? 'اليوم' : 'Today'}
+                  value={moneyFormat(salesTodayTotal)}
+                  icon="sales"
+                  color={salesColor}
+                  desc={isRTL ? 'مبيعات هذا اليوم' : 'Today Sales'}
+                ></InfoBox>
+              </Grid>
+            )}
+
+            {roles.isFinanceAdmin() && (
+              <Grid item xs={6} md={4}>
+                <InfoBox
+                  title={isRTL ? 'هذا الشهر' : 'This Month'}
+                  value={moneyFormat(salesMonthTotal)}
+                  icon="sales"
+                  color={salesColor}
+                  desc={isRTL ? 'مبيعات هذا الشهر' : 'This Month Sales'}
+                ></InfoBox>
+              </Grid>
+            )}
+            {roles.isOperateAdmin() && (
+              <Grid item xs={6} md={4}>
+                <InfoBox
+                  title={isRTL ? 'اليوم' : 'Today'}
+                  value={moneyFormatSimple(eventsTodayCount)}
+                  icon="event"
+                  color={eventColor}
+                  desc={isRTL ? 'المواعيد اليوم' : 'Appointments Today'}
+                ></InfoBox>
+              </Grid>
+            )}
+            {roles.isOperateAdmin() && (
+              <Grid item xs={6} md={4}>
+                <InfoBox
+                  title={isRTL ? 'هذا الشهر' : 'This Month'}
+                  value={moneyFormatSimple(eventsMonthCount)}
+                  icon="event"
+                  color={eventColor}
+                  desc={
+                    isRTL ? 'المواعيد هذا الشهر' : 'Appointments This month'
+                  }
+                ></InfoBox>
+              </Grid>
+            )}
             {todayEvents && roles.isOperateAdmin() && (
-              <Grid item xs={12} md={8}>
+              <Grid item xs={12} md={6}>
                 <PercentChart
                   pricolor={salesColor}
                   seccolor={eventColor}
@@ -183,7 +176,7 @@ export default function Landing(props: any) {
               </Grid>
             )}
             {salesDays && roles.isFinanceAdmin() && (
-              <Grid item xs={12} md={8}>
+              <Grid item xs={12} md={6}>
                 <SalesDaysChart
                   dataKey="total"
                   isRTL={isRTL}
@@ -195,7 +188,7 @@ export default function Landing(props: any) {
               </Grid>
             )}
             {nextEventDays && roles.isOperateAdmin() && (
-              <Grid item xs={12} md={8}>
+              <Grid item xs={12} md={6}>
                 <DaysEvents
                   dataKey="count"
                   theme={theme}
@@ -207,7 +200,7 @@ export default function Landing(props: any) {
               </Grid>
             )}
             {eventDays && roles.isOperateAdmin() && (
-              <Grid item xs={12} md={8}>
+              <Grid item xs={12} md={6}>
                 <EventsDaysChart
                   dataKey="count"
                   isRTL={isRTL}
@@ -221,7 +214,7 @@ export default function Landing(props: any) {
               </Grid>
             )}
             {salesMonth && roles.isFinanceAdmin() && (
-              <Grid item xs={12} md={8}>
+              <Grid item xs={12} md={6}>
                 <MonthsEmpChart
                   data={salesMonth}
                   isRTL={isRTL}
@@ -238,7 +231,7 @@ export default function Landing(props: any) {
               </Grid>
             )}
             {salesMonth && roles.isFinanceAdmin() && (
-              <Grid item xs={12} md={8}>
+              <Grid item xs={12} md={6}>
                 <MonthsEmpChart
                   data={salesMonth}
                   isRTL={isRTL}
@@ -255,7 +248,7 @@ export default function Landing(props: any) {
               </Grid>
             )}
             {eventsMonth && roles.isOperateAdmin() && (
-              <Grid item xs={12} md={8}>
+              <Grid item xs={12} md={6}>
                 <MonthsEmpChart
                   data={eventsMonth}
                   isRTL={isRTL}
@@ -272,7 +265,7 @@ export default function Landing(props: any) {
               </Grid>
             )}
             {eventsMonth && roles.isOperateAdmin() && (
-              <Grid item xs={12} md={8}>
+              <Grid item xs={12} md={6}>
                 <MonthsEmpChart
                   data={eventsMonth}
                   isRTL={isRTL}
@@ -289,7 +282,7 @@ export default function Landing(props: any) {
               </Grid>
             )}
             {salesMonths && roles.isFinanceAdmin() && (
-              <Grid item xs={12} md={8}>
+              <Grid item xs={12} md={6}>
                 <MonthsChart
                   data={salesMonths}
                   isRTL={isRTL}
@@ -302,7 +295,7 @@ export default function Landing(props: any) {
               </Grid>
             )}
             {eventMonths && roles.isOperateAdmin() && (
-              <Grid item xs={12} md={8}>
+              <Grid item xs={12} md={6}>
                 <MonthsChart
                   data={eventMonths}
                   isRTL={isRTL}

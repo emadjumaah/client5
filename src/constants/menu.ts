@@ -375,6 +375,16 @@ export const mainmenu = [
     ],
   },
   {
+    id: 8.5,
+    name: 'notifications',
+    uri: 'notifications',
+    titleAr: 'التنبيهات',
+    titleEn: 'Notifications',
+    icon: 'bell',
+    req: 'cal',
+    dep: 'pos',
+  },
+  {
     id: 9,
     name: 'users',
     uri: 'users',

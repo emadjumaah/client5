@@ -8,7 +8,7 @@ import Avatar from './Avatar';
 import MyIcon from './MyIcon';
 
 export default function UserBox(props: any) {
-  const { theme, user, mobile, logout, client, history, isRTL } = props;
+  const { theme, user, mobile, logout, client, navigate, isRTL } = props;
   const color = theme.palette.primary.dark;
   const { isMobile } = useWindowDimensions();
   const {
@@ -116,7 +116,7 @@ export default function UserBox(props: any) {
                 onClick={async () => {
                   logout();
                   await client.resetStore();
-                  history.push('/');
+                  navigate('/');
                 }}
               >
                 <MyIcon

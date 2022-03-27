@@ -41,6 +41,7 @@ export default gql`
         cost
         model
         purtime
+        insurance
 
         type
 

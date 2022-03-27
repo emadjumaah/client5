@@ -44,6 +44,11 @@ export const carlist = [
     name: 'Km Driven',
     nameAr: 'المسافة المقطوعة',
   },
+  {
+    id: 10,
+    name: 'Insurance',
+    nameAr: 'التأمين',
+  },
 ];
 
 export const custlist = [

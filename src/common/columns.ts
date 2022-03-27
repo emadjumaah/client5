@@ -203,8 +203,15 @@ export const getColumns = ({ isRTL, words }: any) => {
       name: 'location',
       title: isRTL ? 'الموقع' : 'Lopcation',
     },
+    nots: {
+      id: 34,
+      ref: 'nots',
+      name: 'nots',
+      title: isRTL ? 'تنبيهات' : 'Notifications',
+    },
   };
 };
+
 export const userCol = [
   { name: 'avatar', title: 'Avatar' },
   { name: 'username', title: 'User Name' },

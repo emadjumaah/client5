@@ -12,7 +12,7 @@ export default function getRruleData({
   count = 1,
 }) {
   const rule =
-    freq !== RRule.DAILY
+    freq !== RRule.DAILY || interval !== 1
       ? new RRule({
           freq,
           interval,
