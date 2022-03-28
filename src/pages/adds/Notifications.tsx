@@ -55,7 +55,7 @@ export default function Notifications({
     const { checked } = e.target;
     dispatch({ type: 'setNotify', payload: checked });
     try {
-      const pushToken = checked ? await subscribePushToken(company) : undefined;
+      const pushToken = await subscribePushToken(company, checked);
       console.log('pushToken', pushToken);
       const variables = { pushToken, notify: checked };
       updatePush({ variables });

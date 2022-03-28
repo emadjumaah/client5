@@ -204,14 +204,34 @@ export const detectURLs = (text: any) => {
 // detectURLs("Visit www.cluemediator.com and subscribe us on https://www.cluemediator.com/subscribe for regular updates.")
 // Output: ["www.cluemediator.com", "https://www.cluemediator.com/subscribe"]
 
-export const subscribePushToken = async (company: any) => {
-  console.log('company', company);
+export const subscribePushToken = async (company: any, checked: any) => {
   let sw = await navigator.serviceWorker.ready;
-  let push = await sw.pushManager.subscribe({
-    userVisibleOnly: true,
-    applicationServerKey: company?.publicKey,
-  });
-  return JSON.stringify(push);
+  let sub = await sw.pushManager.getSubscription();
+  if (checked) {
+    setTimeout(async () => {
+      if (!sub) {
+        let push = await sw.pushManager.subscribe({
+          userVisibleOnly: true,
+          applicationServerKey: company?.publicKey,
+        });
+        return JSON.stringify(push);
+      } else {
+        await sub.unsubscribe();
+        let push = await sw.pushManager.subscribe({
+          userVisibleOnly: true,
+          applicationServerKey: company?.publicKey,
+        });
+        return JSON.stringify(push);
+      }
+    }, 2000);
+  } else {
+    if (sub) {
+      await sub.unsubscribe();
+      return undefined;
+    } else {
+      return undefined;
+    }
+  }
 };
 
 export const getReadyEventData = (
