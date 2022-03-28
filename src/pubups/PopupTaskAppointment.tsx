@@ -455,7 +455,6 @@ const PopupTaskAppointment = ({
       mt={10}
       maxWidth="md"
       saving={saving}
-      // bgcolor={colors.blue[500]}
       savetitle={isRTL ? 'متابعة' : 'Proceed'}
     >
       <>

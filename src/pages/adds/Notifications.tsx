@@ -38,6 +38,7 @@ export default function Notifications({
   company,
 }: any) {
   const [rows, setRows] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const [columns] = useState([
     { name: 'body', title: words.body },
@@ -52,15 +53,17 @@ export default function Notifications({
   const [updatePush] = useMutation(updatePushToken);
 
   const handleNotification = async (e: any) => {
+    setLoading(true);
     const { checked } = e.target;
     dispatch({ type: 'setNotify', payload: checked });
     try {
       const pushToken = await subscribePushToken(company, checked);
-      console.log('pushToken', pushToken);
       const variables = { pushToken, notify: checked };
-      updatePush({ variables });
+      await updatePush({ variables });
+      setLoading(false);
     } catch (error) {
       console.log(error);
+      setLoading(false);
     }
   };
 
@@ -112,6 +115,7 @@ export default function Notifications({
                   onChange={handleNotification}
                   name="checkedA"
                   inputProps={{ 'aria-label': 'secondary checkbox' }}
+                  disabled={loading}
                 />
               </Tooltip>
             }

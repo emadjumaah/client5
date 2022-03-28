@@ -189,7 +189,6 @@ const PopupTask = ({
     };
     setTotals(tots);
   };
-
   useEffect(() => {
     getEventOverallTotal();
   }, [itemsList]);
@@ -570,7 +569,7 @@ const PopupTask = ({
       title: tasktitle ? tasktitle : custvalue?.name,
       start,
       end,
-      amount: total,
+      amount: total ? total : undefined,
       status: status ? status.id : 1,
       tasktype: 2, // 1: single event, 2: multi events, 3: no events - only items and time
       events,

@@ -208,22 +208,20 @@ export const subscribePushToken = async (company: any, checked: any) => {
   let sw = await navigator.serviceWorker.ready;
   let sub = await sw.pushManager.getSubscription();
   if (checked) {
-    setTimeout(async () => {
-      if (!sub) {
-        let push = await sw.pushManager.subscribe({
-          userVisibleOnly: true,
-          applicationServerKey: company?.publicKey,
-        });
-        return JSON.stringify(push);
-      } else {
-        await sub.unsubscribe();
-        let push = await sw.pushManager.subscribe({
-          userVisibleOnly: true,
-          applicationServerKey: company?.publicKey,
-        });
-        return JSON.stringify(push);
-      }
-    }, 2000);
+    if (!sub) {
+      let push = await sw.pushManager.subscribe({
+        userVisibleOnly: true,
+        applicationServerKey: company?.publicKey,
+      });
+      return JSON.stringify(push);
+    } else {
+      await sub.unsubscribe();
+      let push = await sw.pushManager.subscribe({
+        userVisibleOnly: true,
+        applicationServerKey: company?.publicKey,
+      });
+      return JSON.stringify(push);
+    }
   } else {
     if (sub) {
       await sub.unsubscribe();

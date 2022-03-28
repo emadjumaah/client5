@@ -224,7 +224,7 @@ export default function FinanceReport({
 
   useEffect(() => {
     fetchData();
-  }, [start, end, group, groupby, sumcolumn]);
+  }, [start, end, group, groupby, accvalue, taskvalue, sumcolumn]);
 
   const exporterRef: any = useRef(null);
 

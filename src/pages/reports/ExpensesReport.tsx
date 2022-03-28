@@ -212,7 +212,7 @@ export default function ExpensesReport({
 
   useEffect(() => {
     fetchData();
-  }, [start, end, group, groupby, sumcolumn]);
+  }, [start, end, group, groupby, sumcolumn, accvalue, taskvalue]);
 
   const exporterRef: any = useRef(null);
 

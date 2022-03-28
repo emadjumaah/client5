@@ -193,7 +193,7 @@ export default function CustomerReport({ isRTL, words, menuitem, theme }: any) {
 
   useEffect(() => {
     fetchData();
-  }, [start, end, group, groupby, sumcolumn]);
+  }, [start, end, group, groupby, sumcolumn, custvalue]);
 
   const exporterRef: any = useRef(null);
 

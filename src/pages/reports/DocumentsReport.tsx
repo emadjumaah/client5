@@ -165,7 +165,6 @@ export default function DocumentsReport({
   const endDateChange = (curDate: any) => {
     dispatch({ type: 'setEndDate', payload: curDate });
   };
-
   const setDepartvalueDispatch = (value: any) => {
     dispatch({ type: 'setDepartvalue', payload: value });
   };
@@ -187,7 +186,6 @@ export default function DocumentsReport({
   const setTypesDispatch = (value: any) => {
     dispatch({ type: 'setTypes', payload: value });
   };
-
   const setGroupbyDispatch = (value: any) => {
     dispatch({ type: 'setGroupby', payload: value });
   };
@@ -234,7 +232,21 @@ export default function DocumentsReport({
 
   useEffect(() => {
     fetchData();
-  }, [start, end, group, groupby, sumcolumn]);
+  }, [
+    start,
+    end,
+    group,
+    groupby,
+    sumcolumn,
+    status,
+    departvalue,
+    projvalue,
+    resovalue,
+    emplvalue,
+    custvalue,
+    taskvalue,
+    types,
+  ]);
 
   const exporterRef: any = useRef(null);
 
@@ -427,12 +439,14 @@ export default function DocumentsReport({
             onSortingChange={(srt: any) => setSortDispatch(srt)}
           />
           {group && <GroupingState grouping={grouping} />}
-          <SummaryState
-            totalItems={totalSummaryItems}
-            groupItems={groupSummaryItems}
-          />
+          {group && (
+            <SummaryState
+              totalItems={totalSummaryItems}
+              groupItems={groupSummaryItems}
+            />
+          )}
           {group && <IntegratedGrouping />}
-          <IntegratedSummary />
+          {group && <IntegratedSummary />}
           <IntegratedSorting />
           <VirtualTable
             height={height - 100}
@@ -486,12 +500,14 @@ export default function DocumentsReport({
               showColumnsWhenGrouped
             />
           )}
-          <TableSummaryRow
-            messages={{
-              sum: isRTL ? 'المجموع' : 'Total',
-              count: isRTL ? 'العدد' : 'Count',
-            }}
-          ></TableSummaryRow>
+          {group && (
+            <TableSummaryRow
+              messages={{
+                sum: isRTL ? 'المجموع' : 'Total',
+                count: isRTL ? 'العدد' : 'Count',
+              }}
+            ></TableSummaryRow>
+          )}
         </Grid>
         <GridExporter
           ref={exporterRef}

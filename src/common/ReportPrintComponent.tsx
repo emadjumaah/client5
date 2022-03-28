@@ -117,7 +117,6 @@ export class ReportPrintComponent extends React.PureComponent<any, any> {
 
   render() {
     const { company } = this.props;
-    console.log(this.props);
 
     return (
       <Box style={{ fontFamily: 'inherit' }} m={5}>
