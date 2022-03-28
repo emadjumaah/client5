@@ -825,7 +825,7 @@ const PopupInvoice = ({
                 isRTL={isRTL}
               ></ServiceItemForm>
             </Box>
-            {!loading && (
+            {itemsList.length > 0 && (
               <Box style={{ marginBottom: 20 }}>
                 <ItemsTable
                   rows={itemsList}

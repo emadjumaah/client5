@@ -70,7 +70,6 @@ export const AppointForm = (props: any) => {
 
   const [status, setStatus] = useState(row?.status || 2);
 
-  const [loading, setLoading] = useState(false);
   const [totals, setTotals] = useState<any>({});
   const [itemsList, setItemsList] = useState<any>([]);
 
@@ -224,7 +223,6 @@ export const AppointForm = (props: any) => {
 
       const listwithindex = indexTheList(actions);
       setActionslist(listwithindex);
-      setLoading(false);
     }
   }, [itemsData, actionsData]);
 
@@ -234,7 +232,6 @@ export const AppointForm = (props: any) => {
 
   useEffect(() => {
     if (row && row._id) {
-      setLoading(true);
       getItems({ variables: { opId: row._id } });
       loadActions({ variables: { eventId: row.id } });
       if (row.location) {
@@ -777,7 +774,7 @@ export const AppointForm = (props: any) => {
                 isRTL={isRTL}
               ></ServiceItemForm>
             </Box>
-            {!loading && (
+            {itemsList.length > 0 && (
               <Box style={{ marginBottom: 10 }}>
                 <ItemsTable
                   rows={itemsList}

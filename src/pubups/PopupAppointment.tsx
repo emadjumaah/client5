@@ -82,8 +82,6 @@ const PopupAppointment = ({
 }: any) => {
   const classes = invoiceClasses();
 
-  const [loading, setLoading] = useState(false);
-
   const [startDate, setStartDate]: any = useState(null);
   const [endDate, setEndDate]: any = useState(null);
   const [eventLength, setEventLength]: any = useState(
@@ -311,7 +309,6 @@ const PopupAppointment = ({
 
       const listwithindex = indexTheList(actions);
       setActionslist(listwithindex);
-      setLoading(false);
     }
   }, [itemsData, actionsData]);
 
@@ -334,7 +331,6 @@ const PopupAppointment = ({
 
   useEffect(() => {
     if (row && row._id) {
-      setLoading(true);
       getItems({ variables: { opId: row._id } });
       loadActions({ variables: { eventId: row.id } });
 
@@ -377,7 +373,6 @@ const PopupAppointment = ({
       }
     }
   }, [row]);
-
   const addItemToList = (item: any) => {
     const newArray = [...itemsList, { ...item, userId: user._id }];
     const listwithindex = indexTheList(newArray);
@@ -935,7 +930,7 @@ const PopupAppointment = ({
                   isRTL={isRTL}
                 ></ServiceItemForm>
               </Box>
-              {!loading && (
+              {itemsList.length > 0 && (
                 <Box style={{ marginBottom: 20 }}>
                   <ItemsTable
                     rows={itemsList}

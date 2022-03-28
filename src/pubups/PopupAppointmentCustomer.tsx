@@ -83,7 +83,6 @@ const PopupAppointmentCustomer = ({
   value,
 }: any) => {
   const classes = invoiceClasses();
-  const [loading, setLoading] = useState(false);
 
   const [startDate, setStartDate]: any = useState(null);
   const [endDate, setEndDate]: any = useState(null);
@@ -341,7 +340,6 @@ const PopupAppointmentCustomer = ({
 
       const listwithindex = indexTheList(actions);
       setActionslist(listwithindex);
-      setLoading(false);
     }
   }, [itemsData, actionsData]);
 
@@ -398,7 +396,6 @@ const PopupAppointmentCustomer = ({
 
   useEffect(() => {
     if (row && row._id) {
-      setLoading(true);
       getItems({ variables: { opId: row._id } });
       loadActions({ variables: { eventId: row.id } });
       setTasktitle(row?.title);
@@ -928,7 +925,7 @@ const PopupAppointmentCustomer = ({
                   isRTL={isRTL}
                 ></ServiceItemForm>
               </Box>
-              {!loading && (
+              {itemsList.length > 0 && (
                 <ItemsTable
                   rows={itemsList}
                   editItem={editItemInList}
