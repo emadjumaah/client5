@@ -10,6 +10,7 @@ export default gql`
     $email: String
     $address: String
     $employee: EmployeeInput
+    $driver: String
     $licenseNo: String
     $licenseDate: String
     $national: String
@@ -25,6 +26,7 @@ export default gql`
       email: $email
       address: $address
       employee: $employee
+      driver: $driver
       licenseNo: $licenseNo
       licenseDate: $licenseDate
       national: $national

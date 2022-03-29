@@ -167,7 +167,7 @@ export default function ManageEmployees({
         {loading && <Loading isRTL={isRTL}></Loading>}
         <Grid
           rows={employees.filter((em: any) => em.resType === 1)}
-          columns={roles.isAdmin() ? columns : columnsViewer}
+          columns={roles.isEditor() ? columns : columnsViewer}
           getRowId={getRowId}
         >
           <SortingState />
@@ -206,7 +206,7 @@ export default function ManageEmployees({
               daysoffFormatter({ ...props, isRTL })
             }
           ></DataTypeProvider>
-          {roles.isAdmin() && (
+          {roles.isEditor() && (
             <DataTypeProvider
               for={['nameAr', 'name']}
               formatterComponent={(props: any) =>

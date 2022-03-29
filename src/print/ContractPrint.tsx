@@ -80,6 +80,19 @@ export class ContractPrint extends React.PureComponent<any, any> {
       }}
     />
   );
+  renderPetrol = () => (
+    <img
+      src={
+        'https://res.cloudinary.com/fivegstore/image/upload/v1648541509/petrol_dsgxej.jpg'
+      }
+      alt={'car'}
+      height="auto"
+      width="100%"
+      style={{
+        objectFit: 'contain',
+      }}
+    />
+  );
 
   renderTitle = (data: any) => (
     <Grid container spacing={0}>
@@ -214,6 +227,8 @@ export class ContractPrint extends React.PureComponent<any, any> {
       d = customer?.address;
     } else if (item?.id === 4) {
       d = customer?.phone;
+    } else if (item?.id === 5) {
+      d = customer?.driver;
     } else if (item?.id === 6) {
       d = customer?.licenseNo;
     } else if (item?.id === 7) {
@@ -560,108 +575,7 @@ export class ContractPrint extends React.PureComponent<any, any> {
             <Box>Payments</Box>
           </Box>
         </Grid>
-        <Grid item xs={1}>
-          <Box
-            border={1}
-            borderColor="grey.400"
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              fontSize: 10,
-              flexDirection: 'column',
-              height: 30,
-            }}
-          >
-            QR
-          </Box>
-        </Grid>
-        <Grid item xs={7}>
-          <Box
-            border={1}
-            borderColor="grey.400"
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              fontSize: 10,
-              flexDirection: 'column',
-              height: 30,
-            }}
-          ></Box>
-        </Grid>
-        <Grid item xs={4}>
-          <Box
-            border={1}
-            borderRight={0}
-            borderColor="grey.400"
-            style={{
-              display: 'flex',
-              alignItems: 'flex-end',
-              justifyContent: 'center',
-              paddingLeft: 5,
-              paddingRight: 5,
-              fontSize: 10,
-              flexDirection: 'column',
-              backgroundColor: '#eee',
-              height: 30,
-            }}
-          >
-            <Box>توع التأمين</Box>
-            <Box>Insurance Coverage</Box>
-          </Box>
-        </Grid>
-        <Grid item xs={1}>
-          <Box
-            border={1}
-            borderColor="grey.400"
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              fontSize: 10,
-              flexDirection: 'column',
-              height: 30,
-            }}
-          >
-            QR
-          </Box>
-        </Grid>
-        <Grid item xs={7}>
-          <Box
-            border={1}
-            borderColor="grey.400"
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              fontSize: 10,
-              flexDirection: 'column',
-              height: 30,
-            }}
-          ></Box>
-        </Grid>
-        <Grid item xs={4}>
-          <Box
-            border={1}
-            borderRight={0}
-            borderColor="grey.400"
-            style={{
-              display: 'flex',
-              alignItems: 'flex-end',
-              justifyContent: 'center',
-              paddingLeft: 5,
-              paddingRight: 5,
-              fontSize: 10,
-              flexDirection: 'column',
-              backgroundColor: '#eee',
-              height: 30,
-            }}
-          >
-            <Box>مبالغ اضافية مستحقة</Box>
-            <Box>Over Charges</Box>
-          </Box>
-        </Grid>
+
         <Grid item xs={1}>
           <Box
             border={1}
@@ -793,18 +707,24 @@ export class ContractPrint extends React.PureComponent<any, any> {
                   </Grid>
                   <Grid item xs={6}>
                     {this.renderCustBox(custlist, data?.custvalue, data?.isRTL)}
-                    <Box style={{ display: 'flex', height: 360 }}>
+                    {this.renderDivider(1)}
+                    {this.renderPeriod(data)}
+                  </Grid>
+                  <Grid item xs={6}>
+                    {this.renderCarBox(carlist, data)}
+                    {this.renderDivider(2)}
+                    {this.renderPriceType(data)}
+                  </Grid>
+                  <Grid item xs={12}>
+                    {this.renderPetrol()}
+                  </Grid>
+                  <Grid item xs={6}>
+                    <Box style={{ display: 'flex', height: 330 }}>
                       {this.renderSignatureFooter()}
                     </Box>
                   </Grid>
                   <Grid item xs={6}>
-                    {this.renderCarBox(carlist, data)}
-                    {this.renderDivider(1)}
-                    {this.renderPriceType(data)}
-                    {this.renderDivider(1)}
-                    {this.renderPeriod(data)}
-                    {this.renderDivider(1)}
-                    <Box style={{ display: 'flex', height: 270 }}>
+                    <Box style={{ display: 'flex', height: 300 }}>
                       {this.renderCarFooter()}
                     </Box>
                   </Grid>

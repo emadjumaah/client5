@@ -349,7 +349,6 @@ export const mainmenu = [
         req: 'pos',
         dep: null,
       },
-
       {
         id: 85,
         name: 'expensesreport',
@@ -402,7 +401,7 @@ export const mainmenu = [
     titleAr: 'الحسابات',
     titleEn: 'Accounts',
     icon: 'account',
-    role: menuRoles.financeAdmin,
+    role: menuRoles.financeEditor,
     req: null,
     dep: null,
   },

@@ -63,11 +63,6 @@ export const custlist = [
     nameAr: 'العنوان',
   },
   {
-    id: 3,
-    name: 'Location',
-    nameAr: 'الموقع',
-  },
-  {
     id: 4,
     name: 'Tel',
     nameAr: 'هاتف',
@@ -111,31 +106,6 @@ export const custlist = [
     id: 12,
     name: 'Expire Date',
     nameAr: 'تاريخ الانتهاء',
-  },
-  {
-    id: 13,
-    name: 'Visitor',
-    nameAr: 'زيارة',
-  },
-  {
-    id: 14,
-    name: 'Resident',
-    nameAr: 'مقيم',
-  },
-  {
-    id: 15,
-    name: 'Arrival Date',
-    nameAr: 'تاريخ الدخول',
-  },
-  {
-    id: 16,
-    name: 'Hotel Name',
-    nameAr: 'اسم الفندق',
-  },
-  {
-    id: 17,
-    name: 'Room No',
-    nameAr: 'رقم الغرفة',
   },
   {
     id: 18,

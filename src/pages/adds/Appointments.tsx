@@ -458,7 +458,7 @@ export default function Appointments({
               })
             }
           ></DataTypeProvider>
-          {roles.isAdmin() && (
+          {roles.isEditor() && (
             <DataTypeProvider
               for={['employeeNameAr', 'employeeName']}
               formatterComponent={(props: any) =>
@@ -470,7 +470,7 @@ export default function Appointments({
               }
             ></DataTypeProvider>
           )}
-          {roles.isAdmin() && (
+          {roles.isEditor() && (
             <DataTypeProvider
               for={['resourseNameAr', 'resourseName']}
               formatterComponent={(props: any) =>
@@ -482,7 +482,7 @@ export default function Appointments({
               }
             ></DataTypeProvider>
           )}
-          {roles.isAdmin() && (
+          {roles.isEditor() && (
             <DataTypeProvider
               for={['departmentNameAr', 'departmentName']}
               formatterComponent={(props: any) =>
@@ -494,7 +494,7 @@ export default function Appointments({
               }
             ></DataTypeProvider>
           )}
-          {roles.isAdmin() && (
+          {roles.isEditor() && (
             <DataTypeProvider
               for={['customerNameAr', 'customerName']}
               formatterComponent={(props: any) =>

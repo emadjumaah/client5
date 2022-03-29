@@ -103,6 +103,7 @@ export const translation = (lang: LanguageType) => {
     appointments: lang.words.appointments,
     appointment: lang.words.appointment,
     insurance: lang.words.insurance,
+    driver: lang.words.driver,
     past: lang.words.past,
     today: lang.words.today,
     coming: lang.words.coming,

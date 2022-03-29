@@ -774,19 +774,19 @@ export const taskIdLinkFormat = ({
     return (
       <div
         onClick={() => {
-          if (roles.isAdmin()) {
+          if (roles.isEditor()) {
             setItem(task);
             setName('task');
             setOpenItem(true);
           }
         }}
-        style={{ cursor: roles.isAdmin() ? 'pointer' : undefined }}
+        style={{ cursor: roles.isEditor() ? 'pointer' : undefined }}
       >
         <Typography
           style={{
             fontSize: 13,
             textAlign: 'start',
-            color: roles.isAdmin() ? colors.deepPurple[500] : undefined,
+            color: roles.isEditor() ? colors.deepPurple[500] : undefined,
           }}
         >
           {task.title}

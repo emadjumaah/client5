@@ -298,7 +298,7 @@ export default function Tasks({ isRTL, words, menuitem, theme, company }) {
         <Paper>
           <Grid
             rows={rows}
-            columns={roles.isAdmin() ? columns : columnsViewer}
+            columns={roles.isEditor() ? columns : columnsViewer}
             getRowId={getRowId}
           >
             <SortingState />
@@ -333,7 +333,7 @@ export default function Tasks({ isRTL, words, menuitem, theme, company }) {
                 'income',
               ]}
             />
-            {roles.isAdmin() && (
+            {roles.isEditor() && (
               <DataTypeProvider
                 for={['title']}
                 formatterComponent={(props: any) =>

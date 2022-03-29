@@ -77,6 +77,7 @@ export default function Customers(props: any) {
   const [columns] = useState([
     { name: isRTL ? 'nameAr' : 'name', title: words.name },
     { name: 'phone', title: words.phoneNumber },
+    { name: 'driver', title: words.driver },
     { name: 'email', title: words.email },
     { name: 'address', title: words.address },
     { name: 'amount', title: isRTL ? 'الاجمالي' : 'Total' },
@@ -185,7 +186,7 @@ export default function Customers(props: any) {
         ></ImportBtn>
         <Grid
           rows={rows}
-          columns={roles.isAdmin() ? columns : columnsViewer}
+          columns={roles.isEditor() ? columns : columnsViewer}
           getRowId={getRowId}
         >
           <SortingState />
@@ -206,6 +207,7 @@ export default function Customers(props: any) {
           <TableHeaderRow showSortingControls />
           <TableColumnVisibility
             defaultHiddenColumnNames={[
+              'driver',
               'amount',
               'progress',
               'totalinvoiced',
@@ -215,7 +217,7 @@ export default function Customers(props: any) {
               'income',
             ]}
           />
-          {roles.isAdmin() && (
+          {roles.isEditor() && (
             <DataTypeProvider
               for={['nameAr', 'name']}
               formatterComponent={(props: any) =>

@@ -150,7 +150,7 @@ export default function ManageProjects({
 
         <Grid
           rows={projects}
-          columns={roles.isAdmin() ? columns : columnsViewer}
+          columns={roles.isEditor() ? columns : columnsViewer}
           getRowId={getRowId}
         >
           <SortingState />
@@ -177,7 +177,7 @@ export default function ManageProjects({
             for={['avatar']}
             formatterComponent={avatarPatternFormatter}
           ></DataTypeProvider>
-          {roles.isAdmin() && (
+          {roles.isEditor() && (
             <DataTypeProvider
               for={['nameAr', 'name']}
               formatterComponent={(props: any) =>

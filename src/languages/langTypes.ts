@@ -132,6 +132,7 @@ export interface LanguageType {
     appointments: string;
     appointment: string;
     insurance: string;
+    driver: string;
     past: string;
     today: string;
     coming: string;

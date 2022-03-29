@@ -11,6 +11,12 @@ export default gql`
     $email: String
     $address: String
     $employee: EmployeeInput
+    $driver: String
+    $licenseNo: String
+    $licenseDate: String
+    $national: String
+    $nationalNo: String
+    $nationalDate: String
   ) {
     updateCustomer(
       _id: $_id
@@ -22,6 +28,12 @@ export default gql`
       email: $email
       address: $address
       employee: $employee
+      driver: $driver
+      licenseNo: $licenseNo
+      licenseDate: $licenseDate
+      national: $national
+      nationalNo: $nationalNo
+      nationalDate: $nationalDate
     ) {
       ok
       message

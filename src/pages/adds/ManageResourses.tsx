@@ -160,7 +160,7 @@ export default function ManageResourses({
         {loading && <Loading isRTL={isRTL}></Loading>}
         <Grid
           rows={resourses}
-          columns={roles.isAdmin() ? columns : columnsViewer}
+          columns={roles.isEditor() ? columns : columnsViewer}
           getRowId={getRowId}
         >
           <SortingState />
@@ -198,7 +198,7 @@ export default function ManageResourses({
               daysoffFormatter({ ...props, isRTL })
             }
           ></DataTypeProvider>
-          {roles.isAdmin() && (
+          {roles.isEditor() && (
             <DataTypeProvider
               for={['nameAr', 'name']}
               formatterComponent={(props: any) =>

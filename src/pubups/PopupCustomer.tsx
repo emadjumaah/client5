@@ -43,6 +43,7 @@ const PopupCustomer = ({
       phone,
       email,
       address,
+      driver,
       licenseNo,
       licenseDate,
       national,
@@ -56,6 +57,7 @@ const PopupCustomer = ({
       phone,
       email,
       address,
+      driver,
       licenseNo,
       licenseDate,
       national,
@@ -174,6 +176,17 @@ const PopupCustomer = ({
               <TextFieldLocal
                 name="address"
                 label={words.theaddress}
+                register={register}
+                errors={errors}
+                row={row}
+                fullWidth
+                mb={0}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextFieldLocal
+                name="driver"
+                label={words.driver}
                 register={register}
                 errors={errors}
                 row={row}

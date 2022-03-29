@@ -33,6 +33,7 @@ export default gql`
         employeeColor
         employeePhone
 
+        driver
         licenseNo
         licenseDate
         national
