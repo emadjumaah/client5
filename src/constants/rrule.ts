@@ -34,6 +34,39 @@ export const freqOptions = [
   //   value: RRule.YEARLY,
   // },
 ];
+export const intervalOptions = [
+  {
+    id: 1,
+    name: 'Daily',
+    nameAr: 'يومي',
+    value: 1,
+  },
+  {
+    id: 6,
+    name: 'Weekly',
+    nameAr: 'اسبوعي',
+    value: 6,
+  },
+  {
+    id: 31,
+    name: 'Monthly',
+    nameAr: 'شهري',
+    value: 31,
+  },
+  {
+    id: 30,
+    name: 'Monthly 30 Days',
+    nameAr: 'شهري 30 يوم',
+    value: 29,
+  },
+
+  // {
+  //   id: 4,
+  //   name: 'Yearly',
+  //   nameAr: 'سنوي',
+  //   value: RRule.YEARLY,
+  // },
+];
 export const byweekdayOptions = [
   {
     id: 1,
@@ -235,6 +268,13 @@ export const manamentTabs = [
     name: 'Expenses',
     ref: 'expenses',
   },
+  {
+    id: 6,
+    value: 6,
+    nameAr: 'القيود',
+    name: ' Entries',
+    ref: 'entries',
+  },
 ];
 
 export const taskManamentTabs = [
@@ -282,6 +322,13 @@ export const taskManamentTabs = [
     name: 'Expenses',
     ref: 'expenses',
   },
+  {
+    id: 6,
+    value: 6,
+    nameAr: 'القيود',
+    name: ' Entries',
+    ref: 'entries',
+  },
 ];
 export const projectManamentTabs = [
   {
@@ -327,5 +374,12 @@ export const projectManamentTabs = [
     nameAr: 'المصاريف',
     name: 'Expenses',
     ref: 'expenses',
+  },
+  {
+    id: 6,
+    value: 6,
+    nameAr: 'القيود',
+    name: ' Entries',
+    ref: 'entries',
   },
 ];

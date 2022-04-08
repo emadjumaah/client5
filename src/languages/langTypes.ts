@@ -172,6 +172,7 @@ export interface LanguageType {
     website: string;
     accounts: string;
     account: string;
+    paccount: string;
     address: string;
     theaddress: string;
     unit: string;

@@ -92,14 +92,14 @@ export default function EventsCustomer({
 
   const [columns] = useState([
     { id: 4, ref: 'title', name: 'title', title: words.title },
-    col.location,
+    // col.location,
     col.startDate,
     col.fromto,
     col.docNo,
     col.taskId,
     col.department,
     col.employee,
-    col.status,
+    // col.status,
     col.done,
     col.amount,
   ]);

@@ -147,7 +147,7 @@ export default function PopupLayout(props: any) {
         )}
         {!onlyclose && (
           <>
-            {print && (
+            {/* {print && (
               <Button
                 style={{
                   width: 100,
@@ -182,7 +182,7 @@ export default function PopupLayout(props: any) {
                   {isRTL ? `(طباعة)` : `(Print)`}
                 </Typography>
               </Button>
-            )}
+            )} */}
             <Button
               style={{
                 width: 100,

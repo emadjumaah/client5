@@ -11,14 +11,28 @@ import {
 } from '../Shared';
 import { GContextTypes } from '../types';
 import { GlobalContext } from '../contexts';
-import { Box, Paper, Typography } from '@material-ui/core';
+import {
+  Box,
+  Button,
+  colors,
+  fade,
+  IconButton,
+  ListItem,
+  ListItemText,
+  Paper,
+  Typography,
+} from '@material-ui/core';
 import PopupLayout from '../pages/main/PopupLayout';
 import { Grid } from '@material-ui/core';
 import AutoFieldLocal from '../components/fields/AutoFieldLocal';
 import { CalenderLocal, TextFieldLocal } from '../components';
 import { eventStatus, weekdaysNNo } from '../constants/datatypes';
 import { compressEvents } from '../common/time';
-import { getDateDayWeek } from '../Shared/colorFormat';
+import {
+  actionTypeFormatter,
+  getDateDayTimeFormat,
+  getDateDayWeek,
+} from '../Shared/colorFormat';
 import PopupTaskAppointment from './PopupTaskAppointment';
 import _ from 'lodash';
 import { getPopupTitle } from '../constants/menu';
@@ -36,12 +50,15 @@ import ServiceItemForm from '../Shared/ServiceItemForm';
 import ItemsTable from '../Shared/ItemsTable';
 import { invoiceClasses } from '../themes';
 import { SelectLocal } from '../pages/calendar/common/SelectLocal';
-import { freqOptions } from '../constants/rrule';
+import { intervalOptions } from '../constants/rrule';
 import RRule from 'rrule';
 import getRruleData from '../common/getRruleData';
-import { getEventsListNoActions } from '../common/helpers';
+import { getEventsList } from '../common/helpers';
 import { ContractPrint } from '../print';
 import { useReactToPrint } from 'react-to-print';
+import DeleteOutlinedIcon from '@material-ui/icons/DeleteOutlined';
+import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
+import PopupAction from './PopupAction';
 
 export const indexTheList = (list: any) => {
   return list.map((item: any, index: any) => {
@@ -128,10 +145,17 @@ const PopupTask = ({
   const [freq, setFreq] = useState(RRule.DAILY);
   const [count, setCount] = useState(1);
   const [interval, setInterval] = useState(1);
+  const [rruletype, setRruletype] = useState(1);
   const [totals, setTotals] = useState<any>({});
   const [info, setInfo] = useState<any>(null);
 
   const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
+
+  const [openAction, setOpenAction] = useState(false);
+  const [type, setType] = useState(null);
+  const [actionslist, setActionslist] = useState([]);
+  const [selected, setSelected] = useState(null);
+
   const { addCustomer, editCustomer } = useCustomers();
   const { addDepartment, editDepartment } = useDepartmentsUp();
   const { addEmployee, editEmployee } = useEmployeesUp();
@@ -145,8 +169,34 @@ const PopupTask = ({
     store: { user },
   }: GContextTypes = useContext(GlobalContext);
 
-  const onChangeFreq = (e: any) => {
-    setFreq(e.target.value);
+  const addActionToList = (item: any) => {
+    const newArray = [...actionslist, item];
+    const listwithindex = indexTheList(newArray);
+    setActionslist(listwithindex);
+  };
+  const editActionInList = (item: any) => {
+    const newArray = actionslist.map((it: any) => {
+      if (item._id) {
+        if (it._id === item._id) {
+          return item;
+        } else {
+          return it;
+        }
+      } else {
+        if (it.index === item.index) {
+          return item;
+        } else {
+          return it;
+        }
+      }
+    });
+    const listwithindex = indexTheList(newArray);
+    setActionslist(listwithindex);
+  };
+  const removeActionFromList = (item: any) => {
+    const newlist = actionslist.filter((il: any) => il.index !== item.index);
+    const listwithindex = indexTheList(newlist);
+    setActionslist(listwithindex);
   };
 
   const setExtra = ({ item, value }) => {
@@ -166,10 +216,23 @@ const PopupTask = ({
     const count = value < 1 ? 1 : value > 365 ? 365 : value;
     setCount(count);
   };
-  const onChangeInterval = (e: any) => {
-    const value = Number(e.target.value);
-    const interval = value < 1 ? 1 : value > 365 ? 365 : value;
-    setInterval(interval);
+
+  const onChangeRruletype = (e: any) => {
+    const value = e.target.value;
+    setRruletype(value);
+    if (value === 1) {
+      setFreq(RRule.DAILY);
+      setInterval(value);
+    } else if (value === 6) {
+      setFreq(RRule.WEEKLY);
+      setInterval(1);
+    } else if (value === 29) {
+      setFreq(RRule.DAILY);
+      setInterval(value);
+    } else if (value === 31) {
+      setFreq(RRule.MONTHLY);
+      setInterval(1);
+    }
   };
 
   const getEventOverallTotal = () => {
@@ -485,7 +548,7 @@ const PopupTask = ({
       };
 
   useEffect(() => {
-    if (isNew) {
+    if (isNew && start && end) {
       const event = {
         title: tasktitle,
         startDate: start,
@@ -500,7 +563,7 @@ const PopupTask = ({
         items: JSON.stringify(itemsList),
         user: user._id,
       };
-      const eventlist = getEventsListNoActions({ event, rrule, isRTL });
+      const eventlist = getEventsList({ event, rrule, actionslist, isRTL });
       const sorted = _.sortBy(eventlist, 'startDate');
       const listwithindex = indexTheList(sorted);
       setEvList(listwithindex);
@@ -531,6 +594,7 @@ const PopupTask = ({
     setItemsList([]);
     setCount(1);
     setInterval(1);
+    setRruletype(1);
     setFreq(RRule.DAILY);
     setTotals({});
     setInfo(null);
@@ -569,11 +633,11 @@ const PopupTask = ({
       title: tasktitle ? tasktitle : custvalue?.name,
       start,
       end,
-      amount: total ? total : undefined,
-      status: status ? status.id : 1,
+      amount: isNew ? total : undefined,
+      status: isNew ? status?.id : 1,
       tasktype: 2, // 1: single event, 2: multi events, 3: no events - only items and time
       events,
-      evQty: evList ? evList.length : undefined,
+      evQty: isNew ? evList?.length : undefined,
       evDone: isNew ? 0 : undefined,
       customer,
       department,
@@ -581,7 +645,8 @@ const PopupTask = ({
       resourse,
       project,
       info: JSON.stringify(info),
-      freq: freq === RRule.DAILY && interval === 1 ? 3 : 2,
+      freq,
+      interval,
     };
     const mutate = isNew ? addAction : editAction;
     apply(mutate, variables);
@@ -671,11 +736,20 @@ const PopupTask = ({
                 ></CalenderLocal>
               </Grid>
               <Grid item xs={2} style={{ marginTop: 10 }}>
-                {isNew && (
+                {/* {isNew && (
                   <SelectLocal
                     options={freqOptions}
                     value={freq}
                     onChange={onChangeFreq}
+                    isRTL={isRTL}
+                    width={120}
+                  ></SelectLocal>
+                )} */}
+                {isNew && (
+                  <SelectLocal
+                    options={intervalOptions}
+                    value={rruletype}
+                    onChange={onChangeRruletype}
                     isRTL={isRTL}
                     width={120}
                   ></SelectLocal>
@@ -694,20 +768,7 @@ const PopupTask = ({
                   />
                 )}
               </Grid>
-              <Grid item xs={2} style={{ marginTop: 10 }}>
-                {isNew && (
-                  <TextFieldLocal
-                    required
-                    name="interval"
-                    label={words.interval}
-                    value={interval}
-                    onChange={onChangeInterval}
-                    type="number"
-                    width={120}
-                  />
-                )}
-              </Grid>
-
+              <Grid item xs={1}></Grid>
               <Grid item xs={3}>
                 {rrule?.all && (
                   <CalenderLocal
@@ -722,7 +783,7 @@ const PopupTask = ({
                   ></CalenderLocal>
                 )}
               </Grid>
-              <Grid item xs={12}>
+              <Grid item xs={11}>
                 <TextFieldLocal
                   required
                   autoFocus={true}
@@ -844,9 +905,9 @@ const PopupTask = ({
                   {rrule?.all && (
                     <Paper
                       style={{
-                        maxHeight: 190,
+                        maxHeight: 240,
                         overflow: 'auto',
-                        minHeight: 190,
+                        minHeight: 240,
                       }}
                     >
                       <Box style={{ flexDirection: 'row' }}>
@@ -882,51 +943,131 @@ const PopupTask = ({
           {isNew && <Grid item xs={6}></Grid>}
         </Grid>
         {isNew && (
-          <Grid item xs={12}>
-            <Box
-              style={{
-                backgroundColor: '#f4f4f4',
-                // padding: 10,
-                marginTop: 15,
-                marginBottom: 15,
-                borderRadius: 10,
-              }}
-            >
-              <Box display="flex">
-                <ServiceItemForm
-                  options={servicesproducts}
-                  addItem={addItemToList}
-                  words={words}
-                  classes={classes}
-                  user={user}
-                  isRTL={isRTL}
-                ></ServiceItemForm>
-              </Box>
-              <Box style={{ marginBottom: 20 }}>
-                <ItemsTable
-                  height={200}
-                  rows={itemsList}
-                  editItem={editItemInList}
-                  removeItem={removeItemFromList}
-                  isRTL={isRTL}
-                  words={words}
-                  user={user}
-                ></ItemsTable>
-              </Box>
-            </Box>
+          <Grid xs={12}>
+            <Grid container spacing={1}>
+              <Grid item xs={8}>
+                <Box
+                  style={{
+                    backgroundColor: '#f4f4f4',
+                    // padding: 10,
+                    marginTop: 15,
+                    marginBottom: 15,
+                    borderRadius: 10,
+                  }}
+                >
+                  <Box display="flex">
+                    <ServiceItemForm
+                      options={servicesproducts}
+                      addItem={addItemToList}
+                      words={words}
+                      classes={classes}
+                      user={user}
+                      isRTL={isRTL}
+                    ></ServiceItemForm>
+                  </Box>
+                  <Box style={{ marginBottom: 20 }}>
+                    <ItemsTable
+                      height={200}
+                      rows={itemsList}
+                      editItem={editItemInList}
+                      removeItem={removeItemFromList}
+                      isRTL={isRTL}
+                      words={words}
+                      user={user}
+                    ></ItemsTable>
+                  </Box>
+                </Box>
+              </Grid>
+              <Grid
+                item
+                xs={4}
+                style={{
+                  marginTop: 15,
+                  backgroundColor: fade(colors.grey[400], 0.2),
+                  borderRadius: 10,
+                  height: 240,
+                }}
+              >
+                <Button
+                  variant="outlined"
+                  style={{
+                    margin: 10,
+                    fontSize: 14,
+                    minWidth: 80,
+                  }}
+                  onClick={() => {
+                    setSelected(null);
+                    setType(3);
+                    setOpenAction(true);
+                  }}
+                >
+                  {isRTL ? 'اضافة تنبيه' : 'Add Reminder'}
+                </Button>
+                <Button
+                  variant="outlined"
+                  style={{
+                    margin: 10,
+                    fontSize: 14,
+                    minWidth: 80,
+                    marginRight: 10,
+                    marginLeft: 10,
+                  }}
+                  onClick={() => {
+                    setSelected(null);
+                    setType(1);
+                    setOpenAction(true);
+                  }}
+                >
+                  {isRTL ? 'اضافة رسالة' : 'Add SMS'}
+                </Button>
+                <Paper style={{ height: 180, overflow: 'auto' }}>
+                  {actionslist.map((act: any) => {
+                    return (
+                      <ListItem>
+                        <ListItemText
+                          primary={actionTypeFormatter({ row: act })}
+                          secondary={getDateDayTimeFormat(act.sendtime, isRTL)}
+                        />
+                        <IconButton
+                          onClick={() => removeActionFromList(act)}
+                          title="Delete row"
+                          style={{ padding: 5 }}
+                        >
+                          <DeleteOutlinedIcon
+                            style={{ fontSize: 22, color: '#a76f9a' }}
+                          />
+                        </IconButton>
+                        <IconButton
+                          style={{ padding: 5 }}
+                          onClick={() => {
+                            setSelected(act);
+                            setOpenAction(true);
+                          }}
+                          title="Edit row"
+                        >
+                          <EditOutlinedIcon
+                            style={{ fontSize: 22, color: '#729aaf' }}
+                          />
+                        </IconButton>
+                      </ListItem>
+                    );
+                  })}
+                </Paper>
+              </Grid>
+            </Grid>
           </Grid>
         )}
         <Grid item xs={12}>
           <Grid container spacing={1}>
             {info?.map((extra: any) => (
-              <Grid item xs={extra.multiline ? 6 : 3}>
+              <Grid item xs={extra.multiline ? 8 : 4}>
                 <TextFieldLocal
                   name={extra.name}
                   label={isRTL ? extra.nameAr : extra.name}
                   value={extra.value}
                   type={extra.type}
                   multiline={extra.multiline}
-                  rows={extra.multiline ? 1 : 1}
+                  rows={extra.multiline ? 4 : 1}
                   onChange={(e: any) =>
                     setExtra({ item: extra, value: e.target.value })
                   }
@@ -1015,6 +1156,21 @@ const PopupTask = ({
           addAction={addProject}
           editAction={editProject}
         ></PopupProject>
+        <PopupAction
+          open={openAction}
+          onClose={() => {
+            setOpenAction(false);
+            setSelected(null);
+          }}
+          row={selected}
+          type={type}
+          isNew={selected ? false : true}
+          customer={custvalue}
+          addAction={addActionToList}
+          editAction={editActionInList}
+          theme={theme}
+          event={{ ...evList?.[0], startDate: start, endDate: end }}
+        ></PopupAction>
         <Box>
           <div style={{ display: 'none' }}>
             <ContractPrint

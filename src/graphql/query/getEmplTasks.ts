@@ -53,6 +53,8 @@ export default gql`
         totalDiscount
         totalpaid
         toatlExpenses
+        totalkaidsdebit
+        totalKaidscredit
 
         customerId
         customerName

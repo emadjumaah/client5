@@ -336,10 +336,11 @@ export const createdAtFormatter = ({ value }: any) => {
 };
 export const fromToFormatter = ({ row }: any) => {
   const start = covertToTimeOnly(row.startDate);
-  const end = covertToTimeOnly(row.endDate);
+  // const end = covertToTimeOnly(row.endDate);
   return (
     <div>
-      {start} {end}
+      {/* {start} {end} */}
+      {start}
     </div>
   );
 };
@@ -457,7 +458,7 @@ export const moneyFormat = (amount: number) => {
       return amount.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
     }
   }
-  return '0.00';
+  return '-';
 };
 export const moneyFormatEmpty = (amount: number) => {
   if (amount) {
@@ -514,7 +515,11 @@ export const amountFormatter = ({ row }: any) => {
   return <div style={{ color: '#403795' }}>{moneyFormat(amount)}</div>;
 };
 export const currencyFormatter = ({ value }: any) => {
-  return <span style={{ color: '#403795' }}>{moneyFormat(value)}</span>;
+  return (
+    <span style={{ color: value >= 0 ? colors.blue[800] : colors.red[400] }}>
+      {moneyFormatEmpty(value)}
+    </span>
+  );
 };
 export const reqpackFormatter = ({ row }: any) => {
   const { pack, note } = row;
@@ -548,7 +553,11 @@ export const templateFormatter = ({ value }: any) => {
   return temp?.nameAr;
 };
 export const currencyFormatterEmpty = ({ value }: any) => {
-  return <span style={{ color: '#403795' }}>{moneyFormatEmpty(value)}</span>;
+  return (
+    <span style={{ color: value >= 0 ? colors.blue[500] : colors.red[500] }}>
+      {moneyFormatEmpty(value)}
+    </span>
+  );
 };
 
 export const dueAmountFormatter = ({ row }: any) => {
@@ -577,6 +586,9 @@ export const incomeAmountFormatter = ({ row }: any) => {
   }
 };
 export const doneFormatter = ({ row, editEvent }: any) => {
+  if (row.amount === 0) {
+    return <span></span>;
+  }
   const status = row.status === 10 ? 2 : 10;
   const id = row.id;
   const variables = { id, status };

@@ -925,7 +925,7 @@ const PopupAppointmentCustomer = ({
                   isRTL={isRTL}
                 ></ServiceItemForm>
               </Box>
-              {itemsList.length > 0 && (
+              {(isNew || itemsList.length > 0) && (
                 <ItemsTable
                   rows={itemsList}
                   editItem={editItemInList}

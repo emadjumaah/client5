@@ -4,7 +4,7 @@ import { TextField } from '@material-ui/core';
 import { Autocomplete } from '@material-ui/lab';
 import OptionFilterItem from './OptionFilterItem';
 
-export default function FilterSelectCkeckBox({
+export default function FilterSelectSingle({
   options,
   value,
   setValue,

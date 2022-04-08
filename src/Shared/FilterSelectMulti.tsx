@@ -5,6 +5,7 @@ import { Autocomplete } from '@material-ui/lab';
 import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@material-ui/icons/CheckBox';
 import { useTemplate } from '../hooks';
+import ListboxComponent from '../components/fields/ListboxComponent';
 
 const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
@@ -26,6 +27,7 @@ export default function FilterSelectMulti({
       multiple={!nomulti}
       options={options}
       disableCloseOnSelect
+      ListboxComponent={ListboxComponent}
       disableListWrap
       limitTags={3}
       getOptionLabel={(option: any) => (isRTL ? option.nameAr : option.name)}

@@ -58,7 +58,13 @@ import useEmployeesUp from '../../hooks/useEmployeesUp';
 import useResoursesUp from '../../hooks/useResoursesUp';
 import useProjects from '../../hooks/useProjects';
 
-export default function FinanceAllKaid({ isRTL, words, menuitem, theme }) {
+export default function FinanceAllKaid({
+  isRTL,
+  words,
+  menuitem,
+  company,
+  theme,
+}) {
   const [columns] = useState([
     { name: 'time', title: words.time },
     { name: 'docNo', title: words.no },
@@ -114,6 +120,7 @@ export default function FinanceAllKaid({ isRTL, words, menuitem, theme }) {
       },
       {
         query: getCustomers,
+        variables: { isRTL },
       },
       {
         query: getEmployees,
@@ -129,6 +136,7 @@ export default function FinanceAllKaid({ isRTL, words, menuitem, theme }) {
       },
       {
         query: getProjects,
+        variables: { isRTL },
       },
     ],
   };
@@ -290,6 +298,7 @@ export default function FinanceAllKaid({ isRTL, words, menuitem, theme }) {
               resourses={resourses}
               departments={departments}
               projects={projects}
+              company={company}
             ></PopupFinanceAllKaid>
           </PopupEditing>
         </Grid>

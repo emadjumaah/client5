@@ -1,91 +1,88 @@
 import { gql } from '@apollo/client';
 
 export default gql`
-  query getTasks(
+  query getGereralKaids(
     $departmentId: String
     $employeeId: String
     $projectId: String
     $resourseId: String
     $customerId: String
-    $status: Int
+    $taskId: Int
     $start: Date
     $end: Date
   ) {
-    getTasks(
+    getGereralKaids(
       departmentId: $departmentId
       employeeId: $employeeId
       projectId: $projectId
       resourseId: $resourseId
       customerId: $customerId
-      status: $status
+      taskId: $taskId
       start: $start
       end: $end
     ) {
       ok
       error
+      count
       data {
         _id
-        branch
-        autoNo
-        docNo
-        title
-        desc
 
-        id
-        name
-        type
-        freq
-        interval
-        start
-        end
-        progress
-        isDisabled
-        tasktype
-        location {
-          lat
-          lng
-        }
-        priority
-        amount
-        evQty
-        evDone
+        opId
+        opType
+        opTime
+        opDocNo
 
-        status
-        totalinvoiced
-        totalDiscount
-        totalpaid
-        toatlExpenses
-        totalkaidsdebit
-        totalKaidscredit
+        refNo
+        refType
 
         customerId
         customerName
         customerNameAr
-        customerPhone
 
         departmentId
         departmentName
         departmentNameAr
-        departmentColor
 
         employeeId
         employeeName
         employeeNameAr
-        employeeColor
-        employeePhone
 
         projectId
         projectName
         projectNameAr
-        projectColor
+
         resourseId
         resourseName
         resourseNameAr
-        resourseColor
+
+        categoryId
+        categoryName
+        categoryNameAr
+
+        itemId
+        itemName
+        itemNameAr
+
+        qty
+        itemPrice
+
+        eventId
+        taskId
+
+        amount
+        debit
+        credit
+
+        accName
+        accNameAr
+        accType
+        kaidType
+
+        opaccName
+        opaccNameAr
 
         userId
-        note
-        info
+        desc
 
         createdAt
         updatedAt

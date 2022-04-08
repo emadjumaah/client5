@@ -1,10 +1,10 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { dublicateAlert, errorAlert, messageAlert } from '../Shared';
 import { GContextTypes } from '../types';
 import { GlobalContext } from '../contexts';
-import { Fab } from '@material-ui/core';
+import { Box, Fab } from '@material-ui/core';
 import useAccounts from '../hooks/useAccounts';
 import { operationTypes } from '../constants';
 import PopupLayout from '../pages/main/PopupLayout';
@@ -18,13 +18,13 @@ import getOperationKaids from '../graphql/query/getOperationKaids';
 import LoadingInline from '../Shared/LoadingInline';
 import { useTemplate } from '../hooks';
 import KaidsSingleTable from '../Shared/KaidsSingleTable';
-// import { useDepartments, useEmployees, useTemplate } from '../hooks';
+import { GeneralKaidPrint } from '../print/GeneralKaidPrint';
+import { useReactToPrint } from 'react-to-print';
 
 export const indexTheList = (list: any) => {
   return list.map((item: any, index: any) => {
     return {
       ...item,
-
       index,
     };
   });
@@ -54,6 +54,7 @@ const PopupFinanceAllKaid = ({
   resourses,
   departments,
   projects,
+  company,
 }: any) => {
   const [loading, setLoading] = useState(false);
 
@@ -68,17 +69,18 @@ const PopupFinanceAllKaid = ({
 
   const [acc, setAcc]: any = React.useState(null);
 
-  const [itemsList, setItemsList] = useState<any>([]);
+  const [itemsList, setItemsList] = useState([]);
 
-  const [emplvalue, setEmplvalue] = useState<any>();
-  const [resovalue, setResovalue] = useState<any>();
-  const [departvalue, setDepartvalue] = useState<any>();
-  const [taskvalue, setTaskvalue] = useState<any>();
-  const [projvalue, setProjvalue] = useState<any>();
+  const [emplvalue, setEmplvalue] = useState(null);
+  const [resovalue, setResovalue] = useState(null);
+  const [departvalue, setDepartvalue] = useState(null);
+  const [taskvalue, setTaskvalue] = useState(null);
+  const [projvalue, setProjvalue] = useState(null);
 
-  const [maindesc, setMaindesc] = useState<any>('');
+  const [maindesc, setMaindesc] = useState('');
 
   const { tempwords, tempoptions } = useTemplate();
+  const componentRef: any = useRef();
 
   const {
     translate: { words, isRTL },
@@ -237,7 +239,7 @@ const PopupFinanceAllKaid = ({
 
   const apply = async (mutate: any, variables: any) => {
     try {
-      mutate({ variables });
+      await mutate({ variables });
       closeModal();
     } catch (error) {
       onError(error);
@@ -262,6 +264,7 @@ const PopupFinanceAllKaid = ({
     setResovalue(null);
     setDepartvalue(null);
     setTaskvalue(null);
+    setProjvalue(null);
   };
   const resetAll = () => {
     resetForm();
@@ -277,6 +280,19 @@ const PopupFinanceAllKaid = ({
     setSelectedDate(date);
   };
 
+  const printData = {
+    kaidNo: row?.docNo,
+    time: selectedDate,
+    items: itemsList,
+    ...row,
+  };
+
+  const handleReactPrint = useReactToPrint({
+    content: () => componentRef.current,
+    documentTitle: `Entry #${row?.docNo}`,
+    removeAfterPrint: true,
+  });
+
   return (
     <PopupLayout
       isRTL={isRTL}
@@ -286,6 +302,7 @@ const PopupFinanceAllKaid = ({
       onSubmit={onSubmit}
       theme={theme}
       alrt={alrt}
+      print={handleReactPrint}
       mt={10}
       maxWidth="lg"
     >
@@ -298,11 +315,11 @@ const PopupFinanceAllKaid = ({
             onChange={handleDateChange}
           ></CalenderLocal>
         </Grid>
-        <Grid item xs={7}></Grid>
-        <Grid item xs={2} style={{ marginTop: 10 }}>
+        <Grid item xs={1}></Grid>
+        <Grid item xs={7} style={{ marginTop: 10 }}>
           <TextFieldLocal
             name="maindesc"
-            label={isRTL ? 'المرجع' : 'Reference'}
+            label={isRTL ? 'العنوان' : 'Title'}
             value={maindesc}
             onChange={(e: any) => setMaindesc(e.target.value)}
             row={row}
@@ -455,6 +472,18 @@ const PopupFinanceAllKaid = ({
           </Grid>
         </Grid>
         <Grid item xs={1}></Grid>
+        <Box>
+          <div style={{ display: 'none' }}>
+            <GeneralKaidPrint
+              company={company}
+              user={user}
+              printData={printData}
+              ref={componentRef}
+              isRTL={isRTL}
+              tasks={tasks}
+            />
+          </div>
+        </Box>
       </Grid>
     </PopupLayout>
   );

@@ -216,7 +216,7 @@ export default function SalesFilter({
                   words={words}
                   isRTL={isRTL}
                   name="type"
-                  width={350}
+                  width={250}
                 ></FilterSelectMulti>
               )}
               <FilterSelectMulti
@@ -226,7 +226,7 @@ export default function SalesFilter({
                 words={words}
                 isRTL={isRTL}
                 name="employee"
-                width={350}
+                width={250}
               ></FilterSelectMulti>
               {resourses && resourses.length > 0 && (
                 <FilterSelectMulti
@@ -236,7 +236,7 @@ export default function SalesFilter({
                   words={words}
                   isRTL={isRTL}
                   name="resourse"
-                  width={350}
+                  width={250}
                 ></FilterSelectMulti>
               )}
               <FilterSelectMulti
@@ -246,7 +246,7 @@ export default function SalesFilter({
                 words={words}
                 isRTL={isRTL}
                 name="department"
-                width={350}
+                width={250}
               ></FilterSelectMulti>
               {tasks && tasks.length > 0 && (
                 <FilterSelectMulti
@@ -256,7 +256,7 @@ export default function SalesFilter({
                   words={words}
                   isRTL={isRTL}
                   name="task"
-                  width={350}
+                  width={250}
                 ></FilterSelectMulti>
               )}
               {projects && projects.length > 0 && (
@@ -267,7 +267,7 @@ export default function SalesFilter({
                   words={words}
                   isRTL={isRTL}
                   name="project"
-                  width={350}
+                  width={250}
                 ></FilterSelectMulti>
               )}
               {servicevalue && servicevalue.length > 0 && (
@@ -278,7 +278,7 @@ export default function SalesFilter({
                   words={words}
                   isRTL={isRTL}
                   name="serviceproduct"
-                  width={350}
+                  width={250}
                 ></FilterSelectMulti>
               )}
               <FilterSelectMulti
@@ -288,7 +288,7 @@ export default function SalesFilter({
                 words={words}
                 isRTL={isRTL}
                 name="customer"
-                width={350}
+                width={250}
               ></FilterSelectMulti>
 
               {total && total.length > 0 && (

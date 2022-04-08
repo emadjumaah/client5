@@ -469,7 +469,6 @@ const PopupInvoice = ({
     ];
     setAccounts(accs);
   };
-
   const onSubmit = async () => {
     const { startPeriod, endPeriod } = getAppStartEndPeriod();
     if (selectedDate < startPeriod || selectedDate > endPeriod) {
@@ -825,7 +824,7 @@ const PopupInvoice = ({
                 isRTL={isRTL}
               ></ServiceItemForm>
             </Box>
-            {itemsList.length > 0 && (
+            {(isNew || itemsList.length > 0) && (
               <Box style={{ marginBottom: 20 }}>
                 <ItemsTable
                   rows={itemsList}

@@ -1,4 +1,4 @@
-import { gql } from "@apollo/client";
+import { gql } from '@apollo/client';
 
 export default gql`
   query getEmployees($isRTL: Boolean, $resType: Int, $resKind: Int) {
@@ -21,7 +21,8 @@ export default gql`
         totalDiscount
         totalpaid
         toatlExpenses
-
+        totalkaidsdebit
+        totalKaidscredit
         progress
         evQty
         evDone

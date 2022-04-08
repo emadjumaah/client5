@@ -10,6 +10,7 @@ export const initFinanceContext = {
   emplvalue: [],
   custvalue: [],
   catvalue: [],
+  paccvalue: [],
   accvalue: [],
   projvalue: [],
   taskvalue: [],
@@ -39,6 +40,8 @@ export const financeReducer = (state: EventsContextTypes, action: any) => {
       return { ...state, catvalue: action.payload };
     case 'setAccvalue':
       return { ...state, accvalue: action.payload };
+    case 'setPaccvalue':
+      return { ...state, paccvalue: action.payload };
     case 'setTaskvalue':
       return { ...state, taskvalue: action.payload };
     case 'setProjvalue':

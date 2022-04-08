@@ -46,6 +46,7 @@ import {
   getProjects,
   getContacts,
   getSendreqs,
+  getCustMonthlyReport,
 } from './query';
 import {
   createCategory,
@@ -179,6 +180,7 @@ export {
   getProjects,
   getContacts,
   getSendreqs,
+  getCustMonthlyReport,
 };
 export {
   createCategory,

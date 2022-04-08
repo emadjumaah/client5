@@ -12,6 +12,7 @@ import AutoPopper from './AutoPopper';
 import { PopupService } from '../pubups';
 import { useServices } from '../hooks';
 import _ from 'lodash';
+import ListboxComponent from '../components/fields/ListboxComponent';
 // import { useTemplate } from '../hooks';
 // import useDepartmentsDown from '../hooks/useDepartmentsDown';
 // import useEmployeesDown from '../hooks/useEmployeesDown';
@@ -184,6 +185,7 @@ export default function ServiceItemForm({
             autoSelect
             size="small"
             options={sorted}
+            ListboxComponent={ListboxComponent}
             getOptionLabel={(option: any) =>
               isRTL ? option.nameAr : option.name
             }

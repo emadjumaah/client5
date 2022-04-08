@@ -1,5 +1,3 @@
-/* eslint-disable react/jsx-no-undef */
-/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import React from 'react';
 import { IconButton, TextField } from '@material-ui/core';
 import { Autocomplete } from '@material-ui/lab';
@@ -9,6 +7,7 @@ import { Grid } from '@material-ui/core';
 import OptionItemData from '../../Shared/OptionItemData';
 import AutoPopper from '../../Shared/AutoPopper';
 import _ from 'lodash';
+import ListboxComponent from './ListboxComponent';
 
 export default function AutoFieldLocal({
   name,
@@ -35,14 +34,15 @@ export default function AutoFieldLocal({
   showphone,
 }: any) {
   const sorted = _.sortBy(options, isRTL ? 'nameAr' : 'name');
+
   return (
     <Grid container spacing={0}>
       <Grid item xs={openAdd ? 11 : 12}>
         <Autocomplete
           openOnFocus={openOnFocus}
           autoSelect
-          fullWidth
           PopperComponent={AutoPopper}
+          ListboxComponent={ListboxComponent}
           options={sorted}
           getOptionLabel={(option: any) => {
             let nm;
@@ -100,6 +100,7 @@ export default function AutoFieldLocal({
             width: width ? width : undefined,
             direction: isRTL ? 'rtl' : 'ltr',
           }}
+          // classes={classes}
           classes={classes ? { input: classes.smallFont } : undefined}
           renderInput={(params) => (
             <TextField

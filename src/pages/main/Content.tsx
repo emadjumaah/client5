@@ -73,7 +73,11 @@ import {
 } from '../../contexts/calendarReport/eventsReducer';
 import CalendarReportContext from '../../contexts/calendarReport';
 import Expenses from '../adds/Expenses';
-import { filterMenu, getparentAccounts } from '../../common/helpers';
+import {
+  filterMenu,
+  getparentAccounts,
+  getparentAccountsNames,
+} from '../../common/helpers';
 import PurchaseReport from '../reports/PurchaseReport';
 import ExpensesReport from '../reports/ExpensesReport';
 import Resourses from '../adds/Resourses';
@@ -119,6 +123,8 @@ import Messages from '../adds/Messages';
 import Actions from '../adds/Actions';
 import Notifications from '../adds/Notifications';
 import FinanceAllKaid from '../adds/FinanceAllKaid';
+import ProfitReport from '../reports/ProfitReport';
+import BudgetReport from '../reports/BudgetReport';
 // import ExpenseItems from '../adds/ExpenseItems';
 // import ExpensesDoc from '../adds/ExpensesDoc';
 
@@ -216,6 +222,7 @@ const Content = () => {
     ? accounts
     : accounts.filter((acc: any) => acc.branch === user.branch);
   const mainaccounts = getparentAccounts();
+  const mainaccountsnames = getparentAccountsNames();
   const filteredAccounts =
     accs?.length > 0
       ? accs.filter((acc: any) => mainaccounts.includes(acc.parentcode))
@@ -466,6 +473,7 @@ const Content = () => {
                   isRTL={isRTL}
                   words={words}
                   theme={theme}
+                  company={company}
                 ></FinanceAllKaid>
               </FinanceContext.Provider>
             }
@@ -859,8 +867,51 @@ const Content = () => {
                   theme={theme}
                   categories={[]}
                   company={company}
-                  mainaccounts={filteredAccounts}
+                  mainaccounts={mainaccountsnames}
+                  accounts={filteredAccounts}
                 ></FinanceReport>
+              </FinanceContext.Provider>
+            }
+          />
+          <Route
+            path="/profitreport"
+            element={
+              <FinanceContext.Provider
+                value={{
+                  state: financeStore,
+                  dispatch: financeDispatch,
+                }}
+              >
+                <ProfitReport
+                  isRTL={isRTL}
+                  words={words}
+                  menuitem={menuitem}
+                  theme={theme}
+                  categories={[]}
+                  company={company}
+                  mainaccounts={filteredAccounts}
+                ></ProfitReport>
+              </FinanceContext.Provider>
+            }
+          />
+          <Route
+            path="/budgetreport"
+            element={
+              <FinanceContext.Provider
+                value={{
+                  state: financeStore,
+                  dispatch: financeDispatch,
+                }}
+              >
+                <BudgetReport
+                  isRTL={isRTL}
+                  words={words}
+                  menuitem={menuitem}
+                  theme={theme}
+                  categories={[]}
+                  company={company}
+                  mainaccounts={filteredAccounts}
+                ></BudgetReport>
               </FinanceContext.Provider>
             }
           />

@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client';
 
 export default gql`
-  query getMonthlyReport(
+  query getCustMonthlyReport(
     $accPCode: Int
     $itemType: Int
     $accountIds: [String]
@@ -18,7 +18,7 @@ export default gql`
     $start: Date
     $end: Date
   ) {
-    getMonthlyReport(
+    getCustMonthlyReport(
       accPCode: $accPCode
       itemType: $itemType
       accountIds: $accountIds

@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/alt-text */
-import { Grid, Box } from '@material-ui/core';
+import { Grid, Box, Typography } from '@material-ui/core';
 import React from 'react';
 import { tafkeet } from '../common/helpers';
 import {
@@ -44,7 +44,7 @@ export class ContractPrint extends React.PureComponent<any, any> {
   renderCarFooter = () => (
     <img
       src={
-        'https://res.cloudinary.com/fivegstore/image/upload/v1607758777/car_q0gfdq.png'
+        'https://res.cloudinary.com/fivegstore/image/upload/v1649414122/car_2_gs0d21.png'
       }
       alt={'car'}
       height="auto"
@@ -54,6 +54,30 @@ export class ContractPrint extends React.PureComponent<any, any> {
       }}
     />
   );
+  renderCarTameen = () => (
+    <img
+      src={
+        'https://res.cloudinary.com/fivegstore/image/upload/v1649415448/tameen_evlk8b.png'
+      }
+      alt={'car insurance'}
+      height="auto"
+      width="100%"
+      style={{
+        objectFit: 'contain',
+      }}
+    />
+  );
+  renderNotes = (info: any, isRTL: any) => {
+    const notes = info?.[2].value;
+    return (
+      <Box style={{ direction: isRTL ? 'rtl' : 'ltr' }}>
+        <Typography style={{ fontWeight: 'bold' }} variant="body2">
+          ملاحظات:
+        </Typography>
+        <Typography variant="caption">{notes}</Typography>
+      </Box>
+    );
+  };
   renderSignatureFooter = () => (
     <img
       src={
@@ -314,22 +338,20 @@ export class ContractPrint extends React.PureComponent<any, any> {
   );
 
   renderPriceType = (data: any) => {
-    const { isRTL, freq, amount, evQty } = data;
-
+    const { isRTL, freq, interval, amount, evQty } = data;
     const unit =
-      freq === 1
+      freq === 1 || interval > 27
         ? isRTL
           ? 'شهري'
           : 'Monthly'
-        : freq === 2
+        : freq === 2 || interval === 6
         ? isRTL
           ? 'اسبوعي'
           : 'Weekly'
         : isRTL
         ? 'يومي'
         : 'Daily';
-    const qty = freq === 3 ? evQty : evQty - 1;
-    const price = freq === 3 ? amount / evQty : amount / (evQty - 1);
+    const price = amount / evQty;
     return (
       <Grid container spacing={0}>
         <Grid item xs={8}>
@@ -417,7 +439,7 @@ export class ContractPrint extends React.PureComponent<any, any> {
                   height: 30,
                 }}
               >
-                {qty}
+                {evQty}
               </Box>
             </Grid>
             <Grid item xs={4}>
@@ -693,6 +715,7 @@ export class ContractPrint extends React.PureComponent<any, any> {
 
   render() {
     const data = this.props.printData;
+    const isRTL = data?.isRTL;
     const { company } = this.props;
     return (
       <Box>
@@ -706,7 +729,7 @@ export class ContractPrint extends React.PureComponent<any, any> {
                     {this.renderTitle(data)}
                   </Grid>
                   <Grid item xs={6}>
-                    {this.renderCustBox(custlist, data?.custvalue, data?.isRTL)}
+                    {this.renderCustBox(custlist, data?.custvalue, isRTL)}
                     {this.renderDivider(1)}
                     {this.renderPeriod(data)}
                   </Grid>
@@ -724,8 +747,14 @@ export class ContractPrint extends React.PureComponent<any, any> {
                     </Box>
                   </Grid>
                   <Grid item xs={6}>
-                    <Box style={{ display: 'flex', height: 300 }}>
+                    <Box style={{ display: 'flex', height: 200 }}>
                       {this.renderCarFooter()}
+                    </Box>
+                    <Box style={{ display: 'flex', height: 90 }}>
+                      {this.renderNotes(data?.info, isRTL)}
+                    </Box>
+                    <Box style={{ display: 'flex', height: 40 }}>
+                      {this.renderCarTameen()}
                     </Box>
                   </Grid>
                 </Grid>

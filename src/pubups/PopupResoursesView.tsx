@@ -21,6 +21,7 @@ import ExpensesCustomer from '../Shared/ExpensesCustomer';
 import TasksCustomer from '../Shared/TasksCustomer';
 import { manamentTabs } from '../constants/rrule';
 import ProjectsCustomer from '../Shared/ProjectsCustomer';
+import KaidsCustomer from '../Shared/KaidsCustomer';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -95,6 +96,10 @@ const PopupResoursesView = ({
   const totalpaid = row?.totalpaid ? row.totalpaid : 0;
   const toatlExpenses = row?.toatlExpenses ? row.toatlExpenses : 0;
   const progress = row?.progress ? row.progress : 0;
+  const totalkaidsdebit = row?.totalkaidsdebit ? row.totalkaidsdebit : 0;
+  const totalKaidscredit = row?.totalKaidscredit ? row.totalKaidscredit : 0;
+  const totalkaids = totalkaidsdebit - totalKaidscredit;
+  const income = totalinvoiced - toatlExpenses - totalDiscount - totalkaids;
 
   const {
     translate: { words, isRTL },
@@ -200,6 +205,16 @@ const PopupResoursesView = ({
                     id={row?._id}
                   ></ExpensesCustomer>
                 </TabPanel>
+                <TabPanel value={value} index={6}>
+                  <KaidsCustomer
+                    isRTL={isRTL}
+                    words={words}
+                    theme={theme}
+                    name="resourseId"
+                    value={row}
+                    id={row?._id}
+                  ></KaidsCustomer>
+                </TabPanel>
                 <Box
                   display="flex"
                   style={{
@@ -257,7 +272,7 @@ const PopupResoursesView = ({
                   </Box>
                   <Box>
                     <Typography
-                      style={{ fontSize: 14, color: colors.red[500] }}
+                      style={{ fontSize: 14, color: colors.blue[500] }}
                     >
                       {isRTL ? 'المتبقي' : 'Due Payment'}
                     </Typography>{' '}
@@ -265,7 +280,7 @@ const PopupResoursesView = ({
                       style={{
                         fontWeight: 'bold',
                         fontSize: 14,
-                        color: colors.red[500],
+                        color: colors.blue[500],
                       }}
                     >
                       {moneyFormat(totalinvoiced - totalpaid - totalDiscount)}
@@ -281,8 +296,22 @@ const PopupResoursesView = ({
                     </Typography>
                   </Box>
                   <Box>
+                    <Typography style={{ fontSize: 14 }}>
+                      {isRTL ? 'القيود' : 'Entries'}
+                    </Typography>{' '}
                     <Typography
-                      style={{ fontSize: 14, color: colors.blue[500] }}
+                      style={{
+                        fontWeight: 'bold',
+                        fontSize: 14,
+                        color: totalkaids < 0 ? colors.red[500] : undefined,
+                      }}
+                    >
+                      {moneyFormat(totalkaids)}
+                    </Typography>
+                  </Box>
+                  <Box>
+                    <Typography
+                      style={{ fontSize: 14, color: colors.green[500] }}
                     >
                       {isRTL ? 'صافي الايراد' : 'Total Income'}
                     </Typography>{' '}
@@ -290,12 +319,10 @@ const PopupResoursesView = ({
                       style={{
                         fontWeight: 'bold',
                         fontSize: 14,
-                        color: colors.blue[500],
+                        color: income < 0 ? colors.red[500] : colors.green[500],
                       }}
                     >
-                      {moneyFormat(
-                        totalinvoiced - toatlExpenses - totalDiscount
-                      )}
+                      {moneyFormat(income)}
                     </Typography>
                   </Box>
                 </Box>

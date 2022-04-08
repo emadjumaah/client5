@@ -774,18 +774,16 @@ export const AppointForm = (props: any) => {
                 isRTL={isRTL}
               ></ServiceItemForm>
             </Box>
-            {itemsList.length > 0 && (
-              <Box style={{ marginBottom: 10 }}>
-                <ItemsTable
-                  rows={itemsList}
-                  editItem={editItemInList}
-                  removeItem={removeItemFromList}
-                  isRTL={isRTL}
-                  words={words}
-                  user={user}
-                ></ItemsTable>
-              </Box>
-            )}
+            <Box style={{ marginBottom: 10 }}>
+              <ItemsTable
+                rows={itemsList}
+                editItem={editItemInList}
+                removeItem={removeItemFromList}
+                isRTL={isRTL}
+                words={words}
+                user={user}
+              ></ItemsTable>
+            </Box>
             {/* {loading && <LoadingInline></LoadingInline>} */}
           </Box>
           <Typography style={{ fontWeight: 'bold', fontSize: 16 }}>

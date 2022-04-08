@@ -32,13 +32,12 @@ import {
   calculateAmount,
   covertToTimeDateDigit,
   createdAtFormatter,
-  currencyFormatter,
   currencyFormatterEmpty,
   opTypeFormatter,
   taskIdFormatter,
 } from '../../Shared/colorFormat';
-import { Box, fade, Typography, withStyles } from '@material-ui/core';
-import { getMonthlyReport } from '../../graphql';
+import { Box, fade, IconButton, withStyles } from '@material-ui/core';
+import { getCustMonthlyReport } from '../../graphql';
 import { useLazyQuery } from '@apollo/client';
 import { GridExporter } from '@devexpress/dx-react-grid-export';
 import saveAs from 'file-saver';
@@ -50,6 +49,9 @@ import FilterSelectCkeckBox from '../../Shared/FilterSelectCkeckBox';
 import { useCustomers } from '../../hooks';
 import useTasks from '../../hooks/useTasks';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
+import { CustomerReportPrint } from '../../print/CustomerReportPrint';
+import { useReactToPrint } from 'react-to-print';
+import PrintIcon from '@material-ui/icons/Print';
 
 const styles = (theme) => ({
   tableStriped: {
@@ -66,28 +68,31 @@ export const TableComponent = withStyles(styles, { name: 'TableComponent' })(
   TableComponentBase
 );
 
-export default function CustomerReport({ isRTL, words, menuitem, theme }: any) {
+export default function CustomerReport({
+  isRTL,
+  words,
+  menuitem,
+  company,
+  theme,
+}: any) {
   const [start, setStart] = useState<any>(null);
   const [end, setEnd] = useState<any>(null);
 
   const [rows, setRows] = useState([]);
-  const [total, setTotal]: any = useState(null);
 
   const col = getColumns({ isRTL, words });
 
   const [columns] = useState([
     col.opTime,
     col.customer,
-    // col.acc,
-    // col.kaidType,
     col.opType,
     col.project,
     col.taskId,
     col.opDocNo,
     col.opAcc,
-    // col.accType,
     col.amountdebit,
     col.amountcredit,
+    col.rased,
   ]);
 
   const [tableColumnVisibilityColumnExtensions] = useState([
@@ -95,12 +100,15 @@ export default function CustomerReport({ isRTL, words, menuitem, theme }: any) {
     { columnName: col.amount.name, togglingEnabled: false },
   ]);
 
-  const [getSummary, summaryData]: any = useLazyQuery(getMonthlyReport, {
+  const [getSummary, summaryData]: any = useLazyQuery(getCustMonthlyReport, {
     fetchPolicy: 'cache-and-network',
   });
+  const componentRef: any = useRef();
+
   const { customers } = useCustomers();
   const { tasks } = useTasks();
   const { height } = useWindowDimensions();
+
   const {
     state: {
       currentDate,
@@ -137,34 +145,43 @@ export default function CustomerReport({ isRTL, words, menuitem, theme }: any) {
   };
 
   useEffect(() => {
-    const slsData = summaryData?.data?.['getMonthlyReport']?.data || [];
-    const balance = summaryData?.data?.['getMonthlyReport']?.message || null;
+    const slsData = summaryData?.data?.['getCustMonthlyReport']?.data || [];
+    const balance =
+      summaryData?.data?.['getCustMonthlyReport']?.message || null;
+    const updatedRows = slsData.map((x: any) => x);
 
-    const amount = balance ? Number(balance) : null;
+    const amount = balance ? JSON.parse(balance) : null;
+    if (amount !== null) {
+      const { credit, debit } = amount;
 
-    const updatedRows =
-      slsData?.length > 0
-        ? slsData.map((item: any) => {
+      if (credit || debit) {
+        const am = debit - credit;
+        updatedRows.unshift({
+          _id: Date.now(),
+          opTime: start,
+          opType: 94,
+          debit: am > 0 ? am : 0,
+          credit: am < 0 ? am : 0,
+          amount: am,
+        });
+      }
+    }
+    let rased = 0;
+
+    const updatedRows2 =
+      updatedRows?.length > 0
+        ? updatedRows.map((item: any) => {
+            const rowRased = item.debit ? item.debit : -item.credit;
+            rased = rased + rowRased;
             return {
               ...item,
               amount: calculateAmount(item),
+              rased,
             };
           })
         : [];
 
-    if (amount) {
-      updatedRows.unshift({
-        _id: Date.now(),
-        accNameAr: 'رصيد افتتاحي',
-        accName: 'Opening Balancee',
-        amount,
-      });
-    }
-
-    setRows(updatedRows);
-    let sum = 0;
-    updatedRows.forEach((a: any) => (sum += a.amount));
-    setTotal(sum);
+    setRows(updatedRows2);
   }, [summaryData]);
 
   const getIds = (list: any) =>
@@ -258,6 +275,12 @@ export default function CustomerReport({ isRTL, words, menuitem, theme }: any) {
     },
   ];
 
+  const print = useReactToPrint({
+    content: () => componentRef.current,
+    documentTitle: `Documents Report`,
+    removeAfterPrint: true,
+  });
+
   return (
     <PageLayout
       menuitem={menuitem}
@@ -275,6 +298,21 @@ export default function CustomerReport({ isRTL, words, menuitem, theme }: any) {
           marginRight: 5,
         }}
       >
+        {custvalue?.length > 0 && (
+          <Box
+            style={{
+              position: 'absolute',
+              left: isRTL ? 145 : undefined,
+              right: isRTL ? undefined : 145,
+              top: 51,
+              zIndex: 112,
+            }}
+          >
+            <IconButton onClick={print} title="Print Report" size="medium">
+              <PrintIcon />
+            </IconButton>
+          </Box>
+        )}
         <Box
           display="flex"
           style={{
@@ -319,19 +357,6 @@ export default function CustomerReport({ isRTL, words, menuitem, theme }: any) {
               width={300}
             ></FilterSelectCkeckBox>
           </Box>
-          <Box
-            display="flex"
-            style={{
-              alignItems: 'center',
-              justifyContent: 'flex-end',
-              minWidth: 120,
-              marginRight: 90,
-            }}
-          >
-            <Typography variant="subtitle1" style={{ fontWeight: 'bold' }}>
-              {currencyFormatter({ value: total })}
-            </Typography>
-          </Box>
         </Box>
         <Grid rows={rows} columns={columns} getRowId={getRowId}>
           <SortingState
@@ -371,7 +396,7 @@ export default function CustomerReport({ isRTL, words, menuitem, theme }: any) {
             formatterComponent={createdAtFormatter}
           ></DataTypeProvider>
           <DataTypeProvider
-            for={['credit', 'debit']}
+            for={['credit', 'debit', 'rased']}
             formatterComponent={currencyFormatterEmpty}
           ></DataTypeProvider>
           <DataTypeProvider
@@ -404,6 +429,19 @@ export default function CustomerReport({ isRTL, words, menuitem, theme }: any) {
           columns={columns}
           onSave={onSave}
         />
+        <Box>
+          <div style={{ display: 'none' }}>
+            <CustomerReportPrint
+              company={company}
+              items={rows}
+              columns={columns}
+              ref={componentRef}
+              customer={custvalue?.[0]}
+              start={start}
+              end={end}
+            />
+          </div>
+        </Box>
       </Box>
     </PageLayout>
   );

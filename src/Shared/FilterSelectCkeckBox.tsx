@@ -4,6 +4,7 @@ import { Box, Checkbox, TextField } from '@material-ui/core';
 import { Autocomplete } from '@material-ui/lab';
 import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@material-ui/icons/CheckBox';
+import ListboxComponent from '../components/fields/ListboxComponent';
 
 const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
@@ -24,17 +25,18 @@ export default function FilterSelect({
       multiple={!nomulti}
       options={options}
       disableCloseOnSelect
-      disableListWrap
+      ListboxComponent={ListboxComponent}
+      // disableListWrap
       fullWidth
       getOptionLabel={(option: any) => (isRTL ? option.nameAr : option.name)}
-      style={{ direction: isRTL ? 'rtl' : 'ltr' }}
       renderOption={(option, { selected }) => (
         <Box
           style={{
             display: 'flex',
             flex: 1,
             alignItems: 'center',
-            justifyContent: isRTL ? 'flex-end' : 'flex-start',
+            direction: isRTL ? 'rtl' : 'ltr',
+            textAlign: isRTL ? 'right' : 'left',
           }}
         >
           {!nomulti && (
@@ -62,7 +64,7 @@ export default function FilterSelect({
           label={words[name]}
           variant="outlined"
           style={{
-            width: width ? width : 200,
+            width: 250,
             marginRight: 5,
             marginLeft: 5,
             backgroundColor: value?.length > 0 ? '#FFF5D6' : undefined,

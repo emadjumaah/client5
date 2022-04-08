@@ -70,8 +70,22 @@ export const getparentAccounts = () => {
   const numberlist = parentsAccountsList.map((pl: any) => pl.parentcode);
   return numberlist;
 };
+export const getparentAccountsNames = () => {
+  const numberlist = parentsAccountsList.map((pl: any) => {
+    return {
+      code: pl.parentcode,
+      name: pl.parent,
+      nameAr: pl.parentAr,
+      type: pl.accType,
+    };
+  });
+  return numberlist;
+};
 
 export const getEventsList = ({ event, rrule, actionslist, isRTL }) => {
+  if (!event) {
+    return [];
+  }
   if (!rrule) {
     return [event];
   } else {
@@ -94,25 +108,28 @@ export const getEventsList = ({ event, rrule, actionslist, isRTL }) => {
       const startDate = new Date(year, month, day, starthour, startminute);
       const endDate = new Date(year, month, day, endhour, endminute, 0, 0);
 
-      const actionsl = actionslist.map((al: any) => {
-        const { timeunit, timerelate, qty } = al;
-        const sendtime = getSendTime({
-          startDate,
-          endDate,
-          timeunit,
-          timerelate,
-          qty,
-        });
-        return {
-          ...al,
-          sendtime,
-        };
-      });
+      const actionsl =
+        actionslist?.length > 0
+          ? actionslist.map((al: any) => {
+              const { timeunit, timerelate, qty } = al;
+              const sendtime = getSendTime({
+                startDate,
+                endDate,
+                timeunit,
+                timerelate,
+                qty,
+              });
+              return {
+                ...al,
+                sendtime,
+              };
+            })
+          : null;
 
       return {
         ...event,
         title,
-        actions: JSON.stringify(actionsl),
+        actions: actionsl ? JSON.stringify(actionsl) : null,
         startDate,
         endDate,
       };

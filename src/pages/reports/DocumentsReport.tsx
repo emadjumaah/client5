@@ -48,8 +48,8 @@ import PageLayout from '../main/PageLayout';
 import { ReportGroupBySwitcher } from '../calendar/common/ReportGroupBySwitcher';
 import DateNavigatorReports from '../../components/filters/DateNavigatorReports';
 import { documentTypes, groupList } from '../../constants/reports';
-import FilterSelectCkeckBox from '../../Shared/FilterSelectCkeckBox';
-import { eventStatus } from '../../constants';
+// import FilterSelectCkeckBox from '../../Shared/FilterSelectCkeckBox';
+// import { eventStatus } from '../../constants';
 import { useCustomers, useServices, useTemplate } from '../../hooks';
 import useTasks from '../../hooks/useTasks';
 import getReportDocuments from '../../graphql/query/getReportDocuments';
@@ -195,9 +195,9 @@ export default function DocumentsReport({
   const setSumcolumnDispatch = (value: any) => {
     dispatch({ type: 'setSumcolumn', payload: value });
   };
-  const setStatusDispatch = (value: any) => {
-    dispatch({ type: 'setStatus', payload: value });
-  };
+  // const setStatusDispatch = (value: any) => {
+  //   dispatch({ type: 'setStatus', payload: value });
+  // };
 
   useEffect(() => {
     const slsData = summaryData?.data?.['getReportDocuments']?.data || [];
@@ -414,23 +414,6 @@ export default function DocumentsReport({
               onChange={onSwitcherChange}
               isRTL={isRTL}
             ></ReportGroupBySwitcher>
-          </Box>
-          <Box
-            style={{
-              marginTop: -2,
-              zIndex: 115,
-            }}
-          >
-            <FilterSelectCkeckBox
-              options={eventStatus}
-              value={status}
-              setValue={setStatusDispatch}
-              words={words}
-              isRTL={isRTL}
-              name="status"
-              nomulti
-              width={180}
-            ></FilterSelectCkeckBox>
           </Box>
         </Box>
         <Grid rows={rows} columns={columns} getRowId={getRowId}>

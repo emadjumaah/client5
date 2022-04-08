@@ -13,6 +13,8 @@ import {
   DataTypeProvider,
   SummaryState,
   IntegratedSummary,
+  GroupingState,
+  IntegratedGrouping,
 } from '@devexpress/dx-react-grid';
 import {
   Grid,
@@ -23,17 +25,25 @@ import {
   TableColumnVisibility,
   ColumnChooser,
   TableSummaryRow,
+  TableGroupRow,
 } from '@devexpress/dx-react-grid-material-ui';
 import { getRowId } from '../../common';
 import {
-  calculateAmount,
   covertToTimeDateDigit,
   createdAtFormatter,
-  currencyFormatter,
+  currencyFormatterEmpty,
   opTypeFormatter,
   taskIdFormatter,
 } from '../../Shared/colorFormat';
-import { Box, fade, IconButton, withStyles } from '@material-ui/core';
+import {
+  Box,
+  Checkbox,
+  colors,
+  fade,
+  FormControlLabel,
+  Typography,
+  withStyles,
+} from '@material-ui/core';
 import { getMonthlyReport } from '../../graphql';
 import { useLazyQuery } from '@apollo/client';
 import { GridExporter } from '@devexpress/dx-react-grid-export';
@@ -42,14 +52,10 @@ import { getColumns } from '../../common/columns';
 import PageLayout from '../main/PageLayout';
 import DateNavigatorReports from '../../components/filters/DateNavigatorReports';
 import { FinanceContext } from '../../contexts';
-import FilterSelectCkeckBox from '../../Shared/FilterSelectCkeckBox';
 import useTasks from '../../hooks/useTasks';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
-import { FinanceReportPrint } from '../../print/FinanceReportPrint';
-import { useReactToPrint } from 'react-to-print';
-import PrintIcon from '@material-ui/icons/Print';
 
-const styles = (theme: any) => ({
+const styles = (theme) => ({
   tableStriped: {
     '& tbody tr:nth-of-type(odd)': {
       backgroundColor: fade(theme.palette.primary.main, 0.05),
@@ -64,18 +70,12 @@ export const TableComponent = withStyles(styles, { name: 'TableComponent' })(
   TableComponentBase
 );
 
-export default function FinanceReport({
-  isRTL,
-  words,
-  menuitem,
-  mainaccounts,
-  accounts,
-  company,
-  theme,
-}: any) {
+export default function ProfitReport({ isRTL, words, menuitem, theme }: any) {
   const [start, setStart] = useState<any>(null);
   const [end, setEnd] = useState<any>(null);
+
   const [rows, setRows] = useState([]);
+  const [group, setGroup]: any = useState(false);
 
   const col = getColumns({ isRTL, words });
 
@@ -84,8 +84,6 @@ export default function FinanceReport({
     col.acc,
     col.taskId,
     col.refNo,
-    col.opAcc,
-    col.project,
     col.opType,
     col.employee,
     col.opDocNo,
@@ -105,21 +103,12 @@ export default function FinanceReport({
   });
 
   const {
-    state: {
-      currentDate,
-      currentViewName,
-      endDate,
-      accvalue,
-      paccvalue,
-      group,
-      groupby,
-      sumcolumn,
-      sort,
-    },
+    state: { currentDate, currentViewName, endDate, sort },
     dispatch,
   } = useContext(FinanceContext);
   const { tasks } = useTasks();
   const { height } = useWindowDimensions();
+
   const currentViewNameChange = (e: any) => {
     dispatch({ type: 'setCurrentViewName', payload: e.target.value });
   };
@@ -130,74 +119,33 @@ export default function FinanceReport({
     dispatch({ type: 'setEndDate', payload: curDate });
   };
 
-  const setAccvalueDispatch = (value: any) => {
-    dispatch({ type: 'setAccvalue', payload: value ? [value] : [] });
-  };
-
-  const setPaccvalueDispatch = (value: any) => {
-    dispatch({ type: 'setPaccvalue', payload: value ? [value] : [] });
-  };
-
   useEffect(() => {
     const slsData = summaryData?.data?.['getMonthlyReport']?.data || [];
-    const balance = summaryData?.data?.['getMonthlyReport']?.message || null;
-    const updatedRows = slsData.map((x: any) => x);
-    const amount = balance ? Number(balance) : null;
-    if (amount !== null) {
-      const isCredit = accvalue?.[0]?.accType === 2;
-      let credit: any;
-      let debit: any;
-      if (amount < 0) {
-        credit = isCredit ? 0 : -amount;
-        debit = isCredit ? -amount : 0;
-      } else {
-        credit = isCredit ? amount : 0;
-        debit = isCredit ? 0 : amount;
-      }
-      if (credit || debit) {
-        updatedRows.unshift({
-          _id: Date.now(),
-          opTime: start,
-          opType: 94,
-          amount,
-          credit,
-          debit,
-        });
-      }
-    }
-
     let rased = 0;
-    const updatedRows2 =
-      updatedRows?.length > 0
-        ? updatedRows.map((item: any) => {
+    const updatedRows =
+      slsData?.length > 0
+        ? slsData.map((item: any) => {
             const rowRased = item.debit ? item.debit : -item.credit;
             rased = rased + rowRased;
             return {
               ...item,
-              amount: calculateAmount(item),
               rased,
             };
           })
         : [];
 
-    setRows(updatedRows2);
-  }, [summaryData]);
-
-  const getIds = (list: any) =>
-    list && list?.length > 0 ? list.map((sv: any) => sv._id) : undefined;
-  const getPcode = (list: any) =>
-    list && list?.length > 0 ? list.map((sv: any) => sv.code) : undefined;
+    setRows(updatedRows);
+  }, [summaryData, group]);
+  const arbah = [13, 14, 15];
 
   const fetchData = () => {
     const variables = {
-      parentcodes: getPcode(paccvalue),
-      accountIds: getIds(accvalue),
+      parentcodes: arbah,
       start: start ? start.setHours(0, 0, 0, 0) : undefined,
       end: end
         ? end.setHours(23, 59, 59, 999)
         : new Date().setHours(23, 59, 59, 999),
     };
-
     getSummary({
       variables,
     });
@@ -205,12 +153,7 @@ export default function FinanceReport({
 
   useEffect(() => {
     fetchData();
-  }, [start, end, group, groupby, accvalue, paccvalue, sumcolumn]);
-
-  const faccounts =
-    paccvalue?.length > 0
-      ? accounts.filter((ac: any) => ac?.parentcode === paccvalue?.[0]?.code)
-      : accounts;
+  }, [start, end]);
 
   const exporterRef: any = useRef(null);
 
@@ -237,17 +180,30 @@ export default function FinanceReport({
     dispatch({ type: 'setSort', payload: value });
   };
 
+  const grouping = [{ columnName: col.acc.name }];
+  const groupSummaryItems = [
+    {
+      columnName: col.taskId.name,
+      type: 'count',
+      alignByColumn: true,
+    },
+
+    {
+      columnName: 'credit',
+      type: 'sum',
+      alignByColumn: true,
+    },
+    {
+      columnName: 'debit',
+      type: 'sum',
+      alignByColumn: true,
+    },
+  ];
+
   const totalSummaryItems = [
     { columnName: 'credit', type: 'sum' },
     { columnName: 'debit', type: 'sum' },
   ];
-  const componentRef: any = useRef();
-
-  const print = useReactToPrint({
-    content: () => componentRef.current,
-    documentTitle: `Finance Report`,
-    removeAfterPrint: true,
-  });
 
   return (
     <PageLayout
@@ -266,24 +222,10 @@ export default function FinanceReport({
           marginRight: 5,
         }}
       >
-        {(accvalue?.length > 0 || paccvalue?.length > 0) && (
-          <Box
-            style={{
-              position: 'absolute',
-              left: isRTL ? 145 : undefined,
-              right: isRTL ? undefined : 145,
-              top: 51,
-              zIndex: 112,
-            }}
-          >
-            <IconButton onClick={print} title="Print Report" size="medium">
-              <PrintIcon />
-            </IconButton>
-          </Box>
-        )}
         <Box
           display="flex"
           style={{
+            flex: 1,
             position: 'absolute',
             zIndex: 111,
             flexDirection: 'row',
@@ -304,56 +246,53 @@ export default function FinanceReport({
             words={words}
             theme={theme}
           ></DateNavigatorReports>
-          <Box
-            display="flex"
-            style={{
-              height: 38,
-              alignItems: 'center',
-              justifyContent: 'flex-start',
-              paddingLeft: 20,
-              paddingRight: 20,
-            }}
-          >
-            <FilterSelectCkeckBox
-              options={mainaccounts}
-              value={paccvalue?.[0]}
-              setValue={setPaccvalueDispatch}
-              words={words}
-              isRTL={isRTL}
-              name="paccount"
-              nomulti
-              width={220}
-            ></FilterSelectCkeckBox>
-          </Box>
-          <Box
-            display="flex"
-            style={{
-              height: 38,
-              alignItems: 'center',
-              justifyContent: 'flex-start',
-              paddingLeft: 20,
-              paddingRight: 20,
-            }}
-          >
-            <FilterSelectCkeckBox
-              options={faccounts}
-              value={accvalue?.[0]}
-              setValue={setAccvalueDispatch}
-              words={words}
-              isRTL={isRTL}
-              name="account"
-              nomulti
-              width={220}
-            ></FilterSelectCkeckBox>
-          </Box>
         </Box>
+
+        <Box
+          display={'flex'}
+          style={{
+            position: 'absolute',
+            left: 180,
+            top: 60,
+            zIndex: 111,
+            flexDirection: 'row',
+          }}
+        >
+          <FormControlLabel
+            control={
+              <Checkbox
+                style={{ padding: 7 }}
+                checked={group}
+                onChange={() => setGroup(!group)}
+                color="primary"
+              />
+            }
+            label={
+              <Typography
+                style={{ color: colors.blue[700] }}
+                variant="subtitle2"
+              >
+                {isRTL ? 'تجميع بحسب الحساب' : 'Group by Account'}
+              </Typography>
+            }
+            style={{ fontSize: 14 }}
+          />
+        </Box>
+
         <Grid rows={rows} columns={columns} getRowId={getRowId}>
           <SortingState
             defaultSorting={sort}
             onSortingChange={(srt: any) => setSortDispatch(srt)}
           />
-          <SummaryState totalItems={totalSummaryItems} />
-          <IntegratedSummary />
+          {group && <GroupingState grouping={grouping} />}
+          {group && (
+            <SummaryState
+              totalItems={totalSummaryItems}
+              groupItems={groupSummaryItems}
+            />
+          )}
+          {group && <IntegratedGrouping />}
+          {group && <IntegratedSummary />}
           <IntegratedSorting />
           <VirtualTable
             height={height - 98}
@@ -374,7 +313,7 @@ export default function FinanceReport({
           ></DataTypeProvider>
           <DataTypeProvider
             for={['credit', 'debit', 'rased']}
-            formatterComponent={currencyFormatter}
+            formatterComponent={currencyFormatterEmpty}
           ></DataTypeProvider>
           <DataTypeProvider
             for={['opType']}
@@ -389,12 +328,25 @@ export default function FinanceReport({
           <Toolbar />
           <ColumnChooser />
           <ExportPanel startExport={startExport} />
-          <TableSummaryRow
-            messages={{
-              sum: isRTL ? 'المجموع' : 'Total',
-              count: isRTL ? 'العدد' : 'Count',
-            }}
-          ></TableSummaryRow>
+          {group && (
+            <TableGroupRow
+              messages={{
+                sum: isRTL ? 'المجموع' : 'Total',
+                count: isRTL ? 'العدد' : 'Count',
+                sumOf: isRTL ? 'المجموع' : 'Total',
+                countOf: isRTL ? 'العدد' : 'Count',
+              }}
+              showColumnsWhenGrouped
+            />
+          )}
+          {group && (
+            <TableSummaryRow
+              messages={{
+                sum: isRTL ? 'المجموع' : 'Total',
+                count: isRTL ? 'العدد' : 'Count',
+              }}
+            ></TableSummaryRow>
+          )}
         </Grid>
         <GridExporter
           ref={exporterRef}
@@ -402,20 +354,6 @@ export default function FinanceReport({
           columns={columns}
           onSave={onSave}
         />
-        <Box>
-          <div style={{ display: 'none' }}>
-            <FinanceReportPrint
-              company={company}
-              items={rows}
-              columns={columns}
-              ref={componentRef}
-              isRTL={isRTL}
-              account={accvalue?.[0]}
-              start={start}
-              end={end}
-            />
-          </div>
-        </Box>
       </Box>
     </PageLayout>
   );

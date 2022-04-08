@@ -137,6 +137,11 @@ export const opTypesNames = {
     nameAr: 'قيد يومية',
     ref: 'kaid',
   },
+  94: {
+    name: 'Opening Balancee',
+    nameAr: 'رصيد افتتاحي',
+    ref: 'print',
+  },
 };
 
 export const operationNames = {

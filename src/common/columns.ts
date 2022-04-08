@@ -101,6 +101,12 @@ export const getColumns = ({ isRTL, words }: any) => {
       name: 'refNo',
       title: isRTL ? 'رقم المرجع' : 'Ref',
     },
+    rased: {
+      id: 20,
+      ref: 'rased',
+      name: 'rased',
+      title: isRTL ? 'الرصيد' : 'Balance',
+    },
     eventNo: {
       id: 21,
       ref: 'eventNo',
