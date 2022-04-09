@@ -5,7 +5,7 @@ import { tafkeet } from '../common/helpers';
 import {
   simpleSpanDateFormatter,
   covertToTimeOnly,
-  getDateDayWeek,
+  getDateDayWeekGB,
   moneyFormatEmpty,
 } from '../Shared/colorFormat';
 import { carlist, custlist } from './lists';
@@ -188,11 +188,11 @@ export class ContractPrint extends React.PureComponent<any, any> {
     } else if (item.id === 2) {
       d = data?.resovalue?.plate;
     } else if (item.id === 3) {
-      d = `${getDateDayWeek(data?.start, data.isRTL)}`;
+      d = `${getDateDayWeekGB(data?.start, data.isRTL)}`;
     } else if (item.id === 4) {
       d = `${covertToTimeOnly(data?.start)}`;
     } else if (item.id === 5) {
-      d = `${getDateDayWeek(data?.end, data.isRTL)}`;
+      d = `${getDateDayWeekGB(data?.end, data.isRTL)}`;
     } else if (item.id === 6) {
       d = `${covertToTimeOnly(data?.end)}`;
     } else if (item.id === 7) {

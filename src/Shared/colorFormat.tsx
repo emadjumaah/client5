@@ -297,6 +297,19 @@ export const getDateDayWeek = (time: any, isRTL: any) => {
     return '';
   }
 };
+export const getDateDayWeekGB = (time: any, isRTL: any) => {
+  if (time) {
+    const date = new Date(time);
+    return date.toLocaleString('en-GB', {
+      weekday: 'short',
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric',
+    });
+  } else {
+    return '';
+  }
+};
 
 export const getDateFormat = (time: any, isRTL: any) => {
   if (time) {
