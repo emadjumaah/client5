@@ -68,7 +68,7 @@ export class ContractPrint extends React.PureComponent<any, any> {
     />
   );
   renderNotes = (info: any, isRTL: any) => {
-    const notes = info?.[2].value;
+    const notes = info?.[2]?.value;
     return (
       <Box style={{ direction: isRTL ? 'rtl' : 'ltr' }}>
         <Typography style={{ fontWeight: 'bold' }} variant="body2">
@@ -129,8 +129,8 @@ export class ContractPrint extends React.PureComponent<any, any> {
             flexDirection: 'column',
           }}
         >
-          <div>No: {data.no}</div>
-          <div>Date: {simpleSpanDateFormatter(data.start)}</div>
+          <div>No: {data?.no}</div>
+          <div>Date: {simpleSpanDateFormatter(data?.start)}</div>
         </Box>
       </Grid>
       <Grid item xs={8}>
@@ -167,8 +167,8 @@ export class ContractPrint extends React.PureComponent<any, any> {
             flexDirection: 'column',
           }}
         >
-          <div>No: {data.no}</div>
-          <div>Date: {simpleSpanDateFormatter(data.start)}</div>
+          <div>No: {data?.no}</div>
+          <div>Date: {simpleSpanDateFormatter(data?.start)}</div>
         </Box>
       </Grid>
       <Grid item xs={8}></Grid>
@@ -180,24 +180,24 @@ export class ContractPrint extends React.PureComponent<any, any> {
     let d = '';
 
     if (item.id === 1) {
-      if (data.isRTL) {
+      if (data?.isRTL) {
         d = data?.resovalue?.nameAr;
       } else {
         d = data?.resovalue?.name;
       }
-    } else if (item.id === 2) {
+    } else if (item?.id === 2) {
       d = data?.resovalue?.plate;
-    } else if (item.id === 3) {
-      d = `${getDateDayWeekGB(data?.start, data.isRTL)}`;
-    } else if (item.id === 4) {
+    } else if (item?.id === 3) {
+      d = `${getDateDayWeekGB(data?.start, data?.isRTL)}`;
+    } else if (item?.id === 4) {
       d = `${covertToTimeOnly(data?.start)}`;
-    } else if (item.id === 5) {
-      d = `${getDateDayWeekGB(data?.end, data.isRTL)}`;
-    } else if (item.id === 6) {
+    } else if (item?.id === 5) {
+      d = `${getDateDayWeekGB(data?.end, data?.isRTL)}`;
+    } else if (item?.id === 6) {
       d = `${covertToTimeOnly(data?.end)}`;
-    } else if (item.id === 7) {
+    } else if (item?.id === 7) {
       d = data?.info?.[0]?.value;
-    } else if (item.id === 10) {
+    } else if (item?.id === 10) {
       d = data?.resovalue?.insurance;
     }
 
@@ -232,8 +232,8 @@ export class ContractPrint extends React.PureComponent<any, any> {
               paddingLeft: 5,
             }}
           >
-            <div>{item.name}</div>
-            <div>{item.nameAr}</div>
+            <div>{item?.name}</div>
+            <div>{item?.nameAr}</div>
           </Box>
         </Grid>
       </Grid>
@@ -282,7 +282,7 @@ export class ContractPrint extends React.PureComponent<any, any> {
             }}
           >
             <Box style={{ alignItems: 'center', justifyContent: 'center' }}>
-              {item.name}
+              {item?.name}
             </Box>
           </Box>
         </Grid>
@@ -315,7 +315,7 @@ export class ContractPrint extends React.PureComponent<any, any> {
               paddingLeft: 5,
             }}
           >
-            <div>{item.nameAr}</div>
+            <div>{item?.nameAr}</div>
           </Box>
         </Grid>
       </Grid>
@@ -325,14 +325,14 @@ export class ContractPrint extends React.PureComponent<any, any> {
   renderCarBox = (list: any, data: any) => (
     <Grid container spacing={0}>
       <Grid item xs={12}>
-        {list.map((cl: any) => this.renderCarRow(cl, data))}
+        {list?.map((cl: any) => this.renderCarRow(cl, data))}
       </Grid>
     </Grid>
   );
   renderCustBox = (list: any, customer: any, isRTL: any) => (
     <Grid container spacing={0}>
       <Grid item xs={12}>
-        {list.map((cl: any) => this.renderCustRow(cl, customer, isRTL))}
+        {list?.map((cl: any) => this.renderCustRow(cl, customer, isRTL))}
       </Grid>
     </Grid>
   );
