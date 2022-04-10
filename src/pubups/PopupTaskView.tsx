@@ -44,6 +44,7 @@ import { ContractPrint } from '../print';
 import { useReactToPrint } from 'react-to-print';
 import LoadingInlineButton from '../Shared/LoadingInlineButton';
 import KaidsCustomer from '../Shared/KaidsCustomer';
+import { useTemplate } from '../hooks';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -108,7 +109,6 @@ const PopupTaskView = ({
   company,
 }: any) => {
   const classes = useStyles();
-  // console.log('item', item);
   const [openEvent, setOpenEvent] = useState<any>(false);
   const [event, setEvent] = useState<any>(null);
   const [row, setRow] = useState(item);
@@ -120,6 +120,8 @@ const PopupTaskView = ({
   const [resovalue, setResovalue] = useState(null);
   const [info, setInfo] = useState<any>(null);
   const [loading, setLoading] = useState<any>(null);
+
+  const { tempwords } = useTemplate();
 
   const handleChange = (_, newValue) => {
     setValue(newValue);
@@ -335,7 +337,6 @@ const PopupTaskView = ({
       getItems({ variables });
     }
   }, [row]);
-  console.log('row', row);
   const printData = {
     ...row,
     no: row?.docNo,
@@ -365,7 +366,7 @@ const PopupTaskView = ({
   };
 
   const viewtotal = amount;
-  const title = `${words.task} : ${row?.title}`;
+  const title = `${tempwords.task} : ${row?.title}`;
 
   return (
     <PopupLayout

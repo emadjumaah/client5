@@ -289,7 +289,7 @@ export default function Tasks({ isRTL, words, menuitem, theme, company }) {
                 color="primary"
                 onClick={() => setOpenGantt(true)}
               >
-                {isRTL ? 'عرض المهمات' : 'Task View'}
+                {isRTL ? 'عرض زمني' : 'Time View'}
               </Button>
             </Box>
           )}

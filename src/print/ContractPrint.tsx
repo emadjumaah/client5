@@ -148,7 +148,7 @@ export class ContractPrint extends React.PureComponent<any, any> {
             paddingRight: 15,
           }}
         >
-          <div>CEHICLERENTALAGREEMENT</div>
+          <div>VEHICLE RENTAL AGREEMENT</div>
           <div>عقد ايجار سيارة</div>
         </Box>
       </Grid>
