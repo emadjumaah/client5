@@ -38,8 +38,7 @@ import {
   invoiceReceiptFormatter,
   nameLinkFormat,
   progressFormatter,
-  taskNameFormatter,
-  // taskStatusFormatter,
+  taskTypeFormat,
 } from '../../Shared/colorFormat';
 import PageLayout from '../main/PageLayout';
 import { AlertLocal, SearchTable } from '../../components';
@@ -74,6 +73,7 @@ export default function Tasks({ isRTL, words, menuitem, theme, company }) {
   const [columns] = useState([
     col.title,
     col.createdAt,
+    col.type,
     col.start,
     col.end,
     col.project,
@@ -362,8 +362,10 @@ export default function Tasks({ isRTL, words, menuitem, theme, company }) {
               formatterComponent={incomeAmountFormatter}
             ></DataTypeProvider>
             <DataTypeProvider
-              for={['tasktype']}
-              formatterComponent={taskNameFormatter}
+              for={['type']}
+              formatterComponent={(props: any) =>
+                taskTypeFormat({ ...props, isRTL })
+              }
             ></DataTypeProvider>
             <DataTypeProvider
               for={['progress']}

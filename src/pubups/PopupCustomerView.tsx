@@ -19,7 +19,7 @@ import InvoicesCustomer from '../Shared/InvoicesCustomer';
 import ReceiptCustomer from '../Shared/ReceiptCustomer';
 import ExpensesCustomer from '../Shared/ExpensesCustomer';
 import TasksCustomer from '../Shared/TasksCustomer';
-import { manamentTabs } from '../constants/rrule';
+import { customerManamentTabs } from '../constants/rrule';
 import ProjectsCustomer from '../Shared/ProjectsCustomer';
 import KaidsCustomer from '../Shared/KaidsCustomer';
 
@@ -85,7 +85,7 @@ const PopupCustomerView = ({
 }: any) => {
   const classes = useStyles();
 
-  const [value, setValue] = React.useState(2);
+  const [value, setValue] = React.useState(1);
   const handleChange = (_, newValue) => {
     setValue(newValue);
   };
@@ -340,7 +340,7 @@ const PopupCustomerView = ({
                 aria-label="items"
                 className={classes.tabs}
               >
-                {manamentTabs.map((item: any) => {
+                {customerManamentTabs.map((item: any) => {
                   if (item.hide) {
                     return <div></div>;
                   }

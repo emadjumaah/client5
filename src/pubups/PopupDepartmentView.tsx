@@ -85,10 +85,8 @@ const PopupDepartmentView = ({
 }: any) => {
   const classes = useStyles();
 
-  const [value, setValue] = React.useState(2);
+  const [value, setValue] = React.useState(1);
   const handleChange = (_, newValue) => {
-    console.log('newValue', newValue);
-
     setValue(newValue);
   };
 

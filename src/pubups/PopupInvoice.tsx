@@ -69,9 +69,11 @@ const PopupInvoice = ({
   const [selectedDate, setSelectedDate] = React.useState(new Date());
   const [invNo, setInvNo] = useState<any>('');
 
+  // const [fTasks, setFTasks] = useState(tasks);
+
   const [itemsList, setItemsList] = useState<any>([]);
   const [accounts, setAccounts] = useState<any>([]);
-  const [ptype, setPtype] = useState<any>('');
+  const [ptype, setPtype] = useState<any>('cash');
 
   const [discount, setDiscount] = useState(0);
   const [totals, setTotals] = useState<any>({});
@@ -103,7 +105,7 @@ const PopupInvoice = ({
     name === 'taskId' ? value : null
   );
 
-  const [isCash, setIsCash] = useState(false);
+  const [isCash, setIsCash] = useState(true);
 
   const [newtext, setNewtext] = useState('');
 
@@ -205,16 +207,22 @@ const PopupInvoice = ({
           setDepartvalue(dept);
         }
         if (taskvalue?.employeeId && name !== 'employeeId') {
-          const dept = employees.filter(
+          const emp = employees.filter(
             (dep: any) => dep._id === taskvalue?.employeeId
           )?.[0];
-          setEmplvalue(dept);
+          setEmplvalue(emp);
         }
         if (taskvalue?.resourseId && name !== 'resourseId') {
-          const dept = resourses.filter(
+          const res = resourses.filter(
             (dep: any) => dep._id === taskvalue?.resourseId
           )?.[0];
-          setResovalue(dept);
+          setResovalue(res);
+        }
+        if (taskvalue?.customerId && name !== 'customerId') {
+          const cust = customers.filter(
+            (dep: any) => dep._id === taskvalue?.customerId
+          )?.[0];
+          setCustvalue(cust);
         }
       }
     }
@@ -245,6 +253,19 @@ const PopupInvoice = ({
       }
     }
   }, [resovalue]);
+
+  // useEffect(() => {
+  //   if (isNew) {
+  //     if (custvalue) {
+  //       const ntasks = tasks.filter(
+  //         (tsk: any) => tsk.customerId === custvalue._id
+  //       );
+  //       setFTasks(ntasks);
+  //     } else {
+  //       setFTasks(tasks);
+  //     }
+  //   }
+  // }, [custvalue]);
 
   useEffect(() => {
     const items = itemsData?.data?.['getOperationItems']?.data || [];
@@ -316,7 +337,7 @@ const PopupInvoice = ({
     setCustvalue(null);
     setInvNo('');
     setAccounts([]);
-    setPtype('');
+    setPtype('cash');
     setTaskvalue(null);
     setIsCash(false);
     setSelectedDate(new Date());
@@ -684,6 +705,20 @@ const PopupInvoice = ({
         </Grid>
         <Grid item xs={6}>
           <AutoFieldLocal
+            name="task"
+            title={tempwords.task}
+            words={words}
+            options={tasks}
+            value={taskvalue}
+            setSelectValue={setTaskvalue}
+            isRTL={isRTL}
+            fullWidth
+            openAdd={openTask}
+            disabled={name === 'taskId'}
+          ></AutoFieldLocal>
+        </Grid>
+        <Grid item xs={4}>
+          <AutoFieldLocal
             name="customer"
             title={tempwords.customer}
             words={words}
@@ -695,20 +730,6 @@ const PopupInvoice = ({
             openAdd={openCustomer}
             showphone
             disabled={name === 'customerId'}
-          ></AutoFieldLocal>
-        </Grid>
-        <Grid item xs={4}>
-          <AutoFieldLocal
-            name="task"
-            title={tempwords.task}
-            words={words}
-            options={tasks}
-            value={taskvalue}
-            setSelectValue={setTaskvalue}
-            isRTL={isRTL}
-            fullWidth
-            openAdd={openTask}
-            disabled={name === 'taskId'}
           ></AutoFieldLocal>
         </Grid>
         <Grid item xs={2}>

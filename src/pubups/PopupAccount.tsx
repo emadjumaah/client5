@@ -45,11 +45,11 @@ export const accountClasses = makeStyles((theme: Theme) =>
 
 const accountSchema = yup.object().shape({
   name: yup.string().required().min(3).max(100),
-  nameAr: yup.string(),
+  nameAr: yup.string().required().min(3).max(100),
 });
 const accountEditSchema = yup.object().shape({
   name: yup.string().required().min(3).max(100),
-  nameAr: yup.string(),
+  nameAr: yup.string().required().min(3).max(100),
 });
 export const accountResolver = { resolver: yupResolver(accountSchema) };
 export const accountEditResolver = { resolver: yupResolver(accountEditSchema) };

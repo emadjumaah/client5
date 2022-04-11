@@ -256,6 +256,7 @@ export const getReadyEventData = (
   servicesproducts: any
 ) => {
   const freq = task?.freq;
+  const interval = task?.interval ? task?.interval : 1;
   if (!task || !event || !freq) {
     return null;
   }
@@ -325,16 +326,16 @@ export const getReadyEventData = (
   let endDate: any;
 
   if (freq === 3) {
-    startDate = start.setDate(start.getDate() + 1);
-    endDate = end.setDate(end.getDate() + 1);
+    startDate = start.setDate(start.getDate() + interval);
+    endDate = end.setDate(end.getDate() + interval);
   }
   if (freq === 2) {
-    startDate = start.setDate(start.getDate() + 7);
-    endDate = end.setDate(end.getDate() + 7);
+    startDate = start.setDate(start.getDate() + 7 * interval);
+    endDate = end.setDate(end.getDate() + 7 * interval);
   }
   if (freq === 1) {
-    startDate = start.setMonth(start.getMonth() + 1);
-    endDate = end.setMonth(end.getMonth() + 1);
+    startDate = start.setMonth(start.getMonth() + interval);
+    endDate = end.setMonth(end.getMonth() + interval);
   }
 
   const variables = {
@@ -346,24 +347,60 @@ export const getReadyEventData = (
     status: 2,
     items: JSON.stringify(itemsList),
     taskId: event.taskId,
-    customerId: event.customerId,
-    customerName: event.customerName,
-    customerNameAr: event.customerNameAr,
-    customerPhone: event.customerPhone,
-    departmentId: event.departmentId,
-    departmentName: event.departmentName,
-    departmentNameAr: event.departmentNameAr,
-    departmentColor: event.departmentColor,
-    employeeId: event.employeeId,
-    employeeName: event.employeeName,
-    employeeNameAr: event.employeeNameAr,
-    employeeColor: event.employeeColor,
-    employeePhone: event.employeePhone,
-    resourseId: event.resourseId,
-    resourseName: event.resourseName,
-    resourseNameAr: event.resourseNameAr,
-    resourseColor: event.resourseColor,
+    customer: task.customerId
+      ? {
+          customerId: task.customerId,
+          customerName: task.customerName,
+          customerNameAr: task.customerNameAr,
+          customerPhone: task.customerPhone,
+        }
+      : {
+          customerId: undefined,
+          customerName: undefined,
+          customerNameAr: undefined,
+          customerPhone: undefined,
+        },
+    department: task.departmentId
+      ? {
+          departmentId: task.departmentId,
+          departmentName: task.departmentName,
+          departmentNameAr: task.departmentNameAr,
+          departmentColor: task.departmentColor,
+        }
+      : {
+          departmentId: undefined,
+          departmentName: undefined,
+          departmentNameAr: undefined,
+          departmentColor: undefined,
+        },
+    employee: task.employeeId
+      ? {
+          employeeId: task.employeeId,
+          employeeName: task.employeeName,
+          employeeNameAr: task.employeeNameAr,
+          employeeColor: task.employeeColor,
+          employeePhone: task.employeePhone,
+        }
+      : {
+          employeeId: undefined,
+          employeeName: undefined,
+          employeeNameAr: undefined,
+          employeeColor: undefined,
+          employeePhone: undefined,
+        },
+    resourse: task.resourseId
+      ? {
+          resourseId: task.resourseId,
+          resourseName: task.resourseName,
+          resourseNameAr: task.resourseNameAr,
+          resourseColor: task.resourseColor,
+        }
+      : {
+          resourseId: undefined,
+          resourseName: undefined,
+          resourseNameAr: undefined,
+          resourseColor: undefined,
+        },
   };
-
   return variables;
 };

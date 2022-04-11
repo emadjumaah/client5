@@ -749,6 +749,35 @@ export const nameLinkFormat = ({ row, value, setItem, setOpenItem }: any) => {
     </Box>
   );
 };
+
+export const taskTypeFormat = ({ row, isRTL }: any) => {
+  const { freq, interval } = row;
+  const value =
+    freq === 1 || interval > 27
+      ? isRTL
+        ? 'شهري'
+        : 'Monthly'
+      : freq === 2 || interval === 6
+      ? isRTL
+        ? 'اسبوعي'
+        : 'Weekly'
+      : isRTL
+      ? 'يومي'
+      : 'Daily';
+
+  return (
+    <Typography
+      style={{
+        fontSize: 13,
+        textAlign: 'start',
+        color: colors.deepPurple[500],
+      }}
+    >
+      {value}
+    </Typography>
+  );
+};
+
 export const idLinkFormat = ({
   row,
   value,

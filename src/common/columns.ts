@@ -210,10 +210,16 @@ export const getColumns = ({ isRTL, words }: any) => {
       title: isRTL ? 'الموقع' : 'Lopcation',
     },
     nots: {
-      id: 34,
+      id: 35,
       ref: 'nots',
       name: 'nots',
       title: isRTL ? 'تنبيهات' : 'Notifications',
+    },
+    type: {
+      id: 36,
+      ref: 'type',
+      name: 'type',
+      title: isRTL ? 'النوع' : 'Type',
     },
   };
 };

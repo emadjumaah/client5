@@ -35,12 +35,12 @@ import PopupCustomer from './PopupCustomer';
 import { weekdaysNNo } from '../constants/datatypes';
 import getTasks from '../graphql/query/getTasks';
 import useTasks from '../hooks/useTasks';
-import { InvoicePrintA5 } from '../common/InvoicePrintA5';
 import { useReactToPrint } from 'react-to-print';
 import useCompany from '../hooks/useCompany';
 import useEmployeesUp from '../hooks/useEmployeesUp';
 import useDepartmentsUp from '../hooks/useDepartmentsUp';
 import useResoursesUp from '../hooks/useResoursesUp';
+import { InvoicePrint } from '../print';
 
 export const indexTheList = (list: any) => {
   return list.map((item: any, index: any) => {
@@ -688,10 +688,12 @@ const PopupAppointInvoice = ({
             addAction={addCustomer}
             editAction={editCustomer}
           ></PopupCustomer>
+
           <Box>
             <div style={{ display: 'none' }}>
-              <InvoicePrintA5
+              <InvoicePrint
                 company={company}
+                user={user}
                 printData={printData}
                 ref={componentRef}
               />

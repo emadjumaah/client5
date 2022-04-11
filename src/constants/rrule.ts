@@ -276,6 +276,52 @@ export const manamentTabs = [
     ref: 'entries',
   },
 ];
+export const customerManamentTabs = [
+  {
+    id: 0,
+    value: 0,
+    nameAr: words?.projects,
+    name: words?.projects,
+    ref: 'projects',
+    hide: options?.noPro,
+  },
+  {
+    id: 1,
+    value: 1,
+    nameAr: words?.tasks,
+    name: words?.tasks,
+    ref: 'tasks',
+    hide: options?.noTsk,
+  },
+  {
+    id: 2,
+    value: 2,
+    nameAr: words?.appointments,
+    name: words?.appointments,
+    ref: 'events',
+  },
+  {
+    id: 3,
+    value: 3,
+    nameAr: 'الفواتيير',
+    name: 'Invoices',
+    ref: 'invoices',
+  },
+  {
+    id: 4,
+    value: 4,
+    nameAr: 'المقبوضات',
+    name: 'Receipts',
+    ref: 'receipts',
+  },
+  {
+    id: 5,
+    value: 5,
+    nameAr: 'القيود',
+    name: ' Entries',
+    ref: 'entries',
+  },
+];
 
 export const taskManamentTabs = [
   {
