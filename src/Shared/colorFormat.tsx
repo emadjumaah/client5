@@ -562,6 +562,7 @@ export const logoFormatter = ({ value }: any) => {
   );
 };
 export const templateFormatter = ({ value }: any) => {
+  if (!value) return '';
   const temp = JSON.parse(value);
   return temp?.nameAr;
 };
