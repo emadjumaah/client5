@@ -57,6 +57,7 @@ const PopupFinanceAllKaid = ({
   company,
 }: any) => {
   const [loading, setLoading] = useState(false);
+  const [saving, setSaving] = useState(false);
 
   const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
   const [selectedDate, setSelectedDate] = React.useState(new Date());
@@ -222,6 +223,7 @@ const PopupFinanceAllKaid = ({
       );
       return;
     }
+    setSaving(true);
 
     const variables: any = {
       _id: row && row._id ? row._id : undefined, // is it new or edit
@@ -240,6 +242,7 @@ const PopupFinanceAllKaid = ({
   const apply = async (mutate: any, variables: any) => {
     try {
       await mutate({ variables });
+      setSaving(false);
       closeModal();
     } catch (error) {
       onError(error);
@@ -265,6 +268,7 @@ const PopupFinanceAllKaid = ({
     setDepartvalue(null);
     setTaskvalue(null);
     setProjvalue(null);
+    setSaving(false);
   };
   const resetAll = () => {
     resetForm();
@@ -292,7 +296,6 @@ const PopupFinanceAllKaid = ({
     documentTitle: `Entry #${row?.docNo}`,
     removeAfterPrint: true,
   });
-
   return (
     <PopupLayout
       isRTL={isRTL}
@@ -303,6 +306,7 @@ const PopupFinanceAllKaid = ({
       theme={theme}
       alrt={alrt}
       print={handleReactPrint}
+      saving={saving}
       mt={10}
       maxWidth="lg"
     >
@@ -469,6 +473,20 @@ const PopupFinanceAllKaid = ({
               accounts={accounts}
             ></KaidsSingleTable>
             {loading && <LoadingInline></LoadingInline>}
+            <Grid item xs={3}></Grid>
+            <Grid item xs={3}>
+              <Box>
+                {words.amountDebit}: {kaidsums?.debit}
+              </Box>
+            </Grid>
+            <Grid item xs={3}>
+              <Box>
+                {words.amountCredit}: {kaidsums?.credit}
+              </Box>
+            </Grid>
+            <Grid item xs={3}>
+              <Box>{kaidsums?.debit - kaidsums?.credit}</Box>
+            </Grid>
           </Grid>
         </Grid>
         <Grid item xs={1}></Grid>

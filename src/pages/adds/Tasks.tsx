@@ -77,6 +77,7 @@ export default function Tasks({ isRTL, words, menuitem, theme, company }) {
     col.start,
     col.end,
     col.project,
+    col.resourse,
     col.customer,
     col.department,
     col.employee,

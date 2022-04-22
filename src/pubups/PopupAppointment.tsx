@@ -189,6 +189,16 @@ const PopupAppointment = ({
       setEmplvalue(emp);
     }
   }, [user, employees]);
+  useEffect(() => {
+    if (startDate) {
+      const end = eventLength
+        ? new Date(startDate).getTime() + eventLength * 60 * 1000
+        : null;
+      if (end) {
+        setEndDate(new Date(end));
+      }
+    }
+  }, [eventLength, startDate]);
 
   useEffect(() => {
     if (isNew && !isemployee) {
@@ -670,12 +680,6 @@ const PopupAppointment = ({
                       value={startDate}
                       onChange={(d: any) => {
                         setStartDate(d);
-                        const end = eventLength
-                          ? new Date(d).getTime() + eventLength * 60 * 1000
-                          : null;
-                        if (end) {
-                          setEndDate(new Date(end));
-                        }
                       }}
                       format="dd/MM/yyyy - hh:mm"
                       time
