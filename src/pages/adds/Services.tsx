@@ -23,7 +23,7 @@ import { PopupService } from '../../pubups';
 import { currencyFormatter } from '../../Shared/colorFormat';
 import { AlertLocal, SearchTable } from '../../components';
 import { errorAlert, errorDeleteAlert } from '../../Shared/helpers';
-import { Box } from '@material-ui/core';
+import { Box, FormControlLabel, Radio, RadioGroup } from '@material-ui/core';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
 import { TableComponent } from '../../Shared/TableComponent';
 import ImportBtn from '../../common/ImportBtn';
@@ -33,6 +33,8 @@ import PopupServiceImport from '../../pubups/PopupServiceImport';
 export default function Services({ isRTL, words, theme }: any) {
   // const col = getColumns({ isRTL, words });
   const [openImport, setOpenImport] = useState(false);
+  const [type, setType] = useState(2);
+
   const [loading, setLoading] = useState(false);
   const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
 
@@ -46,8 +48,15 @@ export default function Services({ isRTL, words, theme }: any) {
     { name: 'unit', title: words.unit },
   ]);
 
-  const { services, addService, addMultiServices, editService, removeService } =
-    useServices();
+  const {
+    services,
+    expenseitems,
+    addService,
+    addMultiServices,
+    editService,
+    removeService,
+  } = useServices();
+
   const { height } = useWindowDimensions();
   const commitChanges = async ({ deleted }) => {
     if (deleted) {
@@ -65,7 +74,6 @@ export default function Services({ isRTL, words, theme }: any) {
       setLoading(false);
     }
   };
-
   return (
     <Box
       style={{
@@ -82,7 +90,36 @@ export default function Services({ isRTL, words, theme }: any) {
         isRTL={isRTL}
         theme={theme}
       ></ImportBtn>
-      <Grid rows={services} columns={columns} getRowId={getRowId}>
+      <RadioGroup
+        style={{
+          position: 'absolute',
+          zIndex: 112,
+          paddingLeft: 20,
+          paddingRight: 20,
+        }}
+        aria-label="Views"
+        name="views"
+        row
+        value={type}
+        onChange={(e: any) => setType(Number(e.target.value))}
+      >
+        <FormControlLabel
+          value={2}
+          control={<Radio color="primary" />}
+          label={isRTL ? 'بنود الايرادات' : 'Income Items'}
+        />
+
+        <FormControlLabel
+          value={10}
+          control={<Radio color="primary" />}
+          label={isRTL ? 'بنود المصروفات' : 'Expenses Items'}
+        />
+      </RadioGroup>
+      <Grid
+        rows={type === 2 ? services : expenseitems}
+        columns={columns}
+        getRowId={getRowId}
+      >
         <SortingState />
         <EditingState onCommitChanges={commitChanges} />
         <SearchState />

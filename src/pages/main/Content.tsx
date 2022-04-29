@@ -1,7 +1,7 @@
 /* eslint-disable no-var */
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import { useContext, useEffect, useReducer, useState } from 'react';
+import { useContext, useReducer, useState } from 'react';
 import { useTheme } from '@material-ui/core/styles';
 import { Box, CssBaseline } from '@material-ui/core';
 import { Route, Routes } from 'react-router-dom';
@@ -72,7 +72,7 @@ import {
   initCalendarReportContext,
 } from '../../contexts/calendarReport/eventsReducer';
 import CalendarReportContext from '../../contexts/calendarReport';
-import Expenses from '../adds/Expenses';
+// import Expenses from '../adds/Expenses';
 import {
   filterMenu,
   getparentAccounts,
@@ -115,8 +115,8 @@ import useCompany from '../../hooks/useCompany';
 import Contacts from '../adds/Contacts';
 import Groups from '../adds/Groups';
 import Sendreqs from '../adds/Sendreqs';
-import { useNavigate } from 'react-router-dom';
-import { smsmenu } from '../../constants/menu';
+// import { useNavigate } from 'react-router-dom';
+// import { remindermenu, smsmenu } from '../../constants/menu';
 import Reminders from '../adds/Reminders';
 import RemindCal from '../calendar/RemindCal';
 import Messages from '../adds/Messages';
@@ -126,17 +126,22 @@ import FinanceAllKaid from '../adds/FinanceAllKaid';
 import ProfitReport from '../reports/ProfitReport';
 import BudgetReport from '../reports/BudgetReport';
 // import ExpenseItems from '../adds/ExpenseItems';
-// import ExpensesDoc from '../adds/ExpensesDoc';
+import ExpensesDoc from '../adds/ExpensesDoc';
+import {
+  initReminderContext,
+  reminderReducer,
+} from '../../contexts/reminder/salesReducer';
+import ReminderContext from '../../contexts/reminder';
 
 const Content = () => {
   const classes = layoutClasses();
   const [mmenu, setMmenu] = useState(null);
-  const [menu, setmenu] = useState(filterMenu());
+  // const [menu, setmenu] = useState(filterMenu());
   const [menuitem, setMenuitem] = useState(mainmenu[0]);
   // const [mlocation, setMlocation] = useState('/');
 
   const theme = useTheme();
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   // const location = useLocation();
 
   const { company, editCompany, refreshcompany } = useCompany();
@@ -179,6 +184,10 @@ const Content = () => {
   const [salesStore, salesDispatch] = useReducer(
     salesReducer,
     initSalesContext
+  );
+  const [reminderStore, reminderDispatch] = useReducer(
+    reminderReducer,
+    initReminderContext
   );
   const [salesReportStore, salesReportDispatch] = useReducer(
     salesReportReducer,
@@ -228,30 +237,30 @@ const Content = () => {
       ? accs.filter((acc: any) => mainaccounts.includes(acc.parentcode))
       : [];
   filteredAccounts.sort((a: any, b: any) => a.code - b.code);
-  useEffect(() => {
-    switch (mmenu) {
-      case 1:
-        setmenu(filterMenu());
-        navigate('/');
-        setMenuitem(mainmenu[0]);
-        // setMlocation(location?.pathname);
-        return;
-      case 2:
-        setmenu(smsmenu);
-        navigate(`/sendreqs`);
-        setMenuitem(smsmenu[0]);
-        return;
-      // case 3:
-      //   setmenu(remindermenu);
-      //   navigate(`/notifications`);
-      //   setMenuitem(remindermenu[0]);
-      //   return;
+  // useEffect(() => {
+  //   switch (mmenu) {
+  //     case 1:
+  //       setmenu(filterMenu());
+  //       navigate('/');
+  //       setMenuitem(mainmenu[0]);
+  //       // setMlocation(location?.pathname);
+  //       return;
+  //     case 2:
+  //       setmenu(smsmenu);
+  //       navigate(`/sendreqs`);
+  //       setMenuitem(smsmenu[0]);
+  //       return;
+  //     case 3:
+  //       setmenu(remindermenu);
+  //       navigate(`/managereminders`);
+  //       setMenuitem(remindermenu[0]);
+  //       return;
 
-      // default:
-      //   navigate(mlocation);
-      //   return;
-    }
-  }, [mmenu]);
+  //     // default:
+  //     //   navigate(mlocation);
+  //     //   return;
+  //   }
+  // }, [mmenu]);
 
   return (
     <Box
@@ -270,7 +279,7 @@ const Content = () => {
         menuitem={menuitem}
         user={user}
         branches={branches}
-        menu={menu}
+        menu={filterMenu()}
         logout={logout}
         network={network}
         setMmenu={setMmenu}
@@ -430,7 +439,7 @@ const Content = () => {
               </ReceiptContext.Provider>
             }
           />
-          <Route
+          {/* <Route
             path="/expenses"
             element={
               <ExpensesContext.Provider
@@ -445,8 +454,8 @@ const Content = () => {
                 ></Expenses>
               </ExpensesContext.Provider>
             }
-          />
-          {/* <Route
+          /> */}
+          <Route
             path="/expenses"
             element={
               <ExpensesContext.Provider
@@ -461,7 +470,7 @@ const Content = () => {
                 ></ExpensesDoc>
               </ExpensesContext.Provider>
             }
-          /> */}
+          />
           <Route
             path="/financeall"
             element={
@@ -515,12 +524,16 @@ const Content = () => {
           <Route
             path="/managereminders"
             element={
-              <Reminders
-                isRTL={isRTL}
-                words={words}
-                theme={theme}
-                menuitem={menuitem}
-              ></Reminders>
+              <ReminderContext.Provider
+                value={{ state: reminderStore, dispatch: reminderDispatch }}
+              >
+                <Reminders
+                  isRTL={isRTL}
+                  words={words}
+                  theme={theme}
+                  menuitem={menuitem}
+                ></Reminders>
+              </ReminderContext.Provider>
             }
           />
           <Route

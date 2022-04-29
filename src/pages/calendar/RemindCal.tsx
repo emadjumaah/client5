@@ -7,69 +7,100 @@ import {
   WeekView,
   Appointments,
   AppointmentTooltip,
-  // AppointmentForm,
   MonthView,
   DayView,
   CurrentTimeIndicator,
-  // DragDropProvider,
   EditRecurrenceMenu,
 } from '@devexpress/dx-react-scheduler-material-ui';
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { AppointmentContent } from './common';
-// import { CommandAppointment } from '../../Shared';
 import { Box, Grid, useMediaQuery } from '@material-ui/core';
 import { DateNavigator } from '../../components';
 import { CalendarContext } from '../../contexts';
-// import PopupLayoutBox from '../main/PopupLayoutBox';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
-import useReminders from '../../hooks/useReminders';
 import { commitReminderChanges } from '../../common/calendar';
 import { ReminderTooltip } from './common/ReminderTooltip';
-// import { ReminderForm } from './common/ReminderForm';
+import { useLazyQuery, useMutation } from '@apollo/client';
+import {
+  createReminder,
+  deleteReminder,
+  getReminders,
+  updateReminder,
+} from '../../graphql';
+import getNotificationsList from '../../graphql/query/getNotificationsList';
 
 const RemindCal = (props: any) => {
   const [visible, setVisible] = useState(false);
+  const [rows, setRows] = useState([]);
   const [start, setStart] = useState(new Date());
   const [end, setEnd] = useState(new Date());
-  console.log(start, end);
 
   const isMobile = useMediaQuery('(max-width:600px)');
-  const { calendar, isRTL, words, company, theme } = props;
+  const { isRTL, words, company, theme } = props;
   const {
     state: { currentDate, currentViewName },
     dispatch,
   } = useContext(CalendarContext);
   const { height } = useWindowDimensions();
 
-  const {
-    reminders,
-    addReminder,
-    editReminder,
-    removeReminder,
-    // refreshreminders,
-  } = useReminders();
+  const [loadReminders, remindersData]: any = useLazyQuery(getReminders, {
+    fetchPolicy: 'cache-and-network',
+  });
 
-  const updatedReminders =
-    reminders?.length > 0
-      ? reminders.map((ap: any) => {
-          const startDate = new Date(ap.runtime);
-          const endDate = new Date(ap.runtime);
-          endDate.setMinutes(endDate.getMinutes() + 30);
-          return {
-            ...ap,
-            startDate,
-            endDate,
-            start: startDate,
-            end: endDate,
-          };
-        })
-      : [];
+  useEffect(() => {
+    const variables = {
+      start: start ? start.setHours(0, 0, 0, 0) : undefined,
+      end: end ? end.setHours(23, 59, 59, 999) : undefined,
+    };
+    loadReminders({
+      variables,
+    });
+  }, [start, end]);
 
-  // useEffect(() => {
-  //   if (refreshreminders) {
-  //     refreshreminders();
-  //   }
-  // }, []);
+  useEffect(() => {
+    if (remindersData?.data?.getReminders?.data) {
+      const { data } = remindersData.data.getReminders;
+      const updatedReminders =
+        data?.length > 0
+          ? data.map((ap: any) => {
+              const startDate = new Date(ap.runtime);
+              const endDate = new Date(ap.runtime);
+              endDate.setMinutes(endDate.getMinutes() + 30);
+              return {
+                ...ap,
+                startDate,
+                endDate,
+                start: startDate,
+                end: endDate,
+              };
+            })
+          : [];
+      setRows(updatedReminders);
+    }
+  }, [remindersData]);
+
+  const refresQuery = {
+    refetchQueries: [
+      {
+        query: getReminders,
+        variables: {
+          start: start ? start.setHours(0, 0, 0, 0) : undefined,
+          end: end ? end.setHours(23, 59, 59, 999) : undefined,
+        },
+      },
+      {
+        query: getNotificationsList,
+        variables: {
+          start: start ? start.setHours(0, 0, 0, 0) : undefined,
+          end: end ? end.setHours(23, 59, 59, 999) : undefined,
+        },
+      },
+    ],
+  };
+
+  const [addReminder] = useMutation(createReminder, refresQuery);
+  const [editReminder] = useMutation(updateReminder, refresQuery);
+  const [removeReminder] = useMutation(deleteReminder, refresQuery);
 
   const isMonth = currentViewName === 'Month';
   const currentViewNameChange = (e: any) => {
@@ -117,7 +148,7 @@ const RemindCal = (props: any) => {
         </Grid>
         <Box style={{ margin: 0 }}>
           <Scheduler
-            data={updatedReminders}
+            data={rows}
             height={isMonth ? 'auto' : isMobile ? height - 120 : height - 85}
             firstDayOfWeek={6}
             locale={isRTL ? 'ar' : 'en'}
@@ -149,25 +180,21 @@ const RemindCal = (props: any) => {
               currentDate={currentDate}
               onCurrentDateChange={currentDateChange}
             />
-            <DayView
-              cellDuration={calendar ? calendar?.duration : 30}
-              startDayHour={calendar ? calendar?.start : 8.5}
-              endDayHour={calendar ? calendar?.end : 21.5}
-            />
+            <DayView cellDuration={30} startDayHour={0.5} endDayHour={23.5} />
             <DayView
               name="3Days"
               displayName="3 Days"
               intervalCount={3}
-              cellDuration={calendar ? calendar?.duration : 30}
-              startDayHour={calendar ? calendar?.start : 8.5}
-              endDayHour={calendar ? calendar?.end : 21.5}
+              cellDuration={30}
+              startDayHour={0.5}
+              endDayHour={23.5}
             />
             <WeekView
               name="Week"
               displayName="Week"
-              cellDuration={calendar ? calendar?.duration : 30}
-              startDayHour={calendar ? calendar?.start : 8.5}
-              endDayHour={calendar ? calendar?.end : 21.5}
+              cellDuration={30}
+              startDayHour={0.5}
+              endDayHour={23.5}
             />
             <MonthView intervalCount={1} />
             {/* <Toolbar /> */}

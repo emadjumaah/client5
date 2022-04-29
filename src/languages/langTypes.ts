@@ -87,6 +87,7 @@ export interface LanguageType {
     save: string;
     cancel: string;
     close: string;
+    shutdown: string;
     color: string;
     name: string;
     nameAr: string;

@@ -186,6 +186,13 @@ export const catTypes = [
   { id: 3, name: 'Expenses', nameAr: 'مصاريف' },
 ];
 
+export const itemTypes = [
+  // { id: 1, name: 'Product', nameAr: 'منتج' },
+  { id: 2, name: 'Service', nameAr: 'خدمة' },
+  // { id: 3, name: 'nostockproduct', nameAr: 'مصاريف' },
+  { id: 10, name: 'Expenses', nameAr: 'مصاريف' },
+];
+
 export const statusTypes = {
   Scheduled: 1,
   Confirmed: 2,
@@ -237,6 +244,14 @@ export const eventStatusShort = [
   { id: 6, name: 'In Progress', nameAr: 'قيد الانجاز', color: '#f1Ea94' },
   // { id: 7, name: 'Ends', nameAr: 'انتهى', color: '#f1Ea94' },
   { id: 10, name: 'Completed', nameAr: 'منجز', color: '#7bcf9b' },
+];
+
+export const taskStatus = [
+  { id: 1, name: 'Not Started', nameAr: 'لم يبدأ', color: '#445E93' },
+  { id: 2, name: 'In Progress', nameAr: 'قيد الانجاز', color: '#2AB7CA' },
+  { id: 3, name: 'On-Hold', nameAr: 'معلق', color: '#FED766' },
+  { id: 4, name: 'Canceled', nameAr: 'ملغى', color: '#FE4A49' },
+  { id: 10, name: 'Completed', nameAr: 'منجز', color: '#61E294' },
 ];
 
 export const getThemeStatus = (theme: any) => {
@@ -301,6 +316,12 @@ export const periods = [
   { id: 2, period: 'pm', name: 'Previous Month', nameAr: 'الشهر السابق' },
   { id: 3, period: 'cy', name: 'Current Year', nameAr: 'السنة الحالية' },
   { id: 4, period: 'py', name: 'Previous Year', nameAr: 'السنة السابقة' },
+];
+export const carstatuss = [
+  { id: 1, name: 'Available', nameAr: 'متوفرة' },
+  { id: 2, name: 'In Garage', nameAr: 'قيد الصيانة' },
+  { id: 3, name: 'Broken', nameAr: 'معطلة' },
+  { id: 10, name: 'Busy', nameAr: 'مشغول' },
 ];
 
 export const eventColors = {

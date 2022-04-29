@@ -32,8 +32,12 @@ export default function AutoFieldLocal({
   day,
   width,
   showphone,
+  nosort,
 }: any) {
-  const sorted = _.sortBy(options, isRTL ? 'nameAr' : 'name');
+  let sorted = options;
+  if (!nosort) {
+    sorted = _.sortBy(options, isRTL ? 'nameAr' : 'name');
+  }
 
   return (
     <Grid container spacing={0}>

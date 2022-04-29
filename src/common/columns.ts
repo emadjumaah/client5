@@ -21,7 +21,7 @@ export const getColumns = ({ isRTL, words }: any) => {
     time: { id: 2, ref: 'time', name: 'time', title: words.timedate },
     opTime: { id: 3, ref: 'opTime', name: 'opTime', title: words.time },
     docNo: { id: 4, ref: 'docNo', name: 'docNo', title: words.no },
-    title: { id: 4, ref: 'title', name: 'title', title: words.name },
+    title: { id: 4, ref: 'title', name: 'title', title: words.title },
     opDocNo: { id: 5, ref: 'opDocNo', name: 'opDocNo', title: words.no },
     employee: {
       id: 6,
@@ -72,6 +72,12 @@ export const getColumns = ({ isRTL, words }: any) => {
       title: tempwords.project,
     },
     status: { id: 11, ref: 'status', name: 'status', title: words.status },
+    carstatus: {
+      id: 11,
+      ref: 'carstatus',
+      name: 'carstatus',
+      title: words.status,
+    },
     amount: { id: 12, ref: 'amount', name: 'amount', title: words.amount },
     acc: {
       id: 13,

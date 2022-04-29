@@ -7,6 +7,7 @@ import {
   Box,
   Button,
   colors,
+  fade,
   makeStyles,
   Tab,
   Tabs,
@@ -39,12 +40,16 @@ import {
   getResourses,
 } from '../graphql';
 import getTasks from '../graphql/query/getTasks';
-import { getReadyEventData } from '../common/helpers';
+import {
+  getReadyCloseEventData,
+  getReadyEventData,
+  getTaskTimeAmountData,
+} from '../common/helpers';
 import { ContractPrint } from '../print';
 import { useReactToPrint } from 'react-to-print';
-import LoadingInlineButton from '../Shared/LoadingInlineButton';
 import KaidsCustomer from '../Shared/KaidsCustomer';
 import { useTemplate } from '../hooks';
+import ReminderCustomer from '../Shared/ReminderCustomer';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -107,6 +112,7 @@ const PopupTaskView = ({
   servicesproducts,
   theme,
   company,
+  stopTask,
 }: any) => {
   const classes = useStyles();
   const [openEvent, setOpenEvent] = useState<any>(false);
@@ -120,13 +126,15 @@ const PopupTaskView = ({
   const [resovalue, setResovalue] = useState(null);
   const [info, setInfo] = useState<any>(null);
   const [loading, setLoading] = useState<any>(null);
+  const [closeloading, setCloseloading] = useState<any>(null);
 
   const { tempwords } = useTemplate();
+
+  const daysData = getTaskTimeAmountData(row);
 
   const handleChange = (_, newValue) => {
     setValue(newValue);
   };
-
   useEffect(() => {
     if (item?.id && tasks && tasks.length > 0) {
       const opened = tasks.filter((ts: any) => ts.id === item.id)?.[0];
@@ -212,7 +220,7 @@ const PopupTaskView = ({
   useEffect(() => {
     const variables = { taskId: row?.id };
     getEvents({ variables });
-  }, [row?.id]);
+  }, [row?.id, row]);
 
   useEffect(() => {
     const data = eventsData?.data?.['getObjectEvents']?.data;
@@ -222,13 +230,14 @@ const PopupTaskView = ({
       getEventItems({ variables: { opId: ev._id } });
       setEvent(events[events.length - 1]);
     }
-  }, [eventsData]);
+  }, [eventsData, item]);
 
   const [addEvent] = useMutation(createEvent, refresQuery);
 
   const [getItems, itemsData]: any = useLazyQuery(getTaskItems, {
     fetchPolicy: 'cache-and-network',
   });
+
   const addNewEvent = async () => {
     if (!event) return;
     setLoading(true);
@@ -244,6 +253,32 @@ const PopupTaskView = ({
     }
     await addEvent({ variables });
     setLoading(false);
+  };
+  const toCloseTask = async () => {
+    if (!event) return;
+    setCloseloading(true);
+    const data = eventsData?.data?.['getObjectEvents']?.data;
+    const events = data || [];
+
+    const fevents = events.filter(
+      (ev: any) => new Date(ev.startDate) < new Date()
+    );
+    const sum = _.sumBy(fevents, 'amount');
+    const amount = daysData?.amountnow - sum;
+    const evdata = getReadyCloseEventData(
+      event,
+      row,
+      amount,
+      eventItemsData,
+      servicesproducts
+    );
+    await stopTask({
+      variables: {
+        id: row.id,
+        event: JSON.stringify(evdata),
+      },
+    });
+    setCloseloading(false);
   };
 
   useEffect(() => {
@@ -367,7 +402,6 @@ const PopupTaskView = ({
 
   const viewtotal = amount;
   const title = `${tempwords.task} : ${row?.title}`;
-
   return (
     <PopupLayout
       isRTL={isRTL}
@@ -481,6 +515,21 @@ const PopupTaskView = ({
                       value={row}
                       id={row?.id}
                     ></KaidsCustomer>
+                  </TabPanel>
+                  <TabPanel value={value} index={7}>
+                    <ReminderCustomer
+                      resourses={resourses}
+                      employees={employees}
+                      departments={departments}
+                      customers={customers}
+                      isRTL={isRTL}
+                      words={words}
+                      theme={theme}
+                      isNew={isNew}
+                      name="taskId"
+                      value={row}
+                      id={row?.id}
+                    ></ReminderCustomer>
                   </TabPanel>
                   <Box
                     display="flex"
@@ -600,9 +649,10 @@ const PopupTaskView = ({
               )}
             </Box>
           </Grid>
+
           {row && (
             <Grid item xs={1}>
-              <Box style={{ marginTop: 10, marginBottom: 100 }}>
+              <Box style={{ marginTop: 10, marginBottom: 10 }}>
                 <Tabs
                   orientation="vertical"
                   variant="scrollable"
@@ -691,15 +741,104 @@ const PopupTaskView = ({
                   variant="contained"
                   fullWidth
                   color="primary"
-                  disabled={loading}
+                  disabled={loading || row.isClosed}
                   onClick={() => addNewEvent()}
                 >
                   {words.newPeriod}
                 </Button>
-                {loading && <LoadingInlineButton></LoadingInlineButton>}
               </Box>
             </Grid>
           )}
+
+          <Grid item xs={11}>
+            {daysData && (
+              <Box display={'flex'} style={{ flex: 1, marginBottom: 10 }}>
+                <Grid container spacing={1}>
+                  <Grid item xs={5}>
+                    {daysData?.progress && (
+                      <Box
+                        style={{
+                          display: 'flex',
+                          marginRight: 20,
+                          marginLeft: 20,
+                          width: 400,
+                          height: 50,
+                          backgroundColor: '#ddd',
+                        }}
+                      >
+                        <Typography
+                          style={{
+                            direction: 'ltr',
+                            fontWeight: 'bold',
+                            position: 'absolute',
+                            right: isRTL ? 220 : undefined,
+                            left: isRTL ? undefined : 220,
+                            bottom: 95,
+                            zIndex: 112,
+                          }}
+                        >
+                          {daysData?.progress
+                            ? `${(daysData?.progress * 100).toFixed(2)} %`
+                            : ''}
+                        </Typography>
+                        <Box
+                          style={{
+                            display: 'flex',
+                            width: daysData?.progress * 400,
+                            height: 50,
+                            backgroundColor: fade(colors.blue[500], 0.5),
+                          }}
+                        ></Box>
+                      </Box>
+                    )}
+                  </Grid>
+                  <Grid item xs={7}>
+                    <Grid container spacing={1}>
+                      <Grid item xs={3}>
+                        <Typography style={{ fontWeight: 'bold' }}>
+                          {isRTL ? 'عدد الايام' : 'Days'} : {daysData?.days}
+                        </Typography>
+                      </Grid>
+                      <Grid item xs={3}>
+                        {daysData?.daysnow && (
+                          <Typography style={{ fontWeight: 'bold' }}>
+                            {isRTL ? 'أيام مضت' : 'Spent Days'} :{' '}
+                            {daysData?.daysnow}
+                          </Typography>
+                        )}
+                      </Grid>
+                      <Grid item xs={3}>
+                        {daysData?.amountnow && (
+                          <Typography style={{ fontWeight: 'bold' }}>
+                            {isRTL ? 'القيمة المستحقة' : 'Amount Until Now'} :{' '}
+                            {moneyFormat(daysData?.amountnow)}
+                          </Typography>
+                        )}
+                      </Grid>
+                      <Grid item xs={3}>
+                        <Button
+                          variant="contained"
+                          fullWidth
+                          color="primary"
+                          style={{ width: 150 }}
+                          disabled={
+                            closeloading ||
+                            row.isClosed ||
+                            row?.status === 'لم يبدأ بعد' ||
+                            row?.status === 'Not Started'
+                          }
+                          onClick={() => toCloseTask()}
+                        >
+                          {words.shutdown} {isRTL ? 'ال' : ''}
+                          {tempwords.task}
+                        </Button>
+                      </Grid>
+                    </Grid>
+                  </Grid>
+                </Grid>
+              </Box>
+            )}
+          </Grid>
         </Grid>
         {row && (
           <PopupTaskAppointment

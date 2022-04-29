@@ -23,6 +23,8 @@ export default gql`
     $employeeId: String
     $resourseId: String
     $data: String
+    $items: String
+    $amount: Float
   ) {
     updateReminder(
       _id: $_id
@@ -46,6 +48,8 @@ export default gql`
       employeeId: $employeeId
       resourseId: $resourseId
       data: $data
+      items: $items
+      amount: $amount
     ) {
       ok
       message

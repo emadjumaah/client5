@@ -17,8 +17,6 @@ import { Grid } from '@material-ui/core';
 import AutoFieldLocal from '../components/fields/AutoFieldLocal';
 import { getAppStartEndPeriod } from '../common/time';
 import { CalenderLocal, TextFieldLocal } from '../components';
-// import { useReactToPrint } from 'react-to-print';
-import { InvoicePrintA5 } from '../common/InvoicePrintA5';
 import { weekdaysNNo } from '../constants/datatypes';
 import useTasks from '../hooks/useTasks';
 import useCompany from '../hooks/useCompany';
@@ -34,6 +32,8 @@ import ExpensesItemForm from '../Shared/ExpensesItemForm';
 import ExpensesItemsTable from '../Shared/ExpensesItemsTable';
 import { parents } from '../constants/kaid';
 import useAccounts from '../hooks/useAccounts';
+import { useReactToPrint } from 'react-to-print';
+import { VoucherPrint } from '../print';
 
 export const indexTheList = (list: any) => {
   return list.map((item: any, index: any) => {
@@ -176,43 +176,43 @@ const PopupExpensesDoc = ({
     }
   }, [user, employees]);
 
-  useEffect(() => {
-    if (isNew && !isemployee) {
-      if (taskvalue) {
-        if (taskvalue?.departmentId && name !== 'departmentId') {
-          const dept = departments.filter(
-            (dep: any) => dep._id === taskvalue?.departmentId
-          )?.[0];
-          setDepartvalue(dept);
-        }
-        if (taskvalue?.employeeId && name !== 'employeeId') {
-          const dept = employees.filter(
-            (dep: any) => dep._id === taskvalue?.employeeId
-          )?.[0];
-          setEmplvalue(dept);
-        }
-        if (taskvalue?.resourseId && name !== 'resourseId') {
-          const dept = resourses.filter(
-            (dep: any) => dep._id === taskvalue?.resourseId
-          )?.[0];
-          setResovalue(dept);
-        }
-      }
-    }
-  }, [taskvalue]);
+  // useEffect(() => {
+  //   if (isNew && !isemployee) {
+  //     if (taskvalue) {
+  //       if (taskvalue?.departmentId && name !== 'departmentId') {
+  //         const dept = departments.filter(
+  //           (dep: any) => dep._id === taskvalue?.departmentId
+  //         )?.[0];
+  //         setDepartvalue(dept);
+  //       }
+  //       if (taskvalue?.employeeId && name !== 'employeeId') {
+  //         const dept = employees.filter(
+  //           (dep: any) => dep._id === taskvalue?.employeeId
+  //         )?.[0];
+  //         setEmplvalue(dept);
+  //       }
+  //       if (taskvalue?.resourseId && name !== 'resourseId') {
+  //         const dept = resourses.filter(
+  //           (dep: any) => dep._id === taskvalue?.resourseId
+  //         )?.[0];
+  //         setResovalue(dept);
+  //       }
+  //     }
+  //   }
+  // }, [taskvalue]);
 
-  useEffect(() => {
-    if (isNew) {
-      if (emplvalue) {
-        if (emplvalue?.departmentId) {
-          const dept = departments.filter(
-            (dep: any) => dep._id === emplvalue?.departmentId
-          )?.[0];
-          setDepartvalue(dept);
-        }
-      }
-    }
-  }, [emplvalue]);
+  // useEffect(() => {
+  //   if (isNew) {
+  //     if (emplvalue) {
+  //       if (emplvalue?.departmentId) {
+  //         const dept = departments.filter(
+  //           (dep: any) => dep._id === emplvalue?.departmentId
+  //         )?.[0];
+  //         setDepartvalue(dept);
+  //       }
+  //     }
+  //   }
+  // }, [emplvalue]);
 
   useEffect(() => {
     if (isNew) {
@@ -302,6 +302,7 @@ const PopupExpensesDoc = ({
     setDepartvalue(null);
     setEmplvalue(null);
     setResovalue(null);
+    setLoading(false);
   };
 
   const addItemToList = (item: any) => {
@@ -332,30 +333,30 @@ const PopupExpensesDoc = ({
     setSelectedDate(date);
   };
 
-  useEffect(() => {
-    if (isNew) {
-      if (name === 'taskId') {
-        if (value?.departmentId) {
-          const dept = departments.filter(
-            (dep: any) => dep._id === value?.departmentId
-          )?.[0];
-          setDepartvalue(dept);
-        }
-        if (value?.employeeId) {
-          const dept = employees.filter(
-            (dep: any) => dep._id === value?.employeeId
-          )?.[0];
-          setEmplvalue(dept);
-        }
-        if (value?.resourseId) {
-          const dept = resourses.filter(
-            (dep: any) => dep._id === value?.resourseId
-          )?.[0];
-          setResovalue(dept);
-        }
-      }
-    }
-  }, [open]);
+  // useEffect(() => {
+  //   if (isNew) {
+  //     if (name === 'taskId') {
+  //       if (value?.departmentId) {
+  //         const dept = departments.filter(
+  //           (dep: any) => dep._id === value?.departmentId
+  //         )?.[0];
+  //         setDepartvalue(dept);
+  //       }
+  //       if (value?.employeeId) {
+  //         const dept = employees.filter(
+  //           (dep: any) => dep._id === value?.employeeId
+  //         )?.[0];
+  //         setEmplvalue(dept);
+  //       }
+  //       if (value?.resourseId) {
+  //         const dept = resourses.filter(
+  //           (dep: any) => dep._id === value?.resourseId
+  //         )?.[0];
+  //         setResovalue(dept);
+  //       }
+  //     }
+  //   }
+  // }, [open]);
 
   useEffect(() => {
     getOverallTotal();
@@ -432,6 +433,25 @@ const PopupExpensesDoc = ({
     setTotals({ amount });
   };
 
+  const componentRef: any = useRef();
+  const handleReactPrint = useReactToPrint({
+    content: () => componentRef.current,
+    documentTitle: `Voucher #${row?.docNo}`,
+    removeAfterPrint: true,
+  });
+  const printData = {
+    no: row?.docNo,
+    time: selectedDate,
+    title: row?.title,
+    desc: row?.desc,
+    amount: row?.amount,
+    isRTL: isRTL,
+    chequeBank: row?.chequeBank,
+    chequeNo: row?.chequeNo,
+    chequeDate: row?.chequeDate,
+    task: taskvalue,
+  };
+
   const onSubmit = async (data: any) => {
     const { startPeriod, endPeriod } = getAppStartEndPeriod();
     if (selectedDate < startPeriod || selectedDate > endPeriod) {
@@ -459,7 +479,7 @@ const PopupExpensesDoc = ({
       return;
     }
 
-    const { desc } = data;
+    const { title, desc, chequeBank, chequeNo, chequeDate } = data;
 
     const { amount } = totals;
     const variables: any = {
@@ -469,6 +489,19 @@ const PopupExpensesDoc = ({
       creditAcc: creditAcc.code,
       amount,
       taskId: taskvalue ? taskvalue.id : null,
+      customer: taskvalue
+        ? {
+            customerId: taskvalue.customerId,
+            customerName: taskvalue.customerName,
+            customerNameAr: taskvalue.customerNameAr,
+            customerPhone: taskvalue.customerPhone,
+          }
+        : {
+            customerId: undefined,
+            customerName: undefined,
+            customerNameAr: undefined,
+            customerPhone: undefined,
+          },
 
       department: departvalue
         ? {
@@ -512,7 +545,11 @@ const PopupExpensesDoc = ({
             resourseColor: undefined,
           },
       items: JSON.stringify(itemsList),
+      title,
       desc,
+      chequeBank,
+      chequeNo,
+      chequeDate,
       branch: user.branch,
       userId: user._id,
     };
@@ -553,18 +590,6 @@ const PopupExpensesDoc = ({
     handleSubmit(onSubmit)();
   };
 
-  const componentRef: any = useRef();
-  // const handleReactPrint = useReactToPrint({
-  //   content: () => componentRef.current,
-  //   documentTitle: `Invoice #${row?.invoiceNo}`,
-  //   removeAfterPrint: true,
-  // });
-  const printData = {
-    invoiceNo: row?.invoiceNo,
-    total: totals.total,
-    amount: totals.amount,
-    items: itemsList,
-  };
   const date = row?.startDate ? new Date(row?.startDate) : new Date();
   const day = weekdaysNNo?.[date.getDay()];
   const title = isRTL
@@ -583,6 +608,7 @@ const PopupExpensesDoc = ({
       onSubmit={onHandleSubmit}
       theme={theme}
       alrt={alrt}
+      print={!isNew ? handleReactPrint : undefined}
       maxWidth="md"
       mt={0}
       mb={50}
@@ -609,6 +635,7 @@ const PopupExpensesDoc = ({
                 register={register}
                 isRTL={isRTL}
                 fullwidtth
+                mb={0}
               ></AutoFieldLocal>
             </Grid>
             <Grid item xs={4}>
@@ -622,26 +649,45 @@ const PopupExpensesDoc = ({
                 register={register}
                 isRTL={isRTL}
                 fullwidtth
+                mb={0}
               ></AutoFieldLocal>
             </Grid>
+
             <Grid item xs={4}></Grid>
           </Grid>
         </Grid>
-
-        <Grid item xs={5}>
-          <AutoFieldLocal
-            name="task"
-            title={tempwords.task}
-            words={words}
-            options={tasks}
-            value={taskvalue}
-            setSelectValue={setTaskvalue}
-            isRTL={isRTL}
+        <Grid item xs={9}>
+          <TextFieldLocal
+            name="title"
+            label={words.description}
+            register={register}
+            errors={errors}
+            row={row}
             fullWidth
-            openAdd={openTask}
-            disabled={name === 'taskId'}
-          ></AutoFieldLocal>
+            mb={0}
+          />
         </Grid>
+        <Grid item xs={3}></Grid>
+        {!tempoptions?.noRes && (
+          <Grid item xs={5}>
+            <AutoFieldLocal
+              name="resourse"
+              title={tempwords.resourse}
+              words={words}
+              options={resourses}
+              value={resovalue}
+              disabled={name === 'resourseId'}
+              setSelectValue={setResovalue}
+              setSelectError={setResoError}
+              selectError={resoError}
+              refernce={resoRef}
+              openAdd={openResourse}
+              isRTL={isRTL}
+              fullWidth
+              day={day}
+            ></AutoFieldLocal>
+          </Grid>
+        )}
         <Grid item xs={4}>
           <AutoFieldLocal
             name="department"
@@ -661,8 +707,23 @@ const PopupExpensesDoc = ({
         </Grid>
         <Grid item xs={3}></Grid>
 
+        <Grid item xs={5}>
+          <AutoFieldLocal
+            name="task"
+            title={tempwords.task}
+            words={words}
+            options={tasks}
+            value={taskvalue}
+            setSelectValue={setTaskvalue}
+            isRTL={isRTL}
+            fullWidth
+            openAdd={openTask}
+            disabled={name === 'taskId'}
+          ></AutoFieldLocal>
+        </Grid>
+
         {!tempoptions?.noEmp && (
-          <Grid item xs={5}>
+          <Grid item xs={4}>
             <AutoFieldLocal
               name="employee"
               title={tempwords.employee}
@@ -681,26 +742,77 @@ const PopupExpensesDoc = ({
             ></AutoFieldLocal>
           </Grid>
         )}
-        {!tempoptions?.noRes && (
-          <Grid item xs={4}>
-            <AutoFieldLocal
-              name="resourse"
-              title={tempwords.resourse}
-              words={words}
-              options={resourses}
-              value={resovalue}
-              disabled={name === 'resourseId'}
-              setSelectValue={setResovalue}
-              setSelectError={setResoError}
-              selectError={resoError}
-              refernce={resoRef}
-              openAdd={openResourse}
-              isRTL={isRTL}
-              fullWidth
-              day={day}
-            ></AutoFieldLocal>
-          </Grid>
-        )}
+
+        <Grid item xs={3}></Grid>
+        <Grid item xs={3}>
+          <TextFieldLocal
+            name="chequeBank"
+            label={words.chequeBank}
+            register={register}
+            errors={errors}
+            row={row}
+            fullWidth
+            mb={0}
+          />
+        </Grid>
+        <Grid item xs={3}>
+          <TextFieldLocal
+            name="chequeNo"
+            label={words.chequeNo}
+            register={register}
+            errors={errors}
+            row={row}
+            fullWidth
+            mb={0}
+          />
+        </Grid>
+        <Grid item xs={3}>
+          <TextFieldLocal
+            name="chequeDate"
+            label={words.chequeDate}
+            register={register}
+            errors={errors}
+            row={row}
+            fullWidth
+            mb={0}
+          />
+        </Grid>
+
+        <Grid item xs={12}>
+          {(isNew || itemsList?.length > 0) && (
+            <Box
+              style={{
+                backgroundColor: '#f3f3f3',
+                padding: 10,
+                borderRadius: 10,
+              }}
+            >
+              <Box display="flex" style={{ paddingLeft: 10, paddingRight: 10 }}>
+                <ExpensesItemForm
+                  options={servicesproducts}
+                  addItem={addItemToList}
+                  words={words}
+                  classes={classes}
+                  user={user}
+                  isRTL={isRTL}
+                ></ExpensesItemForm>
+              </Box>
+              {!loading && (
+                <Box style={{ marginBottom: 20 }}>
+                  <ExpensesItemsTable
+                    rows={itemsList}
+                    editItem={editItemInList}
+                    removeItem={removeItemFromList}
+                    isRTL={isRTL}
+                    words={words}
+                    user={user}
+                  ></ExpensesItemsTable>
+                </Box>
+              )}
+              {loading && <LoadingInline></LoadingInline>}
+            </Box>
+          )}
+        </Grid>
         <Grid item xs={9}>
           <TextFieldLocal
             name="desc"
@@ -713,39 +825,7 @@ const PopupExpensesDoc = ({
             fullWidth
           />
         </Grid>
-
-        <Grid item xs={12}>
-          <Box
-            style={{
-              backgroundColor: '#f3f3f3',
-              padding: 10,
-              borderRadius: 10,
-            }}
-          >
-            <Box display="flex" style={{ paddingLeft: 10, paddingRight: 10 }}>
-              <ExpensesItemForm
-                options={servicesproducts}
-                addItem={addItemToList}
-                words={words}
-                classes={classes}
-                user={user}
-                isRTL={isRTL}
-              ></ExpensesItemForm>
-            </Box>
-            {!loading && (
-              <Box style={{ marginBottom: 20 }}>
-                <ExpensesItemsTable
-                  rows={itemsList}
-                  editItem={editItemInList}
-                  removeItem={removeItemFromList}
-                  isRTL={isRTL}
-                  words={words}
-                  user={user}
-                ></ExpensesItemsTable>
-              </Box>
-            )}
-            {loading && <LoadingInline></LoadingInline>}
-          </Box>
+        <Grid item xs={3}>
           <Box
             display="flex"
             style={{
@@ -756,72 +836,73 @@ const PopupExpensesDoc = ({
             }}
           >
             <PriceTotal
-              amount={totals?.amount}
+              amount={totals?.amount ? totals?.amount : row?.amount}
               total={totals?.total}
               words={words}
               totalonly
             ></PriceTotal>
           </Box>
-          <PopupDeprtment
-            newtext={newtext}
-            open={openDep}
-            onClose={onCloseDepartment}
-            isNew={true}
-            setNewValue={onNewDepartChange}
-            row={null}
-            addAction={addDepartment}
-            editAction={editDepartment}
-            depType={1}
-          ></PopupDeprtment>
-          <PopupTask
-            newtext={newtext}
-            open={openTsk}
-            onClose={onCloseTask}
-            isNew={true}
-            setNewValue={onNewTaskChange}
-            row={null}
-            employees={employees}
-            resourses={resourses}
-            departments={departments}
-            projects={projects}
-            customers={customers}
-            addAction={addTask}
-            editAction={editTask}
-          ></PopupTask>
-          <PopupEmployee
-            newtext={newtext}
-            departments={departments}
-            open={openEmp}
-            onClose={onCloseEmploee}
-            isNew={true}
-            setNewValue={onNewEmplChange}
-            row={null}
-            resType={1}
-            addAction={addEmployee}
-            editAction={editEmployee}
-          ></PopupEmployee>
-          <PopupResourses
-            newtext={newtext}
-            departments={departments}
-            open={openRes}
-            onClose={onCloseResourse}
-            isNew={true}
-            setNewValue={onNewResoChange}
-            row={null}
-            resType={1}
-            addAction={addResourse}
-            editAction={editResourse}
-          ></PopupResourses>
-          <Box>
-            <div style={{ display: 'none' }}>
-              <InvoicePrintA5
-                company={company}
-                printData={printData}
-                ref={componentRef}
-              />
-            </div>
-          </Box>
         </Grid>
+        <PopupDeprtment
+          newtext={newtext}
+          open={openDep}
+          onClose={onCloseDepartment}
+          isNew={true}
+          setNewValue={onNewDepartChange}
+          row={null}
+          addAction={addDepartment}
+          editAction={editDepartment}
+          depType={1}
+        ></PopupDeprtment>
+        <PopupTask
+          newtext={newtext}
+          open={openTsk}
+          onClose={onCloseTask}
+          isNew={true}
+          setNewValue={onNewTaskChange}
+          row={null}
+          employees={employees}
+          resourses={resourses}
+          departments={departments}
+          projects={projects}
+          customers={customers}
+          addAction={addTask}
+          editAction={editTask}
+        ></PopupTask>
+        <PopupEmployee
+          newtext={newtext}
+          departments={departments}
+          open={openEmp}
+          onClose={onCloseEmploee}
+          isNew={true}
+          setNewValue={onNewEmplChange}
+          row={null}
+          resType={1}
+          addAction={addEmployee}
+          editAction={editEmployee}
+        ></PopupEmployee>
+        <PopupResourses
+          newtext={newtext}
+          departments={departments}
+          open={openRes}
+          onClose={onCloseResourse}
+          isNew={true}
+          setNewValue={onNewResoChange}
+          row={null}
+          resType={1}
+          addAction={addResourse}
+          editAction={editResourse}
+        ></PopupResourses>
+        <Box>
+          <div style={{ display: 'none' }}>
+            <VoucherPrint
+              company={company}
+              user={user}
+              printData={printData}
+              ref={componentRef}
+            />
+          </div>
+        </Box>
       </Grid>
     </PopupLayout>
   );

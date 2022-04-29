@@ -14,10 +14,11 @@ export default function OptionItem({
     marginLeft: 10,
     marginRight: 10,
   };
+  const isbusy = item?.busy || item?.carstatus > 1;
 
   const { color, daysoff } = item;
   const days = daysoff ? JSON.parse(daysoff) : null;
-  const isred = days && day ? days[day] : false;
+  const isred = days && day ? days[day] : isbusy ? isbusy : false;
 
   const phone = item?.phone ? item?.phone : null;
   const code = item?.code;

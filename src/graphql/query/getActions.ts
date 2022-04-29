@@ -53,6 +53,7 @@ export default gql`
         projectId
 
         data
+        info
 
         timeunit
         timerelate

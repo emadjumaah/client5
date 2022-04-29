@@ -83,6 +83,8 @@ export default gql`
         resourseNameAr
         resourseColor
 
+        isClosed
+
         userId
         note
         info

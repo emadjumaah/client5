@@ -46,6 +46,8 @@ export default gql`
         customerId
         resourseId
         projectId
+        info
+        amount
 
         createdAt
         updatedAt

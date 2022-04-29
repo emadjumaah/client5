@@ -5,30 +5,41 @@ import { useForm } from 'react-hook-form';
 import { dublicateAlert, errorAlert } from '../Shared';
 import { GContextTypes } from '../types';
 import { GlobalContext } from '../contexts';
-import { Box, Paper, Typography } from '@material-ui/core';
+import {
+  Box,
+  Button,
+  IconButton,
+  ListItem,
+  ListItemText,
+  Paper,
+  Typography,
+} from '@material-ui/core';
 import PopupLayout from '../pages/main/PopupLayout';
 import { Grid } from '@material-ui/core';
 import AutoFieldLocal from '../components/fields/AutoFieldLocal';
 import { CalenderLocal, TextFieldLocal } from '../components';
 import { weekdaysNNo } from '../constants/datatypes';
+
 import { getDateDayWeek } from '../Shared/colorFormat';
 import { useCustomers, useTemplate } from '../hooks';
+import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
+import DeleteOutlinedIcon from '@material-ui/icons/DeleteOutlined';
+import PopupCustomer from './PopupCustomer';
+import PopupDeprtment from './PopupDeprtment';
+import PopupEmployee from './PopupEmployee';
+import PopupResourses from './PopupResourses';
 import useDepartmentsUp from '../hooks/useDepartmentsUp';
 import useEmployeesUp from '../hooks/useEmployeesUp';
 import useResoursesUp from '../hooks/useResoursesUp';
 import PopupAddrRule from './PopupAddrRule';
+import PopupAction from './PopupAction';
 import { SelectLocal } from '../pages/calendar/common/SelectLocal';
 import { freqOptions } from '../constants/rrule';
 import RRule from 'rrule';
 import { getReminderRruleData } from '../common/getRruleData';
 import useTasks from '../hooks/useTasks';
-import { useLazyQuery } from '@apollo/client';
-import getOperationItems from '../graphql/query/getOperationItems';
-import ExpensesItemForm from '../Shared/ExpensesItemForm';
-import ExpensesItemsTable from '../Shared/ExpensesItemsTable';
-import LoadingInline from '../Shared/LoadingInline';
-import { invoiceClasses } from '../themes';
-import { PriceTotal } from '../Shared/TotalPrice';
+import PopupTask from './PopupTask';
+import useProjects from '../hooks/useProjects';
 
 export const indexTheList = (list: any) => {
   return list.map((item: any, index: any) => {
@@ -47,10 +58,7 @@ const PopupReminder = ({
   theme,
   addAction,
   editAction,
-  servicesproducts,
 }: any) => {
-  const classes = invoiceClasses();
-
   const [saving, setSaving] = useState(false);
 
   const [runtime, setRuntime]: any = useState(null);
@@ -76,25 +84,34 @@ const PopupReminder = ({
   const [rrule, setRrule] = useState<any>(null);
   const [openMulti, setOpenMulti] = useState(false);
 
-  const [itemsList, setItemsList] = useState<any>([]);
-
-  const [totals, setTotals] = useState<any>({});
-
   const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
 
+  const [type, setType] = useState(null);
+  const [openAction, setOpenAction] = useState(false);
   const [actionslist, setActionslist] = useState([]);
+  const [selected, setSelected] = useState(null);
   const [rtitle, setRtitle]: any = useState(null);
-  const [loading, setLoading] = useState(false);
+
+  const [newtext, setNewtext] = useState('');
+
+  const [openCust, setOpenCust] = useState(false);
+  const [openDep, setOpenDep] = useState(false);
+  const [openEmp, setOpenEmp] = useState(false);
+  const [openRes, setOpenRes] = useState(false);
+  const [openTsk, setOpenTsk] = useState(false);
 
   const [freq, setFreq] = useState(RRule.DAILY);
   const [count, setCount] = useState(1);
+  // const [interval, setInterval] = useState(1);
 
-  const { customers } = useCustomers();
-  const { departments } = useDepartmentsUp();
-  const { employees } = useEmployeesUp();
-  const { resourses } = useResoursesUp();
+  const { customers, addCustomer, editCustomer } = useCustomers();
+
+  const { departments, addDepartment, editDepartment } = useDepartmentsUp();
+  const { employees, addEmployee, editEmployee } = useEmployeesUp();
+  const { resourses, addResourse, editResourse } = useResoursesUp();
   const { tempwords, tempoptions } = useTemplate();
-  const { tasks } = useTasks();
+  const { tasks, addTask, editTask } = useTasks();
+  const { projects } = useProjects();
 
   const { register, handleSubmit } = useForm({});
   const {
@@ -102,11 +119,49 @@ const PopupReminder = ({
     store: { user },
   }: GContextTypes = useContext(GlobalContext);
 
-  const [getItems, itemsData]: any = useLazyQuery(getOperationItems, {
-    fetchPolicy: 'cache-and-network',
-  });
-
   const isemployee = user?.isEmployee && user?.employeeId;
+
+  const openDepartment = () => {
+    setOpenDep(true);
+  };
+  const onCloseDepartment = () => {
+    setOpenDep(false);
+    setNewtext('');
+  };
+  const openEmployee = () => {
+    setOpenEmp(true);
+  };
+  const onCloseEmploee = () => {
+    setOpenEmp(false);
+    setNewtext('');
+  };
+  const openResourse = () => {
+    setOpenRes(true);
+  };
+  const onCloseResourse = () => {
+    setOpenRes(false);
+    setNewtext('');
+  };
+  // const openCustomer = () => {
+  //   setOpenCust(true);
+  // };
+  const onCloseCustomer = () => {
+    setOpenCust(false);
+    setNewtext('');
+  };
+
+  const onNewCustChange = (nextValue: any) => {
+    setCustvalue(nextValue);
+  };
+  const onNewDepartChange = (nextValue: any) => {
+    setDepartvalue(nextValue);
+  };
+  const onNewEmplChange = (nextValue: any) => {
+    setEmplvalue(nextValue);
+  };
+  const onNewResoChange = (nextValue: any) => {
+    setResovalue(nextValue);
+  };
 
   const onChangeFreq = (e: any) => {
     const value = e.target.value;
@@ -118,66 +173,24 @@ const PopupReminder = ({
     const count = value < 1 ? 1 : value > 365 ? 365 : value;
     setCount(count);
   };
+  // const onChangeInterval = (e: any) => {
+  //   const value = Number(e.target.value);
+  //   const count = value < 1 ? 1 : value > 365 ? 365 : value;
+  //   setInterval(count);
+  // };
 
-  useEffect(() => {
-    const items = itemsData?.data?.['getOperationItems']?.data || [];
-    if (items && items.length > 0) {
-      const ids = items.map((it: any) => it.itemId);
-      const servlist = servicesproducts.filter((ser: any) =>
-        ids.includes(ser._id)
-      );
+  const openTask = () => {
+    setOpenTsk(true);
+  };
 
-      const itemsWqtyprice = items.map((item: any, index: any) => {
-        const {
-          categoryId,
-          categoryName,
-          categoryNameAr,
-          departmentId,
-          departmentName,
-          departmentNameAr,
-          departmentColor,
-          employeeId,
-          employeeName,
-          employeeNameAr,
-          employeeColor,
-          resourseId,
-          resourseName,
-          resourseNameAr,
-          resourseColor,
-          note,
-        } = item;
-        const serv = servlist.filter((se: any) => se._id === item.itemId)[0];
-        return {
-          ...serv,
-          categoryId,
-          categoryName,
-          categoryNameAr,
-          departmentId,
-          departmentName,
-          departmentNameAr,
-          departmentColor,
-          employeeId,
-          employeeName,
-          employeeNameAr,
-          employeeColor,
-          resourseId,
-          resourseName,
-          resourseNameAr,
-          resourseColor,
-          index,
-          itemprice: item.itemPrice,
-          itemqty: item.qty,
-          itemtotal: item.total,
-          note,
-        };
-      });
-      itemsWqtyprice.sort((a: any, b: any) =>
-        a.indx > b.indx ? 1 : b.indx > a.indx ? -1 : 0
-      );
-      setItemsList(itemsWqtyprice);
-      setLoading(false);
-    }
-  }, [itemsData]);
+  const onNewTaskChange = (nextValue: any) => {
+    setTaskvalue(nextValue);
+  };
+
+  const onCloseTask = () => {
+    setOpenTsk(false);
+    setNewtext('');
+  };
 
   useEffect(() => {
     if (isNew) {
@@ -202,13 +215,6 @@ const PopupReminder = ({
       setRuntime(new Date(row?.runtime));
       setStartDate(new Date(row?.startDate));
       setEndDate(new Date(row?.endDate));
-
-      setLoading(true);
-      const variables = { opId: row._id };
-      getItems({
-        variables,
-      });
-
       if (depId) {
         const depart = departments.filter((dep: any) => dep._id === depId)[0];
         setDepartvalue(depart);
@@ -238,16 +244,6 @@ const PopupReminder = ({
     }
   }, [row]);
 
-  const getOverallTotal = () => {
-    const totalsin = itemsList.map((litem: any) => litem.itemtotal);
-    const amount = totalsin.reduce((psum: any, a: any) => psum + a, 0);
-    setTotals({ amount });
-  };
-
-  useEffect(() => {
-    getOverallTotal();
-  }, [itemsList]);
-
   useEffect(() => {
     if (isemployee) {
       const emp = employees.filter(
@@ -266,6 +262,32 @@ const PopupReminder = ({
     }
   }, [open]);
 
+  // useEffect(() => {
+  //   if (isNew) {
+  //     if (emplvalue) {
+  //       if (emplvalue?.departmentId) {
+  //         const dept = departments.filter(
+  //           (dep: any) => dep._id === emplvalue?.departmentId
+  //         )?.[0];
+  //         setDepartvalue(dept);
+  //       }
+  //     }
+  //   }
+  // }, [emplvalue]);
+
+  // useEffect(() => {
+  //   if (isNew) {
+  //     if (resovalue) {
+  //       if (resovalue?.departmentId) {
+  //         const dept = departments.filter(
+  //           (dep: any) => dep._id === resovalue?.departmentId
+  //         )?.[0];
+  //         setDepartvalue(dept);
+  //       }
+  //     }
+  //   }
+  // }, [resovalue]);
+
   useEffect(() => {
     if (isNew) {
       const rdata = getReminderRruleData({
@@ -280,6 +302,37 @@ const PopupReminder = ({
     }
   }, [startDate, freq, count]);
 
+  const addActionToList = (item: any) => {
+    const newArray = [...actionslist, item];
+    const listwithindex = indexTheList(newArray);
+    setActionslist(listwithindex);
+  };
+  const editActionInList = (item: any) => {
+    const newArray = actionslist.map((it: any) => {
+      if (item._id) {
+        if (it._id === item._id) {
+          return item;
+        } else {
+          return it;
+        }
+      } else {
+        if (it.index === item.index) {
+          return item;
+        } else {
+          return it;
+        }
+      }
+    });
+    const listwithindex = indexTheList(newArray);
+    setActionslist(listwithindex);
+  };
+
+  const removeActionFromList = (item: any) => {
+    const newlist = actionslist.filter((il: any) => il.index !== item.index);
+    const listwithindex = indexTheList(newlist);
+    setActionslist(listwithindex);
+  };
+
   const resetAllForms = () => {
     setRuntime(null);
     setCustvalue(null);
@@ -289,41 +342,13 @@ const PopupReminder = ({
     setRrule(null);
     setActionslist([]);
     setTaskvalue(null);
+    setSelected(null);
     setSaving(false);
     setRtitle(null);
     setFreq(RRule.DAILY);
     setCount(1);
-    setItemsList([]);
-    setLoading(false);
   };
-
-  const addItemToList = (item: any) => {
-    const newArray = [...itemsList, { ...item, userId: user._id }];
-    const listwithindex = indexTheList(newArray);
-    setItemsList(listwithindex);
-  };
-  const editItemInList = (item: any) => {
-    const newArray = itemsList.map((it: any) => {
-      if (it._id === item._id) {
-        return item;
-      } else {
-        return it;
-      }
-    });
-    const listwithindex = indexTheList(newArray);
-    setItemsList(listwithindex);
-  };
-
-  const removeItemFromList = (index: any) => {
-    const newList = [...itemsList];
-    newList.splice(index, 1);
-    const listwithindex = indexTheList(newList);
-    setItemsList(listwithindex);
-  };
-
   const onSubmit = async () => {
-    const { amount } = totals;
-
     const variables: any = {
       _id: row && row._id ? row._id : undefined, // is it new or edit
       title: rtitle,
@@ -338,8 +363,6 @@ const PopupReminder = ({
       employeeId: emplvalue ? emplvalue._id : undefined,
       resourseId: resovalue ? resovalue._id : undefined,
       taskId: taskvalue ? taskvalue.id : undefined,
-      items: JSON.stringify(itemsList),
-      amount,
     };
     const mutate = isNew ? addAction : editAction;
     apply(mutate, variables);
@@ -445,6 +468,16 @@ const PopupReminder = ({
                       mb={0}
                     />
                   </Grid>
+                  {/* <Grid item xs={4}>
+                    <TextFieldLocal
+                      required
+                      name="interval"
+                      label={words.interval}
+                      value={interval}
+                      onChange={onChangeInterval}
+                      type="number"
+                    />
+                  </Grid> */}
                   <Grid item xs={12}>
                     <TextFieldLocal
                       autoFocus={true}
@@ -472,6 +505,7 @@ const PopupReminder = ({
                         selectError={resoError}
                         refernce={resoRef}
                         register={register}
+                        openAdd={openResourse}
                         isRTL={isRTL}
                         fullWidth
                         day={day}
@@ -488,6 +522,7 @@ const PopupReminder = ({
                       setSelectValue={setTaskvalue}
                       isRTL={isRTL}
                       fullWidth
+                      openAdd={openTask}
                     ></AutoFieldLocal>
                   </Grid>
 
@@ -505,12 +540,29 @@ const PopupReminder = ({
                         selectError={emplError}
                         refernce={emplRef}
                         register={register}
+                        openAdd={openEmployee}
                         isRTL={isRTL}
                         fullWidth
                         day={day}
                       ></AutoFieldLocal>
                     </Grid>
                   )}
+                  {/* <Grid item xs={4}>
+                    <AutoFieldLocal
+                      name="customer"
+                      title={tempwords.customer}
+                      words={words}
+                      options={customers}
+                      value={custvalue}
+                      setSelectValue={setCustvalue}
+                      register={register}
+                      isRTL={isRTL}
+                      openAdd={openCustomer}
+                      showphone
+                      fullWidth
+                    ></AutoFieldLocal>
+                  </Grid> */}
+
                   <Grid item xs={6}>
                     <AutoFieldLocal
                       name="department"
@@ -523,6 +575,7 @@ const PopupReminder = ({
                       selectError={departError}
                       refernce={departRef}
                       register={register}
+                      openAdd={openDepartment}
                       isRTL={isRTL}
                       fullWidth
                     ></AutoFieldLocal>
@@ -562,61 +615,80 @@ const PopupReminder = ({
                   </Paper>
                 )}
               </Grid>
-              <Grid item xs={12}>
-                {(isNew || itemsList?.length > 0) && (
-                  <Box
-                    style={{
-                      backgroundColor: '#f3f3f3',
-                      padding: 10,
-                      borderRadius: 10,
-                    }}
-                  >
-                    <Box
-                      display="flex"
-                      style={{ paddingLeft: 10, paddingRight: 10 }}
-                    >
-                      <ExpensesItemForm
-                        options={servicesproducts}
-                        addItem={addItemToList}
-                        words={words}
-                        classes={classes}
-                        user={user}
-                        isRTL={isRTL}
-                      ></ExpensesItemForm>
-                    </Box>
-                    {!loading && (
-                      <Box style={{ marginBottom: 20 }}>
-                        <ExpensesItemsTable
-                          rows={itemsList}
-                          editItem={editItemInList}
-                          removeItem={removeItemFromList}
-                          isRTL={isRTL}
-                          words={words}
-                          user={user}
-                        ></ExpensesItemsTable>
-                      </Box>
-                    )}
-                    {loading && <LoadingInline></LoadingInline>}
-                  </Box>
-                )}
-              </Grid>
-              <Grid item xs={12}>
-                <Box
-                  display="flex"
+              <Grid item xs={8}></Grid>
+              <Grid
+                item
+                xs={4}
+                style={{
+                  backgroundColor: '#f5f5f5',
+                  borderRadius: 5,
+                }}
+              >
+                <Button
+                  variant="outlined"
                   style={{
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
+                    marginBottom: 10,
+                    fontSize: 14,
+                    minWidth: 80,
+                  }}
+                  onClick={() => {
+                    setSelected(null);
+                    setType(3);
+                    setOpenAction(true);
+                  }}
+                >
+                  {isRTL ? 'اضافة تنبيه' : 'Add Notification'}
+                </Button>
+                <Button
+                  variant="outlined"
+                  style={{
+                    marginBottom: 10,
+                    fontSize: 14,
+                    minWidth: 80,
                     marginRight: 10,
                     marginLeft: 10,
                   }}
+                  onClick={() => {
+                    setSelected(null);
+                    setType(1);
+                    setOpenAction(true);
+                  }}
                 >
-                  <PriceTotal
-                    amount={totals?.amount ? totals?.amount : row?.amount}
-                    total={totals?.total}
-                    words={words}
-                    totalonly
-                  ></PriceTotal>
-                </Box>
+                  {isRTL ? 'اضافة رسالة' : 'Add SMS'}
+                </Button>
+                <Paper style={{ height: 150, overflow: 'auto' }}>
+                  {actionslist.map((act: any) => {
+                    return (
+                      <ListItem>
+                        <ListItemText
+                          primary={act.phone}
+                          secondary={act.body}
+                        />
+                        <IconButton
+                          onClick={() => removeActionFromList(act)}
+                          title="Delete row"
+                          style={{ padding: 5 }}
+                        >
+                          <DeleteOutlinedIcon
+                            style={{ fontSize: 22, color: '#a76f9a' }}
+                          />
+                        </IconButton>
+                        <IconButton
+                          style={{ padding: 5 }}
+                          onClick={() => {
+                            setSelected(act);
+                            setOpenAction(true);
+                          }}
+                          title="Edit row"
+                        >
+                          <EditOutlinedIcon
+                            style={{ fontSize: 22, color: '#729aaf' }}
+                          />
+                        </IconButton>
+                      </ListItem>
+                    );
+                  })}
+                </Paper>
               </Grid>
             </Grid>
           </Grid>
@@ -640,6 +712,83 @@ const PopupReminder = ({
               noStartView={true}
               noEndView={true}
             ></PopupAddrRule>
+
+            <PopupAction
+              open={openAction}
+              onClose={() => {
+                setOpenAction(false);
+                setSelected(null);
+              }}
+              isReminder
+              row={selected}
+              type={type}
+              isNew={selected ? false : true}
+              customer={custvalue}
+              addAction={addActionToList}
+              editAction={editActionInList}
+              theme={theme}
+              event={{ ...row, startDate, endDate }}
+            ></PopupAction>
+            <PopupCustomer
+              newtext={newtext}
+              open={openCust}
+              onClose={onCloseCustomer}
+              isNew={true}
+              setNewValue={onNewCustChange}
+              row={null}
+              addAction={addCustomer}
+              editAction={editCustomer}
+            ></PopupCustomer>
+            <PopupDeprtment
+              newtext={newtext}
+              open={openDep}
+              onClose={onCloseDepartment}
+              isNew={true}
+              setNewValue={onNewDepartChange}
+              row={null}
+              addAction={addDepartment}
+              editAction={editDepartment}
+              depType={1}
+            ></PopupDeprtment>
+            <PopupTask
+              newtext={newtext}
+              open={openTsk}
+              onClose={onCloseTask}
+              isNew={true}
+              setNewValue={onNewTaskChange}
+              row={null}
+              employees={employees}
+              resourses={resourses}
+              departments={departments}
+              projects={projects}
+              customers={customers}
+              addAction={addTask}
+              editAction={editTask}
+            ></PopupTask>
+            <PopupEmployee
+              newtext={newtext}
+              departments={departments}
+              open={openEmp}
+              onClose={onCloseEmploee}
+              isNew={true}
+              setNewValue={onNewEmplChange}
+              row={null}
+              resType={1}
+              addAction={addEmployee}
+              editAction={editEmployee}
+            ></PopupEmployee>
+            <PopupResourses
+              newtext={newtext}
+              departments={departments}
+              open={openRes}
+              onClose={onCloseResourse}
+              isNew={true}
+              setNewValue={onNewResoChange}
+              row={null}
+              resType={1}
+              addAction={addResourse}
+              editAction={editResourse}
+            ></PopupResourses>
           </Grid>
         </Grid>
       </>

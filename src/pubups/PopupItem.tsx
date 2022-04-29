@@ -55,7 +55,7 @@ const PopupItem = ({
   const { register, handleSubmit, errors } = useForm(yup.invItemResolver);
 
   const { departments } = useDepartmentsDown();
-  const { services } = useServices();
+  const { expenseitems } = useServices();
   const { employees } = useEmployeesDown();
   const { resourses } = useResoursesDown();
   const { tempoptions, tempwords } = useTemplate();
@@ -84,7 +84,7 @@ const PopupItem = ({
         setResovalue(empl);
       }
       if (servId) {
-        const serv = services.filter((se: any) => se._id === servId)[0];
+        const serv = expenseitems.filter((se: any) => se._id === servId)[0];
         setItemvalue(serv);
       }
     }
@@ -190,7 +190,7 @@ const PopupItem = ({
             // openOnFocus
             autoSelect
             size="small"
-            options={services}
+            options={expenseitems}
             getOptionLabel={(option: any) =>
               isRTL ? option.nameAr : option.name
             }

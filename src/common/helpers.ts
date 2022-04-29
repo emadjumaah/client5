@@ -106,7 +106,7 @@ export const getEventsList = ({ event, rrule, actionslist, isRTL }) => {
       const month = da.getMonth();
       const day = da.getDate();
       const startDate = new Date(year, month, day, starthour, startminute);
-      const endDate = new Date(year, month, day, endhour, endminute, 0, 0);
+      const endDate = new Date(year, month, day, endhour, endminute);
 
       const actionsl =
         actionslist?.length > 0
@@ -403,4 +403,220 @@ export const getReadyEventData = (
         },
   };
   return variables;
+};
+export const getReadyCloseEventData = (
+  event: any,
+  task: any,
+  amount: any,
+  itemsData: any,
+  servicesproducts: any
+) => {
+  if (!task || !event) {
+    return null;
+  }
+  let itemsList: any;
+  const items = itemsData?.data?.['getOperationItems']?.data || [];
+  if (items && items.length > 0) {
+    const ids = items.map((it: any) => it.itemId);
+    const servlist = servicesproducts.filter((ser: any) =>
+      ids.includes(ser._id)
+    );
+    const itemsWqtyprice = items.map((item: any, index: any) => {
+      const {
+        categoryId,
+        categoryName,
+        categoryNameAr,
+        departmentId,
+        departmentName,
+        departmentNameAr,
+        departmentColor,
+        employeeId,
+        employeeName,
+        employeeNameAr,
+        employeeColor,
+        resourseId,
+        resourseName,
+        resourseNameAr,
+        resourseColor,
+        note,
+      } = item;
+      const serv = servlist.filter((se: any) => se._id === item.itemId)?.[0];
+      return {
+        ...serv,
+        categoryId,
+        categoryName,
+        categoryNameAr,
+        departmentId,
+        departmentName,
+        departmentNameAr,
+        departmentColor,
+        employeeId,
+        employeeName,
+        employeeNameAr,
+        employeeColor,
+        resourseId,
+        resourseName,
+        resourseNameAr,
+        resourseColor,
+        index,
+        itemprice: amount,
+        itemqty: 1,
+        itemtotal: amount,
+        note,
+      };
+    });
+    itemsList = itemsWqtyprice;
+  }
+
+  const startDate = new Date();
+  const endDate = new Date();
+  const variables = {
+    title: event.title,
+    startDate,
+    endDate,
+    location: { lat: event?.location?.lat, lng: event?.location?.lng },
+    amount,
+    status: 2,
+    items: JSON.stringify([itemsList?.[0]]),
+    taskId: event.taskId,
+    customer: task.customerId
+      ? {
+          customerId: task.customerId,
+          customerName: task.customerName,
+          customerNameAr: task.customerNameAr,
+          customerPhone: task.customerPhone,
+        }
+      : {
+          customerId: undefined,
+          customerName: undefined,
+          customerNameAr: undefined,
+          customerPhone: undefined,
+        },
+    department: task.departmentId
+      ? {
+          departmentId: task.departmentId,
+          departmentName: task.departmentName,
+          departmentNameAr: task.departmentNameAr,
+          departmentColor: task.departmentColor,
+        }
+      : {
+          departmentId: undefined,
+          departmentName: undefined,
+          departmentNameAr: undefined,
+          departmentColor: undefined,
+        },
+    employee: task.employeeId
+      ? {
+          employeeId: task.employeeId,
+          employeeName: task.employeeName,
+          employeeNameAr: task.employeeNameAr,
+          employeeColor: task.employeeColor,
+          employeePhone: task.employeePhone,
+        }
+      : {
+          employeeId: undefined,
+          employeeName: undefined,
+          employeeNameAr: undefined,
+          employeeColor: undefined,
+          employeePhone: undefined,
+        },
+    resourse: task.resourseId
+      ? {
+          resourseId: task.resourseId,
+          resourseName: task.resourseName,
+          resourseNameAr: task.resourseNameAr,
+          resourseColor: task.resourseColor,
+        }
+      : {
+          resourseId: undefined,
+          resourseName: undefined,
+          resourseNameAr: undefined,
+          resourseColor: undefined,
+        },
+  };
+  return variables;
+};
+
+export const getTaskTimeAmountData = (task: any) => {
+  if (!task) return null;
+
+  const { start, end, amount } = task;
+
+  const startms = new Date(start).getTime();
+  const endms = new Date(end).getTime();
+  const now = new Date().getTime();
+
+  const days = Math.ceil((endms - startms) / (1000 * 60 * 60 * 24));
+
+  if (now < startms) {
+    return {
+      progress: 0,
+      days,
+      daysnow: null,
+      amountnow: null,
+      remaining: amount,
+      amount,
+    };
+  }
+
+  if (now > endms) {
+    return {
+      progress: 1,
+      days,
+      daysnow: null,
+      amountnow: amount,
+      remaining: 0,
+      amount,
+    };
+  }
+
+  const daysnow = Math.ceil((now - startms) / (1000 * 60 * 60 * 24));
+  const dayamount = Math.round(amount / days);
+
+  const amountnow = Math.round(dayamount * daysnow);
+  const remaining = Math.round(amount - amountnow);
+
+  const progress = Math.round((daysnow / days) * 100) / 100;
+
+  return {
+    progress,
+    days,
+    daysnow,
+    amountnow,
+    remaining,
+    amount,
+  };
+};
+
+export const getTaskStatus = (tasks: any, isRTL: any) => {
+  const rtasks = tasks.map((task: any) => {
+    const { isClosed, start, end, freq, interval } = task;
+    const type =
+      freq === 1 || (freq === 3 && interval > 27)
+        ? isRTL
+          ? 'شهري'
+          : 'Monthly'
+        : freq === 2
+        ? isRTL
+          ? 'اسبوعي'
+          : 'Weekly'
+        : isRTL
+        ? 'يومي'
+        : 'Daily';
+    if (isClosed) {
+      return { ...task, status: isRTL ? 'مغلق' : 'Closed', type };
+    } else {
+      const startms = new Date(start).getTime();
+      const endms = new Date(end).getTime();
+      const now = new Date().getTime();
+      if (now < startms) {
+        return { ...task, status: isRTL ? 'لم يبدأ بعد' : 'Not Started', type };
+      }
+      if (now > endms) {
+        return { ...task, status: isRTL ? 'غير مغلق' : 'Not Closed', type };
+      }
+      return { ...task, status: isRTL ? 'ساري' : 'In Progress', type };
+    }
+  });
+  return rtasks;
 };

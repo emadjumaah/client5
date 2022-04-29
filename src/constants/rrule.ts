@@ -27,12 +27,12 @@ export const freqOptions = [
     nameAr: 'شهري',
     value: RRule.MONTHLY,
   },
-  // {
-  //   id: 4,
-  //   name: 'Yearly',
-  //   nameAr: 'سنوي',
-  //   value: RRule.YEARLY,
-  // },
+  {
+    id: 4,
+    name: 'Yearly',
+    nameAr: 'سنوي',
+    value: RRule.YEARLY,
+  },
 ];
 export const intervalOptions = [
   {
@@ -42,10 +42,10 @@ export const intervalOptions = [
     value: 1,
   },
   {
-    id: 6,
+    id: 7,
     name: 'Weekly',
     nameAr: 'اسبوعي',
-    value: 6,
+    value: 7,
   },
   {
     id: 31,
@@ -57,7 +57,7 @@ export const intervalOptions = [
     id: 30,
     name: 'Monthly 30 Days',
     nameAr: 'شهري 30 يوم',
-    value: 29,
+    value: 30,
   },
 
   // {
@@ -67,6 +67,7 @@ export const intervalOptions = [
   //   value: RRule.YEARLY,
   // },
 ];
+
 export const byweekdayOptions = [
   {
     id: 1,
@@ -275,6 +276,13 @@ export const manamentTabs = [
     name: ' Entries',
     ref: 'entries',
   },
+  {
+    id: 7,
+    value: 7,
+    nameAr: 'التذكيرات',
+    name: ' Reminders',
+    ref: 'reminders',
+  },
 ];
 export const customerManamentTabs = [
   {
@@ -321,6 +329,13 @@ export const customerManamentTabs = [
     name: ' Entries',
     ref: 'entries',
   },
+  // {
+  //   id: 7,
+  //   value: 7,
+  //   nameAr: 'التذكيرات',
+  //   name: ' Reminders',
+  //   ref: 'reminders',
+  // },
 ];
 
 export const taskManamentTabs = [
@@ -374,6 +389,13 @@ export const taskManamentTabs = [
     nameAr: 'القيود',
     name: ' Entries',
     ref: 'entries',
+  },
+  {
+    id: 7,
+    value: 7,
+    nameAr: 'التذكيرات',
+    name: ' Reminders',
+    ref: 'reminders',
   },
 ];
 export const projectManamentTabs = [

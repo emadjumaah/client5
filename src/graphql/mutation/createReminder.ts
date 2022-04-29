@@ -22,6 +22,8 @@ export default gql`
     $employeeId: String
     $resourseId: String
     $data: String
+    $items: String
+    $amount: Float
   ) {
     createReminder(
       type: $type
@@ -44,6 +46,8 @@ export default gql`
       employeeId: $employeeId
       resourseId: $resourseId
       data: $data
+      items: $items
+      amount: $amount
     ) {
       ok
       message

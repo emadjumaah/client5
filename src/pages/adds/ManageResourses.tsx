@@ -23,6 +23,7 @@ import { Command, Loading, PopupEditing } from '../../Shared';
 import { getRowId, roles } from '../../common';
 import {
   avatarPatternFormatter,
+  carstatusFormatter,
   currencyFormatterEmpty,
   daysoffFormatter,
   dueAmountFormatter,
@@ -72,6 +73,7 @@ export default function ManageResourses({
   const [columns] = useState([
     { name: isRTL ? 'nameAr' : 'name', title: words.name },
     { name: 'plate', title: words.plate },
+    col.carstatus,
     {
       name: isRTL ? 'departmentNameAr' : 'departmentName',
       title: words.department,
@@ -122,7 +124,6 @@ export default function ManageResourses({
       }
     }
   }, [resourses]);
-
   const commitChanges = async ({ deleted }) => {
     if (deleted) {
       const _id = deleted[0];
@@ -226,7 +227,12 @@ export default function ManageResourses({
             for={['progress']}
             formatterComponent={progressFormatter}
           ></DataTypeProvider>
-
+          <DataTypeProvider
+            for={['carstatus']}
+            formatterComponent={(props: any) =>
+              carstatusFormatter({ ...props, isRTL })
+            }
+          ></DataTypeProvider>
           <TableEditColumn
             showEditCommand
             showDeleteCommand

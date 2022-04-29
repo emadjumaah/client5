@@ -340,11 +340,11 @@ export class ContractPrint extends React.PureComponent<any, any> {
   renderPriceType = (data: any) => {
     const { isRTL, freq, interval, amount, evQty } = data;
     const unit =
-      freq === 1 || interval > 27
+      freq === 1 || (freq === 3 && interval > 27)
         ? isRTL
           ? 'شهري'
           : 'Monthly'
-        : freq === 2 || interval === 6
+        : freq === 2
         ? isRTL
           ? 'اسبوعي'
           : 'Weekly'

@@ -18,33 +18,32 @@ import {
 import { Getter } from '@devexpress/dx-react-core';
 import { getColumns } from '../common/columns';
 import {
-  createdAtFormatter,
+  actionTimeFormatter,
   currencyFormatter,
-  doneFormatter,
-  eventStatusFormatter,
-  fromToFormatter,
-  locationFormatter,
   taskIdFormat,
 } from './colorFormat';
 import { useLazyQuery, useMutation } from '@apollo/client';
 import {
-  createEvent,
-  deleteEventById,
+  createReminder,
+  deleteReminder,
   getCustomers,
   getDepartments,
   getEmployees,
   getProjects,
+  getReminders,
   getResourses,
-  updateEvent,
+  updateReminder,
 } from '../graphql';
 import { Command } from './Command';
 import PopupEditing from './PopupEditing';
-import getObjectEvents from '../graphql/query/getObjectEvents';
 import getTasks from '../graphql/query/getTasks';
 import LoadingInline from './LoadingInline';
-import PopupAppointmentCustomer from '../pubups/PopupAppointmentCustomer';
 import useTasks from '../hooks/useTasks';
 import React from 'react';
+import { errorAlert, errorDeleteAlert } from './helpers';
+import PopupReminder from '../pubups/PopupReminder';
+import { useExpenseItems } from '../hooks';
+import { AlertLocal } from '../components';
 export const getRowId = (row: any) => row._id;
 
 const NumberTypeProvider = (props) => (
@@ -72,45 +71,40 @@ export const TableComponent = withStyles(styles, { name: 'TableComponent' })(
   TableComponentBase
 );
 
-export default function EventsCustomer({
+export default function ReminderCustomer({
   isRTL,
   words,
   resourses,
   employees,
   departments,
-  customers,
-  servicesproducts,
   theme,
   id,
   name,
   isNew,
-  company,
-  value,
 }: any) {
+  const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
+
   const [loading, setLoading] = useState(true);
   const col = getColumns({ isRTL, words });
 
   const [columns] = useState([
-    { id: 4, ref: 'title', name: 'title', title: words.title },
-    // col.location,
-    col.startDate,
-    col.fromto,
-    col.docNo,
-    col.taskId,
+    col.time,
+    col.title,
     col.resourse,
-    col.department,
     col.employee,
-    // col.status,
-    col.done,
+    col.department,
+    col.taskId,
     col.amount,
   ]);
   const { tasks } = useTasks();
+  const { expenseItems } = useExpenseItems();
+
   const [rows, setRows] = useState([]);
 
   const refresQuery = {
     refetchQueries: [
       {
-        query: getObjectEvents,
+        query: getReminders,
         variables: { [name]: id },
       },
       {
@@ -137,34 +131,81 @@ export default function EventsCustomer({
     ],
   };
 
-  const [getEvents, eventsData]: any = useLazyQuery(getObjectEvents, {
+  const [loadReminders, remindersData]: any = useLazyQuery(getReminders, {
     fetchPolicy: 'cache-and-network',
   });
 
   useEffect(() => {
     const variables = { [name]: id };
-    getEvents({ variables });
+    loadReminders({ variables });
   }, [id]);
 
   useEffect(() => {
-    const data = eventsData?.data?.['getObjectEvents']?.data;
-    if (data) {
+    if (remindersData?.loading) {
+      setLoading(true);
+    }
+    if (remindersData?.data?.getReminders?.data) {
+      const { data } = remindersData.data.getReminders;
+      const rdata = data.map((da: any) => {
+        let resourseNameAr: any;
+        let resourseName: any;
+        let departmentNameAr: any;
+        let departmentName: any;
+        let employeeNameAr: any;
+        let employeeName: any;
+        if (da?.resourseId) {
+          const res = resourses.filter(
+            (re: any) => re._id === da.resourseId
+          )?.[0];
+          resourseNameAr = res?.nameAr;
+          resourseName = res?.name;
+        }
+        if (da?.departmentId) {
+          const res = departments.filter(
+            (re: any) => re._id === da.departmentId
+          )?.[0];
+          departmentNameAr = res?.nameAr;
+          departmentName = res?.name;
+        }
+        if (da?.employeeId) {
+          const res = employees.filter(
+            (re: any) => re._id === da.employeeId
+          )?.[0];
+          employeeNameAr = res?.nameAr;
+          employeeName = res?.name;
+        }
+
+        return {
+          ...da,
+          resourseName,
+          resourseNameAr,
+          departmentNameAr,
+          departmentName,
+          employeeNameAr,
+          employeeName,
+          time: new Date(da.runtime),
+        };
+      });
+      setRows(rdata);
       setLoading(false);
     }
-    const events = data || [];
-    const fevents = events.filter((ev: any) => ev.amount > 0);
-    setRows(fevents);
-  }, [eventsData]);
+  }, [remindersData]);
 
-  const [addEvent] = useMutation(createEvent, refresQuery);
-  const [editEvent] = useMutation(updateEvent, refresQuery);
-  const [removeEventById] = useMutation(deleteEventById, refresQuery);
+  const [addReminder] = useMutation(createReminder, refresQuery);
+  const [editReminder] = useMutation(updateReminder, refresQuery);
+  const [removeReminder] = useMutation(deleteReminder, refresQuery);
 
   const commitChanges = async ({ deleted }) => {
     if (deleted) {
       const _id = deleted[0];
-      removeEventById({ variables: { _id } });
-      setRows(rows.filter((row: any) => row._id !== _id));
+      const res = await removeReminder({ variables: { _id } });
+      if (res?.data?.deleteReminder?.ok === false) {
+        if (res?.data?.deleteReminder?.error.includes('related')) {
+          await errorDeleteAlert(setAlrt, isRTL);
+        } else {
+          await errorAlert(setAlrt, isRTL);
+        }
+      }
     }
   };
 
@@ -193,31 +234,14 @@ export default function EventsCustomer({
             estimatedRowHeight={45}
             tableComponent={TableComponent}
           />
-          <DataTypeProvider
-            for={['startDate']}
-            formatterComponent={createdAtFormatter}
-          ></DataTypeProvider>
-          <DataTypeProvider
-            for={['fromto']}
-            formatterComponent={fromToFormatter}
-          ></DataTypeProvider>
-          <DataTypeProvider
-            for={['location']}
-            formatterComponent={locationFormatter}
-          ></DataTypeProvider>
-          <DataTypeProvider
-            for={['status']}
-            formatterComponent={eventStatusFormatter}
-          ></DataTypeProvider>
+
           <DataTypeProvider
             for={['amount']}
             formatterComponent={currencyFormatter}
           ></DataTypeProvider>
           <DataTypeProvider
-            for={['done']}
-            formatterComponent={(props: any) =>
-              doneFormatter({ ...props, editEvent })
-            }
+            for={['time']}
+            formatterComponent={actionTimeFormatter}
           ></DataTypeProvider>
           <DataTypeProvider
             for={['taskId']}
@@ -240,19 +264,12 @@ export default function EventsCustomer({
             ></TableEditColumn>
           )}
 
-          <PopupEditing addAction={addEvent} editAction={editEvent}>
-            <PopupAppointmentCustomer
-              resourses={resourses}
-              employees={employees}
-              departments={departments}
-              customers={customers}
-              servicesproducts={servicesproducts}
-              theme={theme}
-              company={company}
-              tasks={tasks}
-              name={name}
-              value={value}
-            ></PopupAppointmentCustomer>
+          <PopupEditing
+            theme={theme}
+            addAction={addReminder}
+            editAction={editReminder}
+          >
+            <PopupReminder servicesproducts={expenseItems}></PopupReminder>
           </PopupEditing>
 
           <Getter
@@ -272,6 +289,14 @@ export default function EventsCustomer({
             }}
           />
         </Grid>
+      )}
+      {alrt.show && (
+        <AlertLocal
+          isRTL={isRTL}
+          type={alrt?.type}
+          msg={alrt?.msg}
+          top
+        ></AlertLocal>
       )}
     </Paper>
   );

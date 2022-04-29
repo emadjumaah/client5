@@ -22,6 +22,7 @@ import TasksCustomer from '../Shared/TasksCustomer';
 import { customerManamentTabs } from '../constants/rrule';
 import ProjectsCustomer from '../Shared/ProjectsCustomer';
 import KaidsCustomer from '../Shared/KaidsCustomer';
+// import ReminderCustomer from '../Shared/ReminderCustomer';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -214,6 +215,21 @@ const PopupCustomerView = ({
                     id={row?._id}
                   ></KaidsCustomer>
                 </TabPanel>
+                {/* <TabPanel value={value} index={7}>
+                  <ReminderCustomer
+                    resourses={resourses}
+                    employees={employees}
+                    departments={departments}
+                    customers={customers}
+                    isRTL={isRTL}
+                    words={words}
+                    theme={theme}
+                    isNew={isNew}
+                    name="customerId"
+                    value={row}
+                    id={row?._id}
+                  ></ReminderCustomer>
+                </TabPanel> */}
                 <Box
                   display="flex"
                   style={{

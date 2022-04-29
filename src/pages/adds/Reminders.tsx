@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import React, { useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import {
   SortingState,
   IntegratedSorting,
@@ -17,12 +17,9 @@ import {
   SearchPanel,
   TableEditColumn,
 } from '@devexpress/dx-react-grid-material-ui';
-import { Command, PopupEditing } from '../../Shared';
+import { Command, Loading, PopupEditing } from '../../Shared';
 import { getRowId } from '../../common';
-import {
-  actionTimeFormatter,
-  isActiveFormatter,
-} from '../../Shared/colorFormat';
+import { actionTimeFormatter, taskIdFormatter } from '../../Shared/colorFormat';
 
 import { AlertLocal, SearchTable } from '../../components';
 import { getColumns } from '../../common/columns';
@@ -30,32 +27,105 @@ import { getColumns } from '../../common/columns';
 import { Box, useMediaQuery } from '@material-ui/core';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
 import PageLayout from '../main/PageLayout';
-import useReminders from '../../hooks/useReminders';
 import { errorAlert, errorDeleteAlert } from '../../Shared/helpers';
 import PopupReminder from '../../pubups/PopupReminder';
+import { useLazyQuery, useMutation } from '@apollo/client';
+import {
+  createReminder,
+  deleteReminder,
+  getReminders,
+  updateReminder,
+} from '../../graphql';
+import getNotificationsList from '../../graphql/query/getNotificationsList';
+import DateNavigatorReports from '../../components/filters/DateNavigatorReports';
+import ReminderContext from '../../contexts/reminder';
+import useTasks from '../../hooks/useTasks';
+import useEmployeesUp from '../../hooks/useEmployeesUp';
+import useDepartmentsUp from '../../hooks/useDepartmentsUp';
+import useResoursesUp from '../../hooks/useResoursesUp';
+import { useExpenseItems } from '../../hooks';
 
 export default function Reminders(props: any) {
   const { isRTL, words, menuitem, theme } = props;
   const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
 
+  const [rows, setRows] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [start, setStart] = useState<any>(null);
+  const [end, setEnd] = useState<any>(null);
+
   const col = getColumns({ isRTL, words });
   const isMobile = useMediaQuery('(max-width:600px)');
 
   const [columns] = useState([
-    col.runtime,
+    col.time,
     col.title,
-    { name: 'active', title: words.status },
+    col.resourse,
+    col.employee,
+    col.department,
+    col.taskId,
+    col.amount,
   ]);
 
   const { height } = useWindowDimensions();
+  const { tasks } = useTasks();
+  const { employees } = useEmployeesUp();
+  const { departments } = useDepartmentsUp();
+  const { resourses } = useResoursesUp();
+  const { expenseItems } = useExpenseItems();
 
   const {
-    reminders,
-    addReminder,
-    editReminder,
-    removeReminder,
-    refreshreminders,
-  } = useReminders();
+    state: { currentDate, currentViewName, endDate },
+    dispatch,
+  } = useContext(ReminderContext);
+
+  const currentViewNameChange = (e: any) => {
+    dispatch({ type: 'setCurrentViewName', payload: e.target.value });
+  };
+  const currentDateChange = (curDate: any) => {
+    dispatch({ type: 'setCurrentDate', payload: curDate });
+  };
+
+  const endDateChange = (curDate: any) => {
+    dispatch({ type: 'setEndDate', payload: curDate });
+  };
+
+  const [loadReminders, remindersData]: any = useLazyQuery(getReminders, {
+    fetchPolicy: 'cache-and-network',
+  });
+
+  const refresQuery = {
+    refetchQueries: [
+      {
+        query: getReminders,
+        variables: {
+          start: start ? start.setHours(0, 0, 0, 0) : undefined,
+          end: end ? end.setHours(23, 59, 59, 999) : undefined,
+        },
+      },
+      {
+        query: getNotificationsList,
+        variables: {
+          start: start ? start.setHours(0, 0, 0, 0) : undefined,
+          end: end ? end.setHours(23, 59, 59, 999) : undefined,
+        },
+      },
+    ],
+  };
+
+  useEffect(() => {
+    const variables = {
+      start: start ? start.setHours(0, 0, 0, 0) : undefined,
+      end: end ? end.setHours(23, 59, 59, 999) : undefined,
+    };
+    loadReminders({
+      variables,
+    });
+  }, [start, end]);
+
+  const [addReminder] = useMutation(createReminder, refresQuery);
+  const [editReminder] = useMutation(updateReminder, refresQuery);
+  const [removeReminder] = useMutation(deleteReminder, refresQuery);
 
   const commitChanges = async ({ deleted }) => {
     if (deleted) {
@@ -71,16 +141,116 @@ export default function Reminders(props: any) {
     }
   };
 
+  useEffect(() => {
+    if (remindersData?.loading) {
+      setLoading(true);
+    }
+    if (remindersData?.data?.getReminders?.data) {
+      const { data } = remindersData.data.getReminders;
+      const rdata = data.map((da: any) => {
+        let time: any;
+        let resourseNameAr: any;
+        let resourseName: any;
+        let departmentNameAr: any;
+        let departmentName: any;
+        let employeeNameAr: any;
+        let employeeName: any;
+        if (da?.resourseId) {
+          const res = resourses.filter(
+            (re: any) => re._id === da.resourseId
+          )?.[0];
+          resourseNameAr = res?.nameAr;
+          resourseName = res?.name;
+        }
+        if (da?.departmentId) {
+          const res = departments.filter(
+            (re: any) => re._id === da.departmentId
+          )?.[0];
+          departmentNameAr = res?.nameAr;
+          departmentName = res?.name;
+        }
+        if (da?.employeeId) {
+          const res = employees.filter(
+            (re: any) => re._id === da.employeeId
+          )?.[0];
+          employeeNameAr = res?.nameAr;
+          employeeName = res?.name;
+        }
+
+        const rr = JSON.parse(da?.rruledata);
+        const { all } = rr;
+        const startms = start?.getTime();
+        const endms = end?.getTime();
+        all.map((tm: any) => {
+          const date = new Date(tm).getTime();
+          if (date > startms && date < endms) {
+            time = new Date(tm);
+          }
+          return tm;
+        });
+        return {
+          ...da,
+          resourseName,
+          resourseNameAr,
+          departmentNameAr,
+          departmentName,
+          employeeNameAr,
+          employeeName,
+          time,
+        };
+      });
+      setRows(rdata);
+      setLoading(false);
+    }
+  }, [remindersData]);
+
+  const refresh = () => {
+    remindersData?.refetch();
+  };
   return (
     <PageLayout
       menuitem={menuitem}
       isRTL={isRTL}
       words={words}
       theme={theme}
-      refresh={refreshreminders}
+      refresh={refresh}
     >
-      <Box>
-        <Grid rows={reminders} columns={columns} getRowId={getRowId}>
+      <Box
+        style={{
+          height: height - 50,
+          overflow: 'auto',
+          backgroundColor: '#fff',
+          marginLeft: 5,
+          marginRight: 5,
+        }}
+      >
+        <Box
+          display="flex"
+          style={{
+            position: 'absolute',
+            zIndex: 111,
+            flexDirection: 'row',
+            alignItems: 'center',
+          }}
+        >
+          <DateNavigatorReports
+            setStart={setStart}
+            setEnd={setEnd}
+            currentDate={currentDate}
+            currentDateChange={currentDateChange}
+            currentViewName={currentViewName}
+            currentViewNameChange={currentViewNameChange}
+            endDate={endDate}
+            endDateChange={endDateChange}
+            views={[1, 7, 30, 365, 1000]}
+            isRTL={isRTL}
+            words={words}
+            theme={theme}
+            // color={colors.blue[700]}
+            // bgcolor={colors.blue[50]}
+          ></DateNavigatorReports>
+        </Box>
+        <Grid rows={rows} columns={columns} getRowId={getRowId}>
           <SortingState />
           {!isMobile && <SearchState />}
           <EditingState onCommitChanges={commitChanges} />
@@ -97,13 +267,13 @@ export default function Reminders(props: any) {
           />
 
           <DataTypeProvider
-            for={['runtime']}
+            for={['time']}
             formatterComponent={actionTimeFormatter}
           ></DataTypeProvider>
           <DataTypeProvider
-            for={['active']}
+            for={['taskId']}
             formatterComponent={(props: any) =>
-              isActiveFormatter({ ...props, editSendreq: editReminder })
+              taskIdFormatter({ ...props, tasks })
             }
           ></DataTypeProvider>
           <TableEditColumn
@@ -127,9 +297,10 @@ export default function Reminders(props: any) {
             addAction={addReminder}
             editAction={editReminder}
           >
-            <PopupReminder></PopupReminder>
+            <PopupReminder servicesproducts={expenseItems}></PopupReminder>
           </PopupEditing>
         </Grid>
+        {loading && <Loading isRTL={isRTL} />}
         {alrt.show && (
           <AlertLocal
             isRTL={isRTL}

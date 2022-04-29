@@ -38,6 +38,7 @@ import {
   invoiceReceiptFormatter,
   nameLinkFormat,
   progressFormatter,
+  taskStatusFormat,
   taskTypeFormat,
 } from '../../Shared/colorFormat';
 import PageLayout from '../main/PageLayout';
@@ -62,6 +63,8 @@ import useResoursesUp from '../../hooks/useResoursesUp';
 import useProjects from '../../hooks/useProjects';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
 import { roles } from '../../common';
+import closeTask from '../../graphql/mutation/closeTask';
+import { getTaskStatus } from '../../common/helpers';
 
 export const getRowId = (row: { _id: any }) => row._id;
 
@@ -74,6 +77,7 @@ export default function Tasks({ isRTL, words, menuitem, theme, company }) {
     col.title,
     col.createdAt,
     col.type,
+    col.status,
     col.start,
     col.end,
     col.project,
@@ -204,6 +208,7 @@ export default function Tasks({ isRTL, words, menuitem, theme, company }) {
 
   const [addTask] = useMutation(createTask, refresQuery);
   const [editTask] = useMutation(updateTask, refresQuery);
+  const [stopTask] = useMutation(closeTask, refresQuery);
   const [removeTaskById] = useMutation(deleteTaskById, refresQuery);
   const { customers, addCustomer, editCustomer } = useCustomers();
 
@@ -229,7 +234,8 @@ export default function Tasks({ isRTL, words, menuitem, theme, company }) {
     }
     if (tasksData?.data?.getTasks?.data) {
       const { data } = tasksData.data.getTasks;
-      setRows(data);
+      const taskswithstatus = getTaskStatus(data, isRTL);
+      setRows(taskswithstatus);
       setLoading(false);
     }
   }, [tasksData]);
@@ -364,9 +370,11 @@ export default function Tasks({ isRTL, words, menuitem, theme, company }) {
             ></DataTypeProvider>
             <DataTypeProvider
               for={['type']}
-              formatterComponent={(props: any) =>
-                taskTypeFormat({ ...props, isRTL })
-              }
+              formatterComponent={taskTypeFormat}
+            ></DataTypeProvider>
+            <DataTypeProvider
+              for={['status']}
+              formatterComponent={taskStatusFormat}
             ></DataTypeProvider>
             <DataTypeProvider
               for={['progress']}
@@ -443,6 +451,7 @@ export default function Tasks({ isRTL, words, menuitem, theme, company }) {
               endrange={end}
               addAction={addTask}
               editAction={editTask}
+              stopTask={stopTask}
             ></PopupTaskView>
           )}
         </Paper>

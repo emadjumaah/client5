@@ -9,18 +9,19 @@ import {
   getReminders,
   updateReminder,
 } from '../graphql';
+import getNotificationsList from '../graphql/query/getNotificationsList';
 
 export default () => {
   const [getDeparts, catpData]: any = useLazyQuery(getReminders);
 
   const [addReminder] = useMutation(createReminder, {
-    refetchQueries: [{ query: getReminders }],
+    refetchQueries: [{ query: getReminders }, { query: getNotificationsList }],
   });
   const [editReminder] = useMutation(updateReminder, {
-    refetchQueries: [{ query: getReminders }],
+    refetchQueries: [{ query: getReminders }, { query: getNotificationsList }],
   });
   const [removeReminder] = useMutation(deleteReminder, {
-    refetchQueries: [{ query: getReminders }],
+    refetchQueries: [{ query: getReminders }, { query: getNotificationsList }],
   });
 
   useEffect(() => {

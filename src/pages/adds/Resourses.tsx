@@ -40,6 +40,7 @@ export default function Resourses({ isRTL, words, theme, menuitem }: any) {
   const [columns] = useState([
     { name: isRTL ? 'nameAr' : 'name', title: words.name },
     { name: 'avatar', title: words.color },
+    col.carstatus,
     col.department,
     { name: 'info', title: words.info },
   ]);

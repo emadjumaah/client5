@@ -90,7 +90,7 @@ export default function MainVav(props: any) {
           </Box>
         </Tooltip>
       )}
-      {/* <Tooltip title={isRTL ? 'المفكرة' : 'Reminder'}>
+      <Tooltip title={isRTL ? 'المفكرة' : 'Reminder'}>
         <Box
           display="flex"
           style={{
@@ -110,7 +110,7 @@ export default function MainVav(props: any) {
             icon={'bell'}
           ></MyIcon>
         </Box>
-      </Tooltip> */}
+      </Tooltip>
     </Box>
   );
 }

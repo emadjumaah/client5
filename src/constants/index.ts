@@ -8,12 +8,13 @@ import {
   eventStatusEn,
   eventStatus,
   paymentTypes,
+  carstatuss,
 } from './datatypes';
 import { operationTypes, catTypes } from './datatypes';
 import { packages } from './roles';
 
 // Dev
-// export const graphqlURI = 'http://jadwal-server/graphql';
+export const graphqlURI = 'http://jadwal-server/graphql';
 // dev online
 // export const graphqlURI = 'https://jadwal-prod.herokuapp.com/graphql';
 
@@ -21,7 +22,7 @@ import { packages } from './roles';
 // export const graphqlURI = 'http://jadwal-main/graphql';
 
 // Online
-export const graphqlURI = process.env.REACT_APP_GRAPHQL_URI;
+// export const graphqlURI = process.env.REACT_APP_GRAPHQL_URI;
 
 export {
   mainmenu,
@@ -40,4 +41,5 @@ export {
   paymentTypes,
   templates,
   packages,
+  carstatuss,
 };

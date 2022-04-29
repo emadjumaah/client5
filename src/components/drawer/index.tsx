@@ -27,7 +27,7 @@ import MenuIcon from '@material-ui/icons/Menu';
 import Menu from './Menu';
 import { drawerWidth } from '../../constants';
 import { UserBox } from '../../Shared';
-import MainVav from '../../Shared/MainVav';
+// import MainVav from '../../Shared/MainVav';
 import { subscribePushToken } from '../../common/helpers';
 import { useMutation } from '@apollo/client';
 import updatePushToken from '../../graphql/mutation/updatePushToken';
@@ -138,7 +138,7 @@ function AppDrawer(props: any): any {
     network,
     logout,
     mmenu,
-    setMmenu,
+    // setMmenu,
     notify,
     dispatch,
     company,
@@ -343,12 +343,12 @@ function AppDrawer(props: any): any {
                 </Box>
               </Box>
             )}
-            <MainVav
+            {/* <MainVav
               setMmenu={setMmenu}
               theme={theme}
               isRTL={isRTL}
               user={user}
-            ></MainVav>
+            ></MainVav> */}
           </Drawer>
         </Hidden>
       </nav>

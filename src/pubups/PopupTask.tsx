@@ -26,7 +26,7 @@ import PopupLayout from '../pages/main/PopupLayout';
 import { Grid } from '@material-ui/core';
 import AutoFieldLocal from '../components/fields/AutoFieldLocal';
 import { CalenderLocal, TextFieldLocal } from '../components';
-import { eventStatus, weekdaysNNo } from '../constants/datatypes';
+import { taskStatus, weekdaysNNo } from '../constants/datatypes';
 import { compressEvents } from '../common/time';
 import {
   actionTypeFormatter,
@@ -223,10 +223,10 @@ const PopupTask = ({
     if (value === 1) {
       setFreq(RRule.DAILY);
       setInterval(value);
-    } else if (value === 6) {
+    } else if (value > 5 && value < 9) {
       setFreq(RRule.WEEKLY);
       setInterval(1);
-    } else if (value === 29) {
+    } else if (value === 30) {
       setFreq(RRule.DAILY);
       setInterval(value);
     } else if (value === 31) {
@@ -409,7 +409,7 @@ const PopupTask = ({
     if (isNew) {
       const start = new Date();
       setStart(start);
-      setStatus(eventStatus.filter((es: any) => es.id === 1)?.[0]);
+      setStatus(taskStatus.filter((es: any) => es.id === 1)?.[0]);
       setEvList([]);
       if (name === 'employeeId') {
         if (value?.departmentId) {
@@ -697,6 +697,7 @@ const PopupTask = ({
   const day = weekdaysNNo?.[date.getDay()];
 
   const title = getPopupTitle('task', isNew);
+
   return (
     <PopupLayout
       isRTL={isRTL}
@@ -783,7 +784,7 @@ const PopupTask = ({
                   ></CalenderLocal>
                 )}
               </Grid>
-              <Grid item xs={11}>
+              <Grid item xs={8}>
                 <TextFieldLocal
                   required
                   autoFocus={true}
@@ -796,6 +797,23 @@ const PopupTask = ({
                   mb={0}
                 />
               </Grid>
+              {/* {!isNew && (
+                <Grid item xs={4}>
+                  <AutoFieldLocal
+                    name="status"
+                    title={words.status}
+                    words={words}
+                    options={taskStatus}
+                    value={status}
+                    setSelectValue={setStatus}
+                    register={register}
+                    isRTL={isRTL}
+                    fullWidth
+                    mb={0}
+                    nosort
+                  ></AutoFieldLocal>
+                </Grid>
+              )} */}
               {!tempoptions?.noRes && (
                 <Grid item xs={6}>
                   <AutoFieldLocal
@@ -912,6 +930,9 @@ const PopupTask = ({
                     >
                       <Box style={{ flexDirection: 'row' }}>
                         {rrule?.all?.map((al: any, index: any) => {
+                          if (index === 0) {
+                            return null;
+                          }
                           return (
                             <Box
                               display="flex"
@@ -927,9 +948,7 @@ const PopupTask = ({
                               <Typography>
                                 {getDateDayWeek(al, isRTL)}
                               </Typography>
-                              <Typography variant="caption">
-                                {index + 1}
-                              </Typography>
+                              <Typography variant="caption">{index}</Typography>
                             </Box>
                           );
                         })}

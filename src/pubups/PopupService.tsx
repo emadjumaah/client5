@@ -14,6 +14,8 @@ import { GlobalContext } from '../contexts';
 import PopupLayout from '../pages/main/PopupLayout';
 import { Grid } from '@material-ui/core';
 import { TextFieldLocal } from '../components';
+import AutoFieldLocal from '../components/fields/AutoFieldLocal';
+import { itemTypes } from '../constants/datatypes';
 // import AutoFieldLocal from '../components/fields/AutoFieldLocal';
 // import { useTemplate } from '../hooks';
 // import useEmployeesDown from '../hooks/useEmployeesDown';
@@ -32,6 +34,7 @@ const PopupService = ({
   theme,
 }: any) => {
   const [saving, setSaving] = useState(false);
+  const [itemType, setItemType] = useState(itemTypes[0]);
   const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
 
   // const [departvalue, setDepartvalue] = useState<any>(null);
@@ -144,7 +147,7 @@ const PopupService = ({
     //     };
     const variables: any = {
       _id: row && row._id ? row._id : undefined, // is it new or edit
-      itemType: 2,
+      itemType: itemType?.id,
       name,
       nameAr,
       price,
@@ -252,6 +255,7 @@ const PopupService = ({
                 type="number"
                 row={row}
                 fullWidth
+                mb={0}
               />
             </Grid>
             <Grid item xs={6}>
@@ -265,6 +269,21 @@ const PopupService = ({
                 fullWidth
                 mb={0}
               />
+            </Grid>
+            <Grid item xs={12}>
+              <AutoFieldLocal
+                name="carstatus"
+                title={words.type}
+                words={words}
+                options={itemTypes}
+                value={itemType}
+                setSelectValue={setItemType}
+                register={register}
+                isRTL={isRTL}
+                fullWidth
+                mb={10}
+                nosort
+              ></AutoFieldLocal>
             </Grid>
           </Grid>
 

@@ -24,6 +24,7 @@ import {
 import { operationTypes } from '../constants';
 import { getTaskName } from '../constants/branch';
 import {
+  carstatuss,
   eventColors,
   eventStatus,
   operationNames,
@@ -720,9 +721,9 @@ export const invoiceReceiptFormatter = ({ value, row }: any) => {
 export const taskIdFormatter = ({ value, tasks }: any) => {
   const task = tasks.filter((tsk: any) => tsk.id === value);
   if (task && task.length > 0) {
-    return <span style={{ color: '#403795' }}>{task[0].title}</span>;
+    return <span>{task[0].title}</span>;
   } else {
-    return <span style={{ color: '#403795' }}></span>;
+    return <span></span>;
   }
 };
 
@@ -751,27 +752,40 @@ export const nameLinkFormat = ({ row, value, setItem, setOpenItem }: any) => {
   );
 };
 
-export const taskTypeFormat = ({ row, isRTL }: any) => {
-  const { freq, interval } = row;
-  const value =
-    freq === 1 || interval > 27
-      ? isRTL
-        ? 'شهري'
-        : 'Monthly'
-      : freq === 2 || interval === 6
-      ? isRTL
-        ? 'اسبوعي'
-        : 'Weekly'
-      : isRTL
-      ? 'يومي'
-      : 'Daily';
-
+export const taskTypeFormat = ({ value }: any) => {
   return (
     <Typography
       style={{
         fontSize: 13,
         textAlign: 'start',
         color: colors.deepPurple[500],
+      }}
+    >
+      {value}
+    </Typography>
+  );
+};
+
+export const taskStatusFormat = ({ value }: any) => {
+  let color;
+  if (value === 'مغلق' || value === 'Closed') {
+    color = colors.blue[500];
+  }
+  if (value === 'لم يبدأ بعد' || value === 'Not Started') {
+    color = colors.deepPurple[500];
+  }
+  if (value === 'غير مغلق' || value === 'Not Closed') {
+    color = colors.red[500];
+  }
+  if (value === 'ساري' || value === 'In Progress') {
+    color = colors.green[500];
+  }
+  return (
+    <Typography
+      style={{
+        fontSize: 13,
+        textAlign: 'start',
+        color,
       }}
     >
       {value}
@@ -906,6 +920,25 @@ export const progressFormatter = ({ value }: any) => {
       </Box>
     </Box>
   );
+};
+export const carstatusFormatter = ({ value, isRTL }: any) => {
+  let status = isRTL ? 'متوفر' : 'Available';
+  const color =
+    value === 1
+      ? colors.green[500]
+      : value === 3
+      ? colors.red[500]
+      : value === 2
+      ? colors.grey[500]
+      : value === 10
+      ? colors.blue[500]
+      : '#333';
+  const cstat = carstatuss.filter((cs: any) => cs.id === value)?.[0];
+  if (cstat?.nameAr) {
+    status = isRTL ? cstat?.nameAr : cstat?.name;
+  }
+
+  return <div style={{ color }}>{status}</div>;
 };
 export const deleteFormatter = ({ removeItem, row }: any) => {
   return (

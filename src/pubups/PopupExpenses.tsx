@@ -290,7 +290,7 @@ const PopupExpenses = ({
   const componentRef: any = useRef();
   const handleReactPrint = useReactToPrint({
     content: () => componentRef.current,
-    documentTitle: `Invoice #${row?.docNo}`,
+    documentTitle: `Voucher #${row?.docNo}`,
     removeAfterPrint: true,
   });
   const printData = {

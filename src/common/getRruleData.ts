@@ -11,20 +11,48 @@ export default function getRruleData({
   interval = 1,
   count = 1,
 }) {
-  const rule =
-    freq !== RRule.DAILY || interval !== 1
-      ? new RRule({
-          freq,
-          interval,
-          byweekday,
-          dtstart,
-          until,
-          count: count + 1,
-        })
-      : new RRule({ freq, interval, byweekday, dtstart, until, count });
+  const rule = new RRule({
+    freq,
+    interval,
+    byweekday,
+    dtstart,
+    until,
+    count: count + 1,
+  });
   const all = rule.all();
   const str = rule.toString();
   const txt = rule.toText();
 
   return { all, str, txt };
 }
+export const getReminderRruleData = ({
+  freq = RRule.DAILY,
+  byweekday,
+  dtstart = start,
+  until = end,
+  interval = 1,
+  count = 1,
+}) => {
+  const rule = new RRule({
+    freq,
+    interval,
+    byweekday,
+    dtstart,
+    until,
+    count: count,
+  });
+  const all = rule.all();
+  const str = rule.toString();
+  const txt = rule.toText();
+
+  return { all, str, txt };
+};
+
+export const isToday = (someDate: any) => {
+  const today = new Date();
+  return (
+    someDate.getDate() === today.getDate() &&
+    someDate.getMonth() === today.getMonth() &&
+    someDate.getFullYear() === today.getFullYear()
+  );
+};

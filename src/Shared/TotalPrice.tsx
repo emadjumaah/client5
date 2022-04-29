@@ -25,7 +25,7 @@ export const PriceTotal = ({ amount, total, words, totalonly }: any) => {
         </Typography>
       )}
       <Typography style={{ fontWeight: 'bold', fontSize: 16 }}>
-        {totalonly ? words.total : words.grandtotal} : {moneyFormat(amount)}
+        {totalonly ? words.total : words.grandtotal}: {moneyFormat(amount)}
       </Typography>
     </Box>
   );

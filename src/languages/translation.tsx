@@ -58,6 +58,7 @@ export const translation = (lang: LanguageType) => {
     save: lang.words.save,
     cancel: lang.words.cancel,
     close: lang.words.close,
+    shutdown: lang.words.shutdown,
     color: lang.words.color,
     name: lang.words.name,
     nameAr: lang.words.nameAr,

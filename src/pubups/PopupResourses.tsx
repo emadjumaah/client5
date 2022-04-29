@@ -21,6 +21,7 @@ import { useDepartments, useTemplate } from '../hooks';
 import { getPopupTitle } from '../constants/menu';
 import PopupDeprtment from './PopupDeprtment';
 import useDepartmentsUp from '../hooks/useDepartmentsUp';
+import { carstatuss } from '../constants';
 
 const PopupResourses = ({
   open,
@@ -37,6 +38,7 @@ const PopupResourses = ({
   const [saving, setSaving] = useState(false);
   const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
   const [departvalue, setDepartvalue] = useState<any>(null);
+  const [statusvalue, setStatusvalue] = useState<any>(null);
   const [depError, setDepError] = useState<any>(false);
   const [color, setColor] = useState<any>('#252B3B');
 
@@ -69,8 +71,16 @@ const PopupResourses = ({
   useEffect(() => {
     if (row && row._id) {
       const _id = row.departmentId;
-      const depart = departments.filter((dep: any) => dep._id === _id)[0];
-      setDepartvalue(depart);
+      if (_id) {
+        const depart = departments.filter((dep: any) => dep._id === _id)[0];
+        setDepartvalue(depart);
+      }
+
+      const status = row?.carstatus;
+      if (status) {
+        const sts = carstatuss.filter((dep: any) => dep.id === status)?.[0];
+        setStatusvalue(sts);
+      }
       setColor(row.color);
     }
   }, [row]);
@@ -107,6 +117,7 @@ const PopupResourses = ({
       purtime,
       insurance,
       department,
+      carstatus: statusvalue?.id,
       branch: user.branch,
       userId: user._id,
     };
@@ -143,6 +154,7 @@ const PopupResourses = ({
     reset();
     setDepartvalue(null);
     setColor('#000000');
+    setStatusvalue(carstatuss[0]);
   };
   const closeModal = () => {
     onClose();
@@ -288,6 +300,21 @@ const PopupResourses = ({
                 isRTL={isRTL}
                 fullWidth
                 mb={0}
+              ></AutoFieldLocal>
+            </Grid>
+            <Grid item xs={12}>
+              <AutoFieldLocal
+                name="carstatus"
+                title={words.status}
+                words={words}
+                options={carstatuss}
+                value={statusvalue}
+                setSelectValue={setStatusvalue}
+                register={register}
+                isRTL={isRTL}
+                fullWidth
+                mb={0}
+                nosort
               ></AutoFieldLocal>
             </Grid>
 

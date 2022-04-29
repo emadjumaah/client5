@@ -26,6 +26,11 @@ export default gql`
         progress
         evQty
         evDone
+        isInactive
+
+        carstatus
+        garage
+        busy
 
         departmentId
         departmentName

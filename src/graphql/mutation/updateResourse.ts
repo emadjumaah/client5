@@ -20,6 +20,8 @@ export default gql`
     $purtime: String
     $insurance: String
     $type: String
+    $carstatus: Int
+    $garage: String
   ) {
     updateResourse(
       _id: $_id
@@ -40,6 +42,8 @@ export default gql`
       purtime: $purtime
       insurance: $insurance
       type: $type
+      carstatus: $carstatus
+      garage: $garage
     ) {
       ok
       message
