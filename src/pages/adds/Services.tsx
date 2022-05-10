@@ -23,7 +23,7 @@ import { PopupService } from '../../pubups';
 import { currencyFormatter } from '../../Shared/colorFormat';
 import { AlertLocal, SearchTable } from '../../components';
 import { errorAlert, errorDeleteAlert } from '../../Shared/helpers';
-import { Box, FormControlLabel, Radio, RadioGroup } from '@material-ui/core';
+import { Box, Button } from '@material-ui/core';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
 import { TableComponent } from '../../Shared/TableComponent';
 import ImportBtn from '../../common/ImportBtn';
@@ -83,31 +83,39 @@ export default function Services({ isRTL, words, theme }: any) {
         isRTL={isRTL}
         theme={theme}
       ></ImportBtn>
-      <RadioGroup
+      <Box
+        display="flex"
         style={{
           position: 'absolute',
-          zIndex: 112,
-          paddingLeft: 20,
-          paddingRight: 20,
+          top: 57,
+          width: '60%',
+          zIndex: 111,
+          marginLeft: 40,
+          marginRight: 40,
         }}
-        aria-label="Views"
-        name="views"
-        row
-        value={type}
-        onChange={(e: any) => setType(Number(e.target.value))}
       >
-        <FormControlLabel
-          value={2}
-          control={<Radio color="primary" />}
-          label={isRTL ? 'بنود الايرادات' : 'Income Items'}
-        />
+        <Button
+          color="primary"
+          variant={type === 2 ? 'contained' : 'outlined'}
+          onClick={() => {
+            setType(2);
+          }}
+          style={{ marginLeft: 15, marginRight: 15, padding: 5, minWidth: 150 }}
+        >
+          {isRTL ? 'بنود الايرادات' : 'Income Items'}
+        </Button>
+        <Button
+          color="primary"
+          variant={type === 10 ? 'contained' : 'outlined'}
+          onClick={() => {
+            setType(10);
+          }}
+          style={{ marginLeft: 15, marginRight: 15, padding: 5, minWidth: 150 }}
+        >
+          {isRTL ? 'بنود المصروفات' : 'Expenses Items'}
+        </Button>
+      </Box>
 
-        <FormControlLabel
-          value={10}
-          control={<Radio color="primary" />}
-          label={isRTL ? 'بنود المصروفات' : 'Expenses Items'}
-        />
-      </RadioGroup>
       <Grid
         rows={type === 2 ? services : expenseitems}
         columns={columns}

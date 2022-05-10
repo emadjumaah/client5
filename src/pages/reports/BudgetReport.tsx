@@ -1,7 +1,16 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
-import { Box, Button, Divider, Grid, Typography } from '@material-ui/core';
+import {
+  Box,
+  Button,
+  Checkbox,
+  Divider,
+  FormControlLabel,
+  Grid,
+  IconButton,
+  Typography,
+} from '@material-ui/core';
 import { useLazyQuery } from '@apollo/client';
 
 import PageLayout from '../main/PageLayout';
@@ -10,20 +19,88 @@ import useWindowDimensions from '../../hooks/useWindowDimensions';
 import getTrialBalance from '../../graphql/query/getTrialBalance';
 import _ from 'lodash';
 import { moneyFormatEmpty } from '../../Shared/colorFormat';
+import DateNavigatorReports from '../../components/filters/DateNavigatorReports';
+import { BalanceReportPrint } from '../../print/BalanceReportPrint';
+import { useReactToPrint } from 'react-to-print';
+import PrintIcon from '@material-ui/icons/Print';
 
 const full = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
 const mizania = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 const arbah = [13, 14, 15];
 
-export default function BudgetReport({ isRTL, words, menuitem, theme }: any) {
-  // const [start, setStart] = useState<any>(null);
-  // const [end, setEnd] = useState<any>(null);
+export const renderAccountCell = (d: any, xs: any, p = 10) => (
+  <Grid item xs={xs}>
+    <Typography style={{ padding: p }}>{d}</Typography>
+  </Grid>
+);
+export const renderAccountHeaderCell = (d: any, xs: any, p = 10) => (
+  <Grid item xs={xs}>
+    <Typography style={{ padding: p, fontWeight: 'bold' }}>{d}</Typography>
+  </Grid>
+);
+
+export const renderAccount = ({ pacc, isRTL, p = 10 }: any) => {
+  const { accounts } = pacc;
+  return (
+    <Box style={{ backgroundColor: '#eee' }}>
+      <Grid container spacing={0}>
+        <Grid item xs={12}>
+          <Box style={{ backgroundColor: '#fff' }}>
+            <Grid container spacing={0}>
+              {accounts.map((acc: any) => {
+                const { accCode, accName, accNameAr, rc, rd } = acc;
+                const name = isRTL ? accNameAr : accName;
+                return (
+                  <>
+                    <Grid item xs={12}>
+                      <Divider></Divider>
+                    </Grid>
+                    {renderAccountCell(accCode, 1, p)}
+                    {renderAccountCell(name, 5, p)}
+                    {renderAccountCell(moneyFormatEmpty(rd), 3, p)}
+                    {renderAccountCell(moneyFormatEmpty(rc), 3, p)}
+                  </>
+                );
+              })}
+            </Grid>
+          </Box>
+        </Grid>
+      </Grid>
+    </Box>
+  );
+};
+
+export default function BudgetReport({
+  isRTL,
+  words,
+  menuitem,
+  theme,
+  company,
+}: any) {
   const [parentslist, setParentsList] = useState([]);
   const [pars, setPars] = useState(full);
-  const [totals, setTotals] = useState({ credit: 0, debit: 0 });
+  const [totals, setTotals] = useState(null);
+  const [profit, setProfit] = useState<any>(null);
   const [report, setReport] = useState<any>('tb');
 
-  const [profit, setProfit] = useState<any>(null);
+  const [start, setStart] = useState<any>(null);
+  const [end, setEnd] = useState<any>(null);
+  const [currentViewName, setCurrentViewName] = useState('Month');
+  const [currentDate, setCurrentDate] = useState(new Date());
+  const [endDate, setEndDate] = useState(new Date());
+
+  const [isTime, setIsTime] = useState(false);
+
+  const currentViewNameChange = (e: any) => {
+    setCurrentViewName(e.target.value);
+  };
+  const currentDateChange = (curDate: any) => {
+    setCurrentDate(curDate);
+  };
+
+  const endDateChange = (curDate: any) => {
+    setEndDate(curDate);
+  };
 
   const [getTB, tbData]: any = useLazyQuery(getTrialBalance, {
     fetchPolicy: 'cache-and-network',
@@ -37,7 +114,8 @@ export default function BudgetReport({ isRTL, words, menuitem, theme }: any) {
 
       const faccs = accs.filter(
         (acc: any) =>
-          (acc.credit !== 0 || acc.debit !== 0) && pars.includes(acc.parentcode)
+          (acc?.credit !== 0 || acc?.debit !== 0) &&
+          pars.includes(acc.parentcode)
       );
       const rfaccount = faccs.map((fa: any) => {
         const { credit, debit } = fa;
@@ -58,7 +136,7 @@ export default function BudgetReport({ isRTL, words, menuitem, theme }: any) {
 
       const profitaccounts = accs.filter(
         (acc: any) =>
-          (acc.credit !== 0 || acc.debit !== 0) &&
+          (acc?.credit !== 0 || acc?.debit !== 0) &&
           arbah.includes(acc.parentcode)
       );
       const rprofitaccounts = profitaccounts.map((fa: any) => {
@@ -85,19 +163,32 @@ export default function BudgetReport({ isRTL, words, menuitem, theme }: any) {
       const profitrd = _.sumBy(profitfilter, 'rd');
       const profitrc = _.sumBy(profitfilter, 'rc');
 
-      setProfit({ credit: profitrc, debit: profitrd });
+      const profitrs = profitrd - profitrc;
+
+      setProfit({
+        credit: profitrc,
+        debit: profitrd,
+        raseedd: profitrs > 0 ? profitrs : 0,
+        raseedc: profitrs < 0 ? -profitrs : 0,
+      });
 
       const lfilter = rfaccount.filter((rf: any) => rf.rd !== 0 || rf.rc !== 0);
 
       const allrd = _.sumBy(lfilter, 'rd');
       const allrc = _.sumBy(lfilter, 'rc');
+      const allrsd = allrd - allrc;
 
       const bsrd = allrd + profitrd;
       const bsrc = allrc + profitrc;
+      const bsrsd = bsrd - bsrc;
+
+      const graseed = report === 'bs' ? bsrsd : allrsd;
 
       setTotals({
         credit: report === 'bs' ? bsrc : allrc,
         debit: report === 'bs' ? bsrd : allrd,
+        raseedd: graseed > 0 ? graseed : 0,
+        raseedc: graseed < 0 ? -graseed : 0,
       });
 
       const gaccs = _(lfilter)
@@ -135,100 +226,34 @@ export default function BudgetReport({ isRTL, words, menuitem, theme }: any) {
   }, [tbData, pars]);
 
   useEffect(() => {
-    getTB();
-  }, []);
-  // }, [start, end]);
+    const variables = isTime ? { start, end } : {};
+    getTB({ variables });
+  }, [start, end, isTime]);
 
   const refresh = () => {
     tbData?.refetch();
   };
 
-  // const renderParentCell = (d: any, xs: any) => (
-  //   <Grid item xs={xs}>
-  //     <Typography style={{ fontWeight: 'bold' }}>{d}</Typography>
-  //   </Grid>
-  // );
-  const renderAccountCell = (d: any, xs: any) => (
-    <Grid item xs={xs}>
-      <Typography style={{ padding: 10 }}>{d}</Typography>
-    </Grid>
-  );
-  const renderAccountHeaderCell = (d: any, xs: any) => (
-    <Grid item xs={xs}>
-      <Typography style={{ padding: 10, fontWeight: 'bold' }}>{d}</Typography>
-    </Grid>
-  );
-
-  const renderAccount = ({ pacc, isRTL }: any) => {
-    const { accounts } = pacc;
-    return (
-      <Box style={{ backgroundColor: '#eee' }}>
-        <Grid container spacing={0}>
-          <Grid item xs={12}>
-            <Box style={{ backgroundColor: '#fff' }}>
-              <Grid container spacing={0}>
-                {accounts.map((acc: any) => {
-                  const { accCode, accName, accNameAr, rc, rd } = acc;
-                  const name = isRTL ? accNameAr : accName;
-                  return (
-                    <>
-                      <Grid item xs={12}>
-                        <Divider></Divider>
-                      </Grid>
-                      {renderAccountCell(accCode, 1)}
-                      {renderAccountCell(name, 5)}
-                      {renderAccountCell(moneyFormatEmpty(rd), 3)}
-                      {renderAccountCell(moneyFormatEmpty(rc), 3)}
-                    </>
-                  );
-                })}
-              </Grid>
-            </Box>
-          </Grid>
-        </Grid>
-      </Box>
-    );
-  };
-  // const renderAccountBox = ({ pacc, isRTL }: any) => {
-  //   const { code, rdebit, rcredit, parent, parentAr, accounts } = pacc;
-  //   const name = isRTL ? parentAr : parent;
-  //   return (
-  //     <Box borderRadius={10} p={2} m={2} style={{ backgroundColor: '#eee' }}>
-  //       <Grid container spacing={2}>
-  //         {renderParentCell(code, 1)}
-  //         {renderParentCell(name, 5)}
-  //         {renderParentCell(moneyFormatEmpty(rdebit), 3)}
-  //         {renderParentCell(moneyFormatEmpty(rcredit), 3)}
-  //         <Grid item xs={12}>
-  //           <Box borderRadius={10} style={{ backgroundColor: '#fff' }}>
-  //             <Grid container spacing={0}>
-  //               {renderAccountHeaderCell('No', 1)}
-  //               {renderAccountHeaderCell(isRTL ? 'الحساب' : 'Account', 5)}
-  //               {renderAccountHeaderCell(isRTL ? 'مدين' : 'Debit', 3)}
-  //               {renderAccountHeaderCell(isRTL ? 'دائن' : 'Credit', 3)}
-
-  //               <Grid item xs={12}>
-  //                 <Divider></Divider>
-  //               </Grid>
-  //               {accounts.map((acc: any) => {
-  //                 const { accCode, accName, accNameAr, rd, rc } = acc;
-  //                 const name = isRTL ? accNameAr : accName;
-  //                 return (
-  //                   <>
-  //                     {renderAccountCell(accCode, 1)}
-  //                     {renderAccountCell(name, 5)}
-  //                     {renderAccountCell(moneyFormatEmpty(rd), 3)}
-  //                     {renderAccountCell(moneyFormatEmpty(rc), 3)}
-  //                   </>
-  //                 );
-  //               })}
-  //             </Grid>
-  //           </Box>
-  //         </Grid>
-  //       </Grid>
-  //     </Box>
-  //   );
-  // };
+  const componentRef: any = useRef();
+  const documentTitle =
+    report === 'tb'
+      ? isRTL
+        ? 'ميزان المراجعة'
+        : 'Trial Sheet'
+      : report === 'is'
+      ? isRTL
+        ? 'قائمة الدخل'
+        : 'Income Statment'
+      : report === 'bs'
+      ? isRTL
+        ? 'الميزانية العمومية'
+        : 'Balance Sheet'
+      : '';
+  const print = useReactToPrint({
+    content: () => componentRef.current,
+    documentTitle,
+    removeAfterPrint: true,
+  });
 
   return (
     <PageLayout
@@ -248,55 +273,135 @@ export default function BudgetReport({ isRTL, words, menuitem, theme }: any) {
         }}
       >
         <Box
-          p={2}
+          p={1}
           display="flex"
           style={{
             position: 'absolute',
             backgroundColor: '#fff',
             flex: 1,
-            width: '80%',
+            width: '84%',
           }}
         >
-          <Button
-            color="primary"
-            variant={report === 'tb' ? 'contained' : 'outlined'}
-            onClick={() => {
-              setReport('tb');
-              setPars(full);
+          <Box>
+            <Box display="flex">
+              <Box style={{ padding: 7 }}>
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      style={{ padding: 7 }}
+                      checked={isTime}
+                      onChange={() => {
+                        setIsTime(!isTime);
+                      }}
+                      color="primary"
+                    />
+                  }
+                  label={
+                    <Typography
+                      style={{ color: theme.palette.primary.main }}
+                      variant="subtitle2"
+                    >
+                      {isRTL ? 'تفعيل التاريخ' : 'Activate Date'}
+                    </Typography>
+                  }
+                  style={{ fontSize: 14 }}
+                />
+              </Box>
+              <Box
+                style={{
+                  opacity: !isTime ? 0.5 : undefined,
+                  pointerEvents: !isTime ? 'none' : undefined,
+                }}
+              >
+                <DateNavigatorReports
+                  setStart={setStart}
+                  setEnd={setEnd}
+                  currentDate={currentDate}
+                  currentDateChange={currentDateChange}
+                  currentViewName={currentViewName}
+                  currentViewNameChange={currentViewNameChange}
+                  endDate={endDate}
+                  endDateChange={endDateChange}
+                  views={[30, 365, 1000]}
+                  isRTL={isRTL}
+                  words={words}
+                  theme={theme}
+                ></DateNavigatorReports>
+              </Box>
+            </Box>
+          </Box>
+          <Box style={{ marginLeft: 100, marginRight: 100 }}>
+            <Button
+              color="primary"
+              variant={report === 'tb' ? 'contained' : 'outlined'}
+              onClick={() => {
+                setReport('tb');
+                setPars(full);
+              }}
+              style={{ margin: 10, padding: 5, minWidth: 150 }}
+            >
+              {isRTL ? 'ميزان المراجعة' : 'Trial Sheet'}
+            </Button>
+            <Button
+              color="primary"
+              variant={report === 'is' ? 'contained' : 'outlined'}
+              onClick={() => {
+                setReport('is');
+                setPars(arbah);
+              }}
+              style={{ margin: 10, padding: 5, minWidth: 150 }}
+            >
+              {isRTL ? 'قائمة الدخل' : 'Income Statment'}
+            </Button>
+            <Button
+              color="primary"
+              variant={report === 'bs' ? 'contained' : 'outlined'}
+              onClick={() => {
+                setReport('bs');
+                setPars(mizania);
+              }}
+              style={{ margin: 10, padding: 5, minWidth: 150 }}
+            >
+              {isRTL ? 'الميزانية العمومية' : 'Balance Sheet'}
+            </Button>
+          </Box>
+          <Box
+            style={{
+              position: 'absolute',
+              left: isRTL ? 50 : undefined,
+              right: isRTL ? undefined : 50,
+              top: 15,
+              zIndex: 112,
             }}
-            style={{ margin: 10, padding: 5, minWidth: 150 }}
           >
-            {isRTL ? 'ميزان المراجعة' : 'Trial Sheet'}
-          </Button>
-          <Button
-            color="primary"
-            variant={report === 'is' ? 'contained' : 'outlined'}
-            onClick={() => {
-              setReport('is');
-              setPars(arbah);
-            }}
-            style={{ margin: 10, padding: 5, minWidth: 150 }}
-          >
-            {isRTL ? 'قائمة الدخل' : 'Income Statment'}
-          </Button>
-          <Button
-            color="primary"
-            variant={report === 'bs' ? 'contained' : 'outlined'}
-            onClick={() => {
-              setReport('bs');
-              setPars(mizania);
-            }}
-            style={{ margin: 10, padding: 5, minWidth: 150 }}
-          >
-            {isRTL ? 'الميزانية العمومية' : 'Balance Sheet'}
-          </Button>
+            <IconButton onClick={print} title="Print Report" size="medium">
+              <PrintIcon />
+            </IconButton>
+          </Box>
         </Box>
-        <Box mt={12} ml={2} mr={2}>
-          <Grid container spacing={0}>
+        <Box mt={8} ml={2} mr={2}>
+          <Grid
+            container
+            spacing={0}
+            style={{
+              position: 'fixed',
+              backgroundColor: '#fff',
+              width: '84%',
+            }}
+          >
+            <Grid item xs={12}>
+              <Divider></Divider>
+            </Grid>
             {renderAccountHeaderCell(isRTL ? 'الرقم' : 'No', 1)}
             {renderAccountHeaderCell(isRTL ? 'الحساب' : 'Account', 5)}
             {renderAccountHeaderCell(isRTL ? 'مدين' : 'Debit', 3)}
             {renderAccountHeaderCell(isRTL ? 'دائن' : 'Credit', 3)}
+            <Grid item xs={12}>
+              <Divider></Divider>
+            </Grid>
+          </Grid>
+          <Grid item xs={12}>
+            <Box style={{ height: 43 }}></Box>
           </Grid>
           {parentslist.map((pacc: any) => {
             return renderAccount({ pacc, isRTL });
@@ -309,25 +414,58 @@ export default function BudgetReport({ isRTL, words, menuitem, theme }: any) {
               <Grid item xs={1}></Grid>
               <Grid item xs={5}>
                 <Typography style={{ padding: 10, fontWeight: 'bold' }}>
-                  {isRTL ? 'قائمة الدخل' : 'Income Statment'}
+                  {isRTL ? 'صافي ( الربح/الخسارة )' : 'Net Profit / Loss'}
                 </Typography>
               </Grid>
-              {renderAccountHeaderCell(moneyFormatEmpty(profit.debit), 3)}
-              {renderAccountHeaderCell(moneyFormatEmpty(profit.credit), 3)}
+              {renderAccountHeaderCell(moneyFormatEmpty(profit?.raseedd), 3)}
+              {renderAccountHeaderCell(moneyFormatEmpty(profit?.raseedc), 3)}
             </Grid>
           )}
+
           <Grid container spacing={0}>
             <Grid item xs={12}>
               <Divider></Divider>
             </Grid>
             <Grid item xs={1}></Grid>
             <Grid item xs={5}></Grid>
-            {renderAccountHeaderCell(moneyFormatEmpty(totals.debit), 3)}
-            {renderAccountHeaderCell(moneyFormatEmpty(totals.credit), 3)}
+            {renderAccountHeaderCell(moneyFormatEmpty(totals?.debit), 3)}
+            {renderAccountHeaderCell(moneyFormatEmpty(totals?.credit), 3)}
           </Grid>
+          {report === 'is' && (
+            <Grid container spacing={0}>
+              <Grid item xs={12}>
+                <Divider></Divider>
+              </Grid>
+              <Grid item xs={1}></Grid>
+              <Grid item xs={5}>
+                <Typography style={{ padding: 10, fontWeight: 'bold' }}>
+                  {isRTL ? 'صافي ( الربح/الخسارة )' : 'Net Profit / Loss'}
+                </Typography>
+              </Grid>
+              {renderAccountHeaderCell(moneyFormatEmpty(profit?.raseedd), 3)}
+              {renderAccountHeaderCell(moneyFormatEmpty(profit?.raseedc), 3)}
+            </Grid>
+          )}
           <Grid item xs={12}>
             <Box m={6}></Box>
           </Grid>
+        </Box>
+        <Box>
+          <div style={{ display: 'none' }}>
+            <BalanceReportPrint
+              company={company}
+              parentslist={parentslist}
+              report={report}
+              ref={componentRef}
+              isRTL={isRTL}
+              start={start}
+              end={end}
+              profit={profit}
+              totals={totals}
+              documentTitle={documentTitle}
+              isTime={isTime}
+            />
+          </div>
         </Box>
       </Box>
     </PageLayout>

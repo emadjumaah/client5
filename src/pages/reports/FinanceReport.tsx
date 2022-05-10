@@ -33,7 +33,15 @@ import {
   opTypeFormatter,
   taskIdFormatter,
 } from '../../Shared/colorFormat';
-import { Box, fade, IconButton, withStyles } from '@material-ui/core';
+import {
+  Box,
+  Checkbox,
+  fade,
+  FormControlLabel,
+  IconButton,
+  Typography,
+  withStyles,
+} from '@material-ui/core';
 import { getMonthlyReport } from '../../graphql';
 import { useLazyQuery } from '@apollo/client';
 import { GridExporter } from '@devexpress/dx-react-grid-export';
@@ -76,6 +84,7 @@ export default function FinanceReport({
   const [start, setStart] = useState<any>(null);
   const [end, setEnd] = useState<any>(null);
   const [rows, setRows] = useState([]);
+  const [isRaseed, setIsRaseed] = useState(true);
 
   const col = getColumns({ isRTL, words });
 
@@ -142,7 +151,7 @@ export default function FinanceReport({
     const slsData = summaryData?.data?.['getMonthlyReport']?.data || [];
     const balance = summaryData?.data?.['getMonthlyReport']?.message || null;
     const updatedRows = slsData.map((x: any) => x);
-    const amount = balance ? Number(balance) : null;
+    const amount = isRaseed && balance ? Number(balance) : null;
     if (amount !== null) {
       const isCredit = accvalue?.[0]?.accType === 2;
       let credit: any;
@@ -181,7 +190,7 @@ export default function FinanceReport({
         : [];
 
     setRows(updatedRows2);
-  }, [summaryData]);
+  }, [summaryData, isRaseed]);
 
   const getIds = (list: any) =>
     list && list?.length > 0 ? list.map((sv: any) => sv._id) : undefined;
@@ -325,6 +334,27 @@ export default function FinanceReport({
               nomulti
               width={220}
             ></FilterSelectCkeckBox>
+          </Box>
+          <Box style={{ marginLeft: 50, marginRight: 50 }}>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  style={{ padding: 7 }}
+                  checked={isRaseed}
+                  onChange={() => setIsRaseed(!isRaseed)}
+                  color="primary"
+                />
+              }
+              label={
+                <Typography
+                  style={{ color: theme.palette.primary.main }}
+                  variant="subtitle2"
+                >
+                  {isRTL ? 'رصيد افتتاحي' : 'Opening Balance'}
+                </Typography>
+              }
+              style={{ fontSize: 14 }}
+            />
           </Box>
         </Box>
         <Grid rows={rows} columns={columns} getRowId={getRowId}>

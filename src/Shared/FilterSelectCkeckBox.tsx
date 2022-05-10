@@ -28,7 +28,16 @@ export default function FilterSelect({
       ListboxComponent={ListboxComponent}
       // disableListWrap
       fullWidth
-      getOptionLabel={(option: any) => (isRTL ? option.nameAr : option.name)}
+      getOptionLabel={(option: any) => {
+        let nm;
+        nm = isRTL ? option?.nameAr : option?.name;
+        const code = option?.code;
+        if (code) {
+          return `${nm} - ${code}`;
+        } else {
+          return nm ? nm : '';
+        }
+      }}
       renderOption={(option, { selected }) => (
         <Box
           style={{

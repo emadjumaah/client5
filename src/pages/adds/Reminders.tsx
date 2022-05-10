@@ -24,13 +24,7 @@ import { actionTimeFormatter, sentFormatter } from '../../Shared/colorFormat';
 import { AlertLocal, SearchTable } from '../../components';
 import { getColumns } from '../../common/columns';
 
-import {
-  Box,
-  FormControlLabel,
-  Radio,
-  RadioGroup,
-  useMediaQuery,
-} from '@material-ui/core';
+import { Box, Button, useMediaQuery } from '@material-ui/core';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
 import PageLayout from '../main/PageLayout';
 import { errorAlert, errorDeleteAlert } from '../../Shared/helpers';
@@ -329,6 +323,7 @@ export default function Reminders(props: any) {
             words={words}
             theme={theme}
           ></DateNavigatorReports>
+
           <Box
             style={{
               padding: 0,
@@ -339,24 +334,36 @@ export default function Reminders(props: any) {
               borderRadius: 5,
             }}
           >
-            <RadioGroup
-              aria-label="Views"
-              name="views"
-              row
-              value={type}
-              onChange={(e: any) => setType(Number(e.target.value))}
+            <Button
+              color="primary"
+              variant={type === 2 ? 'contained' : 'outlined'}
+              onClick={() => {
+                setType(2);
+              }}
+              style={{
+                marginLeft: 15,
+                marginRight: 15,
+                padding: 5,
+                minWidth: 150,
+              }}
             >
-              <FormControlLabel
-                value={2}
-                control={<Radio color="primary" />}
-                label={isRTL ? 'التذكيرات' : 'Reminders'}
-              />
-              <FormControlLabel
-                value={1}
-                control={<Radio color="primary" />}
-                label={isRTL ? 'ادارة التذكيرات' : 'Manage Reminders'}
-              />
-            </RadioGroup>
+              {isRTL ? 'التذكيرات' : 'Reminders'}
+            </Button>
+            <Button
+              color="primary"
+              variant={type === 1 ? 'contained' : 'outlined'}
+              onClick={() => {
+                setType(1);
+              }}
+              style={{
+                marginLeft: 15,
+                marginRight: 15,
+                padding: 5,
+                minWidth: 150,
+              }}
+            >
+              {isRTL ? 'ادارة التذكيرات' : 'Manage Reminders'}
+            </Button>
           </Box>
         </Box>
 

@@ -494,6 +494,14 @@ export const simpleDateFormatter = (time: any) => {
     </div>
   );
 };
+export const simpleDateFormatterData = (time: any) => {
+  return new Date(time).toLocaleString('en-GB', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+  });
+};
+
 export const simpleSpanDateFormatter = (time: any) => {
   return (
     <span>

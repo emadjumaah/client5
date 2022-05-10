@@ -10,11 +10,9 @@ import {
 } from '@devexpress/dx-react-grid-material-ui';
 import {
   Box,
+  Button,
   fade,
-  FormControlLabel,
   Paper,
-  Radio,
-  RadioGroup,
   Typography,
   withStyles,
 } from '@material-ui/core';
@@ -365,26 +363,39 @@ export default function ReminderCustomer({
             marginLeft: 40,
             marginRight: 40,
             borderRadius: 5,
+            marginTop: 10,
           }}
         >
-          <RadioGroup
-            aria-label="Views"
-            name="views"
-            row
-            value={type}
-            onChange={(e: any) => setType(Number(e.target.value))}
+          <Button
+            color="primary"
+            variant={type === 2 ? 'contained' : 'outlined'}
+            onClick={() => {
+              setType(2);
+            }}
+            style={{
+              marginLeft: 15,
+              marginRight: 15,
+              padding: 5,
+              minWidth: 150,
+            }}
           >
-            <FormControlLabel
-              value={2}
-              control={<Radio color="primary" />}
-              label={isRTL ? 'التذكيرات' : 'Reminders'}
-            />
-            <FormControlLabel
-              value={1}
-              control={<Radio color="primary" />}
-              label={isRTL ? 'ادارة التذكيرات' : 'Manage Reminders'}
-            />
-          </RadioGroup>
+            {isRTL ? 'التذكيرات' : 'Reminders'}
+          </Button>
+          <Button
+            color="primary"
+            variant={type === 1 ? 'contained' : 'outlined'}
+            onClick={() => {
+              setType(1);
+            }}
+            style={{
+              marginLeft: 15,
+              marginRight: 15,
+              padding: 5,
+              minWidth: 150,
+            }}
+          >
+            {isRTL ? 'ادارة التذكيرات' : 'Manage Reminders'}
+          </Button>
         </Box>
       </Box>
       {rows && type === 1 && (
