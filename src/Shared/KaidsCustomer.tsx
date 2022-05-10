@@ -27,6 +27,8 @@ import {
 import useTasks from '../hooks/useTasks';
 import getGereralKaids from '../graphql/query/getGereralKaids';
 import { getColumns } from '../common/columns';
+import { Box } from '@material-ui/core';
+import DateNavigatorReports from '../components/filters/DateNavigatorReports';
 
 export default function KaidsCustomer({
   isRTL,
@@ -54,6 +56,23 @@ export default function KaidsCustomer({
 
   const { tasks } = useTasks();
 
+  const [start, setStart] = useState<any>(null);
+  const [end, setEnd] = useState<any>(null);
+  const [currentViewName, setCurrentViewName] = useState('Month');
+  const [currentDate, setCurrentDate] = useState(new Date());
+  const [endDate, setEndDate] = useState(new Date());
+
+  const currentViewNameChange = (e: any) => {
+    setCurrentViewName(e.target.value);
+  };
+  const currentDateChange = (curDate: any) => {
+    setCurrentDate(curDate);
+  };
+
+  const endDateChange = (curDate: any) => {
+    setEndDate(curDate);
+  };
+
   const [loadKaids, kaidsData]: any = useLazyQuery(getGereralKaids, {
     fetchPolicy: 'cache-and-network',
   });
@@ -61,11 +80,13 @@ export default function KaidsCustomer({
   useEffect(() => {
     const variables = {
       [name]: id,
+      start: start ? start.setHours(0, 0, 0, 0) : undefined,
+      end: end ? end.setHours(23, 59, 59, 999) : undefined,
     };
     loadKaids({
       variables,
     });
-  }, [id]);
+  }, [id, start, end]);
 
   useEffect(() => {
     if (kaidsData?.loading) {
@@ -92,13 +113,29 @@ export default function KaidsCustomer({
         minHeight: 600,
       }}
     >
+      <Box display="flex">
+        <DateNavigatorReports
+          setStart={setStart}
+          setEnd={setEnd}
+          currentDate={currentDate}
+          currentDateChange={currentDateChange}
+          currentViewName={currentViewName}
+          currentViewNameChange={currentViewNameChange}
+          endDate={endDate}
+          endDateChange={endDateChange}
+          views={[1, 7, 30, 365, 1000]}
+          isRTL={isRTL}
+          words={words}
+          theme={theme}
+        ></DateNavigatorReports>
+      </Box>
       <Grid rows={rows} columns={columns} getRowId={getRowId}>
         <SortingState />
         <SummaryState totalItems={totalSummaryItems} />
         <IntegratedSorting />
         <IntegratedSummary />
         <VirtualTable
-          height={600}
+          height={550}
           messages={{
             noData: isRTL ? 'لا يوجد بيانات' : 'no data',
           }}

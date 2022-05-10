@@ -33,8 +33,8 @@ import AutoFieldLocal from '../components/fields/AutoFieldLocal';
 import { CalenderLocal } from '../components';
 import { getAppStartEndPeriod } from '../common/time';
 import getTasks from '../graphql/query/getTasks';
-import { InvoicePrintA5 } from '../common/InvoicePrintA5';
 import { useReactToPrint } from 'react-to-print';
+import { InvoicePrint } from '../print';
 
 export const indexTheList = (list: any) => {
   return list.map((item: any, index: any) => {
@@ -87,7 +87,7 @@ const PopupTaskInvoice = ({
   const [resoError, setResoError] = useState<any>(false);
   const resoRef: any = React.useRef();
 
-  const [isCash, setIsCash] = useState(false);
+  const [isCash, setIsCash] = useState(true);
   const { tempwords, tempoptions } = useTemplate();
 
   const { handleSubmit, reset } = useForm({});
@@ -518,7 +518,7 @@ const PopupTaskInvoice = ({
           <Grid item xs={4}>
             <AutoFieldLocal
               name="employee"
-              title={tempwords.employee}
+              title={tempwords?.employee}
               words={words}
               options={employees}
               value={emplvalue}
@@ -536,7 +536,7 @@ const PopupTaskInvoice = ({
           <Grid item xs={4}>
             <AutoFieldLocal
               name="resourse"
-              title={tempwords.resourse}
+              title={tempwords?.resourse}
               words={words}
               options={resourses}
               value={resovalue}
@@ -626,8 +626,9 @@ const PopupTaskInvoice = ({
           </Box>
           <Box>
             <div style={{ display: 'none' }}>
-              <InvoicePrintA5
+              <InvoicePrint
                 company={company}
+                user={user}
                 printData={printData}
                 ref={componentRef}
               />

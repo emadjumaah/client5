@@ -174,6 +174,7 @@ const PopupResourseView = ({
                     resourses={resourses}
                     departments={departments}
                     company={company}
+                    theme={theme}
                     servicesproducts={servicesproducts}
                     name="resourseId"
                     value={row}

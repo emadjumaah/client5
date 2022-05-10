@@ -19,15 +19,20 @@ import useDepartmentsUp from '../../hooks/useDepartmentsUp';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
 import { Loading } from '../../Shared';
 import { roles } from '../../common';
+import useResoursesUp from '../../hooks/useResoursesUp';
+import Cars from '../../components/charts/Cars';
+import { useTemplate } from '../../hooks';
 
 export default function Landing(props: any) {
   const [loading, setLoading] = useState(true);
 
   const { words, isRTL, user, theme, menuitem } = props;
 
+  const { resourses } = useResoursesUp();
   const { departments } = useDepartmentsUp();
   const { employees } = useEmployeesUp();
   const { height } = useWindowDimensions();
+  const { tempwords } = useTemplate();
 
   const {
     salesDays,
@@ -44,6 +49,8 @@ export default function Landing(props: any) {
     eventsMonthCount,
     raseeds,
     refreshChartData,
+    // todayEData,
+    // todayRData,
   } = useLandingChart();
 
   const refresh = () => {
@@ -127,7 +134,6 @@ export default function Landing(props: any) {
                 ></InfoBox>
               </Grid>
             )}
-
             {roles.isFinanceAdmin() && (
               <Grid item xs={6} md={4}>
                 <InfoBox
@@ -163,8 +169,24 @@ export default function Landing(props: any) {
                 ></InfoBox>
               </Grid>
             )}
-            {todayEvents && roles.isOperateAdmin() && (
-              <Grid item xs={12} md={6}>
+
+            {roles.isEditor() && resourses && (
+              <Grid item xs={12} md={4}>
+                <Cars
+                  title={
+                    isRTL
+                      ? `انشغال ${tempwords?.resourses}`
+                      : `${tempwords?.resourses} Availability`
+                  }
+                  data={resourses}
+                  height={300}
+                  isRTL={isRTL}
+                  prim={prim}
+                ></Cars>
+              </Grid>
+            )}
+            {todayEvents && roles.isEditor() && (
+              <Grid item xs={12} md={4}>
                 <PercentChart
                   pricolor={salesColor}
                   seccolor={eventColor}
@@ -173,6 +195,18 @@ export default function Landing(props: any) {
                   prim={prim}
                   isRTL={isRTL}
                 />
+              </Grid>
+            )}
+            {nextEventDays && roles.isEditor() && (
+              <Grid item xs={12} md={4}>
+                <DaysEvents
+                  dataKey="count"
+                  theme={theme}
+                  isRTL={isRTL}
+                  data={nextEventDays}
+                  height={300}
+                  prim={prim}
+                ></DaysEvents>
               </Grid>
             )}
             {salesDays && roles.isFinanceAdmin() && (
@@ -187,18 +221,7 @@ export default function Landing(props: any) {
                 ></SalesDaysChart>
               </Grid>
             )}
-            {nextEventDays && roles.isOperateAdmin() && (
-              <Grid item xs={12} md={6}>
-                <DaysEvents
-                  dataKey="count"
-                  theme={theme}
-                  isRTL={isRTL}
-                  data={nextEventDays}
-                  height={300}
-                  prim={prim}
-                ></DaysEvents>
-              </Grid>
-            )}
+
             {eventDays && roles.isOperateAdmin() && (
               <Grid item xs={12} md={6}>
                 <EventsDaysChart

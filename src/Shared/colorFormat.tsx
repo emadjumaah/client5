@@ -472,7 +472,7 @@ export const moneyFormat = (amount: number) => {
       return amount.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
     }
   }
-  return '-';
+  return '0.00';
 };
 export const moneyFormatEmpty = (amount: number) => {
   if (amount) {
@@ -531,7 +531,7 @@ export const amountFormatter = ({ row }: any) => {
 export const currencyFormatter = ({ value }: any) => {
   return (
     <span style={{ color: value >= 0 ? colors.blue[800] : colors.red[400] }}>
-      {moneyFormatEmpty(value)}
+      {moneyFormat(value)}
     </span>
   );
 };
@@ -570,7 +570,7 @@ export const templateFormatter = ({ value }: any) => {
 export const currencyFormatterEmpty = ({ value }: any) => {
   return (
     <span style={{ color: value >= 0 ? colors.blue[500] : colors.red[500] }}>
-      {moneyFormatEmpty(value)}
+      {moneyFormat(value)}
     </span>
   );
 };
@@ -620,6 +620,34 @@ export const doneFormatter = ({ row, editEvent }: any) => {
               updateEvent: {
                 __typename: 'Operation',
                 id,
+                ...row,
+                ...variables,
+              },
+            },
+          });
+        }}
+        color="primary"
+      />
+    </span>
+  );
+};
+export const sentFormatter = ({ row, value, editRAction }: any) => {
+  const sent = !value;
+  const _id = row._id;
+  const variables = { _id, sent };
+  return (
+    <span>
+      <Checkbox
+        style={{ padding: 5 }}
+        checked={value}
+        onChange={async () => {
+          await editRAction({
+            variables,
+            optimisticResponse: {
+              __typename: 'updateAction',
+              updateEvent: {
+                __typename: 'Action',
+                _id,
                 ...row,
                 ...variables,
               },
@@ -753,29 +781,19 @@ export const nameLinkFormat = ({ row, value, setItem, setOpenItem }: any) => {
 };
 
 export const taskTypeFormat = ({ value }: any) => {
-  return (
-    <Typography
-      style={{
-        fontSize: 13,
-        textAlign: 'start',
-        color: colors.deepPurple[500],
-      }}
-    >
-      {value}
-    </Typography>
-  );
+  return <Typography style={{ fontSize: 13 }}>{value}</Typography>;
 };
 
 export const taskStatusFormat = ({ value }: any) => {
   let color;
-  if (value === 'مغلق' || value === 'Closed') {
+  if (value === 'مقفل' || value === 'Closed') {
     color = colors.blue[500];
   }
   if (value === 'لم يبدأ بعد' || value === 'Not Started') {
     color = colors.deepPurple[500];
   }
-  if (value === 'غير مغلق' || value === 'Not Closed') {
-    color = colors.red[500];
+  if (value === 'غير مقفل' || value === 'Not Closed') {
+    color = colors.orange[500];
   }
   if (value === 'ساري' || value === 'In Progress') {
     color = colors.green[500];

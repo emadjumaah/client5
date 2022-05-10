@@ -15,6 +15,7 @@ import React from 'react';
 import Draggable from 'react-draggable';
 import { AlertLocal } from '../../components';
 import CloseOutlinedIcon from '@material-ui/icons/CloseOutlined';
+import { roles } from '../../common';
 function PaperComponent(props: any) {
   return (
     <Draggable
@@ -50,6 +51,7 @@ export default function PopupLayout(props: any) {
     bgcolor,
   } = props;
   const bgc = bgcolor ? fade(bgcolor, 0.1) : '#f5f5f5';
+
   return (
     <Dialog
       open={open}
@@ -129,7 +131,7 @@ export default function PopupLayout(props: any) {
             color="primary"
           >
             <Typography variant="subtitle2">
-              {isRTL ? 'اغلاق' : 'Close'}
+              {isRTL ? 'الغاء' : 'Cancel'}
             </Typography>
           </Button>
         )}
@@ -145,65 +147,27 @@ export default function PopupLayout(props: any) {
             </Typography>
           </Button>
         )}
-        {!onlyclose && (
-          <>
-            {/* {print && (
-              <Button
-                style={{
-                  width: 100,
-                  height: 36,
-                  marginRight: 10,
-                  marginLeft: 10,
-                }}
-                variant="contained"
-                onClick={() => {
-                  onSubmit();
-                  if (print) print();
-                }}
-                color="primary"
-                disabled={saving}
-              >
-                <Typography
-                  style={{ marginLeft: 5, marginRight: 5 }}
-                  variant="subtitle2"
-                >
-                  {savetitle}
-                </Typography>
-                {saving && <CircularProgress color="primary" size={16} />}
-                <Typography
-                  style={{
-                    marginLeft: 5,
-                    marginRight: 5,
-                    fontSize: 10,
-                    color: '#ddd',
-                  }}
-                  variant="subtitle2"
-                >
-                  {isRTL ? `(طباعة)` : `(Print)`}
-                </Typography>
-              </Button>
-            )} */}
-            <Button
-              style={{
-                width: 100,
-                height: 36,
-                marginRight: 10,
-                marginLeft: 10,
-              }}
-              variant="contained"
-              onClick={onSubmit}
-              color="primary"
-              disabled={saving}
+        {!onlyclose && roles.isEditor() && (
+          <Button
+            style={{
+              width: 100,
+              height: 36,
+              marginRight: 10,
+              marginLeft: 10,
+            }}
+            variant="contained"
+            onClick={onSubmit}
+            color="primary"
+            disabled={saving}
+          >
+            <Typography
+              style={{ marginLeft: 5, marginRight: 5 }}
+              variant="subtitle2"
             >
-              <Typography
-                style={{ marginLeft: 5, marginRight: 5 }}
-                variant="subtitle2"
-              >
-                {savetitle}
-              </Typography>
-              {saving && <CircularProgress color="primary" size={16} />}
-            </Button>
-          </>
+              {savetitle}
+            </Typography>
+            {saving && <CircularProgress color="primary" size={16} />}
+          </Button>
         )}
       </DialogActions>
     </Dialog>

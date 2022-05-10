@@ -164,7 +164,7 @@ const PopupProduct = ({
       barcode,
       name,
       nameAr,
-      price,
+      price: Number(price),
       department,
       brand,
       category,

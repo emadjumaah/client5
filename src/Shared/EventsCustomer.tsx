@@ -8,7 +8,7 @@ import {
   TableEditColumn,
   VirtualTable,
 } from '@devexpress/dx-react-grid-material-ui';
-import { fade, Paper, Typography, withStyles } from '@material-ui/core';
+import { Box, fade, Paper, Typography, withStyles } from '@material-ui/core';
 import {
   DataTypeProvider,
   EditingState,
@@ -41,10 +41,10 @@ import { Command } from './Command';
 import PopupEditing from './PopupEditing';
 import getObjectEvents from '../graphql/query/getObjectEvents';
 import getTasks from '../graphql/query/getTasks';
-import LoadingInline from './LoadingInline';
 import PopupAppointmentCustomer from '../pubups/PopupAppointmentCustomer';
 import useTasks from '../hooks/useTasks';
 import React from 'react';
+import DateNavigatorReports from '../components/filters/DateNavigatorReports';
 export const getRowId = (row: any) => row._id;
 
 const NumberTypeProvider = (props) => (
@@ -87,7 +87,6 @@ export default function EventsCustomer({
   company,
   value,
 }: any) {
-  const [loading, setLoading] = useState(true);
   const col = getColumns({ isRTL, words });
 
   const [columns] = useState([
@@ -107,11 +106,32 @@ export default function EventsCustomer({
   const { tasks } = useTasks();
   const [rows, setRows] = useState([]);
 
+  const [start, setStart] = useState<any>(null);
+  const [end, setEnd] = useState<any>(null);
+  const [currentViewName, setCurrentViewName] = useState('Month');
+  const [currentDate, setCurrentDate] = useState(new Date());
+  const [endDate, setEndDate] = useState(new Date());
+
+  const currentViewNameChange = (e: any) => {
+    setCurrentViewName(e.target.value);
+  };
+  const currentDateChange = (curDate: any) => {
+    setCurrentDate(curDate);
+  };
+
+  const endDateChange = (curDate: any) => {
+    setEndDate(curDate);
+  };
+
   const refresQuery = {
     refetchQueries: [
       {
         query: getObjectEvents,
-        variables: { [name]: id },
+        variables: {
+          [name]: id,
+          start: start ? start.setHours(0, 0, 0, 0) : undefined,
+          end: end ? end.setHours(23, 59, 59, 999) : undefined,
+        },
       },
       {
         query: getTasks,
@@ -142,15 +162,16 @@ export default function EventsCustomer({
   });
 
   useEffect(() => {
-    const variables = { [name]: id };
+    const variables = {
+      [name]: id,
+      start: start ? start.setHours(0, 0, 0, 0) : undefined,
+      end: end ? end.setHours(23, 59, 59, 999) : undefined,
+    };
     getEvents({ variables });
-  }, [id]);
+  }, [id, start, end]);
 
   useEffect(() => {
     const data = eventsData?.data?.['getObjectEvents']?.data;
-    if (data) {
-      setLoading(false);
-    }
     const events = data || [];
     const fevents = events.filter((ev: any) => ev.amount > 0);
     setRows(fevents);
@@ -177,8 +198,22 @@ export default function EventsCustomer({
         minHeight: 600,
       }}
     >
-      {loading && <LoadingInline></LoadingInline>}
-
+      <Box display="flex">
+        <DateNavigatorReports
+          setStart={setStart}
+          setEnd={setEnd}
+          currentDate={currentDate}
+          currentDateChange={currentDateChange}
+          currentViewName={currentViewName}
+          currentViewNameChange={currentViewNameChange}
+          endDate={endDate}
+          endDateChange={endDateChange}
+          views={[1, 7, 30, 365, 1000]}
+          isRTL={isRTL}
+          words={words}
+          theme={theme}
+        ></DateNavigatorReports>
+      </Box>
       {rows && (
         <Grid rows={rows} columns={columns} getRowId={getRowId}>
           <SortingState />
@@ -186,7 +221,7 @@ export default function EventsCustomer({
           <IntegratedSorting />
 
           <VirtualTable
-            height={600}
+            height={550}
             messages={{
               noData: isRTL ? 'لا يوجد بيانات' : 'no data',
             }}

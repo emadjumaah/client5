@@ -54,6 +54,7 @@ export interface LanguageType {
     service: string;
     product: string;
     services: string;
+    itemslist: string;
     expenseitems: string;
     products: string;
     serviceproduct: string;
@@ -82,6 +83,7 @@ export interface LanguageType {
     brand: string;
     cost: string;
     price: string;
+    theprice: string;
     used: string;
     underSale: string;
     save: string;

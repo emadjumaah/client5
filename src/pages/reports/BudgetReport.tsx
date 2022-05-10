@@ -1,208 +1,234 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import React, {
-  useCallback,
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-} from 'react';
-import {
-  SortingState,
-  IntegratedSorting,
-  DataTypeProvider,
-  SummaryState,
-  IntegratedSummary,
-  GroupingState,
-  IntegratedGrouping,
-} from '@devexpress/dx-react-grid';
-import {
-  Grid,
-  TableHeaderRow,
-  Toolbar,
-  VirtualTable,
-  ExportPanel,
-  TableColumnVisibility,
-  ColumnChooser,
-  TableSummaryRow,
-  TableGroupRow,
-} from '@devexpress/dx-react-grid-material-ui';
-import { getRowId } from '../../common';
-import {
-  covertToTimeDateDigit,
-  createdAtFormatter,
-  currencyFormatterEmpty,
-  opTypeFormatter,
-  taskIdFormatter,
-} from '../../Shared/colorFormat';
-import {
-  Box,
-  Checkbox,
-  colors,
-  fade,
-  FormControlLabel,
-  Typography,
-  withStyles,
-} from '@material-ui/core';
-import { getMonthlyReport } from '../../graphql';
+import React, { useEffect, useState } from 'react';
+
+import { Box, Button, Divider, Grid, Typography } from '@material-ui/core';
 import { useLazyQuery } from '@apollo/client';
-import { GridExporter } from '@devexpress/dx-react-grid-export';
-import saveAs from 'file-saver';
-import { getColumns } from '../../common/columns';
+
 import PageLayout from '../main/PageLayout';
-import DateNavigatorReports from '../../components/filters/DateNavigatorReports';
-import { FinanceContext } from '../../contexts';
+
 import useWindowDimensions from '../../hooks/useWindowDimensions';
-import useTasks from '../../hooks/useTasks';
+import getTrialBalance from '../../graphql/query/getTrialBalance';
+import _ from 'lodash';
+import { moneyFormatEmpty } from '../../Shared/colorFormat';
 
-const styles = (theme) => ({
-  tableStriped: {
-    '& tbody tr:nth-of-type(odd)': {
-      backgroundColor: fade(theme.palette.primary.main, 0.05),
-    },
-  },
-});
-
-const TableComponentBase = ({ classes, ...restProps }) => (
-  <VirtualTable.Table {...restProps} className={classes.tableStriped} />
-);
-export const TableComponent = withStyles(styles, { name: 'TableComponent' })(
-  TableComponentBase
-);
+const full = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
+const mizania = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+const arbah = [13, 14, 15];
 
 export default function BudgetReport({ isRTL, words, menuitem, theme }: any) {
-  const [start, setStart] = useState<any>(null);
-  const [end, setEnd] = useState<any>(null);
+  // const [start, setStart] = useState<any>(null);
+  // const [end, setEnd] = useState<any>(null);
+  const [parentslist, setParentsList] = useState([]);
+  const [pars, setPars] = useState(full);
+  const [totals, setTotals] = useState({ credit: 0, debit: 0 });
+  const [report, setReport] = useState<any>('tb');
 
-  const [rows, setRows] = useState([]);
-  const [group, setGroup]: any = useState(false);
+  const [profit, setProfit] = useState<any>(null);
 
-  const col = getColumns({ isRTL, words });
-
-  const [columns] = useState([
-    col.opTime,
-    col.acc,
-    col.taskId,
-    col.refNo,
-    col.opType,
-    col.employee,
-    col.opDocNo,
-    col.amount,
-    col.amountdebit,
-    col.amountcredit,
-    col.rased,
-  ]);
-
-  const [tableColumnVisibilityColumnExtensions] = useState([
-    { columnName: col.opTime.name, togglingEnabled: false },
-    { columnName: col.amount.name, togglingEnabled: false },
-  ]);
-
-  const [getSummary, summaryData]: any = useLazyQuery(getMonthlyReport, {
+  const [getTB, tbData]: any = useLazyQuery(getTrialBalance, {
     fetchPolicy: 'cache-and-network',
   });
-
-  const {
-    state: { currentDate, currentViewName, endDate, sort },
-    dispatch,
-  } = useContext(FinanceContext);
-  const { tasks } = useTasks();
   const { height } = useWindowDimensions();
 
-  const currentViewNameChange = (e: any) => {
-    dispatch({ type: 'setCurrentViewName', payload: e.target.value });
-  };
-  const currentDateChange = (curDate: any) => {
-    dispatch({ type: 'setCurrentDate', payload: curDate });
-  };
-  const endDateChange = (curDate: any) => {
-    dispatch({ type: 'setEndDate', payload: curDate });
-  };
   useEffect(() => {
-    const slsData = summaryData?.data?.['getMonthlyReport']?.data || [];
-    let rased = 0;
-    const updatedRows =
-      slsData?.length > 0
-        ? slsData.map((item: any) => {
-            const rowRased = item.debit ? item.debit : -item.credit;
-            rased = rased + rowRased;
-            return {
-              ...item,
-              rased,
-            };
-          })
-        : [];
+    const dd = tbData?.data?.['getTrialBalance']?.data;
+    if (dd) {
+      const accs = JSON.parse(dd);
 
-    setRows(updatedRows);
-  }, [summaryData]);
-
-  const mizania = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
-
-  const fetchData = () => {
-    const variables = {
-      parentcodes: mizania,
-      start: start ? start.setHours(0, 0, 0, 0) : undefined,
-      end: end
-        ? end.setHours(23, 59, 59, 999)
-        : new Date().setHours(23, 59, 59, 999),
-    };
-    getSummary({
-      variables,
-    });
-  };
-
-  useEffect(() => {
-    fetchData();
-  }, [start, end]);
-
-  const exporterRef: any = useRef(null);
-
-  const startExport = useCallback(() => {
-    exporterRef.current.exportGrid();
-  }, [exporterRef]);
-
-  const onSave = (workbook: any) => {
-    workbook.xlsx.writeBuffer().then((buffer: any) => {
-      const now = new Date();
-      const name = `finance-report-${covertToTimeDateDigit(now)}`;
-      saveAs(
-        new Blob([buffer], { type: 'application/octet-stream' }),
-        `${name}.xlsx`
+      const faccs = accs.filter(
+        (acc: any) =>
+          (acc.credit !== 0 || acc.debit !== 0) && pars.includes(acc.parentcode)
       );
-    });
-  };
+      const rfaccount = faccs.map((fa: any) => {
+        const { credit, debit } = fa;
+        const raseed = debit - credit;
+        let rc = 0;
+        let rd = 0;
+        if (raseed > 0) {
+          rd = raseed;
+        } else {
+          rc = -raseed;
+        }
+        return {
+          ...fa,
+          rd,
+          rc,
+        };
+      });
+
+      const profitaccounts = accs.filter(
+        (acc: any) =>
+          (acc.credit !== 0 || acc.debit !== 0) &&
+          arbah.includes(acc.parentcode)
+      );
+      const rprofitaccounts = profitaccounts.map((fa: any) => {
+        const { credit, debit } = fa;
+        const raseed = debit - credit;
+        let rc = 0;
+        let rd = 0;
+        if (raseed > 0) {
+          rd = raseed;
+        } else {
+          rc = -raseed;
+        }
+        return {
+          ...fa,
+          rd,
+          rc,
+        };
+      });
+
+      const profitfilter = rprofitaccounts.filter(
+        (rf: any) => rf.rd !== 0 || rf.rc !== 0
+      );
+
+      const profitrd = _.sumBy(profitfilter, 'rd');
+      const profitrc = _.sumBy(profitfilter, 'rc');
+
+      setProfit({ credit: profitrc, debit: profitrd });
+
+      const lfilter = rfaccount.filter((rf: any) => rf.rd !== 0 || rf.rc !== 0);
+
+      const allrd = _.sumBy(lfilter, 'rd');
+      const allrc = _.sumBy(lfilter, 'rc');
+
+      const bsrd = allrd + profitrd;
+      const bsrc = allrc + profitrc;
+
+      setTotals({
+        credit: report === 'bs' ? bsrc : allrc,
+        debit: report === 'bs' ? bsrd : allrd,
+      });
+
+      const gaccs = _(lfilter)
+        .groupBy('parentcode')
+        .map((array, key) => ({
+          code: Number(key),
+          parent: array[0]?.parent,
+          parentAr: array[0]?.parentAr,
+          credit: _.sumBy(array, 'credit'),
+          debit: _.sumBy(array, 'debit'),
+          accounts: array,
+        }))
+        .orderBy('code')
+        .value();
+
+      const rfparent = gaccs.map((fa: any) => {
+        const { credit, debit } = fa;
+        const raseed = debit - credit;
+        let rcredit = 0;
+        let rdebit = 0;
+        if (raseed > 0) {
+          rdebit = raseed;
+        } else {
+          rcredit = -raseed;
+        }
+        return {
+          ...fa,
+          rdebit,
+          rcredit,
+        };
+      });
+
+      setParentsList(rfparent);
+    }
+  }, [tbData, pars]);
+
+  useEffect(() => {
+    getTB();
+  }, []);
+  // }, [start, end]);
 
   const refresh = () => {
-    summaryData?.refetch();
+    tbData?.refetch();
   };
 
-  const setSortDispatch = (value: any) => {
-    dispatch({ type: 'setSort', payload: value });
+  // const renderParentCell = (d: any, xs: any) => (
+  //   <Grid item xs={xs}>
+  //     <Typography style={{ fontWeight: 'bold' }}>{d}</Typography>
+  //   </Grid>
+  // );
+  const renderAccountCell = (d: any, xs: any) => (
+    <Grid item xs={xs}>
+      <Typography style={{ padding: 10 }}>{d}</Typography>
+    </Grid>
+  );
+  const renderAccountHeaderCell = (d: any, xs: any) => (
+    <Grid item xs={xs}>
+      <Typography style={{ padding: 10, fontWeight: 'bold' }}>{d}</Typography>
+    </Grid>
+  );
+
+  const renderAccount = ({ pacc, isRTL }: any) => {
+    const { accounts } = pacc;
+    return (
+      <Box style={{ backgroundColor: '#eee' }}>
+        <Grid container spacing={0}>
+          <Grid item xs={12}>
+            <Box style={{ backgroundColor: '#fff' }}>
+              <Grid container spacing={0}>
+                {accounts.map((acc: any) => {
+                  const { accCode, accName, accNameAr, rc, rd } = acc;
+                  const name = isRTL ? accNameAr : accName;
+                  return (
+                    <>
+                      <Grid item xs={12}>
+                        <Divider></Divider>
+                      </Grid>
+                      {renderAccountCell(accCode, 1)}
+                      {renderAccountCell(name, 5)}
+                      {renderAccountCell(moneyFormatEmpty(rd), 3)}
+                      {renderAccountCell(moneyFormatEmpty(rc), 3)}
+                    </>
+                  );
+                })}
+              </Grid>
+            </Box>
+          </Grid>
+        </Grid>
+      </Box>
+    );
   };
+  // const renderAccountBox = ({ pacc, isRTL }: any) => {
+  //   const { code, rdebit, rcredit, parent, parentAr, accounts } = pacc;
+  //   const name = isRTL ? parentAr : parent;
+  //   return (
+  //     <Box borderRadius={10} p={2} m={2} style={{ backgroundColor: '#eee' }}>
+  //       <Grid container spacing={2}>
+  //         {renderParentCell(code, 1)}
+  //         {renderParentCell(name, 5)}
+  //         {renderParentCell(moneyFormatEmpty(rdebit), 3)}
+  //         {renderParentCell(moneyFormatEmpty(rcredit), 3)}
+  //         <Grid item xs={12}>
+  //           <Box borderRadius={10} style={{ backgroundColor: '#fff' }}>
+  //             <Grid container spacing={0}>
+  //               {renderAccountHeaderCell('No', 1)}
+  //               {renderAccountHeaderCell(isRTL ? 'الحساب' : 'Account', 5)}
+  //               {renderAccountHeaderCell(isRTL ? 'مدين' : 'Debit', 3)}
+  //               {renderAccountHeaderCell(isRTL ? 'دائن' : 'Credit', 3)}
 
-  const grouping = [{ columnName: col.acc.name }];
-  const groupSummaryItems = [
-    {
-      columnName: col.taskId.name,
-      type: 'count',
-      alignByColumn: true,
-    },
-    {
-      columnName: 'credit',
-      type: 'sum',
-      alignByColumn: true,
-    },
-    {
-      columnName: 'debit',
-      type: 'sum',
-      alignByColumn: true,
-    },
-  ];
-
-  const totalSummaryItems = [
-    { columnName: 'credit', type: 'sum' },
-    { columnName: 'debit', type: 'sum' },
-  ];
+  //               <Grid item xs={12}>
+  //                 <Divider></Divider>
+  //               </Grid>
+  //               {accounts.map((acc: any) => {
+  //                 const { accCode, accName, accNameAr, rd, rc } = acc;
+  //                 const name = isRTL ? accNameAr : accName;
+  //                 return (
+  //                   <>
+  //                     {renderAccountCell(accCode, 1)}
+  //                     {renderAccountCell(name, 5)}
+  //                     {renderAccountCell(moneyFormatEmpty(rd), 3)}
+  //                     {renderAccountCell(moneyFormatEmpty(rc), 3)}
+  //                   </>
+  //                 );
+  //               })}
+  //             </Grid>
+  //           </Box>
+  //         </Grid>
+  //       </Grid>
+  //     </Box>
+  //   );
+  // };
 
   return (
     <PageLayout
@@ -222,143 +248,87 @@ export default function BudgetReport({ isRTL, words, menuitem, theme }: any) {
         }}
       >
         <Box
+          p={2}
           display="flex"
           style={{
             position: 'absolute',
-            zIndex: 111,
-            flexDirection: 'row',
-            alignItems: 'center',
+            backgroundColor: '#fff',
+            flex: 1,
+            width: '80%',
           }}
         >
-          <DateNavigatorReports
-            setStart={setStart}
-            setEnd={setEnd}
-            currentDate={currentDate}
-            currentDateChange={currentDateChange}
-            currentViewName={currentViewName}
-            currentViewNameChange={currentViewNameChange}
-            endDate={endDate}
-            endDateChange={endDateChange}
-            views={[1, 7, 30, 365, 1000]}
-            isRTL={isRTL}
-            words={words}
-            theme={theme}
-          ></DateNavigatorReports>
-          <Box
-            display="flex"
-            style={{
-              height: 38,
-              alignItems: 'center',
-              justifyContent: 'flex-start',
-              paddingLeft: 20,
-              paddingRight: 20,
+          <Button
+            color="primary"
+            variant={report === 'tb' ? 'contained' : 'outlined'}
+            onClick={() => {
+              setReport('tb');
+              setPars(full);
             }}
-          ></Box>
-        </Box>
-        <Box
-          display={'flex'}
-          style={{
-            position: 'absolute',
-            left: 180,
-            top: 60,
-            zIndex: 111,
-            flexDirection: 'row',
-          }}
-        >
-          <FormControlLabel
-            control={
-              <Checkbox
-                style={{ padding: 7 }}
-                checked={group}
-                onChange={() => setGroup(!group)}
-                color="primary"
-              />
-            }
-            label={
-              <Typography
-                style={{ color: colors.blue[700] }}
-                variant="subtitle2"
-              >
-                {isRTL ? 'تجميع بحسب الحساب' : 'Group by Account'}
-              </Typography>
-            }
-            style={{ fontSize: 14 }}
-          />
-        </Box>
-        <Grid rows={rows} columns={columns} getRowId={getRowId}>
-          <SortingState
-            defaultSorting={sort}
-            onSortingChange={(srt: any) => setSortDispatch(srt)}
-          />
-          {group && <GroupingState grouping={grouping} />}
-          {group && (
-            <SummaryState
-              totalItems={totalSummaryItems}
-              groupItems={groupSummaryItems}
-            />
-          )}
-          {group && <IntegratedGrouping />}
-          {group && <IntegratedSummary />}
-          <IntegratedSorting />
-          <VirtualTable
-            height={height - 98}
-            tableComponent={TableComponent}
-            messages={{
-              noData: isRTL ? 'لا يوجد بيانات' : 'no data',
+            style={{ margin: 10, padding: 5, minWidth: 150 }}
+          >
+            {isRTL ? 'ميزان المراجعة' : 'Trial Sheet'}
+          </Button>
+          <Button
+            color="primary"
+            variant={report === 'is' ? 'contained' : 'outlined'}
+            onClick={() => {
+              setReport('is');
+              setPars(arbah);
             }}
-            estimatedRowHeight={30}
-          />
-          <TableHeaderRow showSortingControls />
-          <TableColumnVisibility
-            columnExtensions={tableColumnVisibilityColumnExtensions}
-          />
-          <DataTypeProvider
-            for={['opTime']}
-            formatterComponent={createdAtFormatter}
-          ></DataTypeProvider>
-          <DataTypeProvider
-            for={['credit', 'debit', 'rased']}
-            formatterComponent={currencyFormatterEmpty}
-          ></DataTypeProvider>
-          <DataTypeProvider
-            for={['opType']}
-            formatterComponent={opTypeFormatter}
-          ></DataTypeProvider>
-          <DataTypeProvider
-            for={['taskId']}
-            formatterComponent={(props: any) =>
-              taskIdFormatter({ ...props, tasks })
-            }
-          ></DataTypeProvider>
-          <Toolbar />
-          <ColumnChooser />
-          <ExportPanel startExport={startExport} />
-          {group && (
-            <TableGroupRow
-              messages={{
-                sum: isRTL ? 'المجموع' : 'Total',
-                count: isRTL ? 'العدد' : 'Count',
-                sumOf: isRTL ? 'المجموع' : 'Total',
-                countOf: isRTL ? 'العدد' : 'Count',
-              }}
-              showColumnsWhenGrouped
-            />
+            style={{ margin: 10, padding: 5, minWidth: 150 }}
+          >
+            {isRTL ? 'قائمة الدخل' : 'Income Statment'}
+          </Button>
+          <Button
+            color="primary"
+            variant={report === 'bs' ? 'contained' : 'outlined'}
+            onClick={() => {
+              setReport('bs');
+              setPars(mizania);
+            }}
+            style={{ margin: 10, padding: 5, minWidth: 150 }}
+          >
+            {isRTL ? 'الميزانية العمومية' : 'Balance Sheet'}
+          </Button>
+        </Box>
+        <Box mt={12} ml={2} mr={2}>
+          <Grid container spacing={0}>
+            {renderAccountHeaderCell(isRTL ? 'الرقم' : 'No', 1)}
+            {renderAccountHeaderCell(isRTL ? 'الحساب' : 'Account', 5)}
+            {renderAccountHeaderCell(isRTL ? 'مدين' : 'Debit', 3)}
+            {renderAccountHeaderCell(isRTL ? 'دائن' : 'Credit', 3)}
+          </Grid>
+          {parentslist.map((pacc: any) => {
+            return renderAccount({ pacc, isRTL });
+          })}
+          {report === 'bs' && (
+            <Grid container spacing={0}>
+              <Grid item xs={12}>
+                <Divider></Divider>
+              </Grid>
+              <Grid item xs={1}></Grid>
+              <Grid item xs={5}>
+                <Typography style={{ padding: 10, fontWeight: 'bold' }}>
+                  {isRTL ? 'قائمة الدخل' : 'Income Statment'}
+                </Typography>
+              </Grid>
+              {renderAccountHeaderCell(moneyFormatEmpty(profit.debit), 3)}
+              {renderAccountHeaderCell(moneyFormatEmpty(profit.credit), 3)}
+            </Grid>
           )}
-          {group && (
-            <TableSummaryRow
-              messages={{
-                sum: isRTL ? 'المجموع' : 'Total',
-                count: isRTL ? 'العدد' : 'Count',
-              }}
-            ></TableSummaryRow>
-          )}
-        </Grid>
-        <GridExporter
-          ref={exporterRef}
-          rows={rows}
-          columns={columns}
-          onSave={onSave}
-        />
+          <Grid container spacing={0}>
+            <Grid item xs={12}>
+              <Divider></Divider>
+            </Grid>
+            <Grid item xs={1}></Grid>
+            <Grid item xs={5}></Grid>
+            {renderAccountHeaderCell(moneyFormatEmpty(totals.debit), 3)}
+            {renderAccountHeaderCell(moneyFormatEmpty(totals.credit), 3)}
+          </Grid>
+          <Grid item xs={12}>
+            <Box m={6}></Box>
+          </Grid>
+        </Box>
       </Box>
     </PageLayout>
   );

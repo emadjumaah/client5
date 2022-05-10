@@ -25,16 +25,28 @@ export default () => {
   });
 
   const [addService] = useMutation(createItem, {
-    refetchQueries: [{ query: getServices, variables: { isRTL } }],
+    refetchQueries: [
+      { query: getServices, variables: { isRTL } },
+      { query: getExpenseItems, variables: { isRTL } },
+    ],
   });
   const [addMultiServices] = useMutation(createMultiItems, {
-    refetchQueries: [{ query: getServices, variables: { isRTL } }],
+    refetchQueries: [
+      { query: getServices, variables: { isRTL } },
+      { query: getExpenseItems, variables: { isRTL } },
+    ],
   });
   const [editService] = useMutation(updateItem, {
-    refetchQueries: [{ query: getServices, variables: { isRTL } }],
+    refetchQueries: [
+      { query: getServices, variables: { isRTL } },
+      { query: getExpenseItems, variables: { isRTL } },
+    ],
   });
   const [removeService] = useMutation(deleteItem, {
-    refetchQueries: [{ query: getServices, variables: { isRTL } }],
+    refetchQueries: [
+      { query: getServices, variables: { isRTL } },
+      { query: getExpenseItems, variables: { isRTL } },
+    ],
   });
 
   useEffect(() => {

@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import {
   successAlert,
@@ -32,73 +32,30 @@ const PopupService = ({
   editAction,
   newtext,
   theme,
+  type,
 }: any) => {
   const [saving, setSaving] = useState(false);
   const [itemType, setItemType] = useState(itemTypes[0]);
   const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
-
-  // const [departvalue, setDepartvalue] = useState<any>(null);
-  // const [departError, setDepartError] = useState<any>(false);
-  // const departRef: any = React.useRef();
-
-  // const [emplvalue, setEmplvalue] = useState<any>(null);
-  // const [emplError, setEmplError] = useState<any>(false);
-  // const emplRef: any = React.useRef();
-
-  // const [resovalue, setResovalue] = useState<any>(null);
-  // const [resoError, setResoError] = useState<any>(false);
-  // const resoRef: any = React.useRef();
-
-  // const [emplslist, setEmplslist] = useState<any>([]);
-
   const { register, handleSubmit, errors, reset } = useForm(yup.itmResolver);
   const {
     translate: { words, isRTL },
     store: { user },
   }: GContextTypes = useContext(GlobalContext);
 
-  // const { tempoptions, tempwords } = useTemplate();
-  // const { departments } = useDepartmentsDown();
-  // const { employees } = useEmployeesDown();
-  // const { resourses } = useResoursesDown();
-
-  // useEffect(() => {
-  //   if (employees && employees.length > 0) {
-  //     const filtered = employees.filter((emp: any) => emp.resType === 2);
-  //     setEmplslist(filtered);
-  //   }
-  // }, [employees]);
-
-  // useEffect(() => {
-  //   if (row && row._id) {
-  //     const depId = row.departmentId;
-  //     const empId = row.employeeId;
-  //     const resId = row.resourseId;
-  //     // const catId = row.categoryId;
-  //     if (depId) {
-  //       const depart = departments.filter((dep: any) => dep._id === depId)[0];
-  //       setDepartvalue(depart);
-  //     }
-  //     if (empId) {
-  //       const empl = employees.filter((emp: any) => emp._id === empId)[0];
-  //       setEmplvalue(empl);
-  //     }
-  //     if (resId) {
-  //       const reso = resourses.filter((emp: any) => emp._id === resId)[0];
-  //       setResovalue(reso);
-  //     }
-  //   }
-  // }, [row]);
+  useEffect(() => {
+    if (type) {
+      const it = itemTypes.filter((it: any) => it.id === type)?.[0];
+      if (it) {
+        setItemType(it);
+      }
+    } else {
+      setItemType(itemTypes[0]);
+    }
+  }, [type]);
 
   const resetAll = () => {
     reset();
-    // setDepartvalue(null);
-    // setDepartError(false);
-    // setEmplvalue(null);
-    // setEmplError(false);
-    // setResovalue(null);
-    // setResoError(false);
-    // setEmplslist([]);
   };
 
   const onSubmit = async (data: any) => {
@@ -106,56 +63,15 @@ const PopupService = ({
     const name = data.name.trim();
     const nameAr = data.nameAr.trim();
     const { price, unit, desc } = data;
-    // const department = departvalue
-    //   ? {
-    //       departmentId: departvalue._id,
-    //       departmentName: departvalue.name,
-    //       departmentNameAr: departvalue.nameAr,
-    //       departmentColor: departvalue.color,
-    //     }
-    //   : {
-    //       departmentId: undefined,
-    //       departmentName: undefined,
-    //       departmentNameAr: undefined,
-    //       departmentColor: undefined,
-    //     };
-    // const employee = emplvalue
-    //   ? {
-    //       employeeId: emplvalue._id,
-    //       employeeName: emplvalue.name,
-    //       employeeNameAr: emplvalue.nameAr,
-    //       employeeColor: emplvalue.color,
-    //     }
-    //   : {
-    //       employeeId: undefined,
-    //       employeeName: undefined,
-    //       employeeNameAr: undefined,
-    //       employeeColor: undefined,
-    //     };
-    // const resourse = resovalue
-    //   ? {
-    //       resourseId: resovalue._id,
-    //       resourseName: resovalue.name,
-    //       resourseNameAr: resovalue.nameAr,
-    //       resourseColor: resovalue.color,
-    //     }
-    //   : {
-    //       resourseId: undefined,
-    //       resourseName: undefined,
-    //       resourseNameAr: undefined,
-    //       resourseColor: undefined,
-    //     };
+
     const variables: any = {
       _id: row && row._id ? row._id : undefined, // is it new or edit
       itemType: itemType?.id,
       name,
       nameAr,
-      price,
+      price: Number(price),
       unit,
       desc,
-      // department,
-      // employee,
-      // resourse,
       branch: user.branch,
       userId: user._id,
     };
@@ -247,6 +163,18 @@ const PopupService = ({
             </Grid>
             <Grid item xs={6}>
               <TextFieldLocal
+                name="unit"
+                label={words.unit}
+                register={register}
+                errors={errors}
+                row={row}
+                newtext={newtext}
+                fullWidth
+                mb={0}
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <TextFieldLocal
                 required
                 name="price"
                 label={words.price}
@@ -258,18 +186,7 @@ const PopupService = ({
                 mb={0}
               />
             </Grid>
-            <Grid item xs={6}>
-              <TextFieldLocal
-                name="unit"
-                label={words.unit}
-                register={register}
-                errors={errors}
-                row={row}
-                newtext={newtext}
-                fullWidth
-                mb={0}
-              />
-            </Grid>
+
             <Grid item xs={12}>
               <AutoFieldLocal
                 name="carstatus"
@@ -286,56 +203,6 @@ const PopupService = ({
               ></AutoFieldLocal>
             </Grid>
           </Grid>
-
-          {/* {!tempoptions?.noServDep && (
-            <AutoFieldLocal
-              name="department"
-              title={tempwords.department}
-              words={words}
-              options={departments}
-              value={departvalue}
-              setSelectValue={setDepartvalue}
-              setSelectError={setDepartError}
-              selectError={departError}
-              refernce={departRef}
-              register={register}
-              isRTL={isRTL}
-              mb={20}
-            ></AutoFieldLocal>
-          )}
-
-          {!tempoptions?.noServEmp && (
-            <AutoFieldLocal
-              name="employee"
-              title={tempwords.employee}
-              words={words}
-              options={emplslist}
-              value={emplvalue}
-              setSelectValue={setEmplvalue}
-              setSelectError={setEmplError}
-              selectError={emplError}
-              refernce={emplRef}
-              register={register}
-              isRTL={isRTL}
-              mb={20}
-            ></AutoFieldLocal>
-          )}
-          {!tempoptions?.noServRes && (
-            <AutoFieldLocal
-              name="resourse"
-              title={tempwords.resourse}
-              words={words}
-              options={resourses}
-              value={resovalue}
-              setSelectValue={setResovalue}
-              setSelectError={setResoError}
-              selectError={resoError}
-              refernce={resoRef}
-              register={register}
-              isRTL={isRTL}
-              mb={20}
-            ></AutoFieldLocal>
-          )} */}
           <TextFieldLocal
             name="desc"
             label={words.description}

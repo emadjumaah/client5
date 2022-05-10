@@ -495,7 +495,7 @@ const PopupReminder = ({
                     <Grid item xs={6}>
                       <AutoFieldLocal
                         name="resourse"
-                        title={tempwords.resourse}
+                        title={tempwords?.resourse}
                         words={words}
                         options={resourses}
                         disabled={isemployee}
@@ -515,7 +515,7 @@ const PopupReminder = ({
                   <Grid item xs={6}>
                     <AutoFieldLocal
                       name="task"
-                      title={tempwords.task}
+                      title={tempwords?.task}
                       words={words}
                       options={tasks}
                       value={taskvalue}
@@ -530,7 +530,7 @@ const PopupReminder = ({
                     <Grid item xs={6}>
                       <AutoFieldLocal
                         name="employee"
-                        title={tempwords.employee}
+                        title={tempwords?.employee}
                         words={words}
                         options={employees}
                         disabled={isemployee}
@@ -550,7 +550,7 @@ const PopupReminder = ({
                   {/* <Grid item xs={4}>
                     <AutoFieldLocal
                       name="customer"
-                      title={tempwords.customer}
+                      title={tempwords?.customer}
                       words={words}
                       options={customers}
                       value={custvalue}
@@ -566,7 +566,7 @@ const PopupReminder = ({
                   <Grid item xs={6}>
                     <AutoFieldLocal
                       name="department"
-                      title={tempwords.department}
+                      title={tempwords?.department}
                       words={words}
                       options={departments}
                       value={departvalue}

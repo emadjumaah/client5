@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import React, { useContext, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { dublicateAlert, errorAlert } from '../Shared';
+import { dublicateAlert, errorAlert, messageAlert } from '../Shared';
 import { GContextTypes } from '../types';
 import { GlobalContext } from '../contexts';
 import { Box, Paper, Typography } from '@material-ui/core';
@@ -12,7 +12,7 @@ import AutoFieldLocal from '../components/fields/AutoFieldLocal';
 import { CalenderLocal, TextFieldLocal } from '../components';
 import { weekdaysNNo } from '../constants/datatypes';
 import { getDateDayWeek } from '../Shared/colorFormat';
-import { useCustomers, useTemplate } from '../hooks';
+import { useTemplate } from '../hooks';
 import useDepartmentsUp from '../hooks/useDepartmentsUp';
 import useEmployeesUp from '../hooks/useEmployeesUp';
 import useResoursesUp from '../hooks/useResoursesUp';
@@ -21,7 +21,7 @@ import { SelectLocal } from '../pages/calendar/common/SelectLocal';
 import { freqOptions } from '../constants/rrule';
 import RRule from 'rrule';
 import { getReminderRruleData } from '../common/getRruleData';
-import useTasks from '../hooks/useTasks';
+// import useTasks from '../hooks/useTasks';
 import { useLazyQuery } from '@apollo/client';
 import getOperationItems from '../graphql/query/getOperationItems';
 import ExpensesItemForm from '../Shared/ExpensesItemForm';
@@ -48,30 +48,38 @@ const PopupReminder = ({
   addAction,
   editAction,
   servicesproducts,
+  value,
+  name,
 }: any) => {
   const classes = invoiceClasses();
 
   const [saving, setSaving] = useState(false);
 
-  const [runtime, setRuntime]: any = useState(null);
-  const [startDate, setStartDate]: any = useState(null);
-  const [endDate, setEndDate]: any = useState(null);
+  const [runtime, setRuntime]: any = useState(new Date());
+  const [startDate, setStartDate]: any = useState(new Date());
+  const [endDate, setEndDate]: any = useState(new Date());
 
-  const [departvalue, setDepartvalue] = useState<any>(null);
+  const [departvalue, setDepartvalue] = useState<any>(
+    name === 'departmentId' ? value : null
+  );
   const [departError, setDepartError] = useState<any>(false);
   const departRef: any = React.useRef();
 
-  const [emplvalue, setEmplvalue] = useState<any>(null);
+  const [emplvalue, setEmplvalue] = useState<any>(
+    name === 'employeeId' ? value : null
+  );
   const [emplError, setEmplError] = useState<any>(false);
   const emplRef: any = React.useRef();
 
-  const [resovalue, setResovalue] = useState<any>(null);
+  const [resovalue, setResovalue] = useState<any>(
+    name === 'resourseId' ? value : null
+  );
   const [resoError, setResoError] = useState<any>(false);
   const resoRef: any = React.useRef();
 
-  const [taskvalue, setTaskvalue] = useState<any>(null);
+  // const [taskvalue, setTaskvalue] = useState<any>(null);
 
-  const [custvalue, setCustvalue] = useState<any>(null);
+  // const [custvalue, setCustvalue] = useState<any>(null);
 
   const [rrule, setRrule] = useState<any>(null);
   const [openMulti, setOpenMulti] = useState(false);
@@ -88,13 +96,14 @@ const PopupReminder = ({
 
   const [freq, setFreq] = useState(RRule.DAILY);
   const [count, setCount] = useState(1);
+  const [interval, setInterval] = useState(1);
 
-  const { customers } = useCustomers();
+  // const { customers } = useCustomers();
   const { departments } = useDepartmentsUp();
   const { employees } = useEmployeesUp();
   const { resourses } = useResoursesUp();
   const { tempwords, tempoptions } = useTemplate();
-  const { tasks } = useTasks();
+  // const { tasks } = useTasks();
 
   const { register, handleSubmit } = useForm({});
   const {
@@ -109,8 +118,12 @@ const PopupReminder = ({
   const isemployee = user?.isEmployee && user?.employeeId;
 
   const onChangeFreq = (e: any) => {
-    const value = e.target.value;
+    const value = Number(e.target.value);
     setFreq(value);
+  };
+  const onChangeInterval = (e: any) => {
+    const value = Number(e.target.value);
+    setInterval(value);
   };
 
   const onChangeCount = (e: any) => {
@@ -180,28 +193,26 @@ const PopupReminder = ({
   }, [itemsData]);
 
   useEffect(() => {
-    if (isNew) {
-      const start = new Date();
-      const end = new Date();
-      start.setMinutes(0);
-      end.setHours(end.getHours() + 1);
-      end.setMinutes(0);
-      setStartDate(start);
-      setEndDate(end);
-    }
-  }, [open]);
-
-  useEffect(() => {
     if (row && row._id) {
       const depId = row.departmentId;
       const empId = row.employeeId;
       const resId = row.resourseId;
-      const custId = row.customerId;
-      const taskId = row.taskId;
+      // const custId = row.customerId;
+      // const taskId = row.taskId;
+
       setRtitle(row?.title);
       setRuntime(new Date(row?.runtime));
       setStartDate(new Date(row?.startDate));
       setEndDate(new Date(row?.endDate));
+      if (row.freq) {
+        setFreq(row.freq);
+      }
+      if (row.count) {
+        setCount(row.count);
+      }
+      if (row.interval) {
+        setInterval(row.interval);
+      }
 
       setLoading(true);
       const variables = { opId: row._id };
@@ -221,14 +232,14 @@ const PopupReminder = ({
         const res = resourses.filter((emp: any) => emp._id === resId)[0];
         setResovalue(res);
       }
-      if (taskId) {
-        const tsk = tasks.filter((ts: any) => ts.id === taskId)[0];
-        setTaskvalue(tsk);
-      }
-      if (custId) {
-        const cust = customers.filter((cu: any) => cu._id === custId)[0];
-        setCustvalue(cust);
-      }
+      // if (taskId) {
+      //   const tsk = tasks.filter((ts: any) => ts.id === taskId)[0];
+      //   setTaskvalue(tsk);
+      // }
+      // if (custId) {
+      //   const cust = customers.filter((cu: any) => cu._id === custId)[0];
+      //   setCustvalue(cust);
+      // }
       if (row?.actions) {
         setActionslist(JSON.parse(row?.actions));
       }
@@ -258,40 +269,32 @@ const PopupReminder = ({
   }, [user, employees]);
 
   useEffect(() => {
-    if (isNew) {
-      const start = new Date();
-      start.setMinutes(0);
-      start.setHours(start.getHours() + 1);
-      setRuntime(start);
-    }
-  }, [open]);
-
-  useEffect(() => {
-    if (isNew) {
+    if (freq && count && startDate) {
       const rdata = getReminderRruleData({
         freq,
         byweekday: undefined,
         dtstart: startDate,
         until: null,
-        interval: 1,
+        interval,
         count,
       });
       setRrule(rdata);
     }
-  }, [startDate, freq, count]);
+  }, [startDate, freq, count, interval]);
 
   const resetAllForms = () => {
     setRuntime(null);
-    setCustvalue(null);
+    // setCustvalue(null);
     setDepartvalue(null);
     setEmplvalue(null);
     setResovalue(null);
     setRrule(null);
     setActionslist([]);
-    setTaskvalue(null);
+    // setTaskvalue(null);
     setSaving(false);
     setRtitle(null);
     setFreq(RRule.DAILY);
+    setInterval(1);
     setCount(1);
     setItemsList([]);
     setLoading(false);
@@ -322,6 +325,14 @@ const PopupReminder = ({
   };
 
   const onSubmit = async () => {
+    if (!rtitle) {
+      await messageAlert(
+        setAlrt,
+        isRTL ? 'يرجى اضافة البيان' : 'Please add title'
+      );
+      return;
+    }
+
     const { amount } = totals;
 
     const variables: any = {
@@ -333,13 +344,16 @@ const PopupReminder = ({
       rRule: rrule?.str,
       rruledata: rrule ? JSON.stringify(rrule) : undefined,
       actions: JSON.stringify(actionslist),
-      customerId: custvalue ? custvalue._id : undefined,
+      // customerId: custvalue ? custvalue._id : undefined,
       departmentId: departvalue ? departvalue._id : undefined,
       employeeId: emplvalue ? emplvalue._id : undefined,
       resourseId: resovalue ? resovalue._id : undefined,
-      taskId: taskvalue ? taskvalue.id : undefined,
+      // taskId: taskvalue ? taskvalue.id : undefined,
       items: JSON.stringify(itemsList),
       amount,
+      freq,
+      count,
+      interval,
     };
     const mutate = isNew ? addAction : editAction;
     apply(mutate, variables);
@@ -412,13 +426,12 @@ const PopupReminder = ({
                   <Grid item xs={4}>
                     <CalenderLocal
                       isRTL={isRTL}
-                      label={words.start}
+                      label={words.time}
                       value={startDate}
                       onChange={(d: any) => {
                         setStartDate(d);
                         setRuntime(d);
-                        const end = new Date(d).getTime() + 60 * 60 * 1000;
-                        setEndDate(new Date(end));
+                        setEndDate(d);
                       }}
                       format="dd/MM/yyyy - hh:mm"
                       time
@@ -434,7 +447,19 @@ const PopupReminder = ({
                       mb={0}
                     ></SelectLocal>
                   </Grid>
-                  <Grid item xs={4}>
+                  <Grid item xs={2}>
+                    <TextFieldLocal
+                      required
+                      name="interval"
+                      label={words.interval}
+                      value={interval}
+                      onChange={onChangeInterval}
+                      type="number"
+                      mb={0}
+                      fullWidth
+                    />
+                  </Grid>
+                  <Grid item xs={2}>
                     <TextFieldLocal
                       required
                       name="count"
@@ -443,6 +468,7 @@ const PopupReminder = ({
                       onChange={onChangeCount}
                       type="number"
                       mb={0}
+                      fullWidth
                     />
                   </Grid>
                   <Grid item xs={12}>
@@ -462,10 +488,10 @@ const PopupReminder = ({
                     <Grid item xs={6}>
                       <AutoFieldLocal
                         name="resourse"
-                        title={tempwords.resourse}
+                        title={tempwords?.resourse}
                         words={words}
                         options={resourses}
-                        disabled={isemployee}
+                        // disabled={isemployee}
                         value={resovalue}
                         setSelectValue={setResovalue}
                         setSelectError={setResoError}
@@ -475,13 +501,15 @@ const PopupReminder = ({
                         isRTL={isRTL}
                         fullWidth
                         day={day}
+                        mb={0}
+                        disabled={name === 'resourseId'}
                       ></AutoFieldLocal>
                     </Grid>
                   )}
-                  <Grid item xs={6}>
+                  {/* <Grid item xs={6}>
                     <AutoFieldLocal
                       name="task"
-                      title={tempwords.task}
+                      title={tempwords?.task}
                       words={words}
                       options={tasks}
                       value={taskvalue}
@@ -489,16 +517,16 @@ const PopupReminder = ({
                       isRTL={isRTL}
                       fullWidth
                     ></AutoFieldLocal>
-                  </Grid>
+                  </Grid> */}
 
                   {!tempoptions?.noEmp && (
                     <Grid item xs={6}>
                       <AutoFieldLocal
                         name="employee"
-                        title={tempwords.employee}
+                        title={tempwords?.employee}
                         words={words}
                         options={employees}
-                        disabled={isemployee}
+                        disabled={isemployee || name === 'employeeId'}
                         value={emplvalue}
                         setSelectValue={setEmplvalue}
                         setSelectError={setEmplError}
@@ -508,13 +536,14 @@ const PopupReminder = ({
                         isRTL={isRTL}
                         fullWidth
                         day={day}
+                        mb={0}
                       ></AutoFieldLocal>
                     </Grid>
                   )}
                   <Grid item xs={6}>
                     <AutoFieldLocal
                       name="department"
-                      title={tempwords.department}
+                      title={tempwords?.department}
                       words={words}
                       options={departments}
                       value={departvalue}
@@ -525,6 +554,8 @@ const PopupReminder = ({
                       register={register}
                       isRTL={isRTL}
                       fullWidth
+                      disabled={name === 'departmentId'}
+                      mb={0}
                     ></AutoFieldLocal>
                   </Grid>
                 </Grid>

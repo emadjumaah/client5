@@ -7,7 +7,6 @@ import {
   Box,
   Button,
   colors,
-  fade,
   makeStyles,
   Tab,
   Tabs,
@@ -49,7 +48,9 @@ import { ContractPrint } from '../print';
 import { useReactToPrint } from 'react-to-print';
 import KaidsCustomer from '../Shared/KaidsCustomer';
 import { useTemplate } from '../hooks';
-import ReminderCustomer from '../Shared/ReminderCustomer';
+// import ReminderCustomer from '../Shared/ReminderCustomer';
+import PopupCloseDate from './PopupCloseDate';
+import PercentChartTask from '../components/charts/PercentChartTask';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -127,6 +128,8 @@ const PopupTaskView = ({
   const [info, setInfo] = useState<any>(null);
   const [loading, setLoading] = useState<any>(null);
   const [closeloading, setCloseloading] = useState<any>(null);
+
+  const [openCloseDate, setOpenCloseDate] = useState<any>(false);
 
   const { tempwords } = useTemplate();
 
@@ -254,27 +257,31 @@ const PopupTaskView = ({
     await addEvent({ variables });
     setLoading(false);
   };
-  const toCloseTask = async () => {
+  const toCloseTask = async (time: any) => {
     if (!event) return;
     setCloseloading(true);
     const data = eventsData?.data?.['getObjectEvents']?.data;
     const events = data || [];
 
     const fevents = events.filter(
-      (ev: any) => new Date(ev.startDate) < new Date()
+      (ev: any) => new Date(ev.startDate) < new Date(time)
     );
     const sum = _.sumBy(fevents, 'amount');
-    const amount = daysData?.amountnow - sum;
+    const days = getTaskTimeAmountData(row, time);
+
+    const amount = days?.amountnow - sum;
     const evdata = getReadyCloseEventData(
       event,
       row,
       amount,
       eventItemsData,
-      servicesproducts
+      servicesproducts,
+      time
     );
     await stopTask({
       variables: {
         id: row.id,
+        time,
         event: JSON.stringify(evdata),
       },
     });
@@ -399,9 +406,11 @@ const PopupTaskView = ({
     resetAllForms();
     onClose();
   };
-
   const viewtotal = amount;
-  const title = `${tempwords.task} : ${row?.title}`;
+  const title = `${tempwords?.task} : ${row?.title}`;
+  const salesColor = theme.palette.primary.light;
+  const eventColor = theme.palette.secondary.main;
+
   return (
     <PopupLayout
       isRTL={isRTL}
@@ -417,7 +426,6 @@ const PopupTaskView = ({
       preventclose
       onlyclose
       print={!isNew ? handleReactPrint : undefined}
-      // bgcolor={colors.deepPurple[500]}
       mb={10}
     >
       <>
@@ -428,10 +436,9 @@ const PopupTaskView = ({
                 backgroundColor: '#f5f5f5',
               }}
             >
-              <Box display="flex" style={{ margin: 10 }}></Box>
-
+              <Box display="flex" style={{}}></Box>
               {row && (
-                <Box style={{ marginBottom: 20 }}>
+                <Box style={{ marginBottom: 10 }}>
                   <TabPanel value={value} index={0}>
                     <ProjectsCustomer
                       servicesproducts={servicesproducts}
@@ -480,6 +487,7 @@ const PopupTaskView = ({
                       employees={employees}
                       departments={departments}
                       company={company}
+                      theme={theme}
                       servicesproducts={servicesproducts}
                       name="taskId"
                       value={row}
@@ -515,21 +523,6 @@ const PopupTaskView = ({
                       value={row}
                       id={row?.id}
                     ></KaidsCustomer>
-                  </TabPanel>
-                  <TabPanel value={value} index={7}>
-                    <ReminderCustomer
-                      resourses={resourses}
-                      employees={employees}
-                      departments={departments}
-                      customers={customers}
-                      isRTL={isRTL}
-                      words={words}
-                      theme={theme}
-                      isNew={isNew}
-                      name="taskId"
-                      value={row}
-                      id={row?.id}
-                    ></ReminderCustomer>
                   </TabPanel>
                   <Box
                     display="flex"
@@ -752,56 +745,42 @@ const PopupTaskView = ({
 
           <Grid item xs={11}>
             {daysData && (
-              <Box display={'flex'} style={{ flex: 1, marginBottom: 10 }}>
+              <Box
+                display={'flex'}
+                style={{
+                  flex: 1,
+                  backgroundColor: colors.grey[100],
+                  marginBottom: 10,
+                }}
+                borderRadius={10}
+              >
                 <Grid container spacing={1}>
-                  <Grid item xs={5}>
+                  <Grid item xs={3}>
                     {daysData?.progress && (
-                      <Box
-                        style={{
-                          display: 'flex',
-                          marginRight: 20,
-                          marginLeft: 20,
-                          width: 400,
-                          height: 50,
-                          backgroundColor: '#ddd',
-                        }}
-                      >
-                        <Typography
-                          style={{
-                            direction: 'ltr',
-                            fontWeight: 'bold',
-                            position: 'absolute',
-                            right: isRTL ? 220 : undefined,
-                            left: isRTL ? undefined : 220,
-                            bottom: 95,
-                            zIndex: 112,
-                          }}
-                        >
-                          {daysData?.progress
-                            ? `${(daysData?.progress * 100).toFixed(2)} %`
-                            : ''}
-                        </Typography>
-                        <Box
-                          style={{
-                            display: 'flex',
-                            width: daysData?.progress * 400,
-                            height: 50,
-                            backgroundColor: fade(colors.blue[500], 0.5),
-                          }}
-                        ></Box>
+                      <Box style={{ height: 90 }}>
+                        <PercentChartTask
+                          pricolor={salesColor}
+                          seccolor={eventColor}
+                          progress={daysData?.progress}
+                          height={90}
+                        />
                       </Box>
                     )}
                   </Grid>
-                  <Grid item xs={7}>
+                  <Grid item xs={9}>
                     <Grid container spacing={1}>
                       <Grid item xs={3}>
-                        <Typography style={{ fontWeight: 'bold' }}>
+                        <Typography
+                          style={{ fontWeight: 'bold', marginTop: 20 }}
+                        >
                           {isRTL ? 'عدد الايام' : 'Days'} : {daysData?.days}
                         </Typography>
                       </Grid>
                       <Grid item xs={3}>
                         {daysData?.daysnow && (
-                          <Typography style={{ fontWeight: 'bold' }}>
+                          <Typography
+                            style={{ fontWeight: 'bold', marginTop: 20 }}
+                          >
                             {isRTL ? 'أيام مضت' : 'Spent Days'} :{' '}
                             {daysData?.daysnow}
                           </Typography>
@@ -809,7 +788,9 @@ const PopupTaskView = ({
                       </Grid>
                       <Grid item xs={3}>
                         {daysData?.amountnow && (
-                          <Typography style={{ fontWeight: 'bold' }}>
+                          <Typography
+                            style={{ fontWeight: 'bold', marginTop: 20 }}
+                          >
                             {isRTL ? 'القيمة المستحقة' : 'Amount Until Now'} :{' '}
                             {moneyFormat(daysData?.amountnow)}
                           </Typography>
@@ -820,17 +801,17 @@ const PopupTaskView = ({
                           variant="contained"
                           fullWidth
                           color="primary"
-                          style={{ width: 150 }}
+                          style={{ width: 150, marginTop: 20 }}
                           disabled={
                             closeloading ||
                             row.isClosed ||
                             row?.status === 'لم يبدأ بعد' ||
                             row?.status === 'Not Started'
                           }
-                          onClick={() => toCloseTask()}
+                          onClick={() => setOpenCloseDate(true)}
                         >
                           {words.shutdown} {isRTL ? 'ال' : ''}
-                          {tempwords.task}
+                          {tempwords?.task}
                         </Button>
                       </Grid>
                     </Grid>
@@ -869,6 +850,19 @@ const PopupTaskView = ({
             items={itemsList}
           ></PopupTaskInvoice>
         )}
+        {row && (
+          <PopupCloseDate
+            open={openCloseDate}
+            onClose={() => setOpenCloseDate(false)}
+            toCloseTask={toCloseTask}
+            theme={theme}
+            isRTL={isRTL}
+            title={`${words.shutdown} ${isRTL ? 'ال' : ''}${tempwords?.task}`}
+            minDate={new Date(row.start)}
+            maxDate={new Date()}
+          ></PopupCloseDate>
+        )}
+
         <Box>
           <div style={{ display: 'none' }}>
             <ContractPrint

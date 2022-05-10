@@ -60,18 +60,6 @@ const PopupFinanceAll = ({
 
   const [itemsList, setItemsList] = useState<any>([]);
 
-  // const [departvalue, setDepartvalue] = useState<any>(null);
-  // const [departError, setDepartError] = useState<any>(false);
-  // const departRef: any = React.useRef();
-
-  // const [emplvalue, setEmplvalue] = useState<any>(null);
-  // const [emplError, setEmplError] = useState<any>(false);
-  // const emplRef: any = React.useRef();
-
-  // const [resKind, setResKind] = useState<any>(null);
-  // const [emplslist, setEmplslist] = useState<any>([]);
-  // const { tempwords, tempoptions } = useTemplate();
-
   const [maindesc, setMaindesc] = useState<any>('');
   const {
     translate: { words, isRTL },
@@ -83,31 +71,6 @@ const PopupFinanceAll = ({
   });
 
   const { accounts } = useAccounts();
-  // const { departments } = useDepartments();
-  // const { employees } = useEmployees();
-
-  // useEffect(() => {
-  //   if (employees && employees.length > 0) {
-  //     const filtered = employees.filter(
-  //       (emp: any) => emp.resKind === resKind && emp.resType === 1
-  //     );
-  //     setEmplslist(filtered);
-  //   }
-  // }, [resKind, employees]);
-
-  // useEffect(() => {
-  //   if (isNew) {
-  //     if (emplvalue) {
-  //       if (emplvalue?.departmentId) {
-  //         const dept = departments.filter(
-  //           (dep: any) => dep._id === emplvalue?.departmentId
-  //         )?.[0];
-  //         setDepartvalue(dept);
-  //       }
-  //     }
-  //   }
-  // }, [emplvalue]);
-
   useEffect(() => {
     const items = itemsData?.data?.['getOperationKaids']?.data || [];
     if (items && items.length > 0) {
@@ -223,32 +186,6 @@ const PopupFinanceAll = ({
       );
       return;
     }
-    // const department = departvalue
-    //   ? {
-    //       departmentId: departvalue._id,
-    //       departmentName: departvalue.name,
-    //       departmentNameAr: departvalue.nameAr,
-    //       departmentColor: departvalue.color,
-    //     }
-    //   : {
-    //       departmentId: undefined,
-    //       departmentName: undefined,
-    //       departmentNameAr: undefined,
-    //       departmentColor: undefined,
-    //     };
-    // const employee = emplvalue
-    //   ? {
-    //       employeeId: emplvalue._id,
-    //       employeeName: emplvalue.name,
-    //       employeeNameAr: emplvalue.nameAr,
-    //       employeeColor: emplvalue.color,
-    //     }
-    //   : {
-    //       employeeId: undefined,
-    //       employeeName: undefined,
-    //       employeeNameAr: undefined,
-    //       employeeColor: undefined,
-    //     };
 
     const variables: any = {
       _id: row && row._id ? row._id : undefined, // is it new or edit
@@ -392,81 +329,6 @@ const PopupFinanceAll = ({
                     mb={0}
                   />
                 </Grid>
-
-                {/* {!tempoptions?.noRes && (
-                  <Grid item xs={8}>
-                    <Box
-                      style={{ marginRight: 10, marginTop: 0, marginBottom: 0 }}
-                    >
-                      <RadioGroup
-                        aria-label="Views"
-                        name="views"
-                        row
-                        value={resKind}
-                        onChange={(e: any) => {
-                          setResKind(Number(e.target.value));
-                          setEmplvalue(null);
-                        }}
-                      >
-                        <FormControlLabel
-                          value={1}
-                          control={
-                            <Radio
-                              style={{ padding: 0, margin: 0 }}
-                              color="primary"
-                            />
-                          }
-                          label={tempwords.employee}
-                        />
-
-                        <FormControlLabel
-                          value={2}
-                          control={
-                            <Radio
-                              style={{ padding: 0, margin: 0 }}
-                              color="primary"
-                            />
-                          }
-                          label={tempwords.resourse}
-                        />
-                      </RadioGroup>
-                    </Box>
-                  </Grid>
-                )}
-                {!tempoptions?.noRes && <Grid item xs={4}></Grid>}
-                <Grid item xs={8}>
-                  <AutoFieldLocal
-                    name="employee"
-                    title={
-                      resKind === 2 ? tempwords.resourse : tempwords.employee
-                    }
-                    options={!tempoptions?.noRes ? emplslist : employees}
-                    disabled={!resKind && !tempoptions?.noRes}
-                    words={words}
-                    value={emplvalue}
-                    setSelectValue={setEmplvalue}
-                    setSelectError={setEmplError}
-                    selectError={emplError}
-                    refernce={emplRef}
-                    isRTL={isRTL}
-                    mb={0}
-                  ></AutoFieldLocal>
-                </Grid>
-                <Grid item xs={4}>
-                  <AutoFieldLocal
-                    name="department"
-                    title={tempwords.department}
-                    words={words}
-                    options={departments}
-                    value={departvalue}
-                    setSelectValue={setDepartvalue}
-                    setSelectError={setDepartError}
-                    selectError={departError}
-                    refernce={departRef}
-                    isRTL={isRTL}
-                    mb={0}
-                  ></AutoFieldLocal>
-                </Grid> */}
                 <Grid item xs={8}>
                   <TextFieldLocal
                     name="desc"

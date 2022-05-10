@@ -63,13 +63,13 @@ export const getColumns = ({ isRTL, words }: any) => {
       id: 10,
       ref: 'supplier',
       name: isRTL ? 'supplierNameAr' : 'supplierName',
-      title: words.supplier,
+      title: words?.supplier,
     },
     project: {
       id: 10.5,
       ref: 'project',
       name: isRTL ? 'projectNameAr' : 'projectName',
-      title: tempwords.project,
+      title: tempwords?.project,
     },
     status: { id: 11, ref: 'status', name: 'status', title: words.status },
     carstatus: {
@@ -83,7 +83,7 @@ export const getColumns = ({ isRTL, words }: any) => {
       id: 13,
       ref: 'acc',
       name: isRTL ? 'accNameAr' : 'accName',
-      title: words.account,
+      title: words?.account,
     },
     opAcc: {
       id: 14,
@@ -153,6 +153,12 @@ export const getColumns = ({ isRTL, words }: any) => {
       id: 25,
       ref: 'done',
       name: 'done',
+      title: isRTL ? 'الانجاز' : 'Done',
+    },
+    sent: {
+      id: 25,
+      ref: 'sent',
+      name: 'sent',
       title: isRTL ? 'الانجاز' : 'Done',
     },
     invo: {

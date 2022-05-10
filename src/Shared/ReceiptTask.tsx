@@ -150,7 +150,7 @@ export default function ReceiptTask({ isRTL, words, theme, taskId }) {
         <EditingState onCommitChanges={commitChanges} />
         <IntegratedSorting />
         <VirtualTable
-          height={600}
+          height={550}
           messages={{
             noData: isRTL ? 'لا يوجد بيانات' : 'no data',
           }}

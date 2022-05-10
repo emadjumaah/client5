@@ -6,6 +6,7 @@ export default gql`
     $branch: String
     $type: Int
     $active: Boolean
+    $sent: Boolean
     $sendtime: Date
     $phone: String
     $email: String
@@ -33,6 +34,7 @@ export default gql`
       branch: $branch
       type: $type
       active: $active
+      sent: $sent
       sendtime: $sendtime
       phone: $phone
       email: $email

@@ -1,25 +1,31 @@
 import { gql } from '@apollo/client';
 
 export default gql`
-  query getReminders(
+  query getRemindersActions(
+    $type: Int
+    $active: Boolean
     $departmentId: String
     $employeeId: String
     $projectId: String
     $resourseId: String
     $customerId: String
+    $eventId: Int
     $taskId: Int
-    $status: Int
+    $reminderId: Int
     $start: Date
     $end: Date
   ) {
-    getReminders(
+    getRemindersActions(
+      type: $type
+      active: $active
       departmentId: $departmentId
       employeeId: $employeeId
       projectId: $projectId
       resourseId: $resourseId
       customerId: $customerId
+      eventId: $eventId
       taskId: $taskId
-      status: $status
+      reminderId: $reminderId
       start: $start
       end: $end
     ) {
@@ -28,40 +34,43 @@ export default gql`
       data {
         _id
         branch
-
-        id
-        startDate
-        endDate
+        autoNo
+        indx
         type
+        sendtime
+        phone
+        email
+        user
         title
         body
-
-        rruledata
-        rRule
-        allDay
-        exDate
-        actions
-        runtime
-        lastrun
-        runlog
+        sent
         active
+        smsqty
 
+        phones
+        emails
+        users
+        transres
+
+        reminderId
         eventId
         taskId
-        projectId
-        customerId
-        departmentId
+
         employeeId
+        departmentId
+        customerId
         resourseId
+        projectId
 
-        amount
+        data
+        info
 
-        freq
-        count
-        interval
+        timeunit
+        timerelate
+        qty
+        address
 
         userId
-
         createdAt
         updatedAt
       }

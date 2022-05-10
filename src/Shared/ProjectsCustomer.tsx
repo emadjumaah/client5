@@ -210,7 +210,7 @@ export default function ProjectsCustomer({
         <EditingState onCommitChanges={commitChanges} />
         <IntegratedSorting />
         <VirtualTable
-          height={600}
+          height={550}
           messages={{
             noData: isRTL ? 'لا يوجد بيانات' : 'no data',
           }}

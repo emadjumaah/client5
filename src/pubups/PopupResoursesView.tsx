@@ -83,6 +83,7 @@ const PopupResoursesView = ({
   resourses,
   servicesproducts,
   customers,
+  tempwords,
 }: any) => {
   const classes = useStyles();
 
@@ -106,7 +107,7 @@ const PopupResoursesView = ({
     translate: { words, isRTL },
   }: GContextTypes = useContext(GlobalContext);
 
-  const title = `${words.resourses} : ${isRTL ? row?.nameAr : row?.name}`;
+  const title = `${tempwords?.resourse} : ${isRTL ? row?.nameAr : row?.name}`;
 
   return (
     <PopupLayout
@@ -180,6 +181,7 @@ const PopupResoursesView = ({
                     employees={employees}
                     departments={departments}
                     company={company}
+                    theme={theme}
                     servicesproducts={servicesproducts}
                     name="resourseId"
                     value={row}

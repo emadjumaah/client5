@@ -51,6 +51,8 @@ import useTasks from '../hooks/useTasks';
 import useEmployeesUp from '../hooks/useEmployeesUp';
 import useResoursesUp from '../hooks/useResoursesUp';
 import useProjects from '../hooks/useProjects';
+import { Box } from '@material-ui/core';
+import DateNavigatorReports from '../components/filters/DateNavigatorReports';
 
 export const getRowId = (row: { _id: any }) => row._id;
 
@@ -106,6 +108,23 @@ export default function TasksCustomer({
   const { projects } = useProjects();
   const { tasks } = useTasks();
 
+  const [start, setStart] = useState<any>(null);
+  const [end, setEnd] = useState<any>(null);
+  const [currentViewName, setCurrentViewName] = useState('Month');
+  const [currentDate, setCurrentDate] = useState(new Date());
+  const [endDate, setEndDate] = useState(new Date());
+
+  const currentViewNameChange = (e: any) => {
+    setCurrentViewName(e.target.value);
+  };
+  const currentDateChange = (curDate: any) => {
+    setCurrentDate(curDate);
+  };
+
+  const endDateChange = (curDate: any) => {
+    setEndDate(curDate);
+  };
+
   const onCloseItem = () => {
     setOpenItem(false);
     setItem(null);
@@ -119,7 +138,11 @@ export default function TasksCustomer({
     refetchQueries: [
       {
         query: getTasks,
-        variables: { [name]: id },
+        variables: {
+          [name]: id,
+          start: start ? start.setHours(0, 0, 0, 0) : undefined,
+          end: end ? end.setHours(23, 59, 59, 999) : undefined,
+        },
       },
       {
         query: getTasks,
@@ -161,11 +184,13 @@ export default function TasksCustomer({
   useEffect(() => {
     const variables = {
       [name]: id,
+      start: start ? start.setHours(0, 0, 0, 0) : undefined,
+      end: end ? end.setHours(23, 59, 59, 999) : undefined,
     };
     loadTasks({
       variables,
     });
-  }, [id]);
+  }, [id, start, end]);
 
   const [tableColumnVisibilityColumnExtensions] = useState([
     { columnName: col.title.name, togglingEnabled: false },
@@ -209,12 +234,28 @@ export default function TasksCustomer({
         minHeight: 600,
       }}
     >
+      <Box display="flex">
+        <DateNavigatorReports
+          setStart={setStart}
+          setEnd={setEnd}
+          currentDate={currentDate}
+          currentDateChange={currentDateChange}
+          currentViewName={currentViewName}
+          currentViewNameChange={currentViewNameChange}
+          endDate={endDate}
+          endDateChange={endDateChange}
+          views={[1, 7, 30, 365, 1000]}
+          isRTL={isRTL}
+          words={words}
+          theme={theme}
+        ></DateNavigatorReports>
+      </Box>
       <Grid rows={rows} columns={columns} getRowId={getRowId}>
         <SortingState />
         <EditingState onCommitChanges={commitChanges} />
         <IntegratedSorting />
         <VirtualTable
-          height={600}
+          height={550}
           messages={{
             noData: isRTL ? 'لا يوجد بيانات' : 'no data',
           }}

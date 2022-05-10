@@ -179,6 +179,7 @@ const PopupEmployeeView = ({
                     employees={employees}
                     departments={departments}
                     company={company}
+                    theme={theme}
                     servicesproducts={servicesproducts}
                     name="employeeId"
                     value={row}

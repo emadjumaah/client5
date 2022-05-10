@@ -44,6 +44,8 @@ export default () => {
   let eventsMonth: any;
   let salesMonthTotal: any;
   let eventsMonthCount: any;
+  let todayEData: any;
+  let todayRData: any;
 
   let raseeds: any;
 
@@ -62,8 +64,11 @@ export default () => {
       monthsEvents,
       monthsSales,
       todayEventsData,
+      todayRemindersData,
       todaySalesData,
     } = charts;
+    todayEData = todayEventsData;
+    todayRData = todayRemindersData;
 
     raseeds = accounts;
 
@@ -306,5 +311,7 @@ export default () => {
     eventsMonthCount,
     raseeds,
     refreshChartData,
+    todayEData,
+    todayRData,
   };
 };

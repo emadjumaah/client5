@@ -38,10 +38,16 @@ import {
   timeFormatter,
 } from './colorFormat';
 import useAccounts from '../hooks/useAccounts';
-import PopupExpenses from '../pubups/PopupExpenses';
 import useTasks from '../hooks/useTasks';
 import getTasks from '../graphql/query/getTasks';
 import useCompany from '../hooks/useCompany';
+import { Box } from '@material-ui/core';
+import DateNavigatorReports from '../components/filters/DateNavigatorReports';
+import { useExpenseItems } from '../hooks';
+import useDepartmentsUp from '../hooks/useDepartmentsUp';
+import useEmployeesUp from '../hooks/useEmployeesUp';
+import useResoursesUp from '../hooks/useResoursesUp';
+import PopupExpensesDoc from '../pubups/PopupExpensesDoc';
 
 export default function ExpensesCustomer({
   isRTL,
@@ -77,17 +83,40 @@ export default function ExpensesCustomer({
 
   const { tasks } = useTasks();
   const { company } = useCompany();
+  const { accounts } = useAccounts();
+  const { expenseItems } = useExpenseItems();
+  const { departments } = useDepartmentsUp();
+  const { employees } = useEmployeesUp();
+  const { resourses } = useResoursesUp();
+
+  const [start, setStart] = useState<any>(null);
+  const [end, setEnd] = useState<any>(null);
+  const [currentViewName, setCurrentViewName] = useState('Month');
+  const [currentDate, setCurrentDate] = useState(new Date());
+  const [endDate, setEndDate] = useState(new Date());
+
+  const currentViewNameChange = (e: any) => {
+    setCurrentViewName(e.target.value);
+  };
+  const currentDateChange = (curDate: any) => {
+    setCurrentDate(curDate);
+  };
+
+  const endDateChange = (curDate: any) => {
+    setEndDate(curDate);
+  };
 
   const [loadExpenses, expensesData]: any = useLazyQuery(getExpenses, {
     fetchPolicy: 'cache-and-network',
   });
-  const { accounts } = useAccounts();
   const refresQuery = {
     refetchQueries: [
       {
         query: getExpenses,
         variables: {
           [name]: id,
+          start: start ? start.setHours(0, 0, 0, 0) : undefined,
+          end: end ? end.setHours(23, 59, 59, 999) : undefined,
         },
       },
       {
@@ -123,11 +152,13 @@ export default function ExpensesCustomer({
   useEffect(() => {
     const variables = {
       [name]: id,
+      start: start ? start.setHours(0, 0, 0, 0) : undefined,
+      end: end ? end.setHours(23, 59, 59, 999) : undefined,
     };
     loadExpenses({
       variables,
     });
-  }, [id]);
+  }, [id, start, end]);
 
   const [addExpenses] = useMutation(createExpenses, refresQuery);
   const [editExpenses] = useMutation(updateExpenses, refresQuery);
@@ -161,12 +192,28 @@ export default function ExpensesCustomer({
         minHeight: 600,
       }}
     >
+      <Box display="flex">
+        <DateNavigatorReports
+          setStart={setStart}
+          setEnd={setEnd}
+          currentDate={currentDate}
+          currentDateChange={currentDateChange}
+          currentViewName={currentViewName}
+          currentViewNameChange={currentViewNameChange}
+          endDate={endDate}
+          endDateChange={endDateChange}
+          views={[1, 7, 30, 365, 1000]}
+          isRTL={isRTL}
+          words={words}
+          theme={theme}
+        ></DateNavigatorReports>
+      </Box>
       <Grid rows={rows} columns={columns} getRowId={getRowId}>
         <SortingState />
         <EditingState onCommitChanges={commitChanges} />
         <IntegratedSorting />
         <VirtualTable
-          height={600}
+          height={550}
           messages={{
             noData: isRTL ? 'لا يوجد بيانات' : 'no data',
           }}
@@ -214,12 +261,16 @@ export default function ExpensesCustomer({
           addAction={addExpenses}
           editAction={editExpenses}
         >
-          <PopupExpenses
+          <PopupExpensesDoc
+            resourses={resourses}
+            employees={employees}
+            departments={departments}
             company={company}
-            name={name}
-            value={value}
+            servicesproducts={expenseItems}
             tasks={tasks}
-          ></PopupExpenses>
+            value={value}
+            name={name}
+          ></PopupExpensesDoc>
         </PopupEditing>
       </Grid>
       {loading && <Loading isRTL={isRTL} />}

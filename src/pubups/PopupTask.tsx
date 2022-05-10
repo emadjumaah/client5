@@ -612,7 +612,7 @@ const PopupTask = ({
     if (!tasktitle) {
       await messageAlert(
         setAlrt,
-        isRTL ? 'يرجى اضافة اسم للمهمة' : 'Please add Task title'
+        isRTL ? 'يرجى اضافة اسم للعقد' : 'Please add Contract title'
       );
       return;
     }
@@ -621,6 +621,15 @@ const PopupTask = ({
       await messageAlert(
         setAlrt,
         isRTL ? 'يرجى اضافة عميل' : 'Please add Customer'
+      );
+      return;
+    }
+    if (isNew && (!itemsList || itemsList.length === 0)) {
+      await messageAlert(
+        setAlrt,
+        isRTL
+          ? `يجب اضافة عنصر واحد على الأقل`
+          : `You should add min one service`
       );
       return;
     }
@@ -818,7 +827,7 @@ const PopupTask = ({
                 <Grid item xs={6}>
                   <AutoFieldLocal
                     name="resourse"
-                    title={tempwords.resourse}
+                    title={tempwords?.resourse}
                     words={words}
                     options={resourses}
                     disabled={name === 'resourseId'}
@@ -838,7 +847,7 @@ const PopupTask = ({
               <Grid item xs={6}>
                 <AutoFieldLocal
                   name="customer"
-                  title={tempwords.customer}
+                  title={tempwords?.customer}
                   words={words}
                   options={customers}
                   value={custvalue}
@@ -854,11 +863,11 @@ const PopupTask = ({
                   disabled={name === 'customerId'}
                 ></AutoFieldLocal>
               </Grid>
-              {!tempoptions.noPro && (
+              {!tempoptions?.noPro && (
                 <Grid item xs={6}>
                   <AutoFieldLocal
                     name="project"
-                    title={tempwords.project}
+                    title={tempwords?.project}
                     words={words}
                     options={projects}
                     value={projvalue}
@@ -878,7 +887,7 @@ const PopupTask = ({
               <Grid item xs={6}>
                 <AutoFieldLocal
                   name="department"
-                  title={tempwords.department}
+                  title={tempwords?.department}
                   words={words}
                   options={departments}
                   value={departvalue}
@@ -897,7 +906,7 @@ const PopupTask = ({
                 <Grid item xs={6}>
                   <AutoFieldLocal
                     name="employee"
-                    title={tempwords.employee}
+                    title={tempwords?.employee}
                     words={words}
                     options={employees}
                     disabled={isemployee || name === 'employeeId'}

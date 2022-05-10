@@ -55,6 +55,7 @@ import useProjects from '../hooks/useProjects';
 import { SelectLocal } from '../pages/calendar/common/SelectLocal';
 import { eventLengthOptions } from '../constants/rrule';
 import { roles } from '../common';
+// import CalenderDateTime from '../components/fields/CalenderDateTime';
 
 export const indexTheList = (list: any) => {
   return list.map((item: any, index: any) => {
@@ -675,7 +676,7 @@ const PopupAppointment = ({
                 <Grid container spacing={1}>
                   <Grid item xs={12} md={4}>
                     <CalenderLocal
-                      isRTL={isRTL}
+                      isRTL={false}
                       label={words.start}
                       value={startDate}
                       onChange={(d: any) => {
@@ -684,6 +685,14 @@ const PopupAppointment = ({
                       format="dd/MM/yyyy - hh:mm"
                       time
                     ></CalenderLocal>
+                    {/* <CalenderDateTime
+                      label={words.start}
+                      value={startDate}
+                      onChange={(d: any) => {
+                        setStartDate(d);
+                      }}
+                      time
+                    ></CalenderDateTime> */}
                   </Grid>
                   <Grid item xs={12} md={4}>
                     <SelectLocal
@@ -729,7 +738,7 @@ const PopupAppointment = ({
                   <Grid item xs={6}>
                     <AutoFieldLocal
                       name="task"
-                      title={tempwords.task}
+                      title={tempwords?.task}
                       words={words}
                       options={tasks}
                       value={taskvalue}
@@ -743,7 +752,7 @@ const PopupAppointment = ({
                   <Grid item xs={6}>
                     <AutoFieldLocal
                       name="customer"
-                      title={tempwords.customer}
+                      title={tempwords?.customer}
                       words={words}
                       options={customers}
                       value={custvalue}
@@ -760,7 +769,7 @@ const PopupAppointment = ({
                     <Grid item xs={4}>
                       <AutoFieldLocal
                         name="employee"
-                        title={tempwords.employee}
+                        title={tempwords?.employee}
                         disabled={isemployee}
                         words={words}
                         options={employees}
@@ -781,7 +790,7 @@ const PopupAppointment = ({
                     <Grid item xs={4}>
                       <AutoFieldLocal
                         name="resourse"
-                        title={tempwords.resourse}
+                        title={tempwords?.resourse}
                         words={words}
                         options={resourses}
                         value={resovalue}
@@ -800,7 +809,7 @@ const PopupAppointment = ({
                   <Grid item xs={4}>
                     <AutoFieldLocal
                       name="department"
-                      title={tempwords.department}
+                      title={tempwords?.department}
                       words={words}
                       options={departments.filter(
                         (dep: any) => dep.depType === 1

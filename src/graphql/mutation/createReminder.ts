@@ -21,6 +21,9 @@ export default gql`
     $departmentId: String
     $employeeId: String
     $resourseId: String
+    $freq: Int
+    $count: Int
+    $interval: Int
     $data: String
     $items: String
     $amount: Float
@@ -45,6 +48,9 @@ export default gql`
       departmentId: $departmentId
       employeeId: $employeeId
       resourseId: $resourseId
+      freq: $freq
+      count: $count
+      interval: $interval
       data: $data
       items: $items
       amount: $amount

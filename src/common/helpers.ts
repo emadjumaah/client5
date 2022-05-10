@@ -409,7 +409,8 @@ export const getReadyCloseEventData = (
   task: any,
   amount: any,
   itemsData: any,
-  servicesproducts: any
+  servicesproducts: any,
+  time: any
 ) => {
   if (!task || !event) {
     return null;
@@ -468,8 +469,8 @@ export const getReadyCloseEventData = (
     itemsList = itemsWqtyprice;
   }
 
-  const startDate = new Date();
-  const endDate = new Date();
+  const startDate = new Date(time);
+  const endDate = new Date(time);
   const variables = {
     title: event.title,
     startDate,
@@ -537,14 +538,14 @@ export const getReadyCloseEventData = (
   return variables;
 };
 
-export const getTaskTimeAmountData = (task: any) => {
+export const getTaskTimeAmountData = (task: any, time = new Date()) => {
   if (!task) return null;
 
   const { start, end, amount } = task;
 
   const startms = new Date(start).getTime();
   const endms = new Date(end).getTime();
-  const now = new Date().getTime();
+  const now = time.getTime();
 
   const days = Math.ceil((endms - startms) / (1000 * 60 * 60 * 24));
 
@@ -604,7 +605,7 @@ export const getTaskStatus = (tasks: any, isRTL: any) => {
         ? 'يومي'
         : 'Daily';
     if (isClosed) {
-      return { ...task, status: isRTL ? 'مغلق' : 'Closed', type };
+      return { ...task, status: isRTL ? 'مقفل' : 'Closed', type };
     } else {
       const startms = new Date(start).getTime();
       const endms = new Date(end).getTime();
@@ -613,7 +614,7 @@ export const getTaskStatus = (tasks: any, isRTL: any) => {
         return { ...task, status: isRTL ? 'لم يبدأ بعد' : 'Not Started', type };
       }
       if (now > endms) {
-        return { ...task, status: isRTL ? 'غير مغلق' : 'Not Closed', type };
+        return { ...task, status: isRTL ? 'غير مقفل' : 'Not Closed', type };
       }
       return { ...task, status: isRTL ? 'ساري' : 'In Progress', type };
     }

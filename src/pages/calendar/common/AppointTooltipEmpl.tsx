@@ -214,10 +214,10 @@ export const AppointTooltipEmpl = ({
 
         <Box style={{ alignItems: 'center', justifyContent: 'flex-start' }}>
           <Typography style={{ fontWeight: 'bold' }} variant="body2">
-            {tempwords.task}: {task?.title}
+            {tempwords?.task}: {task?.title}
           </Typography>
           <Typography style={{ fontWeight: 'bold' }} variant="body2">
-            {tempwords.appointment}: {title}
+            {tempwords?.appointment}: {title}
           </Typography>
         </Box>
 

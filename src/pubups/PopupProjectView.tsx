@@ -178,6 +178,7 @@ const PopupProjectView = ({
                     resourses={resourses}
                     departments={departments}
                     company={company}
+                    theme={theme}
                     servicesproducts={servicesproducts}
                     name="projectId"
                     value={row}

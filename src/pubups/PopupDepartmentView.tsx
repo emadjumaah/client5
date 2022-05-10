@@ -179,6 +179,7 @@ const PopupDepartmentView = ({
                     resourses={resourses}
                     departments={departments}
                     company={company}
+                    theme={theme}
                     servicesproducts={servicesproducts}
                     name="departmentId"
                     value={row}

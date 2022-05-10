@@ -390,13 +390,13 @@ export const taskManamentTabs = [
     name: ' Entries',
     ref: 'entries',
   },
-  {
-    id: 7,
-    value: 7,
-    nameAr: 'التذكيرات',
-    name: ' Reminders',
-    ref: 'reminders',
-  },
+  // {
+  //   id: 7,
+  //   value: 7,
+  //   nameAr: 'التذكيرات',
+  //   name: ' Reminders',
+  //   ref: 'reminders',
+  // },
 ];
 export const projectManamentTabs = [
   {

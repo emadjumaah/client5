@@ -340,7 +340,7 @@ const PopupReceipt = ({
             <Grid item xs={12}>
               <AutoFieldLocal
                 name="customer"
-                title={tempwords.customer}
+                title={tempwords?.customer}
                 words={words}
                 options={customers}
                 value={custvalue}

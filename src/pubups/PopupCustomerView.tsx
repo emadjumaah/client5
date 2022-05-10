@@ -179,6 +179,7 @@ const PopupCustomerView = ({
                     employees={employees}
                     departments={departments}
                     company={company}
+                    theme={theme}
                     servicesproducts={servicesproducts}
                     name="customerId"
                     value={row}

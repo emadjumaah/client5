@@ -8,7 +8,16 @@ import {
   TableEditColumn,
   VirtualTable,
 } from '@devexpress/dx-react-grid-material-ui';
-import { fade, Paper, Typography, withStyles } from '@material-ui/core';
+import {
+  Box,
+  fade,
+  FormControlLabel,
+  Paper,
+  Radio,
+  RadioGroup,
+  Typography,
+  withStyles,
+} from '@material-ui/core';
 import {
   DataTypeProvider,
   EditingState,
@@ -20,7 +29,7 @@ import { getColumns } from '../common/columns';
 import {
   actionTimeFormatter,
   currencyFormatter,
-  taskIdFormat,
+  sentFormatter,
 } from './colorFormat';
 import { useLazyQuery, useMutation } from '@apollo/client';
 import {
@@ -32,18 +41,19 @@ import {
   getProjects,
   getReminders,
   getResourses,
+  updateAction,
   updateReminder,
 } from '../graphql';
 import { Command } from './Command';
 import PopupEditing from './PopupEditing';
 import getTasks from '../graphql/query/getTasks';
-import LoadingInline from './LoadingInline';
-import useTasks from '../hooks/useTasks';
 import React from 'react';
 import { errorAlert, errorDeleteAlert } from './helpers';
 import PopupReminder from '../pubups/PopupReminder';
 import { useExpenseItems } from '../hooks';
 import { AlertLocal } from '../components';
+import DateNavigatorReports from '../components/filters/DateNavigatorReports';
+import getRemindersActions from '../graphql/query/getRemindersActions';
 export const getRowId = (row: any) => row._id;
 
 const NumberTypeProvider = (props) => (
@@ -80,11 +90,11 @@ export default function ReminderCustomer({
   theme,
   id,
   name,
+  value,
   isNew,
 }: any) {
   const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
 
-  const [loading, setLoading] = useState(true);
   const col = getColumns({ isRTL, words });
 
   const [columns] = useState([
@@ -93,19 +103,58 @@ export default function ReminderCustomer({
     col.resourse,
     col.employee,
     col.department,
-    col.taskId,
     col.amount,
   ]);
-  const { tasks } = useTasks();
+
+  const [acolumns] = useState([
+    col.time,
+    col.title,
+    col.resourse,
+    col.employee,
+    col.department,
+    col.sent,
+  ]);
+
   const { expenseItems } = useExpenseItems();
 
+  const [type, setType] = useState(2);
   const [rows, setRows] = useState([]);
+  const [arows, setArows] = useState([]);
+
+  const [start, setStart] = useState<any>(null);
+  const [end, setEnd] = useState<any>(null);
+  const [currentViewName, setCurrentViewName] = useState('Month');
+  const [currentDate, setCurrentDate] = useState(new Date());
+  const [endDate, setEndDate] = useState(new Date());
+
+  const currentViewNameChange = (e: any) => {
+    setCurrentViewName(e.target.value);
+  };
+  const currentDateChange = (curDate: any) => {
+    setCurrentDate(curDate);
+  };
+
+  const endDateChange = (curDate: any) => {
+    setEndDate(curDate);
+  };
 
   const refresQuery = {
     refetchQueries: [
       {
         query: getReminders,
-        variables: { [name]: id },
+        variables: {
+          [name]: id,
+          start: start ? start.setHours(0, 0, 0, 0) : undefined,
+          end: end ? end.setHours(23, 59, 59, 999) : undefined,
+        },
+      },
+      {
+        query: getRemindersActions,
+        variables: {
+          [name]: id,
+          start: start ? start.setHours(0, 0, 0, 0) : undefined,
+          end: end ? end.setHours(23, 59, 59, 999) : undefined,
+        },
       },
       {
         query: getTasks,
@@ -135,17 +184,92 @@ export default function ReminderCustomer({
     fetchPolicy: 'cache-and-network',
   });
 
-  useEffect(() => {
-    const variables = { [name]: id };
-    loadReminders({ variables });
-  }, [id]);
+  const [loadActions, actionsData]: any = useLazyQuery(getRemindersActions, {
+    fetchPolicy: 'cache-and-network',
+  });
 
   useEffect(() => {
-    if (remindersData?.loading) {
-      setLoading(true);
-    }
+    const variables = {
+      [name]: id,
+      start: start ? start.setHours(0, 0, 0, 0) : undefined,
+      end: end ? end.setHours(23, 59, 59, 999) : undefined,
+    };
+    loadReminders({ variables });
+  }, [id, start, end]);
+
+  useEffect(() => {
+    const variables = {
+      [name]: id,
+      start: start ? start.setHours(0, 0, 0, 0) : undefined,
+      end: end ? end.setHours(23, 59, 59, 999) : undefined,
+    };
+    loadActions({ variables });
+  }, [id, start, end]);
+
+  useEffect(() => {
     if (remindersData?.data?.getReminders?.data) {
       const { data } = remindersData.data.getReminders;
+      const rdata = data.map((da: any) => {
+        let time: any;
+        let resourseNameAr: any;
+        let resourseName: any;
+        let departmentNameAr: any;
+        let departmentName: any;
+        let employeeNameAr: any;
+        let employeeName: any;
+        if (da?.resourseId) {
+          const res = resourses.filter(
+            (re: any) => re._id === da.resourseId
+          )?.[0];
+          resourseNameAr = res?.nameAr;
+          resourseName = res?.name;
+        }
+        if (da?.departmentId) {
+          const res = departments.filter(
+            (re: any) => re._id === da.departmentId
+          )?.[0];
+          departmentNameAr = res?.nameAr;
+          departmentName = res?.name;
+        }
+        if (da?.employeeId) {
+          const res = employees.filter(
+            (re: any) => re._id === da.employeeId
+          )?.[0];
+          employeeNameAr = res?.nameAr;
+          employeeName = res?.name;
+        }
+        const rr = JSON.parse(da?.rruledata);
+        if (rr) {
+          const { all } = rr;
+          const startms = start?.getTime();
+          const endms = end?.getTime();
+          all.map((tm: any) => {
+            const date = new Date(tm).getTime();
+            if (date > startms && date < endms) {
+              time = new Date(tm);
+            }
+            return tm;
+          });
+        }
+
+        return {
+          ...da,
+          resourseName,
+          resourseNameAr,
+          departmentNameAr,
+          departmentName,
+          employeeNameAr,
+          employeeName,
+          time,
+        };
+      });
+      setRows(rdata);
+    }
+  }, [remindersData]);
+
+  useEffect(() => {
+    if (actionsData?.data?.getRemindersActions?.data) {
+      const { data } = actionsData.data.getRemindersActions;
       const rdata = data.map((da: any) => {
         let resourseNameAr: any;
         let resourseName: any;
@@ -183,17 +307,17 @@ export default function ReminderCustomer({
           departmentName,
           employeeNameAr,
           employeeName,
-          time: new Date(da.runtime),
+          time: da?.sendtime,
         };
       });
-      setRows(rdata);
-      setLoading(false);
+      setArows(rdata);
     }
-  }, [remindersData]);
+  }, [actionsData]);
 
   const [addReminder] = useMutation(createReminder, refresQuery);
   const [editReminder] = useMutation(updateReminder, refresQuery);
   const [removeReminder] = useMutation(deleteReminder, refresQuery);
+  const [editRAction] = useMutation(updateAction, refresQuery);
 
   const commitChanges = async ({ deleted }) => {
     if (deleted) {
@@ -218,16 +342,59 @@ export default function ReminderCustomer({
         minHeight: 600,
       }}
     >
-      {loading && <LoadingInline></LoadingInline>}
-
-      {rows && (
+      <Box display="flex">
+        <DateNavigatorReports
+          setStart={setStart}
+          setEnd={setEnd}
+          currentDate={currentDate}
+          currentDateChange={currentDateChange}
+          currentViewName={currentViewName}
+          currentViewNameChange={currentViewNameChange}
+          endDate={endDate}
+          endDateChange={endDateChange}
+          views={[1, 7, 30, 365, 1000]}
+          isRTL={isRTL}
+          words={words}
+          theme={theme}
+        ></DateNavigatorReports>
+        <Box
+          style={{
+            padding: 0,
+            margin: 0,
+            paddingRight: 10,
+            marginLeft: 40,
+            marginRight: 40,
+            borderRadius: 5,
+          }}
+        >
+          <RadioGroup
+            aria-label="Views"
+            name="views"
+            row
+            value={type}
+            onChange={(e: any) => setType(Number(e.target.value))}
+          >
+            <FormControlLabel
+              value={2}
+              control={<Radio color="primary" />}
+              label={isRTL ? 'التذكيرات' : 'Reminders'}
+            />
+            <FormControlLabel
+              value={1}
+              control={<Radio color="primary" />}
+              label={isRTL ? 'ادارة التذكيرات' : 'Manage Reminders'}
+            />
+          </RadioGroup>
+        </Box>
+      </Box>
+      {rows && type === 1 && (
         <Grid rows={rows} columns={columns} getRowId={getRowId}>
           <SortingState />
           <EditingState onCommitChanges={commitChanges} />
           <IntegratedSorting />
 
           <VirtualTable
-            height={600}
+            height={550}
             messages={{
               noData: isRTL ? 'لا يوجد بيانات' : 'no data',
             }}
@@ -242,15 +409,6 @@ export default function ReminderCustomer({
           <DataTypeProvider
             for={['time']}
             formatterComponent={actionTimeFormatter}
-          ></DataTypeProvider>
-          <DataTypeProvider
-            for={['taskId']}
-            formatterComponent={(props: any) =>
-              taskIdFormat({
-                ...props,
-                tasks,
-              })
-            }
           ></DataTypeProvider>
           <NumberTypeProvider for={['index']} />
           <TableHeaderRow showSortingControls />
@@ -269,7 +427,11 @@ export default function ReminderCustomer({
             addAction={addReminder}
             editAction={editReminder}
           >
-            <PopupReminder servicesproducts={expenseItems}></PopupReminder>
+            <PopupReminder
+              value={value}
+              name={name}
+              servicesproducts={expenseItems}
+            ></PopupReminder>
           </PopupEditing>
 
           <Getter
@@ -288,6 +450,34 @@ export default function ReminderCustomer({
               return result;
             }}
           />
+        </Grid>
+      )}
+      {type === 2 && (
+        <Grid rows={arows} columns={acolumns} getRowId={getRowId}>
+          <SortingState />
+
+          <IntegratedSorting />
+
+          <VirtualTable
+            height={550}
+            messages={{
+              noData: isRTL ? 'لا يوجد بيانات' : 'no data',
+            }}
+            estimatedRowHeight={40}
+          />
+
+          <DataTypeProvider
+            for={['time']}
+            formatterComponent={actionTimeFormatter}
+          ></DataTypeProvider>
+          <DataTypeProvider
+            for={['sent']}
+            formatterComponent={(props: any) =>
+              sentFormatter({ ...props, editRAction })
+            }
+          ></DataTypeProvider>
+
+          <TableHeaderRow showSortingControls />
         </Grid>
       )}
       {alrt.show && (

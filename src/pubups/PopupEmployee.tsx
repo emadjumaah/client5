@@ -236,7 +236,7 @@ const PopupEmployee = ({
           />
           <AutoFieldLocal
             name="department"
-            title={tempwords.department}
+            title={tempwords?.department}
             words={words}
             options={departments}
             value={departvalue}

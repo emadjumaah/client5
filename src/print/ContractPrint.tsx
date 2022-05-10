@@ -10,7 +10,7 @@ import {
 } from '../Shared/colorFormat';
 import { carlist, custlist } from './lists';
 
-const printcolor = '#777';
+const printcolor = '#0E9DAD';
 
 export class ContractPrint extends React.PureComponent<any, any> {
   renderHeader = (company: any) => (
@@ -71,10 +71,7 @@ export class ContractPrint extends React.PureComponent<any, any> {
     const notes = info?.[2]?.value;
     return (
       <Box style={{ direction: isRTL ? 'rtl' : 'ltr' }}>
-        <Typography style={{ fontWeight: 'bold' }} variant="body2">
-          ملاحظات:
-        </Typography>
-        <Typography variant="caption">{notes}</Typography>
+        <Typography style={{ fontSize: 14 }}>{notes}</Typography>
       </Box>
     );
   };
@@ -106,8 +103,11 @@ export class ContractPrint extends React.PureComponent<any, any> {
   );
   renderPetrol = () => (
     <img
+      // src={
+      //   'https://res.cloudinary.com/fivegstore/image/upload/v1648541509/petrol_dsgxej.jpg'
+      // }
       src={
-        'https://res.cloudinary.com/fivegstore/image/upload/v1648541509/petrol_dsgxej.jpg'
+        'https://res.cloudinary.com/fivegstore/image/upload/v1652033731/footerbig_qciqee.png'
       }
       alt={'car'}
       height="auto"
@@ -146,6 +146,7 @@ export class ContractPrint extends React.PureComponent<any, any> {
             justifyContent: 'space-between',
             paddingLeft: 15,
             paddingRight: 15,
+            color: printcolor,
           }}
         >
           <div>VEHICLE RENTAL AGREEMENT</div>
@@ -178,6 +179,8 @@ export class ContractPrint extends React.PureComponent<any, any> {
 
   renderCarRow = (item: any, data: any) => {
     let d = '';
+    const kmout = Number(data?.info?.[0]?.value);
+    const kmin = Number(data?.info?.[1]?.value);
 
     if (item.id === 1) {
       if (data?.isRTL) {
@@ -195,15 +198,19 @@ export class ContractPrint extends React.PureComponent<any, any> {
       d = `${getDateDayWeekGB(data?.end, data?.isRTL)}`;
     } else if (item?.id === 6) {
       d = `${covertToTimeOnly(data?.end)}`;
-    } else if (item?.id === 7) {
-      d = data?.info?.[0]?.value;
+    } else if (item?.id === 7 && kmout) {
+      d = `${kmout}`;
+    } else if (item?.id === 8 && kmin) {
+      d = `${kmin}`;
+    } else if (item?.id === 9 && kmout && kmin) {
+      d = `${kmin - kmout}`;
     } else if (item?.id === 10) {
       d = data?.resovalue?.insurance;
     }
 
     return (
       <Grid container spacing={0}>
-        <Grid item xs={8}>
+        <Grid item xs={9}>
           <Box
             border={1}
             borderColor="grey.400"
@@ -212,12 +219,15 @@ export class ContractPrint extends React.PureComponent<any, any> {
               height: 30,
               alignItems: 'center',
               justifyContent: 'center',
+              fontSize: 14,
+              paddingRight: 2,
+              paddingLeft: 2,
             }}
           >
             {d}
           </Box>
         </Grid>
-        <Grid item xs={4}>
+        <Grid item xs={3}>
           <Box
             border={1}
             borderColor="grey.400"
@@ -225,15 +235,14 @@ export class ContractPrint extends React.PureComponent<any, any> {
               direction: 'rtl',
               display: 'flex',
               flexDirection: 'column',
-              backgroundColor: '#eee',
+              backgroundColor: '#0E9DAD',
+              color: '#fff',
               fontSize: 10,
               height: 30,
-              paddingRight: 5,
-              paddingLeft: 5,
             }}
           >
-            <div>{item?.name}</div>
             <div>{item?.nameAr}</div>
+            <div>{item?.name}</div>
           </Box>
         </Grid>
       </Grid>
@@ -266,7 +275,7 @@ export class ContractPrint extends React.PureComponent<any, any> {
     }
     return (
       <Grid container spacing={0}>
-        <Grid item xs={3}>
+        <Grid item xs={2}>
           <Box
             border={1}
             borderColor="grey.400"
@@ -274,11 +283,12 @@ export class ContractPrint extends React.PureComponent<any, any> {
               direction: 'ltr',
               display: 'flex',
               alignItems: 'center',
-              backgroundColor: '#eee',
-              fontSize: 10,
+              backgroundColor: '#0E9DAD',
+              color: '#fff',
+              fontSize: 9,
               height: 26,
-              paddingRight: 5,
-              paddingLeft: 5,
+              paddingRight: 2,
+              paddingLeft: 2,
             }}
           >
             <Box style={{ alignItems: 'center', justifyContent: 'center' }}>
@@ -286,7 +296,7 @@ export class ContractPrint extends React.PureComponent<any, any> {
             </Box>
           </Box>
         </Grid>
-        <Grid item xs={6}>
+        <Grid item xs={8}>
           <Box
             border={1}
             borderColor="grey.400"
@@ -295,12 +305,13 @@ export class ContractPrint extends React.PureComponent<any, any> {
               alignItems: 'center',
               justifyContent: 'center',
               height: 26,
+              fontSize: 14,
             }}
           >
             {d}
           </Box>
         </Grid>
-        <Grid item xs={3}>
+        <Grid item xs={2}>
           <Box
             border={1}
             borderColor="grey.400"
@@ -308,11 +319,12 @@ export class ContractPrint extends React.PureComponent<any, any> {
               direction: 'rtl',
               display: 'flex',
               alignItems: 'center',
-              backgroundColor: '#eee',
-              fontSize: 10,
+              backgroundColor: '#0E9DAD',
+              color: '#fff',
+              fontSize: 9,
               height: 26,
-              paddingRight: 5,
-              paddingLeft: 5,
+              paddingRight: 2,
+              paddingLeft: 2,
             }}
           >
             <div>{item?.nameAr}</div>
@@ -472,7 +484,8 @@ export class ContractPrint extends React.PureComponent<any, any> {
               justifyContent: 'center',
               fontSize: 11,
               flexDirection: 'column',
-              backgroundColor: '#eee',
+              backgroundColor: '#0E9DAD',
+              color: '#fff',
               height: 60,
             }}
           >
@@ -510,7 +523,8 @@ export class ContractPrint extends React.PureComponent<any, any> {
               paddingRight: 5,
               fontSize: 10,
               flexDirection: 'column',
-              backgroundColor: '#eee',
+              backgroundColor: '#0E9DAD',
+              color: '#fff',
               height: 30,
             }}
           >
@@ -528,7 +542,8 @@ export class ContractPrint extends React.PureComponent<any, any> {
               justifyContent: 'center',
               fontSize: 11,
               flexDirection: 'column',
-              backgroundColor: '#eee',
+              backgroundColor: '#0E9DAD',
+              color: '#fff',
               height: 30,
             }}
           >
@@ -589,7 +604,8 @@ export class ContractPrint extends React.PureComponent<any, any> {
               paddingRight: 5,
               fontSize: 10,
               flexDirection: 'column',
-              backgroundColor: '#eee',
+              backgroundColor: '#0E9DAD',
+              color: '#fff',
               height: 30,
             }}
           >
@@ -641,7 +657,8 @@ export class ContractPrint extends React.PureComponent<any, any> {
               paddingRight: 5,
               fontSize: 10,
               flexDirection: 'column',
-              backgroundColor: '#eee',
+              backgroundColor: '#0E9DAD',
+              color: '#fff',
               height: 30,
             }}
           >
@@ -695,7 +712,8 @@ export class ContractPrint extends React.PureComponent<any, any> {
               paddingRight: 5,
               fontSize: 10,
               flexDirection: 'column',
-              backgroundColor: '#eee',
+              backgroundColor: '#0E9DAD',
+              color: '#fff',
               height: 30,
             }}
           >
@@ -738,28 +756,23 @@ export class ContractPrint extends React.PureComponent<any, any> {
                     {this.renderDivider(2)}
                     {this.renderPriceType(data)}
                   </Grid>
-                  <Grid item xs={12}>
-                    {this.renderPetrol()}
-                  </Grid>
-                  <Grid item xs={6}>
-                    <Box style={{ display: 'flex', height: 330 }}>
-                      {this.renderSignatureFooter()}
-                    </Box>
-                  </Grid>
-                  <Grid item xs={6}>
-                    <Box style={{ display: 'flex', height: 200 }}>
-                      {this.renderCarFooter()}
-                    </Box>
-                    <Box style={{ display: 'flex', height: 90 }}>
-                      {this.renderNotes(data?.info, isRTL)}
-                    </Box>
-                    <Box style={{ display: 'flex', height: 40 }}>
-                      {this.renderCarTameen()}
-                    </Box>
-                  </Grid>
                 </Grid>
               </Box>
-              {this.renderFooter(company)}
+              <Box style={{ marginLeft: 30, marginRight: 30, marginTop: 15 }}>
+                <Box
+                  style={{
+                    position: 'absolute',
+                    zIndex: 111,
+                    bottom: 310,
+                    right: 70,
+                    width: 340,
+                    height: 100,
+                  }}
+                >
+                  {this.renderNotes(data?.info, isRTL)}
+                </Box>
+                {this.renderPetrol()}
+              </Box>
             </Grid>
           </Grid>
         </Box>
@@ -773,7 +786,7 @@ export class ContractPrint extends React.PureComponent<any, any> {
                   <Box
                     ml={-2}
                     mr={-2}
-                    mt={4}
+                    mt={2}
                     style={{
                       display: 'flex',
                       alignItems: 'flex-start',

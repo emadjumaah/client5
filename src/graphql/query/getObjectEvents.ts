@@ -8,6 +8,8 @@ export default gql`
     $resourseId: String
     $customerId: String
     $taskId: Int
+    $start: Date
+    $end: Date
   ) {
     getObjectEvents(
       departmentId: $departmentId
@@ -16,6 +18,8 @@ export default gql`
       resourseId: $resourseId
       customerId: $customerId
       taskId: $taskId
+      start: $start
+      end: $end
     ) {
       ok
       error

@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import { fade } from '@material-ui/core';
+import { colors, fade } from '@material-ui/core';
 
 export const operationTypes = {
   // المبيعات والمشتريات - زبائن وموردين
@@ -318,10 +318,10 @@ export const periods = [
   { id: 4, period: 'py', name: 'Previous Year', nameAr: 'السنة السابقة' },
 ];
 export const carstatuss = [
-  { id: 1, name: 'Available', nameAr: 'متوفرة' },
-  { id: 2, name: 'In Garage', nameAr: 'قيد الصيانة' },
-  { id: 3, name: 'Broken', nameAr: 'معطلة' },
-  { id: 10, name: 'Busy', nameAr: 'مشغول' },
+  { id: 1, name: 'Available', nameAr: 'متوفر', color: colors.green[500] },
+  { id: 2, name: 'In Garage', nameAr: 'قيد الصيانة', color: colors.grey[500] },
+  { id: 3, name: 'Broken', nameAr: 'معطل', color: colors.red[500] },
+  { id: 10, name: 'Busy', nameAr: 'مشغول', color: colors.blue[500] },
 ];
 
 export const eventColors = {

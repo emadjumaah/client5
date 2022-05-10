@@ -236,7 +236,7 @@ const PopupItem = ({
           {!tempoptions?.noServEmp && (
             <AutoField
               name="employee"
-              title={tempwords.employee}
+              title={tempwords?.employee}
               words={words}
               options={employees}
               value={emplvalue}
@@ -256,7 +256,7 @@ const PopupItem = ({
           {!tempoptions?.noServRes && (
             <AutoField
               name="resourse"
-              title={tempwords.resourse}
+              title={tempwords?.resourse}
               words={words}
               options={resourses}
               value={resovalue}

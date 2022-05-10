@@ -15,7 +15,7 @@ import PopupLayout from '../pages/main/PopupLayout';
 import { Grid } from '@material-ui/core';
 import { TextFieldLocal } from '../components';
 
-const PopupExpenseItem = ({
+const PopupServiceItem = ({
   open,
   onClose,
   row,
@@ -29,7 +29,7 @@ const PopupExpenseItem = ({
   const [saving, setSaving] = useState(false);
   const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
 
-  const { register, handleSubmit, errors, reset } = useForm(yup.expitmResolver);
+  const { register, handleSubmit, errors, reset } = useForm(yup.itmResolver);
   const {
     translate: { words, isRTL },
     store: { user },
@@ -47,7 +47,7 @@ const PopupExpenseItem = ({
 
     const variables: any = {
       _id: row && row._id ? row._id : undefined, // is it new or edit
-      itemType: 10,
+      itemType: 2,
       name,
       nameAr,
       price: Number(price),
@@ -66,6 +66,7 @@ const PopupExpenseItem = ({
       const res = await mutate({ variables });
       const nitem = getReturnItem(res, mutateName);
       if (setNewValue && nitem) setNewValue(nitem, 'item');
+
       await successAlert(setAlrt, isRTL);
       closeModal();
     } catch (error) {
@@ -94,11 +95,11 @@ const PopupExpenseItem = ({
   };
   const title = isRTL
     ? isNew
-      ? 'مصروف جديدة'
-      : 'تعديل مصروف'
+      ? 'خدمة جديدة'
+      : 'تعديل خدمة'
     : isNew
-    ? 'New Expenses Item'
-    : 'Edit Expenses Item';
+    ? 'New Service'
+    : 'Edit Service';
   return (
     <PopupLayout
       isRTL={isRTL}
@@ -155,6 +156,7 @@ const PopupExpenseItem = ({
             </Grid>
             <Grid item xs={6}>
               <TextFieldLocal
+                required
                 name="price"
                 label={words.theprice}
                 register={register}
@@ -166,6 +168,7 @@ const PopupExpenseItem = ({
               />
             </Grid>
           </Grid>
+
           <TextFieldLocal
             name="desc"
             label={words.description}
@@ -184,4 +187,4 @@ const PopupExpenseItem = ({
   );
 };
 
-export default PopupExpenseItem;
+export default PopupServiceItem;

@@ -26,9 +26,9 @@ const AddButton = ({ onExecute }) => {
 };
 
 const EditButton = ({ onExecute }) => {
-  const isEditor = roles.isEditor();
+  const isWriter = roles.isWriter();
   const isEmployee = roles.isEmployee();
-  if (!isEditor && !isEmployee) {
+  if (!isWriter && !isEmployee) {
     return <div></div>;
   }
   return (

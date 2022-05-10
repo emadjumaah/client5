@@ -287,7 +287,7 @@ const PopupResourses = ({
             <Grid item xs={12}>
               <AutoFieldLocal
                 name="department"
-                title={tempwords.department}
+                title={tempwords?.department}
                 words={words}
                 options={departments}
                 value={departvalue}
@@ -307,12 +307,13 @@ const PopupResourses = ({
                 name="carstatus"
                 title={words.status}
                 words={words}
-                options={carstatuss}
+                options={carstatuss.filter((cs: any) => cs.id !== 10)}
                 value={statusvalue}
                 setSelectValue={setStatusvalue}
                 register={register}
                 isRTL={isRTL}
                 fullWidth
+                disabled={row?.carstatus === 10}
                 mb={0}
                 nosort
               ></AutoFieldLocal>

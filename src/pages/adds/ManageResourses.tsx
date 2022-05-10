@@ -36,7 +36,7 @@ import { errorAlert, errorDeleteAlert } from '../../Shared/helpers';
 import PageLayout from '../main/PageLayout';
 import { getColumns } from '../../common/columns';
 import useTasks from '../../hooks/useTasks';
-import { useCustomers, useServices } from '../../hooks';
+import { useCustomers, useServices, useTemplate } from '../../hooks';
 import PopupResoursesView from '../../pubups/PopupResoursesView';
 import PopupResourses from '../../pubups/PopupResourses';
 import useResoursesUp from '../../hooks/useResoursesUp';
@@ -64,6 +64,7 @@ export default function ManageResourses({
   const { employees } = useEmployeesUp();
   const { customers } = useCustomers();
   const { services } = useServices();
+  const { tempwords } = useTemplate();
 
   const onCloseItem = () => {
     setOpenItem(false);
@@ -183,6 +184,7 @@ export default function ManageResourses({
           <TableColumnVisibility
             defaultHiddenColumnNames={[
               'info',
+              'due',
               // 'amount',
               // 'progress',
               // 'totalinvoiced',
@@ -278,6 +280,7 @@ export default function ManageResourses({
           servicesproducts={services}
           customers={customers}
           tasks={tasks}
+          tempwords={tempwords}
         ></PopupResoursesView>
       </Box>
     </PageLayout>

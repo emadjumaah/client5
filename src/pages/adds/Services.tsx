@@ -28,21 +28,14 @@ import useWindowDimensions from '../../hooks/useWindowDimensions';
 import { TableComponent } from '../../Shared/TableComponent';
 import ImportBtn from '../../common/ImportBtn';
 import PopupServiceImport from '../../pubups/PopupServiceImport';
-// import { getColumns } from '../../common/columns';
 
 export default function Services({ isRTL, words, theme }: any) {
-  // const col = getColumns({ isRTL, words });
   const [openImport, setOpenImport] = useState(false);
   const [type, setType] = useState(2);
-
   const [loading, setLoading] = useState(false);
   const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
-
   const [columns] = useState([
     { name: isRTL ? 'nameAr' : 'name', title: words.name },
-    // col.department,
-    // col.employee,
-    // col.resourse,
     { name: 'price', title: words.price },
     { name: 'desc', title: words.description },
     { name: 'unit', title: words.unit },
@@ -159,7 +152,7 @@ export default function Services({ isRTL, words, theme }: any) {
           addAction={addService}
           editAction={editService}
         >
-          <PopupService></PopupService>
+          <PopupService type={type}></PopupService>
         </PopupEditing>
       </Grid>
       {alrt.show && (
