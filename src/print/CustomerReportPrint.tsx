@@ -28,12 +28,12 @@ export class CustomerReportPrint extends React.PureComponent<any, any> {
   renderItemHeaderTable = (isRTL: boolean) => {
     return (
       <tr style={{ fontSize: 12 }}>
-        <th>{isRTL ? 'Date' : 'التاريخ'}</th>
-        <th>{isRTL ? 'Document' : 'الوثيقة'}</th>
-        <th>{isRTL ? 'Doc No' : 'رقم الوثيقة'}</th>
-        <th>{isRTL ? 'Debit' : 'مدين'}</th>
-        <th>{isRTL ? 'Credit' : 'دائن'}</th>
-        <th>{isRTL ? 'Balance' : 'الرصيد'}</th>
+        <th>{isRTL ? 'التاريخ' : 'Date'}</th>
+        <th>{isRTL ? 'الوثيقة' : 'Document'}</th>
+        <th>{isRTL ? 'رقم الوثيقة' : 'Doc No'}</th>
+        <th>{isRTL ? 'مدين' : 'Debit'}</th>
+        <th>{isRTL ? 'دائن' : 'Credit'}</th>
+        <th>{isRTL ? 'الرصيد' : 'Balance'}</th>
       </tr>
     );
   };

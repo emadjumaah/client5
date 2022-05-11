@@ -20,7 +20,7 @@ import getTrialBalance from '../../graphql/query/getTrialBalance';
 import _ from 'lodash';
 import { moneyFormatEmpty } from '../../Shared/colorFormat';
 import DateNavigatorReports from '../../components/filters/DateNavigatorReports';
-import { BalanceReportPrint } from '../../print/BalanceReportPrint';
+import { BalanceReportP } from '../../print/BalanceReportP';
 import { useReactToPrint } from 'react-to-print';
 import PrintIcon from '@material-ui/icons/Print';
 
@@ -452,7 +452,7 @@ export default function BudgetReport({
         </Box>
         <Box>
           <div style={{ display: 'none' }}>
-            <BalanceReportPrint
+            <BalanceReportP
               company={company}
               parentslist={parentslist}
               report={report}
