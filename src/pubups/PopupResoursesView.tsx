@@ -23,6 +23,7 @@ import { manamentTabs } from '../constants/rrule';
 import ProjectsCustomer from '../Shared/ProjectsCustomer';
 import KaidsCustomer from '../Shared/KaidsCustomer';
 import ReminderCustomer from '../Shared/ReminderCustomer';
+import { useTemplate } from '../hooks';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -87,7 +88,8 @@ const PopupResoursesView = ({
 }: any) => {
   const classes = useStyles();
 
-  const [value, setValue] = React.useState(1);
+  const { tempoptions } = useTemplate();
+  const [value, setValue] = React.useState(tempoptions?.noRes ? 2 : 1);
   const handleChange = (_, newValue) => {
     setValue(newValue);
   };

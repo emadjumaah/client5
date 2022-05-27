@@ -83,7 +83,7 @@ export default function ServiceItemForm({
       display="flex"
       style={{
         flex: 1,
-        margin: 10,
+        margin: 5,
         borderRadius: 5,
       }}
     >

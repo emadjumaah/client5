@@ -65,7 +65,7 @@ export default function ExpensesItemsTable({
   isRTL,
   words,
   user,
-  height = 265,
+  height = 250,
 }: any) {
   const [columns] = useState([
     { name: 'index', title: words.no },

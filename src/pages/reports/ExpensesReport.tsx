@@ -86,20 +86,30 @@ export default function ExpensesReport({
 
   const col = getColumns({ isRTL, words });
 
-  const [columns] = useState([
-    col.opTime,
-    col.opDocNo,
-    col.acc,
-    // col.refNo,
-    // col.kaidType,
-    col.opAcc,
-    // col.accType,
-    col.project,
-    col.taskId,
-    col.desc,
-    col.opType,
-    col.amount,
-  ]);
+  const { tempoptions, tempwords } = useTemplate();
+  const [columns] = useState(
+    tempoptions?.noTsk
+      ? [
+          col.opTime,
+          col.opDocNo,
+          col.acc,
+          col.opAcc,
+          col.desc,
+          col.opType,
+          col.amount,
+        ]
+      : [
+          col.opTime,
+          col.opDocNo,
+          col.acc,
+          col.opAcc,
+          col.project,
+          col.taskId,
+          col.desc,
+          col.opType,
+          col.amount,
+        ]
+  );
 
   const [tableColumnVisibilityColumnExtensions] = useState([
     { columnName: col.opTime.name, togglingEnabled: false },
@@ -133,7 +143,6 @@ export default function ExpensesReport({
   const { tasks } = useTasks();
   const { height } = useWindowDimensions();
   const { projects } = useProjects();
-  const { tempwords } = useTemplate();
 
   const currentViewNameChange = (e: any) => {
     dispatch({ type: 'setCurrentViewName', payload: e.target.value });
@@ -341,6 +350,8 @@ export default function ExpensesReport({
             zIndex: 111,
             flexDirection: 'row',
             alignItems: 'center',
+            justifyContent: 'space-between',
+            width: '75%',
           }}
         >
           <DateNavigatorReports
@@ -378,22 +389,24 @@ export default function ExpensesReport({
                   isRTL={isRTL}
                   name="project"
                   nomulti
-                  width={220}
+                  width={350}
                 ></FilterSelectCkeckBox>
               </Box>
             )}
-            <Box style={{ marginLeft: 10, marginRight: 10 }}>
-              <FilterSelectCkeckBox
-                options={tasks}
-                value={taskvalue?.[0]}
-                setValue={setTaskvalueDispatch}
-                words={words}
-                isRTL={isRTL}
-                name="task"
-                nomulti
-                width={220}
-              ></FilterSelectCkeckBox>
-            </Box>
+            {!tempoptions?.noTsk && (
+              <Box style={{ marginLeft: 10, marginRight: 10 }}>
+                <FilterSelectCkeckBox
+                  options={tasks}
+                  value={taskvalue?.[0]}
+                  setValue={setTaskvalueDispatch}
+                  words={words}
+                  isRTL={isRTL}
+                  name="task"
+                  nomulti
+                  width={350}
+                ></FilterSelectCkeckBox>
+              </Box>
+            )}
             <FilterSelectCkeckBox
               options={expensesAccounts}
               value={accvalue?.[0]}
@@ -402,7 +415,7 @@ export default function ExpensesReport({
               isRTL={isRTL}
               name="account"
               nomulti
-              width={220}
+              width={350}
             ></FilterSelectCkeckBox>
           </Box>
           <Box

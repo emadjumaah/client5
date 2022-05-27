@@ -25,9 +25,16 @@ export const storeReducer = (state: StoreTypes, action: any) => {
         user: action.payload.user,
         token: action.payload.token,
         template: action.payload.template,
+        tempId: action.payload.tempId,
       };
     case 'logout':
-      return { ...state, user: null, token: null, template: null };
+      return {
+        ...state,
+        user: null,
+        token: null,
+        template: null,
+        tempId: null,
+      };
     case 'setLastSuccess':
       return { ...state, lastSuccess: action.payload };
     case 'setWrongTimes':
@@ -42,7 +49,11 @@ export const storeReducer = (state: StoreTypes, action: any) => {
     case 'closePackIssue':
       return { ...state, packIssue: false, packIssueMsg: null };
     case 'setTemplate':
-      return { ...state, template: action.payload };
+      return {
+        ...state,
+        template: action.payload.template,
+        tempId: action.payload.tempId,
+      };
 
     default:
       throw new Error('Unexpected action');

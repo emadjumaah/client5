@@ -20,5 +20,7 @@ export default () => {
     tempwords,
     tempoptions: template?.options,
     taskExtra: template?.taskExtra,
+    sortOrder: template?.sortOrder,
+    templateId: template?.id,
   };
 };

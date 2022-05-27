@@ -94,10 +94,6 @@ self.addEventListener('push', function (e) {
     icon,
     image,
     vibrate: [100, 50, 100],
-    data: {
-      dateOfArrival: Date.now(),
-      primaryKey: 1,
-    },
   };
   e.waitUntil(self.registration.showNotification(title, options));
 });

@@ -90,37 +90,35 @@ export default function SalesReport({ isRTL, words, menuitem, theme }: any) {
   const [end, setEnd] = useState<any>(null);
 
   const [rows, setRows] = useState([]);
-  // const [printRows, setPrintRows]: any = useState([]);
-  // const [total, setTotal]: any = useState(null);
-  // const [totalRows, setTotalRows]: any = useState(null);
-
   const col = getColumns({ isRTL, words });
 
-  // const [activecolumns, setActivecolumns] = useState([
-  //   col.startDate,
-  //   col.time,
-  //   col.taskId,
-  //   col.employee,
-  //   col.department,
-  //   col.customer,
-  //   col.status,
-  //   col.docNo,
-  //   col.amount,
-  // ]);
-
-  const [columns] = useState([
-    col.startDate,
-    col.time,
-    col.project,
-    col.taskId,
-    col.employee,
-    col.resourse,
-    col.department,
-    col.customer,
-    col.status,
-    col.docNo,
-    col.amount,
-  ]);
+  const { tempoptions } = useTemplate();
+  const [columns] = useState(
+    tempoptions?.noTsk
+      ? [
+          col.startDate,
+          col.time,
+          col.employee,
+          col.department,
+          col.customer,
+          col.status,
+          col.docNo,
+          col.amount,
+        ]
+      : [
+          col.startDate,
+          col.time,
+          col.project,
+          col.taskId,
+          col.employee,
+          col.resourse,
+          col.department,
+          col.customer,
+          col.status,
+          col.docNo,
+          col.amount,
+        ]
+  );
 
   const [tableColumnVisibilityColumnExtensions] = useState([
     { columnName: col.opTime.name, togglingEnabled: false },
@@ -156,7 +154,6 @@ export default function SalesReport({ isRTL, words, menuitem, theme }: any) {
   } = useContext(EventsReportContext);
   const { tasks } = useTasks();
   const { projects } = useProjects();
-  const { tempoptions } = useTemplate();
   const { height } = useWindowDimensions();
 
   const currentViewNameChange = (e: any) => {
@@ -245,7 +242,20 @@ export default function SalesReport({ isRTL, words, menuitem, theme }: any) {
 
   useEffect(() => {
     fetchData();
-  }, [start, end, group, groupby, sumcolumn]);
+  }, [
+    start,
+    end,
+    group,
+    groupby,
+    sumcolumn,
+    status,
+    departvalue,
+    projvalue,
+    resovalue,
+    emplvalue,
+    custvalue,
+    taskvalue,
+  ]);
 
   const exporterRef: any = useRef(null);
 
@@ -578,7 +588,7 @@ export default function SalesReport({ isRTL, words, menuitem, theme }: any) {
               isRTL={isRTL}
               name="status"
               nomulti
-              width={180}
+              width={350}
             ></FilterSelectCkeckBox>
           </Box>
         </Box>

@@ -62,7 +62,7 @@ import useTasks from '../../hooks/useTasks';
 import getTasks from '../../graphql/query/getTasks';
 import { Getter } from '@devexpress/dx-react-core';
 import { TableComponent } from '../../Shared/TableComponent';
-import { useCustomers, useServices } from '../../hooks';
+import { useCustomers, useServices, useTemplate } from '../../hooks';
 import PopupDepartmentView from '../../pubups/PopupDepartmentView';
 import PopupEmployeeView from '../../pubups/PopupEmployeeView';
 import PopupTaskView from '../../pubups/PopupTaskView';
@@ -85,23 +85,42 @@ export default function Appointments({
   const { height } = useWindowDimensions();
   const col = getColumns({ isRTL, words });
 
-  const [columns] = useState([
-    { id: 4, ref: 'title', name: 'title', title: words.title },
-    col.location,
-    col.createdAt,
-    col.startDate,
-    col.fromto,
-    col.docNo,
-    col.customer,
-    col.taskId,
-    col.employee,
-    col.resourse,
-    col.department,
-    col.status,
-    col.done,
-    col.amount,
-    col.nots,
-  ]);
+  const { tempoptions } = useTemplate();
+  const [columns] = useState(
+    tempoptions?.noTsk
+      ? [
+          { id: 4, ref: 'title', name: 'title', title: words.title },
+          col.location,
+          col.createdAt,
+          col.startDate,
+          col.fromto,
+          col.docNo,
+          col.customer,
+          col.employee,
+          col.department,
+          col.status,
+          col.done,
+          col.amount,
+          col.nots,
+        ]
+      : [
+          { id: 4, ref: 'title', name: 'title', title: words.title },
+          col.location,
+          col.createdAt,
+          col.startDate,
+          col.fromto,
+          col.docNo,
+          col.customer,
+          col.taskId,
+          col.employee,
+          col.resourse,
+          col.department,
+          col.status,
+          col.done,
+          col.amount,
+          col.nots,
+        ]
+  );
 
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -123,6 +142,7 @@ export default function Appointments({
   const { employees, addEmployee, editEmployee } = useEmployeesUp();
   const { resourses, addResourse, editResourse } = useResoursesUp();
   const { services } = useServices();
+
   const onCloseTaskItem = () => {
     setOpenTaskItem(false);
     setItem(null);

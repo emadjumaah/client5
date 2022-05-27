@@ -13,6 +13,8 @@ import Company from './Company';
 import React from 'react';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
 import { roles } from '../../common';
+// import { PDFViewer } from '@react-pdf/renderer';
+// import MyPDFDocument from '../../print/pdf/MyPDFDocument';
 
 const initcalendar = {
   duration: 30,
@@ -90,6 +92,11 @@ const Options = ({ isRTL, words, company, editCompany }: any) => {
           </Grid>
         </Grid>
       </Box>
+      {/* <Box style={{ flexGrow: 1, height: '100%', overflow: 'hidden' }}>
+        <PDFViewer width="100%" height="100%" style={{ border: 'none' }}>
+          <MyPDFDocument />
+        </PDFViewer>
+      </Box> */}
     </Box>
   );
 };

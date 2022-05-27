@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -13,6 +13,8 @@ import { useLazyQuery } from '@apollo/client';
 import _ from 'lodash';
 import { isValidEmail } from '../common/helpers';
 import { errorAlertMsg } from '../Shared/helpers';
+import { GContextTypes } from '../types';
+import { GlobalContext } from '../contexts';
 
 const search = _.debounce(({ checkUser, username }) => {
   checkUser({ variables: { username } });
@@ -46,6 +48,8 @@ const PopupBranch = ({
     isNew ? brandchResolver : undefined
   );
   const [checkUser, userData] = useLazyQuery(checkUsername);
+
+  const { dispatch }: GContextTypes = useContext(GlobalContext);
 
   useEffect(() => {
     if (row && row._id) {
@@ -101,11 +105,19 @@ const PopupBranch = ({
     const mutate = isNew ? addAction : editAction;
 
     apply(mutate, variables);
+    dispatch({
+      type: 'setTemplate',
+      payload: { template: temp, tempId: temp?.id },
+    });
+    dispatch({ type: 'setThemeId', payload: temp?.id - 1 });
+
+    window.location.reload();
   };
 
   const apply = async (mutate: any, variables: any) => {
     try {
       mutate({ variables });
+
       closeForm();
     } catch (error) {
       onError(error);

@@ -142,6 +142,11 @@ export const opTypesNames = {
     nameAr: 'رصيد افتتاحي',
     ref: 'print',
   },
+  95: {
+    name: 'Reminder',
+    nameAr: 'تذكير',
+    ref: 'reminder',
+  },
 };
 
 export const operationNames = {

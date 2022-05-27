@@ -29,6 +29,7 @@ import getGereralKaids from '../graphql/query/getGereralKaids';
 import { getColumns } from '../common/columns';
 import { Box } from '@material-ui/core';
 import DateNavigatorReports from '../components/filters/DateNavigatorReports';
+import { useTemplate } from '../hooks';
 
 export default function KaidsCustomer({
   isRTL,
@@ -40,16 +41,29 @@ export default function KaidsCustomer({
 }) {
   const col = getColumns({ isRTL, words });
 
-  const [columns] = useState([
-    col.opTime,
-    col.opDocNo,
-    col.acc,
-    col.taskId,
-    col.employee,
-    col.department,
-    col.amountdebit,
-    col.amountcredit,
-  ]);
+  const { tempoptions } = useTemplate();
+  const [columns] = useState(
+    tempoptions?.noTsk
+      ? [
+          col.opTime,
+          col.opDocNo,
+          col.acc,
+          col.employee,
+          col.department,
+          col.amountdebit,
+          col.amountcredit,
+        ]
+      : [
+          col.opTime,
+          col.opDocNo,
+          col.acc,
+          col.taskId,
+          col.employee,
+          col.department,
+          col.amountdebit,
+          col.amountcredit,
+        ]
+  );
 
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(false);

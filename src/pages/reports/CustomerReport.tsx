@@ -46,7 +46,7 @@ import PageLayout from '../main/PageLayout';
 import DateNavigatorReports from '../../components/filters/DateNavigatorReports';
 import { CustomerReportContext } from '../../contexts';
 import FilterSelectCkeckBox from '../../Shared/FilterSelectCkeckBox';
-import { useCustomers } from '../../hooks';
+import { useCustomers, useTemplate } from '../../hooks';
 import useTasks from '../../hooks/useTasks';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
 import { CustomerReportPrint } from '../../print/CustomerReportPrint';
@@ -82,18 +82,32 @@ export default function CustomerReport({
 
   const col = getColumns({ isRTL, words });
 
-  const [columns] = useState([
-    col.opTime,
-    col.customer,
-    col.opType,
-    col.project,
-    col.taskId,
-    col.opDocNo,
-    col.opAcc,
-    col.amountdebit,
-    col.amountcredit,
-    col.rased,
-  ]);
+  const { tempoptions } = useTemplate();
+  const [columns] = useState(
+    tempoptions?.noTsk
+      ? [
+          col.opTime,
+          col.customer,
+          col.opType,
+          col.opDocNo,
+          col.opAcc,
+          col.amountdebit,
+          col.amountcredit,
+          col.rased,
+        ]
+      : [
+          col.opTime,
+          col.customer,
+          col.opType,
+          col.project,
+          col.taskId,
+          col.opDocNo,
+          col.opAcc,
+          col.amountdebit,
+          col.amountcredit,
+          col.rased,
+        ]
+  );
 
   const [tableColumnVisibilityColumnExtensions] = useState([
     { columnName: col.opTime.name, togglingEnabled: false },
@@ -354,7 +368,7 @@ export default function CustomerReport({
               isRTL={isRTL}
               name="customer"
               nomulti
-              width={300}
+              width={350}
             ></FilterSelectCkeckBox>
           </Box>
         </Box>

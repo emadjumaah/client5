@@ -43,7 +43,7 @@ import getTasks from '../graphql/query/getTasks';
 import useCompany from '../hooks/useCompany';
 import { Box } from '@material-ui/core';
 import DateNavigatorReports from '../components/filters/DateNavigatorReports';
-import { useExpenseItems } from '../hooks';
+import { useExpenseItems, useTemplate } from '../hooks';
 import useDepartmentsUp from '../hooks/useDepartmentsUp';
 import useEmployeesUp from '../hooks/useEmployeesUp';
 import useResoursesUp from '../hooks/useResoursesUp';
@@ -57,26 +57,44 @@ export default function ExpensesCustomer({
   id,
   value,
 }) {
-  const [columns] = useState([
-    { name: 'time', title: words.time },
-    { name: 'debitAcc', title: isRTL ? 'حساب المصروف' : 'Expenses Acc' },
-    { name: 'creditAcc', title: isRTL ? 'حساب الدفع' : 'Payment Acc' },
-    {
-      name: isRTL ? 'departmentNameAr' : 'departmentName',
-      title: words.department,
-    },
-    {
-      name: isRTL ? 'employeeNameAr' : 'employeeName',
-      title: `${words.employee} / ${words.resourses}`,
-    },
-    {
-      name: 'taskId',
-      title: isRTL ? 'المهمة' : 'Task',
-    },
-    { name: 'desc', title: words.description },
-
-    { name: 'amount', title: words.amount },
-  ]);
+  const { tempoptions, tempwords } = useTemplate();
+  const [columns] = useState(
+    tempoptions?.noTsk
+      ? [
+          { name: 'time', title: words.time },
+          { name: 'debitAcc', title: isRTL ? 'حساب المصروف' : 'Expenses Acc' },
+          { name: 'creditAcc', title: isRTL ? 'حساب الدفع' : 'Payment Acc' },
+          {
+            name: isRTL ? 'departmentNameAr' : 'departmentName',
+            title: words.department,
+          },
+          {
+            name: isRTL ? 'employeeNameAr' : 'employeeName',
+            title: `${words.employee}`,
+          },
+          { name: 'desc', title: words.description },
+          { name: 'amount', title: words.amount },
+        ]
+      : [
+          { name: 'time', title: words.time },
+          { name: 'debitAcc', title: isRTL ? 'حساب المصروف' : 'Expenses Acc' },
+          { name: 'creditAcc', title: isRTL ? 'حساب الدفع' : 'Payment Acc' },
+          {
+            name: isRTL ? 'departmentNameAr' : 'departmentName',
+            title: words.department,
+          },
+          {
+            name: isRTL ? 'employeeNameAr' : 'employeeName',
+            title: `${words.employee}`,
+          },
+          {
+            name: 'taskId',
+            title: tempwords.task,
+          },
+          { name: 'desc', title: words.description },
+          { name: 'amount', title: words.amount },
+        ]
+  );
 
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(false);

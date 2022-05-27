@@ -259,7 +259,7 @@ const PopupSendreq = ({
                     words={words}
                     isRTL={isRTL}
                     name="group"
-                    width={300}
+                    width={350}
                   ></FilterSelectMulti>
                 </Grid>
                 <Grid item xs={3}>

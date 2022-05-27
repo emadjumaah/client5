@@ -14,6 +14,7 @@ import {
 import { moneyFormat } from './colorFormat';
 import FilterSelectMulti from './FilterSelectMulti';
 import CloseIcon from '@material-ui/icons/Close';
+import { useTemplate } from '../hooks';
 // import SelectServProd from "./SelectServProd";
 export default function SalesFilter({
   resovalue,
@@ -56,6 +57,7 @@ export default function SalesFilter({
 
   const [open, setOpen] = React.useState(false);
   const [scroll, setScroll] = React.useState<any>('paper');
+  const { tempoptions } = useTemplate();
 
   useEffect(() => {
     if (open === true) {
@@ -216,7 +218,7 @@ export default function SalesFilter({
                   words={words}
                   isRTL={isRTL}
                   name="type"
-                  width={250}
+                  width={350}
                 ></FilterSelectMulti>
               )}
               <FilterSelectMulti
@@ -226,9 +228,10 @@ export default function SalesFilter({
                 words={words}
                 isRTL={isRTL}
                 name="employee"
-                width={250}
+                width={350}
               ></FilterSelectMulti>
-              {resourses && resourses.length > 0 && (
+
+              {!tempoptions?.noRes && resourses && resourses.length > 0 && (
                 <FilterSelectMulti
                   options={resourses}
                   value={resovalueLocal}
@@ -236,7 +239,7 @@ export default function SalesFilter({
                   words={words}
                   isRTL={isRTL}
                   name="resourse"
-                  width={250}
+                  width={350}
                 ></FilterSelectMulti>
               )}
               <FilterSelectMulti
@@ -246,9 +249,9 @@ export default function SalesFilter({
                 words={words}
                 isRTL={isRTL}
                 name="department"
-                width={250}
+                width={350}
               ></FilterSelectMulti>
-              {tasks && tasks.length > 0 && (
+              {!tempoptions?.noTsk && tasks && tasks.length > 0 && (
                 <FilterSelectMulti
                   options={tasks}
                   value={taskvalueLocal}
@@ -256,10 +259,10 @@ export default function SalesFilter({
                   words={words}
                   isRTL={isRTL}
                   name="task"
-                  width={250}
+                  width={350}
                 ></FilterSelectMulti>
               )}
-              {projects && projects.length > 0 && (
+              {!tempoptions?.noPro && projects && projects.length > 0 && (
                 <FilterSelectMulti
                   options={projects}
                   value={projvalueLocal}
@@ -267,7 +270,7 @@ export default function SalesFilter({
                   words={words}
                   isRTL={isRTL}
                   name="project"
-                  width={250}
+                  width={350}
                 ></FilterSelectMulti>
               )}
               {servicevalue && servicevalue.length > 0 && (
@@ -278,7 +281,7 @@ export default function SalesFilter({
                   words={words}
                   isRTL={isRTL}
                   name="serviceproduct"
-                  width={250}
+                  width={350}
                 ></FilterSelectMulti>
               )}
               <FilterSelectMulti
@@ -288,7 +291,7 @@ export default function SalesFilter({
                 words={words}
                 isRTL={isRTL}
                 name="customer"
-                width={250}
+                width={350}
               ></FilterSelectMulti>
 
               {total && total.length > 0 && (

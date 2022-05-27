@@ -49,6 +49,7 @@ export default function PopupLayout(props: any) {
     preventclose = false,
     saving,
     bgcolor,
+    saveprint,
   } = props;
   const bgc = bgcolor ? fade(bgcolor, 0.1) : '#f5f5f5';
 
@@ -135,7 +136,7 @@ export default function PopupLayout(props: any) {
             </Typography>
           </Button>
         )}
-        {print && (
+        {!saveprint && print && (
           <Button
             style={{ width: 100, height: 36, marginRight: 10, marginLeft: 10 }}
             variant="contained"
@@ -156,7 +157,12 @@ export default function PopupLayout(props: any) {
               marginLeft: 10,
             }}
             variant="contained"
-            onClick={onSubmit}
+            onClick={() => {
+              onSubmit();
+              if (saveprint) {
+                print();
+              }
+            }}
             color="primary"
             disabled={saving}
           >

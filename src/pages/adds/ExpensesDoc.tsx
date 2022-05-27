@@ -55,7 +55,7 @@ import PopupExpensesDoc from '../../pubups/PopupExpensesDoc';
 import useDepartmentsUp from '../../hooks/useDepartmentsUp';
 import useEmployeesUp from '../../hooks/useEmployeesUp';
 import useResoursesUp from '../../hooks/useResoursesUp';
-import { useExpenseItems } from '../../hooks';
+import { useExpenseItems, useTemplate } from '../../hooks';
 
 export default function ExpensesDoc({
   isRTL,
@@ -66,16 +66,30 @@ export default function ExpensesDoc({
 }) {
   const col = getColumns({ isRTL, words });
 
-  const [columns] = useState([
-    { name: 'time', title: words.time },
-    { name: 'debitAcc', title: isRTL ? 'حساب المصروف' : 'Expenses Acc' },
-    { name: 'creditAcc', title: isRTL ? 'حساب الدفع' : 'Payment Acc' },
-    col.department,
-    col.employee,
-    col.taskId,
-    { name: 'desc', title: words.description },
-    { name: 'amount', title: words.amount },
-  ]);
+  const { tempoptions } = useTemplate();
+
+  const [columns] = useState(
+    tempoptions?.noTsk
+      ? [
+          { name: 'time', title: words.time },
+          { name: 'debitAcc', title: isRTL ? 'حساب المصروف' : 'Expenses Acc' },
+          { name: 'creditAcc', title: isRTL ? 'حساب الدفع' : 'Payment Acc' },
+          col.department,
+          col.employee,
+          { name: 'desc', title: words.description },
+          { name: 'amount', title: words.amount },
+        ]
+      : [
+          { name: 'time', title: words.time },
+          { name: 'debitAcc', title: isRTL ? 'حساب المصروف' : 'Expenses Acc' },
+          { name: 'creditAcc', title: isRTL ? 'حساب الدفع' : 'Payment Acc' },
+          col.department,
+          col.employee,
+          col.taskId,
+          { name: 'desc', title: words.description },
+          { name: 'amount', title: words.amount },
+        ]
+  );
 
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(false);

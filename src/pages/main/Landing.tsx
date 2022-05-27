@@ -32,7 +32,7 @@ export default function Landing(props: any) {
   const { departments } = useDepartmentsUp();
   const { employees } = useEmployeesUp();
   const { height } = useWindowDimensions();
-  const { tempwords } = useTemplate();
+  const { tempwords, templateId } = useTemplate();
 
   const {
     salesDays,
@@ -68,7 +68,7 @@ export default function Landing(props: any) {
   const salesColor = theme.palette.primary.light;
   const eventColor = theme.palette.secondary.main;
   const prim = theme.palette.primary.light;
-
+  const isRent = [4, 7].includes(templateId);
   return (
     <PageLayout
       menuitem={menuitem}
@@ -170,7 +170,7 @@ export default function Landing(props: any) {
               </Grid>
             )}
 
-            {roles.isEditor() && resourses && (
+            {roles.isEditor() && resourses && isRent && (
               <Grid item xs={12} md={4}>
                 <Cars
                   title={
@@ -186,7 +186,7 @@ export default function Landing(props: any) {
               </Grid>
             )}
             {todayEvents && roles.isEditor() && (
-              <Grid item xs={12} md={4}>
+              <Grid item xs={12} md={isRent ? 4 : 6}>
                 <PercentChart
                   pricolor={salesColor}
                   seccolor={eventColor}
@@ -198,7 +198,7 @@ export default function Landing(props: any) {
               </Grid>
             )}
             {nextEventDays && roles.isEditor() && (
-              <Grid item xs={12} md={4}>
+              <Grid item xs={12} md={isRent ? 4 : 6}>
                 <DaysEvents
                   dataKey="count"
                   theme={theme}

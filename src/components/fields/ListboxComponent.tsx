@@ -65,7 +65,7 @@ const ListboxComponent: any = React.forwardRef(function ListboxComponent(
         <VariableSizeList
           itemData={itemData}
           height={getHeight() + 2 * LISTBOX_PADDING}
-          width={250}
+          width={350}
           ref={gridRef}
           outerElementType={OuterElementType}
           innerElementType="ul"

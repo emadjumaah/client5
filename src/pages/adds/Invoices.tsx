@@ -52,23 +52,39 @@ import getTasks from '../../graphql/query/getTasks';
 import useResoursesUp from '../../hooks/useResoursesUp';
 import useDepartmentsUp from '../../hooks/useDepartmentsUp';
 import useEmployeesUp from '../../hooks/useEmployeesUp';
-import { useServices } from '../../hooks';
+import { useServices, useTemplate } from '../../hooks';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
 
 export default function Invoices({ isRTL, words, menuitem, theme, company }) {
   const col = getColumns({ isRTL, words });
 
-  const [columns] = useState([
-    { name: 'time', title: words.time },
-    { name: 'docNo', title: words.no },
-    col.eventNo,
-    col.taskId,
-    col.customer,
-    { name: 'customerPhone', title: words.phoneNumber },
-    { name: 'total', title: words.total },
-    { name: 'discount', title: words.discount },
-    { name: 'amount', title: words.amount },
-  ]);
+  const { tempoptions } = useTemplate();
+
+  const [columns] = useState(
+    tempoptions?.noTsk
+      ? [
+          { name: 'time', title: words.time },
+          { name: 'docNo', title: words.no },
+          col.eventNo,
+          col.customer,
+          { name: 'customerPhone', title: words.phoneNumber },
+          { name: 'total', title: words.total },
+          { name: 'discount', title: words.discount },
+          { name: 'amount', title: words.amount },
+        ]
+      : [
+          { name: 'time', title: words.time },
+          { name: 'docNo', title: words.no },
+          col.eventNo,
+          col.taskId,
+          col.customer,
+          { name: 'customerPhone', title: words.phoneNumber },
+          { name: 'total', title: words.total },
+          { name: 'discount', title: words.discount },
+          { name: 'amount', title: words.amount },
+        ]
+  );
+
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(false);
   const [start, setStart] = useState<any>(null);

@@ -25,8 +25,9 @@ import { getRowId, roles } from '../../common';
 import {
   avatarPatternFormatter,
   currencyFormatterEmpty,
-  dueAmountFormatter,
+  // dueAmountFormatter,
   incomeAmountFormatter,
+  totalkaidAmountFormatter,
   nameLinkFormat,
   progressFormatter,
 } from '../../Shared/colorFormat';
@@ -78,13 +79,19 @@ export default function ManageProjects({
     col.progress,
     col.totalinvoiced,
     col.totalpaid,
-    {
-      id: 40,
-      ref: 'due',
-      name: 'due',
-      title: isRTL ? 'المتبقي' : 'Due Payment',
-    },
+    // {
+    //   id: 40,
+    //   ref: 'due',
+    //   name: 'due',
+    //   title: isRTL ? 'المتبقي' : 'Due Payment',
+    // },
     col.toatlExpenses,
+    {
+      id: 48,
+      ref: 'kids',
+      name: 'kids',
+      title: isRTL ? 'القيود' : 'Enties',
+    },
     {
       id: 38,
       ref: 'income',
@@ -189,10 +196,10 @@ export default function ManageProjects({
             for={['amount', 'toatlExpenses', 'totalpaid', 'totalinvoiced']}
             formatterComponent={currencyFormatterEmpty}
           ></DataTypeProvider>
-          <DataTypeProvider
+          {/* <DataTypeProvider
             for={['due']}
             formatterComponent={dueAmountFormatter}
-          ></DataTypeProvider>
+          ></DataTypeProvider> */}
           <DataTypeProvider
             for={['avatar']}
             formatterComponent={avatarPatternFormatter}
@@ -200,6 +207,10 @@ export default function ManageProjects({
           <DataTypeProvider
             for={['income']}
             formatterComponent={incomeAmountFormatter}
+          ></DataTypeProvider>
+          <DataTypeProvider
+            for={['kids']}
+            formatterComponent={totalkaidAmountFormatter}
           ></DataTypeProvider>
           <DataTypeProvider
             for={['progress']}

@@ -115,20 +115,35 @@ export default function ServicesReport({
     { name: 'total', title: words.amount },
   ]);
 
-  const [columns] = useState([
-    col.opTime,
-    col.item,
-    col.opType,
-    col.opDocNo,
-    col.customer,
-    col.taskId,
-    col.project,
-    col.employee,
-    col.resourse,
-    col.department,
-    { name: 'qty', title: words.qty },
-    { name: 'total', title: words.amount },
-  ]);
+  const { tempoptions } = useTemplate();
+  const [columns] = useState(
+    tempoptions?.noTsk
+      ? [
+          col.opTime,
+          col.item,
+          col.opType,
+          col.opDocNo,
+          col.customer,
+          col.employee,
+          col.department,
+          { name: 'qty', title: words.qty },
+          { name: 'total', title: words.amount },
+        ]
+      : [
+          col.opTime,
+          col.item,
+          col.opType,
+          col.opDocNo,
+          col.customer,
+          col.taskId,
+          col.project,
+          col.employee,
+          col.resourse,
+          col.department,
+          { name: 'qty', title: words.qty },
+          { name: 'total', title: words.amount },
+        ]
+  );
 
   const [tableColumnVisibilityColumnExtensions] = useState([
     { columnName: col.opTime.name, togglingEnabled: false },
@@ -167,7 +182,6 @@ export default function ServicesReport({
   } = useContext(ServicesReportContext);
   const { tasks } = useTasks();
   const { projects } = useProjects();
-  const { tempoptions } = useTemplate();
   const { height } = useWindowDimensions();
 
   const currentViewNameChange = (e: any) => {
@@ -260,7 +274,21 @@ export default function ServicesReport({
 
   useEffect(() => {
     fetchData();
-  }, [start, end, group, groupby, sumcolumn]);
+  }, [
+    start,
+    end,
+    group,
+    groupby,
+    sumcolumn,
+    status,
+    departvalue,
+    projvalue,
+    resovalue,
+    emplvalue,
+    custvalue,
+    taskvalue,
+    types,
+  ]);
 
   const exporterRef: any = useRef(null);
 
@@ -417,7 +445,7 @@ export default function ServicesReport({
       totl: words.total,
       totalamount: total ? moneyFormat(totalRows.total) : '',
       count: totalRows?.count,
-      reportname: isRTL ? 'تقرير المبيعات' : 'Sales Report',
+      reportname: isRTL ? 'تقرير البنود' : 'Items Report',
       logo: company.logo,
       phone: company.tel1,
       mobile: company.mob,
@@ -471,8 +499,8 @@ export default function ServicesReport({
   ];
 
   const projres = groupList(isRTL).filter((item: any) =>
-    tempoptions.noPro && tempoptions.noRes
-      ? item.id !== 10 && item.id !== 11
+    tempoptions.noPro && tempoptions.noTsk
+      ? item.id !== 10 && item.id !== 11 && item.id !== 8
       : tempoptions.noPro && !tempoptions.noRes
       ? item.id !== 10
       : !tempoptions.noPro && tempoptions.noRes
@@ -593,12 +621,14 @@ export default function ServicesReport({
             onSortingChange={(srt: any) => setSortDispatch(srt)}
           />
           {group && <GroupingState grouping={grouping} />}
-          <SummaryState
-            totalItems={totalSummaryItems}
-            groupItems={groupSummaryItems}
-          />
+          {group && (
+            <SummaryState
+              totalItems={totalSummaryItems}
+              groupItems={groupSummaryItems}
+            />
+          )}
           {group && <IntegratedGrouping />}
-          <IntegratedSummary />
+          {group && <IntegratedSummary />}
           <IntegratedSorting />
           <VirtualTable
             height={height - 100}
@@ -656,12 +686,14 @@ export default function ServicesReport({
               showColumnsWhenGrouped
             />
           )}
-          <TableSummaryRow
-            messages={{
-              sum: isRTL ? 'المجموع' : 'Total',
-              count: isRTL ? 'العدد' : 'Count',
-            }}
-          ></TableSummaryRow>
+          {group && (
+            <TableSummaryRow
+              messages={{
+                sum: isRTL ? 'المجموع' : 'Total',
+                count: isRTL ? 'العدد' : 'Count',
+              }}
+            ></TableSummaryRow>
+          )}
         </Grid>
         <GridExporter
           ref={exporterRef}

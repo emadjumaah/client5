@@ -22,6 +22,7 @@ import TasksCustomer from '../Shared/TasksCustomer';
 import { customerManamentTabs } from '../constants/rrule';
 import ProjectsCustomer from '../Shared/ProjectsCustomer';
 import KaidsCustomer from '../Shared/KaidsCustomer';
+import { useTemplate } from '../hooks';
 // import ReminderCustomer from '../Shared/ReminderCustomer';
 
 function TabPanel(props) {
@@ -85,8 +86,9 @@ const PopupCustomerView = ({
   customers,
 }: any) => {
   const classes = useStyles();
+  const { tempoptions } = useTemplate();
 
-  const [value, setValue] = React.useState(1);
+  const [value, setValue] = React.useState(tempoptions?.noRes ? 2 : 1);
   const handleChange = (_, newValue) => {
     setValue(newValue);
   };

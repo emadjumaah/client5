@@ -29,6 +29,7 @@ export interface lastNoTypes {
   task: string;
   project: string;
   kaid: string;
+  reminder: string;
 }
 
 export interface LanguageType {

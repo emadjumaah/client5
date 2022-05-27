@@ -93,7 +93,7 @@ const PopupAppointInvoice = ({
   const [openCust, setOpenCust] = useState(false);
   const [newtext, setNewtext] = useState('');
 
-  const [isCash, setIsCash] = useState(false);
+  const [isCash, setIsCash] = useState(true);
   const { customers, addCustomer, editCustomer } = useCustomers();
   const { tasks } = useTasks();
   const { employees } = useEmployeesUp();
@@ -485,6 +485,7 @@ const PopupAppointInvoice = ({
       maxWidth="md"
       mt={0}
       mb={50}
+      saveprint
       // bgcolor={colors.green[500]}
     >
       <Grid container spacing={1}>

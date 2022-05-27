@@ -56,6 +56,7 @@ import useWindowDimensions from '../../hooks/useWindowDimensions';
 import { FinanceReportPrint } from '../../print/FinanceReportPrint';
 import { useReactToPrint } from 'react-to-print';
 import PrintIcon from '@material-ui/icons/Print';
+import { useTemplate } from '../../hooks';
 
 const styles = (theme: any) => ({
   tableStriped: {
@@ -88,21 +89,38 @@ export default function FinanceReport({
 
   const col = getColumns({ isRTL, words });
 
-  const [columns] = useState([
-    col.opTime,
-    col.acc,
-    col.taskId,
-    col.refNo,
-    col.opAcc,
-    col.project,
-    col.opType,
-    col.employee,
-    col.opDocNo,
-    col.amount,
-    col.amountdebit,
-    col.amountcredit,
-    col.rased,
-  ]);
+  const { tempoptions } = useTemplate();
+  const [columns] = useState(
+    tempoptions?.noTsk
+      ? [
+          col.opTime,
+          col.acc,
+          col.refNo,
+          col.opAcc,
+          col.opType,
+          col.employee,
+          col.opDocNo,
+          col.amount,
+          col.amountdebit,
+          col.amountcredit,
+          col.rased,
+        ]
+      : [
+          col.opTime,
+          col.acc,
+          col.taskId,
+          col.refNo,
+          col.opAcc,
+          col.project,
+          col.opType,
+          col.employee,
+          col.opDocNo,
+          col.amount,
+          col.amountdebit,
+          col.amountcredit,
+          col.rased,
+        ]
+  );
 
   const [tableColumnVisibilityColumnExtensions] = useState([
     { columnName: col.opTime.name, togglingEnabled: false },
@@ -332,7 +350,7 @@ export default function FinanceReport({
               isRTL={isRTL}
               name="account"
               nomulti
-              width={220}
+              width={350}
             ></FilterSelectCkeckBox>
           </Box>
           <Box style={{ marginLeft: 50, marginRight: 50 }}>

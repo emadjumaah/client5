@@ -16,10 +16,10 @@ export const palettes = [
   {
     palette: {
       primary: {
-        main: '#be0c5f',
+        main: '#B0228C',
       },
       secondary: {
-        main: '#ce93d8',
+        main: '#f5cac3',
       },
       background: {
         default: '#F8F5F5',
@@ -58,6 +58,19 @@ export const palettes = [
         main: '#0068B8',
       },
       secondary: {
+        main: '#c6ac8f',
+      },
+      background: {
+        default: '#F8F5F5',
+      },
+    },
+  },
+  {
+    palette: {
+      primary: {
+        main: '#2c3996',
+      },
+      secondary: {
         main: '#FFC107',
       },
       background: {
@@ -68,27 +81,23 @@ export const palettes = [
   {
     palette: {
       primary: {
-        main: '#874cbe',
+        main: '#065535',
       },
       secondary: {
-        main: '#59c783',
+        main: '#dcedc1',
       },
       background: {
-        default: '#F8F5F5',
+        default: '#F3F4F8',
       },
     },
   },
   {
     palette: {
       primary: {
-        main: '#49536E',
-        // main: '#EA3254',
-        // main: '#9DA1A4',
+        main: '#340100',
       },
       secondary: {
-        main: '#EA3254',
-        // main: '#9DA1A4',
-        // main: '#49536E',
+        main: '#929487',
       },
       background: {
         default: '#F3F4F8',

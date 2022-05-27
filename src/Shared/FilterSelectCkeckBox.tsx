@@ -16,7 +16,7 @@ export default function FilterSelect({
   words,
   isRTL,
   name,
-  width,
+  width = 350,
   nomulti = false,
 }: any) {
   return (
@@ -73,7 +73,7 @@ export default function FilterSelect({
           label={words[name]}
           variant="outlined"
           style={{
-            width: 250,
+            width,
             marginRight: 5,
             marginLeft: 5,
             backgroundColor: value?.length > 0 ? '#FFF5D6' : undefined,

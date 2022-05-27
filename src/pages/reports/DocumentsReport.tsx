@@ -95,19 +95,33 @@ export default function DocumentsReport({
 
   const col = getColumns({ isRTL, words });
 
-  const [columns] = useState([
-    { name: 'time', title: words.time },
-    col.opType,
-    col.docNo,
-    col.refNo,
-    col.customer,
-    col.project,
-    col.taskId,
-    col.employee,
-    col.resourse,
-    col.department,
-    col.amount,
-  ]);
+  const { tempoptions } = useTemplate();
+  const [columns] = useState(
+    tempoptions?.noTsk
+      ? [
+          { name: 'time', title: words.time },
+          col.opType,
+          col.docNo,
+          col.refNo,
+          col.customer,
+          col.employee,
+          col.department,
+          col.amount,
+        ]
+      : [
+          { name: 'time', title: words.time },
+          col.opType,
+          col.docNo,
+          col.refNo,
+          col.customer,
+          col.project,
+          col.taskId,
+          col.employee,
+          col.resourse,
+          col.department,
+          col.amount,
+        ]
+  );
 
   const [tableColumnVisibilityColumnExtensions] = useState([
     { columnName: col.opTime.name, togglingEnabled: false },
@@ -123,7 +137,6 @@ export default function DocumentsReport({
   const { resourses } = useResoursesUp();
   const { projects } = useProjects();
   const { tasks } = useTasks();
-  const { tempoptions } = useTemplate();
   const { services } = useServices();
   const { height } = useWindowDimensions();
 
@@ -304,14 +317,15 @@ export default function DocumentsReport({
   ];
 
   const projres = groupList(isRTL).filter((item: any) =>
-    tempoptions.noPro && tempoptions.noRes
-      ? item.id !== 10 && item.id !== 11
+    tempoptions.noPro && tempoptions.noTsk
+      ? item.id !== 10 && item.id !== 11 && item.id !== 8
       : tempoptions.noPro && !tempoptions.noRes
       ? item.id !== 10
       : !tempoptions.noPro && tempoptions.noRes
       ? item.id !== 11
       : true
   );
+
   const groupOptions = projres.filter(
     (item: any) => item.id !== 6 && item.id !== 4 && item.id !== 7
   );

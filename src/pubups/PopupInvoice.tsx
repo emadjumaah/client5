@@ -693,46 +693,6 @@ const PopupInvoice = ({
             value={selectedDate}
             onChange={handleDateChange}
           ></CalenderLocal>
-        </Grid>
-        <Grid item xs={8}>
-          <PaymentSelect
-            words={words}
-            ptype={ptype}
-            isCash={isCash}
-            setIsCash={setIsCash}
-            setPtype={setPtype}
-          ></PaymentSelect>
-        </Grid>
-        <Grid item xs={6}>
-          <AutoFieldLocal
-            name="task"
-            title={tempwords?.task}
-            words={words}
-            options={tasks}
-            value={taskvalue}
-            setSelectValue={setTaskvalue}
-            isRTL={isRTL}
-            fullWidth
-            openAdd={openTask}
-            disabled={name === 'taskId'}
-          ></AutoFieldLocal>
-        </Grid>
-        <Grid item xs={4}>
-          <AutoFieldLocal
-            name="customer"
-            title={tempwords?.customer}
-            words={words}
-            options={customers}
-            value={custvalue}
-            setSelectValue={setCustvalue}
-            isRTL={isRTL}
-            fullWidth
-            openAdd={openCustomer}
-            showphone
-            disabled={name === 'customerId'}
-          ></AutoFieldLocal>
-        </Grid>
-        <Grid item xs={2}>
           <Box
             display="flex"
             style={{
@@ -740,8 +700,6 @@ const PopupInvoice = ({
               flexDirection: isRTL ? 'row-reverse' : 'row',
               alignItems: 'center',
               justifyContent: 'flex-end',
-              marginLeft: isRTL ? undefined : 20,
-              marginRight: isRTL ? 20 : undefined,
             }}
           >
             {isNew && (
@@ -766,9 +724,49 @@ const PopupInvoice = ({
             />
           </Box>
         </Grid>
+        <Grid item xs={8}>
+          <PaymentSelect
+            words={words}
+            ptype={ptype}
+            isCash={isCash}
+            setIsCash={setIsCash}
+            setPtype={setPtype}
+          ></PaymentSelect>
+        </Grid>
+        {!tempoptions?.noTsk && (
+          <Grid item xs={4}>
+            <AutoFieldLocal
+              name="task"
+              title={tempwords?.task}
+              words={words}
+              options={tasks}
+              value={taskvalue}
+              setSelectValue={setTaskvalue}
+              isRTL={isRTL}
+              fullWidth
+              openAdd={openTask}
+              disabled={name === 'taskId'}
+            ></AutoFieldLocal>
+          </Grid>
+        )}
+        <Grid item xs={4}>
+          <AutoFieldLocal
+            name="customer"
+            title={tempwords?.customer}
+            words={words}
+            options={customers}
+            value={custvalue}
+            setSelectValue={setCustvalue}
+            isRTL={isRTL}
+            fullWidth
+            openAdd={openCustomer}
+            showphone
+            disabled={name === 'customerId'}
+          ></AutoFieldLocal>
+        </Grid>
 
         {!tempoptions?.noEmp && (
-          <Grid item xs={3}>
+          <Grid item xs={4}>
             <AutoFieldLocal
               name="employee"
               title={tempwords?.employee}
@@ -788,7 +786,7 @@ const PopupInvoice = ({
           </Grid>
         )}
         {!tempoptions?.noRes && (
-          <Grid item xs={3}>
+          <Grid item xs={4}>
             <AutoFieldLocal
               name="resourse"
               title={tempwords?.resourse}

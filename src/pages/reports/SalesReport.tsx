@@ -27,7 +27,7 @@ import {
   TableGroupRow,
   TableSummaryRow,
 } from '@devexpress/dx-react-grid-material-ui';
-import PrintIcon from '@material-ui/icons/Print';
+// import PrintIcon from '@material-ui/icons/Print';
 import { getRowId } from '../../common';
 import {
   calculateAmount,
@@ -110,18 +110,31 @@ export default function SalesReport({
     col.amount,
   ]);
 
-  const [columns] = useState([
-    col.opTime,
-    col.employee,
-    col.resourse,
-    col.service,
-    col.department,
-    col.project,
-    col.taskId,
-    col.customer,
-    col.opDocNo,
-    col.amount,
-  ]);
+  const { tempoptions } = useTemplate();
+  const [columns] = useState(
+    tempoptions?.noTsk
+      ? [
+          col.opTime,
+          col.employee,
+          col.service,
+          col.department,
+          col.customer,
+          col.opDocNo,
+          col.amount,
+        ]
+      : [
+          col.opTime,
+          col.employee,
+          col.resourse,
+          col.service,
+          col.department,
+          col.project,
+          col.taskId,
+          col.customer,
+          col.opDocNo,
+          col.amount,
+        ]
+  );
 
   const [tableColumnVisibilityColumnExtensions] = useState([
     { columnName: col.opTime.name, togglingEnabled: false },
@@ -137,7 +150,6 @@ export default function SalesReport({
   const { resourses } = useResoursesUp();
   const { projects } = useProjects();
   const { tasks } = useTasks();
-  const { tempoptions } = useTemplate();
   const { services } = useServices();
 
   const {
@@ -262,7 +274,19 @@ export default function SalesReport({
 
   useEffect(() => {
     fetchData();
-  }, [start, end, group, groupby, sumcolumn]);
+  }, [
+    start,
+    end,
+    group,
+    groupby,
+    sumcolumn,
+    departvalue,
+    projvalue,
+    resovalue,
+    emplvalue,
+    custvalue,
+    taskvalue,
+  ]);
 
   const exporterRef: any = useRef(null);
 
@@ -498,7 +522,7 @@ export default function SalesReport({
             title="Print Report"
             size="small"
           >
-            <PrintIcon />
+            {/* <PrintIcon /> */}
           </IconButton>
         </Box>
         <Box
@@ -575,12 +599,14 @@ export default function SalesReport({
             onSortingChange={(srt: any) => setSortDispatch(srt)}
           />
           {group && <GroupingState grouping={grouping} />}
-          <SummaryState
-            totalItems={totalSummaryItems}
-            groupItems={groupSummaryItems}
-          />
+          {group && (
+            <SummaryState
+              totalItems={totalSummaryItems}
+              groupItems={groupSummaryItems}
+            />
+          )}
           {group && <IntegratedGrouping />}
-          <IntegratedSummary />
+          {group && <IntegratedSummary />}
           <IntegratedSorting />
           <VirtualTable
             height={height - 100}
@@ -630,12 +656,14 @@ export default function SalesReport({
               showColumnsWhenGrouped
             />
           )}
-          <TableSummaryRow
-            messages={{
-              sum: isRTL ? 'المجموع' : 'Total',
-              count: isRTL ? 'العدد' : 'Count',
-            }}
-          ></TableSummaryRow>
+          {group && (
+            <TableSummaryRow
+              messages={{
+                sum: isRTL ? 'المجموع' : 'Total',
+                count: isRTL ? 'العدد' : 'Count',
+              }}
+            ></TableSummaryRow>
+          )}
         </Grid>
         <GridExporter
           ref={exporterRef}

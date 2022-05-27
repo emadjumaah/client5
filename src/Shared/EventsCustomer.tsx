@@ -45,6 +45,7 @@ import PopupAppointmentCustomer from '../pubups/PopupAppointmentCustomer';
 import useTasks from '../hooks/useTasks';
 import React from 'react';
 import DateNavigatorReports from '../components/filters/DateNavigatorReports';
+import { useTemplate } from '../hooks';
 export const getRowId = (row: any) => row._id;
 
 const NumberTypeProvider = (props) => (
@@ -89,20 +90,33 @@ export default function EventsCustomer({
 }: any) {
   const col = getColumns({ isRTL, words });
 
-  const [columns] = useState([
-    { id: 4, ref: 'title', name: 'title', title: words.title },
-    // col.location,
-    col.startDate,
-    col.fromto,
-    col.docNo,
-    col.taskId,
-    col.resourse,
-    col.department,
-    col.employee,
-    // col.status,
-    col.done,
-    col.amount,
-  ]);
+  const { tempoptions } = useTemplate();
+  const [columns] = useState(
+    tempoptions?.noTsk
+      ? [
+          { id: 4, ref: 'title', name: 'title', title: words.title },
+          col.startDate,
+          col.fromto,
+          col.docNo,
+          col.department,
+          col.employee,
+          col.done,
+          col.amount,
+        ]
+      : [
+          { id: 4, ref: 'title', name: 'title', title: words.title },
+          col.startDate,
+          col.fromto,
+          col.docNo,
+          col.taskId,
+          col.resourse,
+          col.department,
+          col.employee,
+          col.done,
+          col.amount,
+        ]
+  );
+
   const { tasks } = useTasks();
   const [rows, setRows] = useState([]);
 

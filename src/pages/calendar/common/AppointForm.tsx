@@ -617,19 +617,22 @@ export const AppointForm = (props: any) => {
                 mb={0}
               />
             </Grid>
-            <Grid item xs={6}>
-              <AutoFieldLocal
-                name="task"
-                title={tempwords?.task}
-                words={words}
-                options={tasks}
-                value={taskvalue}
-                setSelectValue={selectTask}
-                isRTL={isRTL}
-                openAdd={openTask}
-                fullWidth
-              ></AutoFieldLocal>
-            </Grid>
+            {!tempoptions?.noTsk && (
+              <Grid item xs={6}>
+                <AutoFieldLocal
+                  name="task"
+                  title={tempwords?.task}
+                  words={words}
+                  options={tasks}
+                  value={taskvalue}
+                  setSelectValue={selectTask}
+                  isRTL={isRTL}
+                  openAdd={openTask}
+                  fullWidth
+                  mb={0}
+                ></AutoFieldLocal>
+              </Grid>
+            )}
             <Grid item xs={6}>
               <AutoFieldLocal
                 name="customer"
@@ -642,11 +645,12 @@ export const AppointForm = (props: any) => {
                 openAdd={openCustomer}
                 fullWidth
                 showphone
+                mb={0}
               ></AutoFieldLocal>
             </Grid>
 
             {!tempoptions?.noEmp && (
-              <Grid item xs={4}>
+              <Grid item xs={6}>
                 <AutoFieldLocal
                   name="employee"
                   title={tempwords?.employee}
@@ -659,11 +663,12 @@ export const AppointForm = (props: any) => {
                   isRTL={isRTL}
                   fullWidth
                   day={day}
+                  mb={0}
                 ></AutoFieldLocal>
               </Grid>
             )}
             {!tempoptions?.noRes && (
-              <Grid item xs={4}>
+              <Grid item xs={6}>
                 <AutoFieldLocal
                   name="resourse"
                   title={tempwords?.resourse}
@@ -675,10 +680,11 @@ export const AppointForm = (props: any) => {
                   isRTL={isRTL}
                   fullWidth
                   day={day}
+                  mb={0}
                 ></AutoFieldLocal>
               </Grid>
             )}
-            <Grid item xs={4}>
+            <Grid item xs={6}>
               <AutoFieldLocal
                 name="department"
                 title={tempwords?.department}
@@ -689,6 +695,7 @@ export const AppointForm = (props: any) => {
                 openAdd={openDepartment}
                 isRTL={isRTL}
                 fullWidth
+                mb={0}
               ></AutoFieldLocal>
             </Grid>
           </Grid>
@@ -699,7 +706,7 @@ export const AppointForm = (props: any) => {
               backgroundColor: '#f5f5f5',
               borderRadius: 5,
               padding: 7,
-              margin: 10,
+              margin: 5,
             }}
           >
             <Button
@@ -786,45 +793,49 @@ export const AppointForm = (props: any) => {
             </Box>
             {/* {loading && <LoadingInline></LoadingInline>} */}
           </Box>
+        </Grid>
+        <Grid item xs={4}>
           <Typography style={{ fontWeight: 'bold', fontSize: 16 }}>
             {words.total} : {moneyFormat(totals.amount)}
           </Typography>
-          <Box style={{ marginTop: 10 }}>
-            <StatusSelect
-              status={status}
-              setStatus={setStatus}
-              onNewFieldChange={onNewFieldChange}
-              isRTL={isRTL}
-              title={words.status}
-            ></StatusSelect>
-            <Box
-              m={1}
-              display="flex"
-              style={{ flex: 1, justifyContent: 'flex-end' }}
+        </Grid>
+        <Grid item xs={4}>
+          <StatusSelect
+            status={status}
+            setStatus={setStatus}
+            onNewFieldChange={onNewFieldChange}
+            isRTL={isRTL}
+            title={words.status}
+          ></StatusSelect>
+        </Grid>
+        <Grid item xs={4}>
+          <Box
+            m={1}
+            display="flex"
+            style={{ flex: 1, justifyContent: 'center' }}
+          >
+            <Button
+              size="medium"
+              color="primary"
+              variant="contained"
+              onClick={() => setOpenMap(true)}
             >
-              <Button
-                size="medium"
-                color="primary"
-                variant="contained"
-                onClick={() => setOpenMap(true)}
-              >
-                {isRTL ? 'الموقع الجغرافي' : 'Location'}
-              </Button>
-              {location?.lat && (
-                <>
-                  <MyIcon size={32} color="#ff80ed" icon="location"></MyIcon>
-                  <Box
-                    onClick={() => {
-                      setLocation(null);
-                      onNewFieldChange(null, 'location');
-                    }}
-                    style={{ cursor: 'pointer', padding: 4 }}
-                  >
-                    <MyIcon size={28} color="#777" icon="close"></MyIcon>
-                  </Box>
-                </>
-              )}
-            </Box>
+              {isRTL ? 'الموقع الجغرافي' : 'Location'}
+            </Button>
+            {location?.lat && (
+              <>
+                <MyIcon size={32} color="#ff80ed" icon="location"></MyIcon>
+                <Box
+                  onClick={() => {
+                    setLocation(null);
+                    onNewFieldChange(null, 'location');
+                  }}
+                  style={{ cursor: 'pointer', padding: 4 }}
+                >
+                  <MyIcon size={28} color="#777" icon="close"></MyIcon>
+                </Box>
+              </>
+            )}
           </Box>
         </Grid>
 

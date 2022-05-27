@@ -36,6 +36,7 @@ export interface StoreTypes {
     duration: string;
   };
   template: any;
+  tempId: any;
   lastSuccess: any;
   wrongTimes: any;
   startBlock: any;

@@ -48,7 +48,7 @@ import getTasks from '../graphql/query/getTasks';
 import React from 'react';
 import { errorAlert, errorDeleteAlert } from './helpers';
 import PopupReminder from '../pubups/PopupReminder';
-import { useExpenseItems } from '../hooks';
+import { useExpenseItems, useTemplate } from '../hooks';
 import { AlertLocal } from '../components';
 import DateNavigatorReports from '../components/filters/DateNavigatorReports';
 import getRemindersActions from '../graphql/query/getRemindersActions';
@@ -95,23 +95,32 @@ export default function ReminderCustomer({
 
   const col = getColumns({ isRTL, words });
 
-  const [columns] = useState([
-    col.time,
-    col.title,
-    col.resourse,
-    col.employee,
-    col.department,
-    col.amount,
-  ]);
+  const { tempoptions } = useTemplate();
+  const [columns] = useState(
+    tempoptions?.noTsk
+      ? [col.time, col.title, col.employee, col.department, col.amount]
+      : [
+          col.time,
+          col.title,
+          col.resourse,
+          col.employee,
+          col.department,
+          col.amount,
+        ]
+  );
 
-  const [acolumns] = useState([
-    col.time,
-    col.title,
-    col.resourse,
-    col.employee,
-    col.department,
-    col.sent,
-  ]);
+  const [acolumns] = useState(
+    tempoptions?.noTsk
+      ? [col.time, col.title, col.employee, col.department, col.sent]
+      : [
+          col.time,
+          col.title,
+          col.resourse,
+          col.employee,
+          col.department,
+          col.sent,
+        ]
+  );
 
   const { expenseItems } = useExpenseItems();
 

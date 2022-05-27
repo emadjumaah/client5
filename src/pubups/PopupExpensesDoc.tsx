@@ -611,7 +611,7 @@ const PopupExpensesDoc = ({
       print={!isNew ? handleReactPrint : undefined}
       maxWidth="md"
       mt={0}
-      mb={50}
+      mb={20}
     >
       <Grid container spacing={1}>
         <Grid item xs={3}>
@@ -659,7 +659,7 @@ const PopupExpensesDoc = ({
         <Grid item xs={9}>
           <TextFieldLocal
             name="title"
-            label={words.description}
+            label={words.title}
             register={register}
             errors={errors}
             row={row}
@@ -669,7 +669,7 @@ const PopupExpensesDoc = ({
         </Grid>
         <Grid item xs={3}></Grid>
         {!tempoptions?.noRes && (
-          <Grid item xs={5}>
+          <Grid item xs={6}>
             <AutoFieldLocal
               name="resourse"
               title={tempwords?.resourse}
@@ -685,10 +685,11 @@ const PopupExpensesDoc = ({
               isRTL={isRTL}
               fullWidth
               day={day}
+              mb={0}
             ></AutoFieldLocal>
           </Grid>
         )}
-        <Grid item xs={4}>
+        <Grid item xs={6}>
           <AutoFieldLocal
             name="department"
             title={tempwords?.department}
@@ -703,27 +704,28 @@ const PopupExpensesDoc = ({
             isRTL={isRTL}
             fullWidth
             disabled={name === 'departmentId'}
+            mb={0}
           ></AutoFieldLocal>
         </Grid>
-        <Grid item xs={3}></Grid>
-
-        <Grid item xs={5}>
-          <AutoFieldLocal
-            name="task"
-            title={tempwords?.task}
-            words={words}
-            options={tasks}
-            value={taskvalue}
-            setSelectValue={setTaskvalue}
-            isRTL={isRTL}
-            fullWidth
-            openAdd={openTask}
-            disabled={name === 'taskId'}
-          ></AutoFieldLocal>
-        </Grid>
-
+        {!tempoptions?.noTsk && (
+          <Grid item xs={6}>
+            <AutoFieldLocal
+              name="task"
+              title={tempwords?.task}
+              words={words}
+              options={tasks}
+              value={taskvalue}
+              setSelectValue={setTaskvalue}
+              isRTL={isRTL}
+              fullWidth
+              openAdd={openTask}
+              disabled={name === 'taskId'}
+              mb={0}
+            ></AutoFieldLocal>
+          </Grid>
+        )}
         {!tempoptions?.noEmp && (
-          <Grid item xs={4}>
+          <Grid item xs={6}>
             <AutoFieldLocal
               name="employee"
               title={tempwords?.employee}
@@ -739,12 +741,11 @@ const PopupExpensesDoc = ({
               isRTL={isRTL}
               fullWidth
               day={day}
+              mb={0}
             ></AutoFieldLocal>
           </Grid>
         )}
-
-        <Grid item xs={3}></Grid>
-        <Grid item xs={3}>
+        <Grid item xs={4}>
           <TextFieldLocal
             name="chequeBank"
             label={words.chequeBank}
@@ -755,7 +756,7 @@ const PopupExpensesDoc = ({
             mb={0}
           />
         </Grid>
-        <Grid item xs={3}>
+        <Grid item xs={4}>
           <TextFieldLocal
             name="chequeNo"
             label={words.chequeNo}
@@ -766,7 +767,7 @@ const PopupExpensesDoc = ({
             mb={0}
           />
         </Grid>
-        <Grid item xs={3}>
+        <Grid item xs={4}>
           <TextFieldLocal
             name="chequeDate"
             label={words.chequeDate}
@@ -777,7 +778,19 @@ const PopupExpensesDoc = ({
             mb={0}
           />
         </Grid>
-
+        <Grid item xs={12}>
+          <TextFieldLocal
+            name="desc"
+            multiline
+            rows={3}
+            label={words.description}
+            register={register}
+            errors={errors}
+            row={row}
+            fullWidth
+            mb={0}
+          />
+        </Grid>
         <Grid item xs={12}>
           {(isNew || itemsList?.length > 0) && (
             <Box
@@ -798,7 +811,7 @@ const PopupExpensesDoc = ({
                 ></ExpensesItemForm>
               </Box>
               {!loading && (
-                <Box style={{ marginBottom: 20 }}>
+                <Box style={{ marginBottom: 10 }}>
                   <ExpensesItemsTable
                     rows={itemsList}
                     editItem={editItemInList}
@@ -813,24 +826,12 @@ const PopupExpensesDoc = ({
             </Box>
           )}
         </Grid>
-        <Grid item xs={9}>
-          <TextFieldLocal
-            name="desc"
-            multiline
-            rows={3}
-            label={words.description}
-            register={register}
-            errors={errors}
-            row={row}
-            fullWidth
-          />
-        </Grid>
-        <Grid item xs={3}>
+
+        <Grid item xs={12}>
           <Box
             display="flex"
             style={{
               alignItems: 'center',
-              justifyContent: 'space-between',
               marginRight: 10,
               marginLeft: 10,
             }}
@@ -840,6 +841,7 @@ const PopupExpensesDoc = ({
               total={totals?.total}
               words={words}
               totalonly
+              end={false}
             ></PriceTotal>
           </Box>
         </Grid>

@@ -55,6 +55,7 @@ export default gql`
       accessToken
       refreshToken
       template
+      tempId
       error
     }
   }

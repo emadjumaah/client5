@@ -16,6 +16,7 @@ import {
 import { CommandSmall } from './CommandSmall';
 import { getColumns } from '../common/columns';
 import useTasks from '../hooks/useTasks';
+import { useTemplate } from '../hooks';
 
 export const getRowId = (row: any) => row.index;
 
@@ -50,19 +51,31 @@ export default function KaidsSingleTable({
   isRTL,
   words,
   accounts,
+  editItem,
 }: any) {
   const col = getColumns({ isRTL, words });
   const { tasks } = useTasks();
 
-  const [columns] = useState([
-    { name: 'index', title: words.no },
-    { name: 'acc', title: words.account },
-    { name: 'amountDebit', title: words.amountDebit },
-    { name: 'amountCredit', title: words.amountCredit },
-    { name: 'desc', title: words.description },
-    col.taskId,
-    col.resourse,
-  ]);
+  const { tempoptions } = useTemplate();
+  const [columns] = useState(
+    tempoptions?.noTsk
+      ? [
+          { name: 'index', title: words.no },
+          { name: 'acc', title: words.account },
+          { name: 'amountDebit', title: words.amountDebit },
+          { name: 'amountCredit', title: words.amountCredit },
+          { name: 'desc', title: words.description },
+        ]
+      : [
+          { name: 'index', title: words.no },
+          { name: 'acc', title: words.account },
+          { name: 'amountDebit', title: words.amountDebit },
+          { name: 'amountCredit', title: words.amountCredit },
+          { name: 'desc', title: words.description },
+          col.taskId,
+          col.resourse,
+        ]
+  );
 
   const commitChanges = async ({ deleted }) => {
     if (deleted) {

@@ -45,6 +45,7 @@ import { TableComponent } from '../pages/reports/SalesReport';
 import getTasks from '../graphql/query/getTasks';
 import { Box } from '@material-ui/core';
 import DateNavigatorReports from '../components/filters/DateNavigatorReports';
+import { useTemplate } from '../hooks';
 
 export default function InvoicesCustomer({
   isRTL,
@@ -61,17 +62,37 @@ export default function InvoicesCustomer({
 }) {
   const col = getColumns({ isRTL, words });
 
-  const [columns] = useState([
-    { name: 'time', title: words.time },
-    { name: 'docNo', title: words.no },
-    col.eventNo,
-    col.taskId,
-    { name: isRTL ? 'customerNameAr' : 'customerName', title: words.customer },
-    { name: 'customerPhone', title: words.phoneNumber },
-    { name: 'total', title: words.total },
-    { name: 'discount', title: words.discount },
-    { name: 'amount', title: words.amount },
-  ]);
+  const { tempoptions } = useTemplate();
+  const [columns] = useState(
+    tempoptions?.noTsk
+      ? [
+          { name: 'time', title: words.time },
+          { name: 'docNo', title: words.no },
+          col.eventNo,
+          {
+            name: isRTL ? 'customerNameAr' : 'customerName',
+            title: words.customer,
+          },
+          { name: 'customerPhone', title: words.phoneNumber },
+          { name: 'total', title: words.total },
+          { name: 'discount', title: words.discount },
+          { name: 'amount', title: words.amount },
+        ]
+      : [
+          { name: 'time', title: words.time },
+          { name: 'docNo', title: words.no },
+          col.eventNo,
+          col.taskId,
+          {
+            name: isRTL ? 'customerNameAr' : 'customerName',
+            title: words.customer,
+          },
+          { name: 'customerPhone', title: words.phoneNumber },
+          { name: 'total', title: words.total },
+          { name: 'discount', title: words.discount },
+          { name: 'amount', title: words.amount },
+        ]
+  );
 
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(false);

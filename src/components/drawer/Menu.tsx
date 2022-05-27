@@ -8,6 +8,8 @@ import MenuItem from './MenuItem';
 import { applyRole } from '../../common/roles';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
 import { drawerWidth } from '../../constants';
+import { useTemplate } from '../../hooks';
+import { sortMenu } from '../../constants/menu';
 
 const Menu = ({
   isRTL,
@@ -23,16 +25,18 @@ const Menu = ({
   navigate,
 }: any) => {
   const { height } = useWindowDimensions();
+  const { sortOrder } = useTemplate();
+  const rmenu = sortMenu({ menu, sortOrder });
   return (
     <Box
       style={{
         marginTop: 40,
-        height: height - 80,
+        height: height - 40,
         overflow: 'auto',
       }}
     >
       <List>
-        {menu.map((item: any, i: any) => {
+        {rmenu.map((item: any, i: any) => {
           const submenu = item.subMenu;
           const isSelected = item.name === menuitem.name;
           const role = item.role ? applyRole(item.role, user) : true;

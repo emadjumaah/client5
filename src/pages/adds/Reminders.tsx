@@ -42,7 +42,7 @@ import ReminderContext from '../../contexts/reminder';
 import useEmployeesUp from '../../hooks/useEmployeesUp';
 import useDepartmentsUp from '../../hooks/useDepartmentsUp';
 import useResoursesUp from '../../hooks/useResoursesUp';
-import { useExpenseItems } from '../../hooks';
+import { useExpenseItems, useTemplate } from '../../hooks';
 import getRemindersActions from '../../graphql/query/getRemindersActions';
 
 export default function Reminders(props: any) {
@@ -60,22 +60,33 @@ export default function Reminders(props: any) {
   const col = getColumns({ isRTL, words });
   const isMobile = useMediaQuery('(max-width:600px)');
 
-  const [columns] = useState([
-    col.time,
-    col.title,
-    col.resourse,
-    col.employee,
-    col.department,
-    col.amount,
-  ]);
-  const [acolumns] = useState([
-    col.time,
-    col.title,
-    col.resourse,
-    col.employee,
-    col.department,
-    col.sent,
-  ]);
+  const { tempoptions } = useTemplate();
+  const [columns] = useState(
+    tempoptions?.noTsk
+      ? [col.time, col.title, col.employee, col.department, col.amount]
+      : [
+          col.time,
+          col.title,
+          col.resourse,
+          col.employee,
+          col.department,
+          col.amount,
+        ]
+  );
+
+  const [acolumns] = useState(
+    tempoptions?.noTsk
+      ? [col.time, col.title, col.employee, col.department, col.sent]
+      : [
+          col.time,
+          col.title,
+          col.resourse,
+          col.employee,
+          col.department,
+          col.sent,
+        ]
+  );
+
   const { height } = useWindowDimensions();
   const { employees } = useEmployeesUp();
   const { departments } = useDepartmentsUp();

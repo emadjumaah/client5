@@ -7,6 +7,7 @@ const lang = store?.lang;
 const words = template?.words?.[lang];
 const options = template?.options;
 const isRTL = lang === 'ar';
+const tempId = template?.id;
 
 export const smsmenu: any = [
   {
@@ -299,25 +300,26 @@ export const mainmenu = [
     dep: null,
     role: menuRoles.editor,
     subMenu: [
-      // {
-      //   id: 81,
-      //   name: 'calendarempl',
-      //   uri: 'calendarempl',
-      //   titleAr: 'جدول الموظفين',
-      //   titleEn: 'Employees Calendar',
-      //   mainId: 8,
-      //   req: 'cal',
-      //   dep: 'pos',
-      // },
-      // {
-      //   id: 82,
-      //   name: 'calreports',
-      //   uri: 'calreports',
-      //   titleAr: `تقرير ${words?.appointments}`,
-      //   titleEn: `${words?.appointments} Report`,
-      //   req: 'cal',
-      //   dep: 'pos',
-      // },
+      {
+        id: 81,
+        name: 'calendarempl',
+        uri: 'calendarempl',
+        titleAr: 'جدول الموظفين',
+        titleEn: 'Employees Calendar',
+        mainId: 8,
+        req: 'cal',
+        dep: 'pos',
+        hide: [4, 6, 7].includes(tempId),
+      },
+      {
+        id: 82,
+        name: 'calreports',
+        uri: 'calreports',
+        titleAr: `تقرير ${words?.appointments}`,
+        titleEn: `${words?.appointments} Report`,
+        req: 'cal',
+        dep: 'pos',
+      },
       {
         id: 82.5,
         name: 'docreports',
@@ -328,26 +330,26 @@ export const mainmenu = [
         dep: 'pos',
         role: menuRoles.admin,
       },
-      // {
-      //   id: 82.8,
-      //   name: 'servicesreports',
-      //   uri: 'servicesreports',
-      //   titleAr: 'تقرير الخدمات',
-      //   titleEn: 'Services Report',
-      //   req: 'cal',
-      //   dep: 'pos',
-      // },
-      // {
-      //   id: 83,
-      //   name: 'salesreport',
-      //   uri: 'salesreport',
-      //   titleAr: 'تقرير الايرادات',
-      //   titleEn: 'Sales Report',
-      //   role: menuRoles.editor,
-      //   mainId: 8,
-      //   req: 'pos',
-      //   dep: null,
-      // },
+      {
+        id: 82.8,
+        name: 'servicesreports',
+        uri: 'servicesreports',
+        titleAr: 'تقرير البنود',
+        titleEn: 'Items Report',
+        req: 'cal',
+        dep: 'pos',
+      },
+      {
+        id: 83,
+        name: 'salesreport',
+        uri: 'salesreport',
+        titleAr: 'تقرير الايرادات',
+        titleEn: 'Sales Report',
+        role: menuRoles.editor,
+        mainId: 8,
+        req: 'pos',
+        dep: null,
+      },
       {
         id: 84,
         name: 'customerreport',
@@ -359,17 +361,17 @@ export const mainmenu = [
         req: 'pos',
         dep: null,
       },
-      // {
-      //   id: 85,
-      //   name: 'expensesreport',
-      //   uri: 'expensesreport',
-      //   titleAr: 'تقرير المصاريف',
-      //   titleEn: 'Expenses Report',
-      //   mainId: 8,
-      //   req: 'exp',
-      //   dep: null,
-      //   role: menuRoles.financeAdmin,
-      // },
+      {
+        id: 85,
+        name: 'expensesreport',
+        uri: 'expensesreport',
+        titleAr: 'تقرير المصاريف',
+        titleEn: 'Expenses Report',
+        mainId: 8,
+        req: 'exp',
+        dep: null,
+        role: menuRoles.financeAdmin,
+      },
       {
         id: 86,
         name: 'financereport',
@@ -381,17 +383,6 @@ export const mainmenu = [
         req: null,
         dep: null,
       },
-      // {
-      //   id: 87,
-      //   name: 'profitreport',
-      //   uri: 'profitreport',
-      //   titleAr: 'قائمة الدخل',
-      //   titleEn: 'Income Statement',
-      //   role: menuRoles.financeEditor,
-      //   mainId: 8,
-      //   req: null,
-      //   dep: null,
-      // },
       {
         id: 88,
         name: 'budgetreport',
@@ -428,6 +419,59 @@ export const mainmenu = [
     req: null,
     dep: null,
   },
+  {
+    id: 11,
+    name: 'sms',
+    uri: 'sms',
+    titleAr: 'رسائل SMS',
+    titleEn: 'SMS Messages',
+    icon: 'email',
+    req: 'pos',
+    dep: null,
+    subMenu: [
+      {
+        id: 111,
+        name: 'contacts',
+        uri: 'contacts',
+        titleAr: 'جهات الاتصال',
+        titleEn: 'Contacts',
+        icon: 'group',
+        req: 'pos',
+        dep: null,
+      },
+
+      {
+        id: 112,
+        name: 'sendreqs',
+        uri: 'sendreqs',
+        titleAr: 'حملات الارسال',
+        titleEn: 'SMS campaign',
+        icon: 'camp',
+        req: 'pos',
+        dep: null,
+      },
+      {
+        id: 113,
+        name: 'messages',
+        uri: 'messages',
+        titleAr: 'قائمة الرسائل',
+        titleEn: 'Messages',
+        req: 'pos',
+        icon: 'email',
+        dep: null,
+      },
+      {
+        id: 114,
+        name: 'groups',
+        uri: 'groups',
+        titleAr: 'مجموعات الاتصال',
+        titleEn: 'Contact Lists',
+        req: 'pos',
+        icon: 'list',
+        dep: null,
+      },
+    ],
+  },
 
   {
     id: 12,
@@ -452,7 +496,7 @@ export const mainmenu = [
   },
 
   {
-    id: 12,
+    id: 14,
     name: 'options',
     uri: 'options',
     titleAr: 'الاعدادات',
@@ -611,4 +655,17 @@ export const getPopupGeneralTitle = (item: any) => {
   const gtitleAr = `بيانات ${words?.[item]}`;
   const gtitle = `${words?.[item]}`;
   return isRTL ? gtitleAr : gtitle;
+};
+
+export const sortMenu = ({ menu, sortOrder }) => {
+  if (!sortOrder) return menu;
+
+  const itemPositions = {};
+  for (const [index, id] of sortOrder.entries()) {
+    itemPositions[id] = index;
+  }
+
+  return menu.sort(
+    (a: any, b: any) => itemPositions[a.id] - itemPositions[b.id]
+  );
 };

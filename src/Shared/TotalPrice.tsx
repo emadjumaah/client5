@@ -3,14 +3,20 @@ import React from 'react';
 import { Box, Typography } from '@material-ui/core';
 import { moneyFormat } from './colorFormat';
 
-export const PriceTotal = ({ amount, total, words, totalonly }: any) => {
+export const PriceTotal = ({
+  amount,
+  total,
+  words,
+  totalonly,
+  end = true,
+}: any) => {
   return (
     <Box
       display="flex"
       style={{
         flex: 1,
         flexDirection: 'column',
-        alignItems: 'flex-end',
+        alignItems: end ? 'flex-end' : 'flex-start',
         justifyContent: 'center',
         height: 65,
       }}

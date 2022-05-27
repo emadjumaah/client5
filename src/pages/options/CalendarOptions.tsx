@@ -1,12 +1,13 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import React from "react";
+import React from 'react';
 
-import { Box, Button, Grid, Paper, Typography } from "@material-ui/core";
-import { useForm } from "react-hook-form";
-import * as yup from "yup";
+import { Box, Button, Grid, Paper, Typography } from '@material-ui/core';
+import { useForm } from 'react-hook-form';
+import * as yup from 'yup';
 
-import { PopupTextField } from "../../Shared";
-import { yupResolver } from "@hookform/resolvers/yup";
+import { PopupTextField } from '../../Shared';
+import { yupResolver } from '@hookform/resolvers/yup';
+// import AwsUpload from '../../common/AwsUpload';
 
 const calSchema = yup.object().shape({
   start: yup.number().required().min(0).max(23),
@@ -36,7 +37,7 @@ const CalendarOptions = ({ words, calendar, setCalendar, isRTL }) => {
     <Paper>
       <Box padding={3}>
         <Typography variant="h6">
-          {isRTL ? "تعديل التقويم" : "Edit Calendar"}
+          {isRTL ? 'تعديل التقويم' : 'Edit Calendar'}
         </Typography>
         <Box
           style={{
@@ -68,7 +69,6 @@ const CalendarOptions = ({ words, calendar, setCalendar, isRTL }) => {
             <Grid item md={8}></Grid>
 
             <Grid item xs={12} md={4}>
-              {" "}
               <PopupTextField
                 required
                 name="duration"
@@ -83,8 +83,8 @@ const CalendarOptions = ({ words, calendar, setCalendar, isRTL }) => {
           <Box
             display="flex"
             style={{
-              alignItems: "center",
-              justifyContent: "flex-start",
+              alignItems: 'center',
+              justifyContent: 'flex-start',
               height: 50,
               // marginTop: 20,
             }}
@@ -96,14 +96,15 @@ const CalendarOptions = ({ words, calendar, setCalendar, isRTL }) => {
               style={{
                 width: 90,
                 height: 34,
-                alignItems: "center",
-                justifyContent: "center",
+                alignItems: 'center',
+                justifyContent: 'center',
               }}
             >
               <Typography>{words.save}</Typography>
             </Button>
           </Box>
         </Box>
+        {/* <AwsUpload></AwsUpload> */}
       </Box>
     </Paper>
   );

@@ -749,21 +749,24 @@ const PopupAppointmentCustomer = ({
                       mb={0}
                     />
                   </Grid>
-                  <Grid item xs={6}>
-                    <AutoFieldLocal
-                      name="task"
-                      title={tempwords?.task}
-                      words={words}
-                      options={tasks}
-                      value={taskvalue}
-                      setSelectValue={setTaskvalue}
-                      register={register}
-                      isRTL={isRTL}
-                      fullWidth
-                      openAdd={openTask}
-                      disabled={name === 'taskId'}
-                    ></AutoFieldLocal>
-                  </Grid>
+                  {!tempoptions?.noTsk && (
+                    <Grid item xs={6}>
+                      <AutoFieldLocal
+                        name="task"
+                        title={tempwords?.task}
+                        words={words}
+                        options={tasks}
+                        value={taskvalue}
+                        setSelectValue={setTaskvalue}
+                        register={register}
+                        isRTL={isRTL}
+                        fullWidth
+                        openAdd={openTask}
+                        disabled={name === 'taskId'}
+                        mb={0}
+                      ></AutoFieldLocal>
+                    </Grid>
+                  )}
                   <Grid item xs={6}>
                     <AutoFieldLocal
                       name="customer"
@@ -781,11 +784,12 @@ const PopupAppointmentCustomer = ({
                       fullWidth
                       showphone
                       disabled={name === 'customerId'}
+                      mb={0}
                     ></AutoFieldLocal>
                   </Grid>
 
                   {!tempoptions?.noEmp && (
-                    <Grid item xs={4}>
+                    <Grid item xs={6}>
                       <AutoFieldLocal
                         name="employee"
                         title={tempwords?.employee}
@@ -802,11 +806,12 @@ const PopupAppointmentCustomer = ({
                         isRTL={isRTL}
                         fullWidth
                         day={day}
+                        mb={0}
                       ></AutoFieldLocal>
                     </Grid>
                   )}
                   {!tempoptions?.noRes && (
-                    <Grid item xs={4}>
+                    <Grid item xs={6}>
                       <AutoFieldLocal
                         name="resourse"
                         title={tempwords?.resourse}
@@ -823,11 +828,12 @@ const PopupAppointmentCustomer = ({
                         isRTL={isRTL}
                         fullWidth
                         day={day}
+                        mb={0}
                       ></AutoFieldLocal>
                     </Grid>
                   )}
 
-                  <Grid item xs={4}>
+                  <Grid item xs={6}>
                     <AutoFieldLocal
                       name="department"
                       title={tempwords?.department}
@@ -869,7 +875,7 @@ const PopupAppointmentCustomer = ({
                 >
                   {isRTL ? 'اضافة تنبيه' : 'Add Reminder'}
                 </Button>
-                <Paper style={{ height: 150, overflow: 'auto' }}>
+                <Paper style={{ height: 170, overflow: 'auto' }}>
                   {actionslist.map((act: any) => {
                     return (
                       <ListItem>
@@ -938,13 +944,13 @@ const PopupAppointmentCustomer = ({
               {/* {loading && <LoadingInline></LoadingInline>} */}
             </Box>
             <Grid container spacing={2}>
-              <Grid item xs={4}>
+              <Grid item xs={3}>
                 <Typography style={{ fontWeight: 'bold', fontSize: 16 }}>
                   {words.total} : {moneyFormat(totals.amount)}
                 </Typography>
               </Grid>
 
-              <Grid item xs={4}>
+              <Grid item xs={3}>
                 <Box>
                   <AutoFieldLocal
                     name="status"
@@ -959,7 +965,7 @@ const PopupAppointmentCustomer = ({
                   ></AutoFieldLocal>
                 </Box>
               </Grid>
-              <Grid item xs={4}>
+              <Grid item xs={3}>
                 <Box
                   m={1}
                   display="flex"
@@ -990,7 +996,7 @@ const PopupAppointmentCustomer = ({
                   )}
                 </Box>
               </Grid>
-              <Grid item xs={4}>
+              <Grid item xs={3}>
                 {!isNew && (
                   <Box
                     m={1}

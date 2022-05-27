@@ -91,7 +91,6 @@ const PopupFinanceAllKaid = ({
   const [getItems, itemsData]: any = useLazyQuery(getOperationKaids, {
     fetchPolicy: 'cache-and-network',
   });
-
   const { accounts } = useAccounts();
 
   useEffect(() => {
@@ -116,7 +115,7 @@ const PopupFinanceAllKaid = ({
 
   useEffect(() => {
     if (taskvalue) {
-      const task = tasks.filter((tsk: any) => tsk.id === taskvalue);
+      const task = tasks.filter((tsk: any) => tsk.id === taskvalue?.id)?.[0];
       if (task?.projectId) {
         const proj = projects.filter(
           (pro: any) => pro._id === taskvalue?.projectId
@@ -388,18 +387,20 @@ const PopupFinanceAllKaid = ({
                     mb={0}
                   />
                 </Grid>
-                <Grid item xs={3}>
-                  <AutoFieldLocal
-                    name="task"
-                    title={tempwords?.task}
-                    words={words}
-                    options={tasks}
-                    value={taskvalue}
-                    setSelectValue={setTaskvalue}
-                    isRTL={isRTL}
-                    fullWidth
-                  ></AutoFieldLocal>
-                </Grid>
+                {!tempoptions?.noTsk && (
+                  <Grid item xs={3}>
+                    <AutoFieldLocal
+                      name="task"
+                      title={tempwords?.task}
+                      words={words}
+                      options={tasks}
+                      value={taskvalue}
+                      setSelectValue={setTaskvalue}
+                      isRTL={isRTL}
+                      fullWidth
+                    ></AutoFieldLocal>
+                  </Grid>
+                )}
 
                 {!tempoptions?.noRes && (
                   <Grid item xs={3}>

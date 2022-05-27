@@ -16,6 +16,7 @@ export const initStore = {
   lastSuccess: Date.now(),
   wrongTimes: 0,
   startBlock: null,
+  tempId: null,
   template: null,
   localuri: 'jadwal-main', // jadwal-server
   loading: false,

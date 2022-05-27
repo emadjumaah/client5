@@ -13,7 +13,7 @@ import { DatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
 
 import { DateViewSwitcher } from '../../pages/calendar/common/DateViewSwitcher';
-import arLocale from 'date-fns/locale/ar-SA';
+// import arLocale from 'date-fns/locale/ar-SA';
 import enLocale from 'date-fns/locale/en-GB';
 import ArrowForwardIosOutlinedIcon from '@material-ui/icons/ArrowForwardIosOutlined';
 import ArrowBackIosOutlinedIcon from '@material-ui/icons/ArrowBackIosOutlined';
@@ -226,10 +226,7 @@ export default function DateNavigatorReports({
             </Typography>
           </Button>
         )}
-        <MuiPickersUtilsProvider
-          locale={isRTL ? arLocale : enLocale}
-          utils={DateFnsUtils}
-        >
+        <MuiPickersUtilsProvider locale={enLocale} utils={DateFnsUtils}>
           <DatePicker
             autoOk
             variant="inline"

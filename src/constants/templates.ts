@@ -69,6 +69,9 @@ export const templates = [
       },
     },
     taskExtra: [],
+    sortOrder: [
+      0, 1.2, 1.5, 2, 4, 5, 5.5, 5.6, 5.66, 5.7, 6, 7, 8, 9, 10, 12, 11, 13, 14,
+    ],
   },
   {
     id: 2,
@@ -77,7 +80,7 @@ export const templates = [
     nameAr: 'نموذج صالون ',
     options: {
       noPro: true,
-      noTsk: false,
+      noTsk: true,
       noRes: true,
       noEmp: false,
       noDep: false,
@@ -91,8 +94,8 @@ export const templates = [
       ar: {
         appointment: 'الموعد',
         appointments: 'المواعيد',
-        task: 'موعد متعدد',
-        tasks: 'المواعيد المتعددة',
+        task: 'كورس',
+        tasks: 'كورسات',
         department: 'القسم',
         departments: 'الأقسام',
         customer: 'العميل',
@@ -144,6 +147,9 @@ export const templates = [
       },
     },
     taskExtra: [],
+    sortOrder: [
+      0, 5.7, 5.6, 1.2, 1.5, 5.5, 4, 2, 5, 6, 7, 8, 5.66, 12, 11, 9, 10, 13, 14,
+    ],
   },
   {
     id: 3,
@@ -219,6 +225,9 @@ export const templates = [
       },
     },
     taskExtra: [],
+    sortOrder: [
+      0, 1.2, 1.5, 2, 4, 5, 5.5, 5.6, 5.66, 5.7, 6, 7, 8, 9, 10, 12, 11, 13, 14,
+    ],
   },
   {
     id: 4,
@@ -317,6 +326,9 @@ export const templates = [
         value: '',
       },
     ],
+    sortOrder: [
+      0, 1.2, 1.5, 2, 4, 5, 5.5, 5.6, 5.66, 5.7, 6, 7, 8, 9, 10, 12, 11, 13, 14,
+    ],
   },
   {
     id: 5,
@@ -392,6 +404,9 @@ export const templates = [
       },
     },
     taskExtra: [],
+    sortOrder: [
+      0, 1.2, 1.5, 2, 4, 5, 5.5, 5.6, 5.66, 5.7, 6, 7, 8, 9, 10, 12, 11, 13, 14,
+    ],
   },
   {
     id: 6,
@@ -463,6 +478,9 @@ export const templates = [
       },
     },
     taskExtra: [],
+    sortOrder: [
+      0, 1.2, 1.5, 2, 4, 5, 5.5, 5.6, 5.66, 5.7, 6, 7, 8, 9, 10, 12, 11, 13, 14,
+    ],
   },
   {
     id: 7,
@@ -538,6 +556,9 @@ export const templates = [
       },
     },
     taskExtra: [],
+    sortOrder: [
+      0, 1.2, 1.5, 2, 4, 5, 5.5, 5.6, 5.66, 5.7, 6, 7, 8, 9, 10, 12, 11, 13, 14,
+    ],
   },
   {
     id: 8,
@@ -613,5 +634,8 @@ export const templates = [
       },
     },
     taskExtra: [],
+    sortOrder: [
+      0, 1.2, 1.5, 2, 4, 5, 5.5, 5.6, 5.66, 5.7, 6, 7, 8, 9, 10, 12, 11, 13, 14,
+    ],
   },
 ];

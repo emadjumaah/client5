@@ -55,7 +55,6 @@ import useProjects from '../hooks/useProjects';
 import { SelectLocal } from '../pages/calendar/common/SelectLocal';
 import { eventLengthOptions } from '../constants/rrule';
 import { roles } from '../common';
-// import CalenderDateTime from '../components/fields/CalenderDateTime';
 
 export const indexTheList = (list: any) => {
   return list.map((item: any, index: any) => {
@@ -676,7 +675,7 @@ const PopupAppointment = ({
                 <Grid container spacing={1}>
                   <Grid item xs={12} md={4}>
                     <CalenderLocal
-                      isRTL={false}
+                      isRTL={isRTL}
                       label={words.start}
                       value={startDate}
                       onChange={(d: any) => {
@@ -685,14 +684,6 @@ const PopupAppointment = ({
                       format="dd/MM/yyyy - hh:mm"
                       time
                     ></CalenderLocal>
-                    {/* <CalenderDateTime
-                      label={words.start}
-                      value={startDate}
-                      onChange={(d: any) => {
-                        setStartDate(d);
-                      }}
-                      time
-                    ></CalenderDateTime> */}
                   </Grid>
                   <Grid item xs={12} md={4}>
                     <SelectLocal
@@ -735,20 +726,23 @@ const PopupAppointment = ({
                       mb={0}
                     />
                   </Grid>
-                  <Grid item xs={6}>
-                    <AutoFieldLocal
-                      name="task"
-                      title={tempwords?.task}
-                      words={words}
-                      options={tasks}
-                      value={taskvalue}
-                      setSelectValue={setTaskvalue}
-                      register={register}
-                      isRTL={isRTL}
-                      openAdd={openTask}
-                      fullWidth
-                    ></AutoFieldLocal>
-                  </Grid>
+                  {!tempoptions?.noTsk && (
+                    <Grid item xs={6}>
+                      <AutoFieldLocal
+                        name="task"
+                        title={tempwords?.task}
+                        words={words}
+                        options={tasks}
+                        value={taskvalue}
+                        setSelectValue={setTaskvalue}
+                        register={register}
+                        isRTL={isRTL}
+                        openAdd={openTask}
+                        fullWidth
+                        mb={0}
+                      ></AutoFieldLocal>
+                    </Grid>
+                  )}
                   <Grid item xs={6}>
                     <AutoFieldLocal
                       name="customer"
@@ -762,11 +756,12 @@ const PopupAppointment = ({
                       openAdd={openCustomer}
                       showphone
                       fullWidth
+                      mb={0}
                     ></AutoFieldLocal>
                   </Grid>
 
                   {!tempoptions?.noEmp && (
-                    <Grid item xs={4}>
+                    <Grid item xs={6}>
                       <AutoFieldLocal
                         name="employee"
                         title={tempwords?.employee}
@@ -783,11 +778,12 @@ const PopupAppointment = ({
                         isRTL={isRTL}
                         fullWidth
                         day={day}
+                        mb={0}
                       ></AutoFieldLocal>
                     </Grid>
                   )}
                   {!tempoptions?.noRes && (
-                    <Grid item xs={4}>
+                    <Grid item xs={6}>
                       <AutoFieldLocal
                         name="resourse"
                         title={tempwords?.resourse}
@@ -803,10 +799,11 @@ const PopupAppointment = ({
                         isRTL={isRTL}
                         fullWidth
                         day={day}
+                        mb={0}
                       ></AutoFieldLocal>
                     </Grid>
                   )}
-                  <Grid item xs={4}>
+                  <Grid item xs={6}>
                     <AutoFieldLocal
                       name="department"
                       title={tempwords?.department}
@@ -823,6 +820,7 @@ const PopupAppointment = ({
                       openAdd={openDepartment}
                       isRTL={isRTL}
                       fullWidth
+                      mb={0}
                     ></AutoFieldLocal>
                   </Grid>
                 </Grid>
@@ -888,7 +886,7 @@ const PopupAppointment = ({
                   style={{ fontSize: 14 }}
                 /> */}
 
-                <Paper style={{ height: 180, overflow: 'auto' }}>
+                <Paper style={{ height: 170, overflow: 'auto' }}>
                   {actionslist.map((act: any) => {
                     return (
                       <ListItem>
@@ -957,21 +955,15 @@ const PopupAppointment = ({
               )}
               {/* {loading && <LoadingInline></LoadingInline>} */}
             </Box>
-            <Box display="flex" style={{ flexDirection: 'row' }}>
-              <Typography
-                style={{ fontWeight: 'bold', fontSize: 16, marginBottom: 10 }}
-              >
-                {words.total} : {moneyFormat(totals.amount)}
-              </Typography>
-              {/* {totals?.amount && (
-                <Typography style={{ paddingLeft: 10, paddingRight: 10 }}>
-                  {tafkeet(totals.amount)}
-                </Typography>
-              )} */}
-            </Box>
-
             <Grid container spacing={2}>
-              <Grid item xs={4}>
+              <Grid item xs={3}>
+                <Typography
+                  style={{ fontWeight: 'bold', fontSize: 16, marginBottom: 10 }}
+                >
+                  {words.total} : {moneyFormat(totals.amount)}
+                </Typography>
+              </Grid>
+              <Grid item xs={3}>
                 <AutoFieldLocal
                   name="status"
                   title={words.status}
@@ -984,7 +976,7 @@ const PopupAppointment = ({
                   width={200}
                 ></AutoFieldLocal>
               </Grid>
-              <Grid item xs={4}>
+              <Grid item xs={3}>
                 <Box
                   m={1}
                   display="flex"
@@ -1015,7 +1007,7 @@ const PopupAppointment = ({
                   )}
                 </Box>
               </Grid>
-              <Grid item xs={4}>
+              <Grid item xs={3}>
                 {!isNew && (
                   <Box
                     m={1}

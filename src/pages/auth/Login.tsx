@@ -17,6 +17,12 @@ import Logo from './Logo';
 const timeToWait = 900000;
 const possibleWrong = 15;
 
+const getTemplate = (tempId: any) => {
+  if (!tempId) return templates[0];
+  const template = templates.filter((temp: any) => temp.id === tempId)?.[0];
+  return template;
+};
+
 const Login = ({ dispatch, wrongTimes, startBlock, isRTL }: any): any => {
   const classes = loginClasses();
   const [error, seterror] = useState(null);
@@ -47,18 +53,20 @@ const Login = ({ dispatch, wrongTimes, startBlock, isRTL }: any): any => {
     const userData = await dologin({ variables: { username, password } });
     if (userData?.data?.login?.ok === true) {
       initStoreState();
-      const { data, accessToken, refreshToken, template } = userData.data.login;
+      const { data, accessToken, refreshToken, tempId } = userData.data.login;
       const user = {
         ...data,
         roles: JSON.parse(data.roles),
       };
       await client.resetStore();
       const token = JSON.stringify({ accessToken, refreshToken });
-      const temp = template ? JSON.parse(template) : templates[0];
+      const template = getTemplate(tempId);
+
       dispatch({
         type: 'login',
-        payload: { user, token, template: temp },
+        payload: { user, token, template },
       });
+      dispatch({ type: 'setThemeId', payload: template?.id - 1 });
       seterror(null);
       window.location.reload();
     } else if (userData?.data?.login?.ok === false) {

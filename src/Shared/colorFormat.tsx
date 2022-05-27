@@ -576,11 +576,7 @@ export const templateFormatter = ({ value }: any) => {
   return temp?.nameAr;
 };
 export const currencyFormatterEmpty = ({ value }: any) => {
-  return (
-    <span style={{ color: value >= 0 ? colors.blue[500] : colors.red[500] }}>
-      {moneyFormat(value)}
-    </span>
-  );
+  return <span>{moneyFormat(value)}</span>;
 };
 
 export const dueAmountFormatter = ({ row }: any) => {
@@ -599,11 +595,26 @@ export const incomeAmountFormatter = ({ row }: any) => {
   const totalinvoiced = row.totalinvoiced ? row.totalinvoiced : 0;
   const toatlExpenses = row.toatlExpenses ? row.toatlExpenses : 0;
   const totalDiscount = row.totalDiscount ? row.totalDiscount : 0;
-  const inc = totalinvoiced - toatlExpenses - totalDiscount;
-  if (inc) {
+  const totalkaidsdebit = row?.totalkaidsdebit ? row.totalkaidsdebit : 0;
+  const totalKaidscredit = row?.totalKaidscredit ? row.totalKaidscredit : 0;
+  const totalkaids = totalkaidsdebit - totalKaidscredit;
+  const income = totalinvoiced - toatlExpenses - totalDiscount - totalkaids;
+  if (income) {
     return (
-      <span style={{ color: colors.green[800] }}>{moneyFormatEmpty(inc)}</span>
+      <span style={{ color: income > 0 ? colors.green[600] : colors.red[400] }}>
+        {moneyFormat(income)}
+      </span>
     );
+  } else {
+    return <span></span>;
+  }
+};
+export const totalkaidAmountFormatter = ({ row }: any) => {
+  const totalkaidsdebit = row?.totalkaidsdebit ? row.totalkaidsdebit : 0;
+  const totalKaidscredit = row?.totalKaidscredit ? row.totalKaidscredit : 0;
+  const totalkaids = totalkaidsdebit - totalKaidscredit;
+  if (totalkaids) {
+    return <span>{moneyFormat(totalkaids)}</span>;
   } else {
     return <span></span>;
   }
