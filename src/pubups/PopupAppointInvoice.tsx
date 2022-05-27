@@ -411,12 +411,12 @@ const PopupAppointInvoice = ({
   const apply = (mutate: any, variables: any) => {
     try {
       mutate({ variables });
-      // editEvent({
-      //   variables: {
-      //     id: appoint.id,
-      //     status: 10,
-      //   },
-      // });
+      editEvent({
+        variables: {
+          id: appoint.id,
+          status: 10,
+        },
+      });
       freshlastNos();
       onCloseForm();
       onCloseAppoint();
@@ -496,43 +496,6 @@ const PopupAppointInvoice = ({
             value={selectedDate}
             onChange={handleDateChange}
           ></CalenderLocal>
-        </Grid>
-        <Grid item xs={8}>
-          <PaymentSelect
-            words={words}
-            ptype={ptype}
-            isCash={isCash}
-            setIsCash={setIsCash}
-            setPtype={setPtype}
-          ></PaymentSelect>
-        </Grid>
-        <Grid item xs={6}>
-          <AutoFieldLocal
-            name="customer"
-            title={words.customer}
-            words={words}
-            options={customers}
-            value={custvalue}
-            setSelectValue={setCustvalue}
-            isRTL={isRTL}
-            fullWidth
-            openAdd={openCustomer}
-            showphone
-          ></AutoFieldLocal>
-        </Grid>
-        <Grid item xs={4}>
-          <AutoFieldLocal
-            name="task"
-            title={words.task}
-            words={words}
-            options={tasks}
-            value={taskvalue}
-            setSelectValue={setTaskvalue}
-            isRTL={isRTL}
-            fullWidth
-          ></AutoFieldLocal>
-        </Grid>
-        <Grid item xs={2}>
           <Box
             display="flex"
             style={{
@@ -566,7 +529,44 @@ const PopupAppointInvoice = ({
             />
           </Box>
         </Grid>
-
+        <Grid item xs={8}>
+          <PaymentSelect
+            words={words}
+            ptype={ptype}
+            isCash={isCash}
+            setIsCash={setIsCash}
+            setPtype={setPtype}
+          ></PaymentSelect>
+        </Grid>
+        <Grid item xs={8}>
+          <AutoFieldLocal
+            name="customer"
+            title={words.customer}
+            words={words}
+            options={customers}
+            value={custvalue}
+            setSelectValue={setCustvalue}
+            isRTL={isRTL}
+            fullWidth
+            openAdd={openCustomer}
+            showphone
+          ></AutoFieldLocal>
+        </Grid>
+        <Grid item xs={4}></Grid>
+        {!tempoptions?.noTsk && (
+          <Grid item xs={4}>
+            <AutoFieldLocal
+              name="task"
+              title={words.task}
+              words={words}
+              options={tasks}
+              value={taskvalue}
+              setSelectValue={setTaskvalue}
+              isRTL={isRTL}
+              fullWidth
+            ></AutoFieldLocal>
+          </Grid>
+        )}
         {!tempoptions?.noEmp && (
           <Grid item xs={4}>
             <AutoFieldLocal

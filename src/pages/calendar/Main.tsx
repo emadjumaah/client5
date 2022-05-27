@@ -18,7 +18,7 @@ import {
 import { useContext, useEffect, useState } from 'react';
 import { AppointForm } from './common/AppointForm';
 // import { getResourses } from '../../common/helpers';
-import { commitAppointmentChanges } from '../../common';
+import { commitAppointmentChanges, roles } from '../../common';
 import { RenderToolTip } from './common/AppointTooltip';
 import { AppointmentContent } from './common';
 import { CommandAppointment } from '../../Shared';
@@ -323,7 +323,7 @@ const Main = (props: any) => {
               showCloseButton
               // showOpenButton={ isEditor ? true : false} // TODO:
               showOpenButton
-              // showDeleteButton
+              showDeleteButton={roles.isOperateAdmin()}
               visible={visible}
               onVisibilityChange={() => setVisible(!visible)}
               contentComponent={({ appointmentData }) => (

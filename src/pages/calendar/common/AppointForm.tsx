@@ -41,7 +41,7 @@ import useEmployeesUp from '../../../hooks/useEmployeesUp';
 import useResoursesUp from '../../../hooks/useResoursesUp';
 import useTasks from '../../../hooks/useTasks';
 import useProjects from '../../../hooks/useProjects';
-import MyIcon from '../../../Shared/MyIcon';
+// import MyIcon from '../../../Shared/MyIcon';
 import PopupMaps from '../../../pubups/PopupMaps';
 import { SelectLocal } from './SelectLocal';
 import { eventLengthOptions } from '../../../constants/rrule';
@@ -65,7 +65,7 @@ export const AppointForm = (props: any) => {
   const [startDate, setStartDate]: any = useState(row?.startDate);
   const [endDate, setEndDate]: any = useState(row?.endDate);
   const [eventLength, setEventLength]: any = useState(
-    eventLengthOptions[1].value
+    eventLengthOptions[0].value
   );
 
   const [status, setStatus] = useState(row?.status || 2);
@@ -589,7 +589,7 @@ export const AppointForm = (props: any) => {
               ></SelectLocal>
             </Grid>
             <Grid item xs={12} md={4}>
-              <div style={{ pointerEvents: 'none', opacity: 0.3 }}>
+              <div style={{ pointerEvents: 'none', opacity: 0.5 }}>
                 <CalenderLocal
                   isRTL={isRTL}
                   label={words.end}
@@ -602,21 +602,23 @@ export const AppointForm = (props: any) => {
                 ></CalenderLocal>
               </div>
             </Grid>
-            <Grid item xs={12}>
-              <TextFieldLocal
-                autoFocus={true}
-                name="tasktitle"
-                label={words.title}
-                value={tasktitle}
-                onChange={(e: any) => {
-                  setTasktitle(e.target.value);
-                  onNewFieldChange(e.target.value, 'title');
-                }}
-                row={row}
-                fullWidth
-                mb={0}
-              />
-            </Grid>
+            {!tempoptions?.noTsk && (
+              <Grid item xs={12}>
+                <TextFieldLocal
+                  autoFocus={true}
+                  name="tasktitle"
+                  label={words.title}
+                  value={tasktitle}
+                  onChange={(e: any) => {
+                    setTasktitle(e.target.value);
+                    onNewFieldChange(e.target.value, 'title');
+                  }}
+                  row={row}
+                  fullWidth
+                  mb={0}
+                />
+              </Grid>
+            )}
             {!tempoptions?.noTsk && (
               <Grid item xs={6}>
                 <AutoFieldLocal
@@ -633,7 +635,7 @@ export const AppointForm = (props: any) => {
                 ></AutoFieldLocal>
               </Grid>
             )}
-            <Grid item xs={6}>
+            <Grid item xs={12}>
               <AutoFieldLocal
                 name="customer"
                 title={tempwords?.customer}
@@ -723,7 +725,7 @@ export const AppointForm = (props: any) => {
             >
               {isRTL ? 'اضافة تنبيه' : 'Add Reminder'}
             </Button>
-            <Paper style={{ height: 170, overflow: 'auto' }}>
+            <Paper style={{ height: 115, overflow: 'auto' }}>
               {actionslist.map((act: any) => {
                 return (
                   <ListItem>
@@ -794,8 +796,8 @@ export const AppointForm = (props: any) => {
             {/* {loading && <LoadingInline></LoadingInline>} */}
           </Box>
         </Grid>
-        <Grid item xs={4}>
-          <Typography style={{ fontWeight: 'bold', fontSize: 16 }}>
+        <Grid item xs={8}>
+          <Typography style={{ fontWeight: 'bold', fontSize: 16, padding: 10 }}>
             {words.total} : {moneyFormat(totals.amount)}
           </Typography>
         </Grid>
@@ -806,9 +808,11 @@ export const AppointForm = (props: any) => {
             onNewFieldChange={onNewFieldChange}
             isRTL={isRTL}
             title={words.status}
+            noTitle
+            width={170}
           ></StatusSelect>
         </Grid>
-        <Grid item xs={4}>
+        {/*   <Grid item xs={4}>
           <Box
             m={1}
             display="flex"
@@ -837,7 +841,7 @@ export const AppointForm = (props: any) => {
               </>
             )}
           </Box>
-        </Grid>
+        </Grid> */}
 
         <PopupCustomer
           newtext={newtext}

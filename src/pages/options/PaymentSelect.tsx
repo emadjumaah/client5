@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import * as React from "react";
-import Radio from "@material-ui/core/Radio";
-import RadioGroup from "@material-ui/core/RadioGroup";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import { Box, Grid } from "@material-ui/core";
+import * as React from 'react';
+import Radio from '@material-ui/core/Radio';
+import RadioGroup from '@material-ui/core/RadioGroup';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import { Box, Grid } from '@material-ui/core';
 
 const PaymentSelect = ({ ptype, setPtype, isCash, setIsCash, words }) => {
   const onchange = (e: any) => {
@@ -11,18 +11,18 @@ const PaymentSelect = ({ ptype, setPtype, isCash, setIsCash, words }) => {
   };
   const onMainChange = (e: any) => {
     const { value } = e.target;
-    if (value === "paid") {
+    if (value === 'paid') {
       setIsCash(true);
-      setPtype("cash");
+      setPtype('cash');
     } else {
       setIsCash(false);
-      setPtype("");
+      setPtype('');
     }
   };
   return (
     <Box
       style={{
-        backgroundColor: "#f3f3f3",
+        backgroundColor: '#f3f3f3',
         padding: 10,
         marginTop: 10,
         borderRadius: 10,
@@ -34,15 +34,15 @@ const PaymentSelect = ({ ptype, setPtype, isCash, setIsCash, words }) => {
           <RadioGroup
             aria-label="Views"
             name="views"
-            value={isCash ? "paid" : "credit"}
+            value={isCash ? 'paid' : 'credit'}
             onChange={onMainChange}
           >
-            <Box display="flex" style={{ flexDirection: "row", padding: 5 }}>
+            <Box display="flex" style={{ flexDirection: 'row', padding: 5 }}>
               <FormControlLabel
                 value="paid"
                 style={{
                   minWidth: 200,
-                  backgroundColor: isCash ? "#e5e5e5" : "#f3f3f3",
+                  backgroundColor: isCash ? '#e5e5e5' : '#f3f3f3',
                   marginInlineStart: 5,
                   borderRadius: 10,
                 }}
@@ -50,12 +50,12 @@ const PaymentSelect = ({ ptype, setPtype, isCash, setIsCash, words }) => {
                 label={words.paid}
               />
             </Box>
-            <Box display="flex" style={{ flexDirection: "row", padding: 5 }}>
+            <Box display="flex" style={{ flexDirection: 'row', padding: 5 }}>
               <FormControlLabel
                 value="credit"
                 style={{
                   minWidth: 200,
-                  backgroundColor: !isCash ? "#e5e5e5" : "#f3f3f3",
+                  backgroundColor: !isCash ? '#e5e5e5' : '#f3f3f3',
                   marginInlineStart: 5,
                   borderRadius: 10,
                 }}
@@ -76,21 +76,21 @@ const PaymentSelect = ({ ptype, setPtype, isCash, setIsCash, words }) => {
             >
               <Box
                 display="flex"
-                style={{ flexDirection: "row", marginTop: 5 }}
+                style={{ flexDirection: 'row', marginTop: 5 }}
               >
                 <FormControlLabel
                   value="cash"
-                  control={<Radio color="secondary" />}
+                  control={<Radio color="primary" />}
                   label={words.cash}
                 />
               </Box>
               <Box
                 display="flex"
-                style={{ flexDirection: "row", marginTop: 5 }}
+                style={{ flexDirection: 'row', marginTop: 5 }}
               >
                 <FormControlLabel
                   value="card"
-                  control={<Radio color="secondary" />}
+                  control={<Radio color="primary" />}
                   label={words.card}
                 />
               </Box>

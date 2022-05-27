@@ -679,7 +679,7 @@ const PopupInvoice = ({
       onSubmit={onHandleSubmit}
       theme={theme}
       alrt={alrt}
-      print={handleReactPrint}
+      print={!isNew ? handleReactPrint : undefined}
       maxWidth="md"
       mt={0}
       mb={50}
@@ -733,6 +733,23 @@ const PopupInvoice = ({
             setPtype={setPtype}
           ></PaymentSelect>
         </Grid>
+
+        <Grid item xs={8}>
+          <AutoFieldLocal
+            name="customer"
+            title={tempwords?.customer}
+            words={words}
+            options={customers}
+            value={custvalue}
+            setSelectValue={setCustvalue}
+            isRTL={isRTL}
+            fullWidth
+            openAdd={openCustomer}
+            showphone
+            disabled={name === 'customerId'}
+          ></AutoFieldLocal>
+        </Grid>
+        <Grid item xs={4}></Grid>
         {!tempoptions?.noTsk && (
           <Grid item xs={4}>
             <AutoFieldLocal
@@ -749,22 +766,6 @@ const PopupInvoice = ({
             ></AutoFieldLocal>
           </Grid>
         )}
-        <Grid item xs={4}>
-          <AutoFieldLocal
-            name="customer"
-            title={tempwords?.customer}
-            words={words}
-            options={customers}
-            value={custvalue}
-            setSelectValue={setCustvalue}
-            isRTL={isRTL}
-            fullWidth
-            openAdd={openCustomer}
-            showphone
-            disabled={name === 'customerId'}
-          ></AutoFieldLocal>
-        </Grid>
-
         {!tempoptions?.noEmp && (
           <Grid item xs={4}>
             <AutoFieldLocal

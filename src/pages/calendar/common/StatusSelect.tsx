@@ -17,6 +17,7 @@ export const StatusSelect = ({
   title,
   isRTL,
   noTitle = false,
+  width = 140,
 }: any) => {
   return (
     <Box display="flex">
@@ -31,11 +32,19 @@ export const StatusSelect = ({
             onNewFieldChange(value, 'status');
           }}
           variant="outlined"
-          style={{ maxHeight: 38, minWidth: 140 }}
+          style={{
+            maxHeight: 38,
+            minWidth: width,
+          }}
         >
           {eventStatus.map((es: any) => {
             return (
-              <MenuItem key={es.id} value={es.id} selected={es.id === status}>
+              <MenuItem
+                key={es.id}
+                value={es.id}
+                selected={es.id === status}
+                style={{ justifyContent: isRTL ? 'flex-end' : 'flex-start' }}
+              >
                 {isRTL ? es.nameAr : es.name}
               </MenuItem>
             );

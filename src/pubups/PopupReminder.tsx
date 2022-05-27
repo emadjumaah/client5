@@ -269,7 +269,7 @@ const PopupReminder = ({
   }, [user, employees]);
 
   useEffect(() => {
-    if (freq && count && startDate) {
+    if (freq > -1 && count && startDate) {
       const rdata = getReminderRruleData({
         freq,
         byweekday: undefined,

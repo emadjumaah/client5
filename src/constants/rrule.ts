@@ -136,8 +136,8 @@ export const actionOptions = [
 export const eventLengthOptions = [
   {
     id: 1,
-    name: '30 minutes',
-    nameAr: 'ثلاثون دقيقة',
+    name: 'Half Hour',
+    nameAr: 'نصف ساعة',
     value: 30,
   },
   {
@@ -279,7 +279,7 @@ export const manamentTabs = [
   {
     id: 7,
     value: 7,
-    nameAr: 'التذكيرات',
+    nameAr: 'المفكرة',
     name: ' Reminders',
     ref: 'reminders',
   },

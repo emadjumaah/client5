@@ -230,9 +230,9 @@ export const eventStatusAr = {
   10: 'موعد منجز',
 };
 export const eventStatus = [
-  { id: 1, name: 'Scheduled', nameAr: 'موعد غير مؤكد', color: '#445E93' },
+  // { id: 1, name: 'Scheduled', nameAr: 'موعد غير مؤكد', color: '#445E93' },
   { id: 2, name: 'Confirmed', nameAr: 'موعد مؤكد', color: '#2AB7CA' },
-  { id: 3, name: 'On-Hold', nameAr: 'موعد معلق', color: '#FED766' },
+  // { id: 3, name: 'On-Hold', nameAr: 'موعد معلق', color: '#FED766' },
   { id: 4, name: 'Canceled', nameAr: 'موعد ملغى', color: '#FE4A49' },
   // { id: 5, name: 'Starts', nameAr: 'بدأ', color: '#a084bb' },
   { id: 6, name: 'In Progress', nameAr: 'قيد الانجاز', color: '#a084bb' },

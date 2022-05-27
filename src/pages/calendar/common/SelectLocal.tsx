@@ -7,7 +7,7 @@ export const SelectLocal = ({
   value,
   onChange,
   isRTL,
-  width = 180,
+  width = 150,
   disabled = false,
 }: any) => {
   return (
@@ -25,6 +25,7 @@ export const SelectLocal = ({
           fontSize: 12,
           fontWeight: 'bold',
           color: '#555',
+          marginTop: 5,
         }}
       >
         {options.map((item: any) => {

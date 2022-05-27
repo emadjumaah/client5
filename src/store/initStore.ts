@@ -6,8 +6,8 @@ export const initStore = {
   notify: false,
   calendar: {
     duration: 30,
-    start: 8.5,
-    end: 21.5,
+    start: 7.5,
+    end: 22.5,
   },
   packIssue: false,
   packIssueMsg: null,

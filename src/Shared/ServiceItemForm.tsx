@@ -8,7 +8,7 @@ import { Autocomplete } from '@material-ui/lab';
 import OptionItemData from './OptionItemData';
 import { yup } from '../constants';
 import AutoPopper from './AutoPopper';
-import { useServices } from '../hooks';
+import { useServices, useTemplate } from '../hooks';
 import _ from 'lodash';
 import ListboxComponent from '../components/fields/ListboxComponent';
 import PopupServiceItem from '../pubups/PopupServiceItem';
@@ -35,6 +35,7 @@ export default function ServiceItemForm({
 
   const itemRef: any = React.useRef();
   const { addService, editService } = useServices();
+  const { tempoptions } = useTemplate();
 
   const onOpenItem = () => {
     setOpenItem(true);
@@ -140,10 +141,7 @@ export default function ServiceItemForm({
               backgroundColor: '#dfdfdf',
               width: 30,
               height: 30,
-              // position: 'relative',
               marginTop: 10,
-              // left: isRTL ? 35 : undefined,
-              // right: isRTL ? undefined : 35,
             }}
           >
             <AddIcon style={{ color: '#aaa' }}></AddIcon>
@@ -185,28 +183,29 @@ export default function ServiceItemForm({
             }}
           />
         </Grid>
-        <Grid item xs={2}></Grid>
-        <Grid item xs={10}>
-          <TextField
-            name="desc"
-            label={words.description}
-            onChange={(e: any) => setDesc(e.target.value)}
-            value={desc}
-            variant="outlined"
-            inputRef={register}
-            margin="dense"
-            fullWidth
-            inputProps={{
-              style: { textAlign: 'right', fontSize: 13, height: 13 },
-            }}
-          />
-        </Grid>
+        {!tempoptions?.noTsk && <Grid item xs={2}></Grid>}
+        {!tempoptions?.noTsk && (
+          <Grid item xs={10}>
+            <TextField
+              name="desc"
+              label={words.description}
+              onChange={(e: any) => setDesc(e.target.value)}
+              value={desc}
+              variant="outlined"
+              inputRef={register}
+              margin="dense"
+              fullWidth
+              inputProps={{
+                style: { textAlign: 'right', fontSize: 13, height: 13 },
+              }}
+            />
+          </Grid>
+        )}
         <Grid item xs={1}></Grid>
         <Grid item xs={1}>
           <Fab
-            style={{ marginLeft: 10, marginTop: 5 }}
+            style={{ marginLeft: 10, marginTop: 5, width: 36, height: 36 }}
             color="primary"
-            size="small"
             onClick={handleSubmit(addLocalItem)}
             title="Create new row"
           >

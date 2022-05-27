@@ -190,7 +190,7 @@ export const mainmenu = [
     id: 5.66,
     name: 'managereminders',
     uri: 'managereminders',
-    titleAr: 'التذكيرات',
+    titleAr: 'المفكرة',
     titleEn: 'Reminders',
     icon: 'list',
     req: 'cal',

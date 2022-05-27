@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import React from 'react';
 
-import DeleteIcon from '@material-ui/icons/Delete';
+// import DeleteIcon from '@material-ui/icons/Delete';
 
-import { Box, IconButton, Button, Typography } from '@material-ui/core';
+import { Box, Button, Typography } from '@material-ui/core';
 import { getStoreItem } from '../store';
 import { roles } from '../common';
 
@@ -16,7 +16,14 @@ const SaveButton = ({ onExecute }: any) => {
   }
 
   return (
-    <div style={{ textAlign: 'center' }}>
+    <div
+      style={{
+        display: 'flex',
+        flex: 1,
+        textAlign: 'center',
+        width: 600,
+      }}
+    >
       <Box m={1}>
         <Button
           style={{ width: 85, height: 36 }}
@@ -32,34 +39,35 @@ const SaveButton = ({ onExecute }: any) => {
 };
 
 const CancelButton = () => <div></div>;
+const DeleteButton = () => <div></div>;
 
-const DeleteButton = ({ onExecute }: any) => {
-  const store = getStoreItem('store');
-  const { lang } = store;
-  const isOpAdmin = roles.isOperateAdmin();
-  if (!isOpAdmin) {
-    return <div></div>;
-  }
+// const DeleteButton = ({ onExecute }: any) => {
+//   const store = getStoreItem('store');
+//   const { lang } = store;
+//   const isOpAdmin = roles.isOperateAdmin();
+//   if (!isOpAdmin) {
+//     return <div></div>;
+//   }
 
-  return (
-    <IconButton
-      onClick={() => {
-        if (
-          window.confirm(
-            lang === 'ar'
-              ? 'هل انت متأكد من حذف الموعد ؟'
-              : 'Are you sure you want to delete this row?'
-          )
-        ) {
-          onExecute();
-        }
-      }}
-      title="Delete row"
-    >
-      <DeleteIcon />
-    </IconButton>
-  );
-};
+//   return (
+//     <IconButton
+//       onClick={() => {
+//         if (
+//           window.confirm(
+//             lang === 'ar'
+//               ? 'هل انت متأكد من حذف الموعد ؟'
+//               : 'Are you sure you want to delete this row?'
+//           )
+//         ) {
+//           onExecute();
+//         }
+//       }}
+//       title="Delete row"
+//     >
+//       <DeleteIcon />
+//     </IconButton>
+//   );
+// };
 
 const commandComponents: any = {
   saveButton: SaveButton,

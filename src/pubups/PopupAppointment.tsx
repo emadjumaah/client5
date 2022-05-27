@@ -41,7 +41,7 @@ import { useCustomers, useTemplate } from '../hooks';
 import PopupCustomer from './PopupCustomer';
 // import { tafkeet } from '../common/helpers';
 import PopupMaps from './PopupMaps';
-import MyIcon from '../Shared/MyIcon';
+// import MyIcon from '../Shared/MyIcon';
 import { getPopupTitle } from '../constants/menu';
 import PopupDeprtment from './PopupDeprtment';
 import PopupEmployee from './PopupEmployee';
@@ -85,7 +85,7 @@ const PopupAppointment = ({
   const [startDate, setStartDate]: any = useState(null);
   const [endDate, setEndDate]: any = useState(null);
   const [eventLength, setEventLength]: any = useState(
-    eventLengthOptions[1].value
+    eventLengthOptions[0].value
   );
 
   const [departvalue, setDepartvalue] = useState<any>(null);
@@ -703,7 +703,7 @@ const PopupAppointment = ({
                     ></SelectLocal>
                   </Grid>
                   <Grid item xs={12} md={4}>
-                    <div style={{ pointerEvents: 'none', opacity: 0.3 }}>
+                    <div style={{ pointerEvents: 'none', opacity: 0.5 }}>
                       <CalenderLocal
                         isRTL={isRTL}
                         label={words.end}
@@ -714,18 +714,20 @@ const PopupAppointment = ({
                       ></CalenderLocal>
                     </div>
                   </Grid>
-                  <Grid item xs={12}>
-                    <TextFieldLocal
-                      autoFocus={true}
-                      name="tasktitle"
-                      label={words.title}
-                      value={tasktitle}
-                      onChange={(e: any) => setTasktitle(e.target.value)}
-                      row={row}
-                      fullWidth
-                      mb={0}
-                    />
-                  </Grid>
+                  {!tempoptions?.noTsk && (
+                    <Grid item xs={12}>
+                      <TextFieldLocal
+                        autoFocus={true}
+                        name="tasktitle"
+                        label={words.title}
+                        value={tasktitle}
+                        onChange={(e: any) => setTasktitle(e.target.value)}
+                        row={row}
+                        fullWidth
+                        mb={0}
+                      />
+                    </Grid>
+                  )}
                   {!tempoptions?.noTsk && (
                     <Grid item xs={6}>
                       <AutoFieldLocal
@@ -743,7 +745,7 @@ const PopupAppointment = ({
                       ></AutoFieldLocal>
                     </Grid>
                   )}
-                  <Grid item xs={6}>
+                  <Grid item xs={12}>
                     <AutoFieldLocal
                       name="customer"
                       title={tempwords?.customer}
@@ -886,7 +888,7 @@ const PopupAppointment = ({
                   style={{ fontSize: 14 }}
                 /> */}
 
-                <Paper style={{ height: 170, overflow: 'auto' }}>
+                <Paper style={{ height: 115, overflow: 'auto' }}>
                   {actionslist.map((act: any) => {
                     return (
                       <ListItem>
@@ -956,9 +958,9 @@ const PopupAppointment = ({
               {/* {loading && <LoadingInline></LoadingInline>} */}
             </Box>
             <Grid container spacing={2}>
-              <Grid item xs={3}>
+              <Grid item xs={6}>
                 <Typography
-                  style={{ fontWeight: 'bold', fontSize: 16, marginBottom: 10 }}
+                  style={{ fontWeight: 'bold', fontSize: 16, padding: 10 }}
                 >
                   {words.total} : {moneyFormat(totals.amount)}
                 </Typography>
@@ -976,7 +978,7 @@ const PopupAppointment = ({
                   width={200}
                 ></AutoFieldLocal>
               </Grid>
-              <Grid item xs={3}>
+              {/* <Grid item xs={3}>
                 <Box
                   m={1}
                   display="flex"
@@ -1006,7 +1008,7 @@ const PopupAppointment = ({
                     </>
                   )}
                 </Box>
-              </Grid>
+              </Grid> */}
               <Grid item xs={3}>
                 {!isNew && (
                   <Box

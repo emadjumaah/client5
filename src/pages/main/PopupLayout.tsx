@@ -148,6 +148,21 @@ export default function PopupLayout(props: any) {
             </Typography>
           </Button>
         )}
+        {saveprint && print && (
+          <Button
+            style={{ width: 100, height: 36, marginRight: 10, marginLeft: 10 }}
+            variant="contained"
+            onClick={() => {
+              onSubmit();
+              print();
+            }}
+            color="primary"
+          >
+            <Typography variant="subtitle2">
+              {isRTL ? 'حفظ وطباعة' : 'Save & Print'}
+            </Typography>
+          </Button>
+        )}
         {!onlyclose && roles.isEditor() && (
           <Button
             style={{
@@ -159,9 +174,6 @@ export default function PopupLayout(props: any) {
             variant="contained"
             onClick={() => {
               onSubmit();
-              if (saveprint) {
-                print();
-              }
             }}
             color="primary"
             disabled={saving}
