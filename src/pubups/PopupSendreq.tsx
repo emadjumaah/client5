@@ -37,6 +37,7 @@ const PopupSendreq = ({
   editAction,
   theme,
   smss,
+  apiKey,
 }: any) => {
   const [saving, setSaving] = useState(false);
   const [active, setActive] = useState(false);
@@ -63,6 +64,7 @@ const PopupSendreq = ({
       setActive(row.active);
       setRuntime(row.runtime);
       setShort(row.link);
+      setBody(row.body);
     }
   }, [open]);
   useEffect(() => {
@@ -177,15 +179,15 @@ const PopupSendreq = ({
       await messageAlert(setAlrt, isRTL ? `الرابط غير صالح` : `incorrect URL`);
       return;
     }
-    const sh = await getShortLink(link);
-    setShort(sh);
+    const data = await getShortLink({ apiKey, link });
+    setShort(data?.short);
   };
   const setShortLinkData = async () => {
     if (!short) {
       return;
     }
-    const code = short.split('/')[1];
-    const data = await getShortLinkInfo(code);
+    const code = short.replace(/^https?:\/\//, '').split('/')[1];
+    const data = await getShortLinkInfo({ apiKey, code });
     setShortInfo(data);
   };
 

@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import {
   successAlert,
@@ -14,6 +14,8 @@ import { GlobalContext } from '../contexts';
 import { Grid } from '@material-ui/core';
 import PopupLayout from '../pages/main/PopupLayout';
 import { TextFieldLocal } from '../components';
+import FilterSelectMulti from '../Shared/FilterSelectMulti';
+import useGroups from '../hooks/useGroups';
 
 const PopupContact = ({
   open,
@@ -27,23 +29,43 @@ const PopupContact = ({
   theme,
 }: any) => {
   const [saving, setSaving] = useState(false);
+  const [groupvalue, setGroupvalue] = useState([]);
+
   const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
-  const { register, handleSubmit, errors, reset } = useForm(yup.custResolver);
+  const { register, handleSubmit, errors, reset } = useForm(
+    yup.contactResolver
+  );
   const {
     translate: { words, isRTL },
   }: GContextTypes = useContext(GlobalContext);
+  const { groups } = useGroups();
+
+  useEffect(() => {
+    if (open === true && row && row?._id) {
+      const grps = groups.filter((g: any) => row?.groupIds?.includes(g._id));
+      setGroupvalue(grps);
+    }
+  }, [open]);
+
+  const getIds = (list: any) =>
+    list && list?.length > 0 ? list.map((sv: any) => sv._id) : undefined;
 
   const onSubmit = async (data: any) => {
     setSaving(true);
     const name = data.name.trim();
-    const nameAr = data.nameAr.trim();
+    const address = data.address;
+    const company = data.company;
+    const notes = data.notes;
     const { phone, email } = data;
     const variables: any = {
       _id: row && row._id ? row._id : undefined, // is it new or edit
       name,
-      nameAr,
       phone,
       email,
+      company,
+      address,
+      notes,
+      groupIds: getIds(groupvalue),
     };
     const mutate = isNew ? addAction : editAction;
     const mutateName = isNew ? 'createContact' : 'updateContact';
@@ -76,6 +98,7 @@ const PopupContact = ({
   const closeModal = () => {
     onClose();
     reset();
+    setGroupvalue([]);
     setSaving(false);
   };
 
@@ -106,26 +129,12 @@ const PopupContact = ({
       <Grid container spacing={2}>
         <Grid item xs={1}></Grid>
         <Grid item xs={10}>
-          <Grid container spacing={2}>
-            <Grid item xs={6}>
-              <TextFieldLocal
-                autoFocus
-                required
-                name="nameAr"
-                label={words.name}
-                register={register}
-                errors={errors}
-                row={row}
-                fullWidth
-                mb={0}
-              />
-            </Grid>
-            <Grid item xs={6}>
+          <Grid container spacing={1}>
+            <Grid item xs={12}>
               <TextFieldLocal
                 required
                 name="name"
-                ltr
-                label={words.nameEn}
+                label={words.name}
                 register={register}
                 errors={errors}
                 row={row}
@@ -143,29 +152,72 @@ const PopupContact = ({
                 row={row}
                 newtext={newtext}
                 fullWidth
+                mb={0}
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <TextFieldLocal
+                name="email"
+                label={words.email}
+                register={register}
+                errors={errors}
+                row={row}
+                fullWidth
+                mb={0}
+              />
+            </Grid>
+            <div style={{ marginRight: -5, paddingTop: 3, marginBottom: -5 }}>
+              <FilterSelectMulti
+                options={groups}
+                value={groupvalue}
+                setValue={setGroupvalue}
+                words={words}
+                isRTL={isRTL}
+                name="group"
+                width={350}
+              ></FilterSelectMulti>
+            </div>
+
+            <Grid item xs={12}>
+              <TextFieldLocal
+                name="company"
+                label={words.companyName}
+                register={register}
+                errors={errors}
+                row={row}
+                fullWidth
+                mb={0}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextFieldLocal
+                name="address"
+                label={words.theaddress}
+                register={register}
+                errors={errors}
+                row={row}
+                fullWidth
+                multiline
+                rowsMax={2}
+                rows={2}
+                mb={0}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextFieldLocal
+                name="notes"
+                label={words.notes}
+                register={register}
+                errors={errors}
+                row={row}
+                fullWidth
+                multiline
+                rowsMax={4}
+                rows={4}
+                mb={0}
               />
             </Grid>
           </Grid>
-
-          <TextFieldLocal
-            name="email"
-            label={words.email}
-            register={register}
-            errors={errors}
-            row={row}
-            fullWidth
-          />
-          <TextFieldLocal
-            name="address"
-            label={words.theaddress}
-            register={register}
-            errors={errors}
-            row={row}
-            fullWidth
-            multiline
-            rowsMax={4}
-            rows={4}
-          />
         </Grid>
         <Grid item xs={1}></Grid>
       </Grid>

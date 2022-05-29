@@ -72,6 +72,15 @@ const custSchema = yup.object().shape({
   email: yup.string().email(),
 });
 export const custResolver = { resolver: yupResolver(custSchema) };
+const contactSchema = yup.object().shape({
+  name: yup.string().required().min(3).max(100),
+  phone: yup
+    .string()
+    .matches(phoneRegExp, 'Phone number is not valid')
+    .required(),
+  email: yup.string().email(),
+});
+export const contactResolver = { resolver: yupResolver(contactSchema) };
 const itmSchema = yup.object().shape({
   barcode: yup.string(),
   name: yup.string().required().min(3).max(100),

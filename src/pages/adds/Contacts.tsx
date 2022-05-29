@@ -33,7 +33,7 @@ import ImportBtn from '../../common/ImportBtn';
 import useContacts from '../../hooks/useContacts';
 import PopupContactImport from '../../pubups/PopupContactImport';
 import useGroups from '../../hooks/useGroups';
-import { groupFormatter } from '../../Shared/colorFormat';
+import { avatarFormatter, groupFormatter } from '../../Shared/colorFormat';
 import ImportBtns from '../../common/ImportBtns';
 
 export default function Contacts(props: any) {
@@ -53,10 +53,14 @@ export default function Contacts(props: any) {
   } = useContacts();
   const { groups } = useGroups();
   const [columns] = useState([
-    { name: isRTL ? 'nameAr' : 'name', title: words.name },
+    { name: 'avatar', title: ' ' },
+    { name: 'name', title: words.name },
     { name: 'phone', title: words.phoneNumber },
     { name: 'groupIds', title: isRTL ? 'المجموعات' : 'Groups' },
     { name: 'email', title: words.email },
+    { name: 'company', title: words.companyName },
+    { name: 'address', title: words.address },
+    { name: 'notes', title: words.notes },
   ]);
 
   const commitChanges = async ({ deleted }) => {
@@ -123,7 +127,13 @@ export default function Contacts(props: any) {
             for={['groupIds']}
             formatterComponent={(props) => groupFormatter(props, groups, isRTL)}
           ></DataTypeProvider>
-          <TableColumnVisibility />
+          <DataTypeProvider
+            for={['avatar']}
+            formatterComponent={avatarFormatter}
+          ></DataTypeProvider>
+          <TableColumnVisibility
+            defaultHiddenColumnNames={['address', 'notes']}
+          />
           <TableEditColumn
             showEditCommand
             showDeleteCommand

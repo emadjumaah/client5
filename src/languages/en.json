@@ -163,7 +163,9 @@
     "subject": "Subject",
     "body": "Body",
     "weekdays": "Weekdays",
-    "group": "Contact Lists"
+    "notes": "Notes",
+    "contacts": "Contacts",
+    "group": "Groups"
   },
   "messages": {
     "itemadded": "Item Added",

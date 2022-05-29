@@ -11,10 +11,14 @@ export default gql`
         nameAr
         phone
         email
+        company
+        address
         groupIds
-        customerId
 
+        customerId
         userId
+
+        notes
 
         createdAt
         updatedAt

@@ -38,7 +38,7 @@ const PopupGroupِAdd = ({
 }: any) => {
   const [columns] = useState([
     { name: 'add', title: isRTL ? 'مضاف' : 'Added' },
-    { name: isRTL ? 'nameAr' : 'name', title: words.name },
+    { name: 'name', title: words.name },
     { name: 'phone', title: words.phoneNumber },
     { name: 'groupIds', title: isRTL ? 'المجموعات' : 'Groups' },
   ]);
@@ -58,6 +58,7 @@ const PopupGroupِAdd = ({
       onClose={onFormClose}
       title={title}
       onSubmit={() => null}
+      canceltitle={isRTL ? 'اغلاق' : 'Close'}
       onlyclose
       theme={theme}
       alrt={{}}

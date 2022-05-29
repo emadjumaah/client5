@@ -77,7 +77,6 @@ export default function Customers(props: any) {
   const [columns] = useState([
     { name: isRTL ? 'nameAr' : 'name', title: words.name },
     { name: 'phone', title: words.phoneNumber },
-    { name: 'driver', title: words.driver },
     { name: 'email', title: words.email },
     { name: 'address', title: words.address },
     { name: 'amount', title: isRTL ? 'الاجمالي' : 'Total' },
@@ -207,7 +206,6 @@ export default function Customers(props: any) {
           <TableHeaderRow showSortingControls />
           <TableColumnVisibility
             defaultHiddenColumnNames={[
-              'driver',
               'amount',
               'progress',
               'totalinvoiced',

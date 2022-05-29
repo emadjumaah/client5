@@ -35,11 +35,9 @@ const PopupGroup = ({
   const onSubmit = async (data: any) => {
     setSaving(true);
     const name = data.name.trim();
-    const nameAr = data.nameAr.trim();
     const variables: any = {
       _id: row && row._id ? row._id : undefined, // is it new or edit
       name,
-      nameAr,
     };
     const mutate = isNew ? addAction : editAction;
     const mutateName = isNew ? 'createGroup' : 'updateGroup';
@@ -81,11 +79,11 @@ const PopupGroup = ({
 
   const title = isRTL
     ? isNew
-      ? 'قائمة اتصال جديدة'
-      : 'تعديل قائمة اتصال'
+      ? 'مجموعة جديدة'
+      : 'تعديل مجموعة'
     : isNew
-    ? 'New Contact list'
-    : 'Edit Contact list';
+    ? 'New Group'
+    : 'Edit Group';
 
   return (
     <PopupLayout
@@ -105,23 +103,10 @@ const PopupGroup = ({
           <Grid container spacing={2}>
             <Grid item xs={12}>
               <TextFieldLocal
-                autoFocus
-                required
-                name="nameAr"
-                label={words.name}
-                register={register}
-                errors={errors}
-                row={row}
-                fullWidth
-                mb={0}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextFieldLocal
                 required
                 name="name"
                 ltr
-                label={words.nameEn}
+                label={words.name}
                 register={register}
                 errors={errors}
                 row={row}

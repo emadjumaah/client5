@@ -547,6 +547,8 @@ const Content = () => {
                   words={words}
                   theme={theme}
                   menuitem={menuitem}
+                  company={company}
+                  refreshcompany={refreshcompany}
                 ></Messages>
               </EventsContext.Provider>
             }

@@ -9,6 +9,8 @@ export default gql`
     $address: String
     $groupIds: [String]
     $customerId: String
+    $company: String
+    $notes: String
   ) {
     createContact(
       name: $name
@@ -18,6 +20,8 @@ export default gql`
       address: $address
       groupIds: $groupIds
       customerId: $customerId
+      company: $company
+      notes: $notes
     ) {
       ok
       message

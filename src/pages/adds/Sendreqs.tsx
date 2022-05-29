@@ -62,9 +62,9 @@ export default function Sendreqs(props: any) {
     { name: 'qty', title: words.qty },
     { name: 'active', title: words.status },
   ]);
-
   const { groups } = useGroups();
   const smss = company?.smss ? company?.smss : 0;
+  const apiKey = company?.apiKey;
   const commitChanges = async ({ deleted }) => {
     if (deleted) {
       const _id = deleted[0];
@@ -151,7 +151,7 @@ export default function Sendreqs(props: any) {
             addAction={addSendreq}
             editAction={editSendreq}
           >
-            <PopupSendreq smss={smss}></PopupSendreq>
+            <PopupSendreq smss={smss} apiKey={apiKey}></PopupSendreq>
           </PopupEditing>
         </Grid>
         {alrt.show && (

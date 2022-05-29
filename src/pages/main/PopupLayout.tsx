@@ -45,6 +45,7 @@ export default function PopupLayout(props: any) {
     onlyclose = false,
     print,
     savetitle = isRTL ? 'حفظ' : 'Save',
+    canceltitle = isRTL ? 'الغاء' : 'Cancel',
     taskvalue,
     preventclose = false,
     saving,
@@ -131,9 +132,7 @@ export default function PopupLayout(props: any) {
             onClick={onClose}
             color="primary"
           >
-            <Typography variant="subtitle2">
-              {isRTL ? 'الغاء' : 'Cancel'}
-            </Typography>
+            <Typography variant="subtitle2">{canceltitle}</Typography>
           </Button>
         )}
         {!saveprint && print && (

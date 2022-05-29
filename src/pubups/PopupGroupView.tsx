@@ -28,7 +28,7 @@ const PopupGroupView = ({ open, onClose, theme, isRTL, words, item }: any) => {
   const [openAdd, setOpenAdd] = useState(false);
 
   const [columns] = useState([
-    { name: isRTL ? 'nameAr' : 'name', title: words.name },
+    { name: 'name', title: words.name },
     { name: 'phone', title: words.mobile },
   ]);
   const [data, setData] = useState([]);
@@ -83,6 +83,7 @@ const PopupGroupView = ({ open, onClose, theme, isRTL, words, item }: any) => {
       onClose={onFormClose}
       title={title}
       onSubmit={() => null}
+      canceltitle={isRTL ? 'اغلاق' : 'Close'}
       onlyclose
       theme={theme}
       alrt={{}}

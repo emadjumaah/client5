@@ -25,8 +25,11 @@ const PopupContactImport = ({
   const [columns] = useState([
     { name: 'index', title: words.no },
     { name: 'name', title: words.name },
-    { name: 'nameAr', title: words.nameAr },
     { name: 'phone', title: words.mobile },
+    { name: 'email', title: words.email },
+    { name: 'company', title: words.companyName },
+    { name: 'address', title: words.address },
+    { name: 'notes', title: words.notes },
   ]);
   const [data, setData] = useState([]);
 
@@ -46,6 +49,9 @@ const PopupContactImport = ({
           [header[0]]: d[0],
           [header[1]]: d[1],
           [header[2]]: d[2],
+          [header[3]]: d[3],
+          [header[4]]: d[4],
+          [header[5]]: d[5],
         };
       });
       jsondata.shift();
@@ -76,7 +82,7 @@ const PopupContactImport = ({
       onSubmit={onSubmit}
       theme={theme}
       alrt={{}}
-      maxWidth="md"
+      maxWidth="lg"
     >
       <Box>
         <Box

@@ -166,6 +166,8 @@ export const translation = (lang: LanguageType) => {
     subject: lang.words.subject,
     body: lang.words.body,
     weekdays: lang.words.weekdays,
+    notes: lang.words.notes,
+    contacts: lang.words.contacts,
     group: lang.words.group,
   };
 

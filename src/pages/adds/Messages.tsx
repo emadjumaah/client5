@@ -7,6 +7,7 @@ import {
   SearchState,
   IntegratedFiltering,
   DataTypeProvider,
+  EditingState,
 } from '@devexpress/dx-react-grid';
 import {
   Grid,
@@ -14,34 +15,43 @@ import {
   VirtualTable,
   Toolbar,
   SearchPanel,
+  TableEditColumn,
 } from '@devexpress/dx-react-grid-material-ui';
 import { getRowId } from '../../common';
 import { SearchTable } from '../../components';
 import PageLayout from '../main/PageLayout';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
-import { useLazyQuery } from '@apollo/client';
-import getMessagesList from '../../graphql/query/getMessagesList';
+import { useLazyQuery, useMutation } from '@apollo/client';
 import { TableComponent } from '../../Shared/TableComponent';
 import { EventsContext } from '../../contexts';
 import { Box } from '@material-ui/core';
 import DateNavigatorReports from '../../components/filters/DateNavigatorReports';
 import {
+  mobilesFormatter,
   actionTimeFormatter,
-  isActiveViewFormatter,
 } from '../../Shared/colorFormat';
+import { Command, PopupEditing } from '../../Shared';
+import PopupSendSMS from '../../pubups/PopupSendSMS';
+import createSingleSMS from '../../graphql/mutation/createSingleSMS';
+import getMessages from '../../graphql/query/getMessages';
 
-export default function Messages({ isRTL, words, theme, menuitem }: any) {
+export default function Messages({
+  isRTL,
+  words,
+  theme,
+  menuitem,
+  company,
+  refreshcompany,
+}: any) {
   const [rows, setRows] = useState([]);
   const [start, setStart] = useState<any>(null);
   const [end, setEnd] = useState<any>(null);
 
   const [columns] = useState([
-    { name: 'sendtime', title: words.time },
-    { name: 'phone', title: words.phoneNumber },
+    { name: 'createdAt', title: words.time },
+    { name: 'phones', title: words.phoneNumber },
     { name: 'body', title: words.body },
-    { name: 'smsqty', title: words.qty },
-    { name: 'active', title: words.status },
-    { name: 'sent', title: isRTL ? 'تم الارسال' : 'Sent' },
+    { name: 'qty', title: words.qty },
   ]);
 
   const {
@@ -60,7 +70,21 @@ export default function Messages({ isRTL, words, theme, menuitem }: any) {
   };
 
   const { height } = useWindowDimensions();
-  const [loadMsgs, msgsData]: any = useLazyQuery(getMessagesList);
+  const [loadMsgs, msgsData]: any = useLazyQuery(getMessages);
+
+  const refresQuery = {
+    refetchQueries: [
+      {
+        query: getMessages,
+        variables: {
+          start: start ? start.setHours(0, 0, 0, 0) : undefined,
+          end: end ? end.setHours(23, 59, 59, 999) : undefined,
+        },
+      },
+    ],
+  };
+
+  const [addSMS] = useMutation(createSingleSMS, refresQuery);
 
   useEffect(() => {
     const variables = {
@@ -72,11 +96,22 @@ export default function Messages({ isRTL, words, theme, menuitem }: any) {
     });
   }, [start, end]);
   useEffect(() => {
-    if (msgsData?.data?.getMessagesList?.data) {
-      const { data } = msgsData.data.getMessagesList;
+    if (msgsData?.data?.getMessages?.data) {
+      const { data } = msgsData.data.getMessages;
       setRows(data);
     }
   }, [msgsData]);
+
+  const commitChanges = async ({ deleted }) => {
+    if (deleted) {
+      console.log('deleted', deleted);
+    }
+  };
+
+  const refresh = () => {
+    msgsData?.refetch();
+    refreshcompany();
+  };
 
   return (
     <PageLayout
@@ -84,7 +119,7 @@ export default function Messages({ isRTL, words, theme, menuitem }: any) {
       isRTL={isRTL}
       words={words}
       theme={theme}
-      refresh={() => null}
+      refresh={refresh}
     >
       <Box
         style={{
@@ -118,10 +153,12 @@ export default function Messages({ isRTL, words, theme, menuitem }: any) {
             words={words}
             theme={theme}
           ></DateNavigatorReports>
+          <Box>Sms: {company?.smss} </Box>
         </Box>
         <Grid rows={rows} columns={columns} getRowId={getRowId}>
           <SortingState />
           <SearchState />
+          <EditingState onCommitChanges={commitChanges} />
 
           <IntegratedSorting />
           <IntegratedFiltering />
@@ -135,21 +172,27 @@ export default function Messages({ isRTL, words, theme, menuitem }: any) {
             tableComponent={TableComponent}
           />
           <DataTypeProvider
-            for={['sendtime']}
+            for={['createdAt']}
             formatterComponent={actionTimeFormatter}
           ></DataTypeProvider>
           <DataTypeProvider
-            for={['sent', 'active']}
-            formatterComponent={isActiveViewFormatter}
+            for={['phones']}
+            formatterComponent={mobilesFormatter}
           ></DataTypeProvider>
-
           <TableHeaderRow showSortingControls />
+          <TableEditColumn
+            showAddCommand
+            commandComponent={Command}
+          ></TableEditColumn>
           <Toolbar />
           <SearchPanel
             inputComponent={(props: any) => {
               return <SearchTable isRTL={isRTL} {...props}></SearchTable>;
             }}
           />
+          <PopupEditing theme={theme} addAction={addSMS}>
+            <PopupSendSMS></PopupSendSMS>
+          </PopupEditing>
         </Grid>
       </Box>
     </PageLayout>

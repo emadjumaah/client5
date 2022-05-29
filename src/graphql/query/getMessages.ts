@@ -1,8 +1,8 @@
 import { gql } from '@apollo/client';
 
 export default gql`
-  query getMessages {
-    getMessages {
+  query getMessages($start: Date, $end: Date) {
+    getMessages(start: $start, end: $end) {
       ok
       error
       data {
@@ -10,11 +10,13 @@ export default gql`
         branch
         eventId
         customerId
-        phone
+        phones
         title
         body
         qty
         status
+        sent
+        rejected
         userId
         createdAt
         updatedAt

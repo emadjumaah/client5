@@ -44,9 +44,8 @@ export default function Groups(props: any) {
     useGroups();
 
   const [columns] = useState([
-    { name: isRTL ? 'nameAr' : 'name', title: words.name },
-    { name: 'qty', title: words.qty },
-    { name: 'email', title: words.email },
+    { name: 'name', title: words.name },
+    { name: 'qty', title: words.contacts },
   ]);
 
   const commitChanges = async ({ deleted }) => {

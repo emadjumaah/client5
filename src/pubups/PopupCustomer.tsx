@@ -15,6 +15,7 @@ import { Grid } from '@material-ui/core';
 import PopupLayout from '../pages/main/PopupLayout';
 import { TextFieldLocal } from '../components';
 import { getPopupTitle } from '../constants/menu';
+import { useTemplate } from '../hooks';
 
 const PopupCustomer = ({
   open,
@@ -34,6 +35,7 @@ const PopupCustomer = ({
     translate: { words, isRTL },
     store: { user },
   }: GContextTypes = useContext(GlobalContext);
+  const { templateId } = useTemplate();
 
   const onSubmit = async (data: any) => {
     setSaving(true);
@@ -183,72 +185,76 @@ const PopupCustomer = ({
                 mb={0}
               />
             </Grid>
-            <Grid item xs={12}>
-              <TextFieldLocal
-                name="driver"
-                label={words.driver}
-                register={register}
-                errors={errors}
-                row={row}
-                fullWidth
-                mb={0}
-              />
-            </Grid>
-            <Grid item xs={6}>
-              <TextFieldLocal
-                name="licenseNo"
-                label={words.licenseNo}
-                register={register}
-                errors={errors}
-                row={row}
-                fullWidth
-                mb={0}
-              />
-            </Grid>
-            <Grid item xs={6}>
-              <TextFieldLocal
-                name="licenseDate"
-                label={words.licenseDate}
-                register={register}
-                errors={errors}
-                row={row}
-                fullWidth
-                mb={0}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextFieldLocal
-                name="national"
-                label={words.national}
-                register={register}
-                errors={errors}
-                row={row}
-                fullWidth
-                mb={0}
-              />
-            </Grid>
-            <Grid item xs={6}>
-              <TextFieldLocal
-                name="nationalNo"
-                label={words.nationalNo}
-                register={register}
-                errors={errors}
-                row={row}
-                fullWidth
-                mb={0}
-              />
-            </Grid>
-            <Grid item xs={6}>
-              <TextFieldLocal
-                name="nationalDate"
-                label={words.nationalDate}
-                register={register}
-                errors={errors}
-                row={row}
-                fullWidth
-                mb={0}
-              />
-            </Grid>
+            {templateId === 4 && (
+              <>
+                <Grid item xs={12}>
+                  <TextFieldLocal
+                    name="driver"
+                    label={words.driver}
+                    register={register}
+                    errors={errors}
+                    row={row}
+                    fullWidth
+                    mb={0}
+                  />
+                </Grid>
+                <Grid item xs={6}>
+                  <TextFieldLocal
+                    name="licenseNo"
+                    label={words.licenseNo}
+                    register={register}
+                    errors={errors}
+                    row={row}
+                    fullWidth
+                    mb={0}
+                  />
+                </Grid>
+                <Grid item xs={6}>
+                  <TextFieldLocal
+                    name="licenseDate"
+                    label={words.licenseDate}
+                    register={register}
+                    errors={errors}
+                    row={row}
+                    fullWidth
+                    mb={0}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextFieldLocal
+                    name="national"
+                    label={words.national}
+                    register={register}
+                    errors={errors}
+                    row={row}
+                    fullWidth
+                    mb={0}
+                  />
+                </Grid>
+                <Grid item xs={6}>
+                  <TextFieldLocal
+                    name="nationalNo"
+                    label={words.nationalNo}
+                    register={register}
+                    errors={errors}
+                    row={row}
+                    fullWidth
+                    mb={0}
+                  />
+                </Grid>
+                <Grid item xs={6}>
+                  <TextFieldLocal
+                    name="nationalDate"
+                    label={words.nationalDate}
+                    register={register}
+                    errors={errors}
+                    row={row}
+                    fullWidth
+                    mb={0}
+                  />
+                </Grid>
+              </>
+            )}
           </Grid>
         </Grid>
         <Grid item xs={1}></Grid>

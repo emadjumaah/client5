@@ -196,6 +196,8 @@ export interface LanguageType {
     subject: string;
     body: string;
     weekdays: string;
+    notes: string;
+    contacts: string;
     group: string;
   };
   messages: {
