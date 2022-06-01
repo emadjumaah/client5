@@ -370,7 +370,7 @@ const PopupReminder = ({
 
   const apply = async (mutate: any, variables: any) => {
     try {
-      mutate({ variables });
+      await mutate({ variables });
       onCloseForm();
     } catch (error) {
       onError(error);

@@ -105,7 +105,7 @@ export default function Customers(props: any) {
     { name: 'address', title: words.address },
   ]);
 
-  const [loadTasks, tasksData]: any = useLazyQuery(getCustomers, {
+  const [loadCusts, custssData]: any = useLazyQuery(getCustomers, {
     fetchPolicy: 'cache-and-network',
   });
 
@@ -120,16 +120,16 @@ export default function Customers(props: any) {
 
   useEffect(() => {
     if (openItem) {
-      const tsks = tasksData?.data?.['getCustomers']?.data || [];
+      const tsks = custssData?.data?.['getCustomers']?.data || [];
       if (tsks && tsks.length > 0) {
         const opened = tsks.filter((ts: any) => ts._id === item._id)?.[0];
         setItem(opened);
       }
     }
-  }, [tasksData]);
+  }, [custssData]);
 
   useEffect(() => {
-    loadTasks({ isRTL });
+    loadCusts({ isRTL });
   }, []);
 
   const [addCustomer] = useMutation(createCustomer, refresQuery);
@@ -152,14 +152,14 @@ export default function Customers(props: any) {
   };
 
   useEffect(() => {
-    if (tasksData?.data?.getCustomers?.data) {
-      const { data } = tasksData.data.getCustomers;
+    if (custssData?.data?.getCustomers?.data) {
+      const { data } = custssData.data.getCustomers;
       setRows(data);
     }
-  }, [tasksData]);
+  }, [custssData]);
 
   const refresh = () => {
-    tasksData?.refetch();
+    custssData?.refetch();
   };
   return (
     <PageLayout

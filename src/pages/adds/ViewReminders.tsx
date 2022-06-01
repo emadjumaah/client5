@@ -7,7 +7,6 @@ import {
   DataTypeProvider,
   SearchState,
   IntegratedFiltering,
-  EditingState,
 } from '@devexpress/dx-react-grid';
 import {
   Grid,
@@ -15,38 +14,29 @@ import {
   VirtualTable,
   Toolbar,
   SearchPanel,
-  TableEditColumn,
 } from '@devexpress/dx-react-grid-material-ui';
-import { Command, Loading, PopupEditing } from '../../Shared';
+import { Loading } from '../../Shared';
 import { getRowId } from '../../common';
-import { actionTimeFormatter } from '../../Shared/colorFormat';
+import { actionTimeFormatter, sentFormatter } from '../../Shared/colorFormat';
 
-import { AlertLocal, SearchTable } from '../../components';
+import { SearchTable } from '../../components';
 import { getColumns } from '../../common/columns';
 
-import { Box, useMediaQuery } from '@material-ui/core';
+import { Box } from '@material-ui/core';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
 import PageLayout from '../main/PageLayout';
-import { errorAlert, errorDeleteAlert } from '../../Shared/helpers';
-import PopupReminder from '../../pubups/PopupReminder';
 import { useLazyQuery, useMutation } from '@apollo/client';
-import {
-  createReminder,
-  deleteReminder,
-  getReminders,
-  updateReminder,
-} from '../../graphql';
+import { getReminders, updateAction } from '../../graphql';
 import DateNavigatorReports from '../../components/filters/DateNavigatorReports';
 import ReminderContext from '../../contexts/reminder';
 import useEmployeesUp from '../../hooks/useEmployeesUp';
 import useDepartmentsUp from '../../hooks/useDepartmentsUp';
 import useResoursesUp from '../../hooks/useResoursesUp';
-import { useExpenseItems, useTemplate } from '../../hooks';
+import { useTemplate } from '../../hooks';
 import getRemindersActions from '../../graphql/query/getRemindersActions';
 
-export default function Reminders(props: any) {
+export default function ViewReminders(props: any) {
   const { isRTL, words, menuitem, theme } = props;
-  const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
 
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -54,19 +44,18 @@ export default function Reminders(props: any) {
   const [end, setEnd] = useState<any>(null);
 
   const col = getColumns({ isRTL, words });
-  const isMobile = useMediaQuery('(max-width:600px)');
 
   const { tempoptions } = useTemplate();
   const [columns] = useState(
     tempoptions?.noTsk
-      ? [col.time, col.title, col.employee, col.department, col.amount]
+      ? [col.time, col.title, col.employee, col.department, col.sent]
       : [
           col.time,
           col.title,
           col.resourse,
           col.employee,
           col.department,
-          col.amount,
+          col.sent,
         ]
   );
 
@@ -74,7 +63,6 @@ export default function Reminders(props: any) {
   const { employees } = useEmployeesUp();
   const { departments } = useDepartmentsUp();
   const { resourses } = useResoursesUp();
-  const { expenseItems } = useExpenseItems();
 
   const {
     state: { currentDate, currentViewName, endDate },
@@ -92,7 +80,7 @@ export default function Reminders(props: any) {
     dispatch({ type: 'setEndDate', payload: curDate });
   };
 
-  const [loadReminders, remindersData]: any = useLazyQuery(getReminders, {
+  const [loadActions, actionsData]: any = useLazyQuery(getRemindersActions, {
     fetchPolicy: 'cache-and-network',
   });
 
@@ -120,37 +108,20 @@ export default function Reminders(props: any) {
       start: start ? start.setHours(0, 0, 0, 0) : undefined,
       end: end ? end.setHours(23, 59, 59, 999) : undefined,
     };
-    loadReminders({
+    loadActions({
       variables,
     });
   }, [start, end]);
 
-  const [addReminder] = useMutation(createReminder, refresQuery);
-  const [editReminder] = useMutation(updateReminder, refresQuery);
-  const [removeReminder] = useMutation(deleteReminder, refresQuery);
-
-  const commitChanges = async ({ deleted }) => {
-    if (deleted) {
-      const _id = deleted[0];
-      const res = await removeReminder({ variables: { _id } });
-      if (res?.data?.deleteReminder?.ok === false) {
-        if (res?.data?.deleteReminder?.error.includes('related')) {
-          await errorDeleteAlert(setAlrt, isRTL);
-        } else {
-          await errorAlert(setAlrt, isRTL);
-        }
-      }
-    }
-  };
+  const [editRAction] = useMutation(updateAction, refresQuery);
 
   useEffect(() => {
-    if (remindersData?.loading) {
+    if (actionsData?.loading) {
       setLoading(true);
     }
-    if (remindersData?.data?.getReminders?.data) {
-      const { data } = remindersData.data.getReminders;
+    if (actionsData?.data?.getRemindersActions?.data) {
+      const { data } = actionsData.data.getRemindersActions;
       const rdata = data.map((da: any) => {
-        let time: any;
         let resourseNameAr: any;
         let resourseName: any;
         let departmentNameAr: any;
@@ -179,19 +150,6 @@ export default function Reminders(props: any) {
           employeeName = res?.name;
         }
 
-        const rr = JSON.parse(da?.rruledata);
-        if (rr) {
-          const { all } = rr;
-          const startms = start?.getTime();
-          const endms = end?.getTime();
-          all.map((tm: any) => {
-            const date = new Date(tm).getTime();
-            if (date > startms && date < endms) {
-              time = new Date(tm);
-            }
-            return tm;
-          });
-        }
         return {
           ...da,
           resourseName,
@@ -200,16 +158,16 @@ export default function Reminders(props: any) {
           departmentName,
           employeeNameAr,
           employeeName,
-          time,
+          time: da?.sendtime,
         };
       });
       setRows(rdata);
       setLoading(false);
     }
-  }, [remindersData]);
+  }, [actionsData]);
 
   const refresh = () => {
-    remindersData?.refetch();
+    actionsData?.refetch();
   };
   return (
     <PageLayout
@@ -255,11 +213,10 @@ export default function Reminders(props: any) {
 
         <Grid rows={rows} columns={columns} getRowId={getRowId}>
           <SortingState />
-          {!isMobile && <SearchState />}
-          <EditingState onCommitChanges={commitChanges} />
+          <SearchState />
 
           <IntegratedSorting />
-          {!isMobile && <IntegratedFiltering />}
+          <IntegratedFiltering />
 
           <VirtualTable
             height={height - 100}
@@ -273,40 +230,25 @@ export default function Reminders(props: any) {
             for={['time']}
             formatterComponent={actionTimeFormatter}
           ></DataTypeProvider>
-          <TableEditColumn
-            showEditCommand
-            showDeleteCommand
-            showAddCommand
-            commandComponent={Command}
-          ></TableEditColumn>
+          <DataTypeProvider
+            for={['sent']}
+            formatterComponent={(props: any) =>
+              sentFormatter({ ...props, editRAction })
+            }
+          ></DataTypeProvider>
+
           <TableHeaderRow showSortingControls />
 
-          {!isMobile && <Toolbar />}
-          {!isMobile && (
-            <SearchPanel
-              inputComponent={(props: any) => {
-                return <SearchTable isRTL={isRTL} {...props}></SearchTable>;
-              }}
-            />
-          )}
-          <PopupEditing
-            theme={theme}
-            addAction={addReminder}
-            editAction={editReminder}
-          >
-            <PopupReminder servicesproducts={expenseItems}></PopupReminder>
-          </PopupEditing>
+          {<Toolbar />}
+
+          <SearchPanel
+            inputComponent={(props: any) => {
+              return <SearchTable isRTL={isRTL} {...props}></SearchTable>;
+            }}
+          />
         </Grid>
 
         {loading && <Loading isRTL={isRTL} />}
-        {alrt.show && (
-          <AlertLocal
-            isRTL={isRTL}
-            type={alrt?.type}
-            msg={alrt?.msg}
-            top
-          ></AlertLocal>
-        )}
       </Box>
     </PageLayout>
   );

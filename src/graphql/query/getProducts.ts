@@ -19,6 +19,7 @@ export default gql`
         cost
         qty
         price
+        unit
         photo
 
         categoryId
@@ -40,16 +41,15 @@ export default gql`
         employeeColor
         employeePhone
 
-        projectId
-        projectName
-        projectNameAr
-        projectColor
         resourseId
         resourseName
         resourseNameAr
         resourseColor
 
+        quantity
+
         userId
+        note
 
         createdAt
         updatedAt

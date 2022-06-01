@@ -27,7 +27,7 @@ import { Box } from '@material-ui/core';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
 import { TableComponent } from '../../Shared/TableComponent';
 import ImportBtn from '../../common/ImportBtn';
-import PopupExpenseItemImport from '../../pubups/PopupExpenseItemImport';
+import PopupItemsImport from '../../pubups/PopupItemsImport';
 
 export default function ExpenseItems({ isRTL, words, theme }: any) {
   const [openImport, setOpenImport] = useState(false);
@@ -36,9 +36,9 @@ export default function ExpenseItems({ isRTL, words, theme }: any) {
 
   const [columns] = useState([
     { name: isRTL ? 'nameAr' : 'name', title: words.name },
-    // { name: 'price', title: words.price },
+    { name: 'price', title: words.price },
     { name: 'desc', title: words.description },
-    // { name: 'unit', title: words.unit },
+    { name: 'unit', title: words.unit },
   ]);
 
   const {
@@ -133,14 +133,16 @@ export default function ExpenseItems({ isRTL, words, theme }: any) {
           top
         ></AlertLocal>
       )}
-      <PopupExpenseItemImport
+      <PopupItemsImport
         open={openImport}
         onClose={() => setOpenImport(false)}
         addMultiItems={addMultiExpenseItems}
         isRTL={isRTL}
         theme={theme}
         words={words}
-      ></PopupExpenseItemImport>
+        itemType={10}
+        filename="expenses"
+      ></PopupItemsImport>
     </Box>
   );
 }

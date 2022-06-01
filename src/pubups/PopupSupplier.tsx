@@ -38,13 +38,14 @@ const PopupSupplier = ({
     setSaving(true);
     const name = data.name.trim();
     const nameAr = data.nameAr.trim();
-    const { phone, email } = data;
+    const { phone, email, address } = data;
     const variables: any = {
       _id: row && row._id ? row._id : undefined, // is it new or edit
       name,
       nameAr,
       phone,
       email,
+      address,
       branch: user.branch,
       userId: user._id,
     };
@@ -55,7 +56,7 @@ const PopupSupplier = ({
 
   const apply = async (mutate: any, mutateName: string, variables: any) => {
     try {
-      const res = mutate({ variables });
+      const res = await mutate({ variables });
       const nitem = getReturnItem(res, mutateName);
       if (setNewValue && nitem) setNewValue(nitem, 'supplier');
       await successAlert(setAlrt, isRTL);
@@ -107,9 +108,9 @@ const PopupSupplier = ({
     >
       <Grid container spacing={2}>
         <Grid item xs={1}></Grid>
-        <Grid item xs={9}>
-          {isRTL && (
-            <React.Fragment>
+        <Grid item xs={10}>
+          <Grid container spacing={1}>
+            <Grid item xs={12}>
               <TextFieldLocal
                 autoFocus
                 required
@@ -119,7 +120,10 @@ const PopupSupplier = ({
                 errors={errors}
                 row={row}
                 fullWidth
+                mb={0}
               />
+            </Grid>
+            <Grid item xs={12}>
               <TextFieldLocal
                 required
                 name="name"
@@ -129,53 +133,47 @@ const PopupSupplier = ({
                 errors={errors}
                 row={row}
                 fullWidth
+                mb={0}
               />
-            </React.Fragment>
-          )}
-          {!isRTL && (
-            <React.Fragment>
+            </Grid>
+            <Grid item xs={4}>
               <TextFieldLocal
-                autoFocus
                 required
-                name="name"
-                ltr
-                label={words.name}
+                name="phone"
+                label={words.phoneNumber}
+                register={register}
+                errors={errors}
+                row={row}
+                newtext={newtext}
+                fullWidth
+                mb={0}
+              />
+            </Grid>
+            <Grid item xs={8}>
+              <TextFieldLocal
+                name="email"
+                label={words.email}
                 register={register}
                 errors={errors}
                 row={row}
                 fullWidth
+                mb={0}
               />
+            </Grid>
+            <Grid item xs={12}>
               <TextFieldLocal
-                required
-                name="nameAr"
-                label={words.nameAr}
+                name="address"
+                label={words.theaddress}
                 register={register}
                 errors={errors}
                 row={row}
                 fullWidth
+                mb={0}
               />
-            </React.Fragment>
-          )}
-          <TextFieldLocal
-            required
-            name="phone"
-            label={words.phoneNumber}
-            register={register}
-            errors={errors}
-            row={row}
-            newtext={newtext}
-            fullWidth
-          />
-          <TextFieldLocal
-            name="email"
-            label={words.email}
-            register={register}
-            errors={errors}
-            row={row}
-            fullWidth
-          />
+            </Grid>
+          </Grid>
         </Grid>
-        <Grid item xs={2}></Grid>
+        <Grid item xs={1}></Grid>
       </Grid>
     </PopupLayout>
   );

@@ -13,6 +13,8 @@ import Company from './Company';
 import React from 'react';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
 import { roles } from '../../common';
+import { useMutation } from '@apollo/client';
+import updateUserTheme from '../../graphql/mutation/updateUserTheme';
 // import { PDFViewer } from '@react-pdf/renderer';
 // import MyPDFDocument from '../../print/pdf/MyPDFDocument';
 
@@ -26,6 +28,7 @@ const Options = ({ isRTL, words, company, editCompany }: any) => {
   const { store, dispatch }: GContextTypes = useContext(GlobalContext);
   const { lang, themeId, calendar } = store;
   const { height } = useWindowDimensions();
+  const [addUserTheme] = useMutation(updateUserTheme);
 
   const setLang = (lang: any) => {
     dispatch({ type: 'setLang', payload: lang });
@@ -33,7 +36,9 @@ const Options = ({ isRTL, words, company, editCompany }: any) => {
   };
   const setThemeId = (themeId: any) => {
     dispatch({ type: 'setThemeId', payload: themeId });
+    addUserTheme({ variables: { themeId: Number(themeId) } });
   };
+
   const setCalendar = (data: any) => {
     dispatch({ type: 'setCalendar', payload: data });
   };

@@ -66,7 +66,10 @@ const Login = ({ dispatch, wrongTimes, startBlock, isRTL }: any): any => {
         type: 'login',
         payload: { user, token, template },
       });
-      dispatch({ type: 'setThemeId', payload: template?.id - 1 });
+      dispatch({
+        type: 'setThemeId',
+        payload: user?.themeId ? user?.themeId : template?.id - 1,
+      });
       seterror(null);
       window.location.reload();
     } else if (userData?.data?.login?.ok === false) {

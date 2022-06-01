@@ -377,7 +377,7 @@ const PopupTaskInvoice = ({
 
   const apply = async (mutate: any, variables: any) => {
     try {
-      mutate({ variables });
+      await mutate({ variables });
       // handlePrint();
       freshlastNos();
       onCloseForm();

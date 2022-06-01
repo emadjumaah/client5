@@ -13,58 +13,54 @@ import {
   Grid,
   TableHeaderRow,
   TableEditColumn,
+  Toolbar,
   VirtualTable,
   SearchPanel,
-  Toolbar,
 } from '@devexpress/dx-react-grid-material-ui';
 import { Command, Loading, PopupEditing } from '../../Shared';
 import { getRowId } from '../../common';
-import { useLazyQuery, useMutation } from '@apollo/client';
 import {
-  createExpenses,
-  deleteExpenses,
-  getCustomers,
-  getDepartments,
-  getEmployees,
-  getExpenses,
+  getPurchaseInvoices,
+  createPurchaseInvoice,
+  updatePurchaseInvoice,
+  deletePurchaseInvoice,
   getLandingChartData,
   getLastNos,
-  getProducts,
-  getProjects,
+  getSuppliers,
+  getEmployees,
   getResourses,
-  updateExpenses,
+  getProjects,
+  getDepartments,
+  getProducts,
 } from '../../graphql';
+import { useLazyQuery, useMutation } from '@apollo/client';
 import {
-  accountFormatter,
+  amountFormatter,
   currencyFormatter,
-  samllFormatter,
-  taskIdFormatter,
   timeFormatter,
 } from '../../Shared/colorFormat';
-import useAccounts from '../../hooks/useAccounts';
-import PageLayout from '../main/PageLayout';
-import { SearchTable } from '../../components';
-import { ExpensesContext } from '../../contexts';
-import DateNavigatorReports from '../../components/filters/DateNavigatorReports';
-import useTasks from '../../hooks/useTasks';
-import getTasks from '../../graphql/query/getTasks';
 import { getColumns } from '../../common/columns';
-import { Box } from '@material-ui/core';
-import useWindowDimensions from '../../hooks/useWindowDimensions';
-import { TableComponent } from '../../Shared/TableComponent';
-import PopupExpensesDoc from '../../pubups/PopupExpensesDoc';
+import { PurchaseContext } from '../../contexts';
+import PageLayout from '../main/PageLayout';
+import DateNavigatorReports from '../../components/filters/DateNavigatorReports';
+import { SearchTable } from '../../components';
+import PopupPurchaseInvoice from '../../pubups/PopupPurchaseInvoice';
+import { useProducts, useTemplate } from '../../hooks';
 import useDepartmentsUp from '../../hooks/useDepartmentsUp';
 import useEmployeesUp from '../../hooks/useEmployeesUp';
+import useWindowDimensions from '../../hooks/useWindowDimensions';
 import useResoursesUp from '../../hooks/useResoursesUp';
-import { useExpenseItems, useTemplate } from '../../hooks';
+import useTasks from '../../hooks/useTasks';
+import getTasks from '../../graphql/query/getTasks';
+import { Box } from '@material-ui/core';
 
-export default function ExpensesDoc({
+export default function PurchaseInvoices({
   isRTL,
   words,
   menuitem,
   theme,
   company,
-}) {
+}: any) {
   const col = getColumns({ isRTL, words });
 
   const { tempoptions } = useTemplate();
@@ -73,41 +69,42 @@ export default function ExpensesDoc({
     tempoptions?.noTsk
       ? [
           { name: 'time', title: words.time },
-          { name: 'debitAcc', title: isRTL ? 'حساب المصروف' : 'Expenses Acc' },
-          { name: 'creditAcc', title: isRTL ? 'حساب الدفع' : 'Payment Acc' },
-          col.department,
-          col.employee,
-          { name: 'desc', title: words.description },
+          { name: 'docNo', title: words.no },
+          col.supplier,
+          { name: 'supplierPhone', title: words.phoneNumber },
+          { name: 'total', title: words.total },
+          { name: 'discount', title: words.discount },
           { name: 'amount', title: words.amount },
         ]
       : [
           { name: 'time', title: words.time },
-          { name: 'debitAcc', title: isRTL ? 'حساب المصروف' : 'Expenses Acc' },
-          { name: 'creditAcc', title: isRTL ? 'حساب الدفع' : 'Payment Acc' },
-          col.department,
-          col.employee,
+          { name: 'docNo', title: words.no },
           col.taskId,
-          { name: 'desc', title: words.description },
+          col.supplier,
+          { name: 'supplierPhone', title: words.phoneNumber },
+          { name: 'total', title: words.total },
+          { name: 'discount', title: words.discount },
           { name: 'amount', title: words.amount },
         ]
   );
 
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(false);
-
   const [start, setStart] = useState<any>(null);
   const [end, setEnd] = useState<any>(null);
   const { tasks } = useTasks();
+
+  const { height } = useWindowDimensions();
+
+  const { products } = useProducts();
   const { departments } = useDepartmentsUp();
   const { employees } = useEmployeesUp();
   const { resourses } = useResoursesUp();
-  const { expenseItems } = useExpenseItems();
 
-  const { height } = useWindowDimensions();
   const {
     state: { currentDate, currentViewName, endDate, sort },
     dispatch,
-  } = useContext(ExpensesContext);
+  } = useContext(PurchaseContext);
 
   const currentViewNameChange = (e: any) => {
     dispatch({ type: 'setCurrentViewName', payload: e.target.value });
@@ -120,14 +117,17 @@ export default function ExpensesDoc({
     dispatch({ type: 'setEndDate', payload: curDate });
   };
 
-  const [loadExpenses, expensesData]: any = useLazyQuery(getExpenses, {
-    fetchPolicy: 'cache-and-network',
-  });
-  const { accounts } = useAccounts();
+  const [loadPurchaseInvoices, opData]: any = useLazyQuery(
+    getPurchaseInvoices,
+    {
+      fetchPolicy: 'cache-and-network',
+    }
+  );
+
   const refresQuery = {
     refetchQueries: [
       {
-        query: getExpenses,
+        query: getPurchaseInvoices,
         variables: {
           start: start ? start.setHours(0, 0, 0, 0) : undefined,
           end: end ? end.setHours(23, 59, 59, 999) : undefined,
@@ -143,7 +143,7 @@ export default function ExpensesDoc({
         query: getTasks,
       },
       {
-        query: getCustomers,
+        query: getSuppliers,
       },
       {
         query: getProducts,
@@ -172,41 +172,45 @@ export default function ExpensesDoc({
       start: start ? start.setHours(0, 0, 0, 0) : undefined,
       end: end ? end.setHours(23, 59, 59, 999) : undefined,
     };
-    loadExpenses({
+    loadPurchaseInvoices({
       variables,
     });
   }, [start, end]);
 
-  const [addExpenses] = useMutation(createExpenses, refresQuery);
-  const [editExpenses] = useMutation(updateExpenses, refresQuery);
-  const [removeExpenses] = useMutation(deleteExpenses, refresQuery);
+  const [addPurchaseInvoice] = useMutation(createPurchaseInvoice, refresQuery);
+  const [editPurchaseInvoice] = useMutation(updatePurchaseInvoice, refresQuery);
+  const [removePurchaseInvoice] = useMutation(
+    deletePurchaseInvoice,
+    refresQuery
+  );
 
-  const commitChanges = async ({ deleted }) => {
+  const commitChanges: any = async ({ deleted }) => {
     if (deleted) {
       const _id = deleted[0];
-      removeExpenses({ variables: { _id } });
+      removePurchaseInvoice({ variables: { _id } });
       setRows(rows.filter((row: any) => row._id !== _id));
     }
   };
 
   useEffect(() => {
-    if (expensesData?.loading) {
+    if (opData?.loading) {
       setLoading(true);
     }
-    if (expensesData?.data?.getExpenses?.data) {
-      const { data } = expensesData.data.getExpenses;
+    if (opData?.data?.getPurchaseInvoices?.data) {
+      const { data } = opData.data.getPurchaseInvoices;
       setRows(data);
       setLoading(false);
     }
-  }, [expensesData]);
+  }, [opData]);
 
   const refresh = () => {
-    expensesData?.refetch();
+    opData?.refetch();
   };
 
   const setSortDispatch = (value: any) => {
     dispatch({ type: 'setSort', payload: value });
   };
+
   return (
     <PageLayout
       menuitem={menuitem}
@@ -248,6 +252,7 @@ export default function ExpensesDoc({
             theme={theme}
           ></DateNavigatorReports>
         </Box>
+
         <Grid rows={rows} columns={columns} getRowId={getRowId}>
           <SortingState
             defaultSorting={sort}
@@ -258,12 +263,11 @@ export default function ExpensesDoc({
           <IntegratedSorting />
           <IntegratedFiltering />
           <VirtualTable
-            height={height - 100}
+            height={window.innerHeight - 133}
             messages={{
               noData: isRTL ? 'لا يوجد بيانات' : 'no data',
             }}
-            estimatedRowHeight={40}
-            tableComponent={TableComponent}
+            estimatedRowHeight={30}
           />
           <TableHeaderRow showSortingControls />
           <DataTypeProvider
@@ -272,29 +276,11 @@ export default function ExpensesDoc({
           ></DataTypeProvider>
           <DataTypeProvider
             for={['amount']}
+            formatterComponent={amountFormatter}
+          ></DataTypeProvider>
+          <DataTypeProvider
+            for={['total', 'discount']}
             formatterComponent={currencyFormatter}
-          ></DataTypeProvider>
-          <DataTypeProvider
-            for={['docNo', 'refNo']}
-            formatterComponent={samllFormatter}
-          ></DataTypeProvider>
-          <DataTypeProvider
-            for={['creditAcc']}
-            formatterComponent={(props) =>
-              accountFormatter(props, accounts, isRTL)
-            }
-          ></DataTypeProvider>
-          <DataTypeProvider
-            for={['taskId']}
-            formatterComponent={(props: any) =>
-              taskIdFormatter({ ...props, tasks })
-            }
-          ></DataTypeProvider>
-          <DataTypeProvider
-            for={['debitAcc']}
-            formatterComponent={(props) =>
-              accountFormatter(props, accounts, isRTL)
-            }
           ></DataTypeProvider>
           <TableEditColumn
             showEditCommand
@@ -310,18 +296,17 @@ export default function ExpensesDoc({
           />
 
           <PopupEditing
-            theme={theme}
-            addAction={addExpenses}
-            editAction={editExpenses}
+            addAction={addPurchaseInvoice}
+            editAction={editPurchaseInvoice}
           >
-            <PopupExpensesDoc
+            <PopupPurchaseInvoice
               resourses={resourses}
               employees={employees}
               departments={departments}
               company={company}
-              servicesproducts={expenseItems}
+              servicesproducts={products}
               tasks={tasks}
-            ></PopupExpensesDoc>
+            ></PopupPurchaseInvoice>
           </PopupEditing>
         </Grid>
         {loading && <Loading isRTL={isRTL} />}

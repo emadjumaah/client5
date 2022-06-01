@@ -23,15 +23,14 @@ import { PopupService } from '../../pubups';
 import { currencyFormatter } from '../../Shared/colorFormat';
 import { AlertLocal, SearchTable } from '../../components';
 import { errorAlert, errorDeleteAlert } from '../../Shared/helpers';
-import { Box, Button } from '@material-ui/core';
+import { Box } from '@material-ui/core';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
 import { TableComponent } from '../../Shared/TableComponent';
 import ImportBtn from '../../common/ImportBtn';
-import PopupServiceImport from '../../pubups/PopupServiceImport';
+import PopupItemsImport from '../../pubups/PopupItemsImport';
 
 export default function Services({ isRTL, words, theme }: any) {
   const [openImport, setOpenImport] = useState(false);
-  const [type, setType] = useState(2);
   const [loading, setLoading] = useState(false);
   const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
   const [columns] = useState([
@@ -41,14 +40,8 @@ export default function Services({ isRTL, words, theme }: any) {
     { name: 'unit', title: words.unit },
   ]);
 
-  const {
-    services,
-    expenseitems,
-    addService,
-    addMultiServices,
-    editService,
-    removeService,
-  } = useServices();
+  const { services, addService, addMultiServices, editService, removeService } =
+    useServices();
 
   const { height } = useWindowDimensions();
   const commitChanges = async ({ deleted }) => {
@@ -83,44 +76,7 @@ export default function Services({ isRTL, words, theme }: any) {
         isRTL={isRTL}
         theme={theme}
       ></ImportBtn>
-      <Box
-        display="flex"
-        style={{
-          position: 'absolute',
-          top: 57,
-          width: '60%',
-          zIndex: 111,
-          marginLeft: 40,
-          marginRight: 40,
-        }}
-      >
-        <Button
-          color="primary"
-          variant={type === 2 ? 'contained' : 'outlined'}
-          onClick={() => {
-            setType(2);
-          }}
-          style={{ marginLeft: 15, marginRight: 15, padding: 5, minWidth: 150 }}
-        >
-          {isRTL ? 'بنود الايرادات' : 'Income Items'}
-        </Button>
-        <Button
-          color="primary"
-          variant={type === 10 ? 'contained' : 'outlined'}
-          onClick={() => {
-            setType(10);
-          }}
-          style={{ marginLeft: 15, marginRight: 15, padding: 5, minWidth: 150 }}
-        >
-          {isRTL ? 'بنود المصروفات' : 'Expenses Items'}
-        </Button>
-      </Box>
-
-      <Grid
-        rows={type === 2 ? services : expenseitems}
-        columns={columns}
-        getRowId={getRowId}
-      >
+      <Grid rows={services} columns={columns} getRowId={getRowId}>
         <SortingState />
         <EditingState onCommitChanges={commitChanges} />
         <SearchState />
@@ -160,7 +116,7 @@ export default function Services({ isRTL, words, theme }: any) {
           addAction={addService}
           editAction={editService}
         >
-          <PopupService type={type}></PopupService>
+          <PopupService></PopupService>
         </PopupEditing>
       </Grid>
       {alrt.show && (
@@ -171,14 +127,16 @@ export default function Services({ isRTL, words, theme }: any) {
           top
         ></AlertLocal>
       )}
-      <PopupServiceImport
+      <PopupItemsImport
         open={openImport}
         onClose={() => setOpenImport(false)}
         addMultiItems={addMultiServices}
         isRTL={isRTL}
         theme={theme}
         words={words}
-      ></PopupServiceImport>
+        itemType={2}
+        filename="services"
+      ></PopupItemsImport>
     </Box>
   );
 }

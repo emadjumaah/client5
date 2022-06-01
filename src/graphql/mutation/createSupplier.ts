@@ -1,4 +1,4 @@
-import { gql } from "@apollo/client";
+import { gql } from '@apollo/client';
 
 export default gql`
   mutation createSupplier(
@@ -6,7 +6,9 @@ export default gql`
     $name: String
     $nameAr: String
     $phone: String
+    $mobile: String
     $email: String
+    $address: String
     $employee: EmployeeInput
   ) {
     createSupplier(
@@ -14,7 +16,9 @@ export default gql`
       name: $name
       nameAr: $nameAr
       phone: $phone
+      mobile: $mobile
       email: $email
+      address: $address
       employee: $employee
     ) {
       ok

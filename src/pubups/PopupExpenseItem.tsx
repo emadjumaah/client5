@@ -46,7 +46,7 @@ const PopupExpenseItem = ({
     const { price, unit, desc } = data;
 
     const variables: any = {
-      _id: row && row._id ? row._id : undefined, // is it new or edit
+      _id: row && row._id ? row._id : undefined,
       itemType: 10,
       name,
       nameAr,
@@ -143,18 +143,6 @@ const PopupExpenseItem = ({
             </Grid>
             <Grid item xs={6}>
               <TextFieldLocal
-                name="unit"
-                label={words.unit}
-                register={register}
-                errors={errors}
-                row={row}
-                newtext={newtext}
-                fullWidth
-                mb={0}
-              />
-            </Grid>
-            <Grid item xs={6}>
-              <TextFieldLocal
                 name="price"
                 label={words.theprice}
                 register={register}
@@ -165,18 +153,32 @@ const PopupExpenseItem = ({
                 mb={0}
               />
             </Grid>
+            <Grid item xs={6}>
+              <TextFieldLocal
+                name="unit"
+                label={words.unit}
+                register={register}
+                errors={errors}
+                row={row}
+                newtext={newtext}
+                fullWidth
+                mb={0}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextFieldLocal
+                name="desc"
+                label={words.description}
+                register={register}
+                errors={errors}
+                row={row}
+                fullWidth
+                multiline
+                rowsMax={4}
+                rows={4}
+              />
+            </Grid>
           </Grid>
-          <TextFieldLocal
-            name="desc"
-            label={words.description}
-            register={register}
-            errors={errors}
-            row={row}
-            fullWidth
-            multiline
-            rowsMax={4}
-            rows={4}
-          />
         </Grid>
         <Grid item xs={1}></Grid>
       </Grid>

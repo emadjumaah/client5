@@ -109,14 +109,13 @@ const PopupBranch = ({
       type: 'setTemplate',
       payload: { template: temp, tempId: temp?.id },
     });
-    dispatch({ type: 'setThemeId', payload: temp?.id - 1 });
 
     window.location.reload();
   };
 
   const apply = async (mutate: any, variables: any) => {
     try {
-      mutate({ variables });
+      await mutate({ variables });
 
       closeForm();
     } catch (error) {

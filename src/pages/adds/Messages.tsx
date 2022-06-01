@@ -24,17 +24,17 @@ import useWindowDimensions from '../../hooks/useWindowDimensions';
 import { useLazyQuery, useMutation } from '@apollo/client';
 import { TableComponent } from '../../Shared/TableComponent';
 import { EventsContext } from '../../contexts';
-import { Box } from '@material-ui/core';
+import { Box, colors, Typography } from '@material-ui/core';
 import DateNavigatorReports from '../../components/filters/DateNavigatorReports';
 import {
   mobilesFormatter,
   actionTimeFormatter,
+  totalFormatter,
 } from '../../Shared/colorFormat';
 import { Command, PopupEditing } from '../../Shared';
 import PopupSendSMS from '../../pubups/PopupSendSMS';
 import createSingleSMS from '../../graphql/mutation/createSingleSMS';
 import getMessages from '../../graphql/query/getMessages';
-
 export default function Messages({
   isRTL,
   words,
@@ -48,10 +48,11 @@ export default function Messages({
   const [end, setEnd] = useState<any>(null);
 
   const [columns] = useState([
-    { name: 'createdAt', title: words.time },
-    { name: 'phones', title: words.phoneNumber },
+    { name: 'createdAt', title: words.time, width: 100 },
+    { name: 'phones', title: words.phoneNumber, width: 100 },
     { name: 'body', title: words.body },
-    { name: 'qty', title: words.qty },
+    { name: 'qty', title: isRTL ? 'عدد الرسائل' : 'SMS Qty' },
+    { name: 'total', title: words.total },
   ]);
 
   const {
@@ -137,6 +138,7 @@ export default function Messages({
             zIndex: 111,
             flexDirection: 'row',
             alignItems: 'center',
+            width: '70%',
           }}
         >
           <DateNavigatorReports
@@ -153,8 +155,32 @@ export default function Messages({
             words={words}
             theme={theme}
           ></DateNavigatorReports>
-          <Box>Sms: {company?.smss} </Box>
+          <Box
+            display="flex"
+            style={{
+              flex: 1,
+              justifyContent: 'flex-end',
+            }}
+          >
+            <Typography
+              style={{ fontWeight: 'bold', fontSize: 12 }}
+              color="primary"
+            >
+              {isRTL ? 'الرسائل المتبقية' : 'SMS balance'}
+              <span
+                style={{
+                  color: colors.blue[500],
+                  paddingLeft: 10,
+                  paddingRight: 10,
+                  fontSize: 22,
+                }}
+              >
+                {company?.smss?.toLocaleString()}
+              </span>
+            </Typography>
+          </Box>
         </Box>
+
         <Grid rows={rows} columns={columns} getRowId={getRowId}>
           <SortingState />
           <SearchState />
@@ -178,6 +204,10 @@ export default function Messages({
           <DataTypeProvider
             for={['phones']}
             formatterComponent={mobilesFormatter}
+          ></DataTypeProvider>
+          <DataTypeProvider
+            for={['total']}
+            formatterComponent={(props: any) => totalFormatter({ ...props })}
           ></DataTypeProvider>
           <TableHeaderRow showSortingControls />
           <TableEditColumn

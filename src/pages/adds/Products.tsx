@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import React, { useState } from 'react';
-import Paper from '@material-ui/core/Paper';
 import {
   EditingState,
   SortingState,
@@ -25,24 +24,27 @@ import { errorAlert, errorDeleteAlert } from '../../Shared/helpers';
 import { AlertLocal, SearchTable } from '../../components';
 import { useProducts } from '../../hooks';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
+import PopupItemsImport from '../../pubups/PopupItemsImport';
+import { Box } from '@material-ui/core';
+import ImportBtn from '../../common/ImportBtn';
 
 export default function Products({ isRTL, words, theme }: any) {
   const [loading, setLoading] = useState(false);
+  const [openImport, setOpenImport] = useState(false);
+
   const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
 
   const [columns] = useState([
     { name: isRTL ? 'nameAr' : 'name', title: words.name },
-    { name: isRTL ? 'name' : 'nameAr', title: words.name },
-    { name: isRTL ? 'categoryNameAr' : 'categoryName', title: words.category },
-    { name: isRTL ? 'brandNameAr' : 'brandName', title: words.brand },
-    {
-      name: isRTL ? 'departmentNameAr' : 'departmentName',
-      title: words.department,
-    },
+    { name: 'cost', title: words.cost },
     { name: 'price', title: words.price },
+    { name: 'quantity', title: words.qty },
+    { name: 'desc', title: words.description },
+    { name: 'unit', title: words.unit },
   ]);
 
-  const { products, addProduct, editProduct, removeProduct } = useProducts();
+  const { products, addProduct, addMultiProducts, editProduct, removeProduct } =
+    useProducts();
   const { height } = useWindowDimensions();
   const commitChanges = async ({ deleted }) => {
     if (deleted) {
@@ -59,10 +61,22 @@ export default function Products({ isRTL, words, theme }: any) {
       setLoading(false);
     }
   };
-
   return (
-    <Paper>
+    <Box
+      style={{
+        height: height - 50,
+        overflow: 'auto',
+        backgroundColor: '#fff',
+        marginLeft: 5,
+        marginRight: 5,
+      }}
+    >
       {loading && <Loading isRTL={isRTL}></Loading>}
+      <ImportBtn
+        open={() => setOpenImport(true)}
+        isRTL={isRTL}
+        theme={theme}
+      ></ImportBtn>
       <Grid rows={products} columns={columns} getRowId={getRowId}>
         <SortingState />
         <EditingState onCommitChanges={commitChanges} />
@@ -80,7 +94,7 @@ export default function Products({ isRTL, words, theme }: any) {
         />
         <TableHeaderRow showSortingControls />
         <DataTypeProvider
-          for={['price']}
+          for={['price', 'cost']}
           formatterComponent={currencyFormatter}
         ></DataTypeProvider>
 
@@ -113,6 +127,16 @@ export default function Products({ isRTL, words, theme }: any) {
           top
         ></AlertLocal>
       )}
-    </Paper>
+      <PopupItemsImport
+        open={openImport}
+        onClose={() => setOpenImport(false)}
+        addMultiItems={addMultiProducts}
+        isRTL={isRTL}
+        theme={theme}
+        words={words}
+        itemType={1}
+        filename="products"
+      ></PopupItemsImport>
+    </Box>
   );
 }

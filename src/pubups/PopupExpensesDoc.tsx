@@ -3,7 +3,7 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { invoiceClasses } from '../themes';
-import { useCustomers, useTemplate } from '../hooks';
+import { useCustomers, useProducts, useTemplate } from '../hooks';
 import { dublicateAlert, errorAlert, messageAlert } from '../Shared';
 import { GContextTypes } from '../types';
 import { GlobalContext } from '../contexts';
@@ -113,6 +113,7 @@ const PopupExpensesDoc = ({
   const { accounts } = useAccounts();
 
   const { projects } = useProjects();
+  const { products } = useProducts();
 
   const {
     translate: { words, isRTL },
@@ -234,7 +235,6 @@ const PopupExpensesDoc = ({
       const servlist = servicesproducts.filter((ser: any) =>
         ids.includes(ser._id)
       );
-
       const itemsWqtyprice = items.map((item: any, index: any) => {
         const {
           categoryId,
@@ -561,7 +561,7 @@ const PopupExpensesDoc = ({
 
   const apply = async (mutate: any, variables: any) => {
     try {
-      mutate({ variables });
+      await mutate({ variables });
       if (row && row._id) {
         itemsData?.refetch();
       }
@@ -802,7 +802,7 @@ const PopupExpensesDoc = ({
             >
               <Box display="flex" style={{ paddingLeft: 10, paddingRight: 10 }}>
                 <ExpensesItemForm
-                  options={servicesproducts}
+                  options={[...servicesproducts, ...products]}
                   addItem={addItemToList}
                   words={words}
                   classes={classes}

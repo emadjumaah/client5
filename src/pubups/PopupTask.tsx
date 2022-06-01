@@ -670,7 +670,7 @@ const PopupTask = ({
         await successAlert(setAlrt, isRTL);
         onCloseForm();
       } else {
-        mutate({ variables });
+        await mutate({ variables });
         setTimeout(() => {
           refresh();
           onCloseForm();

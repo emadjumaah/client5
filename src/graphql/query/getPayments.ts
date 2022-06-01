@@ -1,18 +1,23 @@
 import { gql } from '@apollo/client';
+
 export default gql`
-  query getInvoicesList(
+  query getPayments(
+    $start: Date
+    $end: Date
+    $search: String
     $taskId: Int
     $customerId: String
-    $supplierId: String
     $departmentId: String
     $employeeId: String
     $projectId: String
     $resourseId: String
   ) {
-    getInvoicesList(
+    getPayments(
+      start: $start
+      end: $end
+      search: $search
       taskId: $taskId
       customerId: $customerId
-      supplierId: $supplierId
       departmentId: $departmentId
       employeeId: $employeeId
       projectId: $projectId
@@ -32,11 +37,6 @@ export default gql`
         desc
         taskId
 
-        customerId
-        customerName
-        customerNameAr
-        customerPhone
-
         supplierId
         supplierName
         supplierNameAr
@@ -46,12 +46,6 @@ export default gql`
         departmentName
         departmentNameAr
         departmentColor
-
-        employeeId
-        employeeName
-        employeeNameAr
-        employeeColor
-        employeePhone
 
         projectId
         projectName
@@ -64,26 +58,19 @@ export default gql`
 
         refNo
         refType
-        eventNo
 
-        costAmount
-        total
-        discount
         amount
-        profit
 
         debitAcc
+        debitAccName
+        debitAccNameAr
         creditAcc
+        creditAccName
+        creditAccNameAr
 
-        paymentType
-
-        inhand
-        change
-
-        amountPaid
-        isPaid
-        isCash
-        opId
+        chequeBank
+        chequeNo
+        chequeDate
 
         userId
         note

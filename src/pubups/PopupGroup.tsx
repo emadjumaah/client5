@@ -27,7 +27,7 @@ const PopupGroup = ({
 }: any) => {
   const [saving, setSaving] = useState(false);
   const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
-  const { register, handleSubmit, errors, reset } = useForm(yup.departResolver);
+  const { register, handleSubmit, errors, reset } = useForm(yup.groupResolver);
   const {
     translate: { words, isRTL },
   }: GContextTypes = useContext(GlobalContext);

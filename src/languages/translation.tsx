@@ -33,6 +33,7 @@ export const translation = (lang: LanguageType) => {
     serviceNameAr: lang.words.serviceNameAr,
     customer: lang.words.customer,
     supplier: lang.words.supplier,
+    suppliers: lang.words.suppliers,
     newCustomer: lang.words.newCustomer,
     customerName: lang.words.customerName,
     customerNameAr: lang.words.customerNameAr,

@@ -14,12 +14,12 @@ import { useReactToPrint } from 'react-to-print';
 import { CalenderLocal, TextFieldLocal } from '../components';
 import { getAppStartEndPeriod } from '../common/time';
 import AutoFieldLocal from '../components/fields/AutoFieldLocal';
-import { useCustomers, useTemplate } from '../hooks';
+import { useSuppliers, useTemplate } from '../hooks';
 import { useLazyQuery } from '@apollo/client';
 import getInvoicesList from '../graphql/query/getInvoicesList';
-import PopupCustomer from './PopupCustomer';
 import { ReceiptPrint } from '../print';
-const PopupReceipt = ({
+import PopupSupplier from './PopupSupplier';
+const PopupPayment = ({
   open,
   onClose,
   row,
@@ -39,10 +39,10 @@ const PopupReceipt = ({
   const [debitAcc, setDebitAcc]: any = React.useState(null);
   const [creditAcc, setCreditAcc]: any = React.useState(null);
 
-  const [custvalue, setCustvalue] = useState<any>(
-    name === 'customerId' ? value : null
+  const [suppvalue, setSuppvalue] = useState<any>(
+    name === 'supplierId' ? value : null
   );
-  const [custError, setCustError] = useState<any>(false);
+  const [suppError, setSuppError] = useState<any>(false);
 
   const [invoices, setInvoices] = useState<any>([]);
   const [invoicevalue, setInvoicevalue] = useState<any>(null);
@@ -60,40 +60,40 @@ const PopupReceipt = ({
   }: GContextTypes = useContext(GlobalContext);
 
   const { accounts } = useAccounts();
-  const { customers, addCustomer, editCustomer } = useCustomers();
+  const { suppliers, addSupplier, editSupplier } = useSuppliers();
   const { tempwords } = useTemplate();
 
   const [loadInvoices, invoicesData]: any = useLazyQuery(getInvoicesList, {
     fetchPolicy: 'cache-and-network',
   });
 
-  const openCustomer = () => {
+  const openSupplier = () => {
     setOpenCust(true);
   };
-  const onCloseCustomer = () => {
+  const onCloseSupplier = () => {
     setOpenCust(false);
     setNewtext('');
   };
-  const onNewCustChange = (nextValue: any) => {
-    setCustvalue(nextValue);
+  const onNewSuppChange = (nextValue: any) => {
+    setSuppvalue(nextValue);
   };
 
   useEffect(() => {
-    if (custvalue) {
-      const variables = { customerId: custvalue._id };
+    if (suppvalue) {
+      const variables = { supplierId: suppvalue._id };
       loadInvoices({ variables });
     }
     if (isNew) {
       if (name === 'taskId') {
-        if (value?.customerId) {
-          const dept = customers.filter(
-            (dep: any) => dep._id === value?.customerId
+        if (value?.supplierId) {
+          const dept = suppliers.filter(
+            (dep: any) => dep._id === value?.supplierId
           )?.[0];
-          setCustvalue(dept);
+          setSuppvalue(dept);
         }
       }
     }
-  }, [custvalue, open]);
+  }, [suppvalue, open]);
 
   useEffect(() => {
     if (invoicesData?.data?.getInvoicesList?.data) {
@@ -134,15 +134,15 @@ const PopupReceipt = ({
         const debit = accounts.filter((acc: any) => acc.code === da)[0];
         setDebitAcc(debit);
       }
-      const customerId = row?.customerId;
-      if (customerId) {
-        const cust = customers.filter((it: any) => it._id === customerId)[0];
-        setCustvalue(cust);
+      const supplierId = row?.supplierId;
+      if (supplierId) {
+        const supp = suppliers.filter((it: any) => it._id === supplierId)[0];
+        setSuppvalue(supp);
       }
       handleDateChange(row.time);
     } else {
       const filtereddebits = accounts.filter(
-        (acc: any) => acc.parentcode === parents.ACCOUNTS_RECEIVABLE
+        (acc: any) => acc.parentcode === parents.ACCOUNTS_PAYABLE
       );
       const filteredcredit = accounts.filter(
         (acc: any) => acc.parentcode === parents.CASH
@@ -162,9 +162,9 @@ const PopupReceipt = ({
   const printData = {
     no: row?.docNo,
     time: selectedDate,
-    customerName: custvalue?.name,
-    customerNameAr: custvalue?.nameAr,
-    customerPhone: custvalue?.phone,
+    supplierName: suppvalue?.name,
+    supplierNameAr: suppvalue?.nameAr,
+    supplierPhone: suppvalue?.phone,
     refNo: row?.refNo,
     title: row?.title,
     desc: row?.desc,
@@ -184,7 +184,7 @@ const PopupReceipt = ({
       return;
     }
     const { amount, title, desc, chequeBank, chequeNo, chequeDate } = data;
-    if (!debitAcc || !creditAcc || !custvalue) {
+    if (!debitAcc || !creditAcc || !suppvalue) {
       await messageAlert(
         setAlrt,
         isRTL ? 'يجب تحديد كلا الحسابين' : 'You have to select both accounts'
@@ -192,18 +192,18 @@ const PopupReceipt = ({
       return;
     }
 
-    const customer = custvalue
+    const supplier = suppvalue
       ? {
-          customerId: custvalue._id,
-          customerName: custvalue.name,
-          customerNameAr: custvalue.nameAr,
-          customerPhone: custvalue.color,
+          supplierId: suppvalue._id,
+          supplierName: suppvalue.name,
+          supplierNameAr: suppvalue.nameAr,
+          supplierPhone: suppvalue.color,
         }
       : {
-          customerId: undefined,
-          customerName: undefined,
-          customerNameAr: undefined,
-          customerPhone: undefined,
+          supplierId: undefined,
+          supplierName: undefined,
+          supplierNameAr: undefined,
+          supplierPhone: undefined,
         };
     const department = invoicevalue
       ? {
@@ -247,13 +247,13 @@ const PopupReceipt = ({
 
     const variables: any = {
       _id: row && row._id ? row._id : undefined, // is it new or edit
-      opType: operationTypes.customerReceipt,
+      opType: operationTypes.supplierPayemnt,
       time: selectedDate,
       debitAcc: debitAcc.code,
       creditAcc: creditAcc.code,
       taskId: invoicevalue ? invoicevalue.taskId : null,
       refNo: invoicevalue ? invoicevalue.docNo : undefined,
-      customer,
+      supplier,
       department,
       employee,
       resourse,
@@ -297,9 +297,8 @@ const PopupReceipt = ({
     setDebitAcc(null);
     setDebaccounts([]);
     setInvoices([]);
-    setCustvalue(null);
+    setSuppvalue(null);
     setInvoicevalue(null);
-    setCustError(false);
   };
   const closeModal = () => {
     resetAll();
@@ -339,18 +338,18 @@ const PopupReceipt = ({
             </Grid>
             <Grid item xs={12}>
               <AutoFieldLocal
-                name="customer"
-                title={tempwords?.customer}
+                name="supplier"
+                title={tempwords?.supplier}
                 words={words}
-                options={customers}
-                value={custvalue}
-                setSelectValue={setCustvalue}
-                setSelectError={setCustError}
-                selectError={custError}
+                options={suppliers}
+                value={suppvalue}
+                setSelectValue={setSuppvalue}
+                setSelectError={setSuppError}
+                selectError={suppError}
                 isRTL={isRTL}
                 fullwidth
-                openAdd={openCustomer}
-                disabled={name === 'customerId'}
+                openAdd={openSupplier}
+                disabled={name === 'supplierId'}
                 mb={0}
               ></AutoFieldLocal>
             </Grid>
@@ -364,7 +363,7 @@ const PopupReceipt = ({
                 setSelectValue={setInvoicevalue}
                 register={register}
                 isRTL={isRTL}
-                disabled={!custvalue}
+                disabled={!suppvalue}
                 fullWidth
                 mb={0}
               ></AutoFieldLocal>
@@ -457,16 +456,16 @@ const PopupReceipt = ({
           </Grid>
         </Grid>
         <Grid item xs={1}></Grid>
-        <PopupCustomer
+        <PopupSupplier
           newtext={newtext}
           open={openCust}
-          onClose={onCloseCustomer}
+          onClose={onCloseSupplier}
           isNew={true}
-          setNewValue={onNewCustChange}
+          setNewValue={onNewSuppChange}
           row={null}
-          addAction={addCustomer}
-          editAction={editCustomer}
-        ></PopupCustomer>
+          addAction={addSupplier}
+          editAction={editSupplier}
+        ></PopupSupplier>
         <Box>
           <div style={{ display: 'none' }}>
             <ReceiptPrint
@@ -482,4 +481,4 @@ const PopupReceipt = ({
   );
 };
 
-export default PopupReceipt;
+export default PopupPayment;

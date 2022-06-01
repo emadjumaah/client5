@@ -362,7 +362,13 @@ export const actionTimeFormatter = ({ value }: any) => {
   return <div>{covertToTimeDateDigit(value)}</div>;
 };
 export const mobilesFormatter = ({ value }: any) => {
-  return <div>{value}</div>;
+  if (value?.length === 1) {
+    return value[0];
+  }
+  if (value?.length > 1) {
+    return `( ${value.length} )`;
+  }
+  return value;
 };
 export const userFormatter = ({ value, users }: any) => {
   const user = users.filter((us: any) => us._id === value)?.[0];
@@ -538,6 +544,12 @@ export const amountFormatter = ({ row }: any) => {
   const amount = total - discount;
 
   return <div style={{ color: '#403795' }}>{moneyFormat(amount)}</div>;
+};
+export const totalFormatter = ({ row }: any) => {
+  const { qty, phones } = row;
+  const total = phones?.length ? qty * phones?.length : 0;
+
+  return <div>{total}</div>;
 };
 export const currencyFormatter = ({ value }: any) => {
   return (

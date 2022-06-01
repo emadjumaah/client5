@@ -29,6 +29,7 @@ import {
   getInvoices,
   getLandingChartData,
   getLastNos,
+  getProducts,
   getProjects,
   getResourses,
   updateInvoice,
@@ -139,6 +140,10 @@ export default function Invoices({ isRTL, words, menuitem, theme, company }) {
         query: getCustomers,
       },
       {
+        query: getProducts,
+        variables: { isRTL },
+      },
+      {
         query: getEmployees,
         variables: { isRTL, resType: 1 },
       },
@@ -246,10 +251,8 @@ export default function Invoices({ isRTL, words, menuitem, theme, company }) {
           />
           <EditingState onCommitChanges={commitChanges} />
           <SearchState />
-
           <IntegratedSorting />
           <IntegratedFiltering />
-
           <VirtualTable
             height={height - 100}
             messages={{
@@ -259,7 +262,6 @@ export default function Invoices({ isRTL, words, menuitem, theme, company }) {
             tableComponent={TableComponent}
           />
           <TableHeaderRow showSortingControls />
-
           <DataTypeProvider
             for={['time']}
             formatterComponent={timeFormatter}
@@ -278,7 +280,6 @@ export default function Invoices({ isRTL, words, menuitem, theme, company }) {
               taskIdFormatter({ ...props, tasks })
             }
           ></DataTypeProvider>
-
           <TableEditColumn
             showEditCommand
             showDeleteCommand

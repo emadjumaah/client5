@@ -408,9 +408,9 @@ const PopupAppointInvoice = ({
     apply(addInvoice, variables);
   };
 
-  const apply = (mutate: any, variables: any) => {
+  const apply = async (mutate: any, variables: any) => {
     try {
-      mutate({ variables });
+      await mutate({ variables });
       editEvent({
         variables: {
           id: appoint.id,

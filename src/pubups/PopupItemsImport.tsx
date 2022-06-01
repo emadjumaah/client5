@@ -14,13 +14,15 @@ import { TableComponent } from '../Shared/ItemsTable';
 
 export const getRowId = (row: any) => row.index;
 
-const PopupServiceImport = ({
+const PopupItemsImport = ({
   open,
   onClose,
   theme,
   isRTL,
   words,
   addMultiItems,
+  itemType,
+  filename,
 }: any) => {
   const [columns] = useState([
     { name: 'index', title: words.no },
@@ -46,6 +48,10 @@ const PopupServiceImport = ({
           [header[0]]: d[0],
           [header[1]]: d[1],
           [header[2]]: d[2],
+          [header[3]]: d[3],
+          [header[4]]: d[4],
+          [header[5]]: d[5],
+          itemType,
         };
       });
       jsondata.shift();
@@ -93,7 +99,7 @@ const PopupServiceImport = ({
           <DataInput theme={theme} handleFile={handleFile} isRTL={isRTL} />
           {data?.length > 0 && <div>{data.length}</div>}
           <a
-            href="https://github.com/emadjumaah/jadwal-releases/blob/main/services.xlsx?raw=true"
+            href={`https://github.com/emadjumaah/jadwal-releases/blob/main/${filename}.xlsx?raw=true`}
             download
             style={{
               borderRadius: 10,
@@ -130,4 +136,4 @@ const PopupServiceImport = ({
     </PopupLayout>
   );
 };
-export default PopupServiceImport;
+export default PopupItemsImport;

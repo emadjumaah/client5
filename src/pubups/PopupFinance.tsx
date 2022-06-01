@@ -213,7 +213,7 @@ const PopupFinance = ({
 
   const apply = async (mutate: any, variables: any) => {
     try {
-      mutate({ variables });
+      await mutate({ variables });
       successAlert(setAlrt, isRTL);
       closeModal();
     } catch (error) {

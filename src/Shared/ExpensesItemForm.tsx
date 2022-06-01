@@ -11,6 +11,7 @@ import AutoPopper from './AutoPopper';
 import { PopupExpenseItem } from '../pubups';
 import { useExpenseItems } from '../hooks';
 import _ from 'lodash';
+import ListboxComponent from '../components/fields/ListboxComponent';
 
 export default function ExpensesItemForm({
   options,
@@ -95,6 +96,7 @@ export default function ExpensesItemForm({
           autoSelect
           size="small"
           options={sorted}
+          ListboxComponent={ListboxComponent}
           getOptionLabel={(option: any) =>
             isRTL ? option.nameAr : option.name
           }

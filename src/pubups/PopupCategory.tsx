@@ -51,7 +51,7 @@ const PopupCategory = ({
 
   const apply = async (mutate: any, mutateName: string, variables: any) => {
     try {
-      const res = mutate({ variables });
+      const res = await mutate({ variables });
       const nitem = getReturnItem(res, mutateName);
       if (setNewValue && nitem) setNewValue(nitem, 'category');
       await successAlert(setAlrt, isRTL);

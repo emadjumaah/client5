@@ -26,6 +26,7 @@ export const templates = [
         departments: 'الأقسام',
         customer: 'العميل',
         customers: 'العملاء',
+        suppliers: 'الموردين',
         employee: 'الموظف',
         employees: 'الموظفين',
         resourse: 'المورد',
@@ -50,6 +51,7 @@ export const templates = [
         department: 'Department',
         departments: 'Departments',
         customer: 'Customer',
+        suppliers: 'Suppliers',
         customers: 'Customers',
         employee: 'Employee',
         employees: 'Employees',
@@ -70,7 +72,8 @@ export const templates = [
     },
     taskExtra: [],
     sortOrder: [
-      0, 1.2, 1.5, 2, 4, 5, 5.5, 5.6, 5.66, 5.7, 6, 7, 8, 9, 10, 12, 11, 13, 14,
+      0, 1.2, 1.5, 2, 4, 5, 5.5, 5.51, 5.6, 5.66, 5.7, 6, 7, 8, 9, 10, 11, 12,
+      13, 14,
     ],
   },
   {
@@ -100,6 +103,7 @@ export const templates = [
         departments: 'الأقسام',
         customer: 'العميل',
         customers: 'العملاء',
+        suppliers: 'الموردين',
         employee: 'الموظف',
         employees: 'الموظفين',
         resourse: 'المورد',
@@ -127,6 +131,8 @@ export const templates = [
         departments: 'Departments',
         customer: 'Customer',
         customers: 'Customers',
+        suppliers: 'Suppliers',
+
         employee: 'Employee',
         employees: 'Employees',
         resourse: 'Resourse',
@@ -148,7 +154,8 @@ export const templates = [
     },
     taskExtra: [],
     sortOrder: [
-      0, 5.7, 5.6, 1.2, 1.5, 5.5, 4, 2, 5, 6, 7, 8, 5.66, 12, 11, 9, 10, 13, 14,
+      0, 5.7, 5.6, 1.2, 1.5, 5.5, 5.51, 4, 2, 5, 6, 7, 8, 5.66, 11, 12, 9, 10,
+      13, 14,
     ],
   },
   {
@@ -178,6 +185,7 @@ export const templates = [
         departments: 'أقسام',
         customer: 'طالب',
         customers: 'طلاب',
+        suppliers: 'الموردين',
         employee: 'مدرس',
         employees: 'مدرسين',
         resourse: 'مورد',
@@ -187,7 +195,6 @@ export const templates = [
         service: 'خدمة',
         services: 'خدمات',
         expenseitems: 'المصروف',
-
         // no service relation
         servicesdepart: 'قسم الخدمات',
         servicesdeparts: 'اقسام الخدمات',
@@ -205,6 +212,7 @@ export const templates = [
         departments: 'Departments',
         customer: 'Student',
         customers: 'Students',
+        suppliers: 'Suppliers',
         employee: 'Teacher',
         employees: 'Teachers',
         resourse: 'Resourse',
@@ -214,7 +222,6 @@ export const templates = [
         service: 'Service',
         services: 'Services',
         expenseitems: 'Expenses Items',
-
         // no service relation
         servicesdepart: 'Services Department',
         servicesdeparts: 'Services Departments',
@@ -226,7 +233,8 @@ export const templates = [
     },
     taskExtra: [],
     sortOrder: [
-      0, 1.2, 1.5, 2, 4, 5, 5.5, 5.6, 5.66, 5.7, 6, 7, 8, 9, 10, 12, 11, 13, 14,
+      0, 1.2, 1.5, 2, 4, 5, 5.5, 5.51, 5.6, 5.66, 5.7, 6, 7, 8, 9, 10, 11, 12,
+      13, 14,
     ],
   },
   {
@@ -256,6 +264,7 @@ export const templates = [
         departments: 'أقسام',
         customer: 'عميل',
         customers: 'عملاء',
+        suppliers: 'الموردين',
         employee: 'موظف',
         employees: 'موظفين',
         resourse: 'سيارة',
@@ -265,7 +274,6 @@ export const templates = [
         service: 'خدمة',
         services: 'خدمات',
         expenseitems: 'المصروف',
-
         // no service relation
         servicesdepart: 'قسم الخدمات',
         servicesdeparts: 'اقسام الخدمات',
@@ -283,6 +291,7 @@ export const templates = [
         departments: 'Departments',
         customer: 'Customer',
         customers: 'Customers',
+        suppliers: 'Suppliers',
         employee: 'Employee',
         employees: 'Employees',
         resourse: 'Car',
@@ -292,7 +301,6 @@ export const templates = [
         service: 'Service',
         services: 'Services',
         expenseitems: 'Expenses Items',
-
         // no service relation
         servicesdepart: 'Services Department',
         servicesdeparts: 'Services Departments',
@@ -327,7 +335,8 @@ export const templates = [
       },
     ],
     sortOrder: [
-      0, 1.2, 1.5, 2, 4, 5, 5.5, 5.6, 5.66, 5.7, 6, 7, 8, 9, 10, 12, 11, 13, 14,
+      0, 1.2, 1.5, 2, 4, 5, 5.5, 5.51, 5.6, 5.66, 5.7, 6, 7, 8, 9, 10, 11, 12,
+      13, 14,
     ],
   },
   {
@@ -357,6 +366,7 @@ export const templates = [
         departments: 'مشاريع',
         customer: 'عميل',
         customers: 'عملاء',
+        suppliers: 'الموردين',
         employee: 'موظف',
         employees: 'موظفين',
         resourse: 'مورد',
@@ -366,7 +376,6 @@ export const templates = [
         service: 'خدمة',
         services: 'خدمات',
         expenseitems: 'المصروف',
-
         // no service relation
         servicesdepart: 'قسم الخدمات',
         servicesdeparts: 'اقسام الخدمات',
@@ -384,6 +393,7 @@ export const templates = [
         departments: 'Projects',
         customer: 'Customer',
         customers: 'Customers',
+        suppliers: 'Suppliers',
         employee: 'Employee',
         employees: 'Employees',
         resourse: 'Resourse',
@@ -393,7 +403,6 @@ export const templates = [
         service: 'Service',
         services: 'Services',
         expenseitems: 'Expenses Items',
-
         // no service relation
         servicesdepart: 'Services Department',
         servicesdeparts: 'Services Departments',
@@ -405,7 +414,8 @@ export const templates = [
     },
     taskExtra: [],
     sortOrder: [
-      0, 1.2, 1.5, 2, 4, 5, 5.5, 5.6, 5.66, 5.7, 6, 7, 8, 9, 10, 12, 11, 13, 14,
+      0, 1.2, 1.5, 2, 4, 5, 5.5, 5.51, 5.6, 5.66, 5.7, 6, 7, 8, 9, 10, 11, 12,
+      13, 14,
     ],
   },
   {
@@ -435,6 +445,7 @@ export const templates = [
         departments: 'الأقسام',
         customer: 'العميل',
         customers: 'العملاء',
+        suppliers: 'الموردين',
         employee: 'الموظف',
         employees: 'الموظفين',
         resourse: 'المعدة',
@@ -459,6 +470,7 @@ export const templates = [
         department: 'Department',
         departments: 'Departments',
         customer: 'Customer',
+        suppliers: 'Suppliers',
         customers: 'Customers',
         employee: 'Employee',
         employees: 'Employees',
@@ -479,7 +491,8 @@ export const templates = [
     },
     taskExtra: [],
     sortOrder: [
-      0, 1.2, 1.5, 2, 4, 5, 5.5, 5.6, 5.66, 5.7, 6, 7, 8, 9, 10, 12, 11, 13, 14,
+      0, 1.2, 1.5, 2, 4, 5, 5.5, 5.51, 5.6, 5.66, 5.7, 6, 7, 8, 9, 10, 11, 12,
+      13, 14,
     ],
   },
   {
@@ -509,6 +522,7 @@ export const templates = [
         departments: 'أقسام',
         customer: 'عميل',
         customers: 'عملاء',
+        suppliers: 'الموردين',
         employee: 'موظف',
         employees: 'موظفين',
         resourse: 'عقار',
@@ -518,7 +532,6 @@ export const templates = [
         service: 'خدمة',
         services: 'خدمات',
         expenseitems: 'المصروف',
-
         // no service relation
         servicesdepart: 'قسم الخدمات',
         servicesdeparts: 'اقسام الخدمات',
@@ -535,6 +548,7 @@ export const templates = [
         department: 'Department',
         departments: 'Departments',
         customer: 'Customer',
+        suppliers: 'Suppliers',
         customers: 'Customers',
         employee: 'Employee',
         employees: 'Employees',
@@ -545,7 +559,6 @@ export const templates = [
         service: 'Service',
         services: 'Services',
         expenseitems: 'Expenses Items',
-
         // no service relation
         servicesdepart: 'Services Department',
         servicesdeparts: 'Services Departments',
@@ -557,7 +570,8 @@ export const templates = [
     },
     taskExtra: [],
     sortOrder: [
-      0, 1.2, 1.5, 2, 4, 5, 5.5, 5.6, 5.66, 5.7, 6, 7, 8, 9, 10, 12, 11, 13, 14,
+      0, 1.2, 1.5, 2, 4, 5, 5.5, 5.51, 5.6, 5.66, 5.7, 6, 7, 8, 9, 10, 11, 12,
+      13, 14,
     ],
   },
   {
@@ -587,6 +601,7 @@ export const templates = [
         departments: 'أقسام',
         customer: 'عميل',
         customers: 'عملاء',
+        suppliers: 'الموردين',
         employee: 'موظف',
         employees: 'موظفين',
         resourse: 'مورد',
@@ -596,7 +611,6 @@ export const templates = [
         service: 'خدمة',
         services: 'خدمات',
         expenseitems: 'المصروف',
-
         // no service relation
         servicesdepart: 'قسم الخدمات',
         servicesdeparts: 'اقسام الخدمات',
@@ -614,6 +628,8 @@ export const templates = [
         departments: 'Departments',
         customer: 'Customer',
         customers: 'Customers',
+        suppliers: 'Suppliers',
+
         employee: 'Employee',
         employees: 'Employees',
         resourse: 'Resourse',
@@ -623,7 +639,6 @@ export const templates = [
         service: 'Service',
         services: 'Services',
         expenseitems: 'Expenses Items',
-
         // no service relation
         servicesdepart: 'Services Department',
         servicesdeparts: 'Services Departments',
@@ -635,7 +650,8 @@ export const templates = [
     },
     taskExtra: [],
     sortOrder: [
-      0, 1.2, 1.5, 2, 4, 5, 5.5, 5.6, 5.66, 5.7, 6, 7, 8, 9, 10, 12, 11, 13, 14,
+      0, 1.2, 1.5, 2, 4, 5, 5.5, 5.51, 5.6, 5.66, 5.7, 6, 7, 8, 9, 10, 11, 12,
+      13, 14,
     ],
   },
 ];

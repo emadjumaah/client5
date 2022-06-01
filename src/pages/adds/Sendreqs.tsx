@@ -26,7 +26,7 @@ import { PopupSendreq } from '../../pubups';
 import { AlertLocal, SearchTable } from '../../components';
 import { errorAlert, errorDeleteAlert } from '../../Shared/helpers';
 import PageLayout from '../main/PageLayout';
-import { Box } from '@material-ui/core';
+import { Box, colors, Typography } from '@material-ui/core';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
 import { TableComponent } from '../../Shared/TableComponent';
 import useSendreqs from '../../hooks/useSendreqs';
@@ -95,6 +95,32 @@ export default function Sendreqs(props: any) {
           marginRight: 5,
         }}
       >
+        <Box
+          display="flex"
+          style={{
+            position: 'absolute',
+            zIndex: 111,
+            left: 316,
+            marginTop: 9,
+          }}
+        >
+          <Typography
+            style={{ fontWeight: 'bold', fontSize: 12 }}
+            color="primary"
+          >
+            {isRTL ? 'الرسائل المتبقية' : 'SMS balance'}
+            <span
+              style={{
+                color: colors.blue[500],
+                paddingLeft: 10,
+                paddingRight: 10,
+                fontSize: 22,
+              }}
+            >
+              {company?.smss?.toLocaleString()}
+            </span>
+          </Typography>
+        </Box>
         <Grid rows={sendreqs} columns={columns} getRowId={getRowId}>
           <SortingState />
           <SearchState />

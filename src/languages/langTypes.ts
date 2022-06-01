@@ -64,6 +64,7 @@ export interface LanguageType {
     serviceNameAr: string;
     customer: string;
     supplier: string;
+    suppliers: string;
     newCustomer: string;
     customerName: string;
     customerNameAr: string;

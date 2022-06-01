@@ -37,6 +37,7 @@ import {
   receiptReducer,
   initReceiptContext,
   ReceiptContext,
+  PurchaseContext,
 } from '../../contexts';
 import { layoutClasses } from '../../themes';
 import Options from '../options';
@@ -48,6 +49,7 @@ import {
   Services,
   Invoices,
   Accounts,
+  Products,
 } from '../adds';
 import { GContextTypes } from '../../types';
 import Finance from '../adds/Finance';
@@ -132,6 +134,11 @@ import {
   reminderReducer,
 } from '../../contexts/reminder/salesReducer';
 import ReminderContext from '../../contexts/reminder';
+import ViewReminders from '../adds/ViewReminders';
+import ExpenseItems from '../adds/ExpenseItems';
+import Suppliers from '../adds/Suppliers';
+import PurchaseInvoices from '../adds/PurchaseInvoices';
+import Payment from '../adds/Payment';
 
 const Content = () => {
   const classes = layoutClasses();
@@ -376,6 +383,22 @@ const Content = () => {
             }
           />
           <Route
+            path="/purchase"
+            element={
+              <PurchaseContext.Provider
+                value={{ state: salesStore, dispatch: salesDispatch }}
+              >
+                <PurchaseInvoices
+                  menuitem={menuitem}
+                  isRTL={isRTL}
+                  words={words}
+                  theme={theme}
+                  company={company}
+                ></PurchaseInvoices>
+              </PurchaseContext.Provider>
+            }
+          />
+          <Route
             path="/tasks"
             element={
               <TasksContext.Provider
@@ -436,6 +459,22 @@ const Content = () => {
                   theme={theme}
                   company={company}
                 ></Receipt>
+              </ReceiptContext.Provider>
+            }
+          />
+          <Route
+            path="/payments"
+            element={
+              <ReceiptContext.Provider
+                value={{ state: receiptStore, dispatch: receiptDispatch }}
+              >
+                <Payment
+                  menuitem={menuitem}
+                  isRTL={isRTL}
+                  words={words}
+                  theme={theme}
+                  company={company}
+                ></Payment>
               </ReceiptContext.Provider>
             }
           />
@@ -500,6 +539,18 @@ const Content = () => {
             }
           />
           <Route
+            path="/supliers"
+            element={
+              <Suppliers
+                isRTL={isRTL}
+                words={words}
+                theme={theme}
+                menuitem={menuitem}
+                company={company}
+              ></Suppliers>
+            }
+          />
+          <Route
             path="/contacts"
             element={
               <Contacts
@@ -533,6 +584,21 @@ const Content = () => {
                   theme={theme}
                   menuitem={menuitem}
                 ></Reminders>
+              </ReminderContext.Provider>
+            }
+          />
+          <Route
+            path="/viewreminders"
+            element={
+              <ReminderContext.Provider
+                value={{ state: reminderStore, dispatch: reminderDispatch }}
+              >
+                <ViewReminders
+                  isRTL={isRTL}
+                  words={words}
+                  theme={theme}
+                  menuitem={menuitem}
+                ></ViewReminders>
               </ReminderContext.Provider>
             }
           />
@@ -750,9 +816,23 @@ const Content = () => {
               </PageLayout>
             }
           />
-          {/* <Route
+          <Route
+            path="/products"
+            element={
+              <PageLayout
+                menuitem={menuitem}
+                isRTL={isRTL}
+                words={words}
+                theme={theme}
+                refresh={() => null}
+              >
+                <Products></Products>
+              </PageLayout>
+            }
+          />
+          <Route
             path="/expenseitems"
-            element={() => (
+            element={
               <PageLayout
                 menuitem={menuitem}
                 isRTL={isRTL}
@@ -762,9 +842,8 @@ const Content = () => {
               >
                 <ExpenseItems></ExpenseItems>
               </PageLayout>
-            )}
-          /> */}
-
+            }
+          />
           <Route
             path="/calreports"
             element={

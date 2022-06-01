@@ -52,6 +52,11 @@ const departSchema = yup.object().shape({
   color: yup.string(),
 });
 export const departResolver = { resolver: yupResolver(departSchema) };
+const groupSchema = yup.object().shape({
+  name: yup.string().required().min(3).max(100),
+  color: yup.string(),
+});
+export const groupResolver = { resolver: yupResolver(groupSchema) };
 
 const smsTempSchema = yup.object().shape({
   phone: yup

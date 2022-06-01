@@ -9,7 +9,7 @@ import OptionItemData from '../Shared/OptionItemData';
 import { yup } from '../constants';
 import AutoField from '../Shared/AutoField';
 import { itemClasses } from '../themes/classes';
-import { useServices, useTemplate } from '../hooks';
+import { useExpenseItems, useTemplate } from '../hooks';
 import { PopupDialog } from '../Shared';
 import useDepartmentsDown from '../hooks/useDepartmentsDown';
 import useEmployeesDown from '../hooks/useEmployeesDown';
@@ -55,7 +55,7 @@ const PopupItem = ({
   const { register, handleSubmit, errors } = useForm(yup.invItemResolver);
 
   const { departments } = useDepartmentsDown();
-  const { expenseitems } = useServices();
+  const { expenseItems } = useExpenseItems();
   const { employees } = useEmployeesDown();
   const { resourses } = useResoursesDown();
   const { tempoptions, tempwords } = useTemplate();
@@ -84,7 +84,7 @@ const PopupItem = ({
         setResovalue(empl);
       }
       if (servId) {
-        const serv = expenseitems.filter((se: any) => se._id === servId)[0];
+        const serv = expenseItems.filter((se: any) => se._id === servId)[0];
         setItemvalue(serv);
       }
     }
@@ -190,7 +190,7 @@ const PopupItem = ({
             // openOnFocus
             autoSelect
             size="small"
-            options={expenseitems}
+            options={expenseItems}
             getOptionLabel={(option: any) =>
               isRTL ? option.nameAr : option.name
             }

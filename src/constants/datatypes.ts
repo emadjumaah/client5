@@ -192,7 +192,7 @@ export const catTypes = [
 ];
 
 export const itemTypes = [
-  // { id: 1, name: 'Product', nameAr: 'منتج' },
+  { id: 1, name: 'Product', nameAr: 'منتج' },
   { id: 2, name: 'Service', nameAr: 'خدمة' },
   // { id: 3, name: 'nostockproduct', nameAr: 'مصاريف' },
   { id: 10, name: 'Expenses', nameAr: 'مصاريف' },

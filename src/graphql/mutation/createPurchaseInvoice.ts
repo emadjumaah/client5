@@ -26,7 +26,8 @@ export default gql`
     $isCash: Boolean
     $opId: String
     $userId: String
-    $eventId: String
+    $taskId: Int
+    $eventId: Int
     $eventNo: String
   ) {
     createPurchaseInvoice(
@@ -54,6 +55,7 @@ export default gql`
       isCash: $isCash
       opId: $opId
       userId: $userId
+      taskId: $taskId
       eventId: $eventId
       eventNo: $eventNo
     ) {

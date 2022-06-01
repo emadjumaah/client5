@@ -3,7 +3,7 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { invoiceClasses } from '../themes';
-import { useCustomers, useLastNos, useProducts, useTemplate } from '../hooks';
+import { useCustomers, useLastNos, useSuppliers, useTemplate } from '../hooks';
 import { dublicateAlert, errorAlert, messageAlert } from '../Shared';
 import { GContextTypes } from '../types';
 import { GlobalContext } from '../contexts';
@@ -14,7 +14,6 @@ import { PriceTotal } from '../Shared/TotalPrice';
 import { operationTypes } from '../constants';
 import { accountCode } from '../constants/kaid';
 import PaymentSelect from '../pages/options/PaymentSelect';
-import PopupCustomer from './PopupCustomer';
 import { useLazyQuery } from '@apollo/client';
 import { getOperationItems } from '../graphql';
 import LoadingInline from '../Shared/LoadingInline';
@@ -23,10 +22,9 @@ import { Grid } from '@material-ui/core';
 import AutoFieldLocal from '../components/fields/AutoFieldLocal';
 import { getAppStartEndPeriod } from '../common/time';
 import { CalenderLocal } from '../components';
-import { useReactToPrint } from 'react-to-print';
-import { weekdaysNNo } from '../constants/datatypes';
+import PopupSupplier from './PopupSupplier';
+import _ from 'lodash';
 import useTasks from '../hooks/useTasks';
-import useCompany from '../hooks/useCompany';
 import PopupDeprtment from './PopupDeprtment';
 import PopupTask from './PopupTask';
 import PopupEmployee from './PopupEmployee';
@@ -35,7 +33,10 @@ import useDepartmentsUp from '../hooks/useDepartmentsUp';
 import useEmployeesUp from '../hooks/useEmployeesUp';
 import useResoursesUp from '../hooks/useResoursesUp';
 import useProjects from '../hooks/useProjects';
+import { weekdaysNNo } from '../constants/datatypes';
 import { InvoicePrint } from '../print';
+import { useReactToPrint } from 'react-to-print';
+import useCompany from '../hooks/useCompany';
 
 export const indexTheList = (list: any) => {
   return list.map((item: any, index: any) => {
@@ -46,7 +47,7 @@ export const indexTheList = (list: any) => {
   });
 };
 
-const PopupInvoice = ({
+const PopupPurchaseInvoice = ({
   open,
   onClose,
   row,
@@ -66,11 +67,12 @@ const PopupInvoice = ({
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
   const { tasks } = useTasks();
+
+  const [isCash, setIsCash] = useState(true);
+
   const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
   const [selectedDate, setSelectedDate] = React.useState(new Date());
   const [invNo, setInvNo] = useState<any>('');
-
-  // const [fTasks, setFTasks] = useState(tasks);
 
   const [itemsList, setItemsList] = useState<any>([]);
   const [accounts, setAccounts] = useState<any>([]);
@@ -99,18 +101,17 @@ const PopupInvoice = ({
   const [resoError, setResoError] = useState<any>(false);
   const resoRef: any = React.useRef();
 
-  const [custvalue, setCustvalue] = useState<any>(
-    name === 'customerId' ? value : null
+  const [suppvalue, setSuppvalue] = useState<any>(
+    name === 'supplierId' ? value : null
   );
+
   const [taskvalue, setTaskvalue] = useState<any>(
     name === 'taskId' ? value : null
   );
 
-  const [isCash, setIsCash] = useState(true);
-
   const [newtext, setNewtext] = useState('');
 
-  const [openCust, setOpenCust] = useState(false);
+  const [openSupp, setOpenSupp] = useState(false);
   const [openDep, setOpenDep] = useState(false);
   const [openEmp, setOpenEmp] = useState(false);
   const [openRes, setOpenRes] = useState(false);
@@ -118,14 +119,14 @@ const PopupInvoice = ({
 
   const { lastNos, freshlastNos } = useLastNos();
 
-  const { customers, addCustomer, editCustomer } = useCustomers();
+  const { suppliers, addSupplier, editSupplier } = useSuppliers();
   const { addDepartment, editDepartment } = useDepartmentsUp();
   const { addEmployee, editEmployee } = useEmployeesUp();
   const { addResourse, editResourse } = useResoursesUp();
   const { addTask, editTask } = useTasks();
   const { tempwords, tempoptions } = useTemplate();
   const { projects } = useProjects();
-  const { products } = useProducts();
+  const { customers } = useCustomers();
 
   const {
     translate: { words, isRTL },
@@ -166,16 +167,12 @@ const PopupInvoice = ({
     setOpenTsk(false);
     setNewtext('');
   };
-  const openCustomer = () => {
-    setOpenCust(true);
-  };
-  const onCloseCustomer = () => {
-    setOpenCust(false);
+  const onCloseSupplier = () => {
+    setOpenSupp(false);
     setNewtext('');
   };
-
-  const onNewCustChange = (nextValue: any) => {
-    setCustvalue(nextValue);
+  const onNewSuppChange = (nextValue: any) => {
+    setSuppvalue(nextValue);
   };
   const onNewDepartChange = (nextValue: any) => {
     setDepartvalue(nextValue);
@@ -220,11 +217,11 @@ const PopupInvoice = ({
           )?.[0];
           setResovalue(res);
         }
-        if (taskvalue?.customerId && name !== 'customerId') {
-          const cust = customers.filter(
-            (dep: any) => dep._id === taskvalue?.customerId
+        if (taskvalue?.supplierId && name !== 'supplierId') {
+          const cust = suppliers.filter(
+            (dep: any) => dep._id === taskvalue?.supplierId
           )?.[0];
-          setCustvalue(cust);
+          setSuppvalue(cust);
         }
       }
     }
@@ -256,21 +253,9 @@ const PopupInvoice = ({
     }
   }, [resovalue]);
 
-  // useEffect(() => {
-  //   if (isNew) {
-  //     if (custvalue) {
-  //       const ntasks = tasks.filter(
-  //         (tsk: any) => tsk.customerId === custvalue._id
-  //       );
-  //       setFTasks(ntasks);
-  //     } else {
-  //       setFTasks(tasks);
-  //     }
-  //   }
-  // }, [custvalue]);
-
   useEffect(() => {
     const items = itemsData?.data?.['getOperationItems']?.data || [];
+
     if (items && items.length > 0) {
       const ids = items.map((it: any) => it.itemId);
       const servlist = servicesproducts.filter((ser: any) =>
@@ -294,7 +279,6 @@ const PopupInvoice = ({
           resourseName,
           resourseNameAr,
           resourseColor,
-          note,
         } = item;
         const serv = servlist.filter((se: any) => se._id === item.itemId)[0];
         return {
@@ -318,7 +302,7 @@ const PopupInvoice = ({
           itemprice: item.itemPrice,
           itemqty: item.qty,
           itemtotal: item.total,
-          note,
+          itemtotalcost: item.qty * serv.cost,
         };
       });
       itemsWqtyprice.sort((a: any, b: any) =>
@@ -332,11 +316,11 @@ const PopupInvoice = ({
   const { handleSubmit, reset } = useForm({});
 
   const resetAllForms = () => {
+    setSuppvalue(null);
     reset();
     setItemsList([]);
     setDiscount(0);
     setTotals({});
-    setCustvalue(null);
     setInvNo('');
     setAccounts([]);
     setPtype('cash');
@@ -347,7 +331,6 @@ const PopupInvoice = ({
     setEmplvalue(null);
     setResovalue(null);
   };
-
   const addItemToList = (item: any) => {
     const newArray = [...itemsList, { ...item, userId: user._id }];
     const listwithindex = indexTheList(newArray);
@@ -378,7 +361,9 @@ const PopupInvoice = ({
 
   useEffect(() => {
     if (isNew && lastNos) {
-      setInvNo(lastNos?.salesInvoice ? Number(lastNos?.salesInvoice) + 1 : 1);
+      setInvNo(
+        lastNos?.purchaseInvoice ? Number(lastNos?.purchaseInvoice) + 1 : 1
+      );
     }
     if (isNew) {
       if (name === 'taskId') {
@@ -400,11 +385,11 @@ const PopupInvoice = ({
           )?.[0];
           setResovalue(dept);
         }
-        if (value?.customerId) {
-          const dept = customers.filter(
-            (dep: any) => dep._id === value?.customerId
+        if (value?.supplierId) {
+          const dept = suppliers.filter(
+            (dep: any) => dep._id === value?.supplierId
           )?.[0];
-          setCustvalue(dept);
+          setSuppvalue(dept);
         }
       }
     }
@@ -421,8 +406,8 @@ const PopupInvoice = ({
       getItems({
         variables,
       });
-      const _id = row.customerId;
-      const cust = customers.filter((it: any) => it._id === _id)[0];
+      const _id = row.supplierId;
+      const supp = suppliers.filter((it: any) => it._id === _id)[0];
 
       const depId = row.departmentId;
       const empId = row.employeeId;
@@ -444,54 +429,66 @@ const PopupInvoice = ({
         const tsk = tasks.filter((ts: any) => ts.id === row.taskId)[0];
         setTaskvalue(tsk);
       }
-      setCustvalue(cust);
+
+      setSuppvalue(supp);
       setIsCash(row.isCash);
       setDiscount(row.discount);
       setInvNo(row.docNo);
       handleDateChange(row.time);
-      setPtype(row.paymentType ? row.paymentType : '');
+      setPtype(row.paymentType ? row.paymentType : 'cash');
     }
   }, [row]);
 
   const getOverallTotal = () => {
-    const totalsin = itemsList.map((litem: any) => litem.itemtotal);
-    const sum = totalsin.reduce((psum: any, a: any) => psum + a, 0);
-    const costtotals = itemsList.map((litem: any) => litem.itemtotalcost);
-    const costsum = costtotals.reduce((psum: any, a: any) => psum + a, 0);
+    const products = itemsList.filter((li: any) => li.itemType === 1);
+    // const nonstock = itemsList.filter((li: any) => li.itemType !== 1);
+
+    const sumProducts =
+      products?.length > 0 ? _(products).sumBy('itemtotal') : 0;
+    // const sumNonstock =
+    //   nonstock?.length > 0 ? _(nonstock).sumBy("itemtotal") : 0;
+    const sum = _(itemsList).sumBy('itemtotal');
+
     const amount = sum - discount;
-    const profit = sum - discount - costsum;
     const tots = {
       itemsSum: amount,
-      itemsCostSum: costsum,
-      costAmount: costsum,
       total: sum,
       amount,
-      profit,
+      costAmount: sumProducts,
     };
     setTotals(tots);
+
     const accs = [
       {
-        debitAcc: accountCode.accounts_receivable,
-        creditAcc: accountCode.sales_income,
+        debitAcc: accountCode.purchase_nonstock,
+        creditAcc: accountCode.accounts_payable,
         amount: sum,
-        type: operationTypes.salesInvoice,
+        // amount: sumNonstock, // non stock items
+        type: operationTypes.purchaseInvoice,
       },
       {
-        debitAcc: accountCode.sales_income,
-        creditAcc: accountCode.accounts_receivable,
+        debitAcc: accountCode.accounts_payable,
+        creditAcc: accountCode.purchase_discount,
         amount: discount,
-        type: operationTypes.customerDiscount,
+        type: operationTypes.supplierDiscount,
       },
       {
-        debitAcc:
+        debitAcc: accountCode.accounts_payable,
+        creditAcc:
           ptype === 'cash' ? accountCode.cash_on_hand : accountCode.card,
-        creditAcc: accountCode.accounts_receivable,
-        amount: isCash ? sum - discount : 0,
-        type: operationTypes.customerReceipt,
+        amount: sum - discount,
+        type: operationTypes.supplierPayemnt,
+      },
+      {
+        debitAcc: accountCode.inventory,
+        creditAcc: accountCode.accounts_payable,
+        amount: sumProducts, // stock items
+        type: operationTypes.purchaseDelivery,
       },
     ];
     setAccounts(accs);
   };
+
   const onSubmit = async () => {
     const { startPeriod, endPeriod } = getAppStartEndPeriod();
     if (selectedDate < startPeriod || selectedDate > endPeriod) {
@@ -517,20 +514,19 @@ const PopupInvoice = ({
       );
       return;
     }
-    if (!custvalue) {
+    if (!suppvalue) {
       await messageAlert(
         setAlrt,
-        isRTL ? 'يرجى اضافة عميل للفاتورة' : 'Please add Customer'
+        isRTL ? 'يرجى اضافة مورد للفاتورة' : 'Please add Supplier'
       );
       return;
     }
-
-    if (isNew && Number(invNo) <= Number(lastNos.salesInvoice)) {
+    if (isNew && Number(invNo) <= Number(lastNos.purchaseInvoice)) {
       await messageAlert(
         setAlrt,
         isRTL
-          ? `رقم الفاتورة يجب ان يكون أكبب من ${lastNos.salesInvoice}`
-          : `Invoice no must be more than ${lastNos.salesInvoice}`
+          ? `رقم الفاتورة يجب ان يكون أكبر من ${lastNos.purchaseInvoice}`
+          : `Invoice no must be more than ${lastNos.purchaseInvoice}`
       );
 
       return;
@@ -545,16 +541,17 @@ const PopupInvoice = ({
       return;
     }
     setSaving(true);
-    const { amount, costAmount, profit, total } = totals;
+    const { amount, total, costAmount } = totals;
+    const isCash = true;
     const variables: any = {
       _id: row && row._id ? row._id : undefined, // is it new or edit
       docNo: invNo ? invNo.toString() : undefined,
       time: selectedDate,
-      customer: {
-        customerId: custvalue._id,
-        customerName: custvalue.name,
-        customerNameAr: custvalue.nameAr,
-        customerPhone: custvalue.phone,
+      supplier: {
+        supplierId: suppvalue._id,
+        supplierName: suppvalue.name,
+        supplierNameAr: suppvalue.nameAr,
+        supplierPhone: suppvalue.phone,
       },
       department: departvalue
         ? {
@@ -602,7 +599,6 @@ const PopupInvoice = ({
       total,
       discount,
       amount,
-      profit,
       isPaid: isCash,
       isCash,
       amountPaid: isCash ? amount : 0,
@@ -622,7 +618,6 @@ const PopupInvoice = ({
       if (row && row._id) {
         itemsData?.refetch();
       }
-      // handlePrint();
       freshlastNos({});
       setSaving(false);
       onCloseForm();
@@ -637,6 +632,7 @@ const PopupInvoice = ({
       await dublicateAlert(setAlrt, isRTL);
     } else {
       await errorAlert(setAlrt, isRTL);
+      reset();
       console.log(error);
     }
   };
@@ -659,12 +655,13 @@ const PopupInvoice = ({
   const printData = {
     invoiceNo: row?.docNo,
     time: selectedDate,
-    customerName: custvalue?.name,
-    customerPhone: custvalue?.phone,
+    customerName: suppvalue?.name,
+    customerPhone: suppvalue?.phone,
     total: totals.total,
     amount: totals.amount,
     items: itemsList,
   };
+
   const date = row?.startDate ? new Date(row?.startDate) : new Date();
   const day = weekdaysNNo?.[date.getDay()];
   const title = isRTL
@@ -674,21 +671,21 @@ const PopupInvoice = ({
     : isNew
     ? 'New Invoice'
     : 'Edit Invoice';
+
   return (
     <PopupLayout
       isRTL={isRTL}
       open={open}
       onClose={onCloseForm}
       title={title}
+      saving={saving}
       onSubmit={onHandleSubmit}
       theme={theme}
       alrt={alrt}
       print={!isNew ? handleReactPrint : undefined}
       maxWidth="md"
-      saving={saving}
       mt={0}
       mb={50}
-      // bgcolor={colors.green[500]}
     >
       <Grid container spacing={1}>
         <Grid item xs={4}>
@@ -738,20 +735,17 @@ const PopupInvoice = ({
             setPtype={setPtype}
           ></PaymentSelect>
         </Grid>
-
         <Grid item xs={8}>
           <AutoFieldLocal
-            name="customer"
-            title={tempwords?.customer}
+            name="supplier"
+            title={words.supplier}
             words={words}
-            options={customers}
-            value={custvalue}
-            setSelectValue={setCustvalue}
+            options={suppliers}
+            value={suppvalue}
+            setSelectValue={setSuppvalue}
             isRTL={isRTL}
             fullWidth
-            openAdd={openCustomer}
-            showphone
-            disabled={name === 'customerId'}
+            // openAdd={openCustomer}
           ></AutoFieldLocal>
         </Grid>
         <Grid item xs={4}></Grid>
@@ -828,20 +822,19 @@ const PopupInvoice = ({
             disabled={name === 'departmentId'}
           ></AutoFieldLocal>
         </Grid>
-
         <Grid item xs={12}>
           <Box
             style={{
-              backgroundColor: '#f3f3f3',
+              backgroundColor: '#f4f4f4',
               padding: 10,
               marginTop: 15,
               marginBottom: 15,
               borderRadius: 10,
             }}
           >
-            <Box display="flex" style={{ paddingLeft: 10, paddingRight: 10 }}>
+            <Box display="flex">
               <ServiceItemForm
-                options={[...servicesproducts, ...products]}
+                options={servicesproducts}
                 addItem={addItemToList}
                 words={words}
                 classes={classes}
@@ -868,8 +861,6 @@ const PopupInvoice = ({
             style={{
               alignItems: 'center',
               justifyContent: 'space-between',
-              marginRight: 10,
-              marginLeft: 10,
             }}
           >
             <TextField
@@ -883,7 +874,6 @@ const PopupInvoice = ({
               type="number"
               onFocus={(e) => e.target.select()}
             />
-
             <PriceTotal
               amount={totals?.amount}
               total={totals?.total}
@@ -891,16 +881,16 @@ const PopupInvoice = ({
               words={words}
             ></PriceTotal>
           </Box>
-          <PopupCustomer
+          <PopupSupplier
             newtext={newtext}
-            open={openCust}
-            onClose={onCloseCustomer}
+            open={openSupp}
+            onClose={onCloseSupplier}
             isNew={true}
-            setNewValue={onNewCustChange}
+            setNewValue={onNewSuppChange}
             row={null}
-            addAction={addCustomer}
-            editAction={editCustomer}
-          ></PopupCustomer>
+            addAction={addSupplier}
+            editAction={editSupplier}
+          ></PopupSupplier>
           <PopupDeprtment
             newtext={newtext}
             open={openDep}
@@ -967,4 +957,4 @@ const PopupInvoice = ({
   );
 };
 
-export default PopupInvoice;
+export default PopupPurchaseInvoice;

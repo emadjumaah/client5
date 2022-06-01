@@ -205,7 +205,7 @@ const PopupFinanceAll = ({
 
   const apply = async (mutate: any, variables: any) => {
     try {
-      mutate({ variables });
+      await mutate({ variables });
       closeModal();
     } catch (error) {
       onError(error);
