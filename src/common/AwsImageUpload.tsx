@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { useMutation } from '@apollo/client';
 import createFileData from '../graphql/mutation/createFileData';
-import { uploadAwsFile } from './uploadAws';
+import { uploadAwsFile, resizeImage } from './uploadAws';
 
-const AwsUpload = ({
+const AwsImageUpload = ({
   opId,
   itemId,
   customerId,
@@ -18,7 +18,6 @@ const AwsUpload = ({
 }: any) => {
   const [progress, setProgress] = useState(0);
   const [selectedFile, setSelectedFile] = useState(null);
-
   const [addFileData] = useMutation(createFileData);
 
   const handleFileInput = (e: any) => {
@@ -26,8 +25,13 @@ const AwsUpload = ({
   };
 
   const uploadFile = async (file: any) => {
+    const resized: any = await resizeImage({ file });
+    var buf = Buffer.from(
+      resized.replace(/^data:image\/\w+;base64,/, ''),
+      'base64'
+    );
     await uploadAwsFile({
-      buf: null,
+      buf,
       file,
       setProgress,
       addFileData,
@@ -48,11 +52,13 @@ const AwsUpload = ({
 
   return (
     <div>
-      <div>Native SDK File Upload Progress is {progress}%</div>
-      <input type="file" onChange={handleFileInput} />
-      <button onClick={() => uploadFile(selectedFile)}> Upload to S3</button>
+      <div>Image Upload Progress is {progress}%</div>
+      <input type="file" accept="image/*" onChange={handleFileInput} />
+      <button onClick={() => uploadFile(selectedFile)}>
+        Upload Image to S3
+      </button>
     </div>
   );
 };
 
-export default AwsUpload;
+export default AwsImageUpload;
