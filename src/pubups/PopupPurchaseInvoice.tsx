@@ -468,7 +468,7 @@ const PopupPurchaseInvoice = ({
       },
       {
         debitAcc: accountCode.accounts_payable,
-        creditAcc: accountCode.purchase_discount,
+        creditAcc: accountCode.cost_of_sales,
         amount: discount,
         type: operationTypes.supplierDiscount,
       },
@@ -476,7 +476,7 @@ const PopupPurchaseInvoice = ({
         debitAcc: accountCode.accounts_payable,
         creditAcc:
           ptype === 'cash' ? accountCode.cash_on_hand : accountCode.card,
-        amount: sum - discount,
+        amount: isCash ? sum - discount : 0,
         type: operationTypes.supplierPayemnt,
       },
       {

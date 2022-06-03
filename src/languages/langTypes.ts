@@ -192,6 +192,7 @@ export interface LanguageType {
     addaction: string;
     title: string;
     receipts: string;
+    payments: string;
     notification: string;
     reminder: string;
     subject: string;

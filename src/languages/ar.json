@@ -159,6 +159,7 @@
     "addaction": "اضافة تنبيه",
     "title": "العنوان",
     "receipts": "سند قبض",
+    "payments": "سند دفع",
     "notification": "تنبيه",
     "reminder": "تذكير",
     "subject": "عنوان الرسالة",

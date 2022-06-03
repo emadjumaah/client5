@@ -159,6 +159,7 @@
     "addaction": "Add Action",
     "title": "Title",
     "receipts": "Receipt Voucher",
+    "payments": "Payment Voucher",
     "notification": "Notification",
     "reminder": "Reminder",
     "subject": "Subject",

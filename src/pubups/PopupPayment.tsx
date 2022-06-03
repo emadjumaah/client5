@@ -34,7 +34,7 @@ const PopupPayment = ({
   const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
   const [selectedDate, setSelectedDate] = React.useState(new Date());
   const [ptype, setPtype] = React.useState('deposit');
-  const [debaccounts, setDebaccounts] = React.useState([]);
+  const [credaccounts, setCredaccounts] = React.useState([]);
 
   const [debitAcc, setDebitAcc]: any = React.useState(null);
   const [creditAcc, setCreditAcc]: any = React.useState(null);
@@ -124,7 +124,7 @@ const PopupPayment = ({
       const filteredcredit = accounts.filter(
         (acc: any) => acc.parentcode === parents.CASH
       );
-      setDebaccounts(filteredcredit);
+      setCredaccounts(filteredcredit);
 
       if (ca) {
         const credit = accounts.filter((acc: any) => acc.code === ca)[0];
@@ -147,9 +147,9 @@ const PopupPayment = ({
       const filteredcredit = accounts.filter(
         (acc: any) => acc.parentcode === parents.CASH
       );
-      setDebaccounts(filteredcredit);
-      setDebitAcc(filteredcredit?.[0]);
-      setCreditAcc(filtereddebits?.[0]);
+      setCredaccounts(filteredcredit);
+      setDebitAcc(filtereddebits?.[0]);
+      setCreditAcc(filteredcredit?.[0]);
     }
   }, [row, ptype, open]);
 
@@ -295,7 +295,7 @@ const PopupPayment = ({
     setPtype('deposit');
     setCreditAcc(null);
     setDebitAcc(null);
-    setDebaccounts([]);
+    setCredaccounts([]);
     setInvoices([]);
     setSuppvalue(null);
     setInvoicevalue(null);
@@ -317,7 +317,7 @@ const PopupPayment = ({
       isRTL={isRTL}
       open={open}
       onClose={closeModal}
-      title={words.receipts}
+      title={words.payments}
       onSubmit={onHandleSubmit}
       theme={theme}
       alrt={alrt}
@@ -384,12 +384,12 @@ const PopupPayment = ({
 
             <Grid item xs={12}>
               <AutoFieldLocal
-                name="debitAcc"
-                title={isRTL ? 'حساب القبض' : 'Receipt Acc'}
+                name="creditAcc"
+                title={isRTL ? 'حساب الدفع' : 'Payment Acc'}
                 words={words}
-                options={debaccounts}
-                value={debitAcc}
-                setSelectValue={setDebitAcc}
+                options={credaccounts}
+                value={creditAcc}
+                setSelectValue={setCreditAcc}
                 register={register}
                 isRTL={isRTL}
                 fullwidth

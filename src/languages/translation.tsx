@@ -162,6 +162,7 @@ export const translation = (lang: LanguageType) => {
     addaction: lang.words.addaction,
     title: lang.words.title,
     receipts: lang.words.receipts,
+    payments: lang.words.payments,
     notification: lang.words.notification,
     reminder: lang.words.reminder,
     subject: lang.words.subject,
