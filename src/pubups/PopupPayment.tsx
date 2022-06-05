@@ -14,7 +14,7 @@ import { useReactToPrint } from 'react-to-print';
 import { CalenderLocal, TextFieldLocal } from '../components';
 import { getAppStartEndPeriod } from '../common/time';
 import AutoFieldLocal from '../components/fields/AutoFieldLocal';
-import { useSuppliers, useTemplate } from '../hooks';
+import { useSuppliers } from '../hooks';
 import { useLazyQuery } from '@apollo/client';
 import getInvoicesList from '../graphql/query/getInvoicesList';
 import { ReceiptPrint } from '../print';
@@ -61,7 +61,6 @@ const PopupPayment = ({
 
   const { accounts } = useAccounts();
   const { suppliers, addSupplier, editSupplier } = useSuppliers();
-  const { tempwords } = useTemplate();
 
   const [loadInvoices, invoicesData]: any = useLazyQuery(getInvoicesList, {
     fetchPolicy: 'cache-and-network',
@@ -339,7 +338,7 @@ const PopupPayment = ({
             <Grid item xs={12}>
               <AutoFieldLocal
                 name="supplier"
-                title={tempwords?.supplier}
+                title={words?.supplier}
                 words={words}
                 options={suppliers}
                 value={suppvalue}

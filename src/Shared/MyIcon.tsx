@@ -31,6 +31,7 @@ import LanguageIcon from '@material-ui/icons/Language';
 import ArrowDownward from '@material-ui/icons/ArrowDownward';
 import MarkEmailReadIcon from '@material-ui/icons/Email';
 import NotificationsActive from '@material-ui/icons/NotificationsActive';
+import NotificationsAdd from '@material-ui/icons/NotificationImportantOutlined';
 import ListAltIcon from '@material-ui/icons/ListAlt';
 import CampaignIcon from '@material-ui/icons/Telegram';
 import SyncIcon from '@material-ui/icons/Sync';
@@ -106,6 +107,8 @@ export default function MyIcon({ icon, color, size }: any) {
       return <MarkEmailReadIcon style={style}></MarkEmailReadIcon>;
     case 'bell':
       return <NotificationsActive style={style}></NotificationsActive>;
+    case 'belladd':
+      return <NotificationsAdd style={style}></NotificationsAdd>;
     case 'list':
       return <ListAltIcon style={style}></ListAltIcon>;
     case 'camp':

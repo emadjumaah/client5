@@ -34,9 +34,10 @@ const Options = ({ isRTL, words, company, editCompany }: any) => {
     dispatch({ type: 'setLang', payload: lang });
     window.location.reload();
   };
-  const setThemeId = (themeId: any) => {
-    dispatch({ type: 'setThemeId', payload: themeId });
-    addUserTheme({ variables: { themeId: Number(themeId) } });
+  const setThemeId = (id: any) => {
+    const themeId = Number(id);
+    dispatch({ type: 'setThemeId', payload: id });
+    addUserTheme({ variables: { themeId } });
   };
 
   const setCalendar = (data: any) => {

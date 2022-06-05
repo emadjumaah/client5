@@ -46,7 +46,7 @@ import useEmployeesUp from '../hooks/useEmployeesUp';
 import useResoursesUp from '../hooks/useResoursesUp';
 import PopupProject from './PopupProject';
 import useProjects from '../hooks/useProjects';
-import ServiceItemForm from '../Shared/ServiceItemForm';
+import EventtemForm from '../Shared/EventtemForm';
 import ItemsTable from '../Shared/ItemsTable';
 import { invoiceClasses } from '../themes';
 import { SelectLocal } from '../pages/calendar/common/SelectLocal';
@@ -984,7 +984,7 @@ const PopupTask = ({
                   }}
                 >
                   <Box display="flex">
-                    <ServiceItemForm
+                    <EventtemForm
                       services={servicesproducts}
                       addItem={addItemToList}
                       words={words}
@@ -992,7 +992,7 @@ const PopupTask = ({
                       user={user}
                       isRTL={isRTL}
                       setAlrt={setAlrt}
-                    ></ServiceItemForm>
+                    ></EventtemForm>
                   </Box>
                   <Box style={{ marginBottom: 20 }}>
                     <ItemsTable

@@ -131,6 +131,7 @@ export default function ExpensesDoc({
         variables: {
           start: start ? start.setHours(0, 0, 0, 0) : undefined,
           end: end ? end.setHours(23, 59, 59, 999) : undefined,
+          opType: 60,
         },
       },
       {

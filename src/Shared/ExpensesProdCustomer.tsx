@@ -43,13 +43,13 @@ import getTasks from '../graphql/query/getTasks';
 import useCompany from '../hooks/useCompany';
 import { Box } from '@material-ui/core';
 import DateNavigatorReports from '../components/filters/DateNavigatorReports';
-import { useExpenseItems, useTemplate } from '../hooks';
+import { useProducts, useTemplate } from '../hooks';
 import useDepartmentsUp from '../hooks/useDepartmentsUp';
 import useEmployeesUp from '../hooks/useEmployeesUp';
 import useResoursesUp from '../hooks/useResoursesUp';
-import PopupExpensesDoc from '../pubups/PopupExpensesDoc';
+import PopupExpProducts from '../pubups/PopupExpProducts';
 
-export default function ExpensesCustomer({
+export default function ExpensesProdCustomer({
   isRTL,
   words,
   theme,
@@ -102,7 +102,7 @@ export default function ExpensesCustomer({
   const { tasks } = useTasks();
   const { company } = useCompany();
   const { accounts } = useAccounts();
-  const { expenseItems } = useExpenseItems();
+  const { products } = useProducts();
   const { departments } = useDepartmentsUp();
   const { employees } = useEmployeesUp();
   const { resourses } = useResoursesUp();
@@ -135,7 +135,7 @@ export default function ExpensesCustomer({
           [name]: id,
           start: start ? start.setHours(0, 0, 0, 0) : undefined,
           end: end ? end.setHours(23, 59, 59, 999) : undefined,
-          opType: 60,
+          opType: 61,
         },
       },
       {
@@ -173,7 +173,7 @@ export default function ExpensesCustomer({
       [name]: id,
       start: start ? start.setHours(0, 0, 0, 0) : undefined,
       end: end ? end.setHours(23, 59, 59, 999) : undefined,
-      opType: 60,
+      opType: 61,
     };
     loadExpenses({
       variables,
@@ -281,16 +281,16 @@ export default function ExpensesCustomer({
           addAction={addExpenses}
           editAction={editExpenses}
         >
-          <PopupExpensesDoc
+          <PopupExpProducts
             resourses={resourses}
             employees={employees}
             departments={departments}
             company={company}
-            servicesproducts={expenseItems}
+            servicesproducts={products}
             tasks={tasks}
             value={value}
             name={name}
-          ></PopupExpensesDoc>
+          ></PopupExpProducts>
         </PopupEditing>
       </Grid>
       {loading && <Loading isRTL={isRTL} />}

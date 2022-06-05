@@ -167,6 +167,9 @@ const PopupPurchaseInvoice = ({
     setOpenTsk(false);
     setNewtext('');
   };
+  const openSupplier = () => {
+    setOpenSupp(true);
+  };
   const onCloseSupplier = () => {
     setOpenSupp(false);
     setNewtext('');
@@ -745,7 +748,9 @@ const PopupPurchaseInvoice = ({
             setSelectValue={setSuppvalue}
             isRTL={isRTL}
             fullWidth
-            // openAdd={openCustomer}
+            openAdd={openSupplier}
+            showphone
+            disabled={name === 'supplierId'}
           ></AutoFieldLocal>
         </Grid>
         <Grid item xs={4}></Grid>

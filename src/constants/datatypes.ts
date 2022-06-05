@@ -21,6 +21,7 @@ export const operationTypes = {
   interDeliveryOut: 51, // حركة تسليم بضاعة لاحد مخازن الشركة
 
   expenses: 60,
+  expproducts: 61,
 
   // حركة مالية
   // transfare cash - bank - card - partners - branchs
@@ -111,6 +112,11 @@ export const opTypesNames = {
     name: 'Expenses',
     nameAr: 'مصاريف',
     ref: 'expenses',
+  },
+  61: {
+    name: 'Products Expenses',
+    nameAr: 'استهلاك بضاعة',
+    ref: 'expproducts',
   },
   70: {
     name: 'Deposet',

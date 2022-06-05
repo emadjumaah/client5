@@ -553,10 +553,22 @@ export const totalFormatter = ({ row }: any) => {
 };
 export const currencyFormatter = ({ value }: any) => {
   return (
-    <span style={{ color: value >= 0 ? colors.blue[800] : colors.red[400] }}>
+    <span
+      style={{
+        color: value >= 0 ? colors.blue[800] : colors.red[400],
+      }}
+    >
       {moneyFormat(value)}
     </span>
   );
+};
+export const inFormatter = ({ row }: any) => {
+  if (row.opType === 30) return <span>{row.qty}</span>;
+  return <span></span>;
+};
+export const outFormatter = ({ row }: any) => {
+  if (row.opType === 10 || row.opType === 61) return <span>{row.qty}</span>;
+  return <span></span>;
 };
 export const reqpackFormatter = ({ row }: any) => {
   const { pack, note } = row;
@@ -1067,6 +1079,13 @@ export const typeFormatter = ({ row }: any) => {
   const type = getNameOfDocument(opType);
 
   return <div style={{ fontSize: 12 }}>{type}</div>;
+};
+export const itemTotalFormatter = ({ row }: any) => {
+  const { cost, quantity } = row;
+
+  return (
+    <div style={{ fontSize: 12 }}>{moneyFormat(cost * quantity || 0)}</div>
+  );
 };
 
 export const accountFormatter = (props: any, accounts: any, isRTL: any) => {

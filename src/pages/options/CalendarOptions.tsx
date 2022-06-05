@@ -7,8 +7,8 @@ import * as yup from 'yup';
 
 import { PopupTextField } from '../../Shared';
 import { yupResolver } from '@hookform/resolvers/yup';
-import AwsUpload from '../../common/AwsUpload';
-import AwsImageUpload from '../../common/AwsImageUpload';
+// import AwsUpload from '../../common/AwsUpload';
+// import AwsImageUpload from '../../common/AwsImageUpload';
 
 const calSchema = yup.object().shape({
   start: yup.number().required().min(0).max(23),
@@ -105,8 +105,8 @@ const CalendarOptions = ({ words, calendar, setCalendar, isRTL }) => {
             </Button>
           </Box>
         </Box>
-        <AwsUpload></AwsUpload>
-        <AwsImageUpload></AwsImageUpload>
+        {/* <AwsUpload></AwsUpload>
+        <AwsImageUpload></AwsImageUpload> */}
       </Box>
     </Paper>
   );

@@ -23,6 +23,7 @@ export default gql`
     $chequeNo: String
     $chequeDate: String
     $userId: String
+    $opType: Int
   ) {
     updateExpenses(
       _id: $_id
@@ -46,6 +47,7 @@ export default gql`
       chequeNo: $chequeNo
       chequeDate: $chequeDate
       userId: $userId
+      opType: $opType
     ) {
       ok
       message

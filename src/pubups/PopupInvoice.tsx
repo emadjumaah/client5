@@ -35,8 +35,8 @@ import useDepartmentsUp from '../hooks/useDepartmentsUp';
 import useEmployeesUp from '../hooks/useEmployeesUp';
 import useResoursesUp from '../hooks/useResoursesUp';
 import useProjects from '../hooks/useProjects';
-// import { InvoicePrint, PosPrint } from '../print';
-import { PosPrint } from '../print';
+import { InvoicePrint } from '../print';
+// import { PosPrint } from '../print';
 
 export const indexTheList = (list: any) => {
   return list.map((item: any, index: any) => {
@@ -962,18 +962,18 @@ const PopupInvoice = ({
           ></PopupResourses>
           <Box>
             <div style={{ display: 'none' }}>
-              {/* <InvoicePrint
-                company={company}
-                user={user}
-                printData={printData}
-                ref={componentRef}
-              /> */}
-              <PosPrint
+              <InvoicePrint
                 company={company}
                 user={user}
                 printData={printData}
                 ref={componentRef}
               />
+              {/* <PosPrint
+                company={company}
+                user={user}
+                printData={printData}
+                ref={componentRef}
+              /> */}
             </div>
           </Box>
         </Grid>

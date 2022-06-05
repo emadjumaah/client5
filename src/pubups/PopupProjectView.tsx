@@ -289,7 +289,7 @@ const PopupProjectView = ({
 
                   <Box>
                     <Typography style={{ fontSize: 14 }}>
-                      {isRTL ? 'المصاريف' : 'Total Expenses'}
+                      {isRTL ? 'المصروفات' : 'Total Expenses'}
                     </Typography>{' '}
                     <Typography style={{ fontWeight: 'bold', fontSize: 14 }}>
                       {moneyFormat(toatlExpenses)}

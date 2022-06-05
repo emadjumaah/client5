@@ -14,6 +14,7 @@ export default gql`
     $taskIds: [Int]
     $start: Date
     $end: Date
+    $itemType: Int
   ) {
     getReportServices(
       types: $types
@@ -28,6 +29,7 @@ export default gql`
       taskIds: $taskIds
       start: $start
       end: $end
+      itemType: $itemType
     ) {
       ok
       error

@@ -25,7 +25,7 @@ export default function Package({ company, isRTL }: any) {
               {isRTL ? 'رسائل SMS' : 'SMS'}
             </Typography>
             <Typography variant="button">
-              {quantityFormat(company.smss, isRTL)}
+              {quantityFormat(company?.smss, isRTL)}
             </Typography>
           </Box>
         </Grid>
@@ -42,7 +42,7 @@ export default function Package({ company, isRTL }: any) {
               {isRTL ? 'رسائل Email' : 'Email'}
             </Typography>
             <Typography variant="button">
-              {quantityFormat(company.emails, isRTL)}
+              {quantityFormat(company?.emails, isRTL)}
             </Typography>
           </Box>
         </Grid>

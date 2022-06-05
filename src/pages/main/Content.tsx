@@ -117,8 +117,6 @@ import useCompany from '../../hooks/useCompany';
 import Contacts from '../adds/Contacts';
 import Groups from '../adds/Groups';
 import Sendreqs from '../adds/Sendreqs';
-// import { useNavigate } from 'react-router-dom';
-// import { remindermenu, smsmenu } from '../../constants/menu';
 import Reminders from '../adds/Reminders';
 import RemindCal from '../calendar/RemindCal';
 import Messages from '../adds/Messages';
@@ -127,7 +125,6 @@ import Notifications from '../adds/Notifications';
 import FinanceAllKaid from '../adds/FinanceAllKaid';
 import ProfitReport from '../reports/ProfitReport';
 import BudgetReport from '../reports/BudgetReport';
-// import ExpenseItems from '../adds/ExpenseItems';
 import ExpensesDoc from '../adds/ExpensesDoc';
 import {
   initReminderContext,
@@ -139,6 +136,15 @@ import ExpenseItems from '../adds/ExpenseItems';
 import Suppliers from '../adds/Suppliers';
 import PurchaseInvoices from '../adds/PurchaseInvoices';
 import Payment from '../adds/Payment';
+import ExpProducts from '../adds/ExpProducts';
+import SupplierReport from '../reports/SupplierReport';
+import {
+  initSupplierReportContext,
+  supplierReportReducer,
+} from '../../contexts/supplierReport/customerReportReducer';
+import SupplierReportContext from '../../contexts/supplierReport';
+import StockItems from '../adds/StockItems';
+import ProductsReport from '../reports/ProductsReport';
 
 const Content = () => {
   const classes = layoutClasses();
@@ -229,6 +235,10 @@ const Content = () => {
     customerReportReducer,
     initCustomerReportContext
   );
+  const [supplierReportStore, supplierReportDispatch] = useReducer(
+    supplierReportReducer,
+    initSupplierReportContext
+  );
   const [calendarReportStore, calendarReportDispatch] = useReducer(
     calendarReportReducer,
     initCalendarReportContext
@@ -244,30 +254,6 @@ const Content = () => {
       ? accs.filter((acc: any) => mainaccounts.includes(acc.parentcode))
       : [];
   filteredAccounts.sort((a: any, b: any) => a.code - b.code);
-  // useEffect(() => {
-  //   switch (mmenu) {
-  //     case 1:
-  //       setmenu(filterMenu());
-  //       navigate('/');
-  //       setMenuitem(mainmenu[0]);
-  //       // setMlocation(location?.pathname);
-  //       return;
-  //     case 2:
-  //       setmenu(smsmenu);
-  //       navigate(`/sendreqs`);
-  //       setMenuitem(smsmenu[0]);
-  //       return;
-  //     case 3:
-  //       setmenu(remindermenu);
-  //       navigate(`/managereminders`);
-  //       setMenuitem(remindermenu[0]);
-  //       return;
-
-  //     // default:
-  //     //   navigate(mlocation);
-  //     //   return;
-  //   }
-  // }, [mmenu]);
 
   return (
     <Box
@@ -367,7 +353,7 @@ const Content = () => {
             }
           />
           <Route
-            path="/sales"
+            path="/invoices"
             element={
               <SalesContext.Provider
                 value={{ state: salesStore, dispatch: salesDispatch }}
@@ -507,6 +493,22 @@ const Content = () => {
                   theme={theme}
                   company={company}
                 ></ExpensesDoc>
+              </ExpensesContext.Provider>
+            }
+          />
+          <Route
+            path="/expproducts"
+            element={
+              <ExpensesContext.Provider
+                value={{ state: expensesStore, dispatch: expensesDispatch }}
+              >
+                <ExpProducts
+                  menuitem={menuitem}
+                  isRTL={isRTL}
+                  words={words}
+                  theme={theme}
+                  company={company}
+                ></ExpProducts>
               </ExpensesContext.Provider>
             }
           />
@@ -831,6 +833,20 @@ const Content = () => {
             }
           />
           <Route
+            path="/StockItems"
+            element={
+              <PageLayout
+                menuitem={menuitem}
+                isRTL={isRTL}
+                words={words}
+                theme={theme}
+                refresh={() => null}
+              >
+                <StockItems></StockItems>
+              </PageLayout>
+            }
+          />
+          <Route
             path="/expenseitems"
             element={
               <PageLayout
@@ -901,6 +917,26 @@ const Content = () => {
                   company={company}
                   theme={theme}
                 ></ServicesReport>
+              </ServicesReportContext.Provider>
+            }
+          />
+          <Route
+            path="/stockreport"
+            element={
+              <ServicesReportContext.Provider
+                value={{
+                  state: servicesStore,
+                  dispatch: servicesDispatch,
+                }}
+              >
+                <ProductsReport
+                  menuitem={menuitem}
+                  isRTL={isRTL}
+                  words={words}
+                  categories={[]}
+                  company={company}
+                  theme={theme}
+                ></ProductsReport>
               </ServicesReportContext.Provider>
             }
           />
@@ -1049,6 +1085,27 @@ const Content = () => {
                   mainaccounts={filteredAccounts}
                 ></CustomerReport>
               </CustomerReportContext.Provider>
+            }
+          />
+          <Route
+            path="/supplierreport"
+            element={
+              <SupplierReportContext.Provider
+                value={{
+                  state: supplierReportStore,
+                  dispatch: supplierReportDispatch,
+                }}
+              >
+                <SupplierReport
+                  isRTL={isRTL}
+                  words={words}
+                  menuitem={menuitem}
+                  theme={theme}
+                  categories={[]}
+                  company={company}
+                  mainaccounts={filteredAccounts}
+                ></SupplierReport>
+              </SupplierReportContext.Provider>
             }
           />
         </Routes>

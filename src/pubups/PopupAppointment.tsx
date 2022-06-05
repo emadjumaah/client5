@@ -22,7 +22,7 @@ import AutoFieldLocal from '../components/fields/AutoFieldLocal';
 import { CalenderLocal, TextFieldLocal } from '../components';
 import { eventStatus, weekdaysNNo } from '../constants/datatypes';
 // import { getAppStartEndPeriod } from "../common/time";
-import ServiceItemForm from '../Shared/ServiceItemForm';
+import EventtemForm from '../Shared/EventtemForm';
 import ItemsTable from '../Shared/ItemsTable';
 // import LoadingInline from '../Shared/LoadingInline';
 import { useLazyQuery } from '@apollo/client';
@@ -934,7 +934,7 @@ const PopupAppointment = ({
               }}
             >
               <Box display="flex">
-                <ServiceItemForm
+                <EventtemForm
                   services={servicesproducts}
                   addItem={addItemToList}
                   words={words}
@@ -942,7 +942,7 @@ const PopupAppointment = ({
                   user={user}
                   isRTL={isRTL}
                   setAlrt={setAlrt}
-                ></ServiceItemForm>
+                ></EventtemForm>
               </Box>
               {(isNew || itemsList.length > 0) && (
                 <Box style={{ marginBottom: 20 }}>

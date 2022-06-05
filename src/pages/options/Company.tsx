@@ -281,7 +281,7 @@ const Company = ({ words, editCompany, company, isRTL }) => {
             <ColorPicker setColor={setColor} color={color}></ColorPicker>
           </Grid>
           <Grid item xs={12} md={8}>
-            {company && <Package company={company} isRTL={isRTL}></Package>}
+            <Package company={company} isRTL={isRTL}></Package>
           </Grid>
           <Grid item xs={12}>
             <Box

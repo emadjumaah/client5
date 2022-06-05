@@ -29,6 +29,7 @@ import {
   getExpenses,
   getLandingChartData,
   getLastNos,
+  getProducts,
   getProjects,
   getResourses,
   updateExpenses,
@@ -45,27 +46,51 @@ import PageLayout from '../main/PageLayout';
 import { SearchTable } from '../../components';
 import { ExpensesContext } from '../../contexts';
 import DateNavigatorReports from '../../components/filters/DateNavigatorReports';
-import PopupExpenses from '../../pubups/PopupExpenses';
 import useTasks from '../../hooks/useTasks';
 import getTasks from '../../graphql/query/getTasks';
 import { getColumns } from '../../common/columns';
 import { Box } from '@material-ui/core';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
 import { TableComponent } from '../../Shared/TableComponent';
+import useDepartmentsUp from '../../hooks/useDepartmentsUp';
+import useEmployeesUp from '../../hooks/useEmployeesUp';
+import useResoursesUp from '../../hooks/useResoursesUp';
+import { useProducts, useTemplate } from '../../hooks';
+import PopupExpProducts from '../../pubups/PopupExpProducts';
 
-export default function Expenses({ isRTL, words, menuitem, theme, company }) {
+export default function ExpProducts({
+  isRTL,
+  words,
+  menuitem,
+  theme,
+  company,
+}) {
   const col = getColumns({ isRTL, words });
 
-  const [columns] = useState([
-    { name: 'time', title: words.time },
-    { name: 'debitAcc', title: isRTL ? 'حساب المصروف' : 'Expenses Acc' },
-    { name: 'creditAcc', title: isRTL ? 'حساب الدفع' : 'Payment Acc' },
-    col.department,
-    col.employee,
-    col.taskId,
-    { name: 'desc', title: words.description },
-    { name: 'amount', title: words.amount },
-  ]);
+  const { tempoptions } = useTemplate();
+
+  const [columns] = useState(
+    tempoptions?.noTsk
+      ? [
+          { name: 'time', title: words.time },
+          { name: 'debitAcc', title: isRTL ? 'حساب المصروف' : 'Expenses Acc' },
+          { name: 'creditAcc', title: isRTL ? 'حساب الدفع' : 'Payment Acc' },
+          col.department,
+          col.employee,
+          { name: 'desc', title: words.description },
+          { name: 'amount', title: words.amount },
+        ]
+      : [
+          { name: 'time', title: words.time },
+          { name: 'debitAcc', title: isRTL ? 'حساب المصروف' : 'Expenses Acc' },
+          { name: 'creditAcc', title: isRTL ? 'حساب الدفع' : 'Payment Acc' },
+          col.department,
+          col.employee,
+          col.taskId,
+          { name: 'desc', title: words.description },
+          { name: 'amount', title: words.amount },
+        ]
+  );
 
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -73,6 +98,11 @@ export default function Expenses({ isRTL, words, menuitem, theme, company }) {
   const [start, setStart] = useState<any>(null);
   const [end, setEnd] = useState<any>(null);
   const { tasks } = useTasks();
+  const { departments } = useDepartmentsUp();
+  const { employees } = useEmployeesUp();
+  const { resourses } = useResoursesUp();
+  const { products } = useProducts();
+
   const { height } = useWindowDimensions();
   const {
     state: { currentDate, currentViewName, endDate, sort },
@@ -101,7 +131,7 @@ export default function Expenses({ isRTL, words, menuitem, theme, company }) {
         variables: {
           start: start ? start.setHours(0, 0, 0, 0) : undefined,
           end: end ? end.setHours(23, 59, 59, 999) : undefined,
-          opType: 60,
+          opType: 61,
         },
       },
       {
@@ -115,6 +145,10 @@ export default function Expenses({ isRTL, words, menuitem, theme, company }) {
       },
       {
         query: getCustomers,
+      },
+      {
+        query: getProducts,
+        variables: { isRTL },
       },
       {
         query: getEmployees,
@@ -138,7 +172,7 @@ export default function Expenses({ isRTL, words, menuitem, theme, company }) {
     const variables = {
       start: start ? start.setHours(0, 0, 0, 0) : undefined,
       end: end ? end.setHours(23, 59, 59, 999) : undefined,
-      opType: 60,
+      opType: 61,
     };
     loadExpenses({
       variables,
@@ -282,7 +316,14 @@ export default function Expenses({ isRTL, words, menuitem, theme, company }) {
             addAction={addExpenses}
             editAction={editExpenses}
           >
-            <PopupExpenses company={company} tasks={tasks}></PopupExpenses>
+            <PopupExpProducts
+              resourses={resourses}
+              employees={employees}
+              departments={departments}
+              company={company}
+              servicesproducts={products}
+              tasks={tasks}
+            ></PopupExpProducts>
           </PopupEditing>
         </Grid>
         {loading && <Loading isRTL={isRTL} />}

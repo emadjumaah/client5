@@ -183,7 +183,13 @@ export const getColumns = ({ isRTL, words }: any) => {
       id: 28,
       ref: 'toatlExpenses',
       name: 'toatlExpenses',
-      title: isRTL ? 'المصاريف' : 'Expenses',
+      title: isRTL ? 'المصروفات' : 'Expenses',
+    },
+    toatlProdExpenses: {
+      id: 28.1,
+      ref: 'toatlExpenses',
+      name: 'toatlExpenses',
+      title: isRTL ? 'استهلاك البضاعة' : 'Products Expenses',
     },
     desc: {
       id: 29,
@@ -196,6 +202,12 @@ export const getColumns = ({ isRTL, words }: any) => {
       ref: 'item',
       name: isRTL ? 'itemNameAr' : 'itemName',
       title: words.service,
+    },
+    product: {
+      id: 30.5,
+      ref: 'product',
+      name: isRTL ? 'itemNameAr' : 'itemName',
+      title: words.product,
     },
     amountdebit: {
       id: 31,

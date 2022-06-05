@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import { EventsContextTypes } from '../../types';
 
-export const initCustomerReportContext = {
+export const initSupplierReportContext = {
   currentViewName: 'Month',
   currentDate: new Date(),
   endDate: new Date(),
@@ -20,7 +20,7 @@ export const initCustomerReportContext = {
   sort: [{ columnName: 'time', direction: 'desc' }],
 };
 
-export const customerReportReducer = (
+export const supplierReportReducer = (
   state: EventsContextTypes,
   action: any
 ) => {

@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import * as React from "react";
-import Radio from "@material-ui/core/Radio";
-import RadioGroup from "@material-ui/core/RadioGroup";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import { Box, Paper, Typography } from "@material-ui/core";
-import { palettes } from "../../themes/palettes";
+import * as React from 'react';
+import Radio from '@material-ui/core/Radio';
+import RadioGroup from '@material-ui/core/RadioGroup';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import { Box, Paper, Typography } from '@material-ui/core';
+import { palettes } from '../../themes/palettes';
 const GenTheme = ({ themeId, setThemeId, isRTL }) => {
   const onchange = (e: any) => {
     setThemeId(e.target.value);
@@ -12,7 +12,7 @@ const GenTheme = ({ themeId, setThemeId, isRTL }) => {
 
   const renderColors = (pallet: any) => {
     return (
-      <Box display="flex" style={{ flexDirection: "row" }}>
+      <Box display="flex" style={{ flexDirection: 'row' }}>
         <Box
           style={{
             width: 40,
@@ -34,7 +34,7 @@ const GenTheme = ({ themeId, setThemeId, isRTL }) => {
   return (
     <Paper>
       <Box padding={3}>
-        <Typography variant="h6">{isRTL ? "الثيمة" : "Themes"}</Typography>
+        <Typography variant="h6">{isRTL ? 'الثيمة' : 'Themes'}</Typography>
 
         <RadioGroup
           aria-label="Views"
@@ -48,7 +48,7 @@ const GenTheme = ({ themeId, setThemeId, isRTL }) => {
               <Box
                 key={index}
                 display="flex"
-                style={{ flexDirection: "row", marginBottom: 20 }}
+                style={{ flexDirection: 'row', marginBottom: 20 }}
               >
                 <FormControlLabel
                   value={index.toString()}

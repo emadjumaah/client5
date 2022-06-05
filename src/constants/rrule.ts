@@ -265,20 +265,27 @@ export const manamentTabs = [
   {
     id: 5,
     value: 5,
-    nameAr: 'المصاريف',
+    nameAr: 'المصروفات',
     name: 'Expenses',
     ref: 'expenses',
   },
   {
     id: 6,
     value: 6,
+    nameAr: 'استهلاك البضاعة',
+    name: 'Products Expenses',
+    ref: 'expenses',
+  },
+  {
+    id: 7,
+    value: 7,
     nameAr: 'القيود',
     name: ' Entries',
     ref: 'entries',
   },
   {
-    id: 7,
-    value: 7,
+    id: 8,
+    value: 8,
     nameAr: 'المفكرة',
     name: ' Reminders',
     ref: 'reminders',
@@ -379,7 +386,7 @@ export const taskManamentTabs = [
   {
     id: 5,
     value: 5,
-    nameAr: 'المصاريف',
+    nameAr: 'المصروفات',
     name: 'Expenses',
     ref: 'expenses',
   },
@@ -439,7 +446,7 @@ export const projectManamentTabs = [
   {
     id: 5,
     value: 5,
-    nameAr: 'المصاريف',
+    nameAr: 'المصروفات',
     name: 'Expenses',
     ref: 'expenses',
   },

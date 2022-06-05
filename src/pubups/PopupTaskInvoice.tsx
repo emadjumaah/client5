@@ -3,7 +3,7 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { invoiceClasses } from '../themes';
-import { useLastNos, useTemplate } from '../hooks';
+import { useLastNos, useProducts, useTemplate } from '../hooks';
 import { dublicateAlert, errorAlert, messageAlert } from '../Shared';
 import { GContextTypes } from '../types';
 import { GlobalContext } from '../contexts';
@@ -89,6 +89,8 @@ const PopupTaskInvoice = ({
 
   const [isCash, setIsCash] = useState(true);
   const { tempwords, tempoptions } = useTemplate();
+
+  const { products } = useProducts();
 
   const { handleSubmit, reset } = useForm({});
   const {
@@ -579,6 +581,7 @@ const PopupTaskInvoice = ({
             <Box display="flex">
               <ServiceItemForm
                 services={services}
+                products={products}
                 addItem={addItemToList}
                 words={words}
                 classes={classes}

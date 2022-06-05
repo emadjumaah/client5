@@ -11,6 +11,7 @@ export default gql`
     $employeeId: String
     $projectId: String
     $resourseId: String
+    $opType: Int
   ) {
     getExpenses(
       start: $start
@@ -22,6 +23,7 @@ export default gql`
       employeeId: $employeeId
       projectId: $projectId
       resourseId: $resourseId
+      opType: $opType
     ) {
       ok
       error

@@ -9,20 +9,18 @@ import { Autocomplete } from '@material-ui/lab';
 import OptionProductData from './OptionProductData';
 import { yup } from '../constants';
 import AutoPopper from './AutoPopper';
-import { PopupExpenseItem } from '../pubups';
-import { useExpenseItems } from '../hooks';
+import { useServices, useTemplate } from '../hooks';
 import ListboxComponent from '../components/fields/ListboxComponent';
-import { messageAlert } from './helpers';
+import PopupServiceItem from '../pubups/PopupServiceItem';
 
-export default function ExpensesItemForm({
-  items,
+export default function EventtemForm({
+  services,
   addItem,
   words,
   classes,
   user,
   isRTL,
   setAlrt,
-  opType,
 }: any) {
   const [itemError, setItemError] = useState<any>(false);
 
@@ -31,11 +29,13 @@ export default function ExpensesItemForm({
   const [itemprice, setItemprice] = useState(0);
   const [openItem, setOpenItem] = useState(false);
   const [newtext, setNewtext] = useState('');
+  const [desc, setDesc] = useState('');
 
   const { register, handleSubmit, errors } = useForm(yup.invItemResolver);
 
   const itemRef: any = React.useRef();
-  const { addExpenseItem, editExpenseItem } = useExpenseItems();
+  const { addService, editService } = useServices();
+  const { tempoptions } = useTemplate();
 
   const onOpenItem = () => {
     setOpenItem(true);
@@ -54,6 +54,7 @@ export default function ExpensesItemForm({
     setItemprice(0);
     setItemqty(1);
     setItemvalue(null);
+    setDesc('');
   };
 
   const addLocalItem = async () => {
@@ -62,14 +63,6 @@ export default function ExpensesItemForm({
       itemRef.current.focus();
       return;
     }
-    if (opType === 61 && itemvalue.quantity < itemqty) {
-      await messageAlert(
-        setAlrt,
-        isRTL ? 'لا يوجد كمية في المخزم' : 'No stock avaliable'
-      );
-      return;
-    }
-
     const itemdata = {
       ...itemvalue,
       itemqty,
@@ -78,27 +71,21 @@ export default function ExpensesItemForm({
       itemtotalcost: itemqty * itemvalue.cost,
       branch: user.branch,
       userId: user._id,
+      note: desc,
     };
     addItem(itemdata);
     resetAll();
     itemRef.current.focus();
   };
 
-  const name =
-    opType === 61
-      ? isRTL
-        ? 'المنتج'
-        : 'Product'
-      : isRTL
-      ? 'المصروف'
-      : 'Expenses';
+  const name = isRTL ? 'الخدمة' : 'Service';
 
   return (
     <Box
       display="flex"
       style={{
         flex: 1,
-        margin: 10,
+        margin: 5,
         borderRadius: 5,
       }}
     >
@@ -109,7 +96,7 @@ export default function ExpensesItemForm({
               PopperComponent={AutoPopper}
               autoSelect
               size="small"
-              options={items}
+              options={services}
               ListboxComponent={ListboxComponent}
               getOptionLabel={(option: any) =>
                 isRTL ? option.nameAr : option.name
@@ -135,8 +122,8 @@ export default function ExpensesItemForm({
               renderInput={(params) => (
                 <TextField
                   {...params}
-                  id="service"
-                  name="service"
+                  id="product"
+                  name="product"
                   label={name}
                   error={itemError}
                   variant="outlined"
@@ -175,12 +162,12 @@ export default function ExpensesItemForm({
               inputRef={register}
               type="number"
               error={errors.qty ? true : false}
+              fullWidth
               margin="dense"
               onFocus={(e) => e.target.select()}
               inputProps={{
                 style: { textAlign: 'right', fontSize: 13, height: 13 },
               }}
-              fullWidth
             />
           </Grid>
           <Grid item xs={2}>
@@ -188,25 +175,42 @@ export default function ExpensesItemForm({
               name="price"
               onChange={(e: any) => setItemprice(Number(e.target.value))}
               value={itemprice}
-              label={words.cost}
+              label={words.price}
               error={errors.price ? true : false}
               variant="outlined"
               inputRef={register}
               type="number"
+              fullWidth
               margin="dense"
               onFocus={(e) => e.target.select()}
               inputProps={{
                 style: { textAlign: 'right', fontSize: 13, height: 13 },
               }}
-              fullWidth
             />
           </Grid>
+          {!tempoptions?.noTsk && <Grid item xs={2}></Grid>}
+          {!tempoptions?.noTsk && (
+            <Grid item xs={10}>
+              <TextField
+                name="desc"
+                label={words.description}
+                onChange={(e: any) => setDesc(e.target.value)}
+                value={desc}
+                variant="outlined"
+                inputRef={register}
+                margin="dense"
+                fullWidth
+                inputProps={{
+                  style: { textAlign: 'right', fontSize: 13, height: 13 },
+                }}
+              />
+            </Grid>
+          )}
           <Grid item xs={1}></Grid>
           <Grid item xs={1}>
             <Fab
               style={{ marginLeft: 10, marginTop: 5, width: 36, height: 36 }}
               color="primary"
-              size="small"
               onClick={handleSubmit(addLocalItem)}
               title="Create new row"
             >
@@ -214,16 +218,18 @@ export default function ExpensesItemForm({
             </Fab>
           </Grid>
         </Grid>
-        <PopupExpenseItem
+
+        <PopupServiceItem
           newtext={newtext}
           open={openItem}
           onClose={onCloseItem}
           isNew={true}
           setNewValue={onNewItemChange}
           row={null}
-          addAction={addExpenseItem}
-          editAction={editExpenseItem}
-        ></PopupExpenseItem>
+          resType={1}
+          addAction={addService}
+          editAction={editService}
+        ></PopupServiceItem>
       </Box>
     </Box>
   );

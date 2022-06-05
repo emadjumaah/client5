@@ -21,6 +21,7 @@ export default gql`
         totalDiscount
         totalpaid
         toatlExpenses
+        toatlProdExpenses
         totalkaidsdebit
         totalKaidscredit
         progress

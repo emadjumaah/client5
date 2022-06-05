@@ -24,6 +24,7 @@ import ProjectsCustomer from '../Shared/ProjectsCustomer';
 import KaidsCustomer from '../Shared/KaidsCustomer';
 import ReminderCustomer from '../Shared/ReminderCustomer';
 import { useTemplate } from '../hooks';
+import ExpensesProdCustomer from '../Shared/ExpensesProdCustomer';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -97,11 +98,17 @@ const PopupDepartmentView = ({
   const totalDiscount = row?.totalDiscount ? row.totalDiscount : 0;
   const totalpaid = row?.totalpaid ? row.totalpaid : 0;
   const toatlExpenses = row?.toatlExpenses ? row.toatlExpenses : 0;
+  const toatlProdExpenses = row?.toatlProdExpenses ? row.toatlProdExpenses : 0;
   const progress = row?.progress ? row.progress : 0;
   const totalkaidsdebit = row?.totalkaidsdebit ? row.totalkaidsdebit : 0;
   const totalKaidscredit = row?.totalKaidscredit ? row.totalKaidscredit : 0;
   const totalkaids = totalkaidsdebit - totalKaidscredit;
-  const income = totalinvoiced - toatlExpenses - totalDiscount - totalkaids;
+  const income =
+    totalinvoiced -
+    toatlExpenses -
+    toatlProdExpenses -
+    totalDiscount -
+    totalkaids;
   const {
     translate: { words, isRTL },
   }: GContextTypes = useContext(GlobalContext);
@@ -208,6 +215,16 @@ const PopupDepartmentView = ({
                   ></ExpensesCustomer>
                 </TabPanel>
                 <TabPanel value={value} index={6}>
+                  <ExpensesProdCustomer
+                    isRTL={isRTL}
+                    words={words}
+                    theme={theme}
+                    name="departmentId"
+                    value={row}
+                    id={row?._id}
+                  ></ExpensesProdCustomer>
+                </TabPanel>
+                <TabPanel value={value} index={7}>
                   <KaidsCustomer
                     isRTL={isRTL}
                     words={words}
@@ -217,7 +234,7 @@ const PopupDepartmentView = ({
                     id={row?._id}
                   ></KaidsCustomer>
                 </TabPanel>
-                <TabPanel value={value} index={7}>
+                <TabPanel value={value} index={8}>
                   <ReminderCustomer
                     resourses={resourses}
                     employees={employees}
@@ -306,10 +323,18 @@ const PopupDepartmentView = ({
 
                   <Box>
                     <Typography style={{ fontSize: 14 }}>
-                      {isRTL ? 'المصاريف' : 'Total Expenses'}
+                      {isRTL ? 'المصروفات' : 'Total Expenses'}
                     </Typography>{' '}
                     <Typography style={{ fontWeight: 'bold', fontSize: 14 }}>
                       {moneyFormat(toatlExpenses)}
+                    </Typography>
+                  </Box>
+                  <Box>
+                    <Typography style={{ fontSize: 14 }}>
+                      {isRTL ? 'استهلاك البضاعة' : 'Products Expenses'}
+                    </Typography>{' '}
+                    <Typography style={{ fontWeight: 'bold', fontSize: 14 }}>
+                      {moneyFormat(toatlProdExpenses)}
                     </Typography>
                   </Box>
                   <Box>

@@ -21,9 +21,7 @@ import { weekdaysNNo } from '../../../constants/datatypes';
 import { setRowFromAppointment } from '../../../common/calendar';
 import { useLazyQuery } from '@apollo/client';
 import { getActions, getOperationItems } from '../../../graphql';
-import ServiceItemForm from '../../../Shared/ServiceItemForm';
 import ItemsTable from '../../../Shared/ItemsTable';
-// import LoadingInline from '../../../Shared/LoadingInline';
 import { invoiceClasses } from '../../../themes';
 import {
   actionTypeFormatter,
@@ -45,6 +43,7 @@ import useProjects from '../../../hooks/useProjects';
 import PopupMaps from '../../../pubups/PopupMaps';
 import { SelectLocal } from './SelectLocal';
 import { eventLengthOptions } from '../../../constants/rrule';
+import EventtemForm from '../../../Shared/EventtemForm';
 
 export const indexTheList = (list: any) => {
   return list.map((item: any, index: any) => {
@@ -774,7 +773,7 @@ export const AppointForm = (props: any) => {
             }}
           >
             <Box display="flex">
-              <ServiceItemForm
+              <EventtemForm
                 services={services}
                 addItem={addItemToList}
                 words={words}
@@ -782,7 +781,7 @@ export const AppointForm = (props: any) => {
                 user={user}
                 isRTL={isRTL}
                 setAlrt={() => null}
-              ></ServiceItemForm>
+              ></EventtemForm>
             </Box>
             <Box style={{ marginBottom: 10 }}>
               <ItemsTable

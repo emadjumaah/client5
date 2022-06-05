@@ -3,13 +3,12 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { invoiceClasses } from '../themes';
-import { useCustomers, useLastNos, useTemplate } from '../hooks';
+import { useCustomers, useLastNos, useProducts, useTemplate } from '../hooks';
 import { dublicateAlert, errorAlert, messageAlert } from '../Shared';
 import { GContextTypes } from '../types';
 import { GlobalContext } from '../contexts';
 
 import { Box, TextField, Typography } from '@material-ui/core';
-import ServiceItemForm from '../Shared/ServiceItemForm';
 import ItemsTable from '../Shared/ItemsTable';
 import { PriceTotal } from '../Shared/TotalPrice';
 import { operationTypes } from '../constants';
@@ -41,6 +40,7 @@ import useEmployeesUp from '../hooks/useEmployeesUp';
 import useDepartmentsUp from '../hooks/useDepartmentsUp';
 import useResoursesUp from '../hooks/useResoursesUp';
 import { InvoicePrint } from '../print';
+import ServiceItemForm from '../Shared/ServiceItemForm';
 
 export const indexTheList = (list: any) => {
   return list.map((item: any, index: any) => {
@@ -101,7 +101,7 @@ const PopupAppointInvoice = ({
   const { resourses } = useResoursesUp();
   const { company } = useCompany();
   const { tempoptions, tempwords } = useTemplate();
-
+  const { products } = useProducts();
   const { handleSubmit, reset } = useForm({});
   const {
     translate: { words, isRTL },
@@ -634,6 +634,7 @@ const PopupAppointInvoice = ({
             <Box display="flex">
               <ServiceItemForm
                 services={services}
+                products={products}
                 addItem={addItemToList}
                 words={words}
                 classes={classes}
@@ -642,7 +643,6 @@ const PopupAppointInvoice = ({
                 setAlrt={setAlrt}
               ></ServiceItemForm>
             </Box>
-
             <Box style={{ marginBottom: 20 }}>
               <ItemsTable
                 rows={itemsList}

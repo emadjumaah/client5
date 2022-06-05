@@ -30,8 +30,7 @@ import useResoursesUp from '../hooks/useResoursesUp';
 import useProjects from '../hooks/useProjects';
 import ExpensesItemForm from '../Shared/ExpensesItemForm';
 import ExpensesItemsTable from '../Shared/ExpensesItemsTable';
-import { parents } from '../constants/kaid';
-import useAccounts from '../hooks/useAccounts';
+import { accountCode } from '../constants/kaid';
 import { useReactToPrint } from 'react-to-print';
 import { VoucherPrint } from '../print';
 
@@ -44,7 +43,7 @@ export const indexTheList = (list: any) => {
   });
 };
 
-const PopupExpensesDoc = ({
+const PopupExpProducts = ({
   open,
   onClose,
   row,
@@ -65,10 +64,7 @@ const PopupExpensesDoc = ({
   const { tasks } = useTasks();
   const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
   const [selectedDate, setSelectedDate] = React.useState(new Date());
-  const [cridaccounts, setCridaccounts] = React.useState([]);
 
-  const [debitAcc, setDebitAcc]: any = React.useState(null);
-  const [creditAcc, setCreditAcc]: any = React.useState(null);
   const [itemsList, setItemsList] = useState<any>([]);
 
   const [totals, setTotals] = useState<any>({});
@@ -108,7 +104,6 @@ const PopupExpensesDoc = ({
   const { addResourse, editResourse } = useResoursesUp();
   const { addTask, editTask } = useTasks();
   const { tempwords, tempoptions } = useTemplate();
-  const { accounts } = useAccounts();
 
   const { projects } = useProjects();
 
@@ -250,8 +245,6 @@ const PopupExpensesDoc = ({
 
   const resetAllForms = () => {
     reset();
-    setCreditAcc(null);
-    setDebitAcc(null);
     setItemsList([]);
     setTotals({});
     setTaskvalue(null);
@@ -296,8 +289,6 @@ const PopupExpensesDoc = ({
 
   useEffect(() => {
     if (row && row._id) {
-      const ca = row.creditAcc;
-      const da = row.debitAcc;
       setLoading(true);
       const variables = { opId: row._id };
       getItems({
@@ -323,34 +314,8 @@ const PopupExpensesDoc = ({
         const tsk = tasks.filter((ts: any) => ts.id === row.taskId)[0];
         setTaskvalue(tsk);
       }
-      const filteredcredit = accounts.filter(
-        (acc: any) =>
-          acc.parentcode === parents.CASH ||
-          acc.parentcode === parents.ACCOUNTS_PAYABLE
-      );
-      setCridaccounts(filteredcredit);
 
-      if (ca) {
-        const credit = accounts.filter((acc: any) => acc.code === ca)[0];
-        setCreditAcc(credit);
-      }
-      if (da) {
-        const debit = accounts.filter((acc: any) => acc.code === da)[0];
-        setDebitAcc(debit);
-      }
       handleDateChange(row.time);
-    } else {
-      const filtereddebits = accounts.filter(
-        (acc: any) => acc.parentcode === parents.EXPENCES
-      );
-      const filteredcredit = accounts.filter(
-        (acc: any) =>
-          acc.parentcode === parents.CASH ||
-          acc.parentcode === parents.ACCOUNTS_PAYABLE
-      );
-      setCridaccounts(filteredcredit);
-      setCreditAcc(filteredcredit?.[0]);
-      setDebitAcc(filtereddebits?.[0]);
     }
   }, [row]);
 
@@ -398,23 +363,16 @@ const PopupExpensesDoc = ({
       );
       return;
     }
-    if (debitAcc === creditAcc) {
-      await messageAlert(
-        setAlrt,
-        isRTL ? 'الحسابات يجب ان تكون مختلفة' : 'The accounts must be deferent'
-      );
-      return;
-    }
 
-    const { title, desc, chequeBank, chequeNo, chequeDate } = data;
+    const { title, desc } = data;
 
     const { amount } = totals;
     const variables: any = {
       _id: row && row._id ? row._id : undefined, // is it new or edit
-      opType: 60,
+      opType: 61,
       time: selectedDate,
-      debitAcc: debitAcc.code,
-      creditAcc: creditAcc.code,
+      debitAcc: accountCode.cost_of_sales,
+      creditAcc: accountCode.inventory,
       amount,
       taskId: taskvalue ? taskvalue.id : null,
       customer: taskvalue
@@ -475,9 +433,6 @@ const PopupExpensesDoc = ({
       items: JSON.stringify(itemsList),
       title,
       desc,
-      chequeBank,
-      chequeNo,
-      chequeDate,
       branch: user.branch,
       userId: user._id,
     };
@@ -522,8 +477,8 @@ const PopupExpensesDoc = ({
   const day = weekdaysNNo?.[date.getDay()];
   const title = isRTL
     ? isNew
-      ? 'اضافة مصروف'
-      : 'تعديل مصروف'
+      ? 'اضافة استهلاك'
+      : 'تعديل استهلاك'
     : isNew
     ? 'New Expenses'
     : 'Edit Expenses';
@@ -550,26 +505,7 @@ const PopupExpensesDoc = ({
             onChange={handleDateChange}
           ></CalenderLocal>
         </Grid>
-        <Grid item xs={9}>
-          <Grid container spacing={2} style={{ marginTop: 10 }}>
-            <Grid item xs={8}>
-              <AutoFieldLocal
-                name="creditAcc"
-                title={isRTL ? 'حساب الدفع' : 'Payment Acc'}
-                words={words}
-                options={cridaccounts}
-                value={creditAcc}
-                setSelectValue={setCreditAcc}
-                register={register}
-                isRTL={isRTL}
-                fullwidtth
-                mb={0}
-              ></AutoFieldLocal>
-            </Grid>
-
-            <Grid item xs={4}></Grid>
-          </Grid>
-        </Grid>
+        <Grid item xs={3}></Grid>
         <Grid item xs={9}>
           <TextFieldLocal
             name="title"
@@ -659,40 +595,7 @@ const PopupExpensesDoc = ({
             ></AutoFieldLocal>
           </Grid>
         )}
-        <Grid item xs={4}>
-          <TextFieldLocal
-            name="chequeBank"
-            label={words.chequeBank}
-            register={register}
-            errors={errors}
-            row={row}
-            fullWidth
-            mb={0}
-          />
-        </Grid>
-        <Grid item xs={4}>
-          <TextFieldLocal
-            name="chequeNo"
-            label={words.chequeNo}
-            register={register}
-            errors={errors}
-            row={row}
-            fullWidth
-            mb={0}
-          />
-        </Grid>
-        <Grid item xs={4}>
-          <TextFieldLocal
-            name="chequeDate"
-            label={words.chequeDate}
-            register={register}
-            errors={errors}
-            row={row}
-            fullWidth
-            mb={0}
-          />
-        </Grid>
-        <Grid item xs={12}>
+        {/* <Grid item xs={12}>
           <TextFieldLocal
             name="desc"
             multiline
@@ -704,7 +607,7 @@ const PopupExpensesDoc = ({
             fullWidth
             mb={0}
           />
-        </Grid>
+        </Grid> */}
         <Grid item xs={12}>
           {(isNew || itemsList?.length > 0) && (
             <Box
@@ -712,6 +615,7 @@ const PopupExpensesDoc = ({
                 backgroundColor: '#f3f3f3',
                 padding: 10,
                 borderRadius: 10,
+                marginTop: 20,
               }}
             >
               <Box display="flex" style={{ paddingLeft: 10, paddingRight: 10 }}>
@@ -723,7 +627,7 @@ const PopupExpensesDoc = ({
                   user={user}
                   isRTL={isRTL}
                   setAlrt={setAlrt}
-                  opType={60}
+                  opType={61}
                 ></ExpensesItemForm>
               </Box>
               {!loading && (
@@ -826,4 +730,4 @@ const PopupExpensesDoc = ({
   );
 };
 
-export default PopupExpensesDoc;
+export default PopupExpProducts;

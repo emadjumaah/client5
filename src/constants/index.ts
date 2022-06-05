@@ -1,5 +1,5 @@
 import { templates } from './templates';
-import { mainmenu, emplmenu, addButtonsList } from './menu';
+import { mainmenu, emplmenu } from './menu';
 import { colors, colorsList, colorsList2 } from './colors';
 import { drawerWidth } from './sizes';
 import { BUCKET, REGION, ACCESS_KEY_ID, SECRET_ACCESS_KEY } from './aws';
@@ -15,7 +15,7 @@ import { operationTypes, catTypes } from './datatypes';
 import { packages } from './roles';
 
 // Dev
-export const graphqlURI = 'http://jadwal-server/graphql';
+// export const graphqlURI = 'http://jadwal-server/graphql';
 // dev online
 // export const graphqlURI = 'https://jadwal-prod.herokuapp.com/graphql';
 
@@ -26,12 +26,11 @@ export const graphqlURI = 'http://jadwal-server/graphql';
 // export const graphqlURI = 'https://hilaleng.herokuapp.com/';
 
 // Online
-// export const graphqlURI = process.env.REACT_APP_GRAPHQL_URI;
+export const graphqlURI = process.env.REACT_APP_GRAPHQL_URI;
 
 export {
   mainmenu,
   emplmenu,
-  addButtonsList,
   catTypes,
   colors,
   colorsList,
