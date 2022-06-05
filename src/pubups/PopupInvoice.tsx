@@ -35,7 +35,8 @@ import useDepartmentsUp from '../hooks/useDepartmentsUp';
 import useEmployeesUp from '../hooks/useEmployeesUp';
 import useResoursesUp from '../hooks/useResoursesUp';
 import useProjects from '../hooks/useProjects';
-import { InvoicePrint } from '../print';
+// import { InvoicePrint, PosPrint } from '../print';
+import { PosPrint } from '../print';
 
 export const indexTheList = (list: any) => {
   return list.map((item: any, index: any) => {
@@ -273,7 +274,7 @@ const PopupInvoice = ({
     const items = itemsData?.data?.['getOperationItems']?.data || [];
     if (items && items.length > 0) {
       const ids = items.map((it: any) => it.itemId);
-      const servlist = servicesproducts.filter((ser: any) =>
+      const servlist = [...servicesproducts, ...products].filter((ser: any) =>
         ids.includes(ser._id)
       );
 
@@ -328,7 +329,6 @@ const PopupInvoice = ({
       setLoading(false);
     }
   }, [itemsData]);
-
   const { handleSubmit, reset } = useForm({});
 
   const resetAllForms = () => {
@@ -848,12 +848,14 @@ const PopupInvoice = ({
           >
             <Box display="flex" style={{ paddingLeft: 10, paddingRight: 10 }}>
               <ServiceItemForm
-                options={[...servicesproducts, ...products]}
+                services={servicesproducts}
+                products={products}
                 addItem={addItemToList}
                 words={words}
                 classes={classes}
                 user={user}
                 isRTL={isRTL}
+                setAlrt={setAlrt}
               ></ServiceItemForm>
             </Box>
             {(isNew || itemsList.length > 0) && (
@@ -960,7 +962,13 @@ const PopupInvoice = ({
           ></PopupResourses>
           <Box>
             <div style={{ display: 'none' }}>
-              <InvoicePrint
+              {/* <InvoicePrint
+                company={company}
+                user={user}
+                printData={printData}
+                ref={componentRef}
+              /> */}
+              <PosPrint
                 company={company}
                 user={user}
                 printData={printData}

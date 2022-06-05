@@ -30,6 +30,7 @@ export default gql`
         opDocNo
         eventId
         taskId
+        stockId
         qty
         doneQty
         totalCost

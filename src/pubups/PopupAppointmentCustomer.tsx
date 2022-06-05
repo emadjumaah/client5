@@ -631,7 +631,7 @@ const PopupAppointmentCustomer = ({
 
   const apply = async (mutate: any, variables: any) => {
     try {
-    await   mutate({ variables });
+      await mutate({ variables });
       onCloseForm();
     } catch (error) {
       onError(error);
@@ -925,12 +925,13 @@ const PopupAppointmentCustomer = ({
             >
               <Box display="flex">
                 <ServiceItemForm
-                  options={servicesproducts}
+                  services={servicesproducts}
                   addItem={addItemToList}
                   words={words}
                   classes={classes}
                   user={user}
                   isRTL={isRTL}
+                  setAlrt={setAlrt}
                 ></ServiceItemForm>
               </Box>
               {(isNew || itemsList.length > 0) && (

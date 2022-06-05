@@ -85,20 +85,3 @@ div.page-footer {
   background-color: rgb(79, 94, 179);
   color: white;
 }
-
-@media print {
-  @page {
-    size: A4;
-    /* margin: 0mm 0mm 10mm 0mm; */
-  }
-  .watermark {
-    display: block;
-    counter-increment: page;
-    position: fixed;
-  }
-
-  div.page-footer,
-  div.footer-info {
-    display: block;
-  }
-}

@@ -613,6 +613,7 @@ const PopupReminder = ({
                         classes={classes}
                         user={user}
                         isRTL={isRTL}
+                        setAlrt={setAlrt}
                       ></ExpensesItemForm>
                     </Box>
                     {!loading && (

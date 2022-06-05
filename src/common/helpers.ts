@@ -621,3 +621,18 @@ export const getTaskStatus = (tasks: any, isRTL: any) => {
   });
   return rtasks;
 };
+
+export const searchInRows = ({ rows, query }: any) => {
+  const frows = rows.filter((row: any) => {
+    for (const key of Object.keys(row)) {
+      if (
+        row[key] &&
+        row[key].toString().toLowerCase().includes(query.toLowerCase())
+      ) {
+        return true;
+      }
+    }
+    return false;
+  });
+  return frows;
+};

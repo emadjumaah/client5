@@ -690,12 +690,13 @@ const PopupTaskAppointment = ({
             >
               <Box display="flex">
                 <ServiceItemForm
-                  options={servicesproducts}
+                  services={servicesproducts}
                   addItem={addItemToList}
                   words={words}
                   classes={classes}
                   user={user}
                   isRTL={isRTL}
+                  setAlrt={setAlrt}
                 ></ServiceItemForm>
               </Box>
               <Box style={{ marginBottom: 20 }}>

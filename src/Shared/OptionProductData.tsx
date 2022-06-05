@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import React from 'react';
-import { Box, Typography } from '@material-ui/core';
+import { Box, Grid, Typography } from '@material-ui/core';
 
 export const ccyFormat = (num: number) => {
   if (num > 0) {
@@ -9,17 +9,19 @@ export const ccyFormat = (num: number) => {
   return '';
 };
 
-const OptionItemData = ({ item, isRTL }: any) => {
+const OptionProductData = ({ item, isRTL }: any) => {
   return (
     <Box
       display="flex"
+      ml={1}
+      mr={1}
       style={{
         flex: 1,
         direction: isRTL ? 'rtl' : 'ltr',
       }}
     >
-      <Box style={{ position: 'relative', top: 7 }}>
-        <Box>
+      <Grid container spacing={1}>
+        <Grid item xs={6}>
           <Typography
             style={{
               textAlign: isRTL ? 'right' : 'left',
@@ -27,17 +29,26 @@ const OptionItemData = ({ item, isRTL }: any) => {
           >
             {isRTL ? item.nameAr : item.name}
           </Typography>
-        </Box>
-        <Box display="flex" flexDirection="row" style={{ marginBottom: 5 }}>
+        </Grid>
+        <Grid item xs={2}>
+          <Typography
+            style={{
+              textAlign: isRTL ? 'right' : 'left',
+            }}
+          >
+            {item.quantity || ''}
+          </Typography>
+        </Grid>
+        <Grid item xs={2}>
           <Typography
             style={{ color: '#00B77C', width: 100, fontSize: 11 }}
             variant={isRTL ? 'subtitle1' : 'caption'}
           >
             {item.price ? ccyFormat(item.price) : ''}
           </Typography>
-        </Box>
-      </Box>
+        </Grid>
+      </Grid>
     </Box>
   );
 };
-export default OptionItemData;
+export default OptionProductData;

@@ -775,12 +775,13 @@ export const AppointForm = (props: any) => {
           >
             <Box display="flex">
               <ServiceItemForm
-                options={services}
+                services={services}
                 addItem={addItemToList}
                 words={words}
                 classes={classes}
                 user={user}
                 isRTL={isRTL}
+                setAlrt={() => null}
               ></ServiceItemForm>
             </Box>
             <Box style={{ marginBottom: 10 }}>

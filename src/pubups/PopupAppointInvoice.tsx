@@ -633,12 +633,13 @@ const PopupAppointInvoice = ({
           >
             <Box display="flex">
               <ServiceItemForm
-                options={services}
+                services={services}
                 addItem={addItemToList}
                 words={words}
                 classes={classes}
                 user={user}
                 isRTL={isRTL}
+                setAlrt={setAlrt}
               ></ServiceItemForm>
             </Box>
 

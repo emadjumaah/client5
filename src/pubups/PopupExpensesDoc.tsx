@@ -802,12 +802,14 @@ const PopupExpensesDoc = ({
             >
               <Box display="flex" style={{ paddingLeft: 10, paddingRight: 10 }}>
                 <ExpensesItemForm
-                  options={[...servicesproducts, ...products]}
+                  services={servicesproducts}
+                  products={products}
                   addItem={addItemToList}
                   words={words}
                   classes={classes}
                   user={user}
                   isRTL={isRTL}
+                  setAlrt={setAlrt}
                 ></ExpensesItemForm>
               </Box>
               {!loading && (

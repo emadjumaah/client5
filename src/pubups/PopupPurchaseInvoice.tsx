@@ -8,7 +8,6 @@ import { dublicateAlert, errorAlert, messageAlert } from '../Shared';
 import { GContextTypes } from '../types';
 import { GlobalContext } from '../contexts';
 import { Box, TextField, Typography } from '@material-ui/core';
-import ServiceItemForm from '../Shared/ServiceItemForm';
 import ItemsTable from '../Shared/ItemsTable';
 import { PriceTotal } from '../Shared/TotalPrice';
 import { operationTypes } from '../constants';
@@ -37,6 +36,7 @@ import { weekdaysNNo } from '../constants/datatypes';
 import { InvoicePrint } from '../print';
 import { useReactToPrint } from 'react-to-print';
 import useCompany from '../hooks/useCompany';
+import ProductItemForm from '../Shared/ProductItemForm';
 
 export const indexTheList = (list: any) => {
   return list.map((item: any, index: any) => {
@@ -833,14 +833,14 @@ const PopupPurchaseInvoice = ({
             }}
           >
             <Box display="flex">
-              <ServiceItemForm
-                options={servicesproducts}
+              <ProductItemForm
+                products={servicesproducts}
                 addItem={addItemToList}
                 words={words}
                 classes={classes}
                 user={user}
                 isRTL={isRTL}
-              ></ServiceItemForm>
+              ></ProductItemForm>
             </Box>
             {(isNew || itemsList.length > 0) && (
               <Box style={{ marginBottom: 20 }}>
