@@ -996,6 +996,7 @@ const PopupTask = ({
                   </Box>
                   <Box style={{ marginBottom: 20 }}>
                     <ItemsTable
+                      products={servicesproducts}
                       height={200}
                       rows={itemsList}
                       editItem={editItemInList}

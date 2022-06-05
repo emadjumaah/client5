@@ -331,7 +331,7 @@ const PopupDepartmentView = ({
                   </Box>
                   <Box>
                     <Typography style={{ fontSize: 14 }}>
-                      {isRTL ? 'استهلاك البضاعة' : 'Products Expenses'}
+                      {isRTL ? 'استهلاك المنتجات' : 'Products Expenses'}
                     </Typography>{' '}
                     <Typography style={{ fontWeight: 'bold', fontSize: 14 }}>
                       {moneyFormat(toatlProdExpenses)}

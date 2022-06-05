@@ -78,7 +78,7 @@ const drawerClasses = makeStyles((theme: Theme) =>
     child2: {
       padding: 7,
       paddingLeft: 55,
-      backgroundColor: theme.palette.primary.main,
+      backgroundColor: 'theme.palette.primary.main',
       '&:hover': {
         backgroundColor: theme.palette.primary.light,
       },

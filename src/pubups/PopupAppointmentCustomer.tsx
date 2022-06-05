@@ -936,6 +936,7 @@ const PopupAppointmentCustomer = ({
               </Box>
               {(isNew || itemsList.length > 0) && (
                 <ItemsTable
+                  products={servicesproducts}
                   rows={itemsList}
                   editItem={editItemInList}
                   removeItem={removeItemFromList}

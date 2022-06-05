@@ -66,6 +66,7 @@ export default function ItemsTable({
   words,
   user,
   height = 265,
+  products,
 }: any) {
   const [columns] = useState([
     { name: 'index', title: words.no },
@@ -126,7 +127,12 @@ export default function ItemsTable({
             commandComponent={CommandSmall}
           ></TableEditColumn>
           <PopupEditing addAction={addAction} editAction={editItem}>
-            <PopupItem user={user} isRTL={isRTL} words={words}></PopupItem>
+            <PopupItem
+              products={products}
+              user={user}
+              isRTL={isRTL}
+              words={words}
+            ></PopupItem>
           </PopupEditing>
           <Getter
             name="tableColumns"

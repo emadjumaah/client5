@@ -593,6 +593,7 @@ const PopupTaskInvoice = ({
 
             <Box style={{ marginBottom: 20 }}>
               <ItemsTable
+                products={[...services, ...products]}
                 rows={itemsList}
                 editItem={editItemInList}
                 removeItem={removeItemFromList}

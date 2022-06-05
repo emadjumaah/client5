@@ -947,6 +947,7 @@ const PopupAppointment = ({
               {(isNew || itemsList.length > 0) && (
                 <Box style={{ marginBottom: 20 }}>
                   <ItemsTable
+                    products={servicesproducts}
                     rows={itemsList}
                     editItem={editItemInList}
                     removeItem={removeItemFromList}

@@ -74,6 +74,9 @@ export const subMenuItem = ({
             color: isSelected ? theme.palette.secondary.main : undefined,
             margin: 0,
           }}
+          primaryTypographyProps={{
+            style: { fontSize: 15 },
+          }}
         />
       </ListItem>
     </Link>

@@ -625,11 +625,11 @@ const PopupInvoice = ({
 
   const apply = async (mutate: any, variables: any) => {
     try {
-      await mutate({ variables });
-      if (row && row._id) {
-        itemsData?.refetch();
-      }
-      // handlePrint();
+      mutate({ variables });
+      // if (row && row._id) {
+      //   itemsData?.refetch();
+      // }
+      // // handlePrint();
       freshlastNos({});
       setSaving(false);
       onCloseForm();
@@ -861,6 +861,7 @@ const PopupInvoice = ({
             {(isNew || itemsList.length > 0) && (
               <Box style={{ marginBottom: 20 }}>
                 <ItemsTable
+                  products={[...servicesproducts, ...products]}
                   rows={itemsList}
                   editItem={editItemInList}
                   removeItem={removeItemFromList}

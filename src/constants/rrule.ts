@@ -272,7 +272,7 @@ export const manamentTabs = [
   {
     id: 6,
     value: 6,
-    nameAr: 'استهلاك البضاعة',
+    nameAr: 'استهلاك المنتجات',
     name: 'Products Expenses',
     ref: 'expenses',
   },

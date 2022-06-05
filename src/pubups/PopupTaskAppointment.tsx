@@ -702,6 +702,7 @@ const PopupTaskAppointment = ({
               <Box style={{ marginBottom: 20 }}>
                 <ItemsTable
                   height={200}
+                  products={servicesproducts}
                   rows={itemsList}
                   editItem={editItemInList}
                   removeItem={removeItemFromList}

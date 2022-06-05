@@ -5,14 +5,14 @@ export const operationTypes = {
   // المبيعات والمشتريات - زبائن وموردين
   salesInvoice: 10, /// فاتورة المبيع
   salesQoutation: 11,
-  salesDelivery: 12, // مع فاتورة المبيعات عند تسليم البضاعة للزبون
+  salesDelivery: 12, // مع فاتورة المبيعات عند تسليم المنتجات للزبون
   salesReturn: 13,
   customerReceipt: 14, // from customer // cash debit <- accounts_receivable credit
   customerDiscount: 15, // to customer //  accounts_receivable debit <- cash credit  خصمم خارج الفاتورة
 
   purchaseInvoice: 30, // فاتورة الشراء
   purchaseOrder: 31, // طلب شراء قبل فاتورة الشراء
-  purchaseDelivery: 32, //  مع طلب الشراء عند استلام البضاعة من المورد
+  purchaseDelivery: 32, //  مع طلب الشراء عند استلام المنتجات من المورد
   purchaseReturn: 33,
   supplierPayemnt: 34, // to supplier // accounts_payable debit <- cash credit
   supplierDiscount: 35, // from supplier // cash debit <- accounts_payable credit خصمم خارج الفاتورة

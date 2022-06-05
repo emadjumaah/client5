@@ -444,10 +444,10 @@ const PopupExpProducts = ({
 
   const apply = async (mutate: any, variables: any) => {
     try {
-      await mutate({ variables });
-      if (row && row._id) {
-        itemsData?.refetch();
-      }
+      mutate({ variables });
+      // if (row && row._id) {
+      //   itemsData?.refetch();
+      // }
       onCloseForm();
     } catch (error) {
       onError(error);

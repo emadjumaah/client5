@@ -189,7 +189,7 @@ export const getColumns = ({ isRTL, words }: any) => {
       id: 28.1,
       ref: 'toatlExpenses',
       name: 'toatlExpenses',
-      title: isRTL ? 'استهلاك البضاعة' : 'Products Expenses',
+      title: isRTL ? 'استهلاك المنتجات' : 'Products Expenses',
     },
     desc: {
       id: 29,

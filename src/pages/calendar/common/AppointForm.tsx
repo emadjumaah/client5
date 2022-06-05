@@ -785,6 +785,7 @@ export const AppointForm = (props: any) => {
             </Box>
             <Box style={{ marginBottom: 10 }}>
               <ItemsTable
+                products={services}
                 rows={itemsList}
                 editItem={editItemInList}
                 removeItem={removeItemFromList}
