@@ -463,8 +463,8 @@ export default function SalesReport({ isRTL, words, menuitem, theme }: any) {
   ];
 
   const projres = groupList(isRTL).filter((item: any) =>
-    tempoptions.noPro && tempoptions.noRes
-      ? item.id !== 10 && item.id !== 11
+    tempoptions.noPro && tempoptions.noTsk
+      ? item.id !== 10 && item.id !== 11 && item.id !== 8
       : tempoptions.noPro && !tempoptions.noRes
       ? item.id !== 10
       : !tempoptions.noPro && tempoptions.noRes
@@ -603,7 +603,7 @@ export default function SalesReport({ isRTL, words, menuitem, theme }: any) {
             groupItems={groupSummaryItems}
           />
           {group && <IntegratedGrouping />}
-          <IntegratedSummary />
+          {group && <IntegratedSummary />}
           <IntegratedSorting />
           <VirtualTable
             height={height - 100}
@@ -661,12 +661,14 @@ export default function SalesReport({ isRTL, words, menuitem, theme }: any) {
               showColumnsWhenGrouped
             />
           )}
-          <TableSummaryRow
-            messages={{
-              sum: isRTL ? 'المجموع' : 'Total',
-              count: isRTL ? 'العدد' : 'Count',
-            }}
-          ></TableSummaryRow>
+          {group && (
+            <TableSummaryRow
+              messages={{
+                sum: isRTL ? 'المجموع' : 'Total',
+                count: isRTL ? 'العدد' : 'Count',
+              }}
+            ></TableSummaryRow>
+          )}
         </Grid>
         <GridExporter
           ref={exporterRef}

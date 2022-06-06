@@ -208,6 +208,7 @@ const PopupExpProducts = ({
           resourseColor,
           note,
         } = item;
+
         const serv = servlist.filter((se: any) => se._id === item.itemId)[0];
         return {
           ...serv,
@@ -628,6 +629,7 @@ const PopupExpProducts = ({
                   isRTL={isRTL}
                   setAlrt={setAlrt}
                   opType={61}
+                  cost={true}
                 ></ExpensesItemForm>
               </Box>
               {!loading && (

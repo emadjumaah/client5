@@ -9,7 +9,7 @@ export const ccyFormat = (num: number) => {
   return '';
 };
 
-const OptionProductData = ({ item, isRTL }: any) => {
+const OptionProductData = ({ item, isRTL, price = true }: any) => {
   return (
     <Box
       display="flex"
@@ -40,12 +40,22 @@ const OptionProductData = ({ item, isRTL }: any) => {
           </Typography>
         </Grid>
         <Grid item xs={2}>
-          <Typography
-            style={{ color: '#00B77C', width: 100, fontSize: 11 }}
-            variant={isRTL ? 'subtitle1' : 'caption'}
-          >
-            {item.price ? ccyFormat(item.price) : ''}
-          </Typography>
+          {price && (
+            <Typography
+              style={{ color: '#00B77C', width: 100, fontSize: 11 }}
+              variant={isRTL ? 'subtitle1' : 'caption'}
+            >
+              {item.price ? ccyFormat(item.price) : ''}
+            </Typography>
+          )}
+          {!price && (
+            <Typography
+              style={{ color: '#00B77C', width: 100, fontSize: 11 }}
+              variant={isRTL ? 'subtitle1' : 'caption'}
+            >
+              {item.cost ? ccyFormat(item.cost) : ''}
+            </Typography>
+          )}
         </Grid>
       </Grid>
     </Box>

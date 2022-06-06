@@ -12,7 +12,6 @@ export default gql`
     $resourseIds: [String]
     $employeeIds: [String]
     $customerIds: [String]
-    $supplierIds: [String]
     $parentcodes: [Int]
     $taskIds: [Int]
     $start: Date
@@ -29,7 +28,6 @@ export default gql`
       resourseIds: $resourseIds
       employeeIds: $employeeIds
       customerIds: $customerIds
-      supplierIds: $supplierIds
       parentcodes: $parentcodes
       taskIds: $taskIds
       start: $start

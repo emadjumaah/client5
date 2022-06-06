@@ -23,6 +23,7 @@ export default function ExpensesItemForm({
   isRTL,
   setAlrt,
   opType,
+  cost = false,
 }: any) {
   const [itemError, setItemError] = useState<any>(false);
 
@@ -55,6 +56,7 @@ export default function ExpensesItemForm({
     setItemqty(1);
     setItemvalue(null);
   };
+  const costprice = itemprice === 0 ? 0 : cost ? itemvalue?.cost : itemprice;
 
   const addLocalItem = async () => {
     if (!itemvalue) {
@@ -69,12 +71,11 @@ export default function ExpensesItemForm({
       );
       return;
     }
-
     const itemdata = {
       ...itemvalue,
       itemqty,
-      itemprice,
-      itemtotal: itemqty * itemprice,
+      itemprice: costprice,
+      itemtotal: itemqty * costprice,
       itemtotalcost: itemqty * itemvalue.cost,
       branch: user.branch,
       userId: user._id,
@@ -187,7 +188,7 @@ export default function ExpensesItemForm({
             <TextField
               name="price"
               onChange={(e: any) => setItemprice(Number(e.target.value))}
-              value={itemprice}
+              value={costprice}
               label={words.cost}
               error={errors.price ? true : false}
               variant="outlined"

@@ -845,6 +845,7 @@ const PopupPurchaseInvoice = ({
                 classes={classes}
                 user={user}
                 isRTL={isRTL}
+                cost={true}
               ></ProductItemForm>
             </Box>
             {(isNew || itemsList.length > 0) && (

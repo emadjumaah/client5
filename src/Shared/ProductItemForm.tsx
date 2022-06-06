@@ -20,6 +20,7 @@ export default function ProductItemForm({
   classes,
   user,
   isRTL,
+  cost = false,
 }: any) {
   const [itemError, setItemError] = useState<any>(false);
 
@@ -35,6 +36,7 @@ export default function ProductItemForm({
   const itemRef: any = React.useRef();
   const { addService, editService } = useServices();
   const { tempoptions } = useTemplate();
+  const costprice = itemprice === 0 ? 0 : cost ? itemvalue?.cost : itemprice;
 
   const onOpenItem = () => {
     setOpenItem(true);
@@ -66,8 +68,8 @@ export default function ProductItemForm({
     const itemdata = {
       ...itemvalue,
       itemqty,
-      itemprice,
-      itemtotal: itemqty * itemprice,
+      itemprice: costprice,
+      itemtotal: itemqty * costprice,
       itemtotalcost: itemqty * itemvalue.cost,
       branch: user.branch,
       userId: user._id,
@@ -105,6 +107,7 @@ export default function ProductItemForm({
               <OptionProductData
                 isRTL={isRTL}
                 item={option}
+                price={false}
               ></OptionProductData>
             )}
             fullWidth
@@ -173,7 +176,7 @@ export default function ProductItemForm({
           <TextField
             name="price"
             onChange={(e: any) => setItemprice(Number(e.target.value))}
-            value={itemprice}
+            value={costprice}
             label={words.theprice}
             error={errors.price ? true : false}
             variant="outlined"

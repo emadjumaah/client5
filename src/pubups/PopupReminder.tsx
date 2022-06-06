@@ -607,7 +607,7 @@ const PopupReminder = ({
                       style={{ paddingLeft: 10, paddingRight: 10 }}
                     >
                       <ExpensesItemForm
-                        options={servicesproducts}
+                        items={servicesproducts}
                         addItem={addItemToList}
                         words={words}
                         classes={classes}

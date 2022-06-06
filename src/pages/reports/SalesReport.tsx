@@ -481,8 +481,8 @@ export default function SalesReport({
   ];
 
   const projres = groupList(isRTL).filter((item: any) =>
-    tempoptions.noPro && tempoptions.noRes
-      ? item.id !== 10 && item.id !== 11
+    tempoptions.noPro && tempoptions.noTsk
+      ? item.id !== 10 && item.id !== 11 && item.id !== 8
       : tempoptions.noPro && !tempoptions.noRes
       ? item.id !== 10
       : !tempoptions.noPro && tempoptions.noRes
