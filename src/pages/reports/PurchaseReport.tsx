@@ -41,7 +41,6 @@ import {
 import { Box, fade, IconButton, withStyles } from '@material-ui/core';
 import { getMonthlyReport } from '../../graphql';
 import { useLazyQuery } from '@apollo/client';
-import ReportsFilter from '../../Shared/ReportsFilter';
 import { GridExporter } from '@devexpress/dx-react-grid-export';
 import saveAs from 'file-saver';
 import { getColumns } from '../../common/columns';
@@ -53,8 +52,9 @@ import DateNavigatorReports from '../../components/filters/DateNavigatorReports'
 import { PurchaseReportContext } from '../../contexts';
 import { groupList } from '../../constants/reports';
 import { groupSumCount } from '../../common/reports';
-import { useDepartments, useEmployees, useServices } from '../../hooks';
+import { useProducts } from '../../hooks';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
+import FilterSelectCkeckBox from '../../Shared/FilterSelectCkeckBox';
 
 const styles = (theme: any) => ({
   tableStriped: {
@@ -79,8 +79,6 @@ export default function PurchaseReport({
   isRTL,
   words,
   menuitem,
-  suppliers,
-  categories,
   company,
   theme,
 }: any) {
@@ -124,9 +122,7 @@ export default function PurchaseReport({
   const [getSummary, summaryData]: any = useLazyQuery(getMonthlyReport, {
     fetchPolicy: 'cache-and-network',
   });
-  const { departments } = useDepartments();
-  const { employees } = useEmployees();
-  const { services } = useServices();
+  const { products } = useProducts();
 
   const {
     state: {
@@ -147,6 +143,10 @@ export default function PurchaseReport({
   } = useContext(PurchaseReportContext);
   const { height } = useWindowDimensions();
 
+  const setItemDispatch = (value: any) => {
+    dispatch({ type: 'setServicevalue', payload: value });
+  };
+
   const currentViewNameChange = (e: any) => {
     dispatch({ type: 'setCurrentViewName', payload: e.target.value });
   };
@@ -155,22 +155,6 @@ export default function PurchaseReport({
   };
   const endDateChange = (curDate: any) => {
     dispatch({ type: 'setEndDate', payload: curDate });
-  };
-
-  const setServicevalueDispatch = (value: any) => {
-    dispatch({ type: 'setServicevalue', payload: value });
-  };
-  const setDepartvalueDispatch = (value: any) => {
-    dispatch({ type: 'setDepartvalue', payload: value });
-  };
-  const setEmplvalueDispatch = (value: any) => {
-    dispatch({ type: 'setEmplvalue', payload: value });
-  };
-  const setSuppvalueDispatch = (value: any) => {
-    dispatch({ type: 'setSuppvalue', payload: value });
-  };
-  const setCatvalueDispatch = (value: any) => {
-    dispatch({ type: 'setCatvalue', payload: value });
   };
 
   const setGroupbyDispatch = (value: any) => {
@@ -480,25 +464,27 @@ export default function PurchaseReport({
             marginTop: 2,
           }}
         >
-          <ReportsFilter
-            servicevalue={servicevalue}
-            setServicevalue={setServicevalueDispatch}
-            departvalue={departvalue}
-            setDepartvalue={setDepartvalueDispatch}
-            emplvalue={emplvalue}
-            setEmplvalue={setEmplvalueDispatch}
-            departments={departments}
-            employees={employees}
-            services={services}
-            customers={suppliers}
-            custvalue={suppvalue}
-            setCustvalue={setSuppvalueDispatch}
-            catvalue={catvalue}
-            setCatvalue={setCatvalueDispatch}
-            categories={categories}
-            words={words}
-            isRTL={isRTL}
-          ></ReportsFilter>
+          <Box
+            display="flex"
+            style={{
+              height: 38,
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              paddingLeft: 100,
+              paddingRight: 100,
+            }}
+          >
+            <FilterSelectCkeckBox
+              options={products}
+              value={servicevalue?.[0]}
+              setValue={setItemDispatch}
+              words={words}
+              isRTL={isRTL}
+              name="customer"
+              nomulti
+              width={350}
+            ></FilterSelectCkeckBox>
+          </Box>
           <ReportGroupBySwitcher
             options={groupOptions}
             value={groupby}

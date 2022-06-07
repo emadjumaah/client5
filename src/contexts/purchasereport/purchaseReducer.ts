@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import { EventsContextTypes } from "../../types";
+import { EventsContextTypes } from '../../types';
 
 export const initPurchaseReportContext = {
-  currentViewName: "Month",
+  currentViewName: 'Month',
   currentDate: new Date(),
   endDate: new Date(),
   servicevalue: [],
@@ -11,44 +11,44 @@ export const initPurchaseReportContext = {
   suppvalue: [],
   catvalue: [],
   brandvalue: [],
-  groupby: "none",
+  groupby: 'none',
   group: false,
-  sumcolumn: "none",
-  sort: [{ columnName: "opTime", direction: "desc" }],
+  sumcolumn: 'none',
+  sort: [{ columnName: 'opTime', direction: 'desc' }],
 };
 
 export const purchaseReportReducer = (
   state: EventsContextTypes,
-  action: any,
+  action: any
 ) => {
   switch (action.type) {
-    case "setCurrentViewName":
+    case 'setCurrentViewName':
       return { ...state, currentViewName: action.payload };
-    case "setCurrentDate":
+    case 'setCurrentDate':
       return { ...state, currentDate: action.payload };
-    case "setEndDate":
+    case 'setEndDate':
       return { ...state, endDate: action.payload };
-    case "setServicevalue":
+    case 'setServicevalue':
       return { ...state, servicevalue: action.payload };
-    case "setDepartvalue":
+    case 'setDepartvalue':
       return { ...state, departvalue: action.payload };
-    case "setEmplvalue":
+    case 'setEmplvalue':
       return { ...state, emplvalue: action.payload };
-    case "setSupptvalue":
+    case 'setSuppvalue':
       return { ...state, suppvalue: action.payload };
-    case "setCatvalue":
+    case 'setCatvalue':
       return { ...state, catvalue: action.payload };
-    case "setBrandvalue":
+    case 'setBrandvalue':
       return { ...state, brandvalue: action.payload };
-    case "setGroupby":
+    case 'setGroupby':
       return { ...state, groupby: action.payload };
-    case "setGroup":
+    case 'setGroup':
       return { ...state, group: action.payload };
-    case "setSumcolumn":
+    case 'setSumcolumn':
       return { ...state, sumcolumn: action.payload };
-    case "setSort":
+    case 'setSort':
       return { ...state, sort: action.payload };
     default:
-      throw new Error("Unexpected action");
+      throw new Error('Unexpected action');
   }
 };

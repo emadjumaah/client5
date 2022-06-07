@@ -45,6 +45,7 @@ export default function SalesFilter({
   documentTypes,
   types,
   setTypes,
+  product = false,
 }: any) {
   const [resovalueLocal, setResovalueLocal] = React.useState([]);
   const [emplvalueLocal, setEmplvalueLocal] = React.useState([]);
@@ -54,7 +55,6 @@ export default function SalesFilter({
   const [custvalueLocal, setCustvalueLocal] = React.useState([]);
   const [taskvalueLocal, setTaskvalueLocal] = React.useState([]);
   const [typesvalueLocal, setTypesvalueLocal] = React.useState([]);
-
   const [open, setOpen] = React.useState(false);
   const [scroll, setScroll] = React.useState<any>('paper');
   const { tempoptions } = useTemplate();
@@ -210,35 +210,14 @@ export default function SalesFilter({
         >
           <Box>
             <Box>
-              {documentTypes && (
+              {servicevalue && product && (
                 <FilterSelectMulti
-                  options={documentTypes}
-                  value={typesvalueLocal}
-                  setValue={setTypesvalueLocal}
+                  options={services}
+                  value={servicevalueLocal}
+                  setValue={setServicevalueLocal}
                   words={words}
                   isRTL={isRTL}
-                  name="type"
-                  width={350}
-                ></FilterSelectMulti>
-              )}
-              <FilterSelectMulti
-                options={employees}
-                value={emplvalueLocal}
-                setValue={setEmplvalueLocal}
-                words={words}
-                isRTL={isRTL}
-                name="employee"
-                width={350}
-              ></FilterSelectMulti>
-
-              {!tempoptions?.noRes && resourses && resourses.length > 0 && (
-                <FilterSelectMulti
-                  options={resourses}
-                  value={resovalueLocal}
-                  setValue={setResovalueLocal}
-                  words={words}
-                  isRTL={isRTL}
-                  name="resourse"
+                  name="product"
                   width={350}
                 ></FilterSelectMulti>
               )}
@@ -251,6 +230,37 @@ export default function SalesFilter({
                 name="department"
                 width={350}
               ></FilterSelectMulti>
+              <FilterSelectMulti
+                options={employees}
+                value={emplvalueLocal}
+                setValue={setEmplvalueLocal}
+                words={words}
+                isRTL={isRTL}
+                name="employee"
+                width={350}
+              ></FilterSelectMulti>
+              {!product && documentTypes && (
+                <FilterSelectMulti
+                  options={documentTypes}
+                  value={typesvalueLocal}
+                  setValue={setTypesvalueLocal}
+                  words={words}
+                  isRTL={isRTL}
+                  name="type"
+                  width={350}
+                ></FilterSelectMulti>
+              )}
+              {!tempoptions?.noRes && resourses && resourses.length > 0 && (
+                <FilterSelectMulti
+                  options={resourses}
+                  value={resovalueLocal}
+                  setValue={setResovalueLocal}
+                  words={words}
+                  isRTL={isRTL}
+                  name="resourse"
+                  width={350}
+                ></FilterSelectMulti>
+              )}
               {!tempoptions?.noTsk && tasks && tasks.length > 0 && (
                 <FilterSelectMulti
                   options={tasks}
@@ -273,27 +283,18 @@ export default function SalesFilter({
                   width={350}
                 ></FilterSelectMulti>
               )}
-              {servicevalue && servicevalue.length > 0 && (
+
+              {!product && (
                 <FilterSelectMulti
-                  options={services}
-                  value={servicevalueLocal}
-                  setValue={setServicevalueLocal}
+                  options={customers}
+                  value={custvalueLocal}
+                  setValue={setCustvalueLocal}
                   words={words}
                   isRTL={isRTL}
-                  name="serviceproduct"
+                  name="customer"
                   width={350}
                 ></FilterSelectMulti>
               )}
-              <FilterSelectMulti
-                options={customers}
-                value={custvalueLocal}
-                setValue={setCustvalueLocal}
-                words={words}
-                isRTL={isRTL}
-                name="customer"
-                width={350}
-              ></FilterSelectMulti>
-
               {total && total.length > 0 && (
                 <Box
                   display="flex"

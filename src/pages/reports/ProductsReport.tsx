@@ -56,7 +56,7 @@ import { ReportGroupBySwitcher } from '../calendar/common/ReportGroupBySwitcher'
 import DateNavigatorReports from '../../components/filters/DateNavigatorReports';
 import { documentTypes, groupList } from '../../constants/reports';
 import { groupSumCount } from '../../common/reports';
-import { useCustomers, useServices, useTemplate } from '../../hooks';
+import { useCustomers, useProducts, useTemplate } from '../../hooks';
 import useTasks from '../../hooks/useTasks';
 import getReportServices from '../../graphql/query/getReportServices';
 import ServicesReportContext from '../../contexts/servicesReport';
@@ -157,7 +157,7 @@ export default function ProductsReport({
   const { departments } = useDepartmentsUp();
   const { employees } = useEmployeesUp();
   const { resourses } = useResoursesUp();
-  const { services } = useServices();
+  const { products } = useProducts();
 
   const {
     state: {
@@ -290,6 +290,7 @@ export default function ProductsReport({
     emplvalue,
     custvalue,
     taskvalue,
+    servicevalue,
     types,
   ]);
 
@@ -501,7 +502,7 @@ export default function ProductsReport({
     },
   ];
 
-  const projres = groupList(isRTL).filter((item: any) =>
+  const projres = groupList(isRTL, true).filter((item: any) =>
     tempoptions.noPro && tempoptions.noTsk
       ? item.id !== 10 && item.id !== 11 && item.id !== 8
       : tempoptions.noPro && !tempoptions.noRes
@@ -511,7 +512,8 @@ export default function ProductsReport({
       : true
   );
   const groupOptions = projres.filter(
-    (item: any) => item.id !== 6 && item.id !== 7
+    (item: any) =>
+      item.id !== 6 && item.id !== 7 && item.id !== 5 && item.id !== 9
   );
   return (
     <PageLayout
@@ -596,7 +598,7 @@ export default function ProductsReport({
               resourses={resourses}
               resovalue={resovalue}
               setResovalue={setResovalueDispatch}
-              services={services}
+              services={products}
               customers={customers}
               custvalue={custvalue}
               setCustvalue={setCustvalueDispatch}
@@ -608,6 +610,7 @@ export default function ProductsReport({
               documentTypes={documentTypes}
               types={types}
               setTypes={setTypesDispatch}
+              product
             ></ReportsFilter>
             <ReportGroupBySwitcher
               options={groupOptions}

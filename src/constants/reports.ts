@@ -6,7 +6,7 @@ const template = store?.template;
 const lang = store?.lang;
 const words = template?.words?.[lang];
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-export const groupList = (isRTL: any) => [
+export const groupList = (isRTL: any, product = false) => [
   {
     id: 1,
     value: 'none',
@@ -27,7 +27,13 @@ export const groupList = (isRTL: any) => [
   {
     id: 4,
     value: 'service',
-    name: isRTL ? 'تجميع بحسب الخدمة' : 'Group By Service',
+    name: isRTL
+      ? product
+        ? 'تجميع بحسب المنتج'
+        : 'تجميع بحسب الخدمة'
+      : product
+      ? 'Group By Product'
+      : 'Group By Service',
   },
   {
     id: 5,
@@ -82,20 +88,44 @@ export const documentTypes = [
   {
     id: 3,
     value: operationTypes.salesInvoice,
-    name: 'Invoice',
-    nameAr: 'الفواتير',
+    name: 'Sales Invoices',
+    nameAr: 'فواتير البيع',
   },
   {
     id: 4,
     value: operationTypes.customerReceipt,
-    name: 'Receipt',
-    nameAr: 'المقبوض',
+    name: 'Receipts',
+    nameAr: 'سندات القبض',
+  },
+  {
+    id: 5,
+    value: operationTypes.purchaseInvoice,
+    name: 'Purchase Invoices',
+    nameAr: 'فواتير الشراء',
   },
   {
     id: 6,
+    value: operationTypes.supplierPayemnt,
+    name: 'Payemnts',
+    nameAr: 'سندات الدفع',
+  },
+  {
+    id: 7,
     value: operationTypes.expenses,
     name: 'Expenses',
-    nameAr: 'المصروف',
+    nameAr: 'المصروفات',
+  },
+  {
+    id: 8,
+    value: operationTypes.expproducts,
+    name: 'Products Expenses',
+    nameAr: 'استهلاك البضاعة',
+  },
+  {
+    id: 9,
+    value: operationTypes.kaid,
+    name: 'Jornal Vaucher',
+    nameAr: 'قيود اليومية',
   },
 ];
 
