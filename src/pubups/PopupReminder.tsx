@@ -280,7 +280,7 @@ const PopupReminder = ({
       });
       setRrule(rdata);
     }
-  }, [startDate, freq, count, interval]);
+  }, [isNew, startDate, freq, count, interval]);
 
   const resetAllForms = () => {
     setRuntime(null);
@@ -301,9 +301,27 @@ const PopupReminder = ({
   };
 
   const addItemToList = (item: any) => {
-    const newArray = [...itemsList, { ...item, userId: user._id }];
-    const listwithindex = indexTheList(newArray);
-    setItemsList(listwithindex);
+    const isInList = itemsList?.filter((li: any) => li._id === item._id)?.[0];
+    if (isInList) {
+      const newityem = {
+        ...isInList,
+        itemqty: isInList.itemqty + item.itemqty,
+        itemtotal: isInList.itemtotal + item.itemtotal,
+        itemtotalcost: isInList.itemtotalcost + item.itemtotalcost,
+      };
+      const narray = itemsList.map((ilm: any) => {
+        if (ilm._id === newityem._id) {
+          return newityem;
+        } else {
+          return ilm;
+        }
+      });
+      setItemsList(narray);
+    } else {
+      const newArray = [...itemsList, { ...item, userId: user._id }];
+      const listwithindex = indexTheList(newArray);
+      setItemsList(listwithindex);
+    }
   };
   const editItemInList = (item: any) => {
     const newArray = itemsList.map((it: any) => {
@@ -333,7 +351,7 @@ const PopupReminder = ({
       return;
     }
 
-    const { amount } = totals;
+    const amount = totals?.amount;
 
     const variables: any = {
       _id: row && row._id ? row._id : undefined, // is it new or edit
@@ -343,13 +361,13 @@ const PopupReminder = ({
       runtime,
       rRule: rrule?.str,
       rruledata: rrule ? JSON.stringify(rrule) : undefined,
-      actions: JSON.stringify(actionslist),
+      actions: actionslist ? JSON.stringify(actionslist) : undefined,
       // customerId: custvalue ? custvalue._id : undefined,
       departmentId: departvalue ? departvalue._id : undefined,
       employeeId: emplvalue ? emplvalue._id : undefined,
       resourseId: resovalue ? resovalue._id : undefined,
       // taskId: taskvalue ? taskvalue.id : undefined,
-      items: JSON.stringify(itemsList),
+      items: itemsList ? JSON.stringify(itemsList) : undefined,
       amount,
       freq,
       count,
@@ -361,7 +379,7 @@ const PopupReminder = ({
 
   const apply = async (mutate: any, variables: any) => {
     try {
-      await mutate({ variables });
+      mutate({ variables });
       onCloseForm();
     } catch (error) {
       onError(error);
@@ -475,7 +493,7 @@ const PopupReminder = ({
                     <TextFieldLocal
                       autoFocus={true}
                       name="rtitle"
-                      label={words.description}
+                      label={words.title}
                       value={rtitle}
                       onChange={(e: any) => setRtitle(e.target.value)}
                       row={row}
@@ -594,43 +612,42 @@ const PopupReminder = ({
                 )}
               </Grid>
               <Grid item xs={12}>
-                {(isNew || itemsList?.length > 0) && (
+                <Box
+                  style={{
+                    backgroundColor: '#f3f3f3',
+                    padding: 10,
+                    borderRadius: 10,
+                  }}
+                >
                   <Box
-                    style={{
-                      backgroundColor: '#f3f3f3',
-                      padding: 10,
-                      borderRadius: 10,
-                    }}
+                    display="flex"
+                    style={{ paddingLeft: 10, paddingRight: 10 }}
                   >
-                    <Box
-                      display="flex"
-                      style={{ paddingLeft: 10, paddingRight: 10 }}
-                    >
-                      <ExpensesItemForm
-                        items={servicesproducts}
-                        addItem={addItemToList}
-                        words={words}
-                        classes={classes}
-                        user={user}
-                        isRTL={isRTL}
-                        setAlrt={setAlrt}
-                      ></ExpensesItemForm>
-                    </Box>
-                    {!loading && (
-                      <Box style={{ marginBottom: 20 }}>
-                        <ExpensesItemsTable
-                          rows={itemsList}
-                          editItem={editItemInList}
-                          removeItem={removeItemFromList}
-                          isRTL={isRTL}
-                          words={words}
-                          user={user}
-                        ></ExpensesItemsTable>
-                      </Box>
-                    )}
-                    {loading && <LoadingInline></LoadingInline>}
+                    <ExpensesItemForm
+                      items={servicesproducts}
+                      addItem={addItemToList}
+                      words={words}
+                      classes={classes}
+                      user={user}
+                      isRTL={isRTL}
+                      setAlrt={setAlrt}
+                    ></ExpensesItemForm>
                   </Box>
-                )}
+                  {!loading && (
+                    <Box style={{ marginBottom: 20 }}>
+                      <ExpensesItemsTable
+                        rows={itemsList}
+                        editItem={editItemInList}
+                        removeItem={removeItemFromList}
+                        isRTL={isRTL}
+                        words={words}
+                        user={user}
+                        products={servicesproducts}
+                      ></ExpensesItemsTable>
+                    </Box>
+                  )}
+                  {loading && <LoadingInline></LoadingInline>}
+                </Box>
               </Grid>
               <Grid item xs={12}>
                 <Box

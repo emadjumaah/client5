@@ -18,7 +18,7 @@ import {
   SearchPanel,
 } from '@devexpress/dx-react-grid-material-ui';
 import { Command, Loading, PopupEditing } from '../../Shared';
-import { getRowId } from '../../common';
+import { getRowId, updateDocNumbers } from '../../common';
 import {
   getPurchaseInvoices,
   createPurchaseInvoice,
@@ -198,7 +198,8 @@ export default function PurchaseInvoices({
     }
     if (opData?.data?.getPurchaseInvoices?.data) {
       const { data } = opData.data.getPurchaseInvoices;
-      setRows(data);
+      const rdata = updateDocNumbers(data);
+      setRows(rdata);
       setLoading(false);
     }
   }, [opData]);

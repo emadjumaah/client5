@@ -28,7 +28,12 @@ import {
   getDateDayTimeFormat,
   moneyFormat,
 } from '../../../Shared/colorFormat';
-import { useCustomers, useServices, useTemplate } from '../../../hooks';
+import {
+  useCustomers,
+  useProducts,
+  useServices,
+  useTemplate,
+} from '../../../hooks';
 import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
 import DeleteOutlinedIcon from '@material-ui/icons/DeleteOutlined';
 import PopupAction from '../../../pubups/PopupAction';
@@ -43,7 +48,7 @@ import useProjects from '../../../hooks/useProjects';
 import PopupMaps from '../../../pubups/PopupMaps';
 import { SelectLocal } from './SelectLocal';
 import { eventLengthOptions } from '../../../constants/rrule';
-import EventtemForm from '../../../Shared/EventtemForm';
+import ServiceItemForm from '../../../Shared/ServiceItemForm';
 
 export const indexTheList = (list: any) => {
   return list.map((item: any, index: any) => {
@@ -63,9 +68,7 @@ export const AppointForm = (props: any) => {
 
   const [startDate, setStartDate]: any = useState(row?.startDate);
   const [endDate, setEndDate]: any = useState(row?.endDate);
-  const [eventLength, setEventLength]: any = useState(
-    eventLengthOptions[0].value
-  );
+  const [eventLength, setEventLength]: any = useState(null);
 
   const [status, setStatus] = useState(row?.status || 2);
 
@@ -102,6 +105,7 @@ export const AppointForm = (props: any) => {
   const { tasks, addTask, editTask } = useTasks();
   const { projects } = useProjects();
   const { services } = useServices();
+  const { products } = useProducts();
 
   const {
     translate: { words, isRTL },
@@ -168,7 +172,9 @@ export const AppointForm = (props: any) => {
 
     if (items && items.length > 0) {
       const ids = items.map((it: any) => it.itemId);
-      const servlist = services.filter((ser: any) => ids.includes(ser._id));
+      const servlist = [...services, ...products].filter((ser: any) =>
+        ids.includes(ser._id)
+      );
 
       const itemsWqtyprice = items.map((item: any, index: any) => {
         const {
@@ -272,9 +278,27 @@ export const AppointForm = (props: any) => {
   }, [tasks, employees, resourses, departments, customers]);
 
   const addItemToList = (item: any) => {
-    const newArray = [...itemsList, { ...item, userId: user._id }];
-    const listwithindex = indexTheList(newArray);
-    setItemsList(listwithindex);
+    const isInList = itemsList?.filter((li: any) => li._id === item._id)?.[0];
+    if (isInList) {
+      const newityem = {
+        ...isInList,
+        itemqty: isInList.itemqty + item.itemqty,
+        itemtotal: isInList.itemtotal + item.itemtotal,
+        itemtotalcost: isInList.itemtotalcost + item.itemtotalcost,
+      };
+      const narray = itemsList.map((ilm: any) => {
+        if (ilm._id === newityem._id) {
+          return newityem;
+        } else {
+          return ilm;
+        }
+      });
+      setItemsList(narray);
+    } else {
+      const newArray = [...itemsList, { ...item, userId: user._id }];
+      const listwithindex = indexTheList(newArray);
+      setItemsList(listwithindex);
+    }
   };
   const editItemInList = (item: any) => {
     const newArray = itemsList.map((it: any) => {
@@ -324,6 +348,7 @@ export const AppointForm = (props: any) => {
       onNewFieldChange(2, 'status');
     }
   }, [row.status]);
+
   useEffect(() => {
     const title = row.title
       ? row.title
@@ -509,6 +534,12 @@ export const AppointForm = (props: any) => {
   useEffect(() => {
     onFieldChange({ actions: JSON.stringify(actionslist) });
   }, [actionslist]);
+
+  useEffect(() => {
+    if (!row._id) {
+      setEventLength(eventLengthOptions[0].value);
+    }
+  }, []);
 
   const addActionToList = (item: any) => {
     const newArray = [...actionslist, item];
@@ -773,19 +804,20 @@ export const AppointForm = (props: any) => {
             }}
           >
             <Box display="flex">
-              <EventtemForm
+              <ServiceItemForm
                 services={services}
+                products={products}
                 addItem={addItemToList}
                 words={words}
                 classes={classes}
                 user={user}
                 isRTL={isRTL}
                 setAlrt={() => null}
-              ></EventtemForm>
+              ></ServiceItemForm>
             </Box>
             <Box style={{ marginBottom: 10 }}>
               <ItemsTable
-                products={services}
+                products={[...services, ...products]}
                 rows={itemsList}
                 editItem={editItemInList}
                 removeItem={removeItemFromList}

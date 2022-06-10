@@ -99,7 +99,7 @@ export default function Groups(props: any) {
           <DataTypeProvider
             for={['nameAr', 'name']}
             formatterComponent={(props: any) =>
-              nameLinkFormat({ ...props, setItem, setOpenItem })
+              nameLinkFormat({ ...props, setItem, setOpenItem, isRTL })
             }
           ></DataTypeProvider>
           <TableColumnVisibility />

@@ -3,10 +3,12 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import {
   Box,
+  Button,
   Checkbox,
   CircularProgress,
   colors,
   fade,
+  Tooltip,
   Typography,
 } from '@material-ui/core';
 import React from 'react';
@@ -801,28 +803,34 @@ export const taskIdFormatter = ({ value, tasks }: any) => {
   }
 };
 
-export const nameLinkFormat = ({ row, value, setItem, setOpenItem }: any) => {
+export const nameLinkFormat = ({
+  row,
+  value,
+  setItem,
+  setOpenItem,
+  isRTL,
+}: any) => {
   return (
-    <Box
-      onClick={() => {
-        setItem(row);
-        setOpenItem(true);
-      }}
-      style={{
-        cursor: 'pointer',
-        borderRadius: 5,
-      }}
-    >
-      <Typography
-        style={{
-          fontSize: 13,
-          textAlign: 'start',
-          color: colors.deepPurple[500],
+    <Tooltip title={isRTL ? 'استعراض صفحة الادارة' : 'Managment Page'}>
+      <Button
+        onClick={() => {
+          setItem(row);
+          setOpenItem(true);
         }}
+        variant="outlined"
+        color="primary"
+        style={{ minWidth: 150 }}
       >
-        {value}
-      </Typography>
-    </Box>
+        <Typography
+          style={{
+            fontSize: 14,
+            fontWeight: 'bold',
+          }}
+        >
+          {value}
+        </Typography>
+      </Button>
+    </Tooltip>
   );
 };
 

@@ -50,6 +50,7 @@ import useResoursesUp from '../hooks/useResoursesUp';
 import useProjects from '../hooks/useProjects';
 import PopupProjectView from '../pubups/PopupProjectView';
 import getObjectProjects from '../graphql/query/getObjectProjects';
+import { updateDocNumbers } from '../common';
 
 export const getRowId = (row: { _id: any }) => row._id;
 
@@ -188,7 +189,8 @@ export default function ProjectsCustomer({
   useEffect(() => {
     if (tasksData?.data?.getObjectProjects?.data) {
       const { data } = tasksData.data.getObjectProjects;
-      setRows(data);
+      const rdata = updateDocNumbers(data);
+      setRows(rdata);
     }
   }, [tasksData]);
 
@@ -281,7 +283,6 @@ export default function ProjectsCustomer({
             editCustomer={editCustomer}
             company={company}
             projects={projects}
-            servicesproducts={servicesproducts}
             theme={theme}
             refresh={refresh}
           ></PopupTask>

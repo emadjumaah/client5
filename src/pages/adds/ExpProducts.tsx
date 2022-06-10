@@ -18,7 +18,7 @@ import {
   Toolbar,
 } from '@devexpress/dx-react-grid-material-ui';
 import { Command, Loading, PopupEditing } from '../../Shared';
-import { getRowId } from '../../common';
+import { getRowId, updateDocNumbers } from '../../common';
 import { useLazyQuery, useMutation } from '@apollo/client';
 import {
   createExpenses,
@@ -73,6 +73,7 @@ export default function ExpProducts({
     tempoptions?.noTsk
       ? [
           { name: 'time', title: words.time },
+          col.docNo,
           { name: 'debitAcc', title: isRTL ? 'حساب المصروف' : 'Expenses Acc' },
           { name: 'creditAcc', title: isRTL ? 'حساب الدفع' : 'Payment Acc' },
           col.department,
@@ -82,6 +83,7 @@ export default function ExpProducts({
         ]
       : [
           { name: 'time', title: words.time },
+          col.docNo,
           { name: 'debitAcc', title: isRTL ? 'حساب المصروف' : 'Expenses Acc' },
           { name: 'creditAcc', title: isRTL ? 'حساب الدفع' : 'Payment Acc' },
           col.department,
@@ -197,7 +199,8 @@ export default function ExpProducts({
     }
     if (expensesData?.data?.getExpenses?.data) {
       const { data } = expensesData.data.getExpenses;
-      setRows(data);
+      const rdata = updateDocNumbers(data);
+      setRows(rdata);
       setLoading(false);
     }
   }, [expensesData]);

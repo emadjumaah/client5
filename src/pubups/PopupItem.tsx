@@ -174,7 +174,7 @@ const PopupItem = ({
             name="price"
             onChange={(e: any) => setItemprice(Number(e.target.value))}
             value={itemprice}
-            label={words.price}
+            label={words.theprice}
             error={errors.price ? true : false}
             variant="outlined"
             inputRef={register}

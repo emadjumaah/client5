@@ -15,6 +15,8 @@ import {
   SummaryState,
   IntegratedGrouping,
   IntegratedSummary,
+  SearchState,
+  IntegratedFiltering,
 } from '@devexpress/dx-react-grid';
 import {
   Grid,
@@ -26,6 +28,7 @@ import {
   ColumnChooser,
   TableGroupRow,
   TableSummaryRow,
+  SearchPanel,
 } from '@devexpress/dx-react-grid-material-ui';
 import { getRowId } from '../../common';
 import {
@@ -52,6 +55,7 @@ import { useReactToPrint } from 'react-to-print';
 import PrintIcon from '@material-ui/icons/Print';
 import getSuppMonthlyReport from '../../graphql/query/getSuppMonthlyReport';
 import SupplierReportContext from '../../contexts/supplierReport';
+import { SearchTable } from '../../components';
 
 const styles = (theme) => ({
   tableStriped: {
@@ -168,7 +172,8 @@ export default function SupplierReport({
       const { credit, debit } = amount;
 
       if (credit || debit) {
-        const am = debit - credit;
+        // const am = debit - credit;
+        const am = credit - debit;
         updatedRows.unshift({
           _id: Date.now(),
           opTime: start,
@@ -184,7 +189,7 @@ export default function SupplierReport({
     const updatedRows2 =
       updatedRows?.length > 0
         ? updatedRows.map((item: any) => {
-            const rowRased = item.debit ? item.debit : -item.credit;
+            const rowRased = item.credit ? item.credit : -item.debit;
             rased = rased + rowRased;
             return {
               ...item,
@@ -315,8 +320,8 @@ export default function SupplierReport({
           <Box
             style={{
               position: 'absolute',
-              left: isRTL ? 145 : undefined,
-              right: isRTL ? undefined : 145,
+              left: isRTL ? 340 : undefined,
+              right: isRTL ? undefined : 340,
               top: 51,
               zIndex: 112,
             }}
@@ -384,7 +389,8 @@ export default function SupplierReport({
           {group && <IntegratedGrouping />}
           <IntegratedSummary />
           <IntegratedSorting />
-
+          <SearchState />
+          <IntegratedFiltering />
           <VirtualTable
             height={height - 100}
             tableComponent={TableComponent}
@@ -424,6 +430,11 @@ export default function SupplierReport({
           ></DataTypeProvider>
           <Toolbar />
           <ColumnChooser />
+          <SearchPanel
+            inputComponent={(props: any) => {
+              return <SearchTable isRTL={isRTL} {...props}></SearchTable>;
+            }}
+          />
           <ExportPanel startExport={startExport} />
           {group && <TableGroupRow showColumnsWhenGrouped />}
           <TableSummaryRow

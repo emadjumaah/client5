@@ -179,6 +179,13 @@ const PopupFinanceAll = ({
       );
       return;
     }
+    if (selectedDate > new Date()) {
+      await messageAlert(
+        setAlrt,
+        isRTL ? 'يجب تعديل التاريخ' : 'Date should be change'
+      );
+      return;
+    }
     if (!itemsList || itemsList.length === 0) {
       await messageAlert(
         setAlrt,

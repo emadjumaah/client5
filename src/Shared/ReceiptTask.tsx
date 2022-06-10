@@ -15,7 +15,7 @@ import {
   VirtualTable,
 } from '@devexpress/dx-react-grid-material-ui';
 import { Command, Loading, PopupEditing } from '.';
-import { getRowId } from '../common';
+import { getRowId, updateDocNumbers } from '../common';
 import { useLazyQuery, useMutation } from '@apollo/client';
 import {
   createFinance,
@@ -131,7 +131,8 @@ export default function ReceiptTask({ isRTL, words, theme, taskId }) {
     }
     if (financeData?.data?.getReceipts?.data) {
       const { data } = financeData.data.getReceipts;
-      setRows(data);
+      const rdata = updateDocNumbers(data);
+      setRows(rdata);
       setLoading(false);
     }
   }, [financeData]);

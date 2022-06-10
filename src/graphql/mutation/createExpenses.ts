@@ -11,6 +11,7 @@ export default gql`
     $desc: String
     $amount: Float
     $customer: CustomerInput
+    $supplier: SupplierInput
     $department: DepartmentInput
     $employee: EmployeeInput
     $project: ProjectInput
@@ -34,6 +35,7 @@ export default gql`
       items: $items
       amount: $amount
       customer: $customer
+      supplier: $supplier
       department: $department
       employee: $employee
       project: $project

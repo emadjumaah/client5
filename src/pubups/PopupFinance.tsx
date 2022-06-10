@@ -172,6 +172,13 @@ const PopupFinance = ({
       );
       return;
     }
+    if (selectedDate > new Date()) {
+      await messageAlert(
+        setAlrt,
+        isRTL ? 'يجب تعديل التاريخ' : 'Date should be change'
+      );
+      return;
+    }
     const { amount, desc } = data;
     if (!debitAcc || !creditAcc) {
       await messageAlert(

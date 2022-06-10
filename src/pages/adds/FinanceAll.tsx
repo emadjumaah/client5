@@ -18,7 +18,7 @@ import {
   Toolbar,
 } from '@devexpress/dx-react-grid-material-ui';
 import { Command, Loading, PopupEditing } from '../../Shared';
-import { getRowId } from '../../common';
+import { getRowId, updateDocNumbers } from '../../common';
 import { useLazyQuery, useMutation } from '@apollo/client';
 import {
   createGeneralFinance,
@@ -155,7 +155,8 @@ export default function FinanceAll({ isRTL, words, menuitem, theme }) {
     }
     if (financeData?.data?.getGeneralFinances?.data) {
       const { data } = financeData.data.getGeneralFinances;
-      setRows(data);
+      const rdata = updateDocNumbers(data);
+      setRows(rdata);
       setLoading(false);
     }
   }, [financeData]);

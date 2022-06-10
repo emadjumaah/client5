@@ -25,6 +25,7 @@ const PopupServiceItem = ({
   editAction,
   newtext,
   theme,
+  type,
 }: any) => {
   const [saving, setSaving] = useState(false);
   const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
@@ -43,14 +44,15 @@ const PopupServiceItem = ({
     setSaving(true);
     const name = data.name.trim();
     const nameAr = data.nameAr.trim();
-    const { price, unit, desc } = data;
+    const { price, cost, unit, desc } = data;
 
     const variables: any = {
-      _id: row && row._id ? row._id : undefined, // is it new or edit
-      itemType: 2,
+      _id: row && row._id ? row._id : undefined,
+      itemType: type,
       name,
       nameAr,
       price: Number(price),
+      cost: cost ? Number(cost) : undefined,
       unit,
       desc,
       branch: user.branch,
@@ -93,13 +95,22 @@ const PopupServiceItem = ({
   const onHandleSubmit = () => {
     handleSubmit(onSubmit)();
   };
-  const title = isRTL
-    ? isNew
-      ? 'خدمة جديدة'
-      : 'تعديل خدمة'
-    : isNew
-    ? 'New Service'
-    : 'Edit Service';
+  const title =
+    type === 2
+      ? isRTL
+        ? isNew
+          ? 'خدمة جديدة'
+          : 'تعديل خدمة'
+        : isNew
+        ? 'New Service'
+        : 'Edit Service'
+      : isRTL
+      ? isNew
+        ? 'منتج جدبد'
+        : 'تعديل منتج'
+      : isNew
+      ? 'New Product'
+      : 'Edit Product';
   return (
     <PopupLayout
       isRTL={isRTL}
@@ -142,19 +153,22 @@ const PopupServiceItem = ({
                 mb={0}
               />
             </Grid>
-            <Grid item xs={6}>
-              <TextFieldLocal
-                name="unit"
-                label={words.unit}
-                register={register}
-                errors={errors}
-                row={row}
-                newtext={newtext}
-                fullWidth
-                mb={0}
-              />
-            </Grid>
-            <Grid item xs={6}>
+            {type === 1 && (
+              <Grid item xs={4}>
+                <TextFieldLocal
+                  required
+                  name="cost"
+                  label={words.cost}
+                  register={register}
+                  errors={errors}
+                  type="number"
+                  row={row}
+                  fullWidth
+                  mb={0}
+                />
+              </Grid>
+            )}
+            <Grid item xs={type === 2 ? 6 : 4}>
               <TextFieldLocal
                 required
                 name="price"
@@ -163,6 +177,18 @@ const PopupServiceItem = ({
                 errors={errors}
                 type="number"
                 row={row}
+                fullWidth
+                mb={0}
+              />
+            </Grid>
+            <Grid item xs={type === 2 ? 6 : 4}>
+              <TextFieldLocal
+                name="unit"
+                label={words.unit}
+                register={register}
+                errors={errors}
+                row={row}
+                newtext={newtext}
                 fullWidth
                 mb={0}
               />

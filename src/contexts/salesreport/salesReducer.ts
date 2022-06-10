@@ -13,6 +13,7 @@ export const initSalesReportContext = {
   custvalue: [],
   catvalue: [],
   taskvalue: [],
+  itemtypes: [],
   groupby: 'none',
   group: false,
   sumcolumn: 'none',
@@ -44,6 +45,8 @@ export const salesReportReducer = (state: EventsContextTypes, action: any) => {
       return { ...state, catvalue: action.payload };
     case 'setTaskvalue':
       return { ...state, taskvalue: action.payload };
+    case 'setItemtypes':
+      return { ...state, itemtypes: action.payload };
     case 'setGroupby':
       return { ...state, groupby: action.payload };
     case 'setGroup':

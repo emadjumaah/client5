@@ -349,9 +349,27 @@ const PopupInvoice = ({
   };
 
   const addItemToList = (item: any) => {
-    const newArray = [...itemsList, { ...item, userId: user._id }];
-    const listwithindex = indexTheList(newArray);
-    setItemsList(listwithindex);
+    const isInList = itemsList?.filter((li: any) => li._id === item._id)?.[0];
+    if (isInList) {
+      const newityem = {
+        ...isInList,
+        itemqty: isInList.itemqty + item.itemqty,
+        itemtotal: isInList.itemtotal + item.itemtotal,
+        itemtotalcost: isInList.itemtotalcost + item.itemtotalcost,
+      };
+      const narray = itemsList.map((ilm: any) => {
+        if (ilm._id === newityem._id) {
+          return newityem;
+        } else {
+          return ilm;
+        }
+      });
+      setItemsList(narray);
+    } else {
+      const newArray = [...itemsList, { ...item, userId: user._id }];
+      const listwithindex = indexTheList(newArray);
+      setItemsList(listwithindex);
+    }
   };
   const editItemInList = (item: any) => {
     const newArray = itemsList.map((it: any) => {
@@ -502,6 +520,13 @@ const PopupInvoice = ({
   const onSubmit = async () => {
     const { startPeriod, endPeriod } = getAppStartEndPeriod();
     if (selectedDate < startPeriod || selectedDate > endPeriod) {
+      await messageAlert(
+        setAlrt,
+        isRTL ? 'يجب تعديل التاريخ' : 'Date should be change'
+      );
+      return;
+    }
+    if (selectedDate > new Date()) {
       await messageAlert(
         setAlrt,
         isRTL ? 'يجب تعديل التاريخ' : 'Date should be change'
@@ -674,13 +699,7 @@ const PopupInvoice = ({
   };
   const date = row?.startDate ? new Date(row?.startDate) : new Date();
   const day = weekdaysNNo?.[date.getDay()];
-  const title = isRTL
-    ? isNew
-      ? 'فاتورة جديدة'
-      : 'تعديل فاتورة'
-    : isNew
-    ? 'New Invoice'
-    : 'Edit Invoice';
+  const title = isRTL ? 'فاتورة بيع' : 'Sales Invoice';
   return (
     <PopupLayout
       isRTL={isRTL}

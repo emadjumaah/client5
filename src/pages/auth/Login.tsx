@@ -68,7 +68,10 @@ const Login = ({ dispatch, wrongTimes, startBlock, isRTL }: any): any => {
       });
       dispatch({
         type: 'setThemeId',
-        payload: user?.themeId ? user?.themeId : template?.id - 1,
+        payload:
+          user?.themeId || user?.themeId === 0
+            ? user?.themeId
+            : template?.id - 1,
       });
       seterror(null);
       window.location.reload();

@@ -281,8 +281,8 @@ export default function Finances({
         <Box
           style={{
             position: 'absolute',
-            left: isRTL ? 145 : undefined,
-            right: isRTL ? undefined : 145,
+            left: isRTL ? 340 : undefined,
+            right: isRTL ? undefined : 340,
             top: 146,
             zIndex: 100,
           }}

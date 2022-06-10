@@ -15,6 +15,7 @@ export default gql`
     $supplierIds: [String]
     $parentcodes: [Int]
     $taskIds: [Int]
+    $itemtypes: [Int]
     $start: Date
     $end: Date
   ) {
@@ -32,6 +33,7 @@ export default gql`
       supplierIds: $supplierIds
       parentcodes: $parentcodes
       taskIds: $taskIds
+      itemtypes: $itemtypes
       start: $start
       end: $end
     ) {

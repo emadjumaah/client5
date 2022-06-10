@@ -15,6 +15,8 @@ import {
   SummaryState,
   IntegratedGrouping,
   IntegratedSummary,
+  SearchState,
+  IntegratedFiltering,
 } from '@devexpress/dx-react-grid';
 import {
   Grid,
@@ -26,6 +28,7 @@ import {
   ColumnChooser,
   TableGroupRow,
   TableSummaryRow,
+  SearchPanel,
 } from '@devexpress/dx-react-grid-material-ui';
 import PrintIcon from '@material-ui/icons/Print';
 import { getRowId } from '../../common';
@@ -52,9 +55,9 @@ import _ from 'lodash';
 import PageLayout from '../main/PageLayout';
 import { ReportGroupBySwitcher } from '../calendar/common/ReportGroupBySwitcher';
 import DateNavigatorReports from '../../components/filters/DateNavigatorReports';
-import { documentTypes, groupList } from '../../constants/reports';
+import { groupList } from '../../constants/reports';
 import { groupSumCount } from '../../common/reports';
-import { useCustomers, useServices, useTemplate } from '../../hooks';
+import { useServices, useTemplate } from '../../hooks';
 import useTasks from '../../hooks/useTasks';
 import getReportServices from '../../graphql/query/getReportServices';
 import ServicesReportContext from '../../contexts/servicesReport';
@@ -63,6 +66,8 @@ import useEmployeesUp from '../../hooks/useEmployeesUp';
 import useResoursesUp from '../../hooks/useResoursesUp';
 import useProjects from '../../hooks/useProjects';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
+import { SearchTable } from '../../components';
+import { itemTypes } from '../../constants/datatypes';
 
 const styles = (theme) => ({
   tableStriped: {
@@ -153,7 +158,6 @@ export default function ServicesReport({
   const [getSummary, summaryData]: any = useLazyQuery(getReportServices, {
     fetchPolicy: 'cache-and-network',
   });
-  const { customers } = useCustomers();
   const { departments } = useDepartmentsUp();
   const { employees } = useEmployeesUp();
   const { resourses } = useResoursesUp();
@@ -171,6 +175,7 @@ export default function ServicesReport({
       emplvalue,
       custvalue,
       taskvalue,
+      itemtypes,
       group,
       groupby,
       sumcolumn,
@@ -212,8 +217,8 @@ export default function ServicesReport({
   const setTaskvalueDispatch = (value: any) => {
     dispatch({ type: 'setTaskvalue', payload: value });
   };
-  const setTypesDispatch = (value: any) => {
-    dispatch({ type: 'setTypes', payload: value });
+  const setItemtypesDispatch = (value: any) => {
+    dispatch({ type: 'setItemtypes', payload: value });
   };
   const setServicevalueDispatch = (value: any) => {
     dispatch({ type: 'setServicevalue', payload: value });
@@ -260,6 +265,7 @@ export default function ServicesReport({
       employeeIds: getIds(emplvalue),
       customerIds: getIds(custvalue),
       taskIds: getTaskIds(taskvalue),
+      itemtypes: getTaskIds(itemtypes),
       types: getTypesValue(types),
       start: start ? start.setHours(0, 0, 0, 0) : undefined,
       end: end
@@ -288,6 +294,7 @@ export default function ServicesReport({
     custvalue,
     taskvalue,
     types,
+    itemtypes,
   ]);
 
   const exporterRef: any = useRef(null);
@@ -315,7 +322,6 @@ export default function ServicesReport({
       return false;
     }
   };
-
   useEffect(() => {
     if (group) {
     } else {
@@ -531,8 +537,8 @@ export default function ServicesReport({
         <Box
           style={{
             position: 'absolute',
-            left: isRTL ? 145 : undefined,
-            right: isRTL ? undefined : 145,
+            left: isRTL ? 340 : undefined,
+            right: isRTL ? undefined : 340,
             top: 68,
             zIndex: 100,
           }}
@@ -595,7 +601,7 @@ export default function ServicesReport({
               resovalue={resovalue}
               setResovalue={setResovalueDispatch}
               services={services}
-              customers={customers}
+              // customers={customers}
               custvalue={custvalue}
               setCustvalue={setCustvalueDispatch}
               tasks={tasks}
@@ -603,9 +609,9 @@ export default function ServicesReport({
               setTaskvalue={setTaskvalueDispatch}
               words={words}
               isRTL={isRTL}
-              documentTypes={documentTypes}
-              types={types}
-              setTypes={setTypesDispatch}
+              documentTypes={itemTypes}
+              types={itemtypes}
+              setTypes={setItemtypesDispatch}
             ></ReportsFilter>
             <ReportGroupBySwitcher
               options={groupOptions}
@@ -630,6 +636,8 @@ export default function ServicesReport({
           {group && <IntegratedGrouping />}
           {group && <IntegratedSummary />}
           <IntegratedSorting />
+          <SearchState />
+          <IntegratedFiltering />
           <VirtualTable
             height={height - 100}
             tableComponent={!group ? TableComponent : TableComponent2}
@@ -674,6 +682,11 @@ export default function ServicesReport({
           ></DataTypeProvider>
           <Toolbar />
           <ColumnChooser />
+          <SearchPanel
+            inputComponent={(props: any) => {
+              return <SearchTable isRTL={isRTL} {...props}></SearchTable>;
+            }}
+          />
           <ExportPanel startExport={startExport} />
           {group && (
             <TableGroupRow

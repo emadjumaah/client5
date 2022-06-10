@@ -9,7 +9,7 @@ import { Autocomplete } from '@material-ui/lab';
 import OptionProductData from './OptionProductData';
 import { yup } from '../constants';
 import AutoPopper from './AutoPopper';
-import { useServices, useTemplate } from '../hooks';
+import { useProducts, useTemplate } from '../hooks';
 import ListboxComponent from '../components/fields/ListboxComponent';
 import PopupServiceItem from '../pubups/PopupServiceItem';
 
@@ -34,7 +34,7 @@ export default function ProductItemForm({
   const { register, handleSubmit, errors } = useForm(yup.invItemResolver);
 
   const itemRef: any = React.useRef();
-  const { addService, editService } = useServices();
+  const { addProduct, editProduct } = useProducts();
   const { tempoptions } = useTemplate();
   const costprice = itemprice === 0 ? 0 : cost ? itemvalue?.cost : itemprice;
 
@@ -177,7 +177,7 @@ export default function ProductItemForm({
             name="price"
             onChange={(e: any) => setItemprice(Number(e.target.value))}
             value={costprice}
-            label={words.theprice}
+            label={words.cost}
             error={errors.price ? true : false}
             variant="outlined"
             inputRef={register}
@@ -229,8 +229,9 @@ export default function ProductItemForm({
         setNewValue={onNewItemChange}
         row={null}
         resType={1}
-        addAction={addService}
-        editAction={editService}
+        type={1}
+        addAction={addProduct}
+        editAction={editProduct}
       ></PopupServiceItem>
     </Box>
   );

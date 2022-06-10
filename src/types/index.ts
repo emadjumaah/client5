@@ -24,7 +24,7 @@ interface UserTypes {
 
 export interface StoreTypes {
   lang: string;
-  themeId: string;
+  themeId: number;
   user: UserTypes;
   token: string | null;
   notify: boolean;

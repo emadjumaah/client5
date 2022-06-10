@@ -178,14 +178,16 @@ export default function SalesFilter({
               ? `الفلاتر - (${filtercounts.length})`
               : `Filters - (${filtercounts.length})`}
           </Typography>
-          <IconButton
-            style={{ marginRight: 10, width: 30, height: 30 }}
-            onClick={handleResetAll}
-          >
-            <CloseIcon></CloseIcon>
-          </IconButton>
         </Box>
       </Button>
+      <IconButton
+        style={{ marginRight: 0, width: 30, height: 30 }}
+        onClick={() => {
+          handleResetAll();
+        }}
+      >
+        <CloseIcon></CloseIcon>
+      </IconButton>
       <Dialog
         open={open}
         onClose={handleClose}
@@ -284,7 +286,7 @@ export default function SalesFilter({
                 ></FilterSelectMulti>
               )}
 
-              {!product && (
+              {!product && customers && (
                 <FilterSelectMulti
                   options={customers}
                   value={custvalueLocal}

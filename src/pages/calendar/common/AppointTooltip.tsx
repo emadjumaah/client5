@@ -25,7 +25,7 @@ import MyIcon from '../../../Shared/MyIcon';
 import useTasks from '../../../hooks/useTasks';
 import useEmployeesUp from '../../../hooks/useEmployeesUp';
 import useDepartmentsUp from '../../../hooks/useDepartmentsUp';
-import { useServices } from '../../../hooks';
+import { useProducts, useServices } from '../../../hooks';
 
 export const RenderToolTip = ({
   appointmentData,
@@ -48,6 +48,7 @@ export const RenderToolTip = ({
   const { employees } = useEmployeesUp();
   const { departments } = useDepartmentsUp();
   const { services } = useServices();
+  const { products } = useProducts();
 
   // useEffect(() => {
   //   const isCalPOSEditor = roles.isEditor();
@@ -99,7 +100,9 @@ export const RenderToolTip = ({
     const items = itemsData?.data?.['getOperationItems']?.data || [];
     if (items && items.length > 0) {
       const ids = items.map((it: any) => it.itemId);
-      const servlist = services.filter((ser: any) => ids.includes(ser._id));
+      const servlist = [...services, ...products].filter((ser: any) =>
+        ids.includes(ser._id)
+      );
 
       const itemsWqtyprice = items.map((item: any, index: any) => {
         const {

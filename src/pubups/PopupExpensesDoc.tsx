@@ -3,7 +3,7 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { invoiceClasses } from '../themes';
-import { useCustomers, useTemplate } from '../hooks';
+import { useCustomers, useSuppliers, useTemplate } from '../hooks';
 import { dublicateAlert, errorAlert, messageAlert } from '../Shared';
 import { GContextTypes } from '../types';
 import { GlobalContext } from '../contexts';
@@ -80,6 +80,11 @@ const PopupExpensesDoc = ({
   );
   const [departError, setDepartError] = useState<any>(false);
   const departRef: any = React.useRef();
+  const [suppvalue, setSuppvalue] = useState<any>(
+    name === 'departmentId' ? value : null
+  );
+  const [suppError, setSuppError] = useState<any>(false);
+  const suppRef: any = React.useRef();
 
   const [emplvalue, setEmplvalue] = useState<any>(
     name === 'employeeId' ? value : null
@@ -111,7 +116,7 @@ const PopupExpensesDoc = ({
   const { accounts } = useAccounts();
 
   const { projects } = useProjects();
-
+  const { suppliers } = useSuppliers();
   const {
     translate: { words, isRTL },
     store: { user },
@@ -259,13 +264,32 @@ const PopupExpensesDoc = ({
     setDepartvalue(null);
     setEmplvalue(null);
     setResovalue(null);
+    setSuppvalue(null);
     setLoading(false);
   };
 
   const addItemToList = (item: any) => {
-    const newArray = [...itemsList, { ...item, userId: user._id }];
-    const listwithindex = indexTheList(newArray);
-    setItemsList(listwithindex);
+    const isInList = itemsList?.filter((li: any) => li._id === item._id)?.[0];
+    if (isInList) {
+      const newityem = {
+        ...isInList,
+        itemqty: isInList.itemqty + item.itemqty,
+        itemtotal: isInList.itemtotal + item.itemtotal,
+        itemtotalcost: isInList.itemtotalcost + item.itemtotalcost,
+      };
+      const narray = itemsList.map((ilm: any) => {
+        if (ilm._id === newityem._id) {
+          return newityem;
+        } else {
+          return ilm;
+        }
+      });
+      setItemsList(narray);
+    } else {
+      const newArray = [...itemsList, { ...item, userId: user._id }];
+      const listwithindex = indexTheList(newArray);
+      setItemsList(listwithindex);
+    }
   };
   const editItemInList = (item: any) => {
     const newArray = itemsList.map((it: any) => {
@@ -306,6 +330,7 @@ const PopupExpensesDoc = ({
       const depId = row.departmentId;
       const empId = row.employeeId;
       const resId = row.resourseId;
+      const suppId = row.supplierId;
       if (depId) {
         const depart = departments.filter((dep: any) => dep._id === depId)[0];
         setDepartvalue(depart);
@@ -315,8 +340,12 @@ const PopupExpensesDoc = ({
         setEmplvalue(empl);
       }
       if (resId) {
-        const empl = resourses.filter((emp: any) => emp._id === resId)[0];
-        setResovalue(empl);
+        const reso = resourses.filter((emp: any) => emp._id === resId)[0];
+        setResovalue(reso);
+      }
+      if (suppId) {
+        const supp = suppliers.filter((emp: any) => emp._id === suppId)[0];
+        setSuppvalue(supp);
       }
 
       if (!task && row.taskId) {
@@ -388,7 +417,13 @@ const PopupExpensesDoc = ({
       );
       return;
     }
-
+    if (selectedDate > new Date()) {
+      await messageAlert(
+        setAlrt,
+        isRTL ? 'يجب تعديل التاريخ' : 'Date should be change'
+      );
+      return;
+    }
     if (!itemsList || itemsList.length === 0) {
       await messageAlert(
         setAlrt,
@@ -431,6 +466,18 @@ const PopupExpensesDoc = ({
             customerPhone: undefined,
           },
 
+      supplier: suppvalue
+        ? {
+            supplierId: suppvalue._id,
+            supplierName: suppvalue.name,
+            supplierNameAr: suppvalue.nameAr,
+          }
+        : {
+            departmentId: undefined,
+            departmentName: undefined,
+            departmentNameAr: undefined,
+            departmentColor: undefined,
+          },
       department: departvalue
         ? {
             departmentId: departvalue._id,
@@ -482,8 +529,6 @@ const PopupExpensesDoc = ({
       userId: user._id,
     };
     const mutate = isNew ? addAction : editAction;
-    console.log('variables', variables);
-    // return;
     apply(mutate, variables);
   };
 
@@ -552,36 +597,46 @@ const PopupExpensesDoc = ({
         </Grid>
         <Grid item xs={9}>
           <Grid container spacing={2} style={{ marginTop: 10 }}>
-            <Grid item xs={8}>
+            <Grid item xs={5}>
               <AutoFieldLocal
                 name="creditAcc"
                 title={isRTL ? 'حساب الدفع' : 'Payment Acc'}
                 words={words}
                 options={cridaccounts}
                 value={creditAcc}
-                setSelectValue={setCreditAcc}
+                setSelectValue={(value: any) => {
+                  setCreditAcc(value);
+                  setSuppvalue(null);
+                }}
                 register={register}
                 isRTL={isRTL}
                 fullwidtth
                 mb={0}
+                nosort
               ></AutoFieldLocal>
             </Grid>
 
-            <Grid item xs={4}></Grid>
+            {creditAcc?.code === 2000 && (
+              <Grid item xs={5}>
+                <AutoFieldLocal
+                  name="supplier"
+                  title={words?.supplier}
+                  words={words}
+                  options={suppliers}
+                  value={suppvalue}
+                  setSelectValue={setSuppvalue}
+                  setSelectError={setSuppError}
+                  selectError={suppError}
+                  refernce={suppRef}
+                  isRTL={isRTL}
+                  fullWidth
+                  disabled={name === 'suppmentId'}
+                  mb={0}
+                ></AutoFieldLocal>
+              </Grid>
+            )}
           </Grid>
         </Grid>
-        <Grid item xs={9}>
-          <TextFieldLocal
-            name="title"
-            label={words.title}
-            register={register}
-            errors={errors}
-            row={row}
-            fullWidth
-            mb={0}
-          />
-        </Grid>
-        <Grid item xs={3}></Grid>
         {!tempoptions?.noRes && (
           <Grid item xs={6}>
             <AutoFieldLocal
@@ -659,7 +714,46 @@ const PopupExpensesDoc = ({
             ></AutoFieldLocal>
           </Grid>
         )}
-        <Grid item xs={4}>
+
+        <Grid item xs={12}>
+          <Box
+            style={{
+              backgroundColor: '#f3f3f3',
+              padding: 10,
+              borderRadius: 10,
+              marginTop: 20,
+            }}
+          >
+            <Box display="flex" style={{ paddingLeft: 10, paddingRight: 10 }}>
+              <ExpensesItemForm
+                items={servicesproducts}
+                addItem={addItemToList}
+                words={words}
+                classes={classes}
+                user={user}
+                isRTL={isRTL}
+                setAlrt={setAlrt}
+                opType={60}
+              ></ExpensesItemForm>
+            </Box>
+            {!loading && (
+              <Box style={{ marginBottom: 10 }}>
+                <ExpensesItemsTable
+                  rows={itemsList}
+                  editItem={editItemInList}
+                  removeItem={removeItemFromList}
+                  isRTL={isRTL}
+                  words={words}
+                  user={user}
+                  products={servicesproducts}
+                ></ExpensesItemsTable>
+              </Box>
+            )}
+            {loading && <LoadingInline></LoadingInline>}
+          </Box>
+        </Grid>
+        <Grid item xs={1}></Grid>
+        <Grid item xs={3}>
           <TextFieldLocal
             name="chequeBank"
             label={words.chequeBank}
@@ -670,7 +764,7 @@ const PopupExpensesDoc = ({
             mb={0}
           />
         </Grid>
-        <Grid item xs={4}>
+        <Grid item xs={3}>
           <TextFieldLocal
             name="chequeNo"
             label={words.chequeNo}
@@ -681,7 +775,7 @@ const PopupExpensesDoc = ({
             mb={0}
           />
         </Grid>
-        <Grid item xs={4}>
+        <Grid item xs={3}>
           <TextFieldLocal
             name="chequeDate"
             label={words.chequeDate}
@@ -692,55 +786,20 @@ const PopupExpensesDoc = ({
             mb={0}
           />
         </Grid>
-        <Grid item xs={12}>
+        <Grid item xs={2}></Grid>
+        <Grid item xs={1}></Grid>
+        <Grid item xs={9}>
           <TextFieldLocal
-            name="desc"
-            multiline
-            rows={3}
+            name="title"
             label={words.description}
             register={register}
+            multiline
+            rows={3}
             errors={errors}
             row={row}
             fullWidth
             mb={0}
           />
-        </Grid>
-        <Grid item xs={12}>
-          {(isNew || itemsList?.length > 0) && (
-            <Box
-              style={{
-                backgroundColor: '#f3f3f3',
-                padding: 10,
-                borderRadius: 10,
-              }}
-            >
-              <Box display="flex" style={{ paddingLeft: 10, paddingRight: 10 }}>
-                <ExpensesItemForm
-                  items={servicesproducts}
-                  addItem={addItemToList}
-                  words={words}
-                  classes={classes}
-                  user={user}
-                  isRTL={isRTL}
-                  setAlrt={setAlrt}
-                  opType={60}
-                ></ExpensesItemForm>
-              </Box>
-              {!loading && (
-                <Box style={{ marginBottom: 10 }}>
-                  <ExpensesItemsTable
-                    rows={itemsList}
-                    editItem={editItemInList}
-                    removeItem={removeItemFromList}
-                    isRTL={isRTL}
-                    words={words}
-                    user={user}
-                  ></ExpensesItemsTable>
-                </Box>
-              )}
-              {loading && <LoadingInline></LoadingInline>}
-            </Box>
-          )}
         </Grid>
 
         <Grid item xs={12}>

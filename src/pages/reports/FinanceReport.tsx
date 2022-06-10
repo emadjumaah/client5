@@ -13,6 +13,8 @@ import {
   DataTypeProvider,
   SummaryState,
   IntegratedSummary,
+  SearchState,
+  IntegratedFiltering,
 } from '@devexpress/dx-react-grid';
 import {
   Grid,
@@ -23,8 +25,9 @@ import {
   TableColumnVisibility,
   ColumnChooser,
   TableSummaryRow,
+  SearchPanel,
 } from '@devexpress/dx-react-grid-material-ui';
-import { getRowId } from '../../common';
+import { getRowId, updateOpDocRefNumbers } from '../../common';
 import {
   calculateAmount,
   covertToTimeDateDigit,
@@ -57,6 +60,7 @@ import { FinanceReportPrint } from '../../print/FinanceReportPrint';
 import { useReactToPrint } from 'react-to-print';
 import PrintIcon from '@material-ui/icons/Print';
 import { useTemplate } from '../../hooks';
+import { SearchTable } from '../../components';
 
 const styles = (theme: any) => ({
   tableStriped: {
@@ -94,12 +98,12 @@ export default function FinanceReport({
     tempoptions?.noTsk
       ? [
           col.opTime,
-          col.acc,
-          col.refNo,
-          col.opAcc,
-          col.opType,
-          col.employee,
           col.opDocNo,
+          col.refNo,
+          col.opType,
+          col.acc,
+          col.opAcc,
+          col.employee,
           col.amount,
           col.amountdebit,
           col.amountcredit,
@@ -108,13 +112,13 @@ export default function FinanceReport({
       : [
           col.opTime,
           col.acc,
-          col.taskId,
+          col.opDocNo,
           col.refNo,
+          col.opType,
+          col.taskId,
           col.opAcc,
           col.project,
-          col.opType,
           col.employee,
-          col.opDocNo,
           col.amount,
           col.amountdebit,
           col.amountcredit,
@@ -207,7 +211,9 @@ export default function FinanceReport({
           })
         : [];
 
-    setRows(updatedRows2);
+    const rdata = updateOpDocRefNumbers(updatedRows2);
+
+    setRows(rdata);
   }, [summaryData, isRaseed]);
 
   const getIds = (list: any) =>
@@ -297,8 +303,8 @@ export default function FinanceReport({
           <Box
             style={{
               position: 'absolute',
-              left: isRTL ? 145 : undefined,
-              right: isRTL ? undefined : 145,
+              left: isRTL ? 340 : undefined,
+              right: isRTL ? undefined : 340,
               top: 51,
               zIndex: 112,
             }}
@@ -383,6 +389,8 @@ export default function FinanceReport({
           <SummaryState totalItems={totalSummaryItems} />
           <IntegratedSummary />
           <IntegratedSorting />
+          <SearchState />
+          <IntegratedFiltering />
           <VirtualTable
             height={height - 98}
             tableComponent={TableComponent}
@@ -416,6 +424,11 @@ export default function FinanceReport({
           ></DataTypeProvider>
           <Toolbar />
           <ColumnChooser />
+          <SearchPanel
+            inputComponent={(props: any) => {
+              return <SearchTable isRTL={isRTL} {...props}></SearchTable>;
+            }}
+          />
           <ExportPanel startExport={startExport} />
           <TableSummaryRow
             messages={{

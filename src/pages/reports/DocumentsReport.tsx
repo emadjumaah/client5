@@ -15,6 +15,8 @@ import {
   SummaryState,
   IntegratedGrouping,
   IntegratedSummary,
+  SearchState,
+  IntegratedFiltering,
 } from '@devexpress/dx-react-grid';
 import {
   Grid,
@@ -26,6 +28,7 @@ import {
   ColumnChooser,
   TableGroupRow,
   TableSummaryRow,
+  SearchPanel,
 } from '@devexpress/dx-react-grid-material-ui';
 import PrintIcon from '@material-ui/icons/Print';
 import { getRowId } from '../../common';
@@ -61,6 +64,7 @@ import useProjects from '../../hooks/useProjects';
 import { ReportPrintComponent } from '../../common/ReportPrintComponent';
 import { useReactToPrint } from 'react-to-print';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
+import { SearchTable } from '../../components';
 
 const styles = (theme) => ({
   tableStriped: {
@@ -350,8 +354,8 @@ export default function DocumentsReport({
         <Box
           style={{
             position: 'absolute',
-            left: isRTL ? 145 : undefined,
-            right: isRTL ? undefined : 145,
+            left: isRTL ? 340 : undefined,
+            right: isRTL ? undefined : 340,
             top: 68,
             zIndex: 100,
           }}
@@ -445,6 +449,8 @@ export default function DocumentsReport({
           {group && <IntegratedGrouping />}
           {group && <IntegratedSummary />}
           <IntegratedSorting />
+          <SearchState />
+          <IntegratedFiltering />
           <VirtualTable
             height={height - 100}
             tableComponent={!group ? TableComponent : TableComponent2}
@@ -485,6 +491,11 @@ export default function DocumentsReport({
           ></DataTypeProvider>
           <Toolbar />
           <ColumnChooser />
+          <SearchPanel
+            inputComponent={(props: any) => {
+              return <SearchTable isRTL={isRTL} {...props}></SearchTable>;
+            }}
+          />
           <ExportPanel startExport={startExport} />
           {group && (
             <TableGroupRow

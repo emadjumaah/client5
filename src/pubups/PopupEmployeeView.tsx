@@ -221,7 +221,7 @@ const PopupEmployeeView = ({
                     isRTL={isRTL}
                     words={words}
                     theme={theme}
-                    name="departmentId"
+                    name="employeeId"
                     value={row}
                     id={row?._id}
                   ></ExpensesProdCustomer>

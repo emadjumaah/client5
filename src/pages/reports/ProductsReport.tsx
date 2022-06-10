@@ -15,6 +15,8 @@ import {
   SummaryState,
   IntegratedGrouping,
   IntegratedSummary,
+  SearchState,
+  IntegratedFiltering,
 } from '@devexpress/dx-react-grid';
 import {
   Grid,
@@ -26,6 +28,7 @@ import {
   ColumnChooser,
   TableGroupRow,
   TableSummaryRow,
+  SearchPanel,
 } from '@devexpress/dx-react-grid-material-ui';
 import PrintIcon from '@material-ui/icons/Print';
 import { getRowId } from '../../common';
@@ -66,6 +69,7 @@ import useResoursesUp from '../../hooks/useResoursesUp';
 import useProjects from '../../hooks/useProjects';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
 import { operationTypes } from '../../constants';
+import { SearchTable } from '../../components';
 
 const styles = (theme) => ({
   tableStriped: {
@@ -512,8 +516,7 @@ export default function ProductsReport({
       : true
   );
   const groupOptions = projres.filter(
-    (item: any) =>
-      item.id !== 6 && item.id !== 7 && item.id !== 5 && item.id !== 9
+    (item: any) => item.id !== 6 && item.id !== 7 && item.id !== 5
   );
   return (
     <PageLayout
@@ -535,8 +538,8 @@ export default function ProductsReport({
         <Box
           style={{
             position: 'absolute',
-            left: isRTL ? 145 : undefined,
-            right: isRTL ? undefined : 145,
+            left: isRTL ? 340 : undefined,
+            right: isRTL ? undefined : 340,
             top: 68,
             zIndex: 100,
           }}
@@ -635,6 +638,8 @@ export default function ProductsReport({
           {group && <IntegratedGrouping />}
           {group && <IntegratedSummary />}
           <IntegratedSorting />
+          <SearchState />
+          <IntegratedFiltering />
           <VirtualTable
             height={height - 100}
             tableComponent={!group ? TableComponent : TableComponent2}
@@ -687,6 +692,11 @@ export default function ProductsReport({
           ></DataTypeProvider>
           <Toolbar />
           <ColumnChooser />
+          <SearchPanel
+            inputComponent={(props: any) => {
+              return <SearchTable isRTL={isRTL} {...props}></SearchTable>;
+            }}
+          />
           <ExportPanel startExport={startExport} />
           {group && (
             <TableGroupRow

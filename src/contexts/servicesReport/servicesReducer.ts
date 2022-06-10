@@ -14,6 +14,7 @@ export const initServicesReportContext = {
   catvalue: [],
   taskvalue: [],
   types: [],
+  itemtypes: [],
   groupby: 'none',
   group: false,
   sumcolumn: 'none',
@@ -50,6 +51,8 @@ export const servicesReportReducer = (
       return { ...state, taskvalue: action.payload };
     case 'setTypes':
       return { ...state, types: action.payload };
+    case 'setItemtypes':
+      return { ...state, itemtypes: action.payload };
     case 'setGroupby':
       return { ...state, groupby: action.payload };
     case 'setGroup':

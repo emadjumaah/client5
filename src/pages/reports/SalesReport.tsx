@@ -15,6 +15,8 @@ import {
   SummaryState,
   IntegratedGrouping,
   IntegratedSummary,
+  SearchState,
+  IntegratedFiltering,
 } from '@devexpress/dx-react-grid';
 import {
   Grid,
@@ -26,6 +28,7 @@ import {
   ColumnChooser,
   TableGroupRow,
   TableSummaryRow,
+  SearchPanel,
 } from '@devexpress/dx-react-grid-material-ui';
 // import PrintIcon from '@material-ui/icons/Print';
 import { getRowId } from '../../common';
@@ -60,6 +63,8 @@ import useEmployeesUp from '../../hooks/useEmployeesUp';
 import useResoursesUp from '../../hooks/useResoursesUp';
 import useProjects from '../../hooks/useProjects';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
+import { SearchTable } from '../../components';
+import { itemTypes } from '../../constants/datatypes';
 
 const styles = (theme: any) => ({
   tableStriped: {
@@ -164,6 +169,7 @@ export default function SalesReport({
       emplvalue,
       custvalue,
       taskvalue,
+      itemtypes,
       group,
       groupby,
       sumcolumn,
@@ -203,6 +209,9 @@ export default function SalesReport({
   };
   const setTaskvalueDispatch = (value: any) => {
     dispatch({ type: 'setTaskvalue', payload: value });
+  };
+  const setItemtypesDispatch = (value: any) => {
+    dispatch({ type: 'setItemtypes', payload: value });
   };
 
   const setGroupbyDispatch = (value: any) => {
@@ -262,6 +271,7 @@ export default function SalesReport({
       customerIds: getIds(custvalue),
       projectIds: getIds(projvalue),
       taskIds: getTaskIds(taskvalue),
+      itemtypes: getTaskIds(itemtypes),
       start: start ? start.setHours(0, 0, 0, 0) : undefined,
       end: end
         ? end.setHours(23, 59, 59, 999)
@@ -286,6 +296,7 @@ export default function SalesReport({
     emplvalue,
     custvalue,
     taskvalue,
+    itemtypes,
   ]);
 
   const exporterRef: any = useRef(null);
@@ -489,7 +500,9 @@ export default function SalesReport({
       ? item.id !== 11
       : true
   );
-  const groupOptions = projres.filter((item: any) => item.id !== 7);
+  const groupOptions = projres.filter(
+    (item: any) => item.id !== 6 && item.id !== 7 && item.id !== 9
+  );
 
   return (
     <PageLayout
@@ -511,8 +524,8 @@ export default function SalesReport({
         <Box
           style={{
             position: 'absolute',
-            left: isRTL ? 145 : undefined,
-            right: isRTL ? undefined : 145,
+            left: isRTL ? 340 : undefined,
+            right: isRTL ? undefined : 340,
             top: 68,
             zIndex: 100,
           }}
@@ -584,6 +597,9 @@ export default function SalesReport({
               setTaskvalue={setTaskvalueDispatch}
               words={words}
               isRTL={isRTL}
+              documentTypes={itemTypes}
+              types={itemtypes}
+              setTypes={setItemtypesDispatch}
             ></ReportsFilter>
             <ReportGroupBySwitcher
               options={groupOptions}
@@ -608,6 +624,8 @@ export default function SalesReport({
           {group && <IntegratedGrouping />}
           {group && <IntegratedSummary />}
           <IntegratedSorting />
+          <SearchState />
+          <IntegratedFiltering />
           <VirtualTable
             height={height - 100}
             tableComponent={!group ? TableComponent : TableComponent2}
@@ -644,6 +662,11 @@ export default function SalesReport({
           ></DataTypeProvider>
           <Toolbar />
           <ColumnChooser />
+          <SearchPanel
+            inputComponent={(props: any) => {
+              return <SearchTable isRTL={isRTL} {...props}></SearchTable>;
+            }}
+          />
           <ExportPanel startExport={startExport} />
           {group && (
             <TableGroupRow

@@ -27,13 +27,7 @@ export const groupList = (isRTL: any, product = false) => [
   {
     id: 4,
     value: 'service',
-    name: isRTL
-      ? product
-        ? 'تجميع بحسب المنتج'
-        : 'تجميع بحسب الخدمة'
-      : product
-      ? 'Group By Product'
-      : 'Group By Service',
+    name: isRTL ? 'تجميع بحسب البند' : 'Group By Item',
   },
   {
     id: 5,

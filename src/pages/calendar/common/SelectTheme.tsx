@@ -14,7 +14,7 @@ export const SelectTheme = ({ isRTL, themeId, onChange }: any) => {
       }}
     >
       {palettes.map((item: any, index: any) => {
-        const isActive = Number(themeId) === index;
+        const isActive = themeId === index;
         return (
           <Box
             key={index}

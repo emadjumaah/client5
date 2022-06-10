@@ -326,7 +326,6 @@ export default function TasksCustomer({
             editCustomer={editCustomer}
             company={company}
             projects={projects}
-            servicesproducts={servicesproducts}
             theme={theme}
             refresh={refresh}
           ></PopupTask>

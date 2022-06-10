@@ -33,7 +33,7 @@ export const getColumns = ({ isRTL, words }: any) => {
       id: 7,
       ref: 'service',
       name: isRTL ? 'itemNameAr' : 'itemName',
-      title: words?.service,
+      title: words?.item,
     },
     department: {
       id: 8,

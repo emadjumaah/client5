@@ -120,6 +120,7 @@ export default function ExpensesItemForm({
                 <OptionProductData
                   isRTL={isRTL}
                   item={option}
+                  price={false}
                 ></OptionProductData>
               )}
               fullWidth

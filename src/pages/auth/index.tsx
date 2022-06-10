@@ -15,8 +15,8 @@ export default function Auth() {
     translate: { isRTL, words },
   }: GContextTypes = useContext(GlobalContext);
 
-  const onThemeSelect = (themeId: any) => {
-    dispatch({ type: 'setThemeId', payload: themeId });
+  const onThemeSelect = (id: any) => {
+    dispatch({ type: 'setThemeId', payload: id });
   };
 
   return (

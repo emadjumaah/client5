@@ -66,6 +66,7 @@ export default function ExpensesItemsTable({
   words,
   user,
   height = 250,
+  products,
 }: any) {
   const [columns] = useState([
     { name: 'index', title: words.no },
@@ -125,7 +126,12 @@ export default function ExpensesItemsTable({
             commandComponent={CommandSmall}
           ></TableEditColumn>
           <PopupEditing addAction={addAction} editAction={editItem}>
-            <PopupItem user={user} isRTL={isRTL} words={words}></PopupItem>
+            <PopupItem
+              products={products}
+              user={user}
+              isRTL={isRTL}
+              words={words}
+            ></PopupItem>
           </PopupEditing>
           <Getter
             name="tableColumns"

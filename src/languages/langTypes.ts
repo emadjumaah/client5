@@ -54,6 +54,7 @@ export interface LanguageType {
     employeeNameAr: string;
     service: string;
     product: string;
+    item: string;
     services: string;
     itemslist: string;
     expenseitems: string;

@@ -219,7 +219,7 @@ export default function Customers(props: any) {
             <DataTypeProvider
               for={['nameAr', 'name']}
               formatterComponent={(props: any) =>
-                nameLinkFormat({ ...props, setItem, setOpenItem })
+                nameLinkFormat({ ...props, setItem, setOpenItem, isRTL })
               }
             ></DataTypeProvider>
           )}

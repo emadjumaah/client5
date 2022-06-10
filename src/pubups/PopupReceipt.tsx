@@ -100,7 +100,8 @@ const PopupReceipt = ({
       const { data } = invoicesData.data.getInvoicesList;
       if (data?.length > 0) {
         const ndata = data.map((d: any) => {
-          const title = `${d.docNo} - ${d.amount}QR`;
+          const ramount = d.amount - d.discount;
+          const title = `${d.docNo} - ${ramount}QR`;
           return {
             ...d,
             name: title,
@@ -115,7 +116,6 @@ const PopupReceipt = ({
       }
     }
   }, [invoicesData]);
-
   useEffect(() => {
     if (row && row._id) {
       const ca = row.creditAcc;
@@ -177,6 +177,13 @@ const PopupReceipt = ({
   const onSubmit = async (data: any) => {
     const { startPeriod, endPeriod } = getAppStartEndPeriod();
     if (selectedDate < startPeriod || selectedDate > endPeriod) {
+      await messageAlert(
+        setAlrt,
+        isRTL ? 'يجب تعديل التاريخ' : 'Date should be change'
+      );
+      return;
+    }
+    if (selectedDate > new Date()) {
       await messageAlert(
         setAlrt,
         isRTL ? 'يجب تعديل التاريخ' : 'Date should be change'

@@ -18,7 +18,7 @@ import { Autocomplete } from '@material-ui/lab';
 import OptionProductData from './OptionProductData';
 import { yup } from '../constants';
 import AutoPopper from './AutoPopper';
-import { useServices, useTemplate } from '../hooks';
+import { useProducts, useServices, useTemplate } from '../hooks';
 import ListboxComponent from '../components/fields/ListboxComponent';
 import PopupServiceItem from '../pubups/PopupServiceItem';
 import { messageAlert } from './helpers';
@@ -49,6 +49,7 @@ export default function ServiceItemForm({
 
   const itemRef: any = React.useRef();
   const { addService, editService } = useServices();
+  const { addProduct, editProduct } = useProducts();
   const { tempoptions } = useTemplate();
 
   useEffect(() => {
@@ -278,8 +279,9 @@ export default function ServiceItemForm({
           setNewValue={onNewItemChange}
           row={null}
           resType={1}
-          addAction={addService}
-          editAction={editService}
+          type={type}
+          addAction={type === 2 ? addService : addProduct}
+          editAction={type === 2 ? editService : editProduct}
         ></PopupServiceItem>
       </Box>
     </Box>

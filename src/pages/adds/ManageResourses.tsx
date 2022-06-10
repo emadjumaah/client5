@@ -205,7 +205,7 @@ export default function ManageResourses({
             <DataTypeProvider
               for={['nameAr', 'name']}
               formatterComponent={(props: any) =>
-                nameLinkFormat({ ...props, setItem, setOpenItem })
+                nameLinkFormat({ ...props, setItem, setOpenItem, isRTL })
               }
             ></DataTypeProvider>
           )}

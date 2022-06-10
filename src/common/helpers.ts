@@ -636,3 +636,31 @@ export const searchInRows = ({ rows, query }: any) => {
   });
   return frows;
 };
+export const zeroPad = (num: any, places: any) =>
+  String(num).padStart(places, '0');
+
+export const updateDocNumbers = (data: any) => {
+  const rdata = data.map((d: any) => {
+    const pre = d?.docNo?.split('-')?.[0];
+    const num = d?.docNo?.split('-')?.[1];
+    return {
+      ...d,
+      docNo: `${pre}-${String(num).padStart(7, '0')}`,
+    };
+  });
+  return rdata;
+};
+export const updateOpDocRefNumbers = (data: any) => {
+  const rdata = data.map((d: any) => {
+    const pre = d?.opDocNo?.split('-')?.[0];
+    const num = d?.opDocNo?.split('-')?.[1];
+    const preref = d?.refNo?.split('-')?.[0];
+    const numref = d?.refNo?.split('-')?.[1];
+    return {
+      ...d,
+      opDocNo: pre ? `${pre}-${String(num).padStart(7, '0')}` : '',
+      refNo: preref ? `${preref}-${String(numref).padStart(7, '0')}` : '',
+    };
+  });
+  return rdata;
+};

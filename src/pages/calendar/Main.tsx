@@ -31,6 +31,7 @@ import {
   getEmployees,
   getEvents,
   getLandingChartData,
+  getProducts,
   getProjects,
   getResourses,
   updateEvent,
@@ -81,6 +82,10 @@ const Main = (props: any) => {
       },
       {
         query: getCustomers,
+      },
+      {
+        query: getProducts,
+        variables: { isRTL },
       },
       {
         query: getEmployees,

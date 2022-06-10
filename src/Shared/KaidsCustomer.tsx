@@ -16,7 +16,7 @@ import {
   VirtualTable,
 } from '@devexpress/dx-react-grid-material-ui';
 import { Loading } from '.';
-import { getRowId } from '../common';
+import { getRowId, updateDocNumbers } from '../common';
 import { useLazyQuery } from '@apollo/client';
 import {
   createdAtFormatter,
@@ -108,7 +108,8 @@ export default function KaidsCustomer({
     }
     if (kaidsData?.data?.getGereralKaids?.data) {
       const { data } = kaidsData.data.getGereralKaids;
-      setRows(data);
+      const rdata = updateDocNumbers(data);
+      setRows(rdata);
       setLoading(false);
     }
   }, [kaidsData]);

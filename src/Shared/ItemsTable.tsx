@@ -70,10 +70,10 @@ export default function ItemsTable({
 }: any) {
   const [columns] = useState([
     { name: 'index', title: words.no },
-    { name: isRTL ? 'nameAr' : 'name', title: words.service },
-    { name: 'note', title: words.description },
+    { name: isRTL ? 'nameAr' : 'name', title: words.item },
+    { name: 'desc', title: words.description },
     { name: 'itemqty', title: words.qty },
-    { name: 'itemprice', title: words.price },
+    { name: 'itemprice', title: words.theprice },
     { name: 'itemtotal', title: words.total },
   ]);
 

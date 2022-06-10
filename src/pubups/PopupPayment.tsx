@@ -182,6 +182,13 @@ const PopupPayment = ({
       );
       return;
     }
+    if (selectedDate > new Date()) {
+      await messageAlert(
+        setAlrt,
+        isRTL ? 'يجب تعديل التاريخ' : 'Date should be change'
+      );
+      return;
+    }
     const { amount, title, desc, chequeBank, chequeNo, chequeDate } = data;
     if (!debitAcc || !creditAcc || !suppvalue) {
       await messageAlert(

@@ -188,7 +188,7 @@ export default function ManageProjects({
             <DataTypeProvider
               for={['nameAr', 'name']}
               formatterComponent={(props: any) =>
-                nameLinkFormat({ ...props, setItem, setOpenItem })
+                nameLinkFormat({ ...props, setItem, setOpenItem, isRTL })
               }
             ></DataTypeProvider>
           )}

@@ -21,6 +21,7 @@ import {
   getInvoices,
   getLandingChartData,
   getLastNos,
+  getProducts,
   getProjects,
   getResourses,
 } from '../graphql';
@@ -130,6 +131,10 @@ const PopupAppointInvoice = ({
         query: getCustomers,
       },
       {
+        query: getProducts,
+        variables: { isRTL },
+      },
+      {
         query: getEmployees,
         variables: { isRTL, resType: 1 },
       },
@@ -179,9 +184,27 @@ const PopupAppointInvoice = ({
   };
 
   const addItemToList = (item: any) => {
-    const newArray = [...itemsList, { ...item, userId: user._id }];
-    const listwithindex = indexTheList(newArray);
-    setItemsList(listwithindex);
+    const isInList = itemsList?.filter((li: any) => li._id === item._id)?.[0];
+    if (isInList) {
+      const newityem = {
+        ...isInList,
+        itemqty: isInList.itemqty + item.itemqty,
+        itemtotal: isInList.itemtotal + item.itemtotal,
+        itemtotalcost: isInList.itemtotalcost + item.itemtotalcost,
+      };
+      const narray = itemsList.map((ilm: any) => {
+        if (ilm._id === newityem._id) {
+          return newityem;
+        } else {
+          return ilm;
+        }
+      });
+      setItemsList(narray);
+    } else {
+      const newArray = [...itemsList, { ...item, userId: user._id }];
+      const listwithindex = indexTheList(newArray);
+      setItemsList(listwithindex);
+    }
   };
   const editItemInList = (item: any) => {
     const newArray = itemsList.map((it: any) => {
@@ -295,6 +318,13 @@ const PopupAppointInvoice = ({
     //   );
     //   return;
     // }
+    if (selectedDate > new Date()) {
+      await messageAlert(
+        setAlrt,
+        isRTL ? 'يجب تعديل التاريخ' : 'Date should be change'
+      );
+      return;
+    }
     if (discount < 0) {
       await messageAlert(
         setAlrt,

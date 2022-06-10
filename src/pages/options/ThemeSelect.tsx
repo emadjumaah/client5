@@ -7,7 +7,7 @@ import { Box, Paper, Typography } from '@material-ui/core';
 import { palettes } from '../../themes/palettes';
 const GenTheme = ({ themeId, setThemeId, isRTL }) => {
   const onchange = (e: any) => {
-    setThemeId(e.target.value);
+    setThemeId(Number(e.target.value));
   };
 
   const renderColors = (pallet: any) => {
@@ -51,7 +51,7 @@ const GenTheme = ({ themeId, setThemeId, isRTL }) => {
                 style={{ flexDirection: 'row', marginBottom: 20 }}
               >
                 <FormControlLabel
-                  value={index.toString()}
+                  value={index}
                   control={<Radio color="primary" />}
                   label=""
                 />

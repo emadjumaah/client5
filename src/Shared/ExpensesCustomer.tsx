@@ -15,7 +15,7 @@ import {
   VirtualTable,
 } from '@devexpress/dx-react-grid-material-ui';
 import { Command, Loading, PopupEditing } from '.';
-import { getRowId } from '../common';
+import { getRowId, updateDocNumbers } from '../common';
 import { useLazyQuery, useMutation } from '@apollo/client';
 import {
   createExpenses,
@@ -198,7 +198,8 @@ export default function ExpensesCustomer({
     }
     if (expensesData?.data?.getExpenses?.data) {
       const { data } = expensesData.data.getExpenses;
-      setRows(data);
+      const rdata = updateDocNumbers(data);
+      setRows(rdata);
       setLoading(false);
     }
   }, [expensesData]);

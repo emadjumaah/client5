@@ -1,5 +1,10 @@
 import { nameToColor, shadeColor } from './color';
-import { isElectron, groupBy } from './helpers';
+import {
+  isElectron,
+  groupBy,
+  updateDocNumbers,
+  updateOpDocRefNumbers,
+} from './helpers';
 import {
   commitAppointmentChanges,
   getSelectedFromAppointment,
@@ -49,4 +54,6 @@ export {
   financeColExtensions,
   jadwalready,
   groupBy,
+  updateDocNumbers,
+  updateOpDocRefNumbers,
 };

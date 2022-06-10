@@ -141,7 +141,7 @@ export default function Sendreqs(props: any) {
           <DataTypeProvider
             for={['nameAr', 'name']}
             formatterComponent={(props: any) =>
-              nameLinkFormat({ ...props, setItem, setOpenItem })
+              nameLinkFormat({ ...props, setItem, setOpenItem, isRTL })
             }
           ></DataTypeProvider>
           <DataTypeProvider

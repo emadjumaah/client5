@@ -20,10 +20,7 @@ import { Grid } from '@material-ui/core';
 import AutoFieldLocal from '../components/fields/AutoFieldLocal';
 import { CalenderLocal, TextFieldLocal } from '../components';
 import { eventStatus, weekdaysNNo } from '../constants/datatypes';
-// import { getAppStartEndPeriod } from "../common/time";
-import EventtemForm from '../Shared/EventtemForm';
 import ItemsTable from '../Shared/ItemsTable';
-// import LoadingInline from '../Shared/LoadingInline';
 import { useLazyQuery } from '@apollo/client';
 import { getActions, getOperationItems } from '../graphql';
 import { invoiceClasses } from '../themes/classes';
@@ -38,7 +35,7 @@ import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
 import DeleteOutlinedIcon from '@material-ui/icons/DeleteOutlined';
 import PopupAction from './PopupAction';
 import { getPopupTitle } from '../constants/menu';
-import { useCustomers, useTemplate } from '../hooks';
+import { useCustomers, useProducts, useTemplate } from '../hooks';
 import PopupCustomer from './PopupCustomer';
 import PopupDeprtment from './PopupDeprtment';
 import PopupTask from './PopupTask';
@@ -54,6 +51,7 @@ import PopupMaps from './PopupMaps';
 import { SelectLocal } from '../pages/calendar/common/SelectLocal';
 import { eventLengthOptions } from '../constants/rrule';
 import { roles } from '../common';
+import ServiceItemForm from '../Shared/ServiceItemForm';
 
 export const indexTheList = (list: any) => {
   return list.map((item: any, index: any) => {
@@ -86,9 +84,7 @@ const PopupAppointmentCustomer = ({
 
   const [startDate, setStartDate]: any = useState(null);
   const [endDate, setEndDate]: any = useState(null);
-  const [eventLength, setEventLength]: any = useState(
-    eventLengthOptions[0].value
-  );
+  const [eventLength, setEventLength]: any = useState(null);
 
   const [departvalue, setDepartvalue] = useState<any>(
     name === 'departmentId' ? value : null
@@ -150,6 +146,7 @@ const PopupAppointmentCustomer = ({
   const { addTask, editTask } = useTasks();
   const { tempwords, tempoptions } = useTemplate();
   const { projects } = useProjects();
+  const { products } = useProducts();
 
   const { register, handleSubmit } = useForm({});
   const {
@@ -284,7 +281,7 @@ const PopupAppointmentCustomer = ({
 
     if (items && items.length > 0) {
       const ids = items.map((it: any) => it.itemId);
-      const servlist = servicesproducts.filter((ser: any) =>
+      const servlist = [...servicesproducts, ...products].filter((ser: any) =>
         ids.includes(ser._id)
       );
 
@@ -395,6 +392,12 @@ const PopupAppointmentCustomer = ({
   }, [itemsList]);
 
   useEffect(() => {
+    if (isNew) {
+      setEventLength(eventLengthOptions[1].value);
+    }
+  }, [isNew]);
+
+  useEffect(() => {
     if (row && row._id) {
       getItems({ variables: { opId: row._id } });
       loadActions({ variables: { eventId: row.id } });
@@ -441,9 +444,27 @@ const PopupAppointmentCustomer = ({
   }, [row]);
 
   const addItemToList = (item: any) => {
-    const newArray = [...itemsList, { ...item, userId: user._id }];
-    const listwithindex = indexTheList(newArray);
-    setItemsList(listwithindex);
+    const isInList = itemsList?.filter((li: any) => li._id === item._id)?.[0];
+    if (isInList) {
+      const newityem = {
+        ...isInList,
+        itemqty: isInList.itemqty + item.itemqty,
+        itemtotal: isInList.itemtotal + item.itemtotal,
+        itemtotalcost: isInList.itemtotalcost + item.itemtotalcost,
+      };
+      const narray = itemsList.map((ilm: any) => {
+        if (ilm._id === newityem._id) {
+          return newityem;
+        } else {
+          return ilm;
+        }
+      });
+      setItemsList(narray);
+    } else {
+      const newArray = [...itemsList, { ...item, userId: user._id }];
+      const listwithindex = indexTheList(newArray);
+      setItemsList(listwithindex);
+    }
   };
   const editItemInList = (item: any) => {
     const newArray = itemsList.map((it: any) => {
@@ -520,7 +541,7 @@ const PopupAppointmentCustomer = ({
     setSelected(null);
     setTasktitle(null);
     setLocation(null);
-    setEventLength(eventLengthOptions[1].value);
+    setEventLength(null);
   };
 
   const onSubmit = async () => {
@@ -924,19 +945,20 @@ const PopupAppointmentCustomer = ({
               }}
             >
               <Box display="flex">
-                <EventtemForm
+                <ServiceItemForm
                   services={servicesproducts}
+                  products={products}
                   addItem={addItemToList}
                   words={words}
                   classes={classes}
                   user={user}
                   isRTL={isRTL}
-                  setAlrt={setAlrt}
-                ></EventtemForm>
+                  setAlrt={() => null}
+                ></ServiceItemForm>
               </Box>
               {(isNew || itemsList.length > 0) && (
                 <ItemsTable
-                  products={servicesproducts}
+                  products={[...servicesproducts, ...products]}
                   rows={itemsList}
                   editItem={editItemInList}
                   removeItem={removeItemFromList}
@@ -1038,7 +1060,7 @@ const PopupAppointmentCustomer = ({
           onClose={() => setOpenInvoice(false)}
           onCloseAppoint={onCloseForm}
           appoint={row}
-          services={servicesproducts}
+          services={[...servicesproducts, ...products]}
           editEvent={editAction}
           company={company}
           theme={theme}

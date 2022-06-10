@@ -15,6 +15,7 @@ export default gql`
     $start: Date
     $end: Date
     $itemType: Int
+    $itemtypes: [Int]
   ) {
     getReportServices(
       types: $types
@@ -30,6 +31,7 @@ export default gql`
       start: $start
       end: $end
       itemType: $itemType
+      itemtypes: $itemtypes
     ) {
       ok
       error
@@ -61,6 +63,8 @@ export default gql`
         opDocNo
         eventId
         taskId
+        refNo
+        refType
         qty
         doneQty
         totalCost

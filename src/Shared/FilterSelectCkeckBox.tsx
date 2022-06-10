@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import React from 'react';
-import { Box, Checkbox, TextField } from '@material-ui/core';
+import { Box, Checkbox, TextField, Typography } from '@material-ui/core';
 import { Autocomplete } from '@material-ui/lab';
 import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@material-ui/icons/CheckBox';
@@ -44,6 +44,7 @@ export default function FilterSelect({
             display: 'flex',
             flex: 1,
             alignItems: 'center',
+            justifyContent: 'space-between',
             direction: isRTL ? 'rtl' : 'ltr',
             textAlign: isRTL ? 'right' : 'left',
           }}
@@ -56,7 +57,8 @@ export default function FilterSelect({
               checked={selected}
             />
           )}
-          {isRTL ? option.nameAr : option.name}
+          <Typography>{isRTL ? option.nameAr : option.name}</Typography>
+          {option.code && <Typography>{option.code}</Typography>}
         </Box>
       )}
       value={value}

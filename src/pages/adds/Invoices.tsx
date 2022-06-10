@@ -18,7 +18,7 @@ import {
   SearchPanel,
 } from '@devexpress/dx-react-grid-material-ui';
 import { Command, Loading, PopupEditing } from '../../Shared';
-import { getRowId } from '../../common';
+import { getRowId, updateDocNumbers } from '../../common';
 import { PopupInvoice } from '../../pubups';
 import {
   createInvoice,
@@ -189,7 +189,8 @@ export default function Invoices({ isRTL, words, menuitem, theme, company }) {
     }
     if (opData?.data?.getInvoices?.data) {
       const { data } = opData.data.getInvoices;
-      setRows(data);
+      const rdata = updateDocNumbers(data);
+      setRows(rdata);
       setLoading(false);
     }
   }, [opData]);

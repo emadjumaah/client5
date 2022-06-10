@@ -257,9 +257,27 @@ const PopupExpProducts = ({
   };
 
   const addItemToList = (item: any) => {
-    const newArray = [...itemsList, { ...item, userId: user._id }];
-    const listwithindex = indexTheList(newArray);
-    setItemsList(listwithindex);
+    const isInList = itemsList?.filter((li: any) => li._id === item._id)?.[0];
+    if (isInList) {
+      const newityem = {
+        ...isInList,
+        itemqty: isInList.itemqty + item.itemqty,
+        itemtotal: isInList.itemtotal + item.itemtotal,
+        itemtotalcost: isInList.itemtotalcost + item.itemtotalcost,
+      };
+      const narray = itemsList.map((ilm: any) => {
+        if (ilm._id === newityem._id) {
+          return newityem;
+        } else {
+          return ilm;
+        }
+      });
+      setItemsList(narray);
+    } else {
+      const newArray = [...itemsList, { ...item, userId: user._id }];
+      const listwithindex = indexTheList(newArray);
+      setItemsList(listwithindex);
+    }
   };
   const editItemInList = (item: any) => {
     const newArray = itemsList.map((it: any) => {
@@ -348,6 +366,13 @@ const PopupExpProducts = ({
   const onSubmit = async (data: any) => {
     const { startPeriod, endPeriod } = getAppStartEndPeriod();
     if (selectedDate < startPeriod || selectedDate > endPeriod) {
+      await messageAlert(
+        setAlrt,
+        isRTL ? 'يجب تعديل التاريخ' : 'Date should be change'
+      );
+      return;
+    }
+    if (selectedDate > new Date()) {
       await messageAlert(
         setAlrt,
         isRTL ? 'يجب تعديل التاريخ' : 'Date should be change'
@@ -610,43 +635,42 @@ const PopupExpProducts = ({
           />
         </Grid> */}
         <Grid item xs={12}>
-          {(isNew || itemsList?.length > 0) && (
-            <Box
-              style={{
-                backgroundColor: '#f3f3f3',
-                padding: 10,
-                borderRadius: 10,
-                marginTop: 20,
-              }}
-            >
-              <Box display="flex" style={{ paddingLeft: 10, paddingRight: 10 }}>
-                <ExpensesItemForm
-                  items={servicesproducts}
-                  addItem={addItemToList}
-                  words={words}
-                  classes={classes}
-                  user={user}
-                  isRTL={isRTL}
-                  setAlrt={setAlrt}
-                  opType={61}
-                  cost={true}
-                ></ExpensesItemForm>
-              </Box>
-              {!loading && (
-                <Box style={{ marginBottom: 10 }}>
-                  <ExpensesItemsTable
-                    rows={itemsList}
-                    editItem={editItemInList}
-                    removeItem={removeItemFromList}
-                    isRTL={isRTL}
-                    words={words}
-                    user={user}
-                  ></ExpensesItemsTable>
-                </Box>
-              )}
-              {loading && <LoadingInline></LoadingInline>}
+          <Box
+            style={{
+              backgroundColor: '#f3f3f3',
+              padding: 10,
+              borderRadius: 10,
+              marginTop: 20,
+            }}
+          >
+            <Box display="flex" style={{ paddingLeft: 10, paddingRight: 10 }}>
+              <ExpensesItemForm
+                items={servicesproducts}
+                addItem={addItemToList}
+                words={words}
+                classes={classes}
+                user={user}
+                isRTL={isRTL}
+                setAlrt={setAlrt}
+                opType={61}
+                cost={true}
+              ></ExpensesItemForm>
             </Box>
-          )}
+            {!loading && (
+              <Box style={{ marginBottom: 10 }}>
+                <ExpensesItemsTable
+                  rows={itemsList}
+                  editItem={editItemInList}
+                  removeItem={removeItemFromList}
+                  isRTL={isRTL}
+                  words={words}
+                  user={user}
+                  products={servicesproducts}
+                ></ExpensesItemsTable>
+              </Box>
+            )}
+            {loading && <LoadingInline></LoadingInline>}
+          </Box>
         </Grid>
 
         <Grid item xs={12}>

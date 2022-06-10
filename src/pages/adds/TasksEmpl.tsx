@@ -312,7 +312,7 @@ export default function TasksEmpl({
             <DataTypeProvider
               for={['title']}
               formatterComponent={(props: any) =>
-                nameLinkFormat({ ...props, setItem, setOpenItem })
+                nameLinkFormat({ ...props, setItem, setOpenItem, isRTL })
               }
             ></DataTypeProvider>
             <DataTypeProvider
@@ -368,7 +368,6 @@ export default function TasksEmpl({
                 addCustomer={addCustomer}
                 editCustomer={editCustomer}
                 company={company}
-                servicesproducts={servicesproducts}
                 theme={theme}
                 refresh={refresh}
                 startrange={start}

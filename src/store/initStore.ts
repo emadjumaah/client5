@@ -1,6 +1,6 @@
 export const initStore = {
   lang: 'ar',
-  themeId: '0',
+  themeId: 0,
   user: null,
   token: null,
   notify: false,

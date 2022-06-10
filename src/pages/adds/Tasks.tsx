@@ -344,7 +344,7 @@ export default function Tasks({ isRTL, words, menuitem, theme, company }) {
               <DataTypeProvider
                 for={['title']}
                 formatterComponent={(props: any) =>
-                  nameLinkFormat({ ...props, setItem, setOpenItem })
+                  nameLinkFormat({ ...props, setItem, setOpenItem, isRTL })
                 }
               ></DataTypeProvider>
             )}
@@ -406,7 +406,6 @@ export default function Tasks({ isRTL, words, menuitem, theme, company }) {
                 addCustomer={addCustomer}
                 editCustomer={editCustomer}
                 company={company}
-                servicesproducts={services}
                 theme={theme}
                 refresh={refresh}
                 startrange={start}

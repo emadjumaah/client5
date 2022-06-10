@@ -23,6 +23,7 @@ export const translation = (lang: LanguageType) => {
     employeeNameAr: lang.words.employeeNameAr,
     service: lang.words.service,
     product: lang.words.product,
+    item: lang.words.item,
     services: lang.words.services,
     itemslist: lang.words.itemslist,
     expenseitems: lang.words.expenseitems,

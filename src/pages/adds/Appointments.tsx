@@ -20,7 +20,7 @@ import {
   ColumnChooser,
 } from '@devexpress/dx-react-grid-material-ui';
 import { Command, Loading, PopupEditing } from '../../Shared';
-import { getRowId, roles } from '../../common';
+import { updateDocNumbers, getRowId, roles } from '../../common';
 import {
   createEvent,
   deleteEventById,
@@ -285,7 +285,8 @@ export default function Appointments({
     }
     if (eventsData?.data?.getEvents?.data) {
       const { data } = eventsData.data.getEvents;
-      setRows(data);
+      const rdata = updateDocNumbers(data);
+      setRows(rdata);
       setLoading(false);
     }
   }, [eventsData]);

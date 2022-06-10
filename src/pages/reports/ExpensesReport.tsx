@@ -15,6 +15,8 @@ import {
   SummaryState,
   IntegratedGrouping,
   IntegratedSummary,
+  SearchState,
+  IntegratedFiltering,
 } from '@devexpress/dx-react-grid';
 import {
   Grid,
@@ -26,6 +28,7 @@ import {
   ColumnChooser,
   TableGroupRow,
   TableSummaryRow,
+  SearchPanel,
 } from '@devexpress/dx-react-grid-material-ui';
 import { getRowId } from '../../common';
 import {
@@ -51,6 +54,7 @@ import useTasks from '../../hooks/useTasks';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
 import useProjects from '../../hooks/useProjects';
 import { useTemplate } from '../../hooks';
+import { SearchTable } from '../../components';
 
 const styles = (theme) => ({
   tableStriped: {
@@ -351,7 +355,7 @@ export default function ExpensesReport({
             flexDirection: 'row',
             alignItems: 'center',
             justifyContent: 'space-between',
-            width: '75%',
+            width: '60%',
           }}
         >
           <DateNavigatorReports
@@ -368,7 +372,6 @@ export default function ExpensesReport({
             words={words}
             theme={theme}
           ></DateNavigatorReports>
-
           <Box
             display="flex"
             style={{
@@ -417,19 +420,19 @@ export default function ExpensesReport({
               nomulti
               width={350}
             ></FilterSelectCkeckBox>
-          </Box>
-          <Box
-            display="flex"
-            style={{
-              alignItems: 'center',
-              justifyContent: 'flex-end',
-              minWidth: 120,
-              marginRight: 90,
-            }}
-          >
-            <Typography variant="subtitle1" style={{ fontWeight: 'bold' }}>
-              {currencyFormatter({ value: total })}
-            </Typography>
+            <Box
+              display="flex"
+              style={{
+                alignItems: 'center',
+                justifyContent: 'flex-end',
+                minWidth: 120,
+                marginRight: 90,
+              }}
+            >
+              <Typography variant="subtitle1" style={{ fontWeight: 'bold' }}>
+                {currencyFormatter({ value: total })}
+              </Typography>
+            </Box>
           </Box>
         </Box>
         <Grid rows={rows} columns={columns} getRowId={getRowId}>
@@ -445,7 +448,8 @@ export default function ExpensesReport({
           {group && <IntegratedGrouping />}
           <IntegratedSummary />
           <IntegratedSorting />
-
+          <SearchState />
+          <IntegratedFiltering />
           <VirtualTable
             height={height - 100}
             tableComponent={TableComponent}
@@ -485,6 +489,11 @@ export default function ExpensesReport({
           ></DataTypeProvider>
           <Toolbar />
           <ColumnChooser />
+          <SearchPanel
+            inputComponent={(props: any) => {
+              return <SearchTable isRTL={isRTL} {...props}></SearchTable>;
+            }}
+          />
           <ExportPanel startExport={startExport} />
           {group && <TableGroupRow showColumnsWhenGrouped />}
           {group && (

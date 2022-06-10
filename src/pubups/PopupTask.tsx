@@ -36,7 +36,7 @@ import {
 import PopupTaskAppointment from './PopupTaskAppointment';
 import _ from 'lodash';
 import { getPopupTitle } from '../constants/menu';
-import { useCustomers, useTemplate } from '../hooks';
+import { useCustomers, useProducts, useServices, useTemplate } from '../hooks';
 import PopupCustomer from './PopupCustomer';
 import PopupDeprtment from './PopupDeprtment';
 import PopupEmployee from './PopupEmployee';
@@ -46,7 +46,7 @@ import useEmployeesUp from '../hooks/useEmployeesUp';
 import useResoursesUp from '../hooks/useResoursesUp';
 import PopupProject from './PopupProject';
 import useProjects from '../hooks/useProjects';
-import EventtemForm from '../Shared/EventtemForm';
+import ServiceItemForm from '../Shared/ServiceItemForm';
 import ItemsTable from '../Shared/ItemsTable';
 import { invoiceClasses } from '../themes';
 import { SelectLocal } from '../pages/calendar/common/SelectLocal';
@@ -81,7 +81,6 @@ const PopupTask = ({
   departments,
   projects,
   customers,
-  servicesproducts,
   theme,
   refresh,
   value = null,
@@ -162,7 +161,8 @@ const PopupTask = ({
   const { addResourse, editResourse } = useResoursesUp();
   const { addProject, editProject } = useProjects();
   const { tempwords, tempoptions, taskExtra } = useTemplate();
-
+  const { products } = useProducts();
+  const { services } = useServices();
   const { register, handleSubmit, reset } = useForm({});
   const {
     translate: { words, isRTL },
@@ -283,9 +283,27 @@ const PopupTask = ({
   }, [rrule]);
 
   const addItemToList = (item: any) => {
-    const newArray = [...itemsList, { ...item, userId: user._id }];
-    const listwithindex = indexTheList(newArray);
-    setItemsList(listwithindex);
+    const isInList = itemsList?.filter((li: any) => li._id === item._id)?.[0];
+    if (isInList) {
+      const newityem = {
+        ...isInList,
+        itemqty: isInList.itemqty + item.itemqty,
+        itemtotal: isInList.itemtotal + item.itemtotal,
+        itemtotalcost: isInList.itemtotalcost + item.itemtotalcost,
+      };
+      const narray = itemsList.map((ilm: any) => {
+        if (ilm._id === newityem._id) {
+          return newityem;
+        } else {
+          return ilm;
+        }
+      });
+      setItemsList(narray);
+    } else {
+      const newArray = [...itemsList, { ...item, userId: user._id }];
+      const listwithindex = indexTheList(newArray);
+      setItemsList(listwithindex);
+    }
   };
   const editItemInList = (item: any) => {
     const newArray = itemsList.map((it: any) => {
@@ -984,19 +1002,20 @@ const PopupTask = ({
                   }}
                 >
                   <Box display="flex">
-                    <EventtemForm
-                      services={servicesproducts}
+                    <ServiceItemForm
+                      services={services}
+                      products={products}
                       addItem={addItemToList}
                       words={words}
                       classes={classes}
                       user={user}
                       isRTL={isRTL}
                       setAlrt={setAlrt}
-                    ></EventtemForm>
+                    ></ServiceItemForm>
                   </Box>
                   <Box style={{ marginBottom: 20 }}>
                     <ItemsTable
-                      products={servicesproducts}
+                      products={[...services, ...products]}
                       height={200}
                       rows={itemsList}
                       editItem={editItemInList}
@@ -1122,7 +1141,7 @@ const PopupTask = ({
           department={departvalue}
           customer={custvalue}
           resourse={resovalue}
-          servicesproducts={servicesproducts}
+          servicesproducts={[...services, ...products]}
           theme={theme}
           setEnd={setEnd}
           addEventsToList={addEventsToList}

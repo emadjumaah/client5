@@ -46,6 +46,7 @@ import useTasks from '../hooks/useTasks';
 import React from 'react';
 import DateNavigatorReports from '../components/filters/DateNavigatorReports';
 import { useTemplate } from '../hooks';
+import { updateDocNumbers } from '../common';
 export const getRowId = (row: any) => row._id;
 
 const NumberTypeProvider = (props) => (
@@ -188,7 +189,8 @@ export default function EventsCustomer({
     const data = eventsData?.data?.['getObjectEvents']?.data;
     const events = data || [];
     const fevents = events.filter((ev: any) => ev.amount > 0);
-    setRows(fevents);
+    const rdata = updateDocNumbers(fevents);
+    setRows(rdata);
   }, [eventsData]);
 
   const [addEvent] = useMutation(createEvent, refresQuery);
