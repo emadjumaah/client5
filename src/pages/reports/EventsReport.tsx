@@ -136,6 +136,7 @@ export default function SalesReport({ isRTL, words, menuitem, theme }: any) {
   const { employees } = useEmployeesUp();
   const { resourses } = useResoursesUp();
   const { services } = useServices();
+
   const {
     state: {
       currentDate,
@@ -477,7 +478,8 @@ export default function SalesReport({ isRTL, words, menuitem, theme }: any) {
   );
 
   const groupOptions = projres.filter(
-    (item: any) => item.id !== 4 && item.id !== 6 && item.id !== 9
+    (item: any) =>
+      item.id !== 4 && item.id !== 5.5 && item.id !== 6 && item.id !== 9
   );
 
   return (
@@ -563,6 +565,9 @@ export default function SalesReport({ isRTL, words, menuitem, theme }: any) {
               resovalue={resovalue}
               setResovalue={setResovalueDispatch}
               services={services}
+              suppliers={[]}
+              suppvalue={[]}
+              setSuppvalue={() => null}
               customers={customers}
               custvalue={custvalue}
               setCustvalue={setCustvalueDispatch}

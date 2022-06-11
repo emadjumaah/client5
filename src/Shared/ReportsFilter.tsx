@@ -306,7 +306,7 @@ export default function SalesFilter({
                   width={350}
                 ></FilterSelectMulti>
               )}
-              {!product && suppliers && (
+              {!product && suppliers?.length > 0 && (
                 <FilterSelectMulti
                   options={suppliers}
                   value={suppvalueLocal}

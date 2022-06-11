@@ -592,6 +592,9 @@ export default function SalesReport({
               customers={customers}
               custvalue={custvalue}
               setCustvalue={setCustvalueDispatch}
+              suppliers={[]}
+              suppvalue={[]}
+              setSuppvalue={() => null}
               tasks={tasks}
               taskvalue={taskvalue}
               setTaskvalue={setTaskvalueDispatch}
