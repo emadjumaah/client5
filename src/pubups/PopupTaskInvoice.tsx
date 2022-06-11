@@ -273,6 +273,12 @@ const PopupTaskInvoice = ({
         amount: isCash ? sum - discount : 0,
         type: operationTypes.customerReceipt,
       },
+      {
+        debitAcc: accountCode.cost_of_sales,
+        creditAcc: accountCode.inventory,
+        amount: costsum,
+        type: operationTypes.salesDelivery,
+      },
     ];
     setAccounts(accs);
   };

@@ -53,7 +53,12 @@ import DateNavigatorReports from '../../components/filters/DateNavigatorReports'
 import { documentTypes, groupList } from '../../constants/reports';
 // import FilterSelectCkeckBox from '../../Shared/FilterSelectCkeckBox';
 // import { eventStatus } from '../../constants';
-import { useCustomers, useServices, useTemplate } from '../../hooks';
+import {
+  useCustomers,
+  useServices,
+  useSuppliers,
+  useTemplate,
+} from '../../hooks';
 import useTasks from '../../hooks/useTasks';
 import getReportDocuments from '../../graphql/query/getReportDocuments';
 import DocumentsReportContext from '../../contexts/documentsReport';
@@ -108,6 +113,7 @@ export default function DocumentsReport({
           col.docNo,
           col.refNo,
           col.customer,
+          col.supplier,
           col.employee,
           col.department,
           col.amount,
@@ -118,6 +124,7 @@ export default function DocumentsReport({
           col.docNo,
           col.refNo,
           col.customer,
+          col.supplier,
           col.project,
           col.taskId,
           col.employee,
@@ -142,6 +149,7 @@ export default function DocumentsReport({
   const { projects } = useProjects();
   const { tasks } = useTasks();
   const { services } = useServices();
+  const { suppliers } = useSuppliers();
   const { height } = useWindowDimensions();
 
   const {
@@ -154,6 +162,7 @@ export default function DocumentsReport({
       resovalue,
       emplvalue,
       custvalue,
+      suppvalue,
       taskvalue,
       group,
       groupby,
@@ -197,6 +206,9 @@ export default function DocumentsReport({
   const setCustvalueDispatch = (value: any) => {
     dispatch({ type: 'setCustvalue', payload: value });
   };
+  const setSuppvalueDispatch = (value: any) => {
+    dispatch({ type: 'setSuppvalue', payload: value });
+  };
   const setTaskvalueDispatch = (value: any) => {
     dispatch({ type: 'setTaskvalue', payload: value });
   };
@@ -234,6 +246,7 @@ export default function DocumentsReport({
       employeeIds: getIds(emplvalue),
       resourseIds: getIds(resovalue),
       customerIds: getIds(custvalue),
+      supplierIds: getIds(suppvalue),
       taskIds: getTaskIds(taskvalue),
       types: getTypesValue(types),
       start: start ? start.setHours(0, 0, 0, 0) : undefined,
@@ -261,6 +274,7 @@ export default function DocumentsReport({
     resovalue,
     emplvalue,
     custvalue,
+    suppvalue,
     taskvalue,
     types,
   ]);
@@ -417,6 +431,9 @@ export default function DocumentsReport({
               customers={customers}
               custvalue={custvalue}
               setCustvalue={setCustvalueDispatch}
+              suppliers={suppliers}
+              suppvalue={suppvalue}
+              setSuppvalue={setSuppvalueDispatch}
               tasks={tasks}
               taskvalue={taskvalue}
               setTaskvalue={setTaskvalueDispatch}

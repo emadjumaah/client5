@@ -810,6 +810,7 @@ export const nameLinkFormat = ({
   setOpenItem,
   isRTL,
 }: any) => {
+  if (!value || value === '') return <div></div>;
   return (
     <Tooltip title={isRTL ? 'استعراض صفحة الادارة' : 'Managment Page'}>
       <Button
@@ -819,7 +820,7 @@ export const nameLinkFormat = ({
         }}
         variant="outlined"
         color="primary"
-        style={{ minWidth: 150 }}
+        // style={{ minWidth: 150 }}
       >
         <Typography
           style={{

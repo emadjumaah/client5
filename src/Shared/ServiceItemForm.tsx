@@ -42,7 +42,7 @@ export default function ServiceItemForm({
   const [newtext, setNewtext] = useState('');
   const [desc, setDesc] = useState('');
 
-  const [items, setItems] = useState(services);
+  const [items, setItems] = useState([]);
   const [type, setType] = useState(2);
 
   const { register, handleSubmit, errors } = useForm(yup.invItemResolver);
@@ -60,7 +60,7 @@ export default function ServiceItemForm({
       setItems(products);
       setItemvalue(null);
     }
-  }, [type]);
+  }, [type, services, products]);
 
   const onOpenItem = () => {
     setOpenItem(true);

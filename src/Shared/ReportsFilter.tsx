@@ -27,6 +27,9 @@ export default function SalesFilter({
   setDepartvalue,
   custvalue,
   setCustvalue,
+  suppliers,
+  suppvalue,
+  setSuppvalue,
   itemType,
   tasks,
   projects,
@@ -53,6 +56,7 @@ export default function SalesFilter({
   const [departvalueLocal, setDepartvalueLocal] = React.useState([]);
   const [projvalueLocal, setProjvalueLocal] = React.useState([]);
   const [custvalueLocal, setCustvalueLocal] = React.useState([]);
+  const [suppvalueLocal, setSuppvalueLocal] = React.useState([]);
   const [taskvalueLocal, setTaskvalueLocal] = React.useState([]);
   const [typesvalueLocal, setTypesvalueLocal] = React.useState([]);
   const [open, setOpen] = React.useState(false);
@@ -67,6 +71,7 @@ export default function SalesFilter({
       setDepartvalueLocal(departvalue);
       setProjvalueLocal(projvalue);
       setCustvalueLocal(custvalue);
+      setSuppvalueLocal(suppvalue);
       setTaskvalueLocal(taskvalue);
       if (types) {
         setTypesvalueLocal(types);
@@ -81,6 +86,7 @@ export default function SalesFilter({
     setDepartvalueLocal([]);
     setProjvalueLocal([]);
     setCustvalueLocal([]);
+    setSuppvalueLocal([]);
     setTaskvalueLocal([]);
     setTypesvalueLocal([]);
   };
@@ -96,6 +102,7 @@ export default function SalesFilter({
     setDepartvalue([]);
     setProjvalue([]);
     setCustvalue([]);
+    setSuppvalue([]);
     setTaskvalue([]);
     if (setTypes) {
       setTypes([]);
@@ -123,6 +130,7 @@ export default function SalesFilter({
     setDepartvalue(departvalueLocal);
     setProjvalue(projvalueLocal);
     setCustvalue(custvalueLocal);
+    setSuppvalue(suppvalueLocal);
     setTaskvalue(taskvalueLocal);
     if (setTypes) {
       setTypes(typesvalueLocal);
@@ -137,6 +145,7 @@ export default function SalesFilter({
     ...departvalue,
     ...projvalue,
     ...custvalue,
+    ...suppvalue,
     ...taskvalue,
     ...tt,
     itemType ? itemType : undefined,
@@ -294,6 +303,17 @@ export default function SalesFilter({
                   words={words}
                   isRTL={isRTL}
                   name="customer"
+                  width={350}
+                ></FilterSelectMulti>
+              )}
+              {!product && suppliers && (
+                <FilterSelectMulti
+                  options={suppliers}
+                  value={suppvalueLocal}
+                  setValue={setSuppvalueLocal}
+                  words={words}
+                  isRTL={isRTL}
+                  name="supplier"
                   width={350}
                 ></FilterSelectMulti>
               )}

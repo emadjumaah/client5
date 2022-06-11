@@ -11,6 +11,7 @@ export const initDocumentsReportContext = {
   emplvalue: [],
   resovalue: [],
   custvalue: [],
+  suppvalue: [],
   catvalue: [],
   taskvalue: [],
   types: [],
@@ -44,6 +45,8 @@ export const documentsReportReducer = (
       return { ...state, resovalue: action.payload };
     case 'setCustvalue':
       return { ...state, custvalue: action.payload };
+    case 'setSuppvalue':
+      return { ...state, suppvalue: action.payload };
     case 'setCatvalue':
       return { ...state, catvalue: action.payload };
     case 'setTaskvalue':

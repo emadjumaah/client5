@@ -35,6 +35,11 @@ export const groupList = (isRTL: any, product = false) => [
     name: isRTL ? `تجميع بحسب ${words.customer}` : `Group By ${words.customer}`,
   },
   {
+    id: 5.5,
+    value: 'supplier',
+    name: isRTL ? `تجميع بحسب المورد` : `Group By Supplier`,
+  },
+  {
     id: 6,
     value: 'category',
     name: isRTL ? 'تجميع بحسب التصنيف' : 'Group By Category',

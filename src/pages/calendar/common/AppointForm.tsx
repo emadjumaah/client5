@@ -15,7 +15,7 @@ import { GContextTypes } from '../../../types';
 import { GlobalContext } from '../../../contexts';
 import { StatusSelect } from './StatusSelect';
 import { Grid } from '@material-ui/core';
-import { CalenderLocal, TextFieldLocal } from '../../../components';
+import { AlertLocal, CalenderLocal, TextFieldLocal } from '../../../components';
 import AutoFieldLocal from '../../../components/fields/AutoFieldLocal';
 import { weekdaysNNo } from '../../../constants/datatypes';
 import { setRowFromAppointment } from '../../../common/calendar';
@@ -65,6 +65,7 @@ export const AppointForm = (props: any) => {
   const row = setRowFromAppointment(appointmentData);
 
   const classes = invoiceClasses();
+  const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
 
   const [startDate, setStartDate]: any = useState(row?.startDate);
   const [endDate, setEndDate]: any = useState(row?.endDate);
@@ -812,7 +813,7 @@ export const AppointForm = (props: any) => {
                 classes={classes}
                 user={user}
                 isRTL={isRTL}
-                setAlrt={() => null}
+                setAlrt={setAlrt}
               ></ServiceItemForm>
             </Box>
             <Box style={{ marginBottom: 10 }}>
@@ -957,6 +958,13 @@ export const AppointForm = (props: any) => {
             onNewFieldChange(value, 'location');
           }}
         ></PopupMaps>
+        {alrt.show && (
+          <AlertLocal
+            isRTL={isRTL}
+            type={alrt?.type}
+            msg={alrt?.msg}
+          ></AlertLocal>
+        )}
       </Grid>
     </>
   );
