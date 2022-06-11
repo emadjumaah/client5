@@ -81,6 +81,7 @@ const PopupAppointment = ({
   company,
 }: any) => {
   const classes = invoiceClasses();
+  const [saving, setSaving] = useState(false);
 
   const [startDate, setStartDate]: any = useState(null);
   const [endDate, setEndDate]: any = useState(null);
@@ -509,6 +510,7 @@ const PopupAppointment = ({
     setItemsList([]);
     setTotals({});
     setActionslist([]);
+    setSaving(false);
     setSelected(null);
     setTasktitle(null);
     setLocation(null);
@@ -552,6 +554,7 @@ const PopupAppointment = ({
     //   );
     //   return;
     // }
+    setSaving(true);
 
     const title = tasktitle
       ? tasktitle
@@ -634,6 +637,7 @@ const PopupAppointment = ({
   const apply = async (mutate: any, variables: any) => {
     try {
       await mutate({ variables });
+      setSaving(false);
       onCloseForm();
     } catch (error) {
       onError(error);
@@ -653,6 +657,7 @@ const PopupAppointment = ({
   const onCloseForm = () => {
     resetAllForms();
     onClose();
+    setSaving(false);
   };
 
   const onHandleSubmit = () => {
@@ -673,6 +678,7 @@ const PopupAppointment = ({
       onSubmit={onHandleSubmit}
       theme={theme}
       alrt={alrt}
+      saving={saving}
       mt={10}
       mb={20}
       preventclose

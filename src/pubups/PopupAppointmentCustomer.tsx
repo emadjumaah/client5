@@ -81,7 +81,7 @@ const PopupAppointmentCustomer = ({
   value,
 }: any) => {
   const classes = invoiceClasses();
-
+  const [saving, setSaving] = useState(false);
   const [startDate, setStartDate]: any = useState(null);
   const [endDate, setEndDate]: any = useState(null);
   const [eventLength, setEventLength]: any = useState(null);
@@ -248,19 +248,6 @@ const PopupAppointmentCustomer = ({
       }
     }
   }, [taskvalue]);
-
-  useEffect(() => {
-    if (isNew) {
-      if (emplvalue) {
-        if (emplvalue?.departmentId) {
-          const dept = departments.filter(
-            (dep: any) => dep._id === emplvalue?.departmentId
-          )?.[0];
-          setDepartvalue(dept);
-        }
-      }
-    }
-  }, [emplvalue]);
 
   useEffect(() => {
     if (isNew) {
@@ -538,6 +525,7 @@ const PopupAppointmentCustomer = ({
     setItemsList([]);
     setTotals({});
     setActionslist([]);
+    setSaving(false);
     setSelected(null);
     setTasktitle(null);
     setLocation(null);
@@ -569,6 +557,7 @@ const PopupAppointmentCustomer = ({
       );
       return;
     }
+    setSaving(true);
 
     const rRule = rrule?.str ? rrule?.str : undefined;
     const title = tasktitle
@@ -653,6 +642,7 @@ const PopupAppointmentCustomer = ({
   const apply = async (mutate: any, variables: any) => {
     try {
       await mutate({ variables });
+      setSaving(false);
       onCloseForm();
     } catch (error) {
       onError(error);
@@ -672,6 +662,7 @@ const PopupAppointmentCustomer = ({
   const onCloseForm = () => {
     resetAllForms();
     onClose();
+    setSaving(false);
   };
 
   const onHandleSubmit = () => {
@@ -694,6 +685,7 @@ const PopupAppointmentCustomer = ({
       onSubmit={onHandleSubmit}
       theme={theme}
       alrt={alrt}
+      saving={saving}
       mt={10}
       maxWidth="md"
       // bgcolor={colors.blue[500]}

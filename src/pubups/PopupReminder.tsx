@@ -350,6 +350,7 @@ const PopupReminder = ({
       );
       return;
     }
+    setSaving(true);
 
     const amount = totals?.amount;
 
@@ -380,6 +381,7 @@ const PopupReminder = ({
   const apply = async (mutate: any, variables: any) => {
     try {
       mutate({ variables });
+      setSaving(false);
       onCloseForm();
     } catch (error) {
       onError(error);

@@ -65,6 +65,7 @@ const PopupAppointInvoice = ({
 }: any) => {
   const classes = invoiceClasses();
   const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
+  const [saving, setSaving] = useState(false);
   const [selectedDate, setSelectedDate] = React.useState(new Date());
   const [invNo, setInvNo] = useState<any>('');
 
@@ -177,6 +178,7 @@ const PopupAppointInvoice = ({
     setAccounts([]);
     setPtype('');
     setIsCash(false);
+    setSaving(false);
     setSelectedDate(new Date());
     setDepartvalue(null);
     setEmplvalue(null);
@@ -372,6 +374,8 @@ const PopupAppointInvoice = ({
       );
       return;
     }
+    setSaving(true);
+
     const { amount, costAmount, profit, total } = totals;
 
     const variables: any = {
@@ -454,6 +458,7 @@ const PopupAppointInvoice = ({
         },
       });
       freshlastNos();
+      setSaving(false);
       onCloseForm();
       onCloseAppoint();
     } catch (error) {
@@ -475,6 +480,7 @@ const PopupAppointInvoice = ({
   const onCloseForm = () => {
     resetAllForms();
     onClose();
+    setSaving(false);
   };
 
   const onHandleSubmit = () => {
@@ -518,6 +524,7 @@ const PopupAppointInvoice = ({
       theme={theme}
       alrt={alrt}
       print={handleReactPrint}
+      saving={saving}
       maxWidth="md"
       mt={0}
       mb={50}

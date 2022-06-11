@@ -1,7 +1,27 @@
 import { gql } from '@apollo/client';
 export default gql`
-  query getPurchaseInvoices($start: Date, $end: Date, $search: String) {
-    getPurchaseInvoices(start: $start, end: $end, search: $search) {
+  query getPurchaseInvoices(
+    $taskId: Int
+    $departmentId: String
+    $employeeId: String
+    $projectId: String
+    $resourseId: String
+    $supplierId: String
+    $start: Date
+    $end: Date
+    $search: String
+  ) {
+    getPurchaseInvoices(
+      taskId: $taskId
+      departmentId: $departmentId
+      employeeId: $employeeId
+      projectId: $projectId
+      resourseId: $resourseId
+      supplierId: $supplierId
+      start: $start
+      end: $end
+      search: $search
+    ) {
       ok
       error
       count
@@ -14,11 +34,6 @@ export default gql`
         time
         title
         desc
-
-        customerId
-        customerName
-        customerNameAr
-        customerPhone
 
         supplierId
         supplierName

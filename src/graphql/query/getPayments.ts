@@ -7,6 +7,7 @@ export default gql`
     $search: String
     $taskId: Int
     $customerId: String
+    $supplierId: String
     $departmentId: String
     $employeeId: String
     $projectId: String
@@ -18,6 +19,7 @@ export default gql`
       search: $search
       taskId: $taskId
       customerId: $customerId
+      supplierId: $supplierId
       departmentId: $departmentId
       employeeId: $employeeId
       projectId: $projectId

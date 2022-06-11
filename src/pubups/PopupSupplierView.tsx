@@ -15,14 +15,14 @@ import {
 import PopupLayout from '../pages/main/PopupLayout';
 import { moneyFormat } from '../Shared/colorFormat';
 import EventsCustomer from '../Shared/EventsCustomer';
-import InvoicesCustomer from '../Shared/InvoicesCustomer';
-import ReceiptCustomer from '../Shared/ReceiptCustomer';
 import ExpensesCustomer from '../Shared/ExpensesCustomer';
 import TasksCustomer from '../Shared/TasksCustomer';
-import { customerManamentTabs } from '../constants/rrule';
+import { supplierManamentTabs } from '../constants/rrule';
 import ProjectsCustomer from '../Shared/ProjectsCustomer';
 import KaidsCustomer from '../Shared/KaidsCustomer';
 import { useTemplate } from '../hooks';
+import InvoicesSupplier from '../Shared/InvoicesSupplier';
+import PaymentSupplier from '../Shared/PaymentSupplier';
 // import ReminderCustomer from '../Shared/ReminderCustomer';
 
 function TabPanel(props) {
@@ -107,7 +107,7 @@ const PopupSupplierView = ({
     translate: { words, isRTL },
   }: GContextTypes = useContext(GlobalContext);
 
-  const title = `${words.customer} : ${isRTL ? row?.nameAr : row?.name}`;
+  const title = `${words.supplier} : ${isRTL ? row?.nameAr : row?.name}`;
 
   return (
     <PopupLayout
@@ -140,7 +140,7 @@ const PopupSupplierView = ({
                     words={words}
                     theme={theme}
                     company={company}
-                    name="customerId"
+                    name="supplierId"
                     value={row}
                     id={row?._id}
                   ></ProjectsCustomer>
@@ -152,7 +152,7 @@ const PopupSupplierView = ({
                     words={words}
                     theme={theme}
                     company={company}
-                    name="customerId"
+                    name="supplierId"
                     value={row}
                     id={row?._id}
                   ></TasksCustomer>
@@ -168,13 +168,13 @@ const PopupSupplierView = ({
                     words={words}
                     theme={theme}
                     isNew={isNew}
-                    name="customerId"
+                    name="supplierId"
                     value={row}
                     id={row?._id}
                   ></EventsCustomer>
                 </TabPanel>
                 <TabPanel value={value} index={3}>
-                  <InvoicesCustomer
+                  <InvoicesSupplier
                     isRTL={isRTL}
                     words={words}
                     resourses={resourses}
@@ -183,27 +183,27 @@ const PopupSupplierView = ({
                     company={company}
                     theme={theme}
                     servicesproducts={servicesproducts}
-                    name="customerId"
+                    name="supplierId"
                     value={row}
                     id={row?._id}
-                  ></InvoicesCustomer>
+                  ></InvoicesSupplier>
                 </TabPanel>
                 <TabPanel value={value} index={4}>
-                  <ReceiptCustomer
+                  <PaymentSupplier
                     isRTL={isRTL}
                     words={words}
                     theme={theme}
-                    name="customerId"
+                    name="supplierId"
                     value={row}
                     id={row?._id}
-                  ></ReceiptCustomer>
+                  ></PaymentSupplier>
                 </TabPanel>
                 <TabPanel value={value} index={5}>
                   <ExpensesCustomer
                     isRTL={isRTL}
                     words={words}
                     theme={theme}
-                    name="customerId"
+                    name="supplierId"
                     value={row}
                     id={row?._id}
                   ></ExpensesCustomer>
@@ -213,7 +213,7 @@ const PopupSupplierView = ({
                     isRTL={isRTL}
                     words={words}
                     theme={theme}
-                    name="customerId"
+                    name="supplierId"
                     value={row}
                     id={row?._id}
                   ></KaidsCustomer>
@@ -359,7 +359,7 @@ const PopupSupplierView = ({
                 aria-label="items"
                 className={classes.tabs}
               >
-                {customerManamentTabs.map((item: any) => {
+                {supplierManamentTabs.map((item: any) => {
                   if (item.hide) {
                     return <div></div>;
                   }

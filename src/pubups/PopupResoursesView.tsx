@@ -25,6 +25,8 @@ import KaidsCustomer from '../Shared/KaidsCustomer';
 import ReminderCustomer from '../Shared/ReminderCustomer';
 import { useTemplate } from '../hooks';
 import ExpensesProdCustomer from '../Shared/ExpensesProdCustomer';
+import InvoicesSupplier from '../Shared/InvoicesSupplier';
+import PaymentSupplier from '../Shared/PaymentSupplier';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -208,6 +210,31 @@ const PopupResoursesView = ({
                   ></ReceiptCustomer>
                 </TabPanel>
                 <TabPanel value={value} index={5}>
+                  <InvoicesSupplier
+                    isRTL={isRTL}
+                    words={words}
+                    resourses={resourses}
+                    employees={employees}
+                    departments={departments}
+                    company={company}
+                    theme={theme}
+                    servicesproducts={servicesproducts}
+                    name="resourseId"
+                    value={row}
+                    id={row?._id}
+                  ></InvoicesSupplier>
+                </TabPanel>
+                <TabPanel value={value} index={6}>
+                  <PaymentSupplier
+                    isRTL={isRTL}
+                    words={words}
+                    theme={theme}
+                    name="resourseId"
+                    value={row}
+                    id={row?._id}
+                  ></PaymentSupplier>
+                </TabPanel>
+                <TabPanel value={value} index={7}>
                   <ExpensesCustomer
                     isRTL={isRTL}
                     words={words}
@@ -217,7 +244,7 @@ const PopupResoursesView = ({
                     id={row?._id}
                   ></ExpensesCustomer>
                 </TabPanel>
-                <TabPanel value={value} index={6}>
+                <TabPanel value={value} index={8}>
                   <ExpensesProdCustomer
                     isRTL={isRTL}
                     words={words}
@@ -227,7 +254,7 @@ const PopupResoursesView = ({
                     id={row?._id}
                   ></ExpensesProdCustomer>
                 </TabPanel>
-                <TabPanel value={value} index={7}>
+                <TabPanel value={value} index={9}>
                   <KaidsCustomer
                     isRTL={isRTL}
                     words={words}
@@ -237,7 +264,7 @@ const PopupResoursesView = ({
                     id={row?._id}
                   ></KaidsCustomer>
                 </TabPanel>
-                <TabPanel value={value} index={8}>
+                <TabPanel value={value} index={10}>
                   <ReminderCustomer
                     resourses={resourses}
                     employees={employees}

@@ -45,6 +45,7 @@ const PopupFinanceAll = ({
   theme,
 }: any) => {
   const [loading, setLoading] = useState(false);
+  const [saving, setSaving] = useState(false);
 
   const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
   const [selectedDate, setSelectedDate] = React.useState(new Date());
@@ -193,6 +194,7 @@ const PopupFinanceAll = ({
       );
       return;
     }
+    setSaving(true);
 
     const variables: any = {
       _id: row && row._id ? row._id : undefined, // is it new or edit
@@ -213,6 +215,7 @@ const PopupFinanceAll = ({
   const apply = async (mutate: any, variables: any) => {
     try {
       await mutate({ variables });
+      setSaving(false);
       closeModal();
     } catch (error) {
       onError(error);
@@ -239,6 +242,7 @@ const PopupFinanceAll = ({
     setDebaccounts([]);
     setCridaccounts([]);
     setItemsList([]);
+    setSaving(false);
     // setDepartvalue(null);
     // setDepartError(false);
     // setEmplvalue(null);
@@ -265,6 +269,7 @@ const PopupFinanceAll = ({
       onSubmit={onSubmit}
       theme={theme}
       alrt={alrt}
+      saving={saving}
       mt={10}
       maxWidth="md"
     >

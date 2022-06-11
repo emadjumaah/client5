@@ -20,7 +20,7 @@ import {
   ColumnChooser,
 } from '@devexpress/dx-react-grid-material-ui';
 import { Command, errorAlert, Loading, PopupEditing } from '../../Shared';
-import { useCustomers, useServices } from '../../hooks';
+import { useCustomers, useProducts, useServices } from '../../hooks';
 import { getRowId } from '../../common';
 import { PopupDeprtment } from '../../pubups';
 import {
@@ -63,6 +63,7 @@ export default function ManageDepartments({
   const { resourses } = useResoursesUp();
   const { customers } = useCustomers();
   const { services } = useServices();
+  const { products } = useProducts();
   const { height } = useWindowDimensions();
   const onCloseItem = () => {
     setOpenItem(false);
@@ -254,7 +255,7 @@ export default function ManageDepartments({
           company={company}
           resourses={resourses}
           employees={employees}
-          servicesproducts={services}
+          servicesproducts={[...services, ...products]}
           customers={customers}
           tasks={tasks}
         ></PopupDepartmentView>

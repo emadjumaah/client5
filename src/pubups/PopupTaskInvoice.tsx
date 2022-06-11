@@ -61,6 +61,7 @@ const PopupTaskInvoice = ({
 }: any) => {
   const classes = invoiceClasses();
   const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
+  const [saving, setSaving] = useState(false);
   const [selectedDate, setSelectedDate] = React.useState(new Date());
   const [invNo, setInvNo] = useState<any>('');
 
@@ -149,6 +150,7 @@ const PopupTaskInvoice = ({
     setInvNo('');
     setAccounts([]);
     setPtype('cash');
+    setSaving(false);
     setSelectedDate(new Date());
     setDepartvalue(null);
     setEmplvalue(null);
@@ -338,6 +340,8 @@ const PopupTaskInvoice = ({
       );
       return;
     }
+    setSaving(true);
+
     const { amount, costAmount, profit, total } = totals;
 
     const variables: any = {
@@ -410,9 +414,10 @@ const PopupTaskInvoice = ({
 
   const apply = async (mutate: any, variables: any) => {
     try {
-      await mutate({ variables });
+      mutate({ variables });
       // handlePrint();
       freshlastNos();
+      setSaving(false);
       onCloseForm();
     } catch (error) {
       onError(error);
@@ -433,6 +438,7 @@ const PopupTaskInvoice = ({
   const onCloseForm = () => {
     resetAllForms();
     onClose();
+    setSaving(false);
   };
 
   const onHandleSubmit = () => {
@@ -472,6 +478,7 @@ const PopupTaskInvoice = ({
       onSubmit={onHandleSubmit}
       theme={theme}
       alrt={alrt}
+      saving={saving}
       print={handleReactPrint}
       maxWidth="md"
       mt={0}

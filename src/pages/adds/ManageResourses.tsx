@@ -36,7 +36,12 @@ import { errorAlert, errorDeleteAlert } from '../../Shared/helpers';
 import PageLayout from '../main/PageLayout';
 import { getColumns } from '../../common/columns';
 import useTasks from '../../hooks/useTasks';
-import { useCustomers, useServices, useTemplate } from '../../hooks';
+import {
+  useCustomers,
+  useProducts,
+  useServices,
+  useTemplate,
+} from '../../hooks';
 import PopupResoursesView from '../../pubups/PopupResoursesView';
 import PopupResourses from '../../pubups/PopupResourses';
 import useResoursesUp from '../../hooks/useResoursesUp';
@@ -64,6 +69,7 @@ export default function ManageResourses({
   const { employees } = useEmployeesUp();
   const { customers } = useCustomers();
   const { services } = useServices();
+  const { products } = useProducts();
   const { tempwords } = useTemplate();
 
   const onCloseItem = () => {
@@ -277,7 +283,7 @@ export default function ManageResourses({
           company={company}
           employees={employees}
           resourses={resourses}
-          servicesproducts={services}
+          servicesproducts={[...services, ...products]}
           customers={customers}
           tasks={tasks}
           tempwords={tempwords}
