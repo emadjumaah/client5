@@ -7,6 +7,7 @@ import {
   TableEditColumn,
   TableHeaderRow,
 } from '@devexpress/dx-react-grid-material-ui';
+import { Typography } from '@material-ui/core';
 import React from 'react';
 import { useEffect, useState } from 'react';
 import { getRowId } from '../common';
@@ -47,7 +48,6 @@ export default function ActionsView({
 
   const [loadActions, actionsData]: any = useLazyQuery(getActions, {
     variables: { eventId: event.id },
-    fetchPolicy: 'cache-and-network',
   });
 
   const refresQuery = {
@@ -107,7 +107,15 @@ export default function ActionsView({
           <EditingState onCommitChanges={commitChanges} />
 
           <Table messages={{ noData: '' }} />
-          <TableHeaderRow />
+          <TableHeaderRow
+            titleComponent={({ children }) => {
+              return (
+                <Typography style={{ fontSize: 14, fontWeight: 'bold' }}>
+                  {children}
+                </Typography>
+              );
+            }}
+          />
           <TableEditColumn
             showEditCommand
             showDeleteCommand

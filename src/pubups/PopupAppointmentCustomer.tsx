@@ -764,24 +764,6 @@ const PopupAppointmentCustomer = ({
                       />
                     </Grid>
                   )}
-                  {!tempoptions?.noTsk && (
-                    <Grid item xs={6}>
-                      <AutoFieldLocal
-                        name="task"
-                        title={tempwords?.task}
-                        words={words}
-                        options={tasks}
-                        value={taskvalue}
-                        setSelectValue={setTaskvalue}
-                        register={register}
-                        isRTL={isRTL}
-                        fullWidth
-                        openAdd={openTask}
-                        disabled={name === 'taskId'}
-                        mb={0}
-                      ></AutoFieldLocal>
-                    </Grid>
-                  )}
                   <Grid item xs={12}>
                     <AutoFieldLocal
                       name="customer"
@@ -802,6 +784,24 @@ const PopupAppointmentCustomer = ({
                       mb={0}
                     ></AutoFieldLocal>
                   </Grid>
+                  {!tempoptions?.noTsk && (
+                    <Grid item xs={6}>
+                      <AutoFieldLocal
+                        name="task"
+                        title={tempwords?.task}
+                        words={words}
+                        options={tasks}
+                        value={taskvalue}
+                        setSelectValue={setTaskvalue}
+                        register={register}
+                        isRTL={isRTL}
+                        fullWidth
+                        openAdd={openTask}
+                        disabled={name === 'taskId'}
+                        mb={0}
+                      ></AutoFieldLocal>
+                    </Grid>
+                  )}
 
                   {!tempoptions?.noEmp && (
                     <Grid item xs={6}>
@@ -888,7 +888,14 @@ const PopupAppointmentCustomer = ({
                     setOpenAction(true);
                   }}
                 >
-                  {isRTL ? 'اضافة تنبيه' : 'Add Reminder'}
+                  <Typography
+                    style={{
+                      fontSize: 13,
+                      fontWeight: 'bold',
+                    }}
+                  >
+                    {isRTL ? 'اضافة تنبيه' : 'Add Reminder'}
+                  </Typography>{' '}
                 </Button>
                 <Paper style={{ height: 115, overflow: 'auto' }}>
                   {actionslist.map((act: any) => {

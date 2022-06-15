@@ -143,7 +143,16 @@ export default function EventsTable({
             }
           ></DataTypeProvider>
           <NumberTypeProvider for={['index']} />
-          <TableHeaderRow showSortingControls />
+          <TableHeaderRow
+            showSortingControls
+            titleComponent={({ children }) => {
+              return (
+                <Typography style={{ fontSize: 14, fontWeight: 'bold' }}>
+                  {children}
+                </Typography>
+              );
+            }}
+          />
 
           <TableEditColumn
             showDeleteCommand={rows && rows.length > 1}

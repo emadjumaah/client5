@@ -22,7 +22,6 @@ import {
   deleteFinance,
   getDepartments,
   getEmployees,
-  getLandingChartData,
   getLastNos,
   getProjects,
   getResourses,
@@ -43,7 +42,7 @@ import useTasks from '../hooks/useTasks';
 import getTasks from '../graphql/query/getTasks';
 import React from 'react';
 import useCompany from '../hooks/useCompany';
-import { Box } from '@material-ui/core';
+import { Box, Typography } from '@material-ui/core';
 import DateNavigatorReports from '../components/filters/DateNavigatorReports';
 import PopupPayment from '../pubups/PopupPayment';
 
@@ -87,9 +86,7 @@ export default function PaymentSupplier({
     setEndDate(curDate);
   };
 
-  const [loadFinances, financeData]: any = useLazyQuery(getPayments, {
-    fetchPolicy: 'cache-and-network',
-  });
+  const [loadFinances, financeData]: any = useLazyQuery(getPayments);
   const { accounts } = useAccounts();
   const refresQuery = {
     refetchQueries: [
@@ -100,9 +97,6 @@ export default function PaymentSupplier({
           start: start ? start.setHours(0, 0, 0, 0) : undefined,
           end: end ? end.setHours(23, 59, 59, 999) : undefined,
         },
-      },
-      {
-        query: getLandingChartData,
       },
       {
         query: getLastNos,
@@ -202,7 +196,16 @@ export default function PaymentSupplier({
           }}
           estimatedRowHeight={40}
         />
-        <TableHeaderRow showSortingControls />
+        <TableHeaderRow
+          showSortingControls
+          titleComponent={({ children }) => {
+            return (
+              <Typography style={{ fontSize: 14, fontWeight: 'bold' }}>
+                {children}
+              </Typography>
+            );
+          }}
+        />
         <DataTypeProvider
           for={['time']}
           formatterComponent={timeFormatter}

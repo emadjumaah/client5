@@ -25,6 +25,7 @@ import { AlertLocal, SearchTable } from '../../components';
 import useNoStockProducts from '../../hooks/useNoStockProducts';
 import PopupNSProduct from '../../pubups/PopupNSProduct';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
+import { Typography } from '@material-ui/core';
 
 export default function NSProducts({ isRTL, words, theme }: any) {
   const [loading, setLoading] = useState(false);
@@ -81,7 +82,16 @@ export default function NSProducts({ isRTL, words, theme }: any) {
           }}
           estimatedRowHeight={40}
         />
-        <TableHeaderRow showSortingControls />
+        <TableHeaderRow
+          showSortingControls
+          titleComponent={({ children }) => {
+            return (
+              <Typography style={{ fontSize: 14, fontWeight: 'bold' }}>
+                {children}
+              </Typography>
+            );
+          }}
+        />
         <DataTypeProvider
           for={['price', 'cost']}
           formatterComponent={currencyFormatter}

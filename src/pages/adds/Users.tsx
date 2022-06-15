@@ -21,7 +21,7 @@ import AddIcon from '@material-ui/icons/Add';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { errorAlert, Loading, PopupEditing } from '../../Shared';
-import { Box, Fab, IconButton } from '@material-ui/core';
+import { Box, Fab, IconButton, Typography } from '@material-ui/core';
 import { useUsers } from '../../hooks';
 import {
   activeFormatter,
@@ -162,7 +162,16 @@ export default function Users({ isRTL, words, theme, user, menuitem }: any) {
             estimatedRowHeight={50}
             tableComponent={TableComponent}
           />
-          <TableHeaderRow showSortingControls />
+          <TableHeaderRow
+            showSortingControls
+            titleComponent={({ children }) => {
+              return (
+                <Typography style={{ fontSize: 14, fontWeight: 'bold' }}>
+                  {children}
+                </Typography>
+              );
+            }}
+          />
           <DataTypeProvider
             for={['roles']}
             formatterComponent={(props: any) =>

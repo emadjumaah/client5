@@ -9,6 +9,9 @@ export default gql`
     $mobile: String
     $email: String
     $address: String
+    $avatar: String
+    $logo: String
+    $headphoto: String
     $employee: EmployeeInput
   ) {
     createSupplier(
@@ -19,6 +22,9 @@ export default gql`
       mobile: $mobile
       email: $email
       address: $address
+      avatar: $avatar
+      logo: $logo
+      headphoto: $headphoto
       employee: $employee
     ) {
       ok

@@ -232,7 +232,7 @@ export const uploadPhotoOnline = async (image: any) => {
     d.append('cloud_name', CLOUD_NAME);
 
     const res = await fetch(
-      'https://api.cloudinary.com/v1_1/fivegstore/image/upload',
+      'https://api.cloudinary.com/v1_1/jadwalio/image/upload',
       {
         method: 'post',
         body: d,

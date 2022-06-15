@@ -1,18 +1,18 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable import/no-anonymous-default-export */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import { useLazyQuery, useMutation } from "@apollo/client";
-import { useEffect } from "react";
+import { useLazyQuery, useMutation } from '@apollo/client';
+import { useEffect } from 'react';
 import {
   createFinance,
   deleteFinance,
   getFinances,
   updateFinance,
-} from "../graphql";
+} from '../graphql';
 
 export default () => {
   const [getfins, finData] = useLazyQuery(getFinances, {
-    fetchPolicy: "cache-and-network",
+    // fetchPolicy: "cache-and-network",
   });
 
   const [addFinance] = useMutation(createFinance, {
@@ -29,7 +29,7 @@ export default () => {
     getfins();
   }, [getfins]);
 
-  const finances = finData?.data?.["getFinances"]?.data || [];
+  const finances = finData?.data?.['getFinances']?.data || [];
 
   return { finances, addFinance, editFinance, removeFinance };
 };

@@ -22,7 +22,7 @@ import {
 import { SearchTable } from '../../components';
 import { useProducts } from '../../hooks';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
-import { Box } from '@material-ui/core';
+import { Box, Typography } from '@material-ui/core';
 
 export default function StockItems({ isRTL, words }: any) {
   const [columns] = useState([
@@ -65,7 +65,15 @@ export default function StockItems({ isRTL, words }: any) {
           }}
           estimatedRowHeight={40}
         />
-        <TableHeaderRow />
+        <TableHeaderRow
+          titleComponent={({ children }) => {
+            return (
+              <Typography style={{ fontSize: 14, fontWeight: 'bold' }}>
+                {children}
+              </Typography>
+            );
+          }}
+        />
         <DataTypeProvider
           for={['price', 'cost']}
           formatterComponent={currencyFormatter}

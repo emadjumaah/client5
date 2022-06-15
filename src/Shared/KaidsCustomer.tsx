@@ -27,7 +27,7 @@ import {
 import useTasks from '../hooks/useTasks';
 import getGereralKaids from '../graphql/query/getGereralKaids';
 import { getColumns } from '../common/columns';
-import { Box } from '@material-ui/core';
+import { Box, Typography } from '@material-ui/core';
 import DateNavigatorReports from '../components/filters/DateNavigatorReports';
 import { useTemplate } from '../hooks';
 
@@ -88,7 +88,7 @@ export default function KaidsCustomer({
   };
 
   const [loadKaids, kaidsData]: any = useLazyQuery(getGereralKaids, {
-    fetchPolicy: 'cache-and-network',
+    // fetchPolicy: 'cache-and-network',
   });
 
   useEffect(() => {
@@ -156,7 +156,16 @@ export default function KaidsCustomer({
           }}
           estimatedRowHeight={40}
         />
-        <TableHeaderRow showSortingControls />
+        <TableHeaderRow
+          showSortingControls
+          titleComponent={({ children }) => {
+            return (
+              <Typography style={{ fontSize: 14, fontWeight: 'bold' }}>
+                {children}
+              </Typography>
+            );
+          }}
+        />
         <DataTypeProvider
           for={['opTime']}
           formatterComponent={createdAtFormatter}

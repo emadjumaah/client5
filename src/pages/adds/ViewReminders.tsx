@@ -22,7 +22,7 @@ import { actionTimeFormatter, sentFormatter } from '../../Shared/colorFormat';
 import { SearchTable } from '../../components';
 import { getColumns } from '../../common/columns';
 
-import { Box } from '@material-ui/core';
+import { Box, Typography } from '@material-ui/core';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
 import PageLayout from '../main/PageLayout';
 import { useLazyQuery, useMutation } from '@apollo/client';
@@ -237,7 +237,16 @@ export default function ViewReminders(props: any) {
             }
           ></DataTypeProvider>
 
-          <TableHeaderRow showSortingControls />
+          <TableHeaderRow
+            showSortingControls
+            titleComponent={({ children }) => {
+              return (
+                <Typography style={{ fontSize: 14, fontWeight: 'bold' }}>
+                  {children}
+                </Typography>
+              );
+            }}
+          />
 
           {<Toolbar />}
 

@@ -24,7 +24,13 @@ import { useLazyQuery, useMutation } from '@apollo/client';
 import getNotifications from '../../graphql/query/getNotifications';
 import { TableComponent } from '../../Shared/TableComponent';
 import { eventFormatter } from '../../Shared/colorFormat';
-import { Box, FormControlLabel, Switch, Tooltip } from '@material-ui/core';
+import {
+  Box,
+  FormControlLabel,
+  Switch,
+  Tooltip,
+  Typography,
+} from '@material-ui/core';
 import updatePushToken from '../../graphql/mutation/updatePushToken';
 import { subscribePushToken } from '../../common/helpers';
 
@@ -147,7 +153,16 @@ export default function Notifications({
               estimatedRowHeight={40}
               tableComponent={TableComponent}
             />
-            <TableHeaderRow showSortingControls />
+            <TableHeaderRow
+              showSortingControls
+              titleComponent={({ children }) => {
+                return (
+                  <Typography style={{ fontSize: 14, fontWeight: 'bold' }}>
+                    {children}
+                  </Typography>
+                );
+              }}
+            />
             <DataTypeProvider
               for={['eventId']}
               formatterComponent={(props: any) => eventFormatter({ ...props })}

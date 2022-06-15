@@ -8,16 +8,22 @@ import {
   DataTypeProvider,
   SearchState,
   IntegratedFiltering,
+  PagingState,
+  IntegratedPaging,
 } from '@devexpress/dx-react-grid';
 import {
   Grid,
   TableHeaderRow,
   TableEditColumn,
-  VirtualTable,
   Toolbar,
   SearchPanel,
   TableColumnVisibility,
   ColumnChooser,
+  PagingPanel,
+  Table,
+  TableColumnResizing,
+  DragDropProvider,
+  TableColumnReordering,
 } from '@devexpress/dx-react-grid-material-ui';
 import { Command, Loading, PopupEditing } from '../../Shared';
 import { updateDocNumbers, getRowId, roles } from '../../common';
@@ -28,10 +34,8 @@ import {
   getDepartments,
   getEmployees,
   getEvents,
-  getLandingChartData,
   getProjects,
   getResourses,
-  // getReminders,
   updateEvent,
 } from '../../graphql';
 import { useLazyQuery, useMutation } from '@apollo/client';
@@ -56,13 +60,19 @@ import {
   Checkbox,
   fade,
   FormControlLabel,
+  Paper,
   Typography,
 } from '@material-ui/core';
 import useTasks from '../../hooks/useTasks';
 import getTasks from '../../graphql/query/getTasks';
 import { Getter } from '@devexpress/dx-react-core';
 import { TableComponent } from '../../Shared/TableComponent';
-import { useCustomers, useServices, useTemplate } from '../../hooks';
+import {
+  useCustomers,
+  useProducts,
+  useServices,
+  useTemplate,
+} from '../../hooks';
 import PopupDepartmentView from '../../pubups/PopupDepartmentView';
 import PopupEmployeeView from '../../pubups/PopupEmployeeView';
 import PopupTaskView from '../../pubups/PopupTaskView';
@@ -82,14 +92,14 @@ export default function Appointments({
   company,
 }) {
   const [due, setDue] = useState(false);
-  const { height } = useWindowDimensions();
+  const [pageSizes] = useState([5, 10, 20, 50, 0]);
+
   const col = getColumns({ isRTL, words });
 
   const { tempoptions } = useTemplate();
   const [columns] = useState(
     tempoptions?.noTsk
       ? [
-          { id: 4, ref: 'title', name: 'title', title: words.title },
           col.location,
           col.createdAt,
           col.startDate,
@@ -104,7 +114,6 @@ export default function Appointments({
           col.nots,
         ]
       : [
-          { id: 4, ref: 'title', name: 'title', title: words.title },
           col.location,
           col.createdAt,
           col.startDate,
@@ -121,6 +130,25 @@ export default function Appointments({
           col.nots,
         ]
   );
+
+  const [tableColumnExtensions]: any = useState([
+    { columnName: 'location', width: 100 },
+    { columnName: 'createdAt', width: 100 },
+    { columnName: 'startDate', width: 100 },
+    { columnName: 'fromto', width: 70 },
+    { columnName: 'docNo', width: 120 },
+    { columnName: col.customer.name, width: 200 },
+    { columnName: 'taskId', width: 200 },
+    { columnName: col.employee.name, width: 200 },
+    { columnName: col.resourse.name, width: 200 },
+    { columnName: col.department.name, width: 200 },
+    { columnName: 'status', width: 100 },
+    { columnName: 'done', width: 100 },
+    { columnName: 'amount', width: 120 },
+    { columnName: 'nots', width: 50 },
+  ]);
+
+  const { width, height } = useWindowDimensions();
 
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -142,6 +170,7 @@ export default function Appointments({
   const { employees, addEmployee, editEmployee } = useEmployeesUp();
   const { resourses, addResourse, editResourse } = useResoursesUp();
   const { services } = useServices();
+  const { products } = useProducts();
 
   const onCloseTaskItem = () => {
     setOpenTaskItem(false);
@@ -216,9 +245,7 @@ export default function Appointments({
     dispatch({ type: 'setEndDate', payload: curDate });
   };
 
-  const [loadEvents, eventsData]: any = useLazyQuery(getEvents, {
-    fetchPolicy: 'cache-and-network',
-  });
+  const [loadEvents, eventsData]: any = useLazyQuery(getEvents);
 
   const refresQuery = {
     refetchQueries: [
@@ -227,10 +254,8 @@ export default function Appointments({
         variables: {
           start: start ? start.setHours(0, 0, 0, 0) : undefined,
           end: end ? end.setHours(23, 59, 59, 999) : undefined,
+          due,
         },
-      },
-      {
-        query: getLandingChartData,
       },
       {
         query: getTasks,
@@ -339,24 +364,29 @@ export default function Appointments({
       refresh={refresh}
       periodvalue={periodvalue}
       setPeriodvalue={setPeriodvalue}
-      // bgcolor={colors.blue[500]}
     >
       <Box
         style={{
           height: height - 50,
           overflow: 'auto',
           backgroundColor: '#fff',
-          marginLeft: 5,
-          marginRight: 5,
         }}
       >
         <Box
+          boxShadow={1}
           display="flex"
+          borderColor="#ddd"
           style={{
             position: 'absolute',
             zIndex: 111,
             flexDirection: 'row',
             alignItems: 'center',
+            paddingTop: 5,
+            paddingBottom: 5,
+            paddingLeft: 60,
+            paddingRight: 60,
+            width: '100%',
+            backgroundColor: '#fff',
           }}
         >
           <Box
@@ -378,15 +408,13 @@ export default function Appointments({
               isRTL={isRTL}
               words={words}
               theme={theme}
-              // color={colors.blue[700]}
-              // bgcolor={colors.blue[50]}
             ></DateNavigatorReports>
           </Box>
           <Box
             style={{
               padding: 0,
               margin: 0,
-              backgroundColor: fade(theme.palette.secondary.light, 0.7),
+              backgroundColor: fade(theme.palette.secondary.light, 0.5),
               paddingRight: 10,
               marginLeft: 40,
               marginRight: 40,
@@ -414,164 +442,211 @@ export default function Appointments({
             />
           </Box>
         </Box>
-        <Grid rows={rows} columns={columns} getRowId={getRowId}>
-          <SortingState />
-          <EditingState onCommitChanges={commitChanges} />
-          <SearchState />
+        <Paper
+          elevation={5}
+          style={{
+            margin: 50,
+            marginTop: 100,
+            overflow: 'auto',
+            width: width - 380,
+            borderRadius: 10,
+          }}
+        >
+          <Grid rows={rows} columns={columns} getRowId={getRowId}>
+            <SortingState />
+            <EditingState onCommitChanges={commitChanges} />
+            <SearchState />
+            <PagingState defaultCurrentPage={0} defaultPageSize={10} />
+            <IntegratedSorting />
+            <IntegratedFiltering />
+            <IntegratedPaging />
+            <DragDropProvider />
 
-          <IntegratedSorting />
-          <IntegratedFiltering />
+            <Table
+              messages={{
+                noData: isRTL ? 'لا يوجد بيانات' : 'no data',
+              }}
+              tableComponent={TableComponent}
+              rowComponent={(props: any) => (
+                <Table.Row {...props} style={{ height: 60 }}></Table.Row>
+              )}
+              columnExtensions={tableColumnExtensions}
+            />
+            <TableColumnReordering
+              defaultOrder={[
+                col.location.name,
+                col.createdAt.name,
+                col.startDate.name,
+                col.fromto.name,
+                col.docNo.name,
+                col.customer.name,
+                col.taskId.name,
+                col.employee.name,
+                col.resourse.name,
+                col.department.name,
+                col.status.name,
+                col.done.name,
+                col.amount.name,
+                col.nots.name,
+              ]}
+            />
+            <TableColumnResizing defaultColumnWidths={tableColumnExtensions} />
 
-          <VirtualTable
-            height={height - 100}
-            messages={{
-              noData: isRTL ? 'لا يوجد بيانات' : 'no data',
-            }}
-            estimatedRowHeight={45}
-            tableComponent={TableComponent}
-          />
-          <TableHeaderRow showSortingControls />
-          <TableColumnVisibility
-            columnExtensions={tableColumnVisibilityColumnExtensions}
-            defaultHiddenColumnNames={[
-              col.createdAt.name,
-              col.status.name,
-              col.resourse.name,
-              col.location.name,
-            ]}
-          />
+            <TableHeaderRow
+              showSortingControls
+              titleComponent={({ children }) => {
+                return (
+                  <Typography style={{ fontSize: 14, fontWeight: 'bold' }}>
+                    {children}
+                  </Typography>
+                );
+              }}
+            />
+            <TableColumnVisibility
+              columnExtensions={tableColumnVisibilityColumnExtensions}
+              defaultHiddenColumnNames={[
+                col.createdAt.name,
+                col.status.name,
+                col.resourse.name,
+                col.location.name,
+                col.nots.name,
+              ]}
+            />
 
-          <DataTypeProvider
-            for={['fromto']}
-            formatterComponent={fromToFormatter}
-          ></DataTypeProvider>
-          <DataTypeProvider
-            for={['location']}
-            formatterComponent={locationFormatter}
-          ></DataTypeProvider>
-          <DataTypeProvider
-            for={['startDate', 'createdAt']}
-            formatterComponent={createdAtFormatter}
-          ></DataTypeProvider>
-          <DataTypeProvider
-            for={['status']}
-            formatterComponent={eventStatusFormatter}
-          ></DataTypeProvider>
-          <DataTypeProvider
-            for={['amount']}
-            formatterComponent={currencyFormatter}
-          ></DataTypeProvider>
-          <DataTypeProvider
-            for={['done']}
-            formatterComponent={(props: any) =>
-              doneFormatter({ ...props, editEvent })
-            }
-          ></DataTypeProvider>
-          <DataTypeProvider
-            for={['taskId']}
-            formatterComponent={(props: any) =>
-              taskIdLinkFormat({
-                ...props,
-                tasks,
-                setItem,
-                setOpenItem: setOpenTaskItem,
-                setName,
-              })
-            }
-          ></DataTypeProvider>
-          {roles.isEditor() && (
             <DataTypeProvider
-              for={['employeeNameAr', 'employeeName']}
+              for={['fromto']}
+              formatterComponent={fromToFormatter}
+            ></DataTypeProvider>
+            <DataTypeProvider
+              for={['location']}
+              formatterComponent={locationFormatter}
+            ></DataTypeProvider>
+            <DataTypeProvider
+              for={['startDate', 'createdAt']}
+              formatterComponent={createdAtFormatter}
+            ></DataTypeProvider>
+            <DataTypeProvider
+              for={['status']}
+              formatterComponent={eventStatusFormatter}
+            ></DataTypeProvider>
+            <DataTypeProvider
+              for={['amount']}
+              formatterComponent={currencyFormatter}
+            ></DataTypeProvider>
+            <DataTypeProvider
+              for={['done']}
               formatterComponent={(props: any) =>
-                nameLinkFormat({
+                doneFormatter({ ...props, editEvent })
+              }
+            ></DataTypeProvider>
+            <DataTypeProvider
+              for={['taskId']}
+              formatterComponent={(props: any) =>
+                taskIdLinkFormat({
                   ...props,
-                  setItem: setEmployeeItem,
-                  setOpenItem: setOpenEmployeeItem,
+                  tasks,
+                  setItem,
+                  setOpenItem: setOpenTaskItem,
+                  setName,
+                  isRTL,
                 })
               }
             ></DataTypeProvider>
-          )}
-          {roles.isEditor() && (
-            <DataTypeProvider
-              for={['resourseNameAr', 'resourseName']}
-              formatterComponent={(props: any) =>
-                nameLinkFormat({
-                  ...props,
-                  setItem: setResourseItem,
-                  setOpenItem: setOpenResourseItem,
-                })
-              }
-            ></DataTypeProvider>
-          )}
-          {roles.isEditor() && (
-            <DataTypeProvider
-              for={['departmentNameAr', 'departmentName']}
-              formatterComponent={(props: any) =>
-                nameLinkFormat({
-                  ...props,
-                  setItem: setDepartmentItem,
-                  setOpenItem: setOpenDepartmentItem,
-                })
-              }
-            ></DataTypeProvider>
-          )}
-          {roles.isEditor() && (
-            <DataTypeProvider
-              for={['customerNameAr', 'customerName']}
-              formatterComponent={(props: any) =>
-                nameLinkFormat({
-                  ...props,
-                  setItem: setCustomerItem,
-                  setOpenItem: setOpenCustomerItem,
-                })
-              }
-            ></DataTypeProvider>
-          )}
+            {roles.isEditor() && (
+              <DataTypeProvider
+                for={['employeeNameAr', 'employeeName']}
+                formatterComponent={(props: any) =>
+                  nameLinkFormat({
+                    ...props,
+                    setItem: setEmployeeItem,
+                    setOpenItem: setOpenEmployeeItem,
+                  })
+                }
+              ></DataTypeProvider>
+            )}
+            {roles.isEditor() && (
+              <DataTypeProvider
+                for={['resourseNameAr', 'resourseName']}
+                formatterComponent={(props: any) =>
+                  nameLinkFormat({
+                    ...props,
+                    setItem: setResourseItem,
+                    setOpenItem: setOpenResourseItem,
+                  })
+                }
+              ></DataTypeProvider>
+            )}
+            {roles.isEditor() && (
+              <DataTypeProvider
+                for={['departmentNameAr', 'departmentName']}
+                formatterComponent={(props: any) =>
+                  nameLinkFormat({
+                    ...props,
+                    setItem: setDepartmentItem,
+                    setOpenItem: setOpenDepartmentItem,
+                  })
+                }
+              ></DataTypeProvider>
+            )}
+            {roles.isEditor() && (
+              <DataTypeProvider
+                for={['customerNameAr', 'customerName']}
+                formatterComponent={(props: any) =>
+                  nameLinkFormat({
+                    ...props,
+                    setItem: setCustomerItem,
+                    setOpenItem: setOpenCustomerItem,
+                  })
+                }
+              ></DataTypeProvider>
+            )}
 
-          <TableEditColumn
-            showEditCommand
-            showDeleteCommand
-            showAddCommand
-            commandComponent={Command}
-          ></TableEditColumn>
+            <TableEditColumn
+              showEditCommand
+              showDeleteCommand
+              showAddCommand
+              commandComponent={Command}
+            ></TableEditColumn>
 
-          <Toolbar />
-          <ColumnChooser />
+            <Toolbar />
+            <ColumnChooser />
+            <PagingPanel pageSizes={pageSizes} />
 
-          <SearchPanel
-            inputComponent={(props: any) => {
-              return <SearchTable isRTL={isRTL} {...props}></SearchTable>;
-            }}
-          />
+            <SearchPanel
+              inputComponent={(props: any) => {
+                return <SearchTable isRTL={isRTL} {...props}></SearchTable>;
+              }}
+            />
 
-          <PopupEditing addAction={addEvent} editAction={editEvent}>
-            <PopupAppointment
-              employees={employees}
-              resourses={resourses}
-              departments={departments}
-              company={company}
-              servicesproducts={services}
-              theme={theme}
-              tasks={tasks}
-            ></PopupAppointment>
-          </PopupEditing>
-          <Getter
-            name="tableColumns"
-            computed={({ tableColumns }) => {
-              const result = [
-                {
-                  key: 'editCommand',
-                  type: TableEditColumn.COLUMN_TYPE,
-                  width: 110,
-                },
-                ...tableColumns.filter(
-                  (c: any) => c.type !== TableEditColumn.COLUMN_TYPE
-                ),
-              ];
-              return result;
-            }}
-          />
-        </Grid>
+            <PopupEditing addAction={addEvent} editAction={editEvent}>
+              <PopupAppointment
+                employees={employees}
+                resourses={resourses}
+                departments={departments}
+                company={company}
+                servicesproducts={services}
+                theme={theme}
+                tasks={tasks}
+              ></PopupAppointment>
+            </PopupEditing>
+            <Getter
+              name="tableColumns"
+              computed={({ tableColumns }) => {
+                const result = [
+                  {
+                    key: 'editCommand',
+                    type: TableEditColumn.COLUMN_TYPE,
+                    width: 120,
+                  },
+                  ...tableColumns.filter(
+                    (c: any) => c.type !== TableEditColumn.COLUMN_TYPE
+                  ),
+                ];
+                return result;
+              }}
+            />
+          </Grid>
+        </Paper>
         {loading && <Loading isRTL={isRTL} />}
         <PopupDepartmentView
           open={openDepartmentItem}
@@ -586,6 +661,7 @@ export default function Appointments({
           employees={employees}
           resourses={resourses}
           servicesproducts={services}
+          products={products}
           customers={customers}
           tasks={tasks}
         ></PopupDepartmentView>
@@ -602,6 +678,7 @@ export default function Appointments({
           employees={employees}
           resourses={resourses}
           servicesproducts={services}
+          products={products}
           customers={customers}
           tasks={tasks}
         ></PopupEmployeeView>
@@ -618,6 +695,7 @@ export default function Appointments({
           employees={employees}
           resourses={resourses}
           servicesproducts={services}
+          products={products}
           customers={customers}
           tasks={tasks}
         ></PopupResourseView>
@@ -636,6 +714,7 @@ export default function Appointments({
           editCustomer={editCustomer}
           company={company}
           servicesproducts={services}
+          products={products}
         ></PopupTaskView>
         <PopupCustomerView
           open={openCustomerItem}
@@ -650,6 +729,7 @@ export default function Appointments({
           employees={employees}
           resourses={resourses}
           servicesproducts={services}
+          products={products}
           customers={rows}
           tasks={tasks}
         ></PopupCustomerView>

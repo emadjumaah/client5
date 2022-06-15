@@ -25,7 +25,7 @@ import { AlertLocal, SearchTable } from '../../components';
 import { useProducts } from '../../hooks';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
 import PopupItemsImport from '../../pubups/PopupItemsImport';
-import { Box } from '@material-ui/core';
+import { Box, Typography } from '@material-ui/core';
 import ImportBtn from '../../common/ImportBtn';
 
 export default function Products({ isRTL, words, theme }: any) {
@@ -92,7 +92,16 @@ export default function Products({ isRTL, words, theme }: any) {
           }}
           estimatedRowHeight={40}
         />
-        <TableHeaderRow showSortingControls />
+        <TableHeaderRow
+          showSortingControls
+          titleComponent={({ children }) => {
+            return (
+              <Typography style={{ fontSize: 14, fontWeight: 'bold' }}>
+                {children}
+              </Typography>
+            );
+          }}
+        />
         <DataTypeProvider
           for={['price', 'cost']}
           formatterComponent={currencyFormatter}

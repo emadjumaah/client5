@@ -25,7 +25,6 @@ import {
   getDepartments,
   getEmployees,
   getInvoices,
-  getLandingChartData,
   getLastNos,
   getProjects,
   getResourses,
@@ -43,7 +42,7 @@ import { getColumns } from '../common/columns';
 import useTasks from '../hooks/useTasks';
 import { TableComponent } from '../pages/reports/SalesReport';
 import getTasks from '../graphql/query/getTasks';
-import { Box } from '@material-ui/core';
+import { Box, Typography } from '@material-ui/core';
 import DateNavigatorReports from '../components/filters/DateNavigatorReports';
 import { useTemplate } from '../hooks';
 
@@ -55,6 +54,7 @@ export default function InvoicesCustomer({
   departments,
   company,
   servicesproducts,
+  products,
   name,
   id,
   value,
@@ -116,9 +116,7 @@ export default function InvoicesCustomer({
     setEndDate(curDate);
   };
 
-  const [loadInvoices, opData]: any = useLazyQuery(getInvoices, {
-    fetchPolicy: 'cache-and-network',
-  });
+  const [loadInvoices, opData]: any = useLazyQuery(getInvoices);
 
   const refresQuery = {
     refetchQueries: [
@@ -129,9 +127,6 @@ export default function InvoicesCustomer({
           start: start ? start.setHours(0, 0, 0, 0) : undefined,
           end: end ? end.setHours(23, 59, 59, 999) : undefined,
         },
-      },
-      {
-        query: getLandingChartData,
       },
       {
         query: getLastNos,
@@ -236,7 +231,16 @@ export default function InvoicesCustomer({
           estimatedRowHeight={40}
           tableComponent={TableComponent}
         />
-        <TableHeaderRow showSortingControls />
+        <TableHeaderRow
+          showSortingControls
+          titleComponent={({ children }) => {
+            return (
+              <Typography style={{ fontSize: 14, fontWeight: 'bold' }}>
+                {children}
+              </Typography>
+            );
+          }}
+        />
 
         <DataTypeProvider
           for={['time']}

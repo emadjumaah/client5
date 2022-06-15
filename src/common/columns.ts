@@ -29,6 +29,12 @@ export const getColumns = ({ isRTL, words }: any) => {
       name: isRTL ? 'employeeNameAr' : 'employeeName',
       title: tempwords?.employee,
     },
+    name: {
+      id: 61,
+      ref: 'name',
+      name: isRTL ? 'nameAr' : 'name',
+      title: words?.name,
+    },
     service: {
       id: 7,
       ref: 'service',
@@ -124,6 +130,36 @@ export const getColumns = ({ isRTL, words }: any) => {
       ref: 'progress',
       name: 'progress',
       title: isRTL ? 'نسبة الانجاز' : 'Progress',
+    },
+    appointments: {
+      id: 65,
+      ref: 'appointments',
+      name: 'appointments',
+      title: isRTL ? 'المواعيد' : 'Appointments',
+    },
+    sales: {
+      id: 66,
+      ref: 'sales',
+      name: 'sales',
+      title: isRTL ? 'المبيعات' : 'Sales',
+    },
+    purchase: {
+      id: 67,
+      ref: 'purchase',
+      name: 'purchase',
+      title: isRTL ? 'المشتريات' : 'Purchase',
+    },
+    expenses: {
+      id: 68,
+      ref: 'expenses',
+      name: 'expenses',
+      title: isRTL ? 'المصروفات' : 'Expenses',
+    },
+    kaids: {
+      id: 68,
+      ref: 'kaids',
+      name: 'kaids',
+      title: isRTL ? 'القيود' : 'Entries',
     },
     evQty: {
       id: 23,

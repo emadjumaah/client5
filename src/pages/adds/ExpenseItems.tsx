@@ -23,7 +23,7 @@ import { PopupExpenseItem } from '../../pubups';
 import { currencyFormatter } from '../../Shared/colorFormat';
 import { AlertLocal, SearchTable } from '../../components';
 import { errorAlert, errorDeleteAlert } from '../../Shared/helpers';
-import { Box } from '@material-ui/core';
+import { Box, Typography } from '@material-ui/core';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
 import { TableComponent } from '../../Shared/TableComponent';
 import ImportBtn from '../../common/ImportBtn';
@@ -98,7 +98,16 @@ export default function ExpenseItems({ isRTL, words, theme }: any) {
           estimatedRowHeight={40}
           tableComponent={TableComponent}
         />
-        <TableHeaderRow showSortingControls />
+        <TableHeaderRow
+          showSortingControls
+          titleComponent={({ children }) => {
+            return (
+              <Typography style={{ fontSize: 14, fontWeight: 'bold' }}>
+                {children}
+              </Typography>
+            );
+          }}
+        />
 
         <DataTypeProvider
           for={['price']}

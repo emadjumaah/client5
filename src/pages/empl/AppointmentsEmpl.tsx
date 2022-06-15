@@ -28,10 +28,8 @@ import {
   getCustomers,
   getDepartments,
   getEmployees,
-  getLandingChartData,
   getProjects,
   getResourses,
-  // getReminders,
   updateEvent,
 } from '../../graphql';
 import { useLazyQuery, useMutation } from '@apollo/client';
@@ -62,7 +60,12 @@ import useTasks from '../../hooks/useTasks';
 import getTasks from '../../graphql/query/getTasks';
 import { Getter } from '@devexpress/dx-react-core';
 import { TableComponent } from '../../Shared/TableComponent';
-import { useCustomers, useDepartments, useEmployees } from '../../hooks';
+import {
+  useCustomers,
+  useDepartments,
+  useEmployees,
+  useProducts,
+} from '../../hooks';
 import PopupDepartmentView from '../../pubups/PopupDepartmentView';
 import PopupEmployeeView from '../../pubups/PopupEmployeeView';
 import PopupTaskView from '../../pubups/PopupTaskView';
@@ -113,7 +116,7 @@ export default function AppointmentsEmpl({
   const [openEmployeeItem, setOpenEmployeeItem] = useState(false);
   const [openDepartmentItem, setOpenDepartmentItem] = useState(false);
   const { height } = useWindowDimensions();
-
+  const { products } = useProducts();
   const onCloseTaskItem = () => {
     setOpenTaskItem(false);
     setItem(null);
@@ -180,9 +183,7 @@ export default function AppointmentsEmpl({
     dispatch({ type: 'setEndDate', payload: curDate });
   };
 
-  const [loadEvents, eventsData]: any = useLazyQuery(getEmplEvents, {
-    fetchPolicy: 'cache-and-network',
-  });
+  const [loadEvents, eventsData]: any = useLazyQuery(getEmplEvents);
 
   const refresQuery = {
     refetchQueries: [
@@ -192,9 +193,6 @@ export default function AppointmentsEmpl({
           start: start ? start.setHours(0, 0, 0, 0) : undefined,
           end: end ? end.setHours(23, 59, 59, 999) : undefined,
         },
-      },
-      {
-        query: getLandingChartData,
       },
       {
         query: getTasks,
@@ -381,7 +379,16 @@ export default function AppointmentsEmpl({
             estimatedRowHeight={45}
             tableComponent={TableComponent}
           />
-          <TableHeaderRow showSortingControls />
+          <TableHeaderRow
+            showSortingControls
+            titleComponent={({ children }) => {
+              return (
+                <Typography style={{ fontSize: 14, fontWeight: 'bold' }}>
+                  {children}
+                </Typography>
+              );
+            }}
+          />
           <TableColumnVisibility
             columnExtensions={tableColumnVisibilityColumnExtensions}
             defaultHiddenColumnNames={[
@@ -520,6 +527,7 @@ export default function AppointmentsEmpl({
           employees={employees}
           resourses={resourses}
           servicesproducts={servicesproducts}
+          products={products}
           customers={customers}
           tasks={tasks}
         ></PopupDepartmentView>
@@ -536,6 +544,7 @@ export default function AppointmentsEmpl({
           employees={employees}
           resourses={resourses}
           servicesproducts={servicesproducts}
+          products={products}
           customers={customers}
           tasks={tasks}
         ></PopupEmployeeView>
@@ -554,6 +563,7 @@ export default function AppointmentsEmpl({
           editCustomer={editCustomer}
           company={company}
           servicesproducts={servicesproducts}
+          products={products}
         ></PopupTaskView>
         <PopupCustomerView
           open={openCustomerItem}
@@ -568,6 +578,7 @@ export default function AppointmentsEmpl({
           employees={employees}
           resourses={resourses}
           servicesproducts={servicesproducts}
+          products={products}
           customers={rows}
           tasks={tasks}
         ></PopupCustomerView>

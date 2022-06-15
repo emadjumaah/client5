@@ -26,6 +26,7 @@ import { errorDeleteAlert } from '../../Shared/helpers';
 import PageLayout from '../main/PageLayout';
 import useDepartmentsDown from '../../hooks/useDepartmentsDown';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
+import { Typography } from '@material-ui/core';
 
 export default function Departments({ isRTL, words, theme, menuitem }: any) {
   const [loading, setLoading] = useState(false);
@@ -90,7 +91,16 @@ export default function Departments({ isRTL, words, theme, menuitem }: any) {
             estimatedRowHeight={40}
           />
 
-          <TableHeaderRow showSortingControls />
+          <TableHeaderRow
+            showSortingControls
+            titleComponent={({ children }) => {
+              return (
+                <Typography style={{ fontSize: 14, fontWeight: 'bold' }}>
+                  {children}
+                </Typography>
+              );
+            }}
+          />
           <DataTypeProvider
             for={['avatar']}
             formatterComponent={avatarPatternFormatter}

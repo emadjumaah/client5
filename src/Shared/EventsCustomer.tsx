@@ -82,6 +82,7 @@ export default function EventsCustomer({
   departments,
   customers,
   servicesproducts,
+  products,
   theme,
   id,
   name,
@@ -280,7 +281,16 @@ export default function EventsCustomer({
             }
           ></DataTypeProvider>
           <NumberTypeProvider for={['index']} />
-          <TableHeaderRow showSortingControls />
+          <TableHeaderRow
+            showSortingControls
+            titleComponent={({ children }) => {
+              return (
+                <Typography style={{ fontSize: 14, fontWeight: 'bold' }}>
+                  {children}
+                </Typography>
+              );
+            }}
+          />
 
           {!isNew && (
             <TableEditColumn

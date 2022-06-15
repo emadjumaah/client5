@@ -26,7 +26,7 @@ import { PopupGroup } from '../../pubups';
 import { AlertLocal, SearchTable } from '../../components';
 import { errorAlert, errorDeleteAlert } from '../../Shared/helpers';
 import PageLayout from '../main/PageLayout';
-import { Box } from '@material-ui/core';
+import { Box, Typography } from '@material-ui/core';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
 import { TableComponent } from '../../Shared/TableComponent';
 import useGroups from '../../hooks/useGroups';
@@ -95,7 +95,16 @@ export default function Groups(props: any) {
             estimatedRowHeight={40}
             tableComponent={TableComponent}
           />
-          <TableHeaderRow showSortingControls />
+          <TableHeaderRow
+            showSortingControls
+            titleComponent={({ children }) => {
+              return (
+                <Typography style={{ fontSize: 14, fontWeight: 'bold' }}>
+                  {children}
+                </Typography>
+              );
+            }}
+          />
           <DataTypeProvider
             for={['nameAr', 'name']}
             formatterComponent={(props: any) =>

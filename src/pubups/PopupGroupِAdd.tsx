@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState } from 'react';
-import { Box, Paper } from '@material-ui/core';
+import { Box, Paper, Typography } from '@material-ui/core';
 
 import PopupLayout from '../pages/main/PopupLayout';
 import {
@@ -93,7 +93,16 @@ const PopupGroupِAdd = ({
               }}
               estimatedRowHeight={40}
             />
-            <TableHeaderRow showSortingControls />
+            <TableHeaderRow
+              showSortingControls
+              titleComponent={({ children }) => {
+                return (
+                  <Typography style={{ fontSize: 14, fontWeight: 'bold' }}>
+                    {children}
+                  </Typography>
+                );
+              }}
+            />
             <DataTypeProvider
               for={['groupIds']}
               formatterComponent={(props) =>

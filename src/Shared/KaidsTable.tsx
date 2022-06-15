@@ -1,15 +1,15 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import React, { useState } from "react";
+import React, { useState } from 'react';
 import {
   Grid,
   Table,
   TableEditColumn,
   TableHeaderRow,
-} from "@devexpress/dx-react-grid-material-ui";
-import { Box, fade, Paper, Typography, withStyles } from "@material-ui/core";
-import { DataTypeProvider, EditingState } from "@devexpress/dx-react-grid";
-import { accountFormatter, currencyFormatter } from "./colorFormat";
-import { CommandSmall } from "./CommandSmall";
+} from '@devexpress/dx-react-grid-material-ui';
+import { Box, fade, Paper, Typography, withStyles } from '@material-ui/core';
+import { DataTypeProvider, EditingState } from '@devexpress/dx-react-grid';
+import { accountFormatter, currencyFormatter } from './colorFormat';
+import { CommandSmall } from './CommandSmall';
 
 export const getRowId = (row: any) => row.index;
 
@@ -24,7 +24,7 @@ const NumberTypeProvider = (props) => (
 
 const styles = (theme) => ({
   tableStriped: {
-    "& tbody tr:nth-of-type(odd)": {
+    '& tbody tr:nth-of-type(odd)': {
       backgroundColor: fade(theme.palette.primary.main, 0.1),
     },
   },
@@ -34,7 +34,7 @@ const TableComponentBase = ({ classes, ...restProps }) => (
   <Table.Table {...restProps} className={classes.tableStriped} />
 );
 
-export const TableComponent = withStyles(styles, { name: "TableComponent" })(
+export const TableComponent = withStyles(styles, { name: 'TableComponent' })(
   TableComponentBase
 );
 
@@ -46,19 +46,19 @@ export default function KaidsTable({
   accounts,
 }: any) {
   const [columns] = useState([
-    { name: "index", title: words.no },
-    { name: "debitAcc", title: words.to },
-    { name: "creditAcc", title: words.from },
-    { name: "desc", title: words.description },
-    { name: "amount", title: words.amount },
+    { name: 'index', title: words.no },
+    { name: 'debitAcc', title: words.to },
+    { name: 'creditAcc', title: words.from },
+    { name: 'desc', title: words.description },
+    { name: 'amount', title: words.amount },
   ]);
 
   const [tableColumnExtensions]: any = useState([
-    { columnName: "index", width: "10%", align: "left" },
-    { columnName: "debitAcc", width: "20%", align: "left" },
-    { columnName: "creditAcc", width: "20%", align: "left" },
-    { columnName: "desc", width: "auto" },
-    { columnName: "amount", width: "15%", align: "right" },
+    { columnName: 'index', width: '10%', align: 'left' },
+    { columnName: 'debitAcc', width: '20%', align: 'left' },
+    { columnName: 'creditAcc', width: '20%', align: 'left' },
+    { columnName: 'desc', width: 'auto' },
+    { columnName: 'amount', width: '15%', align: 'right' },
   ]);
 
   const commitChanges = async ({ deleted }) => {
@@ -76,7 +76,7 @@ export default function KaidsTable({
     <Paper
       style={{
         maxHeight: 265,
-        overflow: "auto",
+        overflow: 'auto',
         margin: 10,
         minHeight: 265,
       }}
@@ -91,12 +91,12 @@ export default function KaidsTable({
             tableComponent={TableComponent}
           />
           <DataTypeProvider
-            for={["amount"]}
+            for={['amount']}
             formatterComponent={currencyFormatter}
           ></DataTypeProvider>
-          <NumberTypeProvider for={["index"]} />
+          <NumberTypeProvider for={['index']} />
           <DataTypeProvider
-            for={["debitAcc", "creditAcc"]}
+            for={['debitAcc', 'creditAcc']}
             formatterComponent={(props) =>
               accountFormatter(props, accounts, isRTL)
             }
@@ -106,7 +106,15 @@ export default function KaidsTable({
             // showEditCommand
             commandComponent={CommandSmall}
           ></TableEditColumn>
-          <TableHeaderRow />
+          <TableHeaderRow
+            titleComponent={({ children }) => {
+              return (
+                <Typography style={{ fontSize: 14, fontWeight: 'bold' }}>
+                  {children}
+                </Typography>
+              );
+            }}
+          />
         </Grid>
       )}
     </Paper>

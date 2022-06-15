@@ -24,7 +24,6 @@ import {
   getDepartments,
   getEmployees,
   getExpenses,
-  getLandingChartData,
   getLastNos,
   getProjects,
   getResourses,
@@ -41,7 +40,7 @@ import useAccounts from '../hooks/useAccounts';
 import useTasks from '../hooks/useTasks';
 import getTasks from '../graphql/query/getTasks';
 import useCompany from '../hooks/useCompany';
-import { Box } from '@material-ui/core';
+import { Box, Typography } from '@material-ui/core';
 import DateNavigatorReports from '../components/filters/DateNavigatorReports';
 import { useProducts, useTemplate } from '../hooks';
 import useDepartmentsUp from '../hooks/useDepartmentsUp';
@@ -124,9 +123,7 @@ export default function ExpensesProdCustomer({
     setEndDate(curDate);
   };
 
-  const [loadExpenses, expensesData]: any = useLazyQuery(getExpenses, {
-    fetchPolicy: 'cache-and-network',
-  });
+  const [loadExpenses, expensesData]: any = useLazyQuery(getExpenses);
   const refresQuery = {
     refetchQueries: [
       {
@@ -138,9 +135,7 @@ export default function ExpensesProdCustomer({
           opType: 61,
         },
       },
-      {
-        query: getLandingChartData,
-      },
+
       {
         query: getLastNos,
       },
@@ -240,7 +235,16 @@ export default function ExpensesProdCustomer({
           }}
           estimatedRowHeight={40}
         />
-        <TableHeaderRow showSortingControls />
+        <TableHeaderRow
+          showSortingControls
+          titleComponent={({ children }) => {
+            return (
+              <Typography style={{ fontSize: 14, fontWeight: 'bold' }}>
+                {children}
+              </Typography>
+            );
+          }}
+        />
         <DataTypeProvider
           for={['time']}
           formatterComponent={timeFormatter}

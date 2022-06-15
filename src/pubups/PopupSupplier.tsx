@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import {
   successAlert,
@@ -14,6 +14,7 @@ import { GlobalContext } from '../contexts';
 import { Grid } from '@material-ui/core';
 import PopupLayout from '../pages/main/PopupLayout';
 import { TextFieldLocal } from '../components';
+import { ImageOnlineUpload, uploadPhotoOnline } from '../common/upload';
 
 const PopupSupplier = ({
   open,
@@ -28,17 +29,34 @@ const PopupSupplier = ({
 }: any) => {
   const [saving, setSaving] = useState(false);
   const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
+  const [logoimage, setLogoimage] = useState(null);
+  const [logourl, setLogourl] = useState(null);
+
   const { register, handleSubmit, errors, reset } = useForm(yup.custResolver);
   const {
     translate: { words, isRTL },
     store: { user },
   }: GContextTypes = useContext(GlobalContext);
 
+  useEffect(() => {
+    if (row?._id) {
+      if (row?.logo) {
+        setLogourl(row?.logo);
+      }
+    }
+  }, [row]);
+
   const onSubmit = async (data: any) => {
     setSaving(true);
     const name = data.name.trim();
     const nameAr = data.nameAr.trim();
     const { phone, email, address } = data;
+    let logo: any;
+
+    if (logoimage) {
+      logo = await uploadPhotoOnline(logoimage);
+      logo = logo?.replace('http://', 'https://');
+    }
     const variables: any = {
       _id: row && row._id ? row._id : undefined, // is it new or edit
       name,
@@ -46,6 +64,7 @@ const PopupSupplier = ({
       phone,
       email,
       address,
+      logo,
       branch: user.branch,
       userId: user._id,
     };
@@ -71,6 +90,8 @@ const PopupSupplier = ({
     onClose();
     reset();
     setSaving(false);
+    setLogoimage(null);
+    setLogourl(null);
   };
 
   const onError = async (error: any) => {
@@ -110,31 +131,46 @@ const PopupSupplier = ({
         <Grid item xs={1}></Grid>
         <Grid item xs={10}>
           <Grid container spacing={1}>
-            <Grid item xs={12}>
-              <TextFieldLocal
-                autoFocus
-                required
-                name="nameAr"
-                label={words.name}
-                register={register}
-                errors={errors}
-                row={row}
-                fullWidth
-                mb={0}
-              />
+            <Grid item xs={4}>
+              <ImageOnlineUpload
+                url={logourl}
+                setUrl={setLogourl}
+                image={logoimage}
+                setImage={setLogoimage}
+                width={150}
+                height={150}
+                size="400x400"
+              ></ImageOnlineUpload>
             </Grid>
-            <Grid item xs={12}>
-              <TextFieldLocal
-                required
-                name="name"
-                ltr
-                label={words.nameEn}
-                register={register}
-                errors={errors}
-                row={row}
-                fullWidth
-                mb={0}
-              />
+            <Grid item xs={8}>
+              <Grid container spacing={2}>
+                <Grid item xs={12} style={{ marginTop: 20 }}>
+                  <TextFieldLocal
+                    autoFocus
+                    required
+                    name="nameAr"
+                    label={words.name}
+                    register={register}
+                    errors={errors}
+                    row={row}
+                    fullWidth
+                    mb={0}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextFieldLocal
+                    required
+                    name="name"
+                    ltr
+                    label={words.nameEn}
+                    register={register}
+                    errors={errors}
+                    row={row}
+                    fullWidth
+                    mb={0}
+                  />
+                </Grid>
+              </Grid>
             </Grid>
             <Grid item xs={4}>
               <TextFieldLocal

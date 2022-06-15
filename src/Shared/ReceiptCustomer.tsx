@@ -23,7 +23,6 @@ import {
   getCustomers,
   getDepartments,
   getEmployees,
-  getLandingChartData,
   getLastNos,
   getProjects,
   getResourses,
@@ -44,7 +43,7 @@ import useTasks from '../hooks/useTasks';
 import getTasks from '../graphql/query/getTasks';
 import React from 'react';
 import useCompany from '../hooks/useCompany';
-import { Box } from '@material-ui/core';
+import { Box, Typography } from '@material-ui/core';
 import DateNavigatorReports from '../components/filters/DateNavigatorReports';
 
 export default function ReceiptCustomer({
@@ -88,9 +87,7 @@ export default function ReceiptCustomer({
     setEndDate(curDate);
   };
 
-  const [loadFinances, financeData]: any = useLazyQuery(getReceipts, {
-    fetchPolicy: 'cache-and-network',
-  });
+  const [loadFinances, financeData]: any = useLazyQuery(getReceipts);
   const { accounts } = useAccounts();
   const refresQuery = {
     refetchQueries: [
@@ -101,9 +98,6 @@ export default function ReceiptCustomer({
           start: start ? start.setHours(0, 0, 0, 0) : undefined,
           end: end ? end.setHours(23, 59, 59, 999) : undefined,
         },
-      },
-      {
-        query: getLandingChartData,
       },
       {
         query: getLastNos,
@@ -203,7 +197,16 @@ export default function ReceiptCustomer({
           }}
           estimatedRowHeight={40}
         />
-        <TableHeaderRow showSortingControls />
+        <TableHeaderRow
+          showSortingControls
+          titleComponent={({ children }) => {
+            return (
+              <Typography style={{ fontSize: 14, fontWeight: 'bold' }}>
+                {children}
+              </Typography>
+            );
+          }}
+        />
         <DataTypeProvider
           for={['time']}
           formatterComponent={timeFormatter}

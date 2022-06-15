@@ -713,10 +713,10 @@ const PopupInvoice = ({
       maxWidth="md"
       saving={saving}
       mt={0}
-      mb={50}
+      mb={40}
       // bgcolor={colors.green[500]}
     >
-      <Grid container spacing={1}>
+      <Grid container spacing={0}>
         <Grid item xs={4}>
           <CalenderLocal
             isRTL={isRTL}
@@ -817,6 +817,7 @@ const PopupInvoice = ({
             ></AutoFieldLocal>
           </Grid>
         )}
+        {!tempoptions?.noRes && <Grid item xs={4}></Grid>}
         {!tempoptions?.noRes && (
           <Grid item xs={4}>
             <AutoFieldLocal

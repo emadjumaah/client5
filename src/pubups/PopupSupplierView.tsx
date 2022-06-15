@@ -15,11 +15,9 @@ import {
 import PopupLayout from '../pages/main/PopupLayout';
 import { moneyFormat } from '../Shared/colorFormat';
 import EventsCustomer from '../Shared/EventsCustomer';
-import ExpensesCustomer from '../Shared/ExpensesCustomer';
 import TasksCustomer from '../Shared/TasksCustomer';
 import { supplierManamentTabs } from '../constants/rrule';
 import ProjectsCustomer from '../Shared/ProjectsCustomer';
-import KaidsCustomer from '../Shared/KaidsCustomer';
 import { useTemplate } from '../hooks';
 import InvoicesSupplier from '../Shared/InvoicesSupplier';
 import PaymentSupplier from '../Shared/PaymentSupplier';
@@ -59,7 +57,7 @@ const useStyles = makeStyles((theme) => ({
     height: 300,
   },
   tabs: {
-    borderRight: `1px solid ${theme.palette.divider}`,
+    borderRight: `2px solid ${theme.palette.divider}`,
   },
 }));
 
@@ -83,6 +81,7 @@ const PopupSupplierView = ({
   employees,
   resourses,
   servicesproducts,
+  products,
   customers,
 }: any) => {
   const classes = useStyles();
@@ -136,6 +135,7 @@ const PopupSupplierView = ({
                 <TabPanel value={value} index={0}>
                   <ProjectsCustomer
                     servicesproducts={servicesproducts}
+                    products={products}
                     isRTL={isRTL}
                     words={words}
                     theme={theme}
@@ -148,6 +148,7 @@ const PopupSupplierView = ({
                 <TabPanel value={value} index={1}>
                   <TasksCustomer
                     servicesproducts={servicesproducts}
+                    products={products}
                     isRTL={isRTL}
                     words={words}
                     theme={theme}
@@ -164,6 +165,7 @@ const PopupSupplierView = ({
                     departments={departments}
                     customers={customers}
                     servicesproducts={servicesproducts}
+                    products={products}
                     isRTL={isRTL}
                     words={words}
                     theme={theme}
@@ -183,6 +185,7 @@ const PopupSupplierView = ({
                     company={company}
                     theme={theme}
                     servicesproducts={servicesproducts}
+                    products={products}
                     name="supplierId"
                     value={row}
                     id={row?._id}
@@ -198,7 +201,7 @@ const PopupSupplierView = ({
                     id={row?._id}
                   ></PaymentSupplier>
                 </TabPanel>
-                <TabPanel value={value} index={5}>
+                {/* <TabPanel value={value} index={5}>
                   <ExpensesCustomer
                     isRTL={isRTL}
                     words={words}
@@ -217,7 +220,7 @@ const PopupSupplierView = ({
                     value={row}
                     id={row?._id}
                   ></KaidsCustomer>
-                </TabPanel>
+                </TabPanel> */}
                 {/* <TabPanel value={value} index={7}>
                   <ReminderCustomer
                     resourses={resourses}
@@ -353,11 +356,14 @@ const PopupSupplierView = ({
             <Box style={{ marginTop: 10, marginBottom: 100 }}>
               <Tabs
                 orientation="vertical"
-                variant="scrollable"
                 value={value}
                 onChange={handleChange}
                 aria-label="items"
                 className={classes.tabs}
+                variant="fullWidth"
+                TabIndicatorProps={{ style: { width: 3 } }}
+                textColor="primary"
+                centered
               >
                 {supplierManamentTabs.map((item: any) => {
                   if (item.hide) {
@@ -369,7 +375,13 @@ const PopupSupplierView = ({
                         backgroundColor:
                           value === item.id ? '#f5f5f5' : undefined,
                       }}
-                      label={isRTL ? item.nameAr : item.name}
+                      label={
+                        <Typography
+                          style={{ fontWeight: 'bold', fontSize: 13 }}
+                        >
+                          {isRTL ? item.nameAr : item.name}
+                        </Typography>
+                      }
                       {...a11yProps(item.id)}
                     />
                   );

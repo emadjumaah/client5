@@ -16,10 +16,17 @@ export default gql`
         mobile
         address
         email
+        avatar
+        logo
+        headphoto
 
         amount
         totalinvoiced
         totalDiscount
+        totalPurchaseInvoiced
+        totalPurchasePaid
+        totalPurchaseDiscount
+        toatlProdExpenses
         totalpaid
         toatlExpenses
         totalkaidsdebit

@@ -25,7 +25,6 @@ import {
   getCustomers,
   getDepartments,
   getEmployees,
-  getLandingChartData,
   getProjects,
   getResourses,
 } from '../../graphql';
@@ -44,14 +43,14 @@ import {
 import PageLayout from '../main/PageLayout';
 import { AlertLocal, SearchTable } from '../../components';
 import { getColumns } from '../../common/columns';
-import { Box, Button } from '@material-ui/core';
+import { Box, Button, Typography } from '@material-ui/core';
 import TasksContext from '../../contexts/tasks';
 import getEmplTasks from '../../graphql/query/getEmplTasks';
 import PopupTask from '../../pubups/PopupTask';
 import createTask from '../../graphql/mutation/createTask';
 import updateTask from '../../graphql/mutation/updateTask';
 import deleteTaskById from '../../graphql/mutation/deleteTaskById';
-import { useCustomers } from '../../hooks';
+import { useCustomers, useProducts } from '../../hooks';
 import PopupGantt from '../../pubups/PopupGantt';
 import { errorAlert, errorDeleteAlert } from '../../Shared/helpers';
 import { TableComponent } from '../../Shared/TableComponent';
@@ -119,6 +118,7 @@ export default function TasksEmpl({
   const { employees } = useEmployeesUp();
   const { resourses } = useResoursesUp();
   const { projects } = useProjects();
+  const { products } = useProducts();
   const { height } = useWindowDimensions();
   const onCloseItem = () => {
     setOpenItem(false);
@@ -139,9 +139,7 @@ export default function TasksEmpl({
     dispatch({ type: 'setEndDate', payload: curDate });
   };
 
-  const [loadTasks, tasksData]: any = useLazyQuery(getEmplTasks, {
-    fetchPolicy: 'cache-and-network',
-  });
+  const [loadTasks, tasksData]: any = useLazyQuery(getEmplTasks);
 
   const refresQuery = {
     refetchQueries: [
@@ -151,9 +149,6 @@ export default function TasksEmpl({
           start: start ? start.setHours(0, 0, 0, 0) : undefined,
           end: end ? end.setHours(23, 59, 59, 999) : undefined,
         },
-      },
-      {
-        query: getLandingChartData,
       },
       {
         query: getEmplTasks,
@@ -297,7 +292,16 @@ export default function TasksEmpl({
               estimatedRowHeight={40}
               tableComponent={TableComponent}
             />
-            <TableHeaderRow showSortingControls />
+            <TableHeaderRow
+              showSortingControls
+              titleComponent={({ children }) => {
+                return (
+                  <Typography style={{ fontSize: 14, fontWeight: 'bold' }}>
+                    {children}
+                  </Typography>
+                );
+              }}
+            />
             <TableColumnVisibility
               columnExtensions={tableColumnVisibilityColumnExtensions}
               defaultHiddenColumnNames={[
@@ -407,6 +411,7 @@ export default function TasksEmpl({
               editCustomer={editCustomer}
               company={company}
               servicesproducts={servicesproducts}
+              products={products}
               refresh={refresh}
               startrange={start}
               endrange={end}

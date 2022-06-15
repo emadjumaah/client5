@@ -46,7 +46,13 @@ import {
   outFormatter,
   taskIdFormatter,
 } from '../../Shared/colorFormat';
-import { Box, fade, IconButton, withStyles } from '@material-ui/core';
+import {
+  Box,
+  fade,
+  IconButton,
+  Typography,
+  withStyles,
+} from '@material-ui/core';
 import { useLazyQuery } from '@apollo/client';
 import ReportsFilter from '../../Shared/ReportsFilter';
 import { GridExporter } from '@devexpress/dx-react-grid-export';
@@ -651,7 +657,16 @@ export default function ProductsReport({
             }}
             estimatedRowHeight={40}
           />
-          <TableHeaderRow showSortingControls />
+          <TableHeaderRow
+            showSortingControls
+            titleComponent={({ children }) => {
+              return (
+                <Typography style={{ fontSize: 14, fontWeight: 'bold' }}>
+                  {children}
+                </Typography>
+              );
+            }}
+          />
           <TableColumnVisibility
             columnExtensions={tableColumnVisibilityColumnExtensions}
             onHiddenColumnNamesChange={(hcs: string[]) => {

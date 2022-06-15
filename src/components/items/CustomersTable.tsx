@@ -29,6 +29,7 @@ import { getRowId, roles } from '../../common';
 import { Command, PopupEditing } from '../../Shared';
 import SearchTable from '../filters/SearchTable';
 import { PopupCustomer } from '../../pubups';
+import { Typography } from '@material-ui/core';
 
 export default function CustomersTable({
   rows,
@@ -64,7 +65,16 @@ export default function CustomersTable({
         estimatedRowHeight={40}
         tableComponent={TableComponent}
       />
-      <TableHeaderRow showSortingControls />
+      <TableHeaderRow
+        showSortingControls
+        titleComponent={({ children }) => {
+          return (
+            <Typography style={{ fontSize: 14, fontWeight: 'bold' }}>
+              {children}
+            </Typography>
+          );
+        }}
+      />
       <TableColumnVisibility
         defaultHiddenColumnNames={[
           'amount',

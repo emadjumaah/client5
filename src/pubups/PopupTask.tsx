@@ -235,6 +235,11 @@ const PopupTask = ({
     }
   };
 
+  const onChangeInterval = (e: any) => {
+    const value = Number(e.target.value);
+    setInterval(value > 1 ? value : 1);
+  };
+
   const getEventOverallTotal = () => {
     const totalsin = itemsList.map((litem: any) => litem.itemtotal);
     const sum = totalsin.reduce((psum: any, a: any) => psum + a, 0);
@@ -734,7 +739,6 @@ const PopupTask = ({
       onSubmit={onHandleSubmit}
       theme={theme}
       alrt={alrt}
-      mt={10}
       print={!isNew ? handleReactPrint : undefined}
       maxWidth={isNew ? 'lg' : 'xl'}
       fullWidth
@@ -742,18 +746,17 @@ const PopupTask = ({
       saving={saving}
       mb={10}
     >
-      <>
-        <Box display="flex">
+      <Box>
+        {/* <Box display="flex">
           <Typography style={{ fontWeight: 'bold' }} variant="body2">
             {row?.docNo}
           </Typography>
-        </Box>
-        <Grid container spacing={1}>
+        </Box> */}
+        <Grid container spacing={2}>
           <Grid item xs={8}>
             <Grid container spacing={1}>
-              <Grid item xs={3}>
+              <Grid item xs={2}>
                 <CalenderLocal
-                  // isRTL={isRTL}
                   label={words.start}
                   value={start}
                   onChange={(d: any) => setStart(d)}
@@ -761,26 +764,33 @@ const PopupTask = ({
                   time
                   disabled={!isNew}
                   mb={0}
+                  width={125}
                 ></CalenderLocal>
               </Grid>
+              <Grid item xs={1}></Grid>
               <Grid item xs={2} style={{ marginTop: 10 }}>
-                {/* {isNew && (
-                  <SelectLocal
-                    options={freqOptions}
-                    value={freq}
-                    onChange={onChangeFreq}
-                    isRTL={isRTL}
-                    width={120}
-                  ></SelectLocal>
-                )} */}
                 {isNew && (
                   <SelectLocal
                     options={intervalOptions}
                     value={rruletype}
                     onChange={onChangeRruletype}
                     isRTL={isRTL}
-                    width={120}
+                    width={128}
                   ></SelectLocal>
+                )}
+              </Grid>
+              <Grid item xs={2} style={{ marginTop: 10 }}>
+                {isNew && (
+                  <TextFieldLocal
+                    required
+                    name="interval"
+                    label={words.interval}
+                    value={interval}
+                    onChange={onChangeInterval}
+                    type="number"
+                    mb={0}
+                    fullWidth
+                  />
                 )}
               </Grid>
               <Grid item xs={2} style={{ marginTop: 10 }}>
@@ -792,12 +802,13 @@ const PopupTask = ({
                     value={count}
                     onChange={onChangeCount}
                     type="number"
-                    width={120}
+                    fullWidth
                   />
                 )}
               </Grid>
               <Grid item xs={1}></Grid>
-              <Grid item xs={3}>
+
+              <Grid item xs={2}>
                 {rrule?.all && (
                   <CalenderLocal
                     isRTL={isRTL}
@@ -808,6 +819,7 @@ const PopupTask = ({
                     format="dd/MM/yyyy - hh:mm"
                     time
                     mb={0}
+                    width={125}
                   ></CalenderLocal>
                 )}
               </Grid>
@@ -824,44 +836,6 @@ const PopupTask = ({
                   mb={0}
                 />
               </Grid>
-              {/* {!isNew && (
-                <Grid item xs={4}>
-                  <AutoFieldLocal
-                    name="status"
-                    title={words.status}
-                    words={words}
-                    options={taskStatus}
-                    value={status}
-                    setSelectValue={setStatus}
-                    register={register}
-                    isRTL={isRTL}
-                    fullWidth
-                    mb={0}
-                    nosort
-                  ></AutoFieldLocal>
-                </Grid>
-              )} */}
-              {!tempoptions?.noRes && (
-                <Grid item xs={6}>
-                  <AutoFieldLocal
-                    name="resourse"
-                    title={tempwords?.resourse}
-                    words={words}
-                    options={resourses}
-                    disabled={name === 'resourseId'}
-                    value={resovalue}
-                    setSelectValue={setResovalue}
-                    setSelectError={setResoError}
-                    selectError={resoError}
-                    refernce={resoRef}
-                    register={register}
-                    openAdd={openResourse}
-                    isRTL={isRTL}
-                    fullWidth
-                    day={day}
-                  ></AutoFieldLocal>
-                </Grid>
-              )}
               <Grid item xs={6}>
                 <AutoFieldLocal
                   name="customer"
@@ -902,6 +876,7 @@ const PopupTask = ({
                   ></AutoFieldLocal>
                 </Grid>
               )}
+
               <Grid item xs={6}>
                 <AutoFieldLocal
                   name="department"
@@ -941,6 +916,27 @@ const PopupTask = ({
                   ></AutoFieldLocal>
                 </Grid>
               )}
+              {!tempoptions?.noRes && (
+                <Grid item xs={6}>
+                  <AutoFieldLocal
+                    name="resourse"
+                    title={tempwords?.resourse}
+                    words={words}
+                    options={resourses}
+                    disabled={name === 'resourseId'}
+                    value={resovalue}
+                    setSelectValue={setResovalue}
+                    setSelectError={setResoError}
+                    selectError={resoError}
+                    refernce={resoRef}
+                    register={register}
+                    openAdd={openResourse}
+                    isRTL={isRTL}
+                    fullWidth
+                    day={day}
+                  ></AutoFieldLocal>
+                </Grid>
+              )}
             </Grid>
           </Grid>
           {isNew && (
@@ -954,6 +950,7 @@ const PopupTask = ({
                         overflow: 'auto',
                         minHeight: 240,
                       }}
+                      elevation={3}
                     >
                       <Box style={{ flexDirection: 'row' }}>
                         {rrule?.all?.map((al: any, index: any) => {
@@ -990,15 +987,14 @@ const PopupTask = ({
         </Grid>
         {isNew && (
           <Grid xs={12}>
-            <Grid container spacing={1}>
+            <Grid container spacing={2}>
               <Grid item xs={8}>
                 <Box
                   style={{
-                    backgroundColor: '#f4f4f4',
-                    // padding: 10,
-                    marginTop: 15,
-                    marginBottom: 15,
+                    backgroundColor: fade(colors.grey[400], 0.2),
+                    marginTop: 10,
                     borderRadius: 10,
+                    height: 268,
                   }}
                 >
                   <Box display="flex">
@@ -1016,7 +1012,7 @@ const PopupTask = ({
                   <Box style={{ marginBottom: 20 }}>
                     <ItemsTable
                       products={[...services, ...products]}
-                      height={200}
+                      height={190}
                       rows={itemsList}
                       editItem={editItemInList}
                       removeItem={removeItemFromList}
@@ -1031,10 +1027,10 @@ const PopupTask = ({
                 item
                 xs={4}
                 style={{
-                  marginTop: 15,
+                  marginTop: 20,
                   backgroundColor: fade(colors.grey[400], 0.2),
                   borderRadius: 10,
-                  height: 240,
+                  height: 268,
                 }}
               >
                 <Button
@@ -1050,9 +1046,11 @@ const PopupTask = ({
                     setOpenAction(true);
                   }}
                 >
-                  {isRTL ? 'اضافة تنبيه' : 'Add Reminder'}
+                  <Typography style={{ fontSize: 13, fontWeight: 'bold' }}>
+                    {isRTL ? 'اضافة تنبيه' : 'Add Reminder'}
+                  </Typography>
                 </Button>
-                <Button
+                {/* <Button
                   variant="outlined"
                   style={{
                     margin: 10,
@@ -1067,9 +1065,11 @@ const PopupTask = ({
                     setOpenAction(true);
                   }}
                 >
-                  {isRTL ? 'اضافة رسالة' : 'Add SMS'}
-                </Button>
-                <Paper style={{ height: 180, overflow: 'auto' }}>
+                  <Typography style={{ fontSize: 13, fontWeight: 'bold' }}>
+                    {isRTL ? 'اضافة رسالة' : 'Add SMS'}
+                  </Typography>
+                </Button> */}
+                <Paper style={{ height: 195, overflow: 'auto' }}>
                   {actionslist.map((act: any) => {
                     return (
                       <ListItem>
@@ -1230,7 +1230,7 @@ const PopupTask = ({
             />
           </div>
         </Box>
-      </>
+      </Box>
     </PopupLayout>
   );
 };

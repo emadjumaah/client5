@@ -17,11 +17,11 @@ import { moneyFormat } from '../Shared/colorFormat';
 import EventsCustomer from '../Shared/EventsCustomer';
 import InvoicesCustomer from '../Shared/InvoicesCustomer';
 import ReceiptCustomer from '../Shared/ReceiptCustomer';
-import ExpensesCustomer from '../Shared/ExpensesCustomer';
+// import ExpensesCustomer from '../Shared/ExpensesCustomer';
 import TasksCustomer from '../Shared/TasksCustomer';
 import { customerManamentTabs } from '../constants/rrule';
 import ProjectsCustomer from '../Shared/ProjectsCustomer';
-import KaidsCustomer from '../Shared/KaidsCustomer';
+// import KaidsCustomer from '../Shared/KaidsCustomer';
 import { useTemplate } from '../hooks';
 // import ReminderCustomer from '../Shared/ReminderCustomer';
 
@@ -59,7 +59,7 @@ const useStyles = makeStyles((theme) => ({
     height: 300,
   },
   tabs: {
-    borderRight: `1px solid ${theme.palette.divider}`,
+    borderRight: `2px solid ${theme.palette.divider}`,
   },
 }));
 
@@ -83,6 +83,7 @@ const PopupCustomerView = ({
   employees,
   resourses,
   servicesproducts,
+  products,
   customers,
 }: any) => {
   const classes = useStyles();
@@ -136,6 +137,7 @@ const PopupCustomerView = ({
                 <TabPanel value={value} index={0}>
                   <ProjectsCustomer
                     servicesproducts={servicesproducts}
+                    products={products}
                     isRTL={isRTL}
                     words={words}
                     theme={theme}
@@ -148,6 +150,7 @@ const PopupCustomerView = ({
                 <TabPanel value={value} index={1}>
                   <TasksCustomer
                     servicesproducts={servicesproducts}
+                    products={products}
                     isRTL={isRTL}
                     words={words}
                     theme={theme}
@@ -164,6 +167,7 @@ const PopupCustomerView = ({
                     departments={departments}
                     customers={customers}
                     servicesproducts={servicesproducts}
+                    products={products}
                     isRTL={isRTL}
                     words={words}
                     theme={theme}
@@ -183,6 +187,7 @@ const PopupCustomerView = ({
                     company={company}
                     theme={theme}
                     servicesproducts={servicesproducts}
+                    products={products}
                     name="customerId"
                     value={row}
                     id={row?._id}
@@ -198,7 +203,7 @@ const PopupCustomerView = ({
                     id={row?._id}
                   ></ReceiptCustomer>
                 </TabPanel>
-                <TabPanel value={value} index={5}>
+                {/* <TabPanel value={value} index={5}>
                   <ExpensesCustomer
                     isRTL={isRTL}
                     words={words}
@@ -217,7 +222,7 @@ const PopupCustomerView = ({
                     value={row}
                     id={row?._id}
                   ></KaidsCustomer>
-                </TabPanel>
+                </TabPanel> */}
                 {/* <TabPanel value={value} index={7}>
                   <ReminderCustomer
                     resourses={resourses}
@@ -353,11 +358,14 @@ const PopupCustomerView = ({
             <Box style={{ marginTop: 10, marginBottom: 100 }}>
               <Tabs
                 orientation="vertical"
-                variant="scrollable"
                 value={value}
                 onChange={handleChange}
                 aria-label="items"
                 className={classes.tabs}
+                variant="fullWidth"
+                TabIndicatorProps={{ style: { width: 3 } }}
+                textColor="primary"
+                centered
               >
                 {customerManamentTabs.map((item: any) => {
                   if (item.hide) {
@@ -369,7 +377,13 @@ const PopupCustomerView = ({
                         backgroundColor:
                           value === item.id ? '#f5f5f5' : undefined,
                       }}
-                      label={isRTL ? item.nameAr : item.name}
+                      label={
+                        <Typography
+                          style={{ fontWeight: 'bold', fontSize: 13 }}
+                        >
+                          {isRTL ? item.nameAr : item.name}
+                        </Typography>
+                      }
                       {...a11yProps(item.id)}
                     />
                   );

@@ -19,7 +19,6 @@ import {
   getDepartments,
   getEmployees,
   getInvoices,
-  getLandingChartData,
   getLastNos,
   getProducts,
   getProjects,
@@ -121,9 +120,6 @@ const PopupAppointInvoice = ({
       },
       {
         query: getLastNos,
-      },
-      {
-        query: getLandingChartData,
       },
       {
         query: getTasks,
@@ -629,6 +625,7 @@ const PopupAppointInvoice = ({
             ></AutoFieldLocal>
           </Grid>
         )}
+        {!tempoptions?.noRes && <Grid item xs={4}></Grid>}
         {!tempoptions?.noRes && (
           <Grid item xs={4}>
             <AutoFieldLocal

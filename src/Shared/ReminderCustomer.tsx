@@ -187,13 +187,9 @@ export default function ReminderCustomer({
     ],
   };
 
-  const [loadReminders, remindersData]: any = useLazyQuery(getReminders, {
-    fetchPolicy: 'cache-and-network',
-  });
+  const [loadReminders, remindersData]: any = useLazyQuery(getReminders);
 
-  const [loadActions, actionsData]: any = useLazyQuery(getRemindersActions, {
-    fetchPolicy: 'cache-and-network',
-  });
+  const [loadActions, actionsData]: any = useLazyQuery(getRemindersActions);
 
   useEffect(() => {
     const variables = {
@@ -431,7 +427,16 @@ export default function ReminderCustomer({
             formatterComponent={actionTimeFormatter}
           ></DataTypeProvider>
           <NumberTypeProvider for={['index']} />
-          <TableHeaderRow showSortingControls />
+          <TableHeaderRow
+            showSortingControls
+            titleComponent={({ children }) => {
+              return (
+                <Typography style={{ fontSize: 14, fontWeight: 'bold' }}>
+                  {children}
+                </Typography>
+              );
+            }}
+          />
 
           {!isNew && (
             <TableEditColumn
@@ -497,7 +502,16 @@ export default function ReminderCustomer({
             }
           ></DataTypeProvider>
 
-          <TableHeaderRow showSortingControls />
+          <TableHeaderRow
+            showSortingControls
+            titleComponent={({ children }) => {
+              return (
+                <Typography style={{ fontSize: 14, fontWeight: 'bold' }}>
+                  {children}
+                </Typography>
+              );
+            }}
+          />
         </Grid>
       )}
       {alrt.show && (

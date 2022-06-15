@@ -24,7 +24,6 @@ import {
   createPurchaseInvoice,
   updatePurchaseInvoice,
   deletePurchaseInvoice,
-  getLandingChartData,
   getLastNos,
   getSuppliers,
   getEmployees,
@@ -52,7 +51,8 @@ import useWindowDimensions from '../../hooks/useWindowDimensions';
 import useResoursesUp from '../../hooks/useResoursesUp';
 import useTasks from '../../hooks/useTasks';
 import getTasks from '../../graphql/query/getTasks';
-import { Box } from '@material-ui/core';
+import { Box, Typography } from '@material-ui/core';
+import { TableComponent } from '../../Shared/ItemsTable';
 
 export default function PurchaseInvoices({
   isRTL,
@@ -117,12 +117,7 @@ export default function PurchaseInvoices({
     dispatch({ type: 'setEndDate', payload: curDate });
   };
 
-  const [loadPurchaseInvoices, opData]: any = useLazyQuery(
-    getPurchaseInvoices,
-    {
-      fetchPolicy: 'cache-and-network',
-    }
-  );
+  const [loadPurchaseInvoices, opData]: any = useLazyQuery(getPurchaseInvoices);
 
   const refresQuery = {
     refetchQueries: [
@@ -133,9 +128,7 @@ export default function PurchaseInvoices({
           end: end ? end.setHours(23, 59, 59, 999) : undefined,
         },
       },
-      {
-        query: getLandingChartData,
-      },
+
       {
         query: getLastNos,
       },
@@ -268,9 +261,19 @@ export default function PurchaseInvoices({
             messages={{
               noData: isRTL ? 'لا يوجد بيانات' : 'no data',
             }}
-            estimatedRowHeight={30}
+            estimatedRowHeight={40}
+            tableComponent={TableComponent}
           />
-          <TableHeaderRow showSortingControls />
+          <TableHeaderRow
+            showSortingControls
+            titleComponent={({ children }) => {
+              return (
+                <Typography style={{ fontSize: 14, fontWeight: 'bold' }}>
+                  {children}
+                </Typography>
+              );
+            }}
+          />
           <DataTypeProvider
             for={['time']}
             formatterComponent={timeFormatter}

@@ -26,7 +26,6 @@ const PaymentSelect = ({ ptype, setPtype, isCash, setIsCash, words }) => {
         padding: 10,
         marginTop: 10,
         borderRadius: 10,
-        marginBottom: 10,
       }}
     >
       <Grid container spacing={2}>

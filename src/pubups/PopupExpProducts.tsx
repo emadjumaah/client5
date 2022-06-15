@@ -463,7 +463,6 @@ const PopupExpProducts = ({
       userId: user._id,
     };
     const mutate = isNew ? addAction : editAction;
-    console.log('variables', variables);
     // return;
     apply(mutate, variables);
   };

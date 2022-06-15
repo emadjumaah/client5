@@ -1,7 +1,7 @@
 /* eslint-disable react/jsx-pascal-case */
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from 'react';
-import { Box, fade, Paper } from '@material-ui/core';
+import { Box, fade, Paper, Typography } from '@material-ui/core';
 
 import PopupLayout from '../pages/main/PopupLayout';
 import {
@@ -146,7 +146,16 @@ const PopupSendreqView = ({
               }}
               estimatedRowHeight={40}
             />
-            <TableHeaderRow showSortingControls />
+            <TableHeaderRow
+              showSortingControls
+              titleComponent={({ children }) => {
+                return (
+                  <Typography style={{ fontSize: 14, fontWeight: 'bold' }}>
+                    {children}
+                  </Typography>
+                );
+              }}
+            />
           </Grid>
         </Paper>
         <PopupGroupِAdd

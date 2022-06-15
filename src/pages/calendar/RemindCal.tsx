@@ -44,7 +44,7 @@ const RemindCal = (props: any) => {
   const { height } = useWindowDimensions();
 
   const [loadReminders, remindersData]: any = useLazyQuery(getReminders, {
-    fetchPolicy: 'cache-and-network',
+    // fetchPolicy: 'cache-and-network',
   });
 
   useEffect(() => {

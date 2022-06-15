@@ -458,7 +458,16 @@ export default function ExpensesReport({
             }}
             estimatedRowHeight={40}
           />
-          <TableHeaderRow showSortingControls />
+          <TableHeaderRow
+            showSortingControls
+            titleComponent={({ children }) => {
+              return (
+                <Typography style={{ fontSize: 14, fontWeight: 'bold' }}>
+                  {children}
+                </Typography>
+              );
+            }}
+          />
           <TableColumnVisibility
             columnExtensions={tableColumnVisibilityColumnExtensions}
             onHiddenColumnNamesChange={(hcs: string[]) => {

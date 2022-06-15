@@ -650,6 +650,21 @@ export const AppointForm = (props: any) => {
                 />
               </Grid>
             )}
+            <Grid item xs={12}>
+              <AutoFieldLocal
+                name="customer"
+                title={tempwords?.customer}
+                words={words}
+                options={customers}
+                value={custvalue}
+                setSelectValue={selectCustomer}
+                isRTL={isRTL}
+                openAdd={openCustomer}
+                fullWidth
+                showphone
+                mb={0}
+              ></AutoFieldLocal>
+            </Grid>
             {!tempoptions?.noTsk && (
               <Grid item xs={6}>
                 <AutoFieldLocal
@@ -666,21 +681,6 @@ export const AppointForm = (props: any) => {
                 ></AutoFieldLocal>
               </Grid>
             )}
-            <Grid item xs={12}>
-              <AutoFieldLocal
-                name="customer"
-                title={tempwords?.customer}
-                words={words}
-                options={customers}
-                value={custvalue}
-                setSelectValue={selectCustomer}
-                isRTL={isRTL}
-                openAdd={openCustomer}
-                fullWidth
-                showphone
-                mb={0}
-              ></AutoFieldLocal>
-            </Grid>
 
             {!tempoptions?.noEmp && (
               <Grid item xs={6}>
@@ -754,9 +754,16 @@ export const AppointForm = (props: any) => {
                 setOpenAction(true);
               }}
             >
-              {isRTL ? 'اضافة تنبيه' : 'Add Reminder'}
+              <Typography
+                style={{
+                  fontSize: 13,
+                  fontWeight: 'bold',
+                }}
+              >
+                {isRTL ? 'اضافة تنبيه' : 'Add Reminder'}
+              </Typography>{' '}
             </Button>
-            <Paper style={{ height: 115, overflow: 'auto' }}>
+            <Paper style={{ height: 170, overflow: 'auto' }}>
               {actionslist.map((act: any) => {
                 return (
                   <ListItem>

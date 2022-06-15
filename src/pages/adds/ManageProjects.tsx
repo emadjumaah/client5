@@ -20,7 +20,7 @@ import {
   ColumnChooser,
 } from '@devexpress/dx-react-grid-material-ui';
 import { Command, errorAlert, Loading, PopupEditing } from '../../Shared';
-import { useCustomers, useServices } from '../../hooks';
+import { useCustomers, useProducts, useServices } from '../../hooks';
 import { getRowId, roles } from '../../common';
 import {
   avatarPatternFormatter,
@@ -42,7 +42,7 @@ import useProjects from '../../hooks/useProjects';
 import PopupProjectView from '../../pubups/PopupProjectView';
 import useDepartmentsUp from '../../hooks/useDepartmentsUp';
 import PopupProject from '../../pubups/PopupProject';
-import { Box } from '@material-ui/core';
+import { Box, Typography } from '@material-ui/core';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
 import { TableComponent } from '../../Shared/TableComponent';
 
@@ -65,6 +65,7 @@ export default function ManageProjects({
   const { resourses } = useResoursesUp();
   const { customers } = useCustomers();
   const { services } = useServices();
+  const { products } = useProducts();
   const { height } = useWindowDimensions();
   const onCloseItem = () => {
     setOpenItem(false);
@@ -172,11 +173,20 @@ export default function ManageProjects({
             messages={{
               noData: isRTL ? 'لا يوجد بيانات' : 'no data',
             }}
-            estimatedRowHeight={40}
+            estimatedRowHeight={60}
             tableComponent={TableComponent}
           />
 
-          <TableHeaderRow showSortingControls />
+          <TableHeaderRow
+            showSortingControls
+            titleComponent={({ children }) => {
+              return (
+                <Typography style={{ fontSize: 14, fontWeight: 'bold' }}>
+                  {children}
+                </Typography>
+              );
+            }}
+          />
           <TableColumnVisibility
             defaultHiddenColumnNames={['avatar', 'depType', 'desc']}
           />
@@ -268,6 +278,7 @@ export default function ManageProjects({
           resourses={resourses}
           employees={employees}
           servicesproducts={services}
+          products={products}
           customers={customers}
           tasks={tasks}
         ></PopupProjectView>

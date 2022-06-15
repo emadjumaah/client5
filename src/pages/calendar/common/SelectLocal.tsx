@@ -25,7 +25,6 @@ export const SelectLocal = ({
           fontSize: 12,
           fontWeight: 'bold',
           color: '#555',
-          marginTop: 5,
         }}
       >
         {options.map((item: any) => {

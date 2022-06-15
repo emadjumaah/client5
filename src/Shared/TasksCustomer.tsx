@@ -20,7 +20,6 @@ import {
   getCustomers,
   getDepartments,
   getEmployees,
-  getLandingChartData,
   getProjects,
   getResourses,
 } from '../graphql';
@@ -34,7 +33,6 @@ import {
   nameLinkFormat,
   progressFormatter,
   taskNameFormatter,
-  // taskStatusFormatter,
 } from './colorFormat';
 import { AlertLocal } from '../components';
 import { getColumns } from '../common/columns';
@@ -51,7 +49,7 @@ import useTasks from '../hooks/useTasks';
 import useEmployeesUp from '../hooks/useEmployeesUp';
 import useResoursesUp from '../hooks/useResoursesUp';
 import useProjects from '../hooks/useProjects';
-import { Box } from '@material-ui/core';
+import { Box, Typography } from '@material-ui/core';
 import DateNavigatorReports from '../components/filters/DateNavigatorReports';
 
 export const getRowId = (row: { _id: any }) => row._id;
@@ -62,6 +60,7 @@ export default function TasksCustomer({
   theme,
   company,
   servicesproducts,
+  products,
   value,
   name,
   id,
@@ -130,9 +129,7 @@ export default function TasksCustomer({
     setItem(null);
   };
 
-  const [loadTasks, tasksData]: any = useLazyQuery(getTasks, {
-    fetchPolicy: 'cache-and-network',
-  });
+  const [loadTasks, tasksData]: any = useLazyQuery(getTasks);
 
   const refresQuery = {
     refetchQueries: [
@@ -164,9 +161,6 @@ export default function TasksCustomer({
       },
       {
         query: getProjects,
-      },
-      {
-        query: getLandingChartData,
       },
     ],
   };
@@ -262,7 +256,16 @@ export default function TasksCustomer({
           estimatedRowHeight={40}
           tableComponent={TableComponent}
         />
-        <TableHeaderRow showSortingControls />
+        <TableHeaderRow
+          showSortingControls
+          titleComponent={({ children }) => {
+            return (
+              <Typography style={{ fontSize: 14, fontWeight: 'bold' }}>
+                {children}
+              </Typography>
+            );
+          }}
+        />
         <TableColumnVisibility
           columnExtensions={tableColumnVisibilityColumnExtensions}
           defaultHiddenColumnNames={[
@@ -355,6 +358,7 @@ export default function TasksCustomer({
           editCustomer={editCustomer}
           company={company}
           servicesproducts={servicesproducts}
+          products={products}
           refresh={refresh}
           addAction={addTask}
           editAction={editTask}

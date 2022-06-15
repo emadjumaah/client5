@@ -22,7 +22,6 @@ import {
   deleteInvoice,
   getDepartments,
   getEmployees,
-  getLandingChartData,
   getLastNos,
   getProjects,
   getPurchaseInvoices,
@@ -42,7 +41,7 @@ import { getColumns } from '../common/columns';
 import useTasks from '../hooks/useTasks';
 import { TableComponent } from '../pages/reports/SalesReport';
 import getTasks from '../graphql/query/getTasks';
-import { Box } from '@material-ui/core';
+import { Box, Typography } from '@material-ui/core';
 import DateNavigatorReports from '../components/filters/DateNavigatorReports';
 import { useTemplate } from '../hooks';
 import PopupPurchaseInvoice from '../pubups/PopupPurchaseInvoice';
@@ -55,6 +54,7 @@ export default function InvoicesSupplier({
   departments,
   company,
   servicesproducts,
+  products,
   name,
   id,
   value,
@@ -116,9 +116,7 @@ export default function InvoicesSupplier({
     setEndDate(curDate);
   };
 
-  const [loadInvoices, opData]: any = useLazyQuery(getPurchaseInvoices, {
-    fetchPolicy: 'cache-and-network',
-  });
+  const [loadInvoices, opData]: any = useLazyQuery(getPurchaseInvoices);
 
   const refresQuery = {
     refetchQueries: [
@@ -129,9 +127,6 @@ export default function InvoicesSupplier({
           start: start ? start.setHours(0, 0, 0, 0) : undefined,
           end: end ? end.setHours(23, 59, 59, 999) : undefined,
         },
-      },
-      {
-        query: getLandingChartData,
       },
       {
         query: getLastNos,
@@ -236,7 +231,16 @@ export default function InvoicesSupplier({
           estimatedRowHeight={40}
           tableComponent={TableComponent}
         />
-        <TableHeaderRow showSortingControls />
+        <TableHeaderRow
+          showSortingControls
+          titleComponent={({ children }) => {
+            return (
+              <Typography style={{ fontSize: 14, fontWeight: 'bold' }}>
+                {children}
+              </Typography>
+            );
+          }}
+        />
 
         <DataTypeProvider
           for={['time']}
@@ -271,7 +275,7 @@ export default function InvoicesSupplier({
             resourses={resourses}
             departments={departments}
             company={company}
-            servicesproducts={servicesproducts}
+            servicesproducts={products}
             tasks={tasks}
           ></PopupPurchaseInvoice>
         </PopupEditing>

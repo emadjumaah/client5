@@ -13,7 +13,7 @@ import { useLazyQuery, useMutation } from '@apollo/client';
 import useEmployeesUp from '../../hooks/useEmployeesUp';
 import useDepartmentsUp from '../../hooks/useDepartmentsUp';
 import useResoursesUp from '../../hooks/useResoursesUp';
-import { useServices } from '../../hooks';
+import { useProducts, useServices } from '../../hooks';
 import { Box } from '@material-ui/core';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
 import PopupCustomerImport from '../../pubups/PopupCustomerImport';
@@ -43,6 +43,7 @@ export default function Customers(props: any) {
   const { employees } = useEmployeesUp();
   const { resourses } = useResoursesUp();
   const { services } = useServices();
+  const { products } = useProducts();
 
   const handleSearch = (e: any) => {
     const q = e.target.value;
@@ -81,9 +82,7 @@ export default function Customers(props: any) {
     }
   };
 
-  const [loadCusts, custssData]: any = useLazyQuery(getCustomers, {
-    fetchPolicy: 'cache-and-network',
-  });
+  const [loadCusts, custssData]: any = useLazyQuery(getCustomers);
 
   useEffect(() => {
     loadCusts({ isRTL });
@@ -178,6 +177,7 @@ export default function Customers(props: any) {
           employees={employees}
           resourses={resourses}
           servicesproducts={services}
+          products={products}
           customers={rows}
           tasks={tasks}
         ></PopupCustomerView>

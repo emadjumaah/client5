@@ -20,7 +20,6 @@ import {
   getCustomers,
   getDepartments,
   getEmployees,
-  getLandingChartData,
   getResourses,
 } from '../graphql';
 import { useLazyQuery, useMutation } from '@apollo/client';
@@ -33,7 +32,6 @@ import {
   nameLinkFormat,
   progressFormatter,
   taskNameFormatter,
-  // taskStatusFormatter,
 } from './colorFormat';
 import { AlertLocal } from '../components';
 import { getColumns } from '../common/columns';
@@ -51,6 +49,7 @@ import useProjects from '../hooks/useProjects';
 import PopupProjectView from '../pubups/PopupProjectView';
 import getObjectProjects from '../graphql/query/getObjectProjects';
 import { updateDocNumbers } from '../common';
+import { Typography } from '@material-ui/core';
 
 export const getRowId = (row: { _id: any }) => row._id;
 
@@ -60,6 +59,7 @@ export default function ProjectsCustomer({
   theme,
   company,
   servicesproducts,
+  products,
   value,
   name,
   id,
@@ -139,9 +139,6 @@ export default function ProjectsCustomer({
         query: getResourses,
         variables: { isRTL, resType: 1 },
       },
-      {
-        query: getLandingChartData,
-      },
     ],
   };
 
@@ -219,7 +216,16 @@ export default function ProjectsCustomer({
           estimatedRowHeight={40}
           tableComponent={TableComponent}
         />
-        <TableHeaderRow showSortingControls />
+        <TableHeaderRow
+          showSortingControls
+          titleComponent={({ children }) => {
+            return (
+              <Typography style={{ fontSize: 14, fontWeight: 'bold' }}>
+                {children}
+              </Typography>
+            );
+          }}
+        />
         <TableColumnVisibility
           columnExtensions={tableColumnVisibilityColumnExtensions}
           defaultHiddenColumnNames={[
@@ -312,6 +318,7 @@ export default function ProjectsCustomer({
           editCustomer={editCustomer}
           company={company}
           servicesproducts={servicesproducts}
+          products={products}
           refresh={refresh}
           addAction={addTask}
           editAction={editTask}

@@ -24,7 +24,7 @@ import { actionTimeFormatter } from '../../Shared/colorFormat';
 import { AlertLocal, SearchTable } from '../../components';
 import { getColumns } from '../../common/columns';
 
-import { Box, useMediaQuery } from '@material-ui/core';
+import { Box, Typography, useMediaQuery } from '@material-ui/core';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
 import PageLayout from '../main/PageLayout';
 import { errorAlert, errorDeleteAlert } from '../../Shared/helpers';
@@ -92,9 +92,7 @@ export default function Reminders(props: any) {
     dispatch({ type: 'setEndDate', payload: curDate });
   };
 
-  const [loadReminders, remindersData]: any = useLazyQuery(getReminders, {
-    fetchPolicy: 'cache-and-network',
-  });
+  const [loadReminders, remindersData]: any = useLazyQuery(getReminders);
 
   const refresQuery = {
     refetchQueries: [
@@ -279,7 +277,16 @@ export default function Reminders(props: any) {
             showAddCommand
             commandComponent={Command}
           ></TableEditColumn>
-          <TableHeaderRow showSortingControls />
+          <TableHeaderRow
+            showSortingControls
+            titleComponent={({ children }) => {
+              return (
+                <Typography style={{ fontSize: 14, fontWeight: 'bold' }}>
+                  {children}
+                </Typography>
+              );
+            }}
+          />
 
           {!isMobile && <Toolbar />}
           {!isMobile && (

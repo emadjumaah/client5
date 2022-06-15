@@ -29,6 +29,7 @@ import {
 } from '../../Shared/colorFormat';
 import { SearchTable } from '../../components';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
+import { Typography } from '@material-ui/core';
 
 export const getRowId = (row: { _id: any }) => row._id;
 
@@ -72,7 +73,16 @@ export default function Branches({ isRTL, theme, words }: any) {
           }}
           estimatedRowHeight={70}
         />
-        <TableHeaderRow showSortingControls />
+        <TableHeaderRow
+          showSortingControls
+          titleComponent={({ children }) => {
+            return (
+              <Typography style={{ fontSize: 14, fontWeight: 'bold' }}>
+                {children}
+              </Typography>
+            );
+          }}
+        />
         <DataTypeProvider
           for={['packCost']}
           formatterComponent={currencyFormatter}

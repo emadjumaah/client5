@@ -137,7 +137,16 @@ export default function Sendreqs(props: any) {
             estimatedRowHeight={40}
             tableComponent={TableComponent}
           />
-          <TableHeaderRow showSortingControls />
+          <TableHeaderRow
+            showSortingControls
+            titleComponent={({ children }) => {
+              return (
+                <Typography style={{ fontSize: 14, fontWeight: 'bold' }}>
+                  {children}
+                </Typography>
+              );
+            }}
+          />
           <DataTypeProvider
             for={['nameAr', 'name']}
             formatterComponent={(props: any) =>

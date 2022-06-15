@@ -25,7 +25,6 @@ import {
   getCustomers,
   getDepartments,
   getEmployees,
-  getLandingChartData,
   getProjects,
   getResourses,
 } from '../../graphql';
@@ -44,14 +43,14 @@ import {
 import PageLayout from '../main/PageLayout';
 import { AlertLocal, SearchTable } from '../../components';
 import { getColumns } from '../../common/columns';
-import { Box, Button } from '@material-ui/core';
+import { Box, Button, Typography } from '@material-ui/core';
 import TasksContext from '../../contexts/tasks';
 import getTasks from '../../graphql/query/getTasks';
 import PopupTask from '../../pubups/PopupTask';
 import createTask from '../../graphql/mutation/createTask';
 import updateTask from '../../graphql/mutation/updateTask';
 import deleteTaskById from '../../graphql/mutation/deleteTaskById';
-import { useCustomers, useServices } from '../../hooks';
+import { useCustomers, useProducts, useServices } from '../../hooks';
 import PopupGantt from '../../pubups/PopupGantt';
 import { errorAlert, errorDeleteAlert } from '../../Shared/helpers';
 import { TableComponent } from '../../Shared/TableComponent';
@@ -129,6 +128,7 @@ export default function Tasks({ isRTL, words, menuitem, theme, company }) {
   const { resourses } = useResoursesUp();
   const { projects } = useProjects();
   const { services } = useServices();
+  const { products } = useProducts();
   const { height } = useWindowDimensions();
   const onCloseItem = () => {
     setOpenItem(false);
@@ -149,9 +149,7 @@ export default function Tasks({ isRTL, words, menuitem, theme, company }) {
     dispatch({ type: 'setEndDate', payload: curDate });
   };
 
-  const [loadTasks, tasksData]: any = useLazyQuery(getTasks, {
-    fetchPolicy: 'cache-and-network',
-  });
+  const [loadTasks, tasksData]: any = useLazyQuery(getTasks);
 
   const refresQuery = {
     refetchQueries: [
@@ -161,9 +159,6 @@ export default function Tasks({ isRTL, words, menuitem, theme, company }) {
           start: start ? start.setHours(0, 0, 0, 0) : undefined,
           end: end ? end.setHours(23, 59, 59, 999) : undefined,
         },
-      },
-      {
-        query: getLandingChartData,
       },
       {
         query: getTasks,
@@ -286,19 +281,21 @@ export default function Tasks({ isRTL, words, menuitem, theme, company }) {
             isRTL={isRTL}
             words={words}
             theme={theme}
-            // color={colors.deepPurple[700]}
-            // bgcolor={colors.deepPurple[50]}
           ></DateNavigatorReports>
           {rows?.length > 0 && (
-            <Box style={{}}>
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={() => setOpenGantt(true)}
-              >
+            <Button
+              variant="outlined"
+              color="primary"
+              onClick={() => setOpenGantt(true)}
+              style={{
+                height: 32,
+                width: 120,
+              }}
+            >
+              <Typography style={{ fontSize: 13, fontWeight: 'bold' }}>
                 {isRTL ? 'عرض زمني' : 'Time View'}
-              </Button>
-            </Box>
+              </Typography>
+            </Button>
           )}
         </Box>
 
@@ -320,10 +317,19 @@ export default function Tasks({ isRTL, words, menuitem, theme, company }) {
               messages={{
                 noData: isRTL ? 'لا يوجد بيانات' : 'no data',
               }}
-              estimatedRowHeight={40}
+              estimatedRowHeight={60}
               tableComponent={TableComponent}
             />
-            <TableHeaderRow showSortingControls />
+            <TableHeaderRow
+              showSortingControls
+              titleComponent={({ children }) => {
+                return (
+                  <Typography style={{ fontSize: 14, fontWeight: 'bold' }}>
+                    {children}
+                  </Typography>
+                );
+              }}
+            />
             <TableColumnVisibility
               columnExtensions={tableColumnVisibilityColumnExtensions}
               defaultHiddenColumnNames={[
@@ -445,6 +451,7 @@ export default function Tasks({ isRTL, words, menuitem, theme, company }) {
               editCustomer={editCustomer}
               company={company}
               servicesproducts={services}
+              products={products}
               refresh={refresh}
               startrange={start}
               endrange={end}

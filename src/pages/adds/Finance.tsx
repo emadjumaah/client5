@@ -29,7 +29,6 @@ import {
   getDepartments,
   getEmployees,
   getFinances,
-  getLandingChartData,
   getLastNos,
   getProjects,
   getResourses,
@@ -51,6 +50,7 @@ import DateNavigatorReports from '../../components/filters/DateNavigatorReports'
 import getTasks from '../../graphql/query/getTasks';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
 import { TableComponent } from '../../Shared/TableComponent';
+import { Typography } from '@material-ui/core';
 
 export default function Finance({ isRTL, words, menuitem, theme }) {
   const [columns] = useState([
@@ -86,9 +86,7 @@ export default function Finance({ isRTL, words, menuitem, theme }) {
     dispatch({ type: 'setEndDate', payload: curDate });
   };
 
-  const [loadFinances, financeData]: any = useLazyQuery(getFinances, {
-    fetchPolicy: 'cache-and-network',
-  });
+  const [loadFinances, financeData]: any = useLazyQuery(getFinances);
   const { accounts } = useAccounts();
   const refresQuery = {
     refetchQueries: [
@@ -98,9 +96,6 @@ export default function Finance({ isRTL, words, menuitem, theme }) {
           start: start ? start.setHours(0, 0, 0, 0) : undefined,
           end: end ? end.setHours(23, 59, 59, 999) : undefined,
         },
-      },
-      {
-        query: getLandingChartData,
       },
       {
         query: getLastNos,
@@ -211,7 +206,16 @@ export default function Finance({ isRTL, words, menuitem, theme }) {
             estimatedRowHeight={40}
             tableComponent={TableComponent}
           />
-          <TableHeaderRow showSortingControls />
+          <TableHeaderRow
+            showSortingControls
+            titleComponent={({ children }) => {
+              return (
+                <Typography style={{ fontSize: 14, fontWeight: 'bold' }}>
+                  {children}
+                </Typography>
+              );
+            }}
+          />
           <DataTypeProvider
             for={['time']}
             formatterComponent={timeFormatter}

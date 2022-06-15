@@ -25,7 +25,6 @@ import {
   getDepartments,
   getEmployees,
   getInvoices,
-  getLandingChartData,
   getLastNos,
   getProjects,
   getResourses,
@@ -42,6 +41,7 @@ import {
 import { getColumns } from '../common/columns';
 import { TableComponent } from '../pages/reports/SalesReport';
 import getTasks from '../graphql/query/getTasks';
+import { Typography } from '@material-ui/core';
 
 export default function InvoicesTask({
   isRTL,
@@ -71,9 +71,7 @@ export default function InvoicesTask({
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  const [loadInvoices, opData]: any = useLazyQuery(getInvoices, {
-    fetchPolicy: 'cache-and-network',
-  });
+  const [loadInvoices, opData]: any = useLazyQuery(getInvoices);
 
   const refresQuery = {
     refetchQueries: [
@@ -82,9 +80,6 @@ export default function InvoicesTask({
         variables: {
           taskId,
         },
-      },
-      {
-        query: getLandingChartData,
       },
       {
         query: getLastNos,
@@ -171,7 +166,16 @@ export default function InvoicesTask({
           estimatedRowHeight={40}
           tableComponent={TableComponent}
         />
-        <TableHeaderRow showSortingControls />
+        <TableHeaderRow
+          showSortingControls
+          titleComponent={({ children }) => {
+            return (
+              <Typography style={{ fontSize: 14, fontWeight: 'bold' }}>
+                {children}
+              </Typography>
+            );
+          }}
+        />
 
         <DataTypeProvider
           for={['time']}

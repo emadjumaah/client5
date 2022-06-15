@@ -8,28 +8,34 @@ import {
   DataTypeProvider,
   SearchState,
   IntegratedFiltering,
+  PagingState,
+  IntegratedPaging,
 } from '@devexpress/dx-react-grid';
 import {
   Grid,
   TableHeaderRow,
   TableEditColumn,
-  VirtualTable,
   Toolbar,
   SearchPanel,
   TableColumnVisibility,
   ColumnChooser,
+  DragDropProvider,
+  Table,
+  TableColumnReordering,
+  TableColumnResizing,
+  PagingPanel,
 } from '@devexpress/dx-react-grid-material-ui';
-import { Command, Loading, PopupEditing } from '../../Shared';
+import { Command, PopupEditing } from '../../Shared';
 import { getRowId } from '../../common';
 import { PopupEmployee } from '../../pubups';
 import {
-  avatarPatternFormatter,
-  currencyFormatterEmpty,
-  daysoffFormatter,
-  dueAmountFormatter,
-  incomeAmountFormatter,
-  nameLinkFormat,
-  progressFormatter,
+  appointmentsFormatter,
+  avataManageFormatter,
+  expensesFormatter,
+  kaidsFormatter,
+  nameManageLinkFormat,
+  purchaseFormatter,
+  salesFormatter,
 } from '../../Shared/colorFormat';
 import { AlertLocal, SearchTable } from '../../components';
 import { errorAlert, errorDeleteAlert } from '../../Shared/helpers';
@@ -41,7 +47,7 @@ import { useCustomers, useProducts, useServices } from '../../hooks';
 import useEmployeesUp from '../../hooks/useEmployeesUp';
 import useResoursesUp from '../../hooks/useResoursesUp';
 import useDepartmentsUp from '../../hooks/useDepartmentsUp';
-import { Box } from '@material-ui/core';
+import { Box, Paper, Typography } from '@material-ui/core';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
 import { TableComponent } from '../../Shared/TableComponent';
 import { roles } from '../../common';
@@ -53,8 +59,8 @@ export default function ManageEmployees({
   menuitem,
   company,
 }: any) {
-  const [loading, setLoading] = useState(false);
   const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
+  const [pageSizes] = useState([5, 10, 20, 50, 0]);
   const [item, setItem] = useState(null);
   const [openItem, setOpenItem] = useState(false);
   const col = getColumns({ isRTL, words });
@@ -65,53 +71,35 @@ export default function ManageEmployees({
   const { resourses } = useResoursesUp();
   const { services } = useServices();
   const { products } = useProducts();
-  const { height } = useWindowDimensions();
+  const { width, height } = useWindowDimensions();
   const onCloseItem = () => {
     setOpenItem(false);
     setItem(null);
   };
 
   const [columns] = useState([
-    { name: isRTL ? 'nameAr' : 'name', title: words.name },
-    { name: 'avatar', title: words.color },
-    { name: 'phone', title: words.phoneNumber },
-    { name: 'email', title: words.email },
-    {
-      name: isRTL ? 'departmentNameAr' : 'departmentName',
-      title: words.department,
-    },
-    { name: 'info', title: words.info },
-    { name: 'daysoff', title: isRTL ? 'يوم العطلة' : 'Day Off' },
-    { name: 'amount', title: isRTL ? 'الاجمالي' : 'Total' },
-    col.progress,
-    col.totalinvoiced,
-    col.totalpaid,
-    {
-      id: 40,
-      ref: 'due',
-      name: 'due',
-      title: isRTL ? 'المتبقي' : 'Due Payment',
-    },
-    col.toatlExpenses,
-    {
-      id: 38,
-      ref: 'income',
-      name: 'income',
-      title: isRTL ? 'صافي الايراد' : 'Total Income',
-    },
+    { name: 'avatar', title: ' ' },
+    col.name,
+    col.appointments,
+    col.sales,
+    col.expenses,
+    col.kaids,
+    col.purchase,
+  ]);
+
+  const [tableColumnExtensions]: any = useState([
+    { columnName: 'avatar', width: 60 },
+    { columnName: col.name.name, width: 250 },
+    { columnName: col.appointments.name, width: 250, align: 'center' },
+    { columnName: col.sales.name, width: 200 },
+    { columnName: col.expenses.name, width: 200 },
+    { columnName: col.kaids.name, width: 200 },
+    { columnName: col.purchase.name, width: 200 },
   ]);
 
   const [columnsViewer] = useState([
     { name: isRTL ? 'nameAr' : 'name', title: words.name },
     { name: 'avatar', title: words.color },
-    { name: 'phone', title: words.phoneNumber },
-    { name: 'email', title: words.email },
-    {
-      name: isRTL ? 'departmentNameAr' : 'departmentName',
-      title: words.department,
-    },
-    { name: 'info', title: words.info },
-    { name: 'daysoff', title: isRTL ? 'يوم العطلة' : 'Day Off' },
   ]);
 
   const {
@@ -134,7 +122,6 @@ export default function ManageEmployees({
   const commitChanges = async ({ deleted }) => {
     if (deleted) {
       const _id = deleted[0];
-      setLoading(true);
 
       const res = await removeEmployee({ variables: { _id } });
       if (res?.data?.deleteEmployee?.ok === false) {
@@ -144,7 +131,6 @@ export default function ManageEmployees({
           await errorAlert(setAlrt, isRTL);
         }
       }
-      setLoading(false);
     }
   };
 
@@ -161,106 +147,143 @@ export default function ManageEmployees({
           height: height - 50,
           overflow: 'auto',
           backgroundColor: '#fff',
-          marginLeft: 5,
-          marginRight: 5,
         }}
       >
-        {loading && <Loading isRTL={isRTL}></Loading>}
-        <Grid
-          rows={employees.filter((em: any) => em.resType === 1)}
-          columns={roles.isEditor() ? columns : columnsViewer}
-          getRowId={getRowId}
+        <Paper
+          elevation={5}
+          style={{
+            margin: 70,
+            marginTop: 70,
+            overflow: 'auto',
+            width: width - 380,
+            borderRadius: 10,
+          }}
         >
-          <SortingState />
-          <SearchState />
-          <EditingState onCommitChanges={commitChanges} />
+          <Grid
+            rows={employees.filter((em: any) => em.resType === 1)}
+            columns={roles.isEditor() ? columns : columnsViewer}
+            getRowId={getRowId}
+          >
+            <SortingState />
+            <EditingState onCommitChanges={commitChanges} />
+            <SearchState />
+            <PagingState defaultCurrentPage={0} defaultPageSize={5} />
 
-          <IntegratedSorting />
-          <IntegratedFiltering />
+            <IntegratedSorting />
+            <IntegratedFiltering />
+            <IntegratedPaging />
+            <DragDropProvider />
 
-          <VirtualTable
-            height={height - 100}
-            messages={{
-              noData: isRTL ? 'لا يوجد بيانات' : 'no data',
-            }}
-            estimatedRowHeight={40}
-            tableComponent={TableComponent}
-          />
-          <TableHeaderRow showSortingControls />
-          <TableColumnVisibility
-            defaultHiddenColumnNames={[
-              'info',
-              'daysoff',
-              'amount',
-              'progress',
-              'totalinvoiced',
-              'totalpaid',
-              'due',
-              'toatlExpenses',
-              'income',
-            ]}
-          />
+            <Table
+              messages={{
+                noData: isRTL ? 'لا يوجد بيانات' : 'no data',
+              }}
+              tableComponent={TableComponent}
+              rowComponent={(props: any) => (
+                <Table.Row {...props} style={{ height: 120 }}></Table.Row>
+              )}
+              columnExtensions={tableColumnExtensions}
+            />
+            <TableColumnReordering
+              defaultOrder={[
+                'avatar',
+                col.name.name,
+                col.appointments.name,
+                col.sales.name,
+                col.expenses.name,
+                col.kaids.name,
+                col.purchase.name,
+              ]}
+            />
+            <TableColumnResizing defaultColumnWidths={tableColumnExtensions} />
 
-          <DataTypeProvider
-            for={['daysoff']}
-            formatterComponent={(props: any) =>
-              daysoffFormatter({ ...props, isRTL })
-            }
-          ></DataTypeProvider>
-          {roles.isEditor() && (
+            <TableHeaderRow
+              showSortingControls
+              titleComponent={({ children }) => {
+                return (
+                  <Typography style={{ fontSize: 14, fontWeight: 'bold' }}>
+                    {children}
+                  </Typography>
+                );
+              }}
+            />
+            <TableColumnVisibility defaultHiddenColumnNames={[]} />
             <DataTypeProvider
-              for={['nameAr', 'name']}
+              for={['avatar']}
+              formatterComponent={avataManageFormatter}
+            ></DataTypeProvider>
+            {roles.isEditor() && (
+              <DataTypeProvider
+                for={[col.name.name]}
+                formatterComponent={(props: any) =>
+                  nameManageLinkFormat({
+                    ...props,
+                    setItem,
+                    setOpenItem,
+                    isRTL,
+                  })
+                }
+              ></DataTypeProvider>
+            )}
+            <DataTypeProvider
+              for={[col.appointments.name]}
               formatterComponent={(props: any) =>
-                nameLinkFormat({ ...props, setItem, setOpenItem, isRTL })
+                appointmentsFormatter({ ...props, theme, isRTL })
               }
             ></DataTypeProvider>
-          )}
-          <DataTypeProvider
-            for={['amount', 'toatlExpenses', 'totalpaid', 'totalinvoiced']}
-            formatterComponent={currencyFormatterEmpty}
-          ></DataTypeProvider>
-          <DataTypeProvider
-            for={['due']}
-            formatterComponent={dueAmountFormatter}
-          ></DataTypeProvider>
-          <DataTypeProvider
-            for={['avatar']}
-            formatterComponent={avatarPatternFormatter}
-          ></DataTypeProvider>
-          <DataTypeProvider
-            for={['income']}
-            formatterComponent={incomeAmountFormatter}
-          ></DataTypeProvider>
-          <DataTypeProvider
-            for={['progress']}
-            formatterComponent={progressFormatter}
-          ></DataTypeProvider>
+            <DataTypeProvider
+              for={[col.sales.name]}
+              formatterComponent={(props: any) =>
+                salesFormatter({ ...props, theme, isRTL })
+              }
+            ></DataTypeProvider>
+            <DataTypeProvider
+              for={[col.purchase.name]}
+              formatterComponent={(props: any) =>
+                purchaseFormatter({ ...props, theme, isRTL })
+              }
+            ></DataTypeProvider>
+            <DataTypeProvider
+              for={[col.expenses.name]}
+              formatterComponent={(props: any) =>
+                expensesFormatter({ ...props, theme, isRTL })
+              }
+            ></DataTypeProvider>
+            <DataTypeProvider
+              for={[col.kaids.name]}
+              formatterComponent={(props: any) =>
+                kaidsFormatter({ ...props, theme, isRTL })
+              }
+            ></DataTypeProvider>
 
-          <TableEditColumn
-            showEditCommand
-            showDeleteCommand
-            showAddCommand
-            commandComponent={Command}
-          ></TableEditColumn>
-          <Toolbar />
-          <ColumnChooser />
-          <SearchPanel
-            inputComponent={(props: any) => {
-              return <SearchTable isRTL={isRTL} {...props}></SearchTable>;
-            }}
-          />
+            <TableEditColumn
+              showEditCommand
+              showDeleteCommand
+              showAddCommand
+              commandComponent={Command}
+            ></TableEditColumn>
+            <Toolbar />
+            <ColumnChooser />
+            <PagingPanel pageSizes={pageSizes} />
 
-          <PopupEditing
-            theme={theme}
-            addAction={addEmployee}
-            editAction={editEmployee}
-          >
-            <PopupEmployee
-              departments={departments}
-              resType={1}
-            ></PopupEmployee>
-          </PopupEditing>
-        </Grid>
+            <SearchPanel
+              inputComponent={(props: any) => {
+                return <SearchTable isRTL={isRTL} {...props}></SearchTable>;
+              }}
+            />
+
+            <PopupEditing
+              theme={theme}
+              addAction={addEmployee}
+              editAction={editEmployee}
+            >
+              <PopupEmployee
+                departments={departments}
+                resType={1}
+              ></PopupEmployee>
+            </PopupEditing>
+          </Grid>
+        </Paper>
         {alrt.show && (
           <AlertLocal
             isRTL={isRTL}
@@ -281,7 +304,8 @@ export default function ManageEmployees({
           company={company}
           employees={employees}
           resourses={resourses}
-          servicesproducts={[...services, ...products]}
+          servicesproducts={services}
+          products={products}
           customers={customers}
           tasks={tasks}
         ></PopupEmployeeView>

@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState } from 'react';
-import { Box, fade, Paper } from '@material-ui/core';
+import { Box, fade, Paper, Typography } from '@material-ui/core';
 import XLSX from 'xlsx';
 
 import PopupLayout from '../pages/main/PopupLayout';
@@ -123,7 +123,15 @@ const PopupCustomerImport = ({
               }}
               estimatedRowHeight={40}
             />
-            <TableHeaderRow />
+            <TableHeaderRow
+              titleComponent={({ children }) => {
+                return (
+                  <Typography style={{ fontSize: 14, fontWeight: 'bold' }}>
+                    {children}
+                  </Typography>
+                );
+              }}
+            />
           </Grid>
         </Paper>
       </Box>

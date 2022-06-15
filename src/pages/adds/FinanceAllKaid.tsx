@@ -27,7 +27,6 @@ import {
   getDepartments,
   getEmployees,
   getGeneralFinances,
-  getLandingChartData,
   getLastNos,
   getProjects,
   getResourses,
@@ -48,7 +47,7 @@ import { FinanceContext } from '../../contexts';
 import DateNavigatorReports from '../../components/filters/DateNavigatorReports';
 // import PopupFinanceAll from '../../pubups/PopupFinanceAll';
 import getTasks from '../../graphql/query/getTasks';
-import { Box } from '@material-ui/core';
+import { Box, Typography } from '@material-ui/core';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
 import { TableComponent } from '../../Shared/TableComponent';
 import PopupFinanceAllKaid from '../../pubups/PopupFinanceAllKaid';
@@ -96,9 +95,7 @@ export default function FinanceAllKaid({
     dispatch({ type: 'setEndDate', payload: curDate });
   };
 
-  const [loadFinances, financeData]: any = useLazyQuery(getGeneralFinances, {
-    fetchPolicy: 'cache-and-network',
-  });
+  const [loadFinances, financeData]: any = useLazyQuery(getGeneralFinances);
   const { accounts } = useAccounts();
   const refresQuery = {
     refetchQueries: [
@@ -108,9 +105,6 @@ export default function FinanceAllKaid({
           start: start ? start.setHours(0, 0, 0, 0) : undefined,
           end: end ? end.setHours(23, 59, 59, 999) : undefined,
         },
-      },
-      {
-        query: getLandingChartData,
       },
       {
         query: getLastNos,
@@ -246,7 +240,16 @@ export default function FinanceAllKaid({
             estimatedRowHeight={40}
             tableComponent={TableComponent}
           />
-          <TableHeaderRow showSortingControls />
+          <TableHeaderRow
+            showSortingControls
+            titleComponent={({ children }) => {
+              return (
+                <Typography style={{ fontSize: 14, fontWeight: 'bold' }}>
+                  {children}
+                </Typography>
+              );
+            }}
+          />
           <DataTypeProvider
             for={['time']}
             formatterComponent={timeFormatter}

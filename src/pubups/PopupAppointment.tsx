@@ -517,19 +517,6 @@ const PopupAppointment = ({
     setEventLength(null);
   };
   const onSubmit = async () => {
-    // const { startPeriod, endPeriod } = getAppStartEndPeriod();
-    // if (
-    //   startDate < startPeriod ||
-    //   startDate > endPeriod ||
-    //   endDate < startPeriod ||
-    //   endDate > endPeriod
-    // ) {
-    //   await messageAlert(
-    //     setAlrt,
-    //     isRTL ? "يجب تعديل التاريخ" : "Date should be change"
-    //   );
-    //   return;
-    // }
     if (startDate > endDate) {
       await messageAlert(
         setAlrt,
@@ -537,23 +524,6 @@ const PopupAppointment = ({
       );
       return;
     }
-    // if (new Date(startDate).getDate() !== new Date(endDate).getDate()) {
-    //   await messageAlert(
-    //     setAlrt,
-    //     isRTL ? 'يجب تعديل التاريخ' : 'Date should be change'
-    //   );
-    //   return;
-    // }
-
-    // if (!itemsList || itemsList.length === 0) {
-    //   await messageAlert(
-    //     setAlrt,
-    //     isRTL
-    //       ? `يجب اضافة عنصر (خدمة او منتج) واحد  على الأقل`
-    //       : `You should add min one service`
-    //   );
-    //   return;
-    // }
     setSaving(true);
 
     const title = tasktitle
@@ -630,13 +600,31 @@ const PopupAppointment = ({
             resourseColor: undefined,
           },
     };
-    const mutate = isNew ? addAction : editAction;
-    apply(mutate, variables);
-  };
-
-  const apply = async (mutate: any, variables: any) => {
     try {
-      await mutate({ variables });
+      if (!isNew) {
+        editAction({
+          variables,
+          // optimisticResponse: {
+          //   __typename: 'updateEvent',
+          //   updateEvent: {
+          //     __typename: 'Operation',
+          //     id: row.id,
+          //     ...variables,
+          //   },
+          // },
+        });
+      } else {
+        addAction({
+          variables,
+          // optimisticResponse: {
+          //   __typename: 'createEvent',
+          //   createEvent: {
+          //     __typename: 'Operation',
+          //     ...variables,
+          //   },
+          // },
+        });
+      }
       setSaving(false);
       onCloseForm();
     } catch (error) {
@@ -684,7 +672,6 @@ const PopupAppointment = ({
       preventclose
       maxWidth="md"
       taskvalue={taskvalue}
-      // bgcolor={colors.blue[500]}
     >
       <>
         <Box display="flex">
@@ -711,21 +698,23 @@ const PopupAppointment = ({
                     ></CalenderLocal>
                   </Grid>
                   <Grid item xs={12} md={4}>
-                    <SelectLocal
-                      options={eventLengthOptions}
-                      value={eventLength}
-                      onChange={(e: any) => {
-                        const { value } = e.target;
-                        setEventLength(value);
-                        const end = startDate
-                          ? new Date(startDate).getTime() + value * 60 * 1000
-                          : null;
-                        if (end) {
-                          setEndDate(new Date(end));
-                        }
-                      }}
-                      isRTL={isRTL}
-                    ></SelectLocal>
+                    <Box style={{ marginTop: 5 }}>
+                      <SelectLocal
+                        options={eventLengthOptions}
+                        value={eventLength}
+                        onChange={(e: any) => {
+                          const { value } = e.target;
+                          setEventLength(value);
+                          const end = startDate
+                            ? new Date(startDate).getTime() + value * 60 * 1000
+                            : null;
+                          if (end) {
+                            setEndDate(new Date(end));
+                          }
+                        }}
+                        isRTL={isRTL}
+                      ></SelectLocal>
+                    </Box>
                   </Grid>
                   <Grid item xs={12} md={4}>
                     <div style={{ pointerEvents: 'none', opacity: 0.5 }}>
@@ -753,6 +742,22 @@ const PopupAppointment = ({
                       />
                     </Grid>
                   )}
+                  <Grid item xs={12}>
+                    <AutoFieldLocal
+                      name="customer"
+                      title={tempwords?.customer}
+                      words={words}
+                      options={customers}
+                      value={custvalue}
+                      setSelectValue={setCustvalue}
+                      register={register}
+                      isRTL={isRTL}
+                      openAdd={openCustomer}
+                      showphone
+                      fullWidth
+                      mb={0}
+                    ></AutoFieldLocal>
+                  </Grid>
                   {!tempoptions?.noTsk && (
                     <Grid item xs={6}>
                       <AutoFieldLocal
@@ -770,22 +775,6 @@ const PopupAppointment = ({
                       ></AutoFieldLocal>
                     </Grid>
                   )}
-                  <Grid item xs={12}>
-                    <AutoFieldLocal
-                      name="customer"
-                      title={tempwords?.customer}
-                      words={words}
-                      options={customers}
-                      value={custvalue}
-                      setSelectValue={setCustvalue}
-                      register={register}
-                      isRTL={isRTL}
-                      openAdd={openCustomer}
-                      showphone
-                      fullWidth
-                      mb={0}
-                    ></AutoFieldLocal>
-                  </Grid>
 
                   {!tempoptions?.noEmp && (
                     <Grid item xs={6}>
@@ -865,8 +854,8 @@ const PopupAppointment = ({
                   variant="outlined"
                   style={{
                     marginBottom: 10,
-                    fontSize: 14,
                     minWidth: 80,
+                    height: 34,
                   }}
                   onClick={() => {
                     setSelected(null);
@@ -874,16 +863,23 @@ const PopupAppointment = ({
                     setOpenAction(true);
                   }}
                 >
-                  {isRTL ? 'اضافة تنبيه' : 'Add Reminder'}
+                  <Typography
+                    style={{
+                      fontSize: 13,
+                      fontWeight: 'bold',
+                    }}
+                  >
+                    {isRTL ? 'اضافة تنبيه' : 'Add Reminder'}
+                  </Typography>
                 </Button>
-                <Button
+                {/* <Button
                   variant="outlined"
                   style={{
                     marginBottom: 10,
-                    fontSize: 14,
                     minWidth: 80,
                     marginRight: 10,
                     marginLeft: 10,
+                    height: 34,
                   }}
                   onClick={() => {
                     setSelected(null);
@@ -891,29 +887,16 @@ const PopupAppointment = ({
                     setOpenAction(true);
                   }}
                 >
-                  {isRTL ? 'اضافة رسالة' : 'Add SMS'}
-                </Button>
-                {/* <FormControlLabel
-                  control={
-                    <Checkbox
-                      style={{ padding: 7 }}
-                      checked={daction}
-                      onChange={() => setDaction(!daction)}
-                      color="primary"
-                    />
-                  }
-                  label={
-                    <Typography
-                      style={{ color: theme.palette.primary.main }}
-                      variant="subtitle2"
-                    >
-                      {isRTL ? 'تنبيه وقت الموعد' : 'Notification'}
-                    </Typography>
-                  }
-                  style={{ fontSize: 14 }}
-                /> */}
-
-                <Paper style={{ height: 115, overflow: 'auto' }}>
+                  <Typography
+                    style={{
+                      fontSize: 13,
+                      fontWeight: 'bold',
+                    }}
+                  >
+                    {isRTL ? 'اضافة رسالة' : 'Add SMS'}
+                  </Typography>
+                </Button> */}
+                <Paper style={{ height: '83%', overflow: 'auto' }}>
                   {actionslist.map((act: any) => {
                     return (
                       <ListItem>
@@ -1006,37 +989,6 @@ const PopupAppointment = ({
                   width={200}
                 ></AutoFieldLocal>
               </Grid>
-              {/* <Grid item xs={3}>
-                <Box
-                  m={1}
-                  display="flex"
-                  style={{ flex: 1, justifyContent: 'flex-end' }}
-                >
-                  <Button
-                    size="medium"
-                    color="primary"
-                    variant="contained"
-                    onClick={() => setOpenMap(true)}
-                  >
-                    {isRTL ? 'الموقع الجغرافي' : 'Location'}
-                  </Button>
-                  {location?.lat && (
-                    <>
-                      <MyIcon
-                        size={32}
-                        color="#ff80ed"
-                        icon="location"
-                      ></MyIcon>
-                      <Box
-                        onClick={() => setLocation(null)}
-                        style={{ cursor: 'pointer', padding: 4 }}
-                      >
-                        <MyIcon size={28} color="#777" icon="close"></MyIcon>
-                      </Box>
-                    </>
-                  )}
-                </Box>
-              </Grid> */}
               <Grid item xs={3}>
                 {!isNew && (
                   <Box

@@ -44,7 +44,7 @@ import {
   // moneyFormat,
   taskIdFormatter,
 } from '../../Shared/colorFormat';
-import { Box, fade, withStyles } from '@material-ui/core';
+import { Box, fade, Typography, withStyles } from '@material-ui/core';
 import { getReportEvents } from '../../graphql';
 import { useLazyQuery } from '@apollo/client';
 import ReportsFilter from '../../Shared/ReportsFilter';
@@ -624,7 +624,16 @@ export default function SalesReport({ isRTL, words, menuitem, theme }: any) {
             }}
             estimatedRowHeight={40}
           />
-          <TableHeaderRow showSortingControls />
+          <TableHeaderRow
+            showSortingControls
+            titleComponent={({ children }) => {
+              return (
+                <Typography style={{ fontSize: 14, fontWeight: 'bold' }}>
+                  {children}
+                </Typography>
+              );
+            }}
+          />
           <TableColumnVisibility
             columnExtensions={tableColumnVisibilityColumnExtensions}
             onHiddenColumnNamesChange={(hcs: string[]) => {

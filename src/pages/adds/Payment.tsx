@@ -25,7 +25,6 @@ import {
   deleteFinance,
   getDepartments,
   getEmployees,
-  getLandingChartData,
   getLastNos,
   getProjects,
   getResourses,
@@ -47,7 +46,7 @@ import DateNavigatorReports from '../../components/filters/DateNavigatorReports'
 import getPayments from '../../graphql/query/getPayments';
 import useTasks from '../../hooks/useTasks';
 import getTasks from '../../graphql/query/getTasks';
-import { Box } from '@material-ui/core';
+import { Box, Typography } from '@material-ui/core';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
 import { TableComponent } from '../../Shared/TableComponent';
 import PopupPayment from '../../pubups/PopupPayment';
@@ -87,9 +86,7 @@ export default function Payment({ isRTL, words, menuitem, theme, company }) {
     dispatch({ type: 'setEndDate', payload: curDate });
   };
 
-  const [loadFinances, financeData]: any = useLazyQuery(getPayments, {
-    fetchPolicy: 'cache-and-network',
-  });
+  const [loadFinances, financeData]: any = useLazyQuery(getPayments);
   const { accounts } = useAccounts();
   const refresQuery = {
     refetchQueries: [
@@ -99,9 +96,6 @@ export default function Payment({ isRTL, words, menuitem, theme, company }) {
           start: start ? start.setHours(0, 0, 0, 0) : undefined,
           end: end ? end.setHours(23, 59, 59, 999) : undefined,
         },
-      },
-      {
-        query: getLandingChartData,
       },
       {
         query: getLastNos,
@@ -230,7 +224,16 @@ export default function Payment({ isRTL, words, menuitem, theme, company }) {
             estimatedRowHeight={40}
             tableComponent={TableComponent}
           />
-          <TableHeaderRow showSortingControls />
+          <TableHeaderRow
+            showSortingControls
+            titleComponent={({ children }) => {
+              return (
+                <Typography style={{ fontSize: 14, fontWeight: 'bold' }}>
+                  {children}
+                </Typography>
+              );
+            }}
+          />
           <DataTypeProvider
             for={['time']}
             formatterComponent={timeFormatter}

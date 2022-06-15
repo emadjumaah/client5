@@ -111,6 +111,7 @@ const drawerClasses = makeStyles((theme: Theme) =>
 
     '@global': {
       '*::-webkit-scrollbar': {
+        height: '0.6em',
         width: '0.4em',
       },
       '*::-webkit-scrollbar-track': {

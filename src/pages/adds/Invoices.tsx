@@ -27,7 +27,6 @@ import {
   getDepartments,
   getEmployees,
   getInvoices,
-  getLandingChartData,
   getLastNos,
   getProducts,
   getProjects,
@@ -48,7 +47,7 @@ import DateNavigatorReports from '../../components/filters/DateNavigatorReports'
 import { getColumns } from '../../common/columns';
 import useTasks from '../../hooks/useTasks';
 import { TableComponent } from '../reports/SalesReport';
-import { Box } from '@material-ui/core';
+import { Box, Typography } from '@material-ui/core';
 import getTasks from '../../graphql/query/getTasks';
 import useResoursesUp from '../../hooks/useResoursesUp';
 import useDepartmentsUp from '../../hooks/useDepartmentsUp';
@@ -114,9 +113,7 @@ export default function Invoices({ isRTL, words, menuitem, theme, company }) {
     dispatch({ type: 'setEndDate', payload: curDate });
   };
 
-  const [loadInvoices, opData]: any = useLazyQuery(getInvoices, {
-    fetchPolicy: 'cache-and-network',
-  });
+  const [loadInvoices, opData]: any = useLazyQuery(getInvoices);
 
   const refresQuery = {
     refetchQueries: [
@@ -126,9 +123,6 @@ export default function Invoices({ isRTL, words, menuitem, theme, company }) {
           start: start ? start.setHours(0, 0, 0, 0) : undefined,
           end: end ? end.setHours(23, 59, 59, 999) : undefined,
         },
-      },
-      {
-        query: getLandingChartData,
       },
       {
         query: getLastNos,
@@ -262,7 +256,16 @@ export default function Invoices({ isRTL, words, menuitem, theme, company }) {
             estimatedRowHeight={40}
             tableComponent={TableComponent}
           />
-          <TableHeaderRow showSortingControls />
+          <TableHeaderRow
+            showSortingControls
+            titleComponent={({ children }) => {
+              return (
+                <Typography style={{ fontSize: 14, fontWeight: 'bold' }}>
+                  {children}
+                </Typography>
+              );
+            }}
+          />
           <DataTypeProvider
             for={['time']}
             formatterComponent={timeFormatter}

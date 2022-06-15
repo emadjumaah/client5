@@ -302,7 +302,16 @@ export default function ProfitReport({ isRTL, words, menuitem, theme }: any) {
             }}
             estimatedRowHeight={30}
           />
-          <TableHeaderRow showSortingControls />
+          <TableHeaderRow
+            showSortingControls
+            titleComponent={({ children }) => {
+              return (
+                <Typography style={{ fontSize: 14, fontWeight: 'bold' }}>
+                  {children}
+                </Typography>
+              );
+            }}
+          />
           <TableColumnVisibility
             columnExtensions={tableColumnVisibilityColumnExtensions}
             defaultHiddenColumnNames={[col.amount.name]}

@@ -36,7 +36,6 @@ export default function ProductItemForm({
   const itemRef: any = React.useRef();
   const { addProduct, editProduct } = useProducts();
   const { tempoptions } = useTemplate();
-  const costprice = itemprice === 0 ? 0 : cost ? itemvalue?.cost : itemprice;
 
   const onOpenItem = () => {
     setOpenItem(true);
@@ -68,9 +67,9 @@ export default function ProductItemForm({
     const itemdata = {
       ...itemvalue,
       itemqty,
-      itemprice: costprice,
-      itemtotal: itemqty * costprice,
-      itemtotalcost: itemqty * itemvalue.cost,
+      itemprice,
+      itemtotal: itemqty * itemprice,
+      itemtotalcost: itemqty * itemprice,
       branch: user.branch,
       userId: user._id,
       note: desc,
@@ -114,7 +113,7 @@ export default function ProductItemForm({
             value={itemvalue}
             onChange={(_, newValue: any) => {
               setItemvalue(newValue);
-              setItemprice(newValue?.price || 0);
+              setItemprice(newValue?.cost || 0);
               if (newValue) {
                 setItemError(false);
               }
@@ -176,7 +175,7 @@ export default function ProductItemForm({
           <TextField
             name="price"
             onChange={(e: any) => setItemprice(Number(e.target.value))}
-            value={costprice}
+            value={itemprice}
             label={words.cost}
             error={errors.price ? true : false}
             variant="outlined"

@@ -23,7 +23,6 @@ import {
   getCustomers,
   getDepartments,
   getEmployees,
-  getLandingChartData,
   getLastNos,
   getProjects,
   getResourses,
@@ -44,6 +43,7 @@ import useTasks from '../hooks/useTasks';
 import getTasks from '../graphql/query/getTasks';
 import React from 'react';
 import useCompany from '../hooks/useCompany';
+import { Typography } from '@material-ui/core';
 
 export default function ReceiptTask({ isRTL, words, theme, taskId }) {
   const [columns] = useState([
@@ -62,9 +62,7 @@ export default function ReceiptTask({ isRTL, words, theme, taskId }) {
   const { tasks } = useTasks();
   const { company } = useCompany();
 
-  const [loadFinances, financeData]: any = useLazyQuery(getReceipts, {
-    fetchPolicy: 'cache-and-network',
-  });
+  const [loadFinances, financeData]: any = useLazyQuery(getReceipts);
   const { accounts } = useAccounts();
   const refresQuery = {
     refetchQueries: [
@@ -73,9 +71,6 @@ export default function ReceiptTask({ isRTL, words, theme, taskId }) {
         variables: {
           taskId,
         },
-      },
-      {
-        query: getLandingChartData,
       },
       {
         query: getLastNos,
@@ -157,7 +152,16 @@ export default function ReceiptTask({ isRTL, words, theme, taskId }) {
           }}
           estimatedRowHeight={40}
         />
-        <TableHeaderRow showSortingControls />
+        <TableHeaderRow
+          showSortingControls
+          titleComponent={({ children }) => {
+            return (
+              <Typography style={{ fontSize: 14, fontWeight: 'bold' }}>
+                {children}
+              </Typography>
+            );
+          }}
+        />
         <DataTypeProvider
           for={['time']}
           formatterComponent={timeFormatter}

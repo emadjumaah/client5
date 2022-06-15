@@ -10,7 +10,7 @@ import getTasks from '../graphql/query/getTasks';
 
 export default () => {
   const [getfins, finData] = useLazyQuery(getTasks, {
-    fetchPolicy: 'cache-and-network',
+    // fetchPolicy: 'cache-and-network',
   });
 
   const [addTask] = useMutation(createTask, {

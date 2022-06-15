@@ -71,7 +71,7 @@ export default function ItemsTable({
   const [columns] = useState([
     { name: 'index', title: words.no },
     { name: isRTL ? 'nameAr' : 'name', title: words.item },
-    { name: 'desc', title: words.description },
+    // { name: 'desc', title: words.description },
     { name: 'itemqty', title: words.qty },
     { name: 'itemprice', title: words.theprice },
     { name: 'itemtotal', title: words.total },
@@ -103,10 +103,9 @@ export default function ItemsTable({
   return (
     <Paper
       style={{
-        maxHeight: height,
         overflow: 'auto',
         margin: 10,
-        minHeight: height,
+        height,
       }}
     >
       {rows && (
@@ -120,7 +119,15 @@ export default function ItemsTable({
           />
           <CurrencyTypeProvider for={['itemtotal', 'itemqty', 'itemprice']} />
           <NumberTypeProvider for={['index']} />
-          <TableHeaderRow />
+          <TableHeaderRow
+            titleComponent={({ children }) => {
+              return (
+                <Typography style={{ fontSize: 14, fontWeight: 'bold' }}>
+                  {children}
+                </Typography>
+              );
+            }}
+          />
           <TableEditColumn
             showDeleteCommand
             showEditCommand

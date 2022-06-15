@@ -26,7 +26,6 @@ import {
   getCustomers,
   getDepartments,
   getEmployees,
-  getLandingChartData,
   getLastNos,
   getProjects,
   getResourses,
@@ -48,7 +47,7 @@ import getReceipts from '../../graphql/query/getReceipts';
 import PopupReceipt from '../../pubups/PopupReceipt';
 import useTasks from '../../hooks/useTasks';
 import getTasks from '../../graphql/query/getTasks';
-import { Box } from '@material-ui/core';
+import { Box, Typography } from '@material-ui/core';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
 import { TableComponent } from '../../Shared/TableComponent';
 
@@ -87,9 +86,7 @@ export default function Receipt({ isRTL, words, menuitem, theme, company }) {
     dispatch({ type: 'setEndDate', payload: curDate });
   };
 
-  const [loadFinances, financeData]: any = useLazyQuery(getReceipts, {
-    fetchPolicy: 'cache-and-network',
-  });
+  const [loadFinances, financeData]: any = useLazyQuery(getReceipts);
   const { accounts } = useAccounts();
   const refresQuery = {
     refetchQueries: [
@@ -99,9 +96,6 @@ export default function Receipt({ isRTL, words, menuitem, theme, company }) {
           start: start ? start.setHours(0, 0, 0, 0) : undefined,
           end: end ? end.setHours(23, 59, 59, 999) : undefined,
         },
-      },
-      {
-        query: getLandingChartData,
       },
       {
         query: getLastNos,
@@ -230,7 +224,16 @@ export default function Receipt({ isRTL, words, menuitem, theme, company }) {
             estimatedRowHeight={40}
             tableComponent={TableComponent}
           />
-          <TableHeaderRow showSortingControls />
+          <TableHeaderRow
+            showSortingControls
+            titleComponent={({ children }) => {
+              return (
+                <Typography style={{ fontSize: 14, fontWeight: 'bold' }}>
+                  {children}
+                </Typography>
+              );
+            }}
+          />
           <DataTypeProvider
             for={['time']}
             formatterComponent={timeFormatter}

@@ -14,7 +14,6 @@ import {
 } from '@material-ui/core';
 import PopupLayout from '../pages/main/PopupLayout';
 import { Grid } from '@material-ui/core';
-
 import { useLazyQuery, useMutation } from '@apollo/client';
 import { moneyFormat } from '../Shared/colorFormat';
 import PopupTaskAppointment from './PopupTaskAppointment';
@@ -48,7 +47,6 @@ import { ContractPrint } from '../print';
 import { useReactToPrint } from 'react-to-print';
 import KaidsCustomer from '../Shared/KaidsCustomer';
 import { useTemplate } from '../hooks';
-// import ReminderCustomer from '../Shared/ReminderCustomer';
 import PopupCloseDate from './PopupCloseDate';
 import PercentChartTask from '../components/charts/PercentChartTask';
 
@@ -87,7 +85,7 @@ const useStyles = makeStyles((theme) => ({
     height: 224,
   },
   tabs: {
-    borderRight: `1px solid ${theme.palette.divider}`,
+    borderRight: `2px solid ${theme.palette.divider}`,
   },
 }));
 
@@ -111,6 +109,7 @@ const PopupTaskView = ({
   departments,
   customers,
   servicesproducts,
+  products,
   theme,
   company,
   stopTask,
@@ -442,6 +441,7 @@ const PopupTaskView = ({
                   <TabPanel value={value} index={0}>
                     <ProjectsCustomer
                       servicesproducts={servicesproducts}
+                      products={products}
                       isRTL={isRTL}
                       words={words}
                       theme={theme}
@@ -454,6 +454,7 @@ const PopupTaskView = ({
                   <TabPanel value={value} index={1}>
                     <TasksCustomer
                       servicesproducts={servicesproducts}
+                      products={products}
                       isRTL={isRTL}
                       words={words}
                       theme={theme}
@@ -470,6 +471,7 @@ const PopupTaskView = ({
                       departments={departments}
                       customers={customers}
                       servicesproducts={servicesproducts}
+                      products={products}
                       isRTL={isRTL}
                       words={words}
                       theme={theme}
@@ -489,6 +491,7 @@ const PopupTaskView = ({
                       company={company}
                       theme={theme}
                       servicesproducts={servicesproducts}
+                      products={products}
                       name="taskId"
                       value={row}
                       id={row?.id}
@@ -648,11 +651,14 @@ const PopupTaskView = ({
               <Box style={{ marginTop: 10, marginBottom: 10 }}>
                 <Tabs
                   orientation="vertical"
-                  variant="scrollable"
                   value={value}
                   onChange={handleChange}
                   aria-label="items"
                   className={classes.tabs}
+                  variant="fullWidth"
+                  TabIndicatorProps={{ style: { width: 3 } }}
+                  textColor="primary"
+                  centered
                 >
                   {taskManamentTabs.map((item: any) => {
                     if (item.hide) {
@@ -664,7 +670,13 @@ const PopupTaskView = ({
                           backgroundColor:
                             value === item.id ? '#f5f5f5' : undefined,
                         }}
-                        label={isRTL ? item.nameAr : item.name}
+                        label={
+                          <Typography
+                            style={{ fontWeight: 'bold', fontSize: 13 }}
+                          >
+                            {isRTL ? item.nameAr : item.name}
+                          </Typography>
+                        }
                         {...a11yProps(item.id)}
                       />
                     );
@@ -726,7 +738,7 @@ const PopupTaskView = ({
                   color="primary"
                   onClick={() => setOpenInvoice(true)}
                 >
-                  {words.newInvoice}
+                  <Typography>{words.newInvoice}</Typography>
                 </Button>
               </Box>
               <Box style={{ padding: 10 }}>
@@ -737,7 +749,7 @@ const PopupTaskView = ({
                   disabled={loading || row.isClosed}
                   onClick={() => addNewEvent()}
                 >
-                  {words.newPeriod}
+                  <Typography>{words.newPeriod}</Typography>
                 </Button>
               </Box>
             </Grid>
@@ -810,8 +822,9 @@ const PopupTaskView = ({
                           }
                           onClick={() => setOpenCloseDate(true)}
                         >
-                          {words.shutdown} {isRTL ? 'ال' : ''}
-                          {tempwords?.task}
+                          <Typography>
+                            {words.shutdown} {tempwords?.task}
+                          </Typography>
                         </Button>
                       </Grid>
                     </Grid>

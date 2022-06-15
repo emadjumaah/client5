@@ -29,7 +29,7 @@ import PageLayout from '../main/PageLayout';
 import { SearchTable } from '../../components';
 import { EventsContext } from '../../contexts';
 import DateNavigatorReports from '../../components/filters/DateNavigatorReports';
-import { Box } from '@material-ui/core';
+import { Box, Typography } from '@material-ui/core';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
 import { TableComponent } from '../../Shared/TableComponent';
 import { useUsers } from '../../hooks';
@@ -197,7 +197,16 @@ export default function Actions({ isRTL, words, menuitem, theme }) {
             estimatedRowHeight={40}
             tableComponent={TableComponent}
           />
-          <TableHeaderRow showSortingControls />
+          <TableHeaderRow
+            showSortingControls
+            titleComponent={({ children }) => {
+              return (
+                <Typography style={{ fontSize: 14, fontWeight: 'bold' }}>
+                  {children}
+                </Typography>
+              );
+            }}
+          />
           <DataTypeProvider
             for={['sendtime']}
             formatterComponent={actionTimeFormatter}

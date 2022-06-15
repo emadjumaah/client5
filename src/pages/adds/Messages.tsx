@@ -209,7 +209,16 @@ export default function Messages({
             for={['total']}
             formatterComponent={(props: any) => totalFormatter({ ...props })}
           ></DataTypeProvider>
-          <TableHeaderRow showSortingControls />
+          <TableHeaderRow
+            showSortingControls
+            titleComponent={({ children }) => {
+              return (
+                <Typography style={{ fontSize: 14, fontWeight: 'bold' }}>
+                  {children}
+                </Typography>
+              );
+            }}
+          />
           <TableEditColumn
             showAddCommand
             commandComponent={Command}

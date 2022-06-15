@@ -51,6 +51,10 @@ export default gql`
         status
         totalinvoiced
         totalDiscount
+        totalPurchaseInvoiced
+        totalPurchasePaid
+        totalPurchaseDiscount
+        toatlProdExpenses
         totalpaid
         toatlExpenses
         totalkaidsdebit

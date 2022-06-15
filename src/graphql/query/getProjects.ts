@@ -28,6 +28,10 @@ export default gql`
         amount
         totalinvoiced
         totalDiscount
+        totalPurchaseInvoiced
+        totalPurchasePaid
+        totalPurchaseDiscount
+        toatlProdExpenses
         totalpaid
         toatlExpenses
         totalkaidsdebit

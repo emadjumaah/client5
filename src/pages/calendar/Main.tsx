@@ -17,7 +17,6 @@ import {
 } from '@devexpress/dx-react-scheduler-material-ui';
 import { useContext, useEffect, useState } from 'react';
 import { AppointForm } from './common/AppointForm';
-// import { getResourses } from '../../common/helpers';
 import { commitAppointmentChanges, roles } from '../../common';
 import { RenderToolTip } from './common/AppointTooltip';
 import { AppointmentContent } from './common';
@@ -30,7 +29,6 @@ import {
   getDepartments,
   getEmployees,
   getEvents,
-  getLandingChartData,
   getProducts,
   getProjects,
   getResourses,
@@ -75,9 +73,6 @@ const Main = (props: any) => {
         },
       },
       {
-        query: getLandingChartData,
-      },
-      {
         query: getTasks,
       },
       {
@@ -116,9 +111,7 @@ const Main = (props: any) => {
   const [editEvent] = useMutation(updateEvent, refresQuery);
   const [removeEvent] = useMutation(deleteEvent, refresQuery);
 
-  const [getCalEvents, evnData]: any = useLazyQuery(getEvents, {
-    fetchPolicy: 'cache-and-network',
-  });
+  const [getCalEvents, evnData]: any = useLazyQuery(getEvents);
 
   useEffect(() => {
     const eventsData = evnData?.data?.['getEvents']?.data || [];

@@ -810,6 +810,7 @@ const PopupPurchaseInvoice = ({
             ></AutoFieldLocal>
           </Grid>
         )}
+        {!tempoptions?.noRes && <Grid item xs={4}></Grid>}
         {!tempoptions?.noRes && (
           <Grid item xs={4}>
             <AutoFieldLocal

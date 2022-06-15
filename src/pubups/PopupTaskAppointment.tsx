@@ -619,7 +619,14 @@ const PopupTaskAppointment = ({
                     setOpenAction(true);
                   }}
                 >
-                  {isRTL ? 'اضافة تنبيه' : 'Add Reminder'}
+                  <Typography
+                    style={{
+                      fontSize: 13,
+                      fontWeight: 'bold',
+                    }}
+                  >
+                    {isRTL ? 'اضافة تنبيه' : 'Add Reminder'}
+                  </Typography>{' '}
                 </Button>
                 <Button
                   variant="outlined"

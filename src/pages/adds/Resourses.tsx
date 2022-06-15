@@ -30,6 +30,7 @@ import PageLayout from '../main/PageLayout';
 import { getColumns } from '../../common/columns';
 import useResoursesDown from '../../hooks/useResoursesDown';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
+import { Typography } from '@material-ui/core';
 
 export default function Resourses({ isRTL, words, theme, menuitem }: any) {
   const col = getColumns({ isRTL, words });
@@ -95,7 +96,16 @@ export default function Resourses({ isRTL, words, theme, menuitem }: any) {
             }}
             estimatedRowHeight={40}
           />
-          <TableHeaderRow showSortingControls />
+          <TableHeaderRow
+            showSortingControls
+            titleComponent={({ children }) => {
+              return (
+                <Typography style={{ fontSize: 14, fontWeight: 'bold' }}>
+                  {children}
+                </Typography>
+              );
+            }}
+          />
           <DataTypeProvider
             for={['avatar']}
             formatterComponent={avatarPatternFormatter}

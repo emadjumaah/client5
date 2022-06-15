@@ -22,7 +22,7 @@ import useAccounts from '../../hooks/useAccounts';
 import { useBranches } from '../../hooks';
 import { AlertLocal, SearchTable } from '../../components';
 import { errorAccountAlert, errorDeleteAlert } from '../../Shared/helpers';
-import { Box } from '@material-ui/core';
+import { Box, Typography } from '@material-ui/core';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
 import { TableComponent } from '../../Shared/TableComponent';
 
@@ -108,7 +108,16 @@ export default function Accounts({ isRTL, accounts }: any) {
           estimatedRowHeight={40}
           tableComponent={TableComponent}
         />
-        <TableHeaderRow showSortingControls />
+        <TableHeaderRow
+          showSortingControls
+          titleComponent={({ children }) => {
+            return (
+              <Typography style={{ fontSize: 14, fontWeight: 'bold' }}>
+                {children}
+              </Typography>
+            );
+          }}
+        />
         <DataTypeProvider
           for={['branch']}
           formatterComponent={branchFormatter}

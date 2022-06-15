@@ -99,7 +99,6 @@ export default function KaidsSingleTable({
       {rows && (
         <Grid rows={rows} columns={columns} getRowId={getRowId}>
           <EditingState onCommitChanges={commitChanges} />
-
           <Table
             noDataCellComponent={renderEmpty}
             // columnExtensions={tableColumnExtensions}
@@ -130,7 +129,15 @@ export default function KaidsSingleTable({
             // showEditCommand
             commandComponent={CommandSmall}
           ></TableEditColumn>
-          <TableHeaderRow />
+          <TableHeaderRow
+            titleComponent={({ children }) => {
+              return (
+                <Typography style={{ fontSize: 14, fontWeight: 'bold' }}>
+                  {children}
+                </Typography>
+              );
+            }}
+          />
         </Grid>
       )}
     </Paper>

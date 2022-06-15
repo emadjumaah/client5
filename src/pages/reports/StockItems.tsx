@@ -20,6 +20,7 @@ import { currencyFormatter } from '../../Shared/colorFormat';
 import { SearchTable } from '../../components';
 import { useProducts } from '../../hooks';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
+import { Typography } from '@material-ui/core';
 
 export default function StockItems({ isRTL, words }: any) {
   const [columns] = useState([
@@ -51,7 +52,16 @@ export default function StockItems({ isRTL, words }: any) {
           }}
           estimatedRowHeight={40}
         />
-        <TableHeaderRow showSortingControls />
+        <TableHeaderRow
+          showSortingControls
+          titleComponent={({ children }) => {
+            return (
+              <Typography style={{ fontSize: 14, fontWeight: 'bold' }}>
+                {children}
+              </Typography>
+            );
+          }}
+        />
         <DataTypeProvider
           for={['price', 'cost']}
           formatterComponent={currencyFormatter}

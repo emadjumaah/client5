@@ -49,8 +49,6 @@ export default function Landing(props: any) {
     eventsMonthCount,
     raseeds,
     refreshChartData,
-    // todayEData,
-    // todayRData,
   } = useLandingChart();
 
   const refresh = () => {

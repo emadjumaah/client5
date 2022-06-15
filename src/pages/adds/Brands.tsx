@@ -23,6 +23,7 @@ import { PopupBrand } from '../../pubups';
 import { AlertLocal, SearchTable } from '../../components';
 import { errorAlert, errorDeleteAlert } from '../../Shared/helpers';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
+import { Typography } from '@material-ui/core';
 
 export default function Brands({ isRTL, words, theme }: any) {
   const [loading, setLoading] = useState(false);
@@ -70,7 +71,16 @@ export default function Brands({ isRTL, words, theme }: any) {
           }}
           estimatedRowHeight={40}
         />
-        <TableHeaderRow showSortingControls />
+        <TableHeaderRow
+          showSortingControls
+          titleComponent={({ children }) => {
+            return (
+              <Typography style={{ fontSize: 14, fontWeight: 'bold' }}>
+                {children}
+              </Typography>
+            );
+          }}
+        />
         <TableEditColumn
           showEditCommand
           showDeleteCommand

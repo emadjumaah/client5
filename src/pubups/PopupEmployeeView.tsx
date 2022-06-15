@@ -62,7 +62,7 @@ const useStyles = makeStyles((theme) => ({
     height: 300,
   },
   tabs: {
-    borderRight: `1px solid ${theme.palette.divider}`,
+    borderRight: `2px solid ${theme.palette.divider}`,
   },
 }));
 
@@ -86,6 +86,7 @@ const PopupEmployeeView = ({
   employees,
   resourses,
   servicesproducts,
+  products,
   customers,
 }: any) => {
   const classes = useStyles();
@@ -146,6 +147,7 @@ const PopupEmployeeView = ({
                 <TabPanel value={value} index={0}>
                   <ProjectsCustomer
                     servicesproducts={servicesproducts}
+                    products={products}
                     isRTL={isRTL}
                     words={words}
                     theme={theme}
@@ -158,6 +160,7 @@ const PopupEmployeeView = ({
                 <TabPanel value={value} index={1}>
                   <TasksCustomer
                     servicesproducts={servicesproducts}
+                    products={products}
                     isRTL={isRTL}
                     words={words}
                     theme={theme}
@@ -174,6 +177,7 @@ const PopupEmployeeView = ({
                     departments={departments}
                     customers={customers}
                     servicesproducts={servicesproducts}
+                    products={products}
                     isRTL={isRTL}
                     words={words}
                     theme={theme}
@@ -193,6 +197,7 @@ const PopupEmployeeView = ({
                     company={company}
                     theme={theme}
                     servicesproducts={servicesproducts}
+                    products={products}
                     name="employeeId"
                     value={row}
                     id={row?._id}
@@ -218,6 +223,7 @@ const PopupEmployeeView = ({
                     company={company}
                     theme={theme}
                     servicesproducts={servicesproducts}
+                    products={products}
                     name="employeeId"
                     value={row}
                     id={row?._id}
@@ -406,11 +412,14 @@ const PopupEmployeeView = ({
             <Box style={{ marginTop: 10, marginBottom: 100 }}>
               <Tabs
                 orientation="vertical"
-                variant="scrollable"
                 value={value}
                 onChange={handleChange}
                 aria-label="items"
                 className={classes.tabs}
+                variant="fullWidth"
+                TabIndicatorProps={{ style: { width: 3 } }}
+                textColor="primary"
+                centered
               >
                 {manamentTabs.map((item: any) => {
                   if (item.hide) {
@@ -422,7 +431,13 @@ const PopupEmployeeView = ({
                         backgroundColor:
                           value === item.id ? '#f5f5f5' : undefined,
                       }}
-                      label={isRTL ? item.nameAr : item.name}
+                      label={
+                        <Typography
+                          style={{ fontWeight: 'bold', fontSize: 13 }}
+                        >
+                          {isRTL ? item.nameAr : item.name}
+                        </Typography>
+                      }
                       {...a11yProps(item.id)}
                     />
                   );

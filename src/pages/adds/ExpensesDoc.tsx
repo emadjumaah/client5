@@ -27,7 +27,6 @@ import {
   getDepartments,
   getEmployees,
   getExpenses,
-  getLandingChartData,
   getLastNos,
   getProducts,
   getProjects,
@@ -49,7 +48,7 @@ import DateNavigatorReports from '../../components/filters/DateNavigatorReports'
 import useTasks from '../../hooks/useTasks';
 import getTasks from '../../graphql/query/getTasks';
 import { getColumns } from '../../common/columns';
-import { Box } from '@material-ui/core';
+import { Box, Typography } from '@material-ui/core';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
 import { TableComponent } from '../../Shared/TableComponent';
 import PopupExpensesDoc from '../../pubups/PopupExpensesDoc';
@@ -122,9 +121,7 @@ export default function ExpensesDoc({
     dispatch({ type: 'setEndDate', payload: curDate });
   };
 
-  const [loadExpenses, expensesData]: any = useLazyQuery(getExpenses, {
-    fetchPolicy: 'cache-and-network',
-  });
+  const [loadExpenses, expensesData]: any = useLazyQuery(getExpenses);
   const { accounts } = useAccounts();
   const refresQuery = {
     refetchQueries: [
@@ -135,9 +132,6 @@ export default function ExpensesDoc({
           end: end ? end.setHours(23, 59, 59, 999) : undefined,
           opType: 60,
         },
-      },
-      {
-        query: getLandingChartData,
       },
       {
         query: getLastNos,
@@ -269,7 +263,16 @@ export default function ExpensesDoc({
             estimatedRowHeight={40}
             tableComponent={TableComponent}
           />
-          <TableHeaderRow showSortingControls />
+          <TableHeaderRow
+            showSortingControls
+            titleComponent={({ children }) => {
+              return (
+                <Typography style={{ fontSize: 14, fontWeight: 'bold' }}>
+                  {children}
+                </Typography>
+              );
+            }}
+          />
           <DataTypeProvider
             for={['time']}
             formatterComponent={timeFormatter}

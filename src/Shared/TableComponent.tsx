@@ -1,4 +1,4 @@
-import { VirtualTable } from '@devexpress/dx-react-grid-material-ui';
+import { Table, VirtualTable } from '@devexpress/dx-react-grid-material-ui';
 import { colors, fade, withStyles } from '@material-ui/core';
 import React from 'react';
 
@@ -55,8 +55,19 @@ const stylesGrey = () => ({
 const TableComponentBase = ({ classes, ...restProps }) => (
   <VirtualTable.Table {...restProps} className={classes.tableStriped} />
 );
+const TableComponentBase2 = ({ classes, ...restProps }) => (
+  <Table.Table
+    {...restProps}
+    className={classes.tableStriped}
+    style={{ borderWidth: 4, borderLeftColor: 'blue' }}
+  />
+);
 export const TableComponent = withStyles(styles, { name: 'TableComponent' })(
   TableComponentBase
+);
+
+export const TableComponent2 = withStyles(styles, { name: 'TableComponent2' })(
+  TableComponentBase2
 );
 export const TableComponentBlue = withStyles(stylesBlue, {
   name: 'TableComponent',

@@ -31,7 +31,6 @@ import {
   getCustomers,
   getDepartments,
   getEmployees,
-  getLandingChartData,
   getProjects,
   getResourses,
   updateEvent,
@@ -85,9 +84,6 @@ const MainEmpl = (props: any) => {
           start,
           end,
         },
-      },
-      {
-        query: getLandingChartData,
       },
       {
         query: getTasks,

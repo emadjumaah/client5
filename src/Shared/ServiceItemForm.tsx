@@ -18,7 +18,7 @@ import { Autocomplete } from '@material-ui/lab';
 import OptionProductData from './OptionProductData';
 import { yup } from '../constants';
 import AutoPopper from './AutoPopper';
-import { useProducts, useServices, useTemplate } from '../hooks';
+import { useProducts, useServices } from '../hooks';
 import ListboxComponent from '../components/fields/ListboxComponent';
 import PopupServiceItem from '../pubups/PopupServiceItem';
 import { messageAlert } from './helpers';
@@ -50,7 +50,7 @@ export default function ServiceItemForm({
   const itemRef: any = React.useRef();
   const { addService, editService } = useServices();
   const { addProduct, editProduct } = useProducts();
-  const { tempoptions } = useTemplate();
+  // const { tempoptions } = useTemplate();
 
   useEffect(() => {
     if (type === 2) {
@@ -240,7 +240,7 @@ export default function ServiceItemForm({
               }}
             />
           </Grid>
-          {!tempoptions?.noTsk && <Grid item xs={2}></Grid>}
+          {/* {!tempoptions?.noTsk && <Grid item xs={2}></Grid>}
           {!tempoptions?.noTsk && (
             <Grid item xs={10}>
               <TextField
@@ -257,7 +257,7 @@ export default function ServiceItemForm({
                 }}
               />
             </Grid>
-          )}
+          )} */}
           <Grid item xs={1}></Grid>
           <Grid item xs={1}>
             <Fab
