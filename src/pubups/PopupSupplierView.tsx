@@ -21,6 +21,7 @@ import ProjectsCustomer from '../Shared/ProjectsCustomer';
 import { useTemplate } from '../hooks';
 import InvoicesSupplier from '../Shared/InvoicesSupplier';
 import PaymentSupplier from '../Shared/PaymentSupplier';
+import useWindowDimensions from '../hooks/useWindowDimensions';
 // import ReminderCustomer from '../Shared/ReminderCustomer';
 
 function TabPanel(props) {
@@ -88,6 +89,8 @@ const PopupSupplierView = ({
   const { tempoptions } = useTemplate();
 
   const [value, setValue] = React.useState(tempoptions?.noRes ? 2 : 1);
+  const { width, height } = useWindowDimensions();
+
   const handleChange = (_, newValue) => {
     setValue(newValue);
   };
@@ -143,6 +146,8 @@ const PopupSupplierView = ({
                     name="supplierId"
                     value={row}
                     id={row?._id}
+                    width={width}
+                    height={height}
                   ></ProjectsCustomer>
                 </TabPanel>
                 <TabPanel value={value} index={1}>
@@ -156,6 +161,8 @@ const PopupSupplierView = ({
                     name="supplierId"
                     value={row}
                     id={row?._id}
+                    width={width}
+                    height={height}
                   ></TasksCustomer>
                 </TabPanel>
                 <TabPanel value={value} index={2}>
@@ -173,6 +180,8 @@ const PopupSupplierView = ({
                     name="supplierId"
                     value={row}
                     id={row?._id}
+                    width={width}
+                    height={height}
                   ></EventsCustomer>
                 </TabPanel>
                 <TabPanel value={value} index={3}>
@@ -189,6 +198,8 @@ const PopupSupplierView = ({
                     name="supplierId"
                     value={row}
                     id={row?._id}
+                    width={width}
+                    height={height}
                   ></InvoicesSupplier>
                 </TabPanel>
                 <TabPanel value={value} index={4}>
@@ -199,6 +210,8 @@ const PopupSupplierView = ({
                     name="supplierId"
                     value={row}
                     id={row?._id}
+                    width={width}
+                    height={height}
                   ></PaymentSupplier>
                 </TabPanel>
                 {/* <TabPanel value={value} index={5}>

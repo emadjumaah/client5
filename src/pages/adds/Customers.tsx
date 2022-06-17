@@ -39,7 +39,6 @@ import {
   expensesFormatter,
   kaidsFormatter,
   nameManageLinkFormat,
-  purchaseFormatter,
   salesFormatter,
 } from '../../Shared/colorFormat';
 import PopupCustomerView from '../../pubups/PopupCustomerView';
@@ -65,7 +64,7 @@ import createMultiCustomers from '../../graphql/mutation/createMultiCustomers';
 export default function Customers(props: any) {
   const { isRTL, words, menuitem, theme, company } = props;
   const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
-  const [pageSizes] = useState([5, 10, 20, 50, 0]);
+  const [pageSizes] = useState([5, 6, 10, 20, 50, 0]);
   const [rows, setRows] = useState([]);
   const [item, setItem] = useState(null);
   const [openImport, setOpenImport] = useState(false);
@@ -91,17 +90,21 @@ export default function Customers(props: any) {
     col.sales,
     col.expenses,
     col.kaids,
-    col.purchase,
+    { name: 'phone', title: words.phoneNumber },
+    { name: 'email', title: words.email },
+    { name: 'address', title: words.address },
   ]);
 
   const [tableColumnExtensions]: any = useState([
     { columnName: 'avatar', width: 110 },
-    { columnName: col.name.name, width: 200 },
+    { columnName: col.name.name, width: 250 },
     { columnName: col.appointments.name, width: 250, align: 'center' },
-    { columnName: col.sales.name, width: 200 },
-    { columnName: col.expenses.name, width: 200 },
+    { columnName: col.sales.name, width: 240 },
     { columnName: col.kaids.name, width: 200 },
-    { columnName: col.purchase.name, width: 200 },
+    { columnName: col.expenses.name, width: 200 },
+    { columnName: 'phone', width: 150 },
+    { columnName: 'email', width: 200 },
+    { columnName: 'address', width: 200 },
   ]);
 
   const [columnsViewer] = useState([
@@ -119,7 +122,6 @@ export default function Customers(props: any) {
       },
     ],
   };
-  console.log('rows', rows);
   useEffect(() => {
     if (openItem) {
       const tsks = custssData?.data?.['getCustomers']?.data || [];
@@ -186,10 +188,12 @@ export default function Customers(props: any) {
         <Paper
           elevation={5}
           style={{
-            margin: 70,
-            marginTop: 70,
+            marginTop: 40,
+            marginLeft: 40,
+            marginRight: 40,
+            marginBottom: 30,
             overflow: 'auto',
-            width: width - 380,
+            width: width - 320,
             borderRadius: 10,
           }}
         >
@@ -201,7 +205,7 @@ export default function Customers(props: any) {
             <SortingState />
             <EditingState onCommitChanges={commitChanges} />
             <SearchState />
-            <PagingState defaultCurrentPage={0} defaultPageSize={5} />
+            <PagingState defaultCurrentPage={0} defaultPageSize={6} />
 
             <IntegratedSorting />
             <IntegratedFiltering />
@@ -214,7 +218,7 @@ export default function Customers(props: any) {
               }}
               tableComponent={TableComponent}
               rowComponent={(props: any) => (
-                <Table.Row {...props} style={{ height: 120 }}></Table.Row>
+                <Table.Row {...props} style={{ height: 110 }}></Table.Row>
               )}
               columnExtensions={tableColumnExtensions}
             />
@@ -224,9 +228,11 @@ export default function Customers(props: any) {
                 col.name.name,
                 col.appointments.name,
                 col.sales.name,
-                col.expenses.name,
                 col.kaids.name,
-                col.purchase.name,
+                col.expenses.name,
+                'phone',
+                'email',
+                'address',
               ]}
             />
             <TableColumnResizing defaultColumnWidths={tableColumnExtensions} />
@@ -241,10 +247,19 @@ export default function Customers(props: any) {
                 );
               }}
             />
-            <TableColumnVisibility defaultHiddenColumnNames={[]} />
+            <TableColumnVisibility
+              defaultHiddenColumnNames={['phone', 'email', 'address']}
+            />
             <DataTypeProvider
               for={['avatar']}
-              formatterComponent={avataManageFormatter}
+              formatterComponent={(props: any) =>
+                avataManageFormatter({
+                  ...props,
+                  setItem,
+                  setOpenItem,
+                  isRTL,
+                })
+              }
             ></DataTypeProvider>
             {roles.isEditor() && (
               <DataTypeProvider
@@ -269,12 +284,6 @@ export default function Customers(props: any) {
               for={[col.sales.name]}
               formatterComponent={(props: any) =>
                 salesFormatter({ ...props, theme, isRTL })
-              }
-            ></DataTypeProvider>
-            <DataTypeProvider
-              for={[col.purchase.name]}
-              formatterComponent={(props: any) =>
-                purchaseFormatter({ ...props, theme, isRTL })
               }
             ></DataTypeProvider>
             <DataTypeProvider

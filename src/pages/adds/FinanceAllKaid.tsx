@@ -8,14 +8,22 @@ import {
   DataTypeProvider,
   SearchState,
   IntegratedFiltering,
+  PagingState,
+  IntegratedPaging,
 } from '@devexpress/dx-react-grid';
 import {
   Grid,
   TableHeaderRow,
   TableEditColumn,
-  VirtualTable,
   SearchPanel,
   Toolbar,
+  DragDropProvider,
+  Table,
+  TableColumnReordering,
+  TableColumnResizing,
+  TableColumnVisibility,
+  ColumnChooser,
+  PagingPanel,
 } from '@devexpress/dx-react-grid-material-ui';
 import { Command, Loading, PopupEditing } from '../../Shared';
 import { getRowId, updateDocNumbers } from '../../common';
@@ -33,21 +41,16 @@ import {
   updateGeneralFinance,
 } from '../../graphql';
 import {
-  accountFormatter,
   currencyFormatter,
-  customerAccountFormatter,
-  opTypeFormatter,
   samllFormatter,
   timeFormatter,
 } from '../../Shared/colorFormat';
-import useAccounts from '../../hooks/useAccounts';
 import PageLayout from '../main/PageLayout';
 import { SearchTable } from '../../components';
 import { FinanceContext } from '../../contexts';
 import DateNavigatorReports from '../../components/filters/DateNavigatorReports';
-// import PopupFinanceAll from '../../pubups/PopupFinanceAll';
 import getTasks from '../../graphql/query/getTasks';
-import { Box, Typography } from '@material-ui/core';
+import { Box, Paper, Typography } from '@material-ui/core';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
 import { TableComponent } from '../../Shared/TableComponent';
 import PopupFinanceAllKaid from '../../pubups/PopupFinanceAllKaid';
@@ -68,19 +71,30 @@ export default function FinanceAllKaid({
     { name: 'time', title: words.time },
     { name: 'docNo', title: words.no },
     { name: 'desc', title: words.description },
-    { name: 'opType', title: words.type },
     { name: 'amount', title: words.amount },
   ]);
+
+  const [tableColumnExtensions]: any = useState([
+    { columnName: 'time', width: 150 },
+    { columnName: 'docNo', width: 150 },
+    { columnName: 'desc', width: 400 },
+    { columnName: 'amount', width: 150 },
+  ]);
+
+  const [tableColumnVisibilityColumnExtensions] = useState([
+    { columnName: 'time', togglingEnabled: false },
+  ]);
+  const [pageSizes] = useState([5, 10, 20, 50, 0]);
 
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(false);
 
   const [start, setStart] = useState<any>(null);
   const [end, setEnd] = useState<any>(null);
-  const { height } = useWindowDimensions();
+  const { height, width } = useWindowDimensions();
 
   const {
-    state: { currentDate, currentViewName, endDate, sort },
+    state: { currentDate, currentViewName, endDate },
     dispatch,
   } = useContext(FinanceContext);
 
@@ -96,7 +110,6 @@ export default function FinanceAllKaid({
   };
 
   const [loadFinances, financeData]: any = useLazyQuery(getGeneralFinances);
-  const { accounts } = useAccounts();
   const refresQuery = {
     refetchQueries: [
       {
@@ -179,9 +192,6 @@ export default function FinanceAllKaid({
     financeData?.refetch();
   };
 
-  const setSortDispatch = (value: any) => {
-    dispatch({ type: 'setSort', payload: value });
-  };
   return (
     <PageLayout
       menuitem={menuitem}
@@ -195,8 +205,6 @@ export default function FinanceAllKaid({
           height: height - 50,
           overflow: 'auto',
           backgroundColor: '#fff',
-          marginLeft: 5,
-          marginRight: 5,
         }}
       >
         <Box
@@ -223,89 +231,99 @@ export default function FinanceAllKaid({
             theme={theme}
           ></DateNavigatorReports>
         </Box>
-        <Grid rows={rows} columns={columns} getRowId={getRowId}>
-          <SortingState
-            defaultSorting={sort}
-            onSortingChange={(srt: any) => setSortDispatch(srt)}
-          />
-          <EditingState onCommitChanges={commitChanges} />
-          <SearchState />
-          <IntegratedSorting />
-          <IntegratedFiltering />
-          <VirtualTable
-            height={height - 100}
-            messages={{
-              noData: isRTL ? 'لا يوجد بيانات' : 'no data',
-            }}
-            estimatedRowHeight={40}
-            tableComponent={TableComponent}
-          />
-          <TableHeaderRow
-            showSortingControls
-            titleComponent={({ children }) => {
-              return (
-                <Typography style={{ fontSize: 14, fontWeight: 'bold' }}>
-                  {children}
-                </Typography>
-              );
-            }}
-          />
-          <DataTypeProvider
-            for={['time']}
-            formatterComponent={timeFormatter}
-          ></DataTypeProvider>
-          <DataTypeProvider
-            for={['amount']}
-            formatterComponent={currencyFormatter}
-          ></DataTypeProvider>
-          <DataTypeProvider
-            for={['opType']}
-            formatterComponent={opTypeFormatter}
-          ></DataTypeProvider>
-          <DataTypeProvider
-            for={['docNo', 'refNo']}
-            formatterComponent={samllFormatter}
-          ></DataTypeProvider>
-          <DataTypeProvider
-            for={['creditAcc']}
-            formatterComponent={(props) =>
-              customerAccountFormatter(props, accounts, isRTL)
-            }
-          ></DataTypeProvider>
-          <DataTypeProvider
-            for={['debitAcc']}
-            formatterComponent={(props) =>
-              accountFormatter(props, accounts, isRTL)
-            }
-          ></DataTypeProvider>
-          <TableEditColumn
-            showEditCommand
-            showDeleteCommand
-            showAddCommand
-            commandComponent={Command}
-          ></TableEditColumn>
-          <Toolbar />
-          <SearchPanel
-            inputComponent={(props: any) => {
-              return <SearchTable isRTL={isRTL} {...props}></SearchTable>;
-            }}
-          />
+        <Paper
+          elevation={5}
+          style={{
+            margin: 40,
+            marginTop: 80,
+            overflow: 'auto',
+            width: width - 330,
+            // height: height - 200,
+            borderRadius: 10,
+          }}
+        >
+          <Grid rows={rows} columns={columns} getRowId={getRowId}>
+            <SortingState />
+            <EditingState onCommitChanges={commitChanges} />
+            <SearchState />
+            <PagingState defaultCurrentPage={0} defaultPageSize={10} />
+            <IntegratedSorting />
+            <IntegratedFiltering />
+            <IntegratedPaging />
+            <DragDropProvider />
+            <Table
+              messages={{
+                noData: isRTL ? 'لا يوجد بيانات' : 'no data',
+              }}
+              tableComponent={TableComponent}
+              rowComponent={(props: any) => (
+                <Table.Row {...props} style={{ height: 60 }}></Table.Row>
+              )}
+              columnExtensions={tableColumnExtensions}
+            />
 
-          <PopupEditing
-            theme={theme}
-            addAction={addFinance}
-            editAction={editFinance}
-          >
-            <PopupFinanceAllKaid
-              tasks={tasks}
-              employees={employees}
-              resourses={resourses}
-              departments={departments}
-              projects={projects}
-              company={company}
-            ></PopupFinanceAllKaid>
-          </PopupEditing>
-        </Grid>
+            <TableColumnReordering
+              defaultOrder={['time', 'docNo', 'desc', 'amount']}
+            />
+            <TableColumnResizing defaultColumnWidths={tableColumnExtensions} />
+
+            <TableHeaderRow
+              showSortingControls
+              titleComponent={({ children }) => {
+                return (
+                  <Typography style={{ fontSize: 14, fontWeight: 'bold' }}>
+                    {children}
+                  </Typography>
+                );
+              }}
+            />
+            <TableColumnVisibility
+              columnExtensions={tableColumnVisibilityColumnExtensions}
+              defaultHiddenColumnNames={[]}
+            />
+            <DataTypeProvider
+              for={['time']}
+              formatterComponent={timeFormatter}
+            ></DataTypeProvider>
+            <DataTypeProvider
+              for={['amount']}
+              formatterComponent={currencyFormatter}
+            ></DataTypeProvider>
+            <DataTypeProvider
+              for={['docNo', 'refNo']}
+              formatterComponent={samllFormatter}
+            ></DataTypeProvider>
+            <TableEditColumn
+              showEditCommand
+              showDeleteCommand
+              showAddCommand
+              commandComponent={Command}
+            ></TableEditColumn>
+            <Toolbar />
+            <ColumnChooser />
+            <PagingPanel pageSizes={pageSizes} />
+            <SearchPanel
+              inputComponent={(props: any) => {
+                return <SearchTable isRTL={isRTL} {...props}></SearchTable>;
+              }}
+            />
+
+            <PopupEditing
+              theme={theme}
+              addAction={addFinance}
+              editAction={editFinance}
+            >
+              <PopupFinanceAllKaid
+                tasks={tasks}
+                employees={employees}
+                resourses={resourses}
+                departments={departments}
+                projects={projects}
+                company={company}
+              ></PopupFinanceAllKaid>
+            </PopupEditing>
+          </Grid>
+        </Paper>
         {loading && <Loading isRTL={isRTL} />}
       </Box>
     </PageLayout>

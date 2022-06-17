@@ -183,6 +183,7 @@ export interface LanguageType {
     theaddress: string;
     unit: string;
     info: string;
+    main: string;
     expenses: string;
     hresource: string;
     oresource: string;

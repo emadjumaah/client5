@@ -8,14 +8,22 @@ import {
   DataTypeProvider,
   SearchState,
   IntegratedFiltering,
+  PagingState,
+  IntegratedPaging,
 } from '@devexpress/dx-react-grid';
 import {
   Grid,
   TableHeaderRow,
   TableEditColumn,
-  VirtualTable,
   SearchPanel,
   Toolbar,
+  DragDropProvider,
+  Table,
+  TableColumnReordering,
+  TableColumnResizing,
+  ColumnChooser,
+  PagingPanel,
+  TableColumnVisibility,
 } from '@devexpress/dx-react-grid-material-ui';
 import { Command, Loading, PopupEditing } from '../../Shared';
 import { getRowId, updateDocNumbers } from '../../common';
@@ -48,7 +56,7 @@ import DateNavigatorReports from '../../components/filters/DateNavigatorReports'
 import useTasks from '../../hooks/useTasks';
 import getTasks from '../../graphql/query/getTasks';
 import { getColumns } from '../../common/columns';
-import { Box, Typography } from '@material-ui/core';
+import { Box, Paper, Typography } from '@material-ui/core';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
 import { TableComponent } from '../../Shared/TableComponent';
 import PopupExpensesDoc from '../../pubups/PopupExpensesDoc';
@@ -93,6 +101,25 @@ export default function ExpensesDoc({
         ]
   );
 
+  const [tableColumnExtensions]: any = useState([
+    { columnName: 'time', width: 100 },
+    { columnName: col.docNo.name, width: 120 },
+    { columnName: 'debitAcc', width: 150 },
+    { columnName: 'creditAcc', width: 150 },
+    { columnName: col.department.name, width: 180 },
+    { columnName: col.employee.name, width: 180 },
+    { columnName: col.taskId.name, width: 180 },
+    { columnName: 'desc', width: 200 },
+    { columnName: 'amount', width: 120 },
+  ]);
+
+  const [tableColumnVisibilityColumnExtensions] = useState([
+    { columnName: 'time', togglingEnabled: false },
+    { columnName: 'creditAcc', togglingEnabled: false },
+    { columnName: 'debitAcc', togglingEnabled: false },
+  ]);
+  const [pageSizes] = useState([5, 10, 20, 50, 0]);
+
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -104,9 +131,9 @@ export default function ExpensesDoc({
   const { resourses } = useResoursesUp();
   const { expenseItems } = useExpenseItems();
 
-  const { height } = useWindowDimensions();
+  const { height, width } = useWindowDimensions();
   const {
-    state: { currentDate, currentViewName, endDate, sort },
+    state: { currentDate, currentViewName, endDate },
     dispatch,
   } = useContext(ExpensesContext);
 
@@ -202,9 +229,6 @@ export default function ExpensesDoc({
     expensesData?.refetch();
   };
 
-  const setSortDispatch = (value: any) => {
-    dispatch({ type: 'setSort', payload: value });
-  };
   return (
     <PageLayout
       menuitem={menuitem}
@@ -218,8 +242,6 @@ export default function ExpensesDoc({
           height: height - 50,
           overflow: 'auto',
           backgroundColor: '#fff',
-          marginLeft: 5,
-          marginRight: 5,
         }}
       >
         <Box
@@ -246,91 +268,126 @@ export default function ExpensesDoc({
             theme={theme}
           ></DateNavigatorReports>
         </Box>
-        <Grid rows={rows} columns={columns} getRowId={getRowId}>
-          <SortingState
-            defaultSorting={sort}
-            onSortingChange={(srt: any) => setSortDispatch(srt)}
-          />
-          <EditingState onCommitChanges={commitChanges} />
-          <SearchState />
-          <IntegratedSorting />
-          <IntegratedFiltering />
-          <VirtualTable
-            height={height - 100}
-            messages={{
-              noData: isRTL ? 'لا يوجد بيانات' : 'no data',
-            }}
-            estimatedRowHeight={40}
-            tableComponent={TableComponent}
-          />
-          <TableHeaderRow
-            showSortingControls
-            titleComponent={({ children }) => {
-              return (
-                <Typography style={{ fontSize: 14, fontWeight: 'bold' }}>
-                  {children}
-                </Typography>
-              );
-            }}
-          />
-          <DataTypeProvider
-            for={['time']}
-            formatterComponent={timeFormatter}
-          ></DataTypeProvider>
-          <DataTypeProvider
-            for={['amount']}
-            formatterComponent={currencyFormatter}
-          ></DataTypeProvider>
-          <DataTypeProvider
-            for={['docNo', 'refNo']}
-            formatterComponent={samllFormatter}
-          ></DataTypeProvider>
-          <DataTypeProvider
-            for={['creditAcc']}
-            formatterComponent={(props) =>
-              accountFormatter(props, accounts, isRTL)
-            }
-          ></DataTypeProvider>
-          <DataTypeProvider
-            for={['taskId']}
-            formatterComponent={(props: any) =>
-              taskIdFormatter({ ...props, tasks })
-            }
-          ></DataTypeProvider>
-          <DataTypeProvider
-            for={['debitAcc']}
-            formatterComponent={(props) =>
-              accountFormatter(props, accounts, isRTL)
-            }
-          ></DataTypeProvider>
-          <TableEditColumn
-            showEditCommand
-            showDeleteCommand
-            showAddCommand
-            commandComponent={Command}
-          ></TableEditColumn>
-          <Toolbar />
-          <SearchPanel
-            inputComponent={(props: any) => {
-              return <SearchTable isRTL={isRTL} {...props}></SearchTable>;
-            }}
-          />
+        <Paper
+          elevation={5}
+          style={{
+            margin: 40,
+            marginTop: 80,
+            overflow: 'auto',
+            width: width - 330,
+            // height: height - 200,
+            borderRadius: 10,
+          }}
+        >
+          <Grid rows={rows} columns={columns} getRowId={getRowId}>
+            <SortingState />
+            <EditingState onCommitChanges={commitChanges} />
+            <SearchState />
+            <PagingState defaultCurrentPage={0} defaultPageSize={10} />
+            <IntegratedSorting />
+            <IntegratedFiltering />
+            <IntegratedPaging />
+            <DragDropProvider />
+            <Table
+              messages={{
+                noData: isRTL ? 'لا يوجد بيانات' : 'no data',
+              }}
+              tableComponent={TableComponent}
+              rowComponent={(props: any) => (
+                <Table.Row {...props} style={{ height: 60 }}></Table.Row>
+              )}
+              columnExtensions={tableColumnExtensions}
+            />
 
-          <PopupEditing
-            theme={theme}
-            addAction={addExpenses}
-            editAction={editExpenses}
-          >
-            <PopupExpensesDoc
-              resourses={resourses}
-              employees={employees}
-              departments={departments}
-              company={company}
-              servicesproducts={expenseItems}
-              tasks={tasks}
-            ></PopupExpensesDoc>
-          </PopupEditing>
-        </Grid>
+            <TableColumnReordering
+              defaultOrder={[
+                'time',
+                'docNo',
+                'debitAcc',
+                'creditAcc',
+                col.department.name,
+                col.employee.name,
+                col.taskId.name,
+                'desc',
+                'amount',
+              ]}
+            />
+            <TableColumnResizing defaultColumnWidths={tableColumnExtensions} />
+            <TableHeaderRow
+              showSortingControls
+              titleComponent={({ children }) => {
+                return (
+                  <Typography style={{ fontSize: 14, fontWeight: 'bold' }}>
+                    {children}
+                  </Typography>
+                );
+              }}
+            />
+            <TableColumnVisibility
+              columnExtensions={tableColumnVisibilityColumnExtensions}
+              defaultHiddenColumnNames={[]}
+            />
+            <DataTypeProvider
+              for={['time']}
+              formatterComponent={timeFormatter}
+            ></DataTypeProvider>
+            <DataTypeProvider
+              for={['amount']}
+              formatterComponent={currencyFormatter}
+            ></DataTypeProvider>
+            <DataTypeProvider
+              for={['docNo', 'refNo']}
+              formatterComponent={samllFormatter}
+            ></DataTypeProvider>
+            <DataTypeProvider
+              for={['creditAcc']}
+              formatterComponent={(props) =>
+                accountFormatter(props, accounts, isRTL)
+              }
+            ></DataTypeProvider>
+            <DataTypeProvider
+              for={['taskId']}
+              formatterComponent={(props: any) =>
+                taskIdFormatter({ ...props, tasks })
+              }
+            ></DataTypeProvider>
+            <DataTypeProvider
+              for={['debitAcc']}
+              formatterComponent={(props) =>
+                accountFormatter(props, accounts, isRTL)
+              }
+            ></DataTypeProvider>
+            <TableEditColumn
+              showEditCommand
+              showDeleteCommand
+              showAddCommand
+              commandComponent={Command}
+            ></TableEditColumn>
+            <Toolbar />
+            <ColumnChooser />
+            <PagingPanel pageSizes={pageSizes} />
+            <SearchPanel
+              inputComponent={(props: any) => {
+                return <SearchTable isRTL={isRTL} {...props}></SearchTable>;
+              }}
+            />
+
+            <PopupEditing
+              theme={theme}
+              addAction={addExpenses}
+              editAction={editExpenses}
+            >
+              <PopupExpensesDoc
+                resourses={resourses}
+                employees={employees}
+                departments={departments}
+                company={company}
+                servicesproducts={expenseItems}
+                tasks={tasks}
+              ></PopupExpensesDoc>
+            </PopupEditing>
+          </Grid>
+        </Paper>
         {loading && <Loading isRTL={isRTL} />}
       </Box>
     </PageLayout>

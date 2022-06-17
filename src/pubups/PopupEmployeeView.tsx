@@ -27,6 +27,7 @@ import { useTemplate } from '../hooks';
 import ExpensesProdCustomer from '../Shared/ExpensesProdCustomer';
 import InvoicesSupplier from '../Shared/InvoicesSupplier';
 import PaymentSupplier from '../Shared/PaymentSupplier';
+import useWindowDimensions from '../hooks/useWindowDimensions';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -93,6 +94,8 @@ const PopupEmployeeView = ({
 
   const { tempoptions } = useTemplate();
   const [value, setValue] = React.useState(tempoptions?.noRes ? 2 : 1);
+  const { width, height } = useWindowDimensions();
+
   const handleChange = (_, newValue) => {
     setValue(newValue);
   };
@@ -155,6 +158,8 @@ const PopupEmployeeView = ({
                     name="employeeId"
                     value={row}
                     id={row?._id}
+                    width={width}
+                    height={height}
                   ></ProjectsCustomer>
                 </TabPanel>
                 <TabPanel value={value} index={1}>
@@ -168,6 +173,8 @@ const PopupEmployeeView = ({
                     name="employeeId"
                     value={row}
                     id={row?._id}
+                    width={width}
+                    height={height}
                   ></TasksCustomer>
                 </TabPanel>
                 <TabPanel value={value} index={2}>
@@ -185,6 +192,8 @@ const PopupEmployeeView = ({
                     name="employeeId"
                     value={row}
                     id={row?._id}
+                    width={width}
+                    height={height}
                   ></EventsCustomer>
                 </TabPanel>
                 <TabPanel value={value} index={3}>
@@ -201,6 +210,8 @@ const PopupEmployeeView = ({
                     name="employeeId"
                     value={row}
                     id={row?._id}
+                    width={width}
+                    height={height}
                   ></InvoicesCustomer>
                 </TabPanel>
                 <TabPanel value={value} index={4}>
@@ -211,6 +222,8 @@ const PopupEmployeeView = ({
                     name="employeeId"
                     value={row}
                     id={row?._id}
+                    width={width}
+                    height={height}
                   ></ReceiptCustomer>
                 </TabPanel>
                 <TabPanel value={value} index={5}>
@@ -227,6 +240,8 @@ const PopupEmployeeView = ({
                     name="employeeId"
                     value={row}
                     id={row?._id}
+                    width={width}
+                    height={height}
                   ></InvoicesSupplier>
                 </TabPanel>
                 <TabPanel value={value} index={6}>
@@ -237,6 +252,8 @@ const PopupEmployeeView = ({
                     name="employeeId"
                     value={row}
                     id={row?._id}
+                    width={width}
+                    height={height}
                   ></PaymentSupplier>
                 </TabPanel>
                 <TabPanel value={value} index={7}>
@@ -247,6 +264,8 @@ const PopupEmployeeView = ({
                     name="employeeId"
                     value={row}
                     id={row?._id}
+                    width={width}
+                    height={height}
                   ></ExpensesCustomer>
                 </TabPanel>
                 <TabPanel value={value} index={8}>
@@ -257,6 +276,8 @@ const PopupEmployeeView = ({
                     name="employeeId"
                     value={row}
                     id={row?._id}
+                    width={width}
+                    height={height}
                   ></ExpensesProdCustomer>
                 </TabPanel>
                 <TabPanel value={value} index={9}>
@@ -267,6 +288,8 @@ const PopupEmployeeView = ({
                     name="employeeId"
                     value={row}
                     id={row?._id}
+                    width={width}
+                    height={height}
                   ></KaidsCustomer>
                 </TabPanel>
                 <TabPanel value={value} index={10}>
@@ -282,6 +305,8 @@ const PopupEmployeeView = ({
                     name="employeeId"
                     value={row}
                     id={row?._id}
+                    width={width}
+                    height={height}
                   ></ReminderCustomer>
                 </TabPanel>
                 <Box

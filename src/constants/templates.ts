@@ -18,6 +18,7 @@ export const templates = [
     },
     words: {
       ar: {
+        main: 'الرئيسية',
         appointment: 'الموعد',
         appointments: 'المواعيد',
         task: 'المهمة',
@@ -44,6 +45,7 @@ export const templates = [
         servicesress: 'موارد الخدمات',
       },
       en: {
+        main: 'Main',
         appointment: 'Appointment',
         appointments: 'Appointments',
         task: 'Task',
@@ -92,6 +94,7 @@ export const templates = [
     },
     words: {
       ar: {
+        main: 'الرئيسية',
         appointment: 'الموعد',
         appointments: 'المواعيد',
         task: 'كورس',
@@ -120,6 +123,7 @@ export const templates = [
         servicesress: 'موارد الخدمات',
       },
       en: {
+        main: 'Main',
         appointment: 'Appointment',
         appointments: 'Appointments',
         task: 'Task',
@@ -171,6 +175,7 @@ export const templates = [
     },
     words: {
       ar: {
+        main: 'الرئيسية',
         appointment: 'حصة',
         appointments: 'حصص',
         task: 'الكورس',
@@ -198,6 +203,7 @@ export const templates = [
         servicesress: 'موارد الخدمات',
       },
       en: {
+        main: 'Main',
         appointment: 'Lesson',
         appointments: 'Lessons',
         task: 'Course',
@@ -247,8 +253,9 @@ export const templates = [
     },
     words: {
       ar: {
-        appointment: 'موعد',
-        appointments: 'مواعيد',
+        main: 'الرئيسية',
+        appointment: 'الموعد',
+        appointments: 'المواعيد',
         task: 'العقد',
         tasks: 'العقود',
         department: 'القسم',
@@ -274,6 +281,7 @@ export const templates = [
         servicesress: 'موارد الخدمات',
       },
       en: {
+        main: 'Main',
         appointment: 'Appointment',
         appointments: 'Appointments',
         task: 'Contract',
@@ -346,6 +354,7 @@ export const templates = [
     },
     words: {
       ar: {
+        main: 'الرئيسية',
         appointment: 'الموعد',
         appointments: 'المواعيد',
         task: 'المهمة',
@@ -373,6 +382,7 @@ export const templates = [
         servicesress: 'موارد الخدمات',
       },
       en: {
+        main: 'Main',
         appointment: 'Appointment',
         appointments: 'Appointments',
         task: 'Task',
@@ -422,6 +432,7 @@ export const templates = [
     },
     words: {
       ar: {
+        main: 'الرئيسية',
         appointment: 'النشاط',
         appointments: 'الأنشطة',
         task: 'المرحلة',
@@ -448,6 +459,7 @@ export const templates = [
         servicesress: 'موارد الخدمات',
       },
       en: {
+        main: 'Main',
         appointment: 'Activity',
         appointments: 'Activities',
         task: 'Phase',
@@ -496,8 +508,9 @@ export const templates = [
     },
     words: {
       ar: {
-        appointment: 'موعد',
-        appointments: 'مواعيد',
+        main: 'الرئيسية',
+        appointment: 'الموعد',
+        appointments: 'المواعيد',
         task: 'العقد',
         tasks: 'العقود',
         department: 'القسم',
@@ -523,6 +536,7 @@ export const templates = [
         servicesress: 'موارد الخدمات',
       },
       en: {
+        main: 'Main',
         appointment: 'Appointment',
         appointments: 'Appointments',
         task: 'Contract',
@@ -572,6 +586,7 @@ export const templates = [
     },
     words: {
       ar: {
+        main: 'الرئيسية',
         appointment: 'الموعد',
         appointments: 'المواعيد',
         task: 'العقد',
@@ -599,6 +614,7 @@ export const templates = [
         servicesress: 'موارد الخدمات',
       },
       en: {
+        main: 'Main',
         appointment: 'Appointment',
         appointments: 'Appointments',
         task: 'Contract',

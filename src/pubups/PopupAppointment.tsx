@@ -601,29 +601,26 @@ const PopupAppointment = ({
           },
     };
     try {
+      const rvariables = {
+        ...variables,
+        ...variables.customer,
+        ...variables.department,
+        ...variables.employee,
+        ...variables.resourse,
+      };
       if (!isNew) {
         editAction({
           variables,
-          // optimisticResponse: {
-          //   __typename: 'updateEvent',
-          //   updateEvent: {
-          //     __typename: 'Operation',
-          //     id: row.id,
-          //     ...variables,
-          //   },
-          // },
+          optimisticResponse: {
+            __typename: 'updateEvent',
+            updateEvent: {
+              __typename: 'Operation',
+              ...rvariables,
+            },
+          },
         });
       } else {
-        addAction({
-          variables,
-          // optimisticResponse: {
-          //   __typename: 'createEvent',
-          //   createEvent: {
-          //     __typename: 'Operation',
-          //     ...variables,
-          //   },
-          // },
-        });
+        addAction({ variables });
       }
       setSaving(false);
       onCloseForm();

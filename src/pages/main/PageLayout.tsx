@@ -11,7 +11,14 @@ import React from 'react';
 import RefreshOutlinedIcon from '@material-ui/icons/RefreshOutlined';
 
 export default function PageLayout(props: any) {
-  const { children, menuitem, isRTL, refresh, theme } = props;
+  const {
+    children,
+    menuitem,
+    isRTL,
+    refresh,
+    theme,
+    bgcolor = fade(theme.palette.primary.light, 0.1),
+  } = props;
 
   return (
     <Paper square>
@@ -25,7 +32,7 @@ export default function PageLayout(props: any) {
             flex: 1,
             alignItems: 'center',
             justifyContent: 'space-between',
-            backgroundColor: fade(theme.palette.primary.light, 0.1),
+            backgroundColor: bgcolor,
           }}
         >
           <Typography
@@ -59,7 +66,7 @@ export default function PageLayout(props: any) {
             height: 1,
             display: 'flex',
             flex: 1,
-            backgroundColor: fade(theme.palette.secondary.main, 0.5),
+            backgroundColor: bgcolor,
           }}
         ></div>
       </Hidden>

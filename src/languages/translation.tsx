@@ -153,6 +153,7 @@ export const translation = (lang: LanguageType) => {
     theaddress: lang.words.theaddress,
     unit: lang.words.unit,
     info: lang.words.info,
+    main: lang.words.main,
     expenses: lang.words.expenses,
     hresource: lang.words.hresource,
     oresource: lang.words.oresource,

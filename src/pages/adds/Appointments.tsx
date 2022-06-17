@@ -445,10 +445,11 @@ export default function Appointments({
         <Paper
           elevation={5}
           style={{
-            margin: 50,
-            marginTop: 100,
+            margin: 40,
+            marginTop: 80,
             overflow: 'auto',
-            width: width - 380,
+            width: width - 330,
+            // height: height - 200,
             borderRadius: 10,
           }}
         >

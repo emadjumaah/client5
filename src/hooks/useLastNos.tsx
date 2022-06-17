@@ -9,7 +9,7 @@ import { lastNoTypes } from '../languages/langTypes';
 
 export default () => {
   const [freshlastNos, invNopData] = useLazyQuery(getLastNos, {
-    fetchPolicy: 'network-only',
+    fetchPolicy: 'cache-and-network',
   });
 
   useEffect(() => {

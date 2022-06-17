@@ -7,14 +7,22 @@ import {
   DataTypeProvider,
   SearchState,
   IntegratedFiltering,
+  PagingState,
+  IntegratedPaging,
 } from '@devexpress/dx-react-grid';
 import {
   Grid,
   TableHeaderRow,
   TableEditColumn,
-  VirtualTable,
   Toolbar,
   SearchPanel,
+  DragDropProvider,
+  Table,
+  TableColumnReordering,
+  TableColumnResizing,
+  TableColumnVisibility,
+  ColumnChooser,
+  PagingPanel,
 } from '@devexpress/dx-react-grid-material-ui';
 import { Command, Loading, PopupEditing } from '../../Shared';
 import { useExpenseItems } from '../../hooks';
@@ -23,22 +31,37 @@ import { PopupExpenseItem } from '../../pubups';
 import { currencyFormatter } from '../../Shared/colorFormat';
 import { AlertLocal, SearchTable } from '../../components';
 import { errorAlert, errorDeleteAlert } from '../../Shared/helpers';
-import { Box, Typography } from '@material-ui/core';
+import { Box, Paper, Typography } from '@material-ui/core';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
 import { TableComponent } from '../../Shared/TableComponent';
 import ImportBtn from '../../common/ImportBtn';
 import PopupItemsImport from '../../pubups/PopupItemsImport';
+import { getColumns } from '../../common/columns';
 
 export default function ExpenseItems({ isRTL, words, theme }: any) {
   const [openImport, setOpenImport] = useState(false);
   const [loading, setLoading] = useState(false);
   const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
+  const [pageSizes] = useState([5, 10, 15, 20, 50, 0]);
+
+  const col = getColumns({ isRTL, words });
 
   const [columns] = useState([
-    { name: isRTL ? 'nameAr' : 'name', title: words.name },
+    col.name,
     { name: 'price', title: words.price },
-    { name: 'desc', title: words.description },
     { name: 'unit', title: words.unit },
+    { name: 'desc', title: words.description },
+  ]);
+
+  const [tableColumnExtensions]: any = useState([
+    { columnName: col.name.name, width: 250 },
+    { columnName: 'price', width: 150 },
+    { columnName: 'unit', width: 150 },
+    { columnName: 'desc', width: 250 },
+  ]);
+
+  const [tableColumnVisibilityColumnExtensions] = useState([
+    { columnName: col.name.name, togglingEnabled: false },
   ]);
 
   const {
@@ -48,7 +71,7 @@ export default function ExpenseItems({ isRTL, words, theme }: any) {
     editExpenseItem,
     removeExpenseItem,
   } = useExpenseItems();
-  const { height } = useWindowDimensions();
+  const { height, width } = useWindowDimensions();
   const commitChanges = async ({ deleted }) => {
     if (deleted) {
       const _id = deleted[0];
@@ -82,58 +105,84 @@ export default function ExpenseItems({ isRTL, words, theme }: any) {
         isRTL={isRTL}
         theme={theme}
       ></ImportBtn>
-      <Grid rows={expenseItems} columns={columns} getRowId={getRowId}>
-        <SortingState />
-        <EditingState onCommitChanges={commitChanges} />
-        <SearchState />
+      <Paper
+        elevation={5}
+        style={{
+          marginTop: 40,
+          marginLeft: 40,
+          marginRight: 40,
+          marginBottom: 30,
+          overflow: 'auto',
+          width: width - 320,
+          borderRadius: 10,
+        }}
+      >
+        <Grid rows={expenseItems} columns={columns} getRowId={getRowId}>
+          <SortingState />
+          <EditingState onCommitChanges={commitChanges} />
+          <SearchState />
+          <PagingState defaultCurrentPage={0} defaultPageSize={15} />
+          <IntegratedSorting />
+          <IntegratedFiltering />
+          <IntegratedPaging />
+          <DragDropProvider />
+          <Table
+            messages={{
+              noData: isRTL ? 'لا يوجد بيانات' : 'no data',
+            }}
+            tableComponent={TableComponent}
+            rowComponent={(props: any) => (
+              <Table.Row {...props} style={{ height: 45 }}></Table.Row>
+            )}
+            columnExtensions={tableColumnExtensions}
+          />
+          <TableColumnReordering
+            defaultOrder={['photo', 'nameAr', 'price', 'unit', 'desc']}
+          />
+          <TableColumnResizing defaultColumnWidths={tableColumnExtensions} />
+          <TableHeaderRow
+            showSortingControls
+            titleComponent={({ children }) => {
+              return (
+                <Typography style={{ fontSize: 14, fontWeight: 'bold' }}>
+                  {children}
+                </Typography>
+              );
+            }}
+          />
+          <TableColumnVisibility
+            columnExtensions={tableColumnVisibilityColumnExtensions}
+            defaultHiddenColumnNames={[]}
+          />
+          <DataTypeProvider
+            for={['price']}
+            formatterComponent={currencyFormatter}
+          ></DataTypeProvider>
 
-        <IntegratedSorting />
-        <IntegratedFiltering />
+          <TableEditColumn
+            showEditCommand
+            showDeleteCommand
+            showAddCommand
+            commandComponent={Command}
+          ></TableEditColumn>
+          <Toolbar />
+          <ColumnChooser />
+          <PagingPanel pageSizes={pageSizes} />
 
-        <VirtualTable
-          height={height - 100}
-          messages={{
-            noData: isRTL ? 'لا يوجد بيانات' : 'no data',
-          }}
-          estimatedRowHeight={40}
-          tableComponent={TableComponent}
-        />
-        <TableHeaderRow
-          showSortingControls
-          titleComponent={({ children }) => {
-            return (
-              <Typography style={{ fontSize: 14, fontWeight: 'bold' }}>
-                {children}
-              </Typography>
-            );
-          }}
-        />
-
-        <DataTypeProvider
-          for={['price']}
-          formatterComponent={currencyFormatter}
-        ></DataTypeProvider>
-
-        <TableEditColumn
-          showEditCommand
-          showDeleteCommand
-          showAddCommand
-          commandComponent={Command}
-        ></TableEditColumn>
-        <Toolbar />
-        <SearchPanel
-          inputComponent={(props: any) => {
-            return <SearchTable isRTL={isRTL} {...props}></SearchTable>;
-          }}
-        />
-        <PopupEditing
-          theme={theme}
-          addAction={addExpenseItem}
-          editAction={editExpenseItem}
-        >
-          <PopupExpenseItem></PopupExpenseItem>
-        </PopupEditing>
-      </Grid>
+          <SearchPanel
+            inputComponent={(props: any) => {
+              return <SearchTable isRTL={isRTL} {...props}></SearchTable>;
+            }}
+          />
+          <PopupEditing
+            theme={theme}
+            addAction={addExpenseItem}
+            editAction={editExpenseItem}
+          >
+            <PopupExpenseItem></PopupExpenseItem>
+          </PopupEditing>
+        </Grid>
+      </Paper>
       {alrt.show && (
         <AlertLocal
           isRTL={isRTL}

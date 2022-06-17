@@ -8,14 +8,22 @@ import {
   DataTypeProvider,
   SearchState,
   IntegratedFiltering,
+  PagingState,
+  IntegratedPaging,
 } from '@devexpress/dx-react-grid';
 import {
   Grid,
   TableHeaderRow,
   TableEditColumn,
   Toolbar,
-  VirtualTable,
   SearchPanel,
+  DragDropProvider,
+  Table,
+  TableColumnReordering,
+  TableColumnResizing,
+  TableColumnVisibility,
+  ColumnChooser,
+  PagingPanel,
 } from '@devexpress/dx-react-grid-material-ui';
 import { Command, Loading, PopupEditing } from '../../Shared';
 import { getRowId, updateDocNumbers } from '../../common';
@@ -51,7 +59,7 @@ import useWindowDimensions from '../../hooks/useWindowDimensions';
 import useResoursesUp from '../../hooks/useResoursesUp';
 import useTasks from '../../hooks/useTasks';
 import getTasks from '../../graphql/query/getTasks';
-import { Box, Typography } from '@material-ui/core';
+import { Box, Paper, Typography } from '@material-ui/core';
 import { TableComponent } from '../../Shared/ItemsTable';
 
 export default function PurchaseInvoices({
@@ -64,6 +72,7 @@ export default function PurchaseInvoices({
   const col = getColumns({ isRTL, words });
 
   const { tempoptions } = useTemplate();
+  const [pageSizes] = useState([5, 10, 20, 50, 0]);
 
   const [columns] = useState(
     tempoptions?.noTsk
@@ -88,13 +97,29 @@ export default function PurchaseInvoices({
         ]
   );
 
+  const [tableColumnExtensions]: any = useState([
+    { columnName: 'time', width: 100 },
+    { columnName: 'docNo', width: 120 },
+    { columnName: col.supplier.name, width: 250 },
+    { columnName: col.taskId.name, width: 250 },
+    { columnName: 'supplierPhone', width: 150 },
+    { columnName: 'total', width: 120 },
+    { columnName: 'discount', width: 120 },
+    { columnName: 'amount', width: 120 },
+  ]);
+
+  const [tableColumnVisibilityColumnExtensions] = useState([
+    { columnName: 'time', togglingEnabled: false },
+    { columnName: 'docNo', togglingEnabled: false },
+  ]);
+
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(false);
   const [start, setStart] = useState<any>(null);
   const [end, setEnd] = useState<any>(null);
   const { tasks } = useTasks();
 
-  const { height } = useWindowDimensions();
+  const { height, width } = useWindowDimensions();
 
   const { products } = useProducts();
   const { departments } = useDepartmentsUp();
@@ -102,7 +127,7 @@ export default function PurchaseInvoices({
   const { resourses } = useResoursesUp();
 
   const {
-    state: { currentDate, currentViewName, endDate, sort },
+    state: { currentDate, currentViewName, endDate },
     dispatch,
   } = useContext(PurchaseContext);
 
@@ -201,10 +226,6 @@ export default function PurchaseInvoices({
     opData?.refetch();
   };
 
-  const setSortDispatch = (value: any) => {
-    dispatch({ type: 'setSort', payload: value });
-  };
-
   return (
     <PageLayout
       menuitem={menuitem}
@@ -218,8 +239,6 @@ export default function PurchaseInvoices({
           height: height - 50,
           overflow: 'auto',
           backgroundColor: '#fff',
-          marginLeft: 5,
-          marginRight: 5,
         }}
       >
         <Box
@@ -246,73 +265,109 @@ export default function PurchaseInvoices({
             theme={theme}
           ></DateNavigatorReports>
         </Box>
+        <Paper
+          elevation={5}
+          style={{
+            margin: 40,
+            marginTop: 80,
+            overflow: 'auto',
+            width: width - 330,
+            // height: height - 200,
+            borderRadius: 10,
+          }}
+        >
+          <Grid rows={rows} columns={columns} getRowId={getRowId}>
+            <SortingState />
+            <EditingState onCommitChanges={commitChanges} />
+            <SearchState />
+            <PagingState defaultCurrentPage={0} defaultPageSize={10} />
+            <IntegratedSorting />
+            <IntegratedFiltering />
+            <IntegratedPaging />
+            <DragDropProvider />
+            <Table
+              messages={{
+                noData: isRTL ? 'لا يوجد بيانات' : 'no data',
+              }}
+              tableComponent={TableComponent}
+              rowComponent={(props: any) => (
+                <Table.Row {...props} style={{ height: 60 }}></Table.Row>
+              )}
+              columnExtensions={tableColumnExtensions}
+            />
 
-        <Grid rows={rows} columns={columns} getRowId={getRowId}>
-          <SortingState
-            defaultSorting={sort}
-            onSortingChange={(srt: any) => setSortDispatch(srt)}
-          />
-          <EditingState onCommitChanges={commitChanges} />
-          <SearchState />
-          <IntegratedSorting />
-          <IntegratedFiltering />
-          <VirtualTable
-            height={window.innerHeight - 133}
-            messages={{
-              noData: isRTL ? 'لا يوجد بيانات' : 'no data',
-            }}
-            estimatedRowHeight={40}
-            tableComponent={TableComponent}
-          />
-          <TableHeaderRow
-            showSortingControls
-            titleComponent={({ children }) => {
-              return (
-                <Typography style={{ fontSize: 14, fontWeight: 'bold' }}>
-                  {children}
-                </Typography>
-              );
-            }}
-          />
-          <DataTypeProvider
-            for={['time']}
-            formatterComponent={timeFormatter}
-          ></DataTypeProvider>
-          <DataTypeProvider
-            for={['amount']}
-            formatterComponent={amountFormatter}
-          ></DataTypeProvider>
-          <DataTypeProvider
-            for={['total', 'discount']}
-            formatterComponent={currencyFormatter}
-          ></DataTypeProvider>
-          <TableEditColumn
-            showEditCommand
-            showDeleteCommand
-            showAddCommand
-            commandComponent={Command}
-          ></TableEditColumn>
-          <Toolbar />
-          <SearchPanel
-            inputComponent={(props: any) => {
-              return <SearchTable isRTL={isRTL} {...props}></SearchTable>;
-            }}
-          />
+            <TableColumnReordering
+              defaultOrder={[
+                'time',
+                'docNo',
+                col.eventNo.name,
+                col.taskId.name,
+                col.customer.name,
+                'customerPhone',
+                'total',
+                'discount',
+                'amount',
+              ]}
+            />
+            <TableColumnResizing defaultColumnWidths={tableColumnExtensions} />
 
-          <PopupEditing
-            addAction={addPurchaseInvoice}
-            editAction={editPurchaseInvoice}
-          >
-            <PopupPurchaseInvoice
-              resourses={resourses}
-              employees={employees}
-              departments={departments}
-              company={company}
-              servicesproducts={products}
-              tasks={tasks}
-            ></PopupPurchaseInvoice>
-          </PopupEditing>
-        </Grid>
+            <TableHeaderRow
+              showSortingControls
+              titleComponent={({ children }) => {
+                return (
+                  <Typography style={{ fontSize: 14, fontWeight: 'bold' }}>
+                    {children}
+                  </Typography>
+                );
+              }}
+            />
+            <TableColumnVisibility
+              columnExtensions={tableColumnVisibilityColumnExtensions}
+              defaultHiddenColumnNames={[]}
+            />
+            <DataTypeProvider
+              for={['time']}
+              formatterComponent={timeFormatter}
+            ></DataTypeProvider>
+            <DataTypeProvider
+              for={['amount']}
+              formatterComponent={amountFormatter}
+            ></DataTypeProvider>
+            <DataTypeProvider
+              for={['total', 'discount']}
+              formatterComponent={currencyFormatter}
+            ></DataTypeProvider>
+            <TableEditColumn
+              showEditCommand
+              showDeleteCommand
+              showAddCommand
+              commandComponent={Command}
+            ></TableEditColumn>
+            <Toolbar />
+            <ColumnChooser />
+            <PagingPanel pageSizes={pageSizes} />
+
+            <SearchPanel
+              inputComponent={(props: any) => {
+                return <SearchTable isRTL={isRTL} {...props}></SearchTable>;
+              }}
+            />
+
+            <PopupEditing
+              addAction={addPurchaseInvoice}
+              editAction={editPurchaseInvoice}
+            >
+              <PopupPurchaseInvoice
+                resourses={resourses}
+                employees={employees}
+                departments={departments}
+                company={company}
+                servicesproducts={products}
+                tasks={tasks}
+              ></PopupPurchaseInvoice>
+            </PopupEditing>
+          </Grid>
+        </Paper>
         {loading && <Loading isRTL={isRTL} />}
       </Box>
     </PageLayout>

@@ -87,19 +87,27 @@ export default function ManageResourses({
     col.name,
     col.appointments,
     col.sales,
+    col.purchase,
     col.expenses,
     col.kaids,
-    col.purchase,
+    { name: 'plate', title: words.plate },
+    col.carstatus,
+    col.department,
+    { name: 'info', title: words.info },
   ]);
 
   const [tableColumnExtensions]: any = useState([
-    { columnName: 'avatar', width: 60 },
+    { columnName: 'avatar', width: 30 },
     { columnName: col.name.name, width: 250 },
     { columnName: col.appointments.name, width: 250, align: 'center' },
-    { columnName: col.sales.name, width: 200 },
-    { columnName: col.expenses.name, width: 200 },
-    { columnName: col.kaids.name, width: 200 },
-    { columnName: col.purchase.name, width: 200 },
+    { columnName: col.sales.name, width: 240 },
+    { columnName: col.purchase.name, width: 240 },
+    { columnName: col.expenses.name, width: 180 },
+    { columnName: col.kaids.name, width: 180 },
+    { columnName: 'plate', width: 100 },
+    { columnName: col.carstatus.name, width: 100 },
+    { columnName: col.department.name, width: 150 },
+    { columnName: 'info', width: 250 },
   ]);
 
   const [columnsViewer] = useState([
@@ -137,6 +145,7 @@ export default function ManageResourses({
       }
     }
   };
+  const bgcolor = '#EFEBE988';
 
   return (
     <PageLayout
@@ -145,21 +154,24 @@ export default function ManageResourses({
       words={words}
       theme={theme}
       refresh={refreshresourse}
+      bgcolor={bgcolor}
     >
       <Box
         style={{
           height: height - 50,
           overflow: 'auto',
-          backgroundColor: '#fff',
+          backgroundColor: bgcolor,
         }}
       >
         <Paper
           elevation={5}
           style={{
-            margin: 70,
-            marginTop: 70,
+            marginTop: 10,
+            marginLeft: 40,
+            marginRight: 40,
+            marginBottom: 20,
             overflow: 'auto',
-            width: width - 380,
+            width: width - 320,
             borderRadius: 10,
           }}
         >
@@ -171,7 +183,7 @@ export default function ManageResourses({
             <SortingState />
             <EditingState onCommitChanges={commitChanges} />
             <SearchState />
-            <PagingState defaultCurrentPage={0} defaultPageSize={5} />
+            <PagingState defaultCurrentPage={0} defaultPageSize={6} />
 
             <IntegratedSorting />
             <IntegratedFiltering />
@@ -194,9 +206,13 @@ export default function ManageResourses({
                 col.name.name,
                 col.appointments.name,
                 col.sales.name,
+                col.purchase.name,
                 col.expenses.name,
                 col.kaids.name,
-                col.purchase.name,
+                'plate',
+                col.carstatus.name,
+                col.department.name,
+                'info',
               ]}
             />
             <TableColumnResizing defaultColumnWidths={tableColumnExtensions} />
@@ -211,10 +227,24 @@ export default function ManageResourses({
                 );
               }}
             />
-            <TableColumnVisibility defaultHiddenColumnNames={[]} />
+            <TableColumnVisibility
+              defaultHiddenColumnNames={[
+                'plate',
+                col.carstatus.name,
+                col.department.name,
+                'info',
+              ]}
+            />
             <DataTypeProvider
               for={['avatar']}
-              formatterComponent={avataManageFormatter}
+              formatterComponent={(props: any) =>
+                avataManageFormatter({
+                  ...props,
+                  setItem,
+                  setOpenItem,
+                  isRTL,
+                })
+              }
             ></DataTypeProvider>
             {roles.isEditor() && (
               <DataTypeProvider

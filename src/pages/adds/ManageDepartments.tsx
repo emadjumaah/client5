@@ -59,7 +59,7 @@ export default function ManageDepartments({
   menuitem,
   company,
 }: any) {
-  const [pageSizes] = useState([5, 10, 20, 50, 0]);
+  const [pageSizes] = useState([5, 6, 10, 20, 50, 0]);
 
   const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
   const [item, setItem] = useState(null);
@@ -89,13 +89,13 @@ export default function ManageDepartments({
   ]);
 
   const [tableColumnExtensions]: any = useState([
-    { columnName: 'avatar', width: 60 },
+    { columnName: 'avatar', width: 30 },
     { columnName: col.name.name, width: 250 },
     { columnName: col.appointments.name, width: 250, align: 'center' },
-    { columnName: col.sales.name, width: 200 },
+    { columnName: col.sales.name, width: 240 },
+    { columnName: col.purchase.name, width: 240 },
     { columnName: col.expenses.name, width: 200 },
     { columnName: col.kaids.name, width: 200 },
-    { columnName: col.purchase.name, width: 200 },
   ]);
 
   const [columnsViewer] = useState([
@@ -135,6 +135,10 @@ export default function ManageDepartments({
       }
     }
   };
+
+  // const bgcolor = '#EFFAF1aa';
+  const bgcolor = '#EFFAF100';
+
   return (
     <PageLayout
       menuitem={menuitem}
@@ -142,21 +146,24 @@ export default function ManageDepartments({
       words={words}
       theme={theme}
       refresh={refreshdepartment}
+      bgcolor={bgcolor}
     >
       <Box
         style={{
           height: height - 50,
           overflow: 'auto',
-          backgroundColor: '#fff',
+          backgroundColor: bgcolor,
         }}
       >
         <Paper
           elevation={5}
           style={{
-            margin: 70,
-            marginTop: 70,
+            marginTop: 10,
+            marginLeft: 40,
+            marginRight: 40,
+            marginBottom: 20,
             overflow: 'auto',
-            width: width - 380,
+            width: width - 320,
             borderRadius: 10,
           }}
         >
@@ -168,7 +175,7 @@ export default function ManageDepartments({
             <SortingState />
             <EditingState onCommitChanges={commitChanges} />
             <SearchState />
-            <PagingState defaultCurrentPage={0} defaultPageSize={5} />
+            <PagingState defaultCurrentPage={0} defaultPageSize={6} />
 
             <IntegratedSorting />
             <IntegratedFiltering />
@@ -190,9 +197,9 @@ export default function ManageDepartments({
                 col.name.name,
                 col.appointments.name,
                 col.sales.name,
+                col.purchase.name,
                 col.expenses.name,
                 col.kaids.name,
-                col.purchase.name,
               ]}
             />
             <TableColumnResizing defaultColumnWidths={tableColumnExtensions} />
@@ -210,7 +217,14 @@ export default function ManageDepartments({
             <TableColumnVisibility defaultHiddenColumnNames={[]} />
             <DataTypeProvider
               for={['avatar']}
-              formatterComponent={avataManageFormatter}
+              formatterComponent={(props: any) =>
+                avataManageFormatter({
+                  ...props,
+                  setItem,
+                  setOpenItem,
+                  isRTL,
+                })
+              }
             ></DataTypeProvider>
             {roles.isEditor() && (
               <DataTypeProvider

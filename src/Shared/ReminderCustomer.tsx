@@ -90,6 +90,8 @@ export default function ReminderCustomer({
   name,
   value,
   isNew,
+  width,
+  height,
 }: any) {
   const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
 
@@ -337,191 +339,197 @@ export default function ReminderCustomer({
   };
 
   return (
-    <Paper
+    <Box
       style={{
-        maxHeight: 600,
-        overflow: 'auto',
+        height: height - 230,
+        width: width - 300,
         margin: 10,
-        minHeight: 600,
       }}
     >
-      <Box display="flex">
-        <DateNavigatorReports
-          setStart={setStart}
-          setEnd={setEnd}
-          currentDate={currentDate}
-          currentDateChange={currentDateChange}
-          currentViewName={currentViewName}
-          currentViewNameChange={currentViewNameChange}
-          endDate={endDate}
-          endDateChange={endDateChange}
-          views={[1, 7, 30, 365, 1000]}
-          isRTL={isRTL}
-          words={words}
-          theme={theme}
-        ></DateNavigatorReports>
-        <Box
-          style={{
-            padding: 0,
-            margin: 0,
-            paddingRight: 10,
-            marginLeft: 40,
-            marginRight: 40,
-            borderRadius: 5,
-            marginTop: 10,
-          }}
-        >
-          <Button
-            color="primary"
-            variant={type === 2 ? 'contained' : 'outlined'}
-            onClick={() => {
-              setType(2);
-            }}
-            style={{
-              marginLeft: 15,
-              marginRight: 15,
-              padding: 5,
-              minWidth: 150,
-            }}
-          >
-            {isRTL ? 'التذكيرات' : 'Reminders'}
-          </Button>
-          <Button
-            color="primary"
-            variant={type === 1 ? 'contained' : 'outlined'}
-            onClick={() => {
-              setType(1);
-            }}
-            style={{
-              marginLeft: 15,
-              marginRight: 15,
-              padding: 5,
-              minWidth: 150,
-            }}
-          >
-            {isRTL ? 'ادارة التذكيرات' : 'Manage Reminders'}
-          </Button>
-        </Box>
-      </Box>
-      {rows && type === 1 && (
-        <Grid rows={rows} columns={columns} getRowId={getRowId}>
-          <SortingState />
-          <EditingState onCommitChanges={commitChanges} />
-          <IntegratedSorting />
-
-          <VirtualTable
-            height={550}
-            messages={{
-              noData: isRTL ? 'لا يوجد بيانات' : 'no data',
-            }}
-            estimatedRowHeight={45}
-            tableComponent={TableComponent}
-          />
-
-          <DataTypeProvider
-            for={['amount']}
-            formatterComponent={currencyFormatter}
-          ></DataTypeProvider>
-          <DataTypeProvider
-            for={['time']}
-            formatterComponent={actionTimeFormatter}
-          ></DataTypeProvider>
-          <NumberTypeProvider for={['index']} />
-          <TableHeaderRow
-            showSortingControls
-            titleComponent={({ children }) => {
-              return (
-                <Typography style={{ fontSize: 14, fontWeight: 'bold' }}>
-                  {children}
-                </Typography>
-              );
-            }}
-          />
-
-          {!isNew && (
-            <TableEditColumn
-              showEditCommand
-              showDeleteCommand
-              showAddCommand
-              commandComponent={Command}
-            ></TableEditColumn>
-          )}
-
-          <PopupEditing
+      <Paper
+        style={{
+          height: height - 240,
+          width: width - 320,
+        }}
+      >
+        <Box display="flex">
+          <DateNavigatorReports
+            setStart={setStart}
+            setEnd={setEnd}
+            currentDate={currentDate}
+            currentDateChange={currentDateChange}
+            currentViewName={currentViewName}
+            currentViewNameChange={currentViewNameChange}
+            endDate={endDate}
+            endDateChange={endDateChange}
+            views={[1, 7, 30, 365, 1000]}
+            isRTL={isRTL}
+            words={words}
             theme={theme}
-            addAction={addReminder}
-            editAction={editReminder}
+          ></DateNavigatorReports>
+          <Box
+            style={{
+              padding: 0,
+              margin: 0,
+              paddingRight: 10,
+              marginLeft: 40,
+              marginRight: 40,
+              borderRadius: 5,
+              marginTop: 10,
+            }}
           >
-            <PopupReminder
-              value={value}
-              name={name}
-              servicesproducts={expenseItems}
-            ></PopupReminder>
-          </PopupEditing>
+            <Button
+              color="primary"
+              variant={type === 2 ? 'contained' : 'outlined'}
+              onClick={() => {
+                setType(2);
+              }}
+              style={{
+                marginLeft: 15,
+                marginRight: 15,
+                padding: 5,
+                minWidth: 150,
+              }}
+            >
+              {isRTL ? 'التذكيرات' : 'Reminders'}
+            </Button>
+            <Button
+              color="primary"
+              variant={type === 1 ? 'contained' : 'outlined'}
+              onClick={() => {
+                setType(1);
+              }}
+              style={{
+                marginLeft: 15,
+                marginRight: 15,
+                padding: 5,
+                minWidth: 150,
+              }}
+            >
+              {isRTL ? 'ادارة التذكيرات' : 'Manage Reminders'}
+            </Button>
+          </Box>
+        </Box>
+        {rows && type === 1 && (
+          <Grid rows={rows} columns={columns} getRowId={getRowId}>
+            <SortingState />
+            <EditingState onCommitChanges={commitChanges} />
+            <IntegratedSorting />
 
-          <Getter
-            name="tableColumns"
-            computed={({ tableColumns }) => {
-              const result = [
-                {
-                  key: 'editCommand',
-                  type: TableEditColumn.COLUMN_TYPE,
-                  width: isNew ? 20 : 100,
-                },
-                ...tableColumns.filter(
-                  (c: any) => c.type !== TableEditColumn.COLUMN_TYPE
-                ),
-              ];
-              return result;
-            }}
-          />
-        </Grid>
-      )}
-      {type === 2 && (
-        <Grid rows={arows} columns={acolumns} getRowId={getRowId}>
-          <SortingState />
+            <VirtualTable
+              height={680}
+              messages={{
+                noData: isRTL ? 'لا يوجد بيانات' : 'no data',
+              }}
+              estimatedRowHeight={45}
+              tableComponent={TableComponent}
+            />
 
-          <IntegratedSorting />
+            <DataTypeProvider
+              for={['amount']}
+              formatterComponent={currencyFormatter}
+            ></DataTypeProvider>
+            <DataTypeProvider
+              for={['time']}
+              formatterComponent={actionTimeFormatter}
+            ></DataTypeProvider>
+            <NumberTypeProvider for={['index']} />
+            <TableHeaderRow
+              showSortingControls
+              titleComponent={({ children }) => {
+                return (
+                  <Typography style={{ fontSize: 14, fontWeight: 'bold' }}>
+                    {children}
+                  </Typography>
+                );
+              }}
+            />
 
-          <VirtualTable
-            height={550}
-            messages={{
-              noData: isRTL ? 'لا يوجد بيانات' : 'no data',
-            }}
-            estimatedRowHeight={40}
-          />
+            {!isNew && (
+              <TableEditColumn
+                showEditCommand
+                showDeleteCommand
+                showAddCommand
+                commandComponent={Command}
+              ></TableEditColumn>
+            )}
 
-          <DataTypeProvider
-            for={['time']}
-            formatterComponent={actionTimeFormatter}
-          ></DataTypeProvider>
-          <DataTypeProvider
-            for={['sent']}
-            formatterComponent={(props: any) =>
-              sentFormatter({ ...props, editRAction })
-            }
-          ></DataTypeProvider>
+            <PopupEditing
+              theme={theme}
+              addAction={addReminder}
+              editAction={editReminder}
+            >
+              <PopupReminder
+                value={value}
+                name={name}
+                servicesproducts={expenseItems}
+              ></PopupReminder>
+            </PopupEditing>
 
-          <TableHeaderRow
-            showSortingControls
-            titleComponent={({ children }) => {
-              return (
-                <Typography style={{ fontSize: 14, fontWeight: 'bold' }}>
-                  {children}
-                </Typography>
-              );
-            }}
-          />
-        </Grid>
-      )}
-      {alrt.show && (
-        <AlertLocal
-          isRTL={isRTL}
-          type={alrt?.type}
-          msg={alrt?.msg}
-          top
-        ></AlertLocal>
-      )}
-    </Paper>
+            <Getter
+              name="tableColumns"
+              computed={({ tableColumns }) => {
+                const result = [
+                  {
+                    key: 'editCommand',
+                    type: TableEditColumn.COLUMN_TYPE,
+                    width: isNew ? 20 : 100,
+                  },
+                  ...tableColumns.filter(
+                    (c: any) => c.type !== TableEditColumn.COLUMN_TYPE
+                  ),
+                ];
+                return result;
+              }}
+            />
+          </Grid>
+        )}
+        {type === 2 && (
+          <Grid rows={arows} columns={acolumns} getRowId={getRowId}>
+            <SortingState />
+
+            <IntegratedSorting />
+
+            <VirtualTable
+              height={680}
+              messages={{
+                noData: isRTL ? 'لا يوجد بيانات' : 'no data',
+              }}
+              estimatedRowHeight={40}
+            />
+
+            <DataTypeProvider
+              for={['time']}
+              formatterComponent={actionTimeFormatter}
+            ></DataTypeProvider>
+            <DataTypeProvider
+              for={['sent']}
+              formatterComponent={(props: any) =>
+                sentFormatter({ ...props, editRAction })
+              }
+            ></DataTypeProvider>
+
+            <TableHeaderRow
+              showSortingControls
+              titleComponent={({ children }) => {
+                return (
+                  <Typography style={{ fontSize: 14, fontWeight: 'bold' }}>
+                    {children}
+                  </Typography>
+                );
+              }}
+            />
+          </Grid>
+        )}
+        {alrt.show && (
+          <AlertLocal
+            isRTL={isRTL}
+            type={alrt?.type}
+            msg={alrt?.msg}
+            top
+          ></AlertLocal>
+        )}
+      </Paper>
+    </Box>
   );
 }

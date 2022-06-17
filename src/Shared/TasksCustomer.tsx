@@ -64,6 +64,8 @@ export default function TasksCustomer({
   value,
   name,
   id,
+  width,
+  height,
 }) {
   const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
   const col = getColumns({ isRTL, words });
@@ -220,150 +222,156 @@ export default function TasksCustomer({
   };
 
   return (
-    <Paper
+    <Box
       style={{
-        maxHeight: 600,
-        overflow: 'auto',
+        height: height - 230,
+        width: width - 300,
         margin: 10,
-        minHeight: 600,
       }}
     >
-      <Box display="flex">
-        <DateNavigatorReports
-          setStart={setStart}
-          setEnd={setEnd}
-          currentDate={currentDate}
-          currentDateChange={currentDateChange}
-          currentViewName={currentViewName}
-          currentViewNameChange={currentViewNameChange}
-          endDate={endDate}
-          endDateChange={endDateChange}
-          views={[1, 7, 30, 365, 1000]}
-          isRTL={isRTL}
-          words={words}
-          theme={theme}
-        ></DateNavigatorReports>
-      </Box>
-      <Grid rows={rows} columns={columns} getRowId={getRowId}>
-        <SortingState />
-        <EditingState onCommitChanges={commitChanges} />
-        <IntegratedSorting />
-        <VirtualTable
-          height={550}
-          messages={{
-            noData: isRTL ? 'لا يوجد بيانات' : 'no data',
-          }}
-          estimatedRowHeight={40}
-          tableComponent={TableComponent}
-        />
-        <TableHeaderRow
-          showSortingControls
-          titleComponent={({ children }) => {
-            return (
-              <Typography style={{ fontSize: 14, fontWeight: 'bold' }}>
-                {children}
-              </Typography>
-            );
-          }}
-        />
-        <TableColumnVisibility
-          columnExtensions={tableColumnVisibilityColumnExtensions}
-          defaultHiddenColumnNames={[
-            col.department.name,
-            col.evQty.name,
-            col.toatlExpenses.name,
-            col.start.name,
-            col.end.name,
-          ]}
-        />
-        <DataTypeProvider
-          for={['title']}
-          formatterComponent={(props: any) =>
-            nameLinkFormat({ ...props, setItem, setOpenItem })
-          }
-        ></DataTypeProvider>
-        <DataTypeProvider
-          for={['start', 'end']}
-          formatterComponent={createdAtFormatter}
-        ></DataTypeProvider>
-        <DataTypeProvider
-          for={['due']}
-          formatterComponent={dueAmountFormatter}
-        ></DataTypeProvider>
-        <DataTypeProvider
-          for={['amount', 'toatlExpenses', 'totalpaid']}
-          formatterComponent={currencyFormatterEmpty}
-        ></DataTypeProvider>
-        <DataTypeProvider
-          for={['totalinvoiced']}
-          formatterComponent={invoiceReceiptFormatter}
-        ></DataTypeProvider>
-        <DataTypeProvider
-          for={['income']}
-          formatterComponent={incomeAmountFormatter}
-        ></DataTypeProvider>
-        <DataTypeProvider
-          for={['tasktype']}
-          formatterComponent={taskNameFormatter}
-        ></DataTypeProvider>
-        <DataTypeProvider
-          for={['progress']}
-          formatterComponent={progressFormatter}
-        ></DataTypeProvider>
+      <Paper
+        style={{
+          height: height - 240,
+          width: width - 320,
+        }}
+      >
+        <Box display="flex">
+          <DateNavigatorReports
+            setStart={setStart}
+            setEnd={setEnd}
+            currentDate={currentDate}
+            currentDateChange={currentDateChange}
+            currentViewName={currentViewName}
+            currentViewNameChange={currentViewNameChange}
+            endDate={endDate}
+            endDateChange={endDateChange}
+            views={[1, 7, 30, 365, 1000]}
+            isRTL={isRTL}
+            words={words}
+            theme={theme}
+          ></DateNavigatorReports>
+        </Box>
+        <Grid rows={rows} columns={columns} getRowId={getRowId}>
+          <SortingState />
+          <EditingState onCommitChanges={commitChanges} />
+          <IntegratedSorting />
+          <VirtualTable
+            height={680}
+            messages={{
+              noData: isRTL ? 'لا يوجد بيانات' : 'no data',
+            }}
+            estimatedRowHeight={40}
+            tableComponent={TableComponent}
+          />
+          <TableHeaderRow
+            showSortingControls
+            titleComponent={({ children }) => {
+              return (
+                <Typography style={{ fontSize: 14, fontWeight: 'bold' }}>
+                  {children}
+                </Typography>
+              );
+            }}
+          />
+          <TableColumnVisibility
+            columnExtensions={tableColumnVisibilityColumnExtensions}
+            defaultHiddenColumnNames={[
+              col.department.name,
+              col.evQty.name,
+              col.toatlExpenses.name,
+              col.start.name,
+              col.end.name,
+            ]}
+          />
+          <DataTypeProvider
+            for={['title']}
+            formatterComponent={(props: any) =>
+              nameLinkFormat({ ...props, setItem, setOpenItem })
+            }
+          ></DataTypeProvider>
+          <DataTypeProvider
+            for={['start', 'end']}
+            formatterComponent={createdAtFormatter}
+          ></DataTypeProvider>
+          <DataTypeProvider
+            for={['due']}
+            formatterComponent={dueAmountFormatter}
+          ></DataTypeProvider>
+          <DataTypeProvider
+            for={['amount', 'toatlExpenses', 'totalpaid']}
+            formatterComponent={currencyFormatterEmpty}
+          ></DataTypeProvider>
+          <DataTypeProvider
+            for={['totalinvoiced']}
+            formatterComponent={invoiceReceiptFormatter}
+          ></DataTypeProvider>
+          <DataTypeProvider
+            for={['income']}
+            formatterComponent={incomeAmountFormatter}
+          ></DataTypeProvider>
+          <DataTypeProvider
+            for={['tasktype']}
+            formatterComponent={taskNameFormatter}
+          ></DataTypeProvider>
+          <DataTypeProvider
+            for={['progress']}
+            formatterComponent={progressFormatter}
+          ></DataTypeProvider>
 
-        <TableEditColumn
-          showEditCommand
-          showDeleteCommand
-          showAddCommand
-          commandComponent={Command}
-        ></TableEditColumn>
-        <PopupEditing addAction={addTask} editAction={editTask}>
-          <PopupTask
-            value={value}
-            name={name}
-            employees={employees}
+          <TableEditColumn
+            showEditCommand
+            showDeleteCommand
+            showAddCommand
+            commandComponent={Command}
+          ></TableEditColumn>
+          <PopupEditing addAction={addTask} editAction={editTask}>
+            <PopupTask
+              value={value}
+              name={name}
+              employees={employees}
+              resourses={resourses}
+              departments={departments}
+              customers={customers}
+              addCustomer={addCustomer}
+              editCustomer={editCustomer}
+              company={company}
+              projects={projects}
+              theme={theme}
+              refresh={refresh}
+            ></PopupTask>
+          </PopupEditing>
+        </Grid>
+        {alrt.show && (
+          <AlertLocal
+            isRTL={isRTL}
+            type={alrt?.type}
+            msg={alrt?.msg}
+            top
+          ></AlertLocal>
+        )}
+        {item && (
+          <PopupTaskView
+            open={openItem}
+            onClose={onCloseItem}
+            item={item}
+            tasks={tasks}
+            isNew={false}
+            theme={theme}
             resourses={resourses}
+            employees={employees}
             departments={departments}
             customers={customers}
             addCustomer={addCustomer}
             editCustomer={editCustomer}
             company={company}
-            projects={projects}
-            theme={theme}
+            servicesproducts={servicesproducts}
+            products={products}
             refresh={refresh}
-          ></PopupTask>
-        </PopupEditing>
-      </Grid>
-      {alrt.show && (
-        <AlertLocal
-          isRTL={isRTL}
-          type={alrt?.type}
-          msg={alrt?.msg}
-          top
-        ></AlertLocal>
-      )}
-      {item && (
-        <PopupTaskView
-          open={openItem}
-          onClose={onCloseItem}
-          item={item}
-          tasks={tasks}
-          isNew={false}
-          theme={theme}
-          resourses={resourses}
-          employees={employees}
-          departments={departments}
-          customers={customers}
-          addCustomer={addCustomer}
-          editCustomer={editCustomer}
-          company={company}
-          servicesproducts={servicesproducts}
-          products={products}
-          refresh={refresh}
-          addAction={addTask}
-          editAction={editTask}
-        ></PopupTaskView>
-      )}
-    </Paper>
+            addAction={addTask}
+            editAction={editTask}
+          ></PopupTaskView>
+        )}
+      </Paper>
+    </Box>
   );
 }

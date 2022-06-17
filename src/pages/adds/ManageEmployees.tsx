@@ -60,7 +60,7 @@ export default function ManageEmployees({
   company,
 }: any) {
   const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
-  const [pageSizes] = useState([5, 10, 20, 50, 0]);
+  const [pageSizes] = useState([5, 6, 10, 20, 50, 0]);
   const [item, setItem] = useState(null);
   const [openItem, setOpenItem] = useState(false);
   const col = getColumns({ isRTL, words });
@@ -85,16 +85,24 @@ export default function ManageEmployees({
     col.expenses,
     col.kaids,
     col.purchase,
+    { name: 'phone', title: words.phoneNumber },
+    { name: 'email', title: words.email },
+    col.department,
+    { name: 'info', title: words.info },
   ]);
 
   const [tableColumnExtensions]: any = useState([
-    { columnName: 'avatar', width: 60 },
+    { columnName: 'avatar', width: 30 },
     { columnName: col.name.name, width: 250 },
     { columnName: col.appointments.name, width: 250, align: 'center' },
-    { columnName: col.sales.name, width: 200 },
+    { columnName: col.sales.name, width: 240 },
+    { columnName: col.purchase.name, width: 240 },
     { columnName: col.expenses.name, width: 200 },
     { columnName: col.kaids.name, width: 200 },
-    { columnName: col.purchase.name, width: 200 },
+    { columnName: 'phone', width: 100 },
+    { columnName: 'email', width: 200 },
+    { columnName: col.department.name, width: 150 },
+    { columnName: 'info', width: 200 },
   ]);
 
   const [columnsViewer] = useState([
@@ -133,7 +141,7 @@ export default function ManageEmployees({
       }
     }
   };
-
+  const bgcolor = '#E9F8FEaa';
   return (
     <PageLayout
       menuitem={menuitem}
@@ -141,21 +149,24 @@ export default function ManageEmployees({
       words={words}
       theme={theme}
       refresh={refreshemployee}
+      bgcolor={bgcolor}
     >
       <Box
         style={{
           height: height - 50,
           overflow: 'auto',
-          backgroundColor: '#fff',
+          backgroundColor: bgcolor,
         }}
       >
         <Paper
           elevation={5}
           style={{
-            margin: 70,
-            marginTop: 70,
+            marginTop: 10,
+            marginLeft: 40,
+            marginRight: 40,
+            marginBottom: 20,
             overflow: 'auto',
-            width: width - 380,
+            width: width - 320,
             borderRadius: 10,
           }}
         >
@@ -167,7 +178,7 @@ export default function ManageEmployees({
             <SortingState />
             <EditingState onCommitChanges={commitChanges} />
             <SearchState />
-            <PagingState defaultCurrentPage={0} defaultPageSize={5} />
+            <PagingState defaultCurrentPage={0} defaultPageSize={6} />
 
             <IntegratedSorting />
             <IntegratedFiltering />
@@ -190,9 +201,13 @@ export default function ManageEmployees({
                 col.name.name,
                 col.appointments.name,
                 col.sales.name,
+                col.purchase.name,
                 col.expenses.name,
                 col.kaids.name,
-                col.purchase.name,
+                'phone',
+                'email',
+                col.department.name,
+                'info',
               ]}
             />
             <TableColumnResizing defaultColumnWidths={tableColumnExtensions} />
@@ -207,10 +222,24 @@ export default function ManageEmployees({
                 );
               }}
             />
-            <TableColumnVisibility defaultHiddenColumnNames={[]} />
+            <TableColumnVisibility
+              defaultHiddenColumnNames={[
+                'phone',
+                'email',
+                col.department.name,
+                'info',
+              ]}
+            />
             <DataTypeProvider
               for={['avatar']}
-              formatterComponent={avataManageFormatter}
+              formatterComponent={(props: any) =>
+                avataManageFormatter({
+                  ...props,
+                  setItem,
+                  setOpenItem,
+                  isRTL,
+                })
+              }
             ></DataTypeProvider>
             {roles.isEditor() && (
               <DataTypeProvider

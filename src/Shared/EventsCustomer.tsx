@@ -89,6 +89,8 @@ export default function EventsCustomer({
   isNew,
   company,
   value,
+  width,
+  height,
 }: any) {
   const col = getColumns({ isRTL, words });
 
@@ -173,9 +175,7 @@ export default function EventsCustomer({
     ],
   };
 
-  const [getEvents, eventsData]: any = useLazyQuery(getObjectEvents, {
-    fetchPolicy: 'cache-and-network',
-  });
+  const [getEvents, eventsData]: any = useLazyQuery(getObjectEvents);
 
   useEffect(() => {
     const variables = {
@@ -207,133 +207,139 @@ export default function EventsCustomer({
   };
 
   return (
-    <Paper
+    <Box
       style={{
-        maxHeight: 600,
-        overflow: 'auto',
+        height: height - 230,
+        width: width - 300,
         margin: 10,
-        minHeight: 600,
       }}
     >
-      <Box display="flex">
-        <DateNavigatorReports
-          setStart={setStart}
-          setEnd={setEnd}
-          currentDate={currentDate}
-          currentDateChange={currentDateChange}
-          currentViewName={currentViewName}
-          currentViewNameChange={currentViewNameChange}
-          endDate={endDate}
-          endDateChange={endDateChange}
-          views={[1, 7, 30, 365, 1000]}
-          isRTL={isRTL}
-          words={words}
-          theme={theme}
-        ></DateNavigatorReports>
-      </Box>
-      {rows && (
-        <Grid rows={rows} columns={columns} getRowId={getRowId}>
-          <SortingState />
-          <EditingState onCommitChanges={commitChanges} />
-          <IntegratedSorting />
+      <Paper
+        style={{
+          height: height - 240,
+          width: width - 320,
+        }}
+      >
+        <Box display="flex">
+          <DateNavigatorReports
+            setStart={setStart}
+            setEnd={setEnd}
+            currentDate={currentDate}
+            currentDateChange={currentDateChange}
+            currentViewName={currentViewName}
+            currentViewNameChange={currentViewNameChange}
+            endDate={endDate}
+            endDateChange={endDateChange}
+            views={[1, 7, 30, 365, 1000]}
+            isRTL={isRTL}
+            words={words}
+            theme={theme}
+          ></DateNavigatorReports>
+        </Box>
+        {rows && (
+          <Grid rows={rows} columns={columns} getRowId={getRowId}>
+            <SortingState />
+            <EditingState onCommitChanges={commitChanges} />
+            <IntegratedSorting />
 
-          <VirtualTable
-            height={550}
-            messages={{
-              noData: isRTL ? 'لا يوجد بيانات' : 'no data',
-            }}
-            estimatedRowHeight={45}
-            tableComponent={TableComponent}
-          />
-          <DataTypeProvider
-            for={['startDate']}
-            formatterComponent={createdAtFormatter}
-          ></DataTypeProvider>
-          <DataTypeProvider
-            for={['fromto']}
-            formatterComponent={fromToFormatter}
-          ></DataTypeProvider>
-          <DataTypeProvider
-            for={['location']}
-            formatterComponent={locationFormatter}
-          ></DataTypeProvider>
-          <DataTypeProvider
-            for={['status']}
-            formatterComponent={eventStatusFormatter}
-          ></DataTypeProvider>
-          <DataTypeProvider
-            for={['amount']}
-            formatterComponent={currencyFormatter}
-          ></DataTypeProvider>
-          <DataTypeProvider
-            for={['done']}
-            formatterComponent={(props: any) =>
-              doneFormatter({ ...props, editEvent })
-            }
-          ></DataTypeProvider>
-          <DataTypeProvider
-            for={['taskId']}
-            formatterComponent={(props: any) =>
-              taskIdFormat({
-                ...props,
-                tasks,
-              })
-            }
-          ></DataTypeProvider>
-          <NumberTypeProvider for={['index']} />
-          <TableHeaderRow
-            showSortingControls
-            titleComponent={({ children }) => {
-              return (
-                <Typography style={{ fontSize: 14, fontWeight: 'bold' }}>
-                  {children}
-                </Typography>
-              );
-            }}
-          />
+            <VirtualTable
+              height={680}
+              messages={{
+                noData: isRTL ? 'لا يوجد بيانات' : 'no data',
+              }}
+              estimatedRowHeight={45}
+              tableComponent={TableComponent}
+            />
+            <DataTypeProvider
+              for={['startDate']}
+              formatterComponent={createdAtFormatter}
+            ></DataTypeProvider>
+            <DataTypeProvider
+              for={['fromto']}
+              formatterComponent={fromToFormatter}
+            ></DataTypeProvider>
+            <DataTypeProvider
+              for={['location']}
+              formatterComponent={locationFormatter}
+            ></DataTypeProvider>
+            <DataTypeProvider
+              for={['status']}
+              formatterComponent={eventStatusFormatter}
+            ></DataTypeProvider>
+            <DataTypeProvider
+              for={['amount']}
+              formatterComponent={currencyFormatter}
+            ></DataTypeProvider>
+            <DataTypeProvider
+              for={['done']}
+              formatterComponent={(props: any) =>
+                doneFormatter({ ...props, editEvent })
+              }
+            ></DataTypeProvider>
+            <DataTypeProvider
+              for={['taskId']}
+              formatterComponent={(props: any) =>
+                taskIdFormat({
+                  ...props,
+                  tasks,
+                })
+              }
+            ></DataTypeProvider>
+            <NumberTypeProvider for={['index']} />
+            <TableHeaderRow
+              showSortingControls
+              titleComponent={({ children }) => {
+                return (
+                  <Typography style={{ fontSize: 14, fontWeight: 'bold' }}>
+                    {children}
+                  </Typography>
+                );
+              }}
+            />
 
-          {!isNew && (
-            <TableEditColumn
-              showEditCommand
-              showDeleteCommand
-              showAddCommand
-              commandComponent={Command}
-            ></TableEditColumn>
-          )}
+            {!isNew && (
+              <TableEditColumn
+                showEditCommand
+                showDeleteCommand
+                showAddCommand
+                commandComponent={Command}
+              ></TableEditColumn>
+            )}
 
-          <PopupEditing addAction={addEvent} editAction={editEvent}>
-            <PopupAppointmentCustomer
-              resourses={resourses}
-              employees={employees}
-              departments={departments}
-              customers={customers}
-              servicesproducts={servicesproducts}
-              theme={theme}
-              company={company}
-              tasks={tasks}
-              name={name}
-              value={value}
-            ></PopupAppointmentCustomer>
-          </PopupEditing>
+            <PopupEditing addAction={addEvent} editAction={editEvent}>
+              <PopupAppointmentCustomer
+                resourses={resourses}
+                employees={employees}
+                departments={departments}
+                customers={customers}
+                servicesproducts={servicesproducts}
+                theme={theme}
+                company={company}
+                tasks={tasks}
+                name={name}
+                value={value}
+              ></PopupAppointmentCustomer>
+            </PopupEditing>
 
-          <Getter
-            name="tableColumns"
-            computed={({ tableColumns }) => {
-              const result = [
-                {
-                  key: 'editCommand',
-                  type: TableEditColumn.COLUMN_TYPE,
-                  width: isNew ? 20 : 100,
-                },
-                ...tableColumns.filter(
-                  (c: any) => c.type !== TableEditColumn.COLUMN_TYPE
-                ),
-              ];
-              return result;
-            }}
-          />
-        </Grid>
-      )}
-    </Paper>
+            <Getter
+              name="tableColumns"
+              computed={({ tableColumns }) => {
+                const result = [
+                  {
+                    key: 'editCommand',
+                    type: TableEditColumn.COLUMN_TYPE,
+                    width: isNew ? 20 : 100,
+                  },
+                  ...tableColumns.filter(
+                    (c: any) => c.type !== TableEditColumn.COLUMN_TYPE
+                  ),
+                ];
+                return result;
+              }}
+            />
+          </Grid>
+        )}
+      </Paper>
+    </Box>
   );
 }

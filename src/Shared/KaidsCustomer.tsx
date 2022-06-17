@@ -38,6 +38,8 @@ export default function KaidsCustomer({
   name,
   id,
   value,
+  width,
+  height,
 }) {
   const col = getColumns({ isRTL, words });
 
@@ -120,78 +122,84 @@ export default function KaidsCustomer({
   ];
 
   return (
-    <Paper
+    <Box
       style={{
-        maxHeight: 600,
-        overflow: 'auto',
+        height: height - 230,
+        width: width - 300,
         margin: 10,
-        minHeight: 600,
       }}
     >
-      <Box display="flex">
-        <DateNavigatorReports
-          setStart={setStart}
-          setEnd={setEnd}
-          currentDate={currentDate}
-          currentDateChange={currentDateChange}
-          currentViewName={currentViewName}
-          currentViewNameChange={currentViewNameChange}
-          endDate={endDate}
-          endDateChange={endDateChange}
-          views={[1, 7, 30, 365, 1000]}
-          isRTL={isRTL}
-          words={words}
-          theme={theme}
-        ></DateNavigatorReports>
-      </Box>
-      <Grid rows={rows} columns={columns} getRowId={getRowId}>
-        <SortingState />
-        <SummaryState totalItems={totalSummaryItems} />
-        <IntegratedSorting />
-        <IntegratedSummary />
-        <VirtualTable
-          height={550}
-          messages={{
-            noData: isRTL ? 'لا يوجد بيانات' : 'no data',
-          }}
-          estimatedRowHeight={40}
-        />
-        <TableHeaderRow
-          showSortingControls
-          titleComponent={({ children }) => {
-            return (
-              <Typography style={{ fontSize: 14, fontWeight: 'bold' }}>
-                {children}
-              </Typography>
-            );
-          }}
-        />
-        <DataTypeProvider
-          for={['opTime']}
-          formatterComponent={createdAtFormatter}
-        ></DataTypeProvider>
-        <DataTypeProvider
-          for={['credit', 'debit']}
-          formatterComponent={currencyFormatterEmpty}
-        ></DataTypeProvider>
-        <DataTypeProvider
-          for={['opType']}
-          formatterComponent={opTypeFormatter}
-        ></DataTypeProvider>
-        <DataTypeProvider
-          for={['taskId']}
-          formatterComponent={(props: any) =>
-            taskIdFormatter({ ...props, tasks })
-          }
-        ></DataTypeProvider>
-        <TableSummaryRow
-          messages={{
-            sum: isRTL ? 'المجموع' : 'Total',
-            count: isRTL ? 'العدد' : 'Count',
-          }}
-        ></TableSummaryRow>
-      </Grid>
-      {loading && <Loading isRTL={isRTL} />}
-    </Paper>
+      <Paper
+        style={{
+          height: height - 240,
+          width: width - 320,
+        }}
+      >
+        <Box display="flex">
+          <DateNavigatorReports
+            setStart={setStart}
+            setEnd={setEnd}
+            currentDate={currentDate}
+            currentDateChange={currentDateChange}
+            currentViewName={currentViewName}
+            currentViewNameChange={currentViewNameChange}
+            endDate={endDate}
+            endDateChange={endDateChange}
+            views={[1, 7, 30, 365, 1000]}
+            isRTL={isRTL}
+            words={words}
+            theme={theme}
+          ></DateNavigatorReports>
+        </Box>
+        <Grid rows={rows} columns={columns} getRowId={getRowId}>
+          <SortingState />
+          <SummaryState totalItems={totalSummaryItems} />
+          <IntegratedSorting />
+          <IntegratedSummary />
+          <VirtualTable
+            height={680}
+            messages={{
+              noData: isRTL ? 'لا يوجد بيانات' : 'no data',
+            }}
+            estimatedRowHeight={40}
+          />
+          <TableHeaderRow
+            showSortingControls
+            titleComponent={({ children }) => {
+              return (
+                <Typography style={{ fontSize: 14, fontWeight: 'bold' }}>
+                  {children}
+                </Typography>
+              );
+            }}
+          />
+          <DataTypeProvider
+            for={['opTime']}
+            formatterComponent={createdAtFormatter}
+          ></DataTypeProvider>
+          <DataTypeProvider
+            for={['credit', 'debit']}
+            formatterComponent={currencyFormatterEmpty}
+          ></DataTypeProvider>
+          <DataTypeProvider
+            for={['opType']}
+            formatterComponent={opTypeFormatter}
+          ></DataTypeProvider>
+          <DataTypeProvider
+            for={['taskId']}
+            formatterComponent={(props: any) =>
+              taskIdFormatter({ ...props, tasks })
+            }
+          ></DataTypeProvider>
+          <TableSummaryRow
+            messages={{
+              sum: isRTL ? 'المجموع' : 'Total',
+              count: isRTL ? 'العدد' : 'Count',
+            }}
+          ></TableSummaryRow>
+        </Grid>
+        {loading && <Loading isRTL={isRTL} />}
+      </Paper>
+    </Box>
   );
 }

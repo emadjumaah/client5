@@ -298,8 +298,10 @@ export default function BudgetReport({
                   }
                   label={
                     <Typography
-                      style={{ color: theme.palette.primary.main }}
-                      variant="subtitle2"
+                      style={{
+                        color: theme.palette.primary.main,
+                        fontWeight: 'bold',
+                      }}
                     >
                       {isRTL ? 'تفعيل التاريخ' : 'Activate Date'}
                     </Typography>
@@ -340,7 +342,9 @@ export default function BudgetReport({
               }}
               style={{ margin: 10, padding: 5, minWidth: 150 }}
             >
-              {isRTL ? 'ميزان المراجعة' : 'Trial Sheet'}
+              <Typography style={{ fontWeight: 'bold' }}>
+                {isRTL ? 'ميزان المراجعة' : 'Trial Sheet'}
+              </Typography>
             </Button>
             <Button
               color="primary"
@@ -351,7 +355,9 @@ export default function BudgetReport({
               }}
               style={{ margin: 10, padding: 5, minWidth: 150 }}
             >
-              {isRTL ? 'قائمة الدخل' : 'Income Statment'}
+              <Typography style={{ fontWeight: 'bold' }}>
+                {isRTL ? 'قائمة الدخل' : 'Income Statment'}
+              </Typography>
             </Button>
             <Button
               color="primary"
@@ -362,7 +368,9 @@ export default function BudgetReport({
               }}
               style={{ margin: 10, padding: 5, minWidth: 150 }}
             >
-              {isRTL ? 'الميزانية العمومية' : 'Balance Sheet'}
+              <Typography style={{ fontWeight: 'bold' }}>
+                {isRTL ? 'الميزانية العمومية' : 'Balance Sheet'}
+              </Typography>
             </Button>
           </Box>
           <Box

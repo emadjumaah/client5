@@ -155,7 +155,7 @@ export default function ExpensesTask({ isRTL, words, theme, taskId }) {
         <EditingState onCommitChanges={commitChanges} />
         <IntegratedSorting />
         <VirtualTable
-          height={550}
+          height={680}
           messages={{
             noData: isRTL ? 'لا يوجد بيانات' : 'no data',
           }}

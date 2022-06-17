@@ -49,6 +49,7 @@ import KaidsCustomer from '../Shared/KaidsCustomer';
 import { useTemplate } from '../hooks';
 import PopupCloseDate from './PopupCloseDate';
 import PercentChartTask from '../components/charts/PercentChartTask';
+import useWindowDimensions from '../hooks/useWindowDimensions';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -131,6 +132,7 @@ const PopupTaskView = ({
   const [openCloseDate, setOpenCloseDate] = useState<any>(false);
 
   const { tempwords } = useTemplate();
+  const { width, height } = useWindowDimensions();
 
   const daysData = getTaskTimeAmountData(row);
 
@@ -449,6 +451,8 @@ const PopupTaskView = ({
                       name="taskId"
                       value={row}
                       id={row?._id}
+                      width={width}
+                      height={height}
                     ></ProjectsCustomer>
                   </TabPanel>
                   <TabPanel value={value} index={1}>
@@ -462,6 +466,8 @@ const PopupTaskView = ({
                       name="taskId"
                       value={row}
                       id={row?._id}
+                      width={width}
+                      height={height}
                     ></TasksCustomer>
                   </TabPanel>
                   <TabPanel value={value} index={2}>
@@ -479,6 +485,8 @@ const PopupTaskView = ({
                       name="taskId"
                       value={row}
                       id={row?.id}
+                      width={width}
+                      height={height}
                     ></EventsCustomer>
                   </TabPanel>
                   <TabPanel value={value} index={3}>
@@ -495,6 +503,8 @@ const PopupTaskView = ({
                       name="taskId"
                       value={row}
                       id={row?.id}
+                      width={width}
+                      height={height}
                     ></InvoicesCustomer>
                   </TabPanel>
                   <TabPanel value={value} index={4}>
@@ -505,6 +515,8 @@ const PopupTaskView = ({
                       name="taskId"
                       value={row}
                       id={row?.id}
+                      width={width}
+                      height={height}
                     ></ReceiptCustomer>
                   </TabPanel>
                   <TabPanel value={value} index={5}>
@@ -515,6 +527,8 @@ const PopupTaskView = ({
                       name="taskId"
                       value={row}
                       id={row?.id}
+                      width={width}
+                      height={height}
                     ></ExpensesCustomer>
                   </TabPanel>
                   <TabPanel value={value} index={6}>
@@ -525,6 +539,8 @@ const PopupTaskView = ({
                       name="taskId"
                       value={row}
                       id={row?.id}
+                      width={width}
+                      height={height}
                     ></KaidsCustomer>
                   </TabPanel>
                   <Box

@@ -833,7 +833,7 @@ const Content = () => {
             }
           />
           <Route
-            path="/StockItems"
+            path="/stockitems"
             element={
               <PageLayout
                 menuitem={menuitem}

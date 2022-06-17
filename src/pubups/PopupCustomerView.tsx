@@ -5,7 +5,6 @@ import { GContextTypes } from '../types';
 import { GlobalContext } from '../contexts';
 import {
   Box,
-  colors,
   Grid,
   makeStyles,
   Tab,
@@ -13,17 +12,14 @@ import {
   Typography,
 } from '@material-ui/core';
 import PopupLayout from '../pages/main/PopupLayout';
-import { moneyFormat } from '../Shared/colorFormat';
 import EventsCustomer from '../Shared/EventsCustomer';
 import InvoicesCustomer from '../Shared/InvoicesCustomer';
 import ReceiptCustomer from '../Shared/ReceiptCustomer';
-// import ExpensesCustomer from '../Shared/ExpensesCustomer';
 import TasksCustomer from '../Shared/TasksCustomer';
 import { customerManamentTabs } from '../constants/rrule';
 import ProjectsCustomer from '../Shared/ProjectsCustomer';
-// import KaidsCustomer from '../Shared/KaidsCustomer';
-import { useTemplate } from '../hooks';
-// import ReminderCustomer from '../Shared/ReminderCustomer';
+import MainCustomer from '../Shared/MainCustomer';
+import useWindowDimensions from '../hooks/useWindowDimensions';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -87,23 +83,13 @@ const PopupCustomerView = ({
   customers,
 }: any) => {
   const classes = useStyles();
-  const { tempoptions } = useTemplate();
+  const { width, height } = useWindowDimensions();
 
-  const [value, setValue] = React.useState(tempoptions?.noRes ? 2 : 1);
+  const [value, setValue] = React.useState(0);
   const handleChange = (_, newValue) => {
     setValue(newValue);
   };
 
-  const amount = row?.amount ? row.amount : 0;
-  const totalinvoiced = row?.totalinvoiced ? row.totalinvoiced : 0;
-  const totalDiscount = row?.totalDiscount ? row.totalDiscount : 0;
-  const totalpaid = row?.totalpaid ? row.totalpaid : 0;
-  const toatlExpenses = row?.toatlExpenses ? row.toatlExpenses : 0;
-  const progress = row?.progress ? row.progress : 0;
-  const totalkaidsdebit = row?.totalkaidsdebit ? row.totalkaidsdebit : 0;
-  const totalKaidscredit = row?.totalKaidscredit ? row.totalKaidscredit : 0;
-  const totalkaids = totalkaidsdebit - totalKaidscredit;
-  const income = totalinvoiced - toatlExpenses - totalDiscount - totalkaids;
   const {
     translate: { words, isRTL },
   }: GContextTypes = useContext(GlobalContext);
@@ -121,318 +107,154 @@ const PopupCustomerView = ({
       theme={theme}
       alrt={{}}
       maxWidth={'xl'}
-      mb={10}
       mt={10}
+      mb={0}
     >
-      <Grid container spacing={0}>
-        <Grid item xs={11}>
-          <Box
-            style={{
-              backgroundColor: '#f5f5f5',
-            }}
-          >
-            <Box display="flex" style={{ margin: 10 }}></Box>
-            {row && (
-              <Box style={{ marginBottom: 20 }}>
-                <TabPanel value={value} index={0}>
-                  <ProjectsCustomer
-                    servicesproducts={servicesproducts}
-                    products={products}
-                    isRTL={isRTL}
-                    words={words}
-                    theme={theme}
-                    company={company}
-                    name="customerId"
-                    value={row}
-                    id={row?._id}
-                  ></ProjectsCustomer>
-                </TabPanel>
-                <TabPanel value={value} index={1}>
-                  <TasksCustomer
-                    servicesproducts={servicesproducts}
-                    products={products}
-                    isRTL={isRTL}
-                    words={words}
-                    theme={theme}
-                    company={company}
-                    name="customerId"
-                    value={row}
-                    id={row?._id}
-                  ></TasksCustomer>
-                </TabPanel>
-                <TabPanel value={value} index={2}>
-                  <EventsCustomer
-                    resourses={resourses}
-                    employees={employees}
-                    departments={departments}
-                    customers={customers}
-                    servicesproducts={servicesproducts}
-                    products={products}
-                    isRTL={isRTL}
-                    words={words}
-                    theme={theme}
-                    isNew={isNew}
-                    name="customerId"
-                    value={row}
-                    id={row?._id}
-                  ></EventsCustomer>
-                </TabPanel>
-                <TabPanel value={value} index={3}>
-                  <InvoicesCustomer
-                    isRTL={isRTL}
-                    words={words}
-                    resourses={resourses}
-                    employees={employees}
-                    departments={departments}
-                    company={company}
-                    theme={theme}
-                    servicesproducts={servicesproducts}
-                    products={products}
-                    name="customerId"
-                    value={row}
-                    id={row?._id}
-                  ></InvoicesCustomer>
-                </TabPanel>
-                <TabPanel value={value} index={4}>
-                  <ReceiptCustomer
-                    isRTL={isRTL}
-                    words={words}
-                    theme={theme}
-                    name="customerId"
-                    value={row}
-                    id={row?._id}
-                  ></ReceiptCustomer>
-                </TabPanel>
-                {/* <TabPanel value={value} index={5}>
-                  <ExpensesCustomer
-                    isRTL={isRTL}
-                    words={words}
-                    theme={theme}
-                    name="customerId"
-                    value={row}
-                    id={row?._id}
-                  ></ExpensesCustomer>
-                </TabPanel>
-                <TabPanel value={value} index={6}>
-                  <KaidsCustomer
-                    isRTL={isRTL}
-                    words={words}
-                    theme={theme}
-                    name="customerId"
-                    value={row}
-                    id={row?._id}
-                  ></KaidsCustomer>
-                </TabPanel> */}
-                {/* <TabPanel value={value} index={7}>
-                  <ReminderCustomer
-                    resourses={resourses}
-                    employees={employees}
-                    departments={departments}
-                    customers={customers}
-                    isRTL={isRTL}
-                    words={words}
-                    theme={theme}
-                    isNew={isNew}
-                    name="customerId"
-                    value={row}
-                    id={row?._id}
-                  ></ReminderCustomer>
-                </TabPanel> */}
-                <Box
-                  display="flex"
-                  style={{
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    marginLeft: 20,
-                    marginRight: 20,
-                  }}
-                >
-                  <Box>
-                    <Typography style={{ fontSize: 14 }}>
-                      {isRTL ? 'الاجمالي' : 'Total'}
-                    </Typography>
-                    <Typography style={{ fontWeight: 'bold', fontSize: 14 }}>
-                      {moneyFormat(amount)}
-                    </Typography>
-                  </Box>
-                  <Box>
-                    <Typography style={{ fontSize: 14 }}>
-                      {isRTL ? 'نسبة الانجاز' : 'Progress'}
-                    </Typography>
-                    <Typography style={{ fontWeight: 'bold', fontSize: 14 }}>
-                      {progress}%
-                    </Typography>
-                  </Box>
-                  <Box display="flex" style={{ flexDirection: 'row' }}>
-                    <Box>
-                      <Typography style={{ fontSize: 14 }}>
-                        {isRTL ? 'الفواتير' : 'Total Invoiced'}
-                      </Typography>
-                      <Typography style={{ fontWeight: 'bold', fontSize: 14 }}>
-                        {moneyFormat(totalinvoiced)}
-                      </Typography>
-                    </Box>
-                    {totalDiscount > 0 && (
-                      <Box style={{ marginLeft: 20, marginRight: 20 }}>
-                        <Typography style={{ fontSize: 14 }}>
-                          {isRTL ? 'الحسومات' : 'Total Discounts'}
-                        </Typography>
-                        <Typography
-                          style={{ fontWeight: 'bold', fontSize: 14 }}
-                        >
-                          {moneyFormat(totalDiscount)}
-                        </Typography>
-                      </Box>
-                    )}
-                  </Box>
-                  <Box>
-                    <Typography style={{ fontSize: 14 }}>
-                      {isRTL ? 'المقبوضات' : 'Total Paid'}
-                    </Typography>
-                    <Typography style={{ fontWeight: 'bold', fontSize: 14 }}>
-                      {moneyFormat(totalpaid)}
-                    </Typography>
-                  </Box>
-                  <Box>
-                    <Typography
-                      style={{ fontSize: 14, color: colors.blue[500] }}
-                    >
-                      {isRTL ? 'المتبقي' : 'Due Payment'}
-                    </Typography>{' '}
-                    <Typography
-                      style={{
-                        fontWeight: 'bold',
-                        fontSize: 14,
-                        color: colors.blue[500],
-                      }}
-                    >
-                      {moneyFormat(totalinvoiced - totalpaid - totalDiscount)}
-                    </Typography>
-                  </Box>
-
-                  <Box>
-                    <Typography style={{ fontSize: 14 }}>
-                      {isRTL ? 'المصروفات' : 'Total Expenses'}
-                    </Typography>{' '}
-                    <Typography style={{ fontWeight: 'bold', fontSize: 14 }}>
-                      {moneyFormat(toatlExpenses)}
-                    </Typography>
-                  </Box>
-                  <Box>
-                    <Typography style={{ fontSize: 14 }}>
-                      {isRTL ? 'القيود' : 'Entries'}
-                    </Typography>{' '}
-                    <Typography
-                      style={{
-                        fontWeight: 'bold',
-                        fontSize: 14,
-                        color: totalkaids < 0 ? colors.red[500] : undefined,
-                      }}
-                    >
-                      {moneyFormat(totalkaids)}
-                    </Typography>
-                  </Box>
-                  <Box>
-                    <Typography
-                      style={{ fontSize: 14, color: colors.green[500] }}
-                    >
-                      {isRTL ? 'صافي الايراد' : 'Total Income'}
-                    </Typography>{' '}
-                    <Typography
-                      style={{
-                        fontWeight: 'bold',
-                        fontSize: 14,
-                        color: income < 0 ? colors.red[500] : colors.green[500],
-                      }}
-                    >
-                      {moneyFormat(income)}
-                    </Typography>
-                  </Box>
-                </Box>
-              </Box>
-            )}
-          </Box>
-        </Grid>
-        {row && (
-          <Grid item xs={1}>
-            <Box style={{ marginTop: 10, marginBottom: 100 }}>
-              <Tabs
-                orientation="vertical"
-                value={value}
-                onChange={handleChange}
-                aria-label="items"
-                className={classes.tabs}
-                variant="fullWidth"
-                TabIndicatorProps={{ style: { width: 3 } }}
-                textColor="primary"
-                centered
-              >
-                {customerManamentTabs.map((item: any) => {
-                  if (item.hide) {
-                    return <div></div>;
-                  }
-                  return (
-                    <Tab
-                      style={{
-                        backgroundColor:
-                          value === item.id ? '#f5f5f5' : undefined,
-                      }}
-                      label={
-                        <Typography
-                          style={{ fontWeight: 'bold', fontSize: 13 }}
-                        >
-                          {isRTL ? item.nameAr : item.name}
-                        </Typography>
-                      }
-                      {...a11yProps(item.id)}
-                    />
-                  );
-                })}
-              </Tabs>
-            </Box>
-            <Box
-              style={{
-                backgroundColor: '#f5f5f5',
-                margin: 7,
-                padding: 8,
-                borderRadius: 5,
-                alignItems: 'flex-start',
-                justifyContent: 'center',
-                paddingBottom: 15,
-              }}
-            >
-              <Typography
-                variant="subtitle1"
+      <Box style={{ display: 'flex', marginTop: 0 }}>
+        <Box>
+          <Grid container spacing={0} style={{ width: width - 300 }}>
+            <Grid item xs={12}>
+              <Box
                 style={{
-                  fontWeight: 'bold',
-                  marginTop: 10,
-                  marginBottom: 10,
+                  backgroundColor: '#f5f5f5',
                 }}
               >
-                {isRTL ? row.nameAr : row.name}
-              </Typography>
-              <Typography
-                variant="subtitle2"
-                style={{ fontWeight: 'bold', marginTop: 10 }}
-              >
-                {words.phoneNumber}
-              </Typography>
-              <Typography>{row.phone}</Typography>
-              {row.email && (
-                <>
-                  <Typography
-                    variant="subtitle2"
-                    style={{ fontWeight: 'bold', marginTop: 10 }}
-                  >
-                    {words.email}
-                  </Typography>
-                  <Typography>{row.email}</Typography>
-                </>
-              )}
-            </Box>
+                <Box display="flex" style={{ margin: 10 }}></Box>
+                {row && (
+                  <Box>
+                    <TabPanel value={value} index={0}>
+                      <MainCustomer
+                        isRTL={isRTL}
+                        words={words}
+                        theme={theme}
+                        name="customerId"
+                        value={row}
+                        id={row?._id}
+                        width={width}
+                        height={height}
+                      ></MainCustomer>
+                    </TabPanel>
+                    <TabPanel value={value} index={1}>
+                      <ProjectsCustomer
+                        servicesproducts={servicesproducts}
+                        products={products}
+                        isRTL={isRTL}
+                        words={words}
+                        theme={theme}
+                        company={company}
+                        name="customerId"
+                        value={row}
+                        id={row?._id}
+                        width={width}
+                        height={height}
+                      ></ProjectsCustomer>
+                    </TabPanel>
+                    <TabPanel value={value} index={2}>
+                      <TasksCustomer
+                        servicesproducts={servicesproducts}
+                        products={products}
+                        isRTL={isRTL}
+                        words={words}
+                        theme={theme}
+                        company={company}
+                        name="customerId"
+                        value={row}
+                        id={row?._id}
+                        width={width}
+                        height={height}
+                      ></TasksCustomer>
+                    </TabPanel>
+                    <TabPanel value={value} index={3}>
+                      <EventsCustomer
+                        resourses={resourses}
+                        employees={employees}
+                        departments={departments}
+                        customers={customers}
+                        servicesproducts={servicesproducts}
+                        products={products}
+                        isRTL={isRTL}
+                        words={words}
+                        theme={theme}
+                        isNew={isNew}
+                        name="customerId"
+                        value={row}
+                        id={row?._id}
+                        width={width}
+                        height={height}
+                      ></EventsCustomer>
+                    </TabPanel>
+                    <TabPanel value={value} index={4}>
+                      <InvoicesCustomer
+                        isRTL={isRTL}
+                        words={words}
+                        resourses={resourses}
+                        employees={employees}
+                        departments={departments}
+                        company={company}
+                        theme={theme}
+                        servicesproducts={servicesproducts}
+                        products={products}
+                        name="customerId"
+                        value={row}
+                        id={row?._id}
+                        width={width}
+                        height={height}
+                      ></InvoicesCustomer>
+                    </TabPanel>
+                    <TabPanel value={value} index={5}>
+                      <ReceiptCustomer
+                        isRTL={isRTL}
+                        words={words}
+                        theme={theme}
+                        name="customerId"
+                        value={row}
+                        id={row?._id}
+                        width={width}
+                        height={height}
+                      ></ReceiptCustomer>
+                    </TabPanel>
+                  </Box>
+                )}
+              </Box>
+            </Grid>
           </Grid>
+        </Box>
+        {row && (
+          <Box style={{ marginTop: 10, width: 200 }}>
+            <Tabs
+              orientation="vertical"
+              value={value}
+              onChange={handleChange}
+              aria-label="items"
+              className={classes.tabs}
+              variant="fullWidth"
+              TabIndicatorProps={{ style: { width: 3 } }}
+              textColor="primary"
+              centered
+            >
+              {customerManamentTabs.map((item: any) => {
+                if (item.hide) {
+                  return <div></div>;
+                }
+                return (
+                  <Tab
+                    style={{
+                      backgroundColor:
+                        value === item.id ? '#f5f5f5' : undefined,
+                    }}
+                    label={
+                      <Typography style={{ fontWeight: 'bold', fontSize: 13 }}>
+                        {isRTL ? item.nameAr : item.name}
+                      </Typography>
+                    }
+                    {...a11yProps(item.id)}
+                  />
+                );
+              })}
+            </Tabs>
+          </Box>
         )}
-      </Grid>
+      </Box>
     </PopupLayout>
   );
 };

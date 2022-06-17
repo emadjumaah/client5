@@ -159,7 +159,7 @@ export default function InvoicesTask({
         <IntegratedFiltering />
 
         <VirtualTable
-          height={550}
+          height={680}
           messages={{
             noData: isRTL ? 'لا يوجد بيانات' : 'no data',
           }}

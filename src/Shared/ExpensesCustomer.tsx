@@ -56,6 +56,8 @@ export default function ExpensesCustomer({
   name,
   id,
   value,
+  width,
+  height,
 }) {
   const { tempoptions, tempwords } = useTemplate();
   const [columns] = useState(
@@ -200,105 +202,111 @@ export default function ExpensesCustomer({
   }, [expensesData]);
 
   return (
-    <Paper
+    <Box
       style={{
-        maxHeight: 600,
-        overflow: 'auto',
+        height: height - 230,
+        width: width - 300,
         margin: 10,
-        minHeight: 600,
       }}
     >
-      <Box display="flex">
-        <DateNavigatorReports
-          setStart={setStart}
-          setEnd={setEnd}
-          currentDate={currentDate}
-          currentDateChange={currentDateChange}
-          currentViewName={currentViewName}
-          currentViewNameChange={currentViewNameChange}
-          endDate={endDate}
-          endDateChange={endDateChange}
-          views={[1, 7, 30, 365, 1000]}
-          isRTL={isRTL}
-          words={words}
-          theme={theme}
-        ></DateNavigatorReports>
-      </Box>
-      <Grid rows={rows} columns={columns} getRowId={getRowId}>
-        <SortingState />
-        <EditingState onCommitChanges={commitChanges} />
-        <IntegratedSorting />
-        <VirtualTable
-          height={550}
-          messages={{
-            noData: isRTL ? 'لا يوجد بيانات' : 'no data',
-          }}
-          estimatedRowHeight={40}
-        />
-        <TableHeaderRow
-          showSortingControls
-          titleComponent={({ children }) => {
-            return (
-              <Typography style={{ fontSize: 14, fontWeight: 'bold' }}>
-                {children}
-              </Typography>
-            );
-          }}
-        />
-        <DataTypeProvider
-          for={['time']}
-          formatterComponent={timeFormatter}
-        ></DataTypeProvider>
-        <DataTypeProvider
-          for={['amount']}
-          formatterComponent={currencyFormatter}
-        ></DataTypeProvider>
-        <DataTypeProvider
-          for={['docNo', 'refNo']}
-          formatterComponent={samllFormatter}
-        ></DataTypeProvider>
-        <DataTypeProvider
-          for={['creditAcc']}
-          formatterComponent={(props) =>
-            accountFormatter(props, accounts, isRTL)
-          }
-        ></DataTypeProvider>
-        <DataTypeProvider
-          for={['taskId']}
-          formatterComponent={(props: any) =>
-            taskIdFormatter({ ...props, tasks })
-          }
-        ></DataTypeProvider>
-        <DataTypeProvider
-          for={['debitAcc']}
-          formatterComponent={(props) =>
-            accountFormatter(props, accounts, isRTL)
-          }
-        ></DataTypeProvider>
-        <TableEditColumn
-          showEditCommand
-          showDeleteCommand
-          showAddCommand
-          commandComponent={Command}
-        ></TableEditColumn>
-        <PopupEditing
-          theme={theme}
-          addAction={addExpenses}
-          editAction={editExpenses}
-        >
-          <PopupExpensesDoc
-            resourses={resourses}
-            employees={employees}
-            departments={departments}
-            company={company}
-            servicesproducts={expenseItems}
-            tasks={tasks}
-            value={value}
-            name={name}
-          ></PopupExpensesDoc>
-        </PopupEditing>
-      </Grid>
-      {loading && <Loading isRTL={isRTL} />}
-    </Paper>
+      <Paper
+        style={{
+          height: height - 240,
+          width: width - 320,
+        }}
+      >
+        <Box display="flex">
+          <DateNavigatorReports
+            setStart={setStart}
+            setEnd={setEnd}
+            currentDate={currentDate}
+            currentDateChange={currentDateChange}
+            currentViewName={currentViewName}
+            currentViewNameChange={currentViewNameChange}
+            endDate={endDate}
+            endDateChange={endDateChange}
+            views={[1, 7, 30, 365, 1000]}
+            isRTL={isRTL}
+            words={words}
+            theme={theme}
+          ></DateNavigatorReports>
+        </Box>
+        <Grid rows={rows} columns={columns} getRowId={getRowId}>
+          <SortingState />
+          <EditingState onCommitChanges={commitChanges} />
+          <IntegratedSorting />
+          <VirtualTable
+            height={680}
+            messages={{
+              noData: isRTL ? 'لا يوجد بيانات' : 'no data',
+            }}
+            estimatedRowHeight={40}
+          />
+          <TableHeaderRow
+            showSortingControls
+            titleComponent={({ children }) => {
+              return (
+                <Typography style={{ fontSize: 14, fontWeight: 'bold' }}>
+                  {children}
+                </Typography>
+              );
+            }}
+          />
+          <DataTypeProvider
+            for={['time']}
+            formatterComponent={timeFormatter}
+          ></DataTypeProvider>
+          <DataTypeProvider
+            for={['amount']}
+            formatterComponent={currencyFormatter}
+          ></DataTypeProvider>
+          <DataTypeProvider
+            for={['docNo', 'refNo']}
+            formatterComponent={samllFormatter}
+          ></DataTypeProvider>
+          <DataTypeProvider
+            for={['creditAcc']}
+            formatterComponent={(props) =>
+              accountFormatter(props, accounts, isRTL)
+            }
+          ></DataTypeProvider>
+          <DataTypeProvider
+            for={['taskId']}
+            formatterComponent={(props: any) =>
+              taskIdFormatter({ ...props, tasks })
+            }
+          ></DataTypeProvider>
+          <DataTypeProvider
+            for={['debitAcc']}
+            formatterComponent={(props) =>
+              accountFormatter(props, accounts, isRTL)
+            }
+          ></DataTypeProvider>
+          <TableEditColumn
+            showEditCommand
+            showDeleteCommand
+            showAddCommand
+            commandComponent={Command}
+          ></TableEditColumn>
+          <PopupEditing
+            theme={theme}
+            addAction={addExpenses}
+            editAction={editExpenses}
+          >
+            <PopupExpensesDoc
+              resourses={resourses}
+              employees={employees}
+              departments={departments}
+              company={company}
+              servicesproducts={expenseItems}
+              tasks={tasks}
+              value={value}
+              name={name}
+            ></PopupExpensesDoc>
+          </PopupEditing>
+        </Grid>
+        {loading && <Loading isRTL={isRTL} />}
+      </Paper>
+    </Box>
   );
 }
