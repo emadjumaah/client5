@@ -28,15 +28,12 @@ import { weekdaysNNo } from '../constants/datatypes';
 import useTasks from '../hooks/useTasks';
 import useCompany from '../hooks/useCompany';
 import PopupDeprtment from './PopupDeprtment';
-import PopupTask from './PopupTask';
 import PopupEmployee from './PopupEmployee';
 import PopupResourses from './PopupResourses';
 import useDepartmentsUp from '../hooks/useDepartmentsUp';
 import useEmployeesUp from '../hooks/useEmployeesUp';
 import useResoursesUp from '../hooks/useResoursesUp';
-import useProjects from '../hooks/useProjects';
 import { InvoicePrint } from '../print';
-// import { PosPrint } from '../print';
 
 export const indexTheList = (list: any) => {
   return list.map((item: any, index: any) => {
@@ -115,7 +112,6 @@ const PopupInvoice = ({
   const [openDep, setOpenDep] = useState(false);
   const [openEmp, setOpenEmp] = useState(false);
   const [openRes, setOpenRes] = useState(false);
-  const [openTsk, setOpenTsk] = useState(false);
 
   const { lastNos, freshlastNos } = useLastNos();
 
@@ -123,9 +119,7 @@ const PopupInvoice = ({
   const { addDepartment, editDepartment } = useDepartmentsUp();
   const { addEmployee, editEmployee } = useEmployeesUp();
   const { addResourse, editResourse } = useResoursesUp();
-  const { addTask, editTask } = useTasks();
   const { tempwords, tempoptions } = useTemplate();
-  const { projects } = useProjects();
   const { products } = useProducts();
 
   const {
@@ -160,13 +154,6 @@ const PopupInvoice = ({
     setOpenRes(false);
     setNewtext('');
   };
-  const openTask = () => {
-    setOpenTsk(true);
-  };
-  const onCloseTask = () => {
-    setOpenTsk(false);
-    setNewtext('');
-  };
   const openCustomer = () => {
     setOpenCust(true);
   };
@@ -186,9 +173,6 @@ const PopupInvoice = ({
   };
   const onNewResoChange = (nextValue: any) => {
     setResovalue(nextValue);
-  };
-  const onNewTaskChange = (nextValue: any) => {
-    setTaskvalue(nextValue);
   };
 
   useEffect(() => {
@@ -792,32 +776,11 @@ const PopupInvoice = ({
               setSelectValue={setTaskvalue}
               isRTL={isRTL}
               fullWidth
-              openAdd={openTask}
+              // openAdd={openTask}
               disabled={name === 'taskId'}
             ></AutoFieldLocal>
           </Grid>
         )}
-        {!tempoptions?.noEmp && (
-          <Grid item xs={4}>
-            <AutoFieldLocal
-              name="employee"
-              title={tempwords?.employee}
-              words={words}
-              options={employees}
-              value={emplvalue}
-              disabled={isemployee || name === 'employeeId'}
-              setSelectValue={setEmplvalue}
-              setSelectError={setEmplError}
-              selectError={emplError}
-              refernce={emplRef}
-              openAdd={openEmployee}
-              isRTL={isRTL}
-              fullWidth
-              day={day}
-            ></AutoFieldLocal>
-          </Grid>
-        )}
-        {!tempoptions?.noRes && <Grid item xs={4}></Grid>}
         {!tempoptions?.noRes && (
           <Grid item xs={4}>
             <AutoFieldLocal
@@ -832,6 +795,27 @@ const PopupInvoice = ({
               selectError={resoError}
               refernce={resoRef}
               openAdd={openResourse}
+              isRTL={isRTL}
+              fullWidth
+              day={day}
+            ></AutoFieldLocal>
+          </Grid>
+        )}
+        {!tempoptions?.noRes && <Grid item xs={4}></Grid>}
+        {!tempoptions?.noEmp && (
+          <Grid item xs={4}>
+            <AutoFieldLocal
+              name="employee"
+              title={tempwords?.employee}
+              words={words}
+              options={employees}
+              value={emplvalue}
+              disabled={isemployee || name === 'employeeId'}
+              setSelectValue={setEmplvalue}
+              setSelectError={setEmplError}
+              selectError={emplError}
+              refernce={emplRef}
+              openAdd={openEmployee}
               isRTL={isRTL}
               fullWidth
               day={day}
@@ -942,21 +926,6 @@ const PopupInvoice = ({
             editAction={editDepartment}
             depType={1}
           ></PopupDeprtment>
-          <PopupTask
-            newtext={newtext}
-            open={openTsk}
-            onClose={onCloseTask}
-            isNew={true}
-            setNewValue={onNewTaskChange}
-            row={null}
-            employees={employees}
-            resourses={resourses}
-            departments={departments}
-            projects={projects}
-            customers={customers}
-            addAction={addTask}
-            editAction={editTask}
-          ></PopupTask>
           <PopupEmployee
             newtext={newtext}
             departments={departments}

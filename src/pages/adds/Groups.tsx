@@ -9,16 +9,22 @@ import {
   SearchState,
   IntegratedFiltering,
   DataTypeProvider,
+  PagingState,
+  IntegratedPaging,
 } from '@devexpress/dx-react-grid';
 import {
   Grid,
   TableHeaderRow,
   TableEditColumn,
-  VirtualTable,
   Toolbar,
   SearchPanel,
   TableColumnVisibility,
   ColumnChooser,
+  DragDropProvider,
+  Table,
+  TableColumnReordering,
+  PagingPanel,
+  TableColumnResizing,
 } from '@devexpress/dx-react-grid-material-ui';
 import { Command, PopupEditing } from '../../Shared';
 import { getRowId } from '../../common';
@@ -26,7 +32,7 @@ import { PopupGroup } from '../../pubups';
 import { AlertLocal, SearchTable } from '../../components';
 import { errorAlert, errorDeleteAlert } from '../../Shared/helpers';
 import PageLayout from '../main/PageLayout';
-import { Box, Typography } from '@material-ui/core';
+import { Box, Paper, Typography } from '@material-ui/core';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
 import { TableComponent } from '../../Shared/TableComponent';
 import useGroups from '../../hooks/useGroups';
@@ -39,7 +45,6 @@ export default function Groups(props: any) {
   const [openItem, setOpenItem] = useState(false);
   const [item, setItem] = useState(null);
 
-  const { height } = useWindowDimensions();
   const { groups, refreshgroups, addGroup, editGroup, removeGroup } =
     useGroups();
 
@@ -47,6 +52,18 @@ export default function Groups(props: any) {
     { name: 'name', title: words.name },
     { name: 'qty', title: words.contacts },
   ]);
+
+  const [tableColumnExtensions]: any = useState([
+    { columnName: 'name', width: 400 },
+    { columnName: 'qty', width: 200 },
+  ]);
+
+  const [tableColumnVisibilityColumnExtensions] = useState([
+    { columnName: 'name', togglingEnabled: false },
+    { columnName: 'qty', togglingEnabled: false },
+  ]);
+  const [pageSizes] = useState([5, 10, 20, 50, 0]);
+  const { width, height } = useWindowDimensions();
 
   const commitChanges = async ({ deleted }) => {
     if (deleted) {
@@ -75,64 +92,86 @@ export default function Groups(props: any) {
           height: height - 50,
           overflow: 'auto',
           backgroundColor: '#fff',
-          marginLeft: 5,
-          marginRight: 5,
         }}
       >
-        <Grid rows={groups} columns={columns} getRowId={getRowId}>
-          <SortingState />
-          <SearchState />
-          <EditingState onCommitChanges={commitChanges} />
+        <Paper
+          elevation={5}
+          style={{
+            margin: 40,
+            marginTop: 80,
+            overflow: 'auto',
+            width: width - 330,
+            // height: height - 200,
+            borderRadius: 10,
+          }}
+        >
+          <Grid rows={groups} columns={columns} getRowId={getRowId}>
+            <SortingState />
+            <EditingState onCommitChanges={commitChanges} />
+            <SearchState />
+            <PagingState defaultCurrentPage={0} defaultPageSize={10} />
+            <IntegratedSorting />
+            <IntegratedFiltering />
+            <IntegratedPaging />
+            <DragDropProvider />
+            <Table
+              messages={{
+                noData: isRTL ? 'لا يوجد بيانات' : 'no data',
+              }}
+              tableComponent={TableComponent}
+              rowComponent={(props: any) => (
+                <Table.Row {...props} style={{ height: 60 }}></Table.Row>
+              )}
+              columnExtensions={tableColumnExtensions}
+            />
 
-          <IntegratedSorting />
-          <IntegratedFiltering />
+            <TableColumnReordering defaultOrder={['name', 'qty']} />
+            <TableColumnResizing defaultColumnWidths={tableColumnExtensions} />
 
-          <VirtualTable
-            height={height - 100}
-            messages={{
-              noData: isRTL ? 'لا يوجد بيانات' : 'no data',
-            }}
-            estimatedRowHeight={40}
-            tableComponent={TableComponent}
-          />
-          <TableHeaderRow
-            showSortingControls
-            titleComponent={({ children }) => {
-              return (
-                <Typography style={{ fontSize: 14, fontWeight: 'bold' }}>
-                  {children}
-                </Typography>
-              );
-            }}
-          />
-          <DataTypeProvider
-            for={['nameAr', 'name']}
-            formatterComponent={(props: any) =>
-              nameLinkFormat({ ...props, setItem, setOpenItem, isRTL })
-            }
-          ></DataTypeProvider>
-          <TableColumnVisibility />
-          <TableEditColumn
-            showEditCommand
-            showDeleteCommand
-            showAddCommand
-            commandComponent={Command}
-          ></TableEditColumn>
-          <Toolbar />
-          <ColumnChooser />
-          <SearchPanel
-            inputComponent={(props: any) => {
-              return <SearchTable isRTL={isRTL} {...props}></SearchTable>;
-            }}
-          />
-          <PopupEditing
-            theme={theme}
-            addAction={addGroup}
-            editAction={editGroup}
-          >
-            <PopupGroup></PopupGroup>
-          </PopupEditing>
-        </Grid>
+            <TableHeaderRow
+              showSortingControls
+              titleComponent={({ children }) => {
+                return (
+                  <Typography style={{ fontSize: 14, fontWeight: 'bold' }}>
+                    {children}
+                  </Typography>
+                );
+              }}
+            />
+            <TableColumnVisibility
+              columnExtensions={tableColumnVisibilityColumnExtensions}
+              defaultHiddenColumnNames={[]}
+            />
+            <DataTypeProvider
+              for={['nameAr', 'name']}
+              formatterComponent={(props: any) =>
+                nameLinkFormat({ ...props, setItem, setOpenItem, isRTL })
+              }
+            ></DataTypeProvider>
+            <TableColumnVisibility />
+            <TableEditColumn
+              showEditCommand
+              showDeleteCommand
+              showAddCommand
+              commandComponent={Command}
+            ></TableEditColumn>
+            <Toolbar />
+            <ColumnChooser />
+            <PagingPanel pageSizes={pageSizes} />
+            <SearchPanel
+              inputComponent={(props: any) => {
+                return <SearchTable isRTL={isRTL} {...props}></SearchTable>;
+              }}
+            />
+            <PopupEditing
+              theme={theme}
+              addAction={addGroup}
+              editAction={editGroup}
+            >
+              <PopupGroup></PopupGroup>
+            </PopupEditing>
+          </Grid>
+        </Paper>
         {alrt.show && (
           <AlertLocal
             isRTL={isRTL}

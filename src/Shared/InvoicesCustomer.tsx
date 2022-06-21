@@ -3,21 +3,20 @@
 import React, { useEffect, useState } from 'react';
 import Paper from '@material-ui/core/Paper';
 import {
-  EditingState,
   SortingState,
   IntegratedSorting,
   DataTypeProvider,
   IntegratedFiltering,
+  EditingState,
 } from '@devexpress/dx-react-grid';
 import {
   Grid,
-  TableHeaderRow,
   TableEditColumn,
+  TableHeaderRow,
   VirtualTable,
 } from '@devexpress/dx-react-grid-material-ui';
 import { Command, Loading, PopupEditing } from '.';
 import { getRowId, updateDocNumbers } from '../common';
-import { PopupInvoice } from '../pubups';
 import {
   createInvoice,
   deleteInvoice,
@@ -26,7 +25,6 @@ import {
   getEmployees,
   getInvoices,
   getLastNos,
-  getProjects,
   getResourses,
   updateInvoice,
 } from '../graphql';
@@ -41,27 +39,27 @@ import {
 import { getColumns } from '../common/columns';
 import useTasks from '../hooks/useTasks';
 import { TableComponent } from '../pages/reports/SalesReport';
-import getTasks from '../graphql/query/getTasks';
 import { Box, Typography } from '@material-ui/core';
-import DateNavigatorReports from '../components/filters/DateNavigatorReports';
-import { useTemplate } from '../hooks';
+import { useServices, useTemplate } from '../hooks';
+import { PopupInvoice } from '../pubups';
+import getTasks from '../graphql/query/getTasks';
+import useResoursesUp from '../hooks/useResoursesUp';
+import useEmployeesUp from '../hooks/useEmployeesUp';
+import useDepartmentsUp from '../hooks/useDepartmentsUp';
 
 export default function InvoicesCustomer({
   isRTL,
   words,
-  employees,
-  resourses,
-  departments,
-  company,
-  servicesproducts,
-  products,
   name,
-  id,
   value,
+  company,
+  id,
   theme,
   width,
   height,
-}) {
+  start,
+  end,
+}: any) {
   const col = getColumns({ isRTL, words });
 
   const { tempoptions } = useTemplate();
@@ -101,22 +99,10 @@ export default function InvoicesCustomer({
 
   const { tasks } = useTasks();
 
-  const [start, setStart] = useState<any>(null);
-  const [end, setEnd] = useState<any>(null);
-  const [currentViewName, setCurrentViewName] = useState('Month');
-  const [currentDate, setCurrentDate] = useState(new Date());
-  const [endDate, setEndDate] = useState(new Date());
-
-  const currentViewNameChange = (e: any) => {
-    setCurrentViewName(e.target.value);
-  };
-  const currentDateChange = (curDate: any) => {
-    setCurrentDate(curDate);
-  };
-
-  const endDateChange = (curDate: any) => {
-    setEndDate(curDate);
-  };
+  const { departments } = useDepartmentsUp();
+  const { employees } = useEmployeesUp();
+  const { resourses } = useResoursesUp();
+  const { services } = useServices();
 
   const [loadInvoices, opData]: any = useLazyQuery(getInvoices);
 
@@ -150,9 +136,6 @@ export default function InvoicesCustomer({
       {
         query: getResourses,
         variables: { isRTL, resType: 1 },
-      },
-      {
-        query: getProjects,
       },
     ],
   };
@@ -196,33 +179,17 @@ export default function InvoicesCustomer({
   return (
     <Box
       style={{
-        height: height - 230,
+        height: height - 280,
         width: width - 300,
         margin: 10,
       }}
     >
       <Paper
         style={{
-          height: height - 240,
+          height: height - 290,
           width: width - 320,
         }}
       >
-        <Box display="flex">
-          <DateNavigatorReports
-            setStart={setStart}
-            setEnd={setEnd}
-            currentDate={currentDate}
-            currentDateChange={currentDateChange}
-            currentViewName={currentViewName}
-            currentViewNameChange={currentViewNameChange}
-            endDate={endDate}
-            endDateChange={endDateChange}
-            views={[1, 7, 30, 365, 1000]}
-            isRTL={isRTL}
-            words={words}
-            theme={theme}
-          ></DateNavigatorReports>
-        </Box>
         <Grid rows={rows} columns={columns} getRowId={getRowId}>
           <SortingState />
           <EditingState onCommitChanges={commitChanges} />
@@ -267,7 +234,6 @@ export default function InvoicesCustomer({
               taskIdFormatter({ ...props, tasks })
             }
           ></DataTypeProvider>
-
           <TableEditColumn
             showEditCommand
             showDeleteCommand
@@ -282,7 +248,7 @@ export default function InvoicesCustomer({
               resourses={resourses}
               departments={departments}
               company={company}
-              servicesproducts={servicesproducts}
+              servicesproducts={services}
               tasks={tasks}
             ></PopupInvoice>
           </PopupEditing>

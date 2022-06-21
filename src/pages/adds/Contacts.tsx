@@ -9,16 +9,22 @@ import {
   SearchState,
   IntegratedFiltering,
   DataTypeProvider,
+  PagingState,
+  IntegratedPaging,
 } from '@devexpress/dx-react-grid';
 import {
   Grid,
   TableHeaderRow,
   TableEditColumn,
-  VirtualTable,
   Toolbar,
   SearchPanel,
   TableColumnVisibility,
   ColumnChooser,
+  DragDropProvider,
+  Table,
+  TableColumnReordering,
+  TableColumnResizing,
+  PagingPanel,
 } from '@devexpress/dx-react-grid-material-ui';
 import { Command, PopupEditing } from '../../Shared';
 import { getRowId } from '../../common';
@@ -26,7 +32,7 @@ import { PopupContact } from '../../pubups';
 import { AlertLocal, SearchTable } from '../../components';
 import { errorAlert, errorDeleteAlert } from '../../Shared/helpers';
 import PageLayout from '../main/PageLayout';
-import { Box, Typography } from '@material-ui/core';
+import { Box, Paper, Typography } from '@material-ui/core';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
 import { TableComponent } from '../../Shared/TableComponent';
 import ImportBtn from '../../common/ImportBtn';
@@ -40,7 +46,6 @@ export default function Contacts(props: any) {
   const { isRTL, words, menuitem, theme } = props;
   const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
   const [openImport, setOpenImport] = useState(false);
-  const { height } = useWindowDimensions();
   const {
     contacts,
     refreshcontact,
@@ -62,6 +67,24 @@ export default function Contacts(props: any) {
     { name: 'address', title: words.address },
     { name: 'notes', title: words.notes },
   ]);
+
+  const [tableColumnExtensions]: any = useState([
+    { columnName: 'avatar', width: 100 },
+    { columnName: 'name', width: 200 },
+    { columnName: 'phone', width: 150 },
+    { columnName: 'groupIds', width: 200 },
+    { columnName: 'email', width: 200 },
+    { columnName: 'company', width: 200 },
+    { columnName: 'address', width: 200 },
+    { columnName: 'notes', width: 200 },
+  ]);
+
+  const [tableColumnVisibilityColumnExtensions] = useState([
+    { columnName: 'avatar', togglingEnabled: false },
+    { columnName: 'name', togglingEnabled: false },
+  ]);
+  const [pageSizes] = useState([5, 10, 20, 50, 0]);
+  const { width, height } = useWindowDimensions();
 
   const commitChanges = async ({ deleted }) => {
     if (deleted) {
@@ -90,8 +113,6 @@ export default function Contacts(props: any) {
           height: height - 50,
           overflow: 'auto',
           backgroundColor: '#fff',
-          marginLeft: 5,
-          marginRight: 5,
         }}
       >
         <ImportBtn
@@ -105,65 +126,102 @@ export default function Contacts(props: any) {
           syncCust={syncCust}
           syncEmpl={syncEmpl}
         ></ImportBtns>
+        <Paper
+          elevation={5}
+          style={{
+            margin: 40,
+            marginTop: 80,
+            overflow: 'auto',
+            width: width - 330,
+            // height: height - 200,
+            borderRadius: 10,
+          }}
+        >
+          <Grid rows={contacts} columns={columns} getRowId={getRowId}>
+            <SortingState />
+            <EditingState onCommitChanges={commitChanges} />
+            <SearchState />
+            <PagingState defaultCurrentPage={0} defaultPageSize={10} />
+            <IntegratedSorting />
+            <IntegratedFiltering />
+            <IntegratedPaging />
+            <DragDropProvider />
+            <Table
+              messages={{
+                noData: isRTL ? 'لا يوجد بيانات' : 'no data',
+              }}
+              tableComponent={TableComponent}
+              rowComponent={(props: any) => (
+                <Table.Row {...props} style={{ height: 60 }}></Table.Row>
+              )}
+              columnExtensions={tableColumnExtensions}
+            />
 
-        <Grid rows={contacts} columns={columns} getRowId={getRowId}>
-          <SortingState />
-          <SearchState />
-          <EditingState onCommitChanges={commitChanges} />
+            <TableColumnReordering
+              defaultOrder={[
+                'avatar',
+                'name',
+                'phone',
+                'groupIds',
+                'email',
+                'company',
+                'address',
+                'notes',
+              ]}
+            />
+            <TableColumnResizing defaultColumnWidths={tableColumnExtensions} />
 
-          <IntegratedSorting />
-          <IntegratedFiltering />
-
-          <VirtualTable
-            height={height - 100}
-            messages={{
-              noData: isRTL ? 'لا يوجد بيانات' : 'no data',
-            }}
-            estimatedRowHeight={40}
-            tableComponent={TableComponent}
-          />
-          <TableHeaderRow
-            showSortingControls
-            titleComponent={({ children }) => {
-              return (
-                <Typography style={{ fontSize: 14, fontWeight: 'bold' }}>
-                  {children}
-                </Typography>
-              );
-            }}
-          />
-          <DataTypeProvider
-            for={['groupIds']}
-            formatterComponent={(props) => groupFormatter(props, groups, isRTL)}
-          ></DataTypeProvider>
-          <DataTypeProvider
-            for={['avatar']}
-            formatterComponent={avatarFormatter}
-          ></DataTypeProvider>
-          <TableColumnVisibility
-            defaultHiddenColumnNames={['address', 'notes']}
-          />
-          <TableEditColumn
-            showEditCommand
-            showDeleteCommand
-            showAddCommand
-            commandComponent={Command}
-          ></TableEditColumn>
-          <Toolbar />
-          <ColumnChooser />
-          <SearchPanel
-            inputComponent={(props: any) => {
-              return <SearchTable isRTL={isRTL} {...props}></SearchTable>;
-            }}
-          />
-          <PopupEditing
-            theme={theme}
-            addAction={addContact}
-            editAction={editContact}
-          >
-            <PopupContact></PopupContact>
-          </PopupEditing>
-        </Grid>
+            <TableHeaderRow
+              showSortingControls
+              titleComponent={({ children }) => {
+                return (
+                  <Typography style={{ fontSize: 14, fontWeight: 'bold' }}>
+                    {children}
+                  </Typography>
+                );
+              }}
+            />
+            <TableColumnVisibility
+              columnExtensions={tableColumnVisibilityColumnExtensions}
+              defaultHiddenColumnNames={['address', 'notes']}
+            />
+            <DataTypeProvider
+              for={['groupIds']}
+              formatterComponent={(props) =>
+                groupFormatter(props, groups, isRTL)
+              }
+            ></DataTypeProvider>
+            <DataTypeProvider
+              for={['avatar']}
+              formatterComponent={avatarFormatter}
+            ></DataTypeProvider>
+            <TableColumnVisibility
+              defaultHiddenColumnNames={['address', 'notes']}
+            />
+            <TableEditColumn
+              showEditCommand
+              showDeleteCommand
+              showAddCommand
+              commandComponent={Command}
+            ></TableEditColumn>
+            <Toolbar />
+            <ColumnChooser />
+            <PagingPanel pageSizes={pageSizes} />
+            <ColumnChooser />
+            <SearchPanel
+              inputComponent={(props: any) => {
+                return <SearchTable isRTL={isRTL} {...props}></SearchTable>;
+              }}
+            />
+            <PopupEditing
+              theme={theme}
+              addAction={addContact}
+              editAction={editContact}
+            >
+              <PopupContact></PopupContact>
+            </PopupEditing>
+          </Grid>
+        </Paper>
         {alrt.show && (
           <AlertLocal
             isRTL={isRTL}

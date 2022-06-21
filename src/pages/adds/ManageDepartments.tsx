@@ -26,7 +26,6 @@ import {
   PagingPanel,
 } from '@devexpress/dx-react-grid-material-ui';
 import { Command, errorAlert, PopupEditing } from '../../Shared';
-import { useCustomers, useProducts, useServices } from '../../hooks';
 import { getRowId } from '../../common';
 import { PopupDeprtment } from '../../pubups';
 import {
@@ -42,11 +41,8 @@ import { AlertLocal, SearchTable } from '../../components';
 import { errorDeleteAlert } from '../../Shared/helpers';
 import PageLayout from '../main/PageLayout';
 import { getColumns } from '../../common/columns';
-import useTasks from '../../hooks/useTasks';
 import PopupDepartmentView from '../../pubups/PopupDepartmentView';
 import useDepartmentsUp from '../../hooks/useDepartmentsUp';
-import useEmployeesUp from '../../hooks/useEmployeesUp';
-import useResoursesUp from '../../hooks/useResoursesUp';
 import { Box, Paper, Typography } from '@material-ui/core';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
 import { TableComponent } from '../../Shared/TableComponent';
@@ -66,12 +62,6 @@ export default function ManageDepartments({
   const [openItem, setOpenItem] = useState(false);
   const col = getColumns({ isRTL, words });
 
-  const { tasks } = useTasks();
-  const { employees } = useEmployeesUp();
-  const { resourses } = useResoursesUp();
-  const { customers } = useCustomers();
-  const { services } = useServices();
-  const { products } = useProducts();
   const { width, height } = useWindowDimensions();
   const onCloseItem = () => {
     setOpenItem(false);
@@ -91,7 +81,7 @@ export default function ManageDepartments({
   const [tableColumnExtensions]: any = useState([
     { columnName: 'avatar', width: 30 },
     { columnName: col.name.name, width: 250 },
-    { columnName: col.appointments.name, width: 250, align: 'center' },
+    { columnName: col.appointments.name, width: 250 },
     { columnName: col.sales.name, width: 240 },
     { columnName: col.purchase.name, width: 240 },
     { columnName: col.expenses.name, width: 200 },
@@ -309,18 +299,8 @@ export default function ManageDepartments({
           open={openItem}
           onClose={onCloseItem}
           row={item}
-          isNew={false}
-          addAction={addDepartment}
-          editAction={editDepartment}
           theme={theme}
-          departments={departments}
           company={company}
-          resourses={resourses}
-          employees={employees}
-          servicesproducts={services}
-          products={products}
-          customers={customers}
-          tasks={tasks}
         ></PopupDepartmentView>
       </Box>
     </PageLayout>

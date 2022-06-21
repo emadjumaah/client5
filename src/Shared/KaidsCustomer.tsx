@@ -28,7 +28,6 @@ import useTasks from '../hooks/useTasks';
 import getGereralKaids from '../graphql/query/getGereralKaids';
 import { getColumns } from '../common/columns';
 import { Box, Typography } from '@material-ui/core';
-import DateNavigatorReports from '../components/filters/DateNavigatorReports';
 import { useTemplate } from '../hooks';
 
 export default function KaidsCustomer({
@@ -37,9 +36,10 @@ export default function KaidsCustomer({
   theme,
   name,
   id,
-  value,
   width,
   height,
+  start,
+  end,
 }) {
   const col = getColumns({ isRTL, words });
 
@@ -71,23 +71,6 @@ export default function KaidsCustomer({
   const [loading, setLoading] = useState(false);
 
   const { tasks } = useTasks();
-
-  const [start, setStart] = useState<any>(null);
-  const [end, setEnd] = useState<any>(null);
-  const [currentViewName, setCurrentViewName] = useState('Month');
-  const [currentDate, setCurrentDate] = useState(new Date());
-  const [endDate, setEndDate] = useState(new Date());
-
-  const currentViewNameChange = (e: any) => {
-    setCurrentViewName(e.target.value);
-  };
-  const currentDateChange = (curDate: any) => {
-    setCurrentDate(curDate);
-  };
-
-  const endDateChange = (curDate: any) => {
-    setEndDate(curDate);
-  };
 
   const [loadKaids, kaidsData]: any = useLazyQuery(getGereralKaids, {
     // fetchPolicy: 'cache-and-network',
@@ -124,33 +107,17 @@ export default function KaidsCustomer({
   return (
     <Box
       style={{
-        height: height - 230,
+        height: height - 280,
         width: width - 300,
         margin: 10,
       }}
     >
       <Paper
         style={{
-          height: height - 240,
+          height: height - 290,
           width: width - 320,
         }}
       >
-        <Box display="flex">
-          <DateNavigatorReports
-            setStart={setStart}
-            setEnd={setEnd}
-            currentDate={currentDate}
-            currentDateChange={currentDateChange}
-            currentViewName={currentViewName}
-            currentViewNameChange={currentViewNameChange}
-            endDate={endDate}
-            endDateChange={endDateChange}
-            views={[1, 7, 30, 365, 1000]}
-            isRTL={isRTL}
-            words={words}
-            theme={theme}
-          ></DateNavigatorReports>
-        </Box>
         <Grid rows={rows} columns={columns} getRowId={getRowId}>
           <SortingState />
           <SummaryState totalItems={totalSummaryItems} />

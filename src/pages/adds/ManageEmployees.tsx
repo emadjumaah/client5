@@ -42,10 +42,7 @@ import { errorAlert, errorDeleteAlert } from '../../Shared/helpers';
 import PageLayout from '../main/PageLayout';
 import { getColumns } from '../../common/columns';
 import PopupEmployeeView from '../../pubups/PopupEmployeeView';
-import useTasks from '../../hooks/useTasks';
-import { useCustomers, useProducts, useServices } from '../../hooks';
 import useEmployeesUp from '../../hooks/useEmployeesUp';
-import useResoursesUp from '../../hooks/useResoursesUp';
 import useDepartmentsUp from '../../hooks/useDepartmentsUp';
 import { Box, Paper, Typography } from '@material-ui/core';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
@@ -65,12 +62,7 @@ export default function ManageEmployees({
   const [openItem, setOpenItem] = useState(false);
   const col = getColumns({ isRTL, words });
 
-  const { tasks } = useTasks();
-  const { customers } = useCustomers();
   const { departments } = useDepartmentsUp();
-  const { resourses } = useResoursesUp();
-  const { services } = useServices();
-  const { products } = useProducts();
   const { width, height } = useWindowDimensions();
   const onCloseItem = () => {
     setOpenItem(false);
@@ -325,18 +317,8 @@ export default function ManageEmployees({
           open={openItem}
           onClose={onCloseItem}
           row={item}
-          isNew={false}
-          addAction={addEmployee}
-          editAction={editEmployee}
           theme={theme}
-          departments={departments}
           company={company}
-          employees={employees}
-          resourses={resourses}
-          servicesproducts={services}
-          products={products}
-          customers={customers}
-          tasks={tasks}
         ></PopupEmployeeView>
       </Box>
     </PageLayout>

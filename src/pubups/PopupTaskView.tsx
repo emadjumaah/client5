@@ -3,20 +3,10 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { GContextTypes } from '../types';
 import { GlobalContext } from '../contexts';
-import {
-  Box,
-  Button,
-  colors,
-  makeStyles,
-  Tab,
-  Tabs,
-  Typography,
-} from '@material-ui/core';
+import { Box, Button, Tab, Tabs, Typography } from '@material-ui/core';
 import PopupLayout from '../pages/main/PopupLayout';
 import { Grid } from '@material-ui/core';
 import { useLazyQuery, useMutation } from '@apollo/client';
-import { moneyFormat } from '../Shared/colorFormat';
-import PopupTaskAppointment from './PopupTaskAppointment';
 import _ from 'lodash';
 import PopupTaskInvoice from './PopupTaskInvoice';
 import getTaskItems from '../graphql/query/getTaskItems';
@@ -24,15 +14,14 @@ import { taskManamentTabs } from '../constants/rrule';
 import EventsCustomer from '../Shared/EventsCustomer';
 import InvoicesCustomer from '../Shared/InvoicesCustomer';
 import ReceiptCustomer from '../Shared/ReceiptCustomer';
-import ExpensesCustomer from '../Shared/ExpensesCustomer';
-import ProjectsCustomer from '../Shared/ProjectsCustomer';
-import TasksCustomer from '../Shared/TasksCustomer';
 import getObjectEvents from '../graphql/query/getObjectEvents';
 import {
   createEvent,
+  createFinance,
   getCustomers,
   getDepartments,
   getEmployees,
+  getLastNos,
   getOperationItems,
   getProjects,
   getResourses,
@@ -46,58 +35,18 @@ import {
 import { ContractPrint } from '../print';
 import { useReactToPrint } from 'react-to-print';
 import KaidsCustomer from '../Shared/KaidsCustomer';
-import { useTemplate } from '../hooks';
+import { useCustomers, useServices, useTemplate } from '../hooks';
 import PopupCloseDate from './PopupCloseDate';
-import PercentChartTask from '../components/charts/PercentChartTask';
 import useWindowDimensions from '../hooks/useWindowDimensions';
-
-function TabPanel(props) {
-  const { children, value, index, ...other } = props;
-
-  return (
-    <div
-      role="tabpanel"
-      hidden={value !== index}
-      id={`vertical-tabpanel-${index}`}
-      aria-labelledby={`vertical-tab-${index}`}
-      {...other}
-    >
-      {value === index && (
-        <Box>
-          <Typography>{children}</Typography>
-        </Box>
-      )}
-    </div>
-  );
-}
-
-function a11yProps(index: any) {
-  return {
-    id: `vertical-tab-${index}`,
-    'aria-controls': `vertical-tabpanel-${index}`,
-  };
-}
-
-const useStyles = makeStyles((theme) => ({
-  root: {
-    flexGrow: 1,
-    backgroundColor: theme.palette.background.paper,
-    display: 'flex',
-    height: 224,
-  },
-  tabs: {
-    borderRight: `2px solid ${theme.palette.divider}`,
-  },
-}));
-
-export const indexTheList = (list: any) => {
-  return list.map((item: any, index: any) => {
-    return {
-      ...item,
-      index,
-    };
-  });
-};
+import useDepartmentsUp from '../hooks/useDepartmentsUp';
+import useEmployeesUp from '../hooks/useEmployeesUp';
+import useResoursesUp from '../hooks/useResoursesUp';
+import { TabPanel, useStyles, a11yProps } from '../Shared/TabPanel';
+import ReminderCustomer from '../Shared/ReminderCustomer';
+import MainCustomer from '../Shared/MainCustomer';
+import PopupReceipt from './PopupReceipt';
+import getReceipts from '../graphql/query/getReceipts';
+import ExpensesCustomer from '../Shared/ExpensesCustomer';
 
 const PopupTaskView = ({
   open,
@@ -105,21 +54,14 @@ const PopupTaskView = ({
   item,
   tasks,
   isNew,
-  resourses,
-  employees,
-  departments,
-  customers,
-  servicesproducts,
-  products,
   theme,
   company,
   stopTask,
 }: any) => {
   const classes = useStyles();
-  const [openEvent, setOpenEvent] = useState<any>(false);
   const [event, setEvent] = useState<any>(null);
   const [row, setRow] = useState(item);
-  const [value, setValue] = React.useState(2);
+  const [value, setValue] = React.useState(0);
 
   const [start, setStart]: any = useState(null);
   const [end, setEnd]: any = useState(null);
@@ -130,6 +72,16 @@ const PopupTaskView = ({
   const [closeloading, setCloseloading] = useState<any>(null);
 
   const [openCloseDate, setOpenCloseDate] = useState<any>(false);
+  const [openInvoice, setOpenInvoice] = useState(false);
+  const [openReceipt, setOpenReceipt] = useState(false);
+
+  const [itemsList, setItemsList] = useState<any>([]);
+
+  const { departments } = useDepartmentsUp();
+  const { employees } = useEmployeesUp();
+  const { resourses } = useResoursesUp();
+  const { services } = useServices();
+  const { customers } = useCustomers();
 
   const { tempwords } = useTemplate();
   const { width, height } = useWindowDimensions();
@@ -164,20 +116,7 @@ const PopupTaskView = ({
         setCustvalue(cust);
       }
     }
-  }, [row]);
-
-  const [openInvoice, setOpenInvoice] = useState(false);
-  const [itemsList, setItemsList] = useState<any>([]);
-  const amount = row?.amount ? row.amount : 0;
-  const totalinvoiced = row?.totalinvoiced ? row.totalinvoiced : 0;
-  const totalDiscount = row?.totalDiscount ? row.totalDiscount : 0;
-  const totalpaid = row?.totalpaid ? row.totalpaid : 0;
-  const toatlExpenses = row?.toatlExpenses ? row.toatlExpenses : 0;
-  const progress = row?.progress ? row.progress : 0;
-  const totalkaidsdebit = row?.totalkaidsdebit ? row.totalkaidsdebit : 0;
-  const totalKaidscredit = row?.totalKaidscredit ? row.totalKaidscredit : 0;
-  const totalkaids = totalkaidsdebit - totalKaidscredit;
-  const income = totalinvoiced - toatlExpenses - totalDiscount - totalkaids;
+  }, [row, customers, resourses]);
   const {
     translate: { words, isRTL },
     store: { user },
@@ -185,33 +124,30 @@ const PopupTaskView = ({
 
   const refresQuery = {
     refetchQueries: [
-      {
-        query: getObjectEvents,
-        variables: { taskId: row?.id },
-      },
-      {
-        query: getTasks,
-      },
-      {
-        query: getCustomers,
-      },
-      {
-        query: getEmployees,
-        variables: { isRTL, resType: 1 },
-      },
-      {
-        query: getDepartments,
-        variables: { isRTL, depType: 1 },
-      },
-      {
-        query: getResourses,
-        variables: { isRTL, resType: 1 },
-      },
-      {
-        query: getProjects,
-      },
+      { query: getObjectEvents, variables: { taskId: row?.id } },
+      { query: getTasks },
+      { query: getCustomers },
+      { query: getEmployees, variables: { isRTL, resType: 1 } },
+      { query: getDepartments, variables: { isRTL, depType: 1 } },
+      { query: getResourses, variables: { isRTL, resType: 1 } },
+      { query: getProjects },
     ],
   };
+  const refresReceiptQuery = {
+    refetchQueries: [
+      { query: getReceipts, variables: { taskId: row?.id } },
+      { query: getLastNos },
+      { query: getTasks },
+      { query: getCustomers },
+      { query: getEmployees, variables: { isRTL, resType: 1 } },
+      { query: getDepartments, variables: { isRTL, depType: 1 } },
+      { query: getResourses, variables: { isRTL, resType: 1 } },
+      { query: getProjects },
+    ],
+  };
+
+  const [addFinance] = useMutation(createFinance, refresReceiptQuery);
+  const [addEvent] = useMutation(createEvent, refresQuery);
 
   const [getEvents, eventsData]: any = useLazyQuery(getObjectEvents, {
     fetchPolicy: 'cache-and-network',
@@ -236,8 +172,6 @@ const PopupTaskView = ({
     }
   }, [eventsData, item]);
 
-  const [addEvent] = useMutation(createEvent, refresQuery);
-
   const [getItems, itemsData]: any = useLazyQuery(getTaskItems, {
     fetchPolicy: 'cache-and-network',
   });
@@ -245,12 +179,7 @@ const PopupTaskView = ({
   const addNewEvent = async () => {
     if (!event) return;
     setLoading(true);
-    const variables = getReadyEventData(
-      event,
-      row,
-      eventItemsData,
-      servicesproducts
-    );
+    const variables = getReadyEventData(event, row, eventItemsData, services);
     if (!variables) {
       setLoading(false);
       return;
@@ -276,7 +205,7 @@ const PopupTaskView = ({
       row,
       amount,
       eventItemsData,
-      servicesproducts,
+      services,
       time
     );
     await stopTask({
@@ -294,9 +223,7 @@ const PopupTaskView = ({
       const items = itemsData?.data?.['getTaskItems']?.data || [];
       if (items && items.length > 0) {
         const ids = items.map((it: any) => it.itemId);
-        const servlist = servicesproducts.filter((ser: any) =>
-          ids.includes(ser._id)
-        );
+        const servlist = services.filter((ser: any) => ids.includes(ser._id));
 
         const itemsWqtyprice = items.map((item: any, index: any) => {
           const {
@@ -407,11 +334,7 @@ const PopupTaskView = ({
     resetAllForms();
     onClose();
   };
-  const viewtotal = amount;
   const title = `${tempwords?.task} : ${row?.title}`;
-  const salesColor = theme.palette.primary.light;
-  const eventColor = theme.palette.secondary.main;
-
   return (
     <PopupLayout
       isRTL={isRTL}
@@ -421,250 +344,137 @@ const PopupTaskView = ({
       onSubmit={() => null}
       theme={theme}
       alrt={{}}
-      mt={10}
-      maxWidth={isNew ? 'lg' : 'xl'}
-      fullWidth
-      preventclose
-      onlyclose
+      maxWidth={'xl'}
       print={!isNew ? handleReactPrint : undefined}
-      mb={10}
+      mb={0}
+      mt={0}
+      onlyclose
+      preventclose
+      canceltitle={isRTL ? 'اغلاق' : 'close'}
     >
-      <>
-        <Grid container spacing={0}>
-          <Grid item xs={11}>
-            <Box
-              style={{
-                backgroundColor: '#f5f5f5',
-              }}
-            >
-              <Box display="flex" style={{}}></Box>
-              {row && (
-                <Box style={{ marginBottom: 10 }}>
-                  <TabPanel value={value} index={0}>
-                    <ProjectsCustomer
-                      servicesproducts={servicesproducts}
-                      products={products}
-                      isRTL={isRTL}
-                      words={words}
-                      theme={theme}
-                      company={company}
-                      name="taskId"
-                      value={row}
-                      id={row?._id}
-                      width={width}
-                      height={height}
-                    ></ProjectsCustomer>
-                  </TabPanel>
-                  <TabPanel value={value} index={1}>
-                    <TasksCustomer
-                      servicesproducts={servicesproducts}
-                      products={products}
-                      isRTL={isRTL}
-                      words={words}
-                      theme={theme}
-                      company={company}
-                      name="taskId"
-                      value={row}
-                      id={row?._id}
-                      width={width}
-                      height={height}
-                    ></TasksCustomer>
-                  </TabPanel>
-                  <TabPanel value={value} index={2}>
-                    <EventsCustomer
-                      resourses={resourses}
-                      employees={employees}
-                      departments={departments}
-                      customers={customers}
-                      servicesproducts={servicesproducts}
-                      products={products}
-                      isRTL={isRTL}
-                      words={words}
-                      theme={theme}
-                      isNew={isNew}
-                      name="taskId"
-                      value={row}
-                      id={row?.id}
-                      width={width}
-                      height={height}
-                    ></EventsCustomer>
-                  </TabPanel>
-                  <TabPanel value={value} index={3}>
-                    <InvoicesCustomer
-                      isRTL={isRTL}
-                      words={words}
-                      resourses={resourses}
-                      employees={employees}
-                      departments={departments}
-                      company={company}
-                      theme={theme}
-                      servicesproducts={servicesproducts}
-                      products={products}
-                      name="taskId"
-                      value={row}
-                      id={row?.id}
-                      width={width}
-                      height={height}
-                    ></InvoicesCustomer>
-                  </TabPanel>
-                  <TabPanel value={value} index={4}>
-                    <ReceiptCustomer
-                      isRTL={isRTL}
-                      words={words}
-                      theme={theme}
-                      name="taskId"
-                      value={row}
-                      id={row?.id}
-                      width={width}
-                      height={height}
-                    ></ReceiptCustomer>
-                  </TabPanel>
-                  <TabPanel value={value} index={5}>
-                    <ExpensesCustomer
-                      isRTL={isRTL}
-                      words={words}
-                      theme={theme}
-                      name="taskId"
-                      value={row}
-                      id={row?.id}
-                      width={width}
-                      height={height}
-                    ></ExpensesCustomer>
-                  </TabPanel>
-                  <TabPanel value={value} index={6}>
-                    <KaidsCustomer
-                      isRTL={isRTL}
-                      words={words}
-                      theme={theme}
-                      name="taskId"
-                      value={row}
-                      id={row?.id}
-                      width={width}
-                      height={height}
-                    ></KaidsCustomer>
-                  </TabPanel>
-                  <Box
-                    display="flex"
-                    style={{
-                      alignItems: 'center',
-                      justifyContent: 'space-between',
-                      marginLeft: 20,
-                      marginRight: 20,
-                    }}
-                  >
-                    <Box>
-                      <Typography style={{ fontSize: 14 }}>
-                        {isRTL ? 'الاجمالي' : 'Total'}
-                      </Typography>
-                      <Typography style={{ fontWeight: 'bold', fontSize: 14 }}>
-                        {moneyFormat(viewtotal)}
-                      </Typography>
-                    </Box>
-                    <Box>
-                      <Typography style={{ fontSize: 14 }}>
-                        {isRTL ? 'نسبة الانجاز' : 'Progress'}
-                      </Typography>
-                      <Typography style={{ fontWeight: 'bold', fontSize: 14 }}>
-                        {progress}%
-                      </Typography>
-                    </Box>
-                    <Box display="flex" style={{ flexDirection: 'row' }}>
-                      <Box>
-                        <Typography style={{ fontSize: 14 }}>
-                          {isRTL ? 'الفواتير' : 'Total Invoiced'}
-                        </Typography>
-                        <Typography
-                          style={{ fontWeight: 'bold', fontSize: 14 }}
-                        >
-                          {moneyFormat(totalinvoiced)}
-                        </Typography>
-                      </Box>
-                      {totalDiscount > 0 && (
-                        <Box style={{ marginLeft: 20, marginRight: 20 }}>
-                          <Typography style={{ fontSize: 14 }}>
-                            {isRTL ? 'الحسومات' : 'Total Discounts'}
-                          </Typography>
-                          <Typography
-                            style={{ fontWeight: 'bold', fontSize: 14 }}
-                          >
-                            {moneyFormat(totalDiscount)}
-                          </Typography>
-                        </Box>
-                      )}
-                    </Box>
-                    <Box>
-                      <Typography style={{ fontSize: 14 }}>
-                        {isRTL ? 'المقبوضات' : 'Total Paid'}
-                      </Typography>
-                      <Typography style={{ fontWeight: 'bold', fontSize: 14 }}>
-                        {moneyFormat(totalpaid)}
-                      </Typography>
-                    </Box>
-                    <Box>
-                      <Typography
-                        style={{ fontSize: 14, color: colors.blue[500] }}
-                      >
-                        {isRTL ? 'المتبقي' : 'Due Payment'}
-                      </Typography>{' '}
-                      <Typography
-                        style={{
-                          fontWeight: 'bold',
-                          fontSize: 14,
-                          color: colors.blue[500],
-                        }}
-                      >
-                        {moneyFormat(totalinvoiced - totalpaid - totalDiscount)}
-                      </Typography>
-                    </Box>
-
-                    <Box>
-                      <Typography style={{ fontSize: 14 }}>
-                        {isRTL ? 'المصروفات' : 'Total Expenses'}
-                      </Typography>{' '}
-                      <Typography style={{ fontWeight: 'bold', fontSize: 14 }}>
-                        {moneyFormat(toatlExpenses)}
-                      </Typography>
-                    </Box>
-                    <Box>
-                      <Typography style={{ fontSize: 14 }}>
-                        {isRTL ? 'القيود' : 'Entries'}
-                      </Typography>{' '}
-                      <Typography
-                        style={{
-                          fontWeight: 'bold',
-                          fontSize: 14,
-                          color: totalkaids < 0 ? colors.red[500] : undefined,
-                        }}
-                      >
-                        {moneyFormat(totalkaids)}
-                      </Typography>
-                    </Box>
-                    <Box>
-                      <Typography
-                        style={{ fontSize: 14, color: colors.green[500] }}
-                      >
-                        {isRTL ? 'صافي الايراد' : 'Total Income'}
-                      </Typography>{' '}
-                      <Typography
-                        style={{
-                          fontWeight: 'bold',
-                          fontSize: 14,
-                          color:
-                            income < 0 ? colors.red[500] : colors.green[500],
-                        }}
-                      >
-                        {moneyFormat(income)}
-                      </Typography>
-                    </Box>
+      <Box>
+        <Box style={{ display: 'flex', marginTop: 20, marginBottom: 20 }}>
+          <Grid container spacing={0} style={{ width: width - 300 }}>
+            <Grid item xs={12}>
+              <Box
+                style={{
+                  backgroundColor: '#f5f5f5',
+                }}
+              >
+                <Box display="flex" style={{}}></Box>
+                {row && (
+                  <Box style={{ marginBottom: 10 }}>
+                    <TabPanel value={value} index={0}>
+                      <MainCustomer
+                        isRTL={isRTL}
+                        words={words}
+                        theme={theme}
+                        name="taskId"
+                        value={row}
+                        id={row?.id}
+                        width={width}
+                        height={height}
+                        start={null}
+                        end={null}
+                        closeloading={closeloading}
+                        setOpenCloseDate={setOpenCloseDate}
+                        daysData={daysData}
+                      ></MainCustomer>
+                    </TabPanel>
+                    <TabPanel value={value} index={1}>
+                      <EventsCustomer
+                        isRTL={isRTL}
+                        words={words}
+                        theme={theme}
+                        id={row?.id}
+                        name="taskId"
+                        width={width}
+                        height={height}
+                        start={null}
+                        end={null}
+                        value={row}
+                        company={company}
+                      ></EventsCustomer>
+                    </TabPanel>
+                    <TabPanel value={value} index={2}>
+                      <InvoicesCustomer
+                        isRTL={isRTL}
+                        words={words}
+                        theme={theme}
+                        name="taskId"
+                        id={row?.id}
+                        width={width}
+                        height={height}
+                        start={null}
+                        end={null}
+                        value={row}
+                        company={company}
+                      ></InvoicesCustomer>
+                    </TabPanel>
+                    <TabPanel value={value} index={3}>
+                      <ReceiptCustomer
+                        isRTL={isRTL}
+                        words={words}
+                        theme={theme}
+                        name="taskId"
+                        id={row?.id}
+                        width={width}
+                        height={height}
+                        start={null}
+                        end={null}
+                        value={row}
+                        company={company}
+                      ></ReceiptCustomer>
+                    </TabPanel>
+                    <TabPanel value={value} index={4}>
+                      <ExpensesCustomer
+                        isRTL={isRTL}
+                        words={words}
+                        theme={theme}
+                        name="taskId"
+                        id={row?.id}
+                        width={width}
+                        height={height}
+                        start={null}
+                        end={null}
+                        value={row}
+                        company={company}
+                      ></ExpensesCustomer>
+                    </TabPanel>
+                    <TabPanel value={value} index={5}>
+                      <KaidsCustomer
+                        isRTL={isRTL}
+                        words={words}
+                        theme={theme}
+                        name="taskId"
+                        id={row?.id}
+                        width={width}
+                        height={height}
+                        start={null}
+                        end={null}
+                      ></KaidsCustomer>
+                    </TabPanel>
+                    <TabPanel value={value} index={6}>
+                      <ReminderCustomer
+                        isRTL={isRTL}
+                        words={words}
+                        theme={theme}
+                        name="taskId"
+                        id={row?.id}
+                        width={width}
+                        height={height}
+                        start={null}
+                        end={null}
+                      ></ReminderCustomer>
+                    </TabPanel>
                   </Box>
-                </Box>
-              )}
-            </Box>
+                )}
+              </Box>
+            </Grid>
           </Grid>
-
           {row && (
-            <Grid item xs={1}>
-              <Box style={{ marginTop: 10, marginBottom: 10 }}>
+            <Box style={{ width: 200 }}>
+              <Box>
                 <Tabs
                   orientation="vertical"
                   value={value}
@@ -699,55 +509,8 @@ const PopupTaskView = ({
                   })}
                 </Tabs>
               </Box>
-              <Box
-                style={{
-                  backgroundColor: '#f5f5f5',
-                  margin: 7,
-                  padding: 8,
-                  borderRadius: 5,
-                  alignItems: 'flex-start',
-                  justifyContent: 'center',
-                }}
-              >
-                <Typography
-                  variant="subtitle1"
-                  style={{
-                    fontWeight: 'bold',
-                    marginTop: 10,
-                    marginBottom: 10,
-                  }}
-                >
-                  {row.title}
-                </Typography>
-                <Typography
-                  variant="subtitle2"
-                  style={{ fontWeight: 'bold', marginTop: 10 }}
-                >
-                  {words.customer}
-                </Typography>
-                <Typography>
-                  {isRTL ? row.customerNameAr : row.customerName}
-                </Typography>
-                <Typography
-                  variant="subtitle2"
-                  style={{ fontWeight: 'bold', marginTop: 10 }}
-                >
-                  {words.employee}
-                </Typography>
-                <Typography>
-                  {isRTL ? row.employeeNameAr : row.employeeName}
-                </Typography>
-                <Typography
-                  variant="subtitle2"
-                  style={{ fontWeight: 'bold', marginTop: 10 }}
-                >
-                  {words.department}
-                </Typography>
-                <Typography>
-                  {isRTL ? row.departmentNameAr : row.departmentName}
-                </Typography>
-              </Box>
-              <Box style={{ padding: 10, marginTop: 20 }}>
+
+              <Box style={{ padding: 10, marginTop: 50 }}>
                 <Button
                   variant="contained"
                   fullWidth
@@ -762,147 +525,95 @@ const PopupTaskView = ({
                   variant="contained"
                   fullWidth
                   color="primary"
+                  onClick={() => setOpenReceipt(true)}
+                >
+                  <Typography>{words.receipts}</Typography>
+                </Button>
+              </Box>
+              <Box style={{ padding: 10 }}>
+                <Button
+                  variant="contained"
+                  fullWidth
+                  color="primary"
                   disabled={loading || row.isClosed}
                   onClick={() => addNewEvent()}
                 >
                   <Typography>{words.newPeriod}</Typography>
                 </Button>
               </Box>
-            </Grid>
-          )}
-
-          <Grid item xs={11}>
-            {daysData && (
-              <Box
-                display={'flex'}
-                style={{
-                  flex: 1,
-                  backgroundColor: colors.grey[100],
-                  marginBottom: 10,
-                }}
-                borderRadius={10}
-              >
-                <Grid container spacing={1}>
-                  <Grid item xs={3}>
-                    {daysData?.progress && (
-                      <Box style={{ height: 90 }}>
-                        <PercentChartTask
-                          pricolor={salesColor}
-                          seccolor={eventColor}
-                          progress={daysData?.progress}
-                          height={90}
-                        />
-                      </Box>
-                    )}
-                  </Grid>
-                  <Grid item xs={9}>
-                    <Grid container spacing={1}>
-                      <Grid item xs={3}>
-                        <Typography
-                          style={{ fontWeight: 'bold', marginTop: 20 }}
-                        >
-                          {isRTL ? 'عدد الايام' : 'Days'} : {daysData?.days}
-                        </Typography>
-                      </Grid>
-                      <Grid item xs={3}>
-                        {daysData?.daysnow && (
-                          <Typography
-                            style={{ fontWeight: 'bold', marginTop: 20 }}
-                          >
-                            {isRTL ? 'أيام مضت' : 'Spent Days'} :{' '}
-                            {daysData?.daysnow}
-                          </Typography>
-                        )}
-                      </Grid>
-                      <Grid item xs={3}>
-                        {daysData?.amountnow && (
-                          <Typography
-                            style={{ fontWeight: 'bold', marginTop: 20 }}
-                          >
-                            {isRTL ? 'القيمة المستحقة' : 'Amount Until Now'} :{' '}
-                            {moneyFormat(daysData?.amountnow)}
-                          </Typography>
-                        )}
-                      </Grid>
-                      <Grid item xs={3}>
-                        <Button
-                          variant="contained"
-                          fullWidth
-                          color="primary"
-                          style={{ width: 150, marginTop: 20 }}
-                          disabled={
-                            closeloading ||
-                            row.isClosed ||
-                            row?.status === 'لم يبدأ بعد' ||
-                            row?.status === 'Not Started'
-                          }
-                          onClick={() => setOpenCloseDate(true)}
-                        >
-                          <Typography>
-                            {words.shutdown} {tempwords?.task}
-                          </Typography>
-                        </Button>
-                      </Grid>
-                    </Grid>
-                  </Grid>
-                </Grid>
+              <Box style={{ padding: 10 }}>
+                <Button
+                  variant="contained"
+                  fullWidth
+                  color="primary"
+                  disabled={
+                    closeloading ||
+                    row.isClosed ||
+                    row?.status === 'لم يبدأ بعد' ||
+                    row?.status === 'Not Started'
+                  }
+                  onClick={() => setOpenCloseDate(true)}
+                >
+                  <Typography>
+                    {words.shutdown} {tempwords?.task}
+                  </Typography>
+                </Button>
               </Box>
-            )}
-          </Grid>
-        </Grid>
-        {row && (
-          <PopupTaskAppointment
-            open={openEvent}
-            onClose={() => setOpenEvent(false)}
-            row={null}
-            isNew={true}
-            resourses={resourses}
-            employees={employees}
-            departments={departments}
-            customers={customers}
-            servicesproducts={servicesproducts}
-            theme={theme}
-          ></PopupTaskAppointment>
-        )}
-        {row && (
-          <PopupTaskInvoice
-            open={openInvoice}
-            onClose={() => setOpenInvoice(false)}
-            task={row}
-            customers={customers}
-            services={servicesproducts}
-            resourses={resourses}
-            employees={employees}
-            departments={departments}
-            company={company}
-            theme={theme}
-            items={itemsList}
-          ></PopupTaskInvoice>
-        )}
-        {row && (
-          <PopupCloseDate
-            open={openCloseDate}
-            onClose={() => setOpenCloseDate(false)}
-            toCloseTask={toCloseTask}
-            theme={theme}
-            isRTL={isRTL}
-            title={`${words.shutdown} ${isRTL ? 'ال' : ''}${tempwords?.task}`}
-            minDate={new Date(row.start)}
-            maxDate={new Date()}
-          ></PopupCloseDate>
-        )}
-
-        <Box>
-          <div style={{ display: 'none' }}>
-            <ContractPrint
+            </Box>
+          )}
+          {row && (
+            <PopupTaskInvoice
+              open={openInvoice}
+              onClose={() => setOpenInvoice(false)}
+              task={row}
+              customers={customers}
+              services={services}
+              resourses={resourses}
+              employees={employees}
+              departments={departments}
               company={company}
-              user={user}
-              printData={printData}
-              ref={componentRef}
-            />
-          </div>
+              theme={theme}
+              items={itemsList}
+            ></PopupTaskInvoice>
+          )}
+          {row && (
+            <PopupReceipt
+              open={openReceipt}
+              onClose={() => setOpenReceipt(false)}
+              task={row}
+              isNew={true}
+              addAction={addFinance}
+              editAction={() => null}
+              theme={theme}
+              company={company}
+              name="customerId"
+              value={custvalue}
+            ></PopupReceipt>
+          )}
+          {row && (
+            <PopupCloseDate
+              open={openCloseDate}
+              onClose={() => setOpenCloseDate(false)}
+              toCloseTask={toCloseTask}
+              theme={theme}
+              isRTL={isRTL}
+              title={`${words.shutdown} ${isRTL ? 'ال' : ''}${tempwords?.task}`}
+              minDate={new Date(row.start)}
+              maxDate={new Date()}
+            ></PopupCloseDate>
+          )}
+          <Box>
+            <div style={{ display: 'none' }}>
+              <ContractPrint
+                company={company}
+                user={user}
+                printData={printData}
+                ref={componentRef}
+              />
+            </div>
+          </Box>
         </Box>
-      </>
+      </Box>
     </PopupLayout>
   );
 };

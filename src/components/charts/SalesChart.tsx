@@ -6,15 +6,17 @@ export default function SalesChart({
   scolor,
   pcolor,
   dcolor,
+  acolor = '#555',
   height,
 }: any) {
-  const { totalinvoiced, totalpaid, totalDiscount } = row;
+  const { totalinvoiced, totalpaid, totalDiscount, amount } = row;
   const data = [
     {
       name: 'Sales',
       totalinvoiced: totalinvoiced ? totalinvoiced : 0,
       totalpaid: totalpaid ? totalpaid : 0,
       totalDiscount: totalDiscount ? totalDiscount : 0,
+      amount: amount ? amount : 0,
     },
   ];
   const h = height ? height : 100;
@@ -31,6 +33,7 @@ export default function SalesChart({
           bottom: 10,
         }}
       >
+        <Bar dataKey="amount" fill={acolor} />
         <Bar dataKey="totalinvoiced" fill={scolor} />
         <Bar dataKey="totalpaid" stackId="a" fill={pcolor} />
         <Bar dataKey="totalDiscount" stackId="a" fill={dcolor} />

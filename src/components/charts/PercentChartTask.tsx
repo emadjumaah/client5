@@ -15,8 +15,8 @@ const PercentChartTask = ({ height, progress, pricolor, seccolor }) => {
       <PieChart height={height}>
         <Pie
           data={[{ value: 1 }]}
-          innerRadius="85%"
-          outerRadius="100%"
+          innerRadius="75%"
+          outerRadius="90%"
           startAngle={startPosition}
           endAngle={startPosition - 360}
           isAnimationActive={false}
@@ -26,8 +26,8 @@ const PercentChartTask = ({ height, progress, pricolor, seccolor }) => {
         />
         <Pie
           data={rdata}
-          innerRadius="85%"
-          outerRadius="100%"
+          innerRadius="75%"
+          outerRadius="90%"
           startAngle={startPosition}
           endAngle={endPosition}
           cornerRadius={20}

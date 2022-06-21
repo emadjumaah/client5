@@ -9,16 +9,22 @@ import {
   SearchState,
   IntegratedFiltering,
   DataTypeProvider,
+  PagingState,
+  IntegratedPaging,
 } from '@devexpress/dx-react-grid';
 import {
   Grid,
   TableHeaderRow,
   TableEditColumn,
-  VirtualTable,
   Toolbar,
   SearchPanel,
   TableColumnVisibility,
   ColumnChooser,
+  DragDropProvider,
+  Table,
+  TableColumnReordering,
+  TableColumnResizing,
+  PagingPanel,
 } from '@devexpress/dx-react-grid-material-ui';
 import { Command, PopupEditing } from '../../Shared';
 import { getRowId } from '../../common';
@@ -26,7 +32,7 @@ import { PopupSendreq } from '../../pubups';
 import { AlertLocal, SearchTable } from '../../components';
 import { errorAlert, errorDeleteAlert } from '../../Shared/helpers';
 import PageLayout from '../main/PageLayout';
-import { Box, colors, Typography } from '@material-ui/core';
+import { Box, colors, Paper, Typography } from '@material-ui/core';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
 import { TableComponent } from '../../Shared/TableComponent';
 import useSendreqs from '../../hooks/useSendreqs';
@@ -46,7 +52,6 @@ export default function Sendreqs(props: any) {
   const [openItem, setOpenItem] = useState(false);
   const [item, setItem] = useState(null);
 
-  const { height } = useWindowDimensions();
   const {
     sendreqs,
     refreshsendreqs,
@@ -62,6 +67,22 @@ export default function Sendreqs(props: any) {
     { name: 'qty', title: words.qty },
     { name: 'active', title: words.status },
   ]);
+
+  const [tableColumnExtensions]: any = useState([
+    { columnName: 'runtime', width: 100 },
+    { columnName: 'title', width: 200 },
+    { columnName: 'groups', width: 150 },
+    { columnName: 'qty', width: 200 },
+    { columnName: 'active', width: 200 },
+  ]);
+
+  const [tableColumnVisibilityColumnExtensions] = useState([
+    { columnName: 'runtime', togglingEnabled: false },
+    { columnName: 'title', togglingEnabled: false },
+  ]);
+  const [pageSizes] = useState([5, 10, 20, 50, 0]);
+  const { width, height } = useWindowDimensions();
+
   const { groups } = useGroups();
   const smss = company?.smss ? company?.smss : 0;
   const apiKey = company?.apiKey;
@@ -91,8 +112,6 @@ export default function Sendreqs(props: any) {
           height: height - 50,
           overflow: 'auto',
           backgroundColor: '#fff',
-          marginLeft: 5,
-          marginRight: 5,
         }}
       >
         <Box
@@ -121,74 +140,102 @@ export default function Sendreqs(props: any) {
             </span>
           </Typography>
         </Box>
-        <Grid rows={sendreqs} columns={columns} getRowId={getRowId}>
-          <SortingState />
-          <SearchState />
-          <EditingState onCommitChanges={commitChanges} />
+        <Paper
+          elevation={5}
+          style={{
+            margin: 40,
+            marginTop: 80,
+            overflow: 'auto',
+            width: width - 330,
+            // height: height - 200,
+            borderRadius: 10,
+          }}
+        >
+          <Grid rows={sendreqs} columns={columns} getRowId={getRowId}>
+            <SortingState />
+            <EditingState onCommitChanges={commitChanges} />
+            <SearchState />
+            <PagingState defaultCurrentPage={0} defaultPageSize={10} />
+            <IntegratedSorting />
+            <IntegratedFiltering />
+            <IntegratedPaging />
+            <DragDropProvider />
+            <Table
+              messages={{
+                noData: isRTL ? 'لا يوجد بيانات' : 'no data',
+              }}
+              tableComponent={TableComponent}
+              rowComponent={(props: any) => (
+                <Table.Row {...props} style={{ height: 60 }}></Table.Row>
+              )}
+              columnExtensions={tableColumnExtensions}
+            />
 
-          <IntegratedSorting />
-          <IntegratedFiltering />
+            <TableColumnReordering
+              defaultOrder={['runtime', 'title', 'groups', 'qty', 'active']}
+            />
+            <TableColumnResizing defaultColumnWidths={tableColumnExtensions} />
 
-          <VirtualTable
-            height={height - 100}
-            messages={{
-              noData: isRTL ? 'لا يوجد بيانات' : 'no data',
-            }}
-            estimatedRowHeight={40}
-            tableComponent={TableComponent}
-          />
-          <TableHeaderRow
-            showSortingControls
-            titleComponent={({ children }) => {
-              return (
-                <Typography style={{ fontSize: 14, fontWeight: 'bold' }}>
-                  {children}
-                </Typography>
-              );
-            }}
-          />
-          <DataTypeProvider
-            for={['nameAr', 'name']}
-            formatterComponent={(props: any) =>
-              nameLinkFormat({ ...props, setItem, setOpenItem, isRTL })
-            }
-          ></DataTypeProvider>
-          <DataTypeProvider
-            for={['groups']}
-            formatterComponent={(props) => groupFormatter(props, groups, isRTL)}
-          ></DataTypeProvider>
-          <DataTypeProvider
-            for={['runtime']}
-            formatterComponent={actionTimeFormatter}
-          ></DataTypeProvider>
-          <DataTypeProvider
-            for={['active']}
-            formatterComponent={(props: any) =>
-              isActiveFormatter({ ...props, editSendreq })
-            }
-          ></DataTypeProvider>
-          <TableColumnVisibility />
-          <TableEditColumn
-            showEditCommand
-            showDeleteCommand
-            showAddCommand
-            commandComponent={Command}
-          ></TableEditColumn>
-          <Toolbar />
-          <ColumnChooser />
-          <SearchPanel
-            inputComponent={(props: any) => {
-              return <SearchTable isRTL={isRTL} {...props}></SearchTable>;
-            }}
-          />
-          <PopupEditing
-            theme={theme}
-            addAction={addSendreq}
-            editAction={editSendreq}
-          >
-            <PopupSendreq smss={smss} apiKey={apiKey}></PopupSendreq>
-          </PopupEditing>
-        </Grid>
+            <TableHeaderRow
+              showSortingControls
+              titleComponent={({ children }) => {
+                return (
+                  <Typography style={{ fontSize: 14, fontWeight: 'bold' }}>
+                    {children}
+                  </Typography>
+                );
+              }}
+            />
+            <TableColumnVisibility
+              columnExtensions={tableColumnVisibilityColumnExtensions}
+              defaultHiddenColumnNames={[]}
+            />
+            <DataTypeProvider
+              for={['nameAr', 'name']}
+              formatterComponent={(props: any) =>
+                nameLinkFormat({ ...props, setItem, setOpenItem, isRTL })
+              }
+            ></DataTypeProvider>
+            <DataTypeProvider
+              for={['groups']}
+              formatterComponent={(props) =>
+                groupFormatter(props, groups, isRTL)
+              }
+            ></DataTypeProvider>
+            <DataTypeProvider
+              for={['runtime']}
+              formatterComponent={actionTimeFormatter}
+            ></DataTypeProvider>
+            <DataTypeProvider
+              for={['active']}
+              formatterComponent={(props: any) =>
+                isActiveFormatter({ ...props, editSendreq })
+              }
+            ></DataTypeProvider>
+            <TableColumnVisibility />
+            <TableEditColumn
+              showEditCommand
+              showDeleteCommand
+              showAddCommand
+              commandComponent={Command}
+            ></TableEditColumn>
+            <Toolbar />
+            <ColumnChooser />
+            <PagingPanel pageSizes={pageSizes} />
+            <SearchPanel
+              inputComponent={(props: any) => {
+                return <SearchTable isRTL={isRTL} {...props}></SearchTable>;
+              }}
+            />
+            <PopupEditing
+              theme={theme}
+              addAction={addSendreq}
+              editAction={editSendreq}
+            >
+              <PopupSendreq smss={smss} apiKey={apiKey}></PopupSendreq>
+            </PopupEditing>
+          </Grid>
+        </Paper>
         {alrt.show && (
           <AlertLocal
             isRTL={isRTL}

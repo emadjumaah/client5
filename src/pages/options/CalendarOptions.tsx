@@ -35,7 +35,7 @@ const CalendarOptions = ({ words, calendar, setCalendar, isRTL }) => {
   };
 
   return (
-    <Paper>
+    <Paper style={{ height: 300, marginTop: 10 }}>
       <Box padding={3}>
         <Typography variant="h6">
           {isRTL ? 'تعديل التقويم' : 'Edit Calendar'}
@@ -67,8 +67,8 @@ const CalendarOptions = ({ words, calendar, setCalendar, isRTL }) => {
                 type="number"
               />
             </Grid>
-            <Grid item md={8}></Grid>
 
+            <Grid item md={8}></Grid>
             <Grid item xs={12} md={4}>
               <PopupTextField
                 required
@@ -79,31 +79,33 @@ const CalendarOptions = ({ words, calendar, setCalendar, isRTL }) => {
                 type="number"
               />
             </Grid>
+            <Grid item md={8}>
+              <Box
+                display="flex"
+                style={{
+                  alignItems: 'center',
+                  justifyContent: 'flex-start',
+                  height: 50,
+                  marginRight: 50,
+                  // marginTop: 20,
+                }}
+              >
+                <Button
+                  onClick={handleSubmit(onSubmit)}
+                  color="primary"
+                  variant="contained"
+                  style={{
+                    width: 90,
+                    height: 34,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}
+                >
+                  <Typography>{words.save}</Typography>
+                </Button>
+              </Box>
+            </Grid>
           </Grid>
-
-          <Box
-            display="flex"
-            style={{
-              alignItems: 'center',
-              justifyContent: 'flex-start',
-              height: 50,
-              // marginTop: 20,
-            }}
-          >
-            <Button
-              onClick={handleSubmit(onSubmit)}
-              color="primary"
-              variant="contained"
-              style={{
-                width: 90,
-                height: 34,
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}
-            >
-              <Typography>{words.save}</Typography>
-            </Button>
-          </Box>
         </Box>
         {/* <AwsUpload></AwsUpload>
         <AwsImageUpload></AwsImageUpload> */}

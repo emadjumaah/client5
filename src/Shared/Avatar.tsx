@@ -7,7 +7,7 @@ import { nameToColor } from '../common';
 export default function Avatar({
   name,
   username,
-  size = 40,
+  size = 44,
   bc = '#ddd',
   bg,
 }: any) {

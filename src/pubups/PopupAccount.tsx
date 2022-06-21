@@ -241,7 +241,7 @@ const PopupAccount = ({
             name="code"
             label={isRTL ? 'كود الحساب' : 'Code'}
             value={code}
-            onChange={(e: any) => setCode(e.target.value)}
+            onChange={(e: any) => setCode(Number(e.target.value))}
             row={row}
             disabled={row && row.parentcode ? true : false}
             type="number"

@@ -67,22 +67,16 @@ import useTasks from '../../hooks/useTasks';
 import getTasks from '../../graphql/query/getTasks';
 import { Getter } from '@devexpress/dx-react-core';
 import { TableComponent } from '../../Shared/TableComponent';
-import {
-  useCustomers,
-  useProducts,
-  useServices,
-  useTemplate,
-} from '../../hooks';
+import { useCustomers, useServices, useTemplate } from '../../hooks';
 import PopupDepartmentView from '../../pubups/PopupDepartmentView';
 import PopupEmployeeView from '../../pubups/PopupEmployeeView';
 import PopupTaskView from '../../pubups/PopupTaskView';
 import PopupCustomerView from '../../pubups/PopupCustomerView';
-import React from 'react';
-import PopupResourseView from '../../pubups/PopupResourseView';
 import useResoursesUp from '../../hooks/useResoursesUp';
 import useEmployeesUp from '../../hooks/useEmployeesUp';
 import useDepartmentsUp from '../../hooks/useDepartmentsUp';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
+import PopupResoursesView from '../../pubups/PopupResoursesView';
 
 export default function Appointments({
   isRTL,
@@ -165,12 +159,11 @@ export default function Appointments({
   const [openDepartmentItem, setOpenDepartmentItem] = useState(false);
 
   const { tasks } = useTasks();
-  const { customers, addCustomer, editCustomer } = useCustomers();
-  const { departments, addDepartment, editDepartment } = useDepartmentsUp();
-  const { employees, addEmployee, editEmployee } = useEmployeesUp();
-  const { resourses, addResourse, editResourse } = useResoursesUp();
+  const { customers } = useCustomers();
+  const { departments } = useDepartmentsUp();
+  const { employees } = useEmployeesUp();
+  const { resourses } = useResoursesUp();
   const { services } = useServices();
-  const { products } = useProducts();
 
   const onCloseTaskItem = () => {
     setOpenTaskItem(false);
@@ -373,9 +366,7 @@ export default function Appointments({
         }}
       >
         <Box
-          boxShadow={1}
           display="flex"
-          borderColor="#ddd"
           style={{
             position: 'absolute',
             zIndex: 111,
@@ -653,53 +644,23 @@ export default function Appointments({
           open={openDepartmentItem}
           onClose={onCloseDepartmentItem}
           row={item}
-          isNew={false}
-          addAction={addDepartment}
-          editAction={editDepartment}
           theme={theme}
           company={company}
-          departments={departments}
-          employees={employees}
-          resourses={resourses}
-          servicesproducts={services}
-          products={products}
-          customers={customers}
-          tasks={tasks}
         ></PopupDepartmentView>
         <PopupEmployeeView
           open={openEmployeeItem}
           onClose={onCloseEmployeeItem}
           row={item}
-          isNew={false}
-          addAction={addEmployee}
-          editAction={editEmployee}
           theme={theme}
           company={company}
-          departments={departments}
-          employees={employees}
-          resourses={resourses}
-          servicesproducts={services}
-          products={products}
-          customers={customers}
-          tasks={tasks}
         ></PopupEmployeeView>
-        <PopupResourseView
+        <PopupResoursesView
           open={openResourseItem}
           onClose={onCloseResourseItem}
           row={item}
-          isNew={false}
-          addAction={addResourse}
-          editAction={editResourse}
           theme={theme}
           company={company}
-          departments={departments}
-          employees={employees}
-          resourses={resourses}
-          servicesproducts={services}
-          products={products}
-          customers={customers}
-          tasks={tasks}
-        ></PopupResourseView>
+        ></PopupResoursesView>
         <PopupTaskView
           open={openTaskItem}
           onClose={onCloseTaskItem}
@@ -707,32 +668,13 @@ export default function Appointments({
           tasks={tasks}
           isNew={false}
           theme={theme}
-          employees={employees}
-          resourses={resourses}
-          customers={customers}
-          departments={departments}
-          addCustomer={addCustomer}
-          editCustomer={editCustomer}
-          company={company}
-          servicesproducts={services}
-          products={products}
         ></PopupTaskView>
         <PopupCustomerView
           open={openCustomerItem}
           onClose={onCloseCustomerItem}
           row={item}
-          isNew={false}
-          addAction={addCustomer}
-          editAction={editCustomer}
           theme={theme}
           company={company}
-          departments={departments}
-          employees={employees}
-          resourses={resourses}
-          servicesproducts={services}
-          products={products}
-          customers={rows}
-          tasks={tasks}
         ></PopupCustomerView>
       </Box>
     </PageLayout>

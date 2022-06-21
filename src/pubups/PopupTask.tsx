@@ -5,7 +5,6 @@ import { useForm } from 'react-hook-form';
 import {
   dublicateAlert,
   errorAlert,
-  getReturnItem,
   messageAlert,
   successAlert,
 } from '../Shared';
@@ -33,7 +32,6 @@ import {
   getDateDayTimeFormat,
   getDateDayWeek,
 } from '../Shared/colorFormat';
-import PopupTaskAppointment from './PopupTaskAppointment';
 import _ from 'lodash';
 import { getPopupTitle } from '../constants/menu';
 import { useCustomers, useProducts, useServices, useTemplate } from '../hooks';
@@ -126,7 +124,6 @@ const PopupTask = ({
 
   const [status, setStatus]: any = useState(null);
 
-  const [openEvent, setOpenEvent] = useState<any>(false);
   const [evList, setEvList] = useState<any>([]);
   const [total, setTotal] = useState<any>(null);
 
@@ -397,13 +394,6 @@ const PopupTask = ({
     setResovalue(nextValue);
   };
 
-  const addEventsToList = (events: any) => {
-    const newArray = [...evList, ...events];
-    const sorted = _.sortBy(newArray, 'startDate');
-    const listwithindex = indexTheList(sorted);
-    setEvList(listwithindex);
-  };
-
   const isemployee = user?.isEmployee && user?.employeeId;
 
   useEffect(() => {
@@ -647,6 +637,15 @@ const PopupTask = ({
       );
       return;
     }
+    if (!resovalue) {
+      await messageAlert(
+        setAlrt,
+        isRTL
+          ? `يرجى اضافة ${tempwords?.resourse}`
+          : `Please add ${tempwords?.resourse}`
+      );
+      return;
+    }
     if (isNew && (!itemsList || itemsList.length === 0)) {
       await messageAlert(
         setAlrt,
@@ -686,11 +685,9 @@ const PopupTask = ({
   const apply = async (mutate: any, variables: any) => {
     try {
       if (evList?.length === 0) {
-        const res = await mutate({ variables });
-        const nitem = getReturnItem(res, 'createTask');
-        if (setNewValue && nitem) setNewValue(nitem, 'task');
-        setSaving(false);
+        mutate({ variables });
         await successAlert(setAlrt, isRTL);
+        setSaving(false);
         onCloseForm();
       } else {
         await mutate({ variables });
@@ -744,14 +741,10 @@ const PopupTask = ({
       fullWidth
       preventclose
       saving={saving}
+      canceltitle={isRTL ? 'اغلاق' : 'close'}
       mb={10}
     >
       <Box>
-        {/* <Box display="flex">
-          <Typography style={{ fontWeight: 'bold' }} variant="body2">
-            {row?.docNo}
-          </Typography>
-        </Box> */}
         <Grid container spacing={2}>
           <Grid item xs={8}>
             <Grid container spacing={1}>
@@ -855,6 +848,27 @@ const PopupTask = ({
                   disabled={name === 'customerId'}
                 ></AutoFieldLocal>
               </Grid>
+              {!tempoptions?.noRes && (
+                <Grid item xs={6}>
+                  <AutoFieldLocal
+                    name="resourse"
+                    title={tempwords?.resourse}
+                    words={words}
+                    options={resourses}
+                    disabled={name === 'resourseId'}
+                    value={resovalue}
+                    setSelectValue={setResovalue}
+                    setSelectError={setResoError}
+                    selectError={resoError}
+                    refernce={resoRef}
+                    register={register}
+                    openAdd={openResourse}
+                    isRTL={isRTL}
+                    fullWidth
+                    day={day}
+                  ></AutoFieldLocal>
+                </Grid>
+              )}
               {!tempoptions?.noPro && (
                 <Grid item xs={6}>
                   <AutoFieldLocal
@@ -910,27 +924,6 @@ const PopupTask = ({
                     refernce={emplRef}
                     register={register}
                     openAdd={openEmployee}
-                    isRTL={isRTL}
-                    fullWidth
-                    day={day}
-                  ></AutoFieldLocal>
-                </Grid>
-              )}
-              {!tempoptions?.noRes && (
-                <Grid item xs={6}>
-                  <AutoFieldLocal
-                    name="resourse"
-                    title={tempwords?.resourse}
-                    words={words}
-                    options={resourses}
-                    disabled={name === 'resourseId'}
-                    value={resovalue}
-                    setSelectValue={setResovalue}
-                    setSelectError={setResoError}
-                    selectError={resoError}
-                    refernce={resoRef}
-                    register={register}
-                    openAdd={openResourse}
                     isRTL={isRTL}
                     fullWidth
                     day={day}
@@ -1050,25 +1043,6 @@ const PopupTask = ({
                     {isRTL ? 'اضافة تنبيه' : 'Add Reminder'}
                   </Typography>
                 </Button>
-                {/* <Button
-                  variant="outlined"
-                  style={{
-                    margin: 10,
-                    fontSize: 14,
-                    minWidth: 80,
-                    marginRight: 10,
-                    marginLeft: 10,
-                  }}
-                  onClick={() => {
-                    setSelected(null);
-                    setType(1);
-                    setOpenAction(true);
-                  }}
-                >
-                  <Typography style={{ fontSize: 13, fontWeight: 'bold' }}>
-                    {isRTL ? 'اضافة رسالة' : 'Add SMS'}
-                  </Typography>
-                </Button> */}
                 <Paper style={{ height: 195, overflow: 'auto' }}>
                   {actionslist.map((act: any) => {
                     return (
@@ -1127,25 +1101,6 @@ const PopupTask = ({
             ))}
           </Grid>
         </Grid>
-
-        <PopupTaskAppointment
-          open={openEvent}
-          onClose={() => setOpenEvent(false)}
-          row={null}
-          isNew={true}
-          employees={employees}
-          departments={departments}
-          customers={customers}
-          resourses={resourses}
-          employee={emplvalue}
-          department={departvalue}
-          customer={custvalue}
-          resourse={resovalue}
-          servicesproducts={[...services, ...products]}
-          theme={theme}
-          setEnd={setEnd}
-          addEventsToList={addEventsToList}
-        ></PopupTaskAppointment>
         <PopupCustomer
           newtext={newtext}
           open={openCust}

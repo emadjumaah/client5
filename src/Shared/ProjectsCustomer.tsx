@@ -3,7 +3,6 @@
 import React, { useEffect, useState } from 'react';
 import Paper from '@material-ui/core/Paper';
 import {
-  EditingState,
   SortingState,
   IntegratedSorting,
   DataTypeProvider,
@@ -11,18 +10,11 @@ import {
 import {
   Grid,
   TableHeaderRow,
-  TableEditColumn,
   VirtualTable,
   TableColumnVisibility,
 } from '@devexpress/dx-react-grid-material-ui';
-import { Command, PopupEditing } from '.';
-import {
-  getCustomers,
-  getDepartments,
-  getEmployees,
-  getResourses,
-} from '../graphql';
-import { useLazyQuery, useMutation } from '@apollo/client';
+
+import { useLazyQuery } from '@apollo/client';
 import {
   createdAtFormatter,
   currencyFormatterEmpty,
@@ -33,20 +25,10 @@ import {
   progressFormatter,
   taskNameFormatter,
 } from './colorFormat';
-import { AlertLocal } from '../components';
 import { getColumns } from '../common/columns';
-import PopupTask from '../pubups/PopupTask';
-import createTask from '../graphql/mutation/createTask';
-import updateTask from '../graphql/mutation/updateTask';
-import deleteTaskById from '../graphql/mutation/deleteTaskById';
-import { useCustomers, useDepartments } from '../hooks';
-import { errorAlert, errorDeleteAlert } from './helpers';
+
 import { TableComponent } from './TableComponent';
-import useTasks from '../hooks/useTasks';
-import useEmployeesUp from '../hooks/useEmployeesUp';
-import useResoursesUp from '../hooks/useResoursesUp';
-import useProjects from '../hooks/useProjects';
-import PopupProjectView from '../pubups/PopupProjectView';
+
 import getObjectProjects from '../graphql/query/getObjectProjects';
 import { updateDocNumbers } from '../common';
 import { Box, Typography } from '@material-ui/core';
@@ -56,17 +38,13 @@ export const getRowId = (row: { _id: any }) => row._id;
 export default function ProjectsCustomer({
   isRTL,
   words,
-  theme,
-  company,
-  servicesproducts,
-  products,
-  value,
   name,
   id,
   width,
   height,
+  start,
+  end,
 }) {
-  const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
   const col = getColumns({ isRTL, words });
   const [columns] = useState([
     { name: isRTL ? 'nameAr' : 'name', title: words.name },
@@ -101,48 +79,9 @@ export default function ProjectsCustomer({
   const [item, setItem] = useState(null);
   const [openItem, setOpenItem] = useState(false);
 
-  const { customers, addCustomer, editCustomer } = useCustomers();
-  const { departments } = useDepartments();
-  const { employees } = useEmployeesUp();
-  const { resourses } = useResoursesUp();
-  const { projects } = useProjects();
-  const { tasks } = useTasks();
-
-  const onCloseItem = () => {
-    setOpenItem(false);
-    setItem(null);
-  };
-
   const [loadTasks, tasksData]: any = useLazyQuery(getObjectProjects, {
     fetchPolicy: 'cache-and-network',
   });
-
-  const refresQuery = {
-    refetchQueries: [
-      {
-        query: getObjectProjects,
-        variables: { [name]: id },
-      },
-      {
-        query: getObjectProjects,
-      },
-      {
-        query: getCustomers,
-      },
-      {
-        query: getEmployees,
-        variables: { isRTL, resType: 1 },
-      },
-      {
-        query: getDepartments,
-        variables: { isRTL, depType: 1 },
-      },
-      {
-        query: getResourses,
-        variables: { isRTL, resType: 1 },
-      },
-    ],
-  };
 
   useEffect(() => {
     if (openItem) {
@@ -167,24 +106,6 @@ export default function ProjectsCustomer({
     { columnName: col.title.name, togglingEnabled: false },
   ]);
 
-  const [addTask] = useMutation(createTask, refresQuery);
-  const [editTask] = useMutation(updateTask, refresQuery);
-  const [removeTaskById] = useMutation(deleteTaskById, refresQuery);
-
-  const commitChanges = async ({ deleted }) => {
-    if (deleted) {
-      const _id = deleted[0];
-      const res = await removeTaskById({ variables: { _id } });
-      if (res?.data?.deleteTaskById?.ok === false) {
-        if (res?.data?.deleteTaskById?.error.includes('related')) {
-          await errorDeleteAlert(setAlrt, isRTL);
-        } else {
-          await errorAlert(setAlrt, isRTL);
-        }
-      }
-    }
-  };
-
   useEffect(() => {
     if (tasksData?.data?.getObjectProjects?.data) {
       const { data } = tasksData.data.getObjectProjects;
@@ -193,27 +114,22 @@ export default function ProjectsCustomer({
     }
   }, [tasksData]);
 
-  const refresh = () => {
-    tasksData?.refetch();
-  };
-
   return (
     <Box
       style={{
-        height: height - 230,
+        height: height - 280,
         width: width - 300,
         margin: 10,
       }}
     >
       <Paper
         style={{
-          height: height - 240,
+          height: height - 290,
           width: width - 320,
         }}
       >
         <Grid rows={rows} columns={columns} getRowId={getRowId}>
           <SortingState />
-          <EditingState onCommitChanges={commitChanges} />
           <IntegratedSorting />
           <VirtualTable
             height={680}
@@ -277,60 +193,7 @@ export default function ProjectsCustomer({
             for={['progress']}
             formatterComponent={progressFormatter}
           ></DataTypeProvider>
-
-          <TableEditColumn
-            showEditCommand
-            showDeleteCommand
-            showAddCommand
-            commandComponent={Command}
-          ></TableEditColumn>
-          <PopupEditing addAction={addTask} editAction={editTask}>
-            <PopupTask
-              value={value}
-              name={name}
-              employees={employees}
-              resourses={resourses}
-              departments={departments}
-              customers={customers}
-              addCustomer={addCustomer}
-              editCustomer={editCustomer}
-              company={company}
-              projects={projects}
-              theme={theme}
-              refresh={refresh}
-            ></PopupTask>
-          </PopupEditing>
         </Grid>
-        {alrt.show && (
-          <AlertLocal
-            isRTL={isRTL}
-            type={alrt?.type}
-            msg={alrt?.msg}
-            top
-          ></AlertLocal>
-        )}
-        {item && (
-          <PopupProjectView
-            open={openItem}
-            onClose={onCloseItem}
-            item={item}
-            tasks={tasks}
-            isNew={false}
-            theme={theme}
-            resourses={resourses}
-            employees={employees}
-            departments={departments}
-            customers={customers}
-            addCustomer={addCustomer}
-            editCustomer={editCustomer}
-            company={company}
-            servicesproducts={servicesproducts}
-            products={products}
-            refresh={refresh}
-            addAction={addTask}
-            editAction={editTask}
-          ></PopupProjectView>
-        )}
       </Paper>
     </Box>
   );

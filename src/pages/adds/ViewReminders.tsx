@@ -7,13 +7,21 @@ import {
   DataTypeProvider,
   SearchState,
   IntegratedFiltering,
+  PagingState,
+  IntegratedPaging,
 } from '@devexpress/dx-react-grid';
 import {
   Grid,
   TableHeaderRow,
-  VirtualTable,
   Toolbar,
   SearchPanel,
+  DragDropProvider,
+  Table,
+  TableColumnReordering,
+  TableColumnResizing,
+  TableColumnVisibility,
+  ColumnChooser,
+  PagingPanel,
 } from '@devexpress/dx-react-grid-material-ui';
 import { Loading } from '../../Shared';
 import { getRowId } from '../../common';
@@ -22,7 +30,7 @@ import { actionTimeFormatter, sentFormatter } from '../../Shared/colorFormat';
 import { SearchTable } from '../../components';
 import { getColumns } from '../../common/columns';
 
-import { Box, Typography } from '@material-ui/core';
+import { Box, Paper, Typography } from '@material-ui/core';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
 import PageLayout from '../main/PageLayout';
 import { useLazyQuery, useMutation } from '@apollo/client';
@@ -34,6 +42,7 @@ import useDepartmentsUp from '../../hooks/useDepartmentsUp';
 import useResoursesUp from '../../hooks/useResoursesUp';
 import { useTemplate } from '../../hooks';
 import getRemindersActions from '../../graphql/query/getRemindersActions';
+import { TableComponent } from '../../Shared/TableComponent';
 
 export default function ViewReminders(props: any) {
   const { isRTL, words, menuitem, theme } = props;
@@ -59,7 +68,21 @@ export default function ViewReminders(props: any) {
         ]
   );
 
-  const { height } = useWindowDimensions();
+  const [tableColumnExtensions]: any = useState([
+    { columnName: col.time.name, width: 200 },
+    { columnName: col.title.name, width: 250 },
+    { columnName: col.resourse.name, width: 250 },
+    { columnName: col.employee.name, width: 250 },
+    { columnName: col.department.name, width: 250 },
+    { columnName: col.sent.name, width: 120 },
+  ]);
+
+  const [tableColumnVisibilityColumnExtensions] = useState([
+    { columnName: 'time', togglingEnabled: false },
+  ]);
+  const [pageSizes] = useState([5, 10, 15, 20, 50, 0]);
+
+  const { width, height } = useWindowDimensions();
   const { employees } = useEmployeesUp();
   const { departments } = useDepartmentsUp();
   const { resourses } = useResoursesUp();
@@ -182,8 +205,6 @@ export default function ViewReminders(props: any) {
           height: height - 50,
           overflow: 'auto',
           backgroundColor: '#fff',
-          marginLeft: 5,
-          marginRight: 5,
         }}
       >
         <Box
@@ -210,52 +231,85 @@ export default function ViewReminders(props: any) {
             theme={theme}
           ></DateNavigatorReports>
         </Box>
+        <Paper
+          elevation={5}
+          style={{
+            marginLeft: 40,
+            marginRight: 40,
+            marginTop: 60,
+            overflow: 'auto',
+            width: width - 330,
+            // height: height - 200,
+            borderRadius: 10,
+          }}
+        >
+          <Grid rows={rows} columns={columns} getRowId={getRowId}>
+            <SortingState />
+            <SearchState />
+            <PagingState defaultCurrentPage={0} defaultPageSize={15} />
+            <IntegratedSorting />
+            <IntegratedFiltering />
+            <IntegratedPaging />
+            <DragDropProvider />
+            <Table
+              messages={{
+                noData: isRTL ? 'لا يوجد بيانات' : 'no data',
+              }}
+              tableComponent={TableComponent}
+              rowComponent={(props: any) => (
+                <Table.Row {...props} style={{ height: 40 }}></Table.Row>
+              )}
+              columnExtensions={tableColumnExtensions}
+            />
 
-        <Grid rows={rows} columns={columns} getRowId={getRowId}>
-          <SortingState />
-          <SearchState />
+            <TableColumnReordering
+              defaultOrder={[
+                col.time.name,
+                col.title.name,
+                col.resourse.name,
+                col.employee.name,
+                col.department.name,
+                col.sent.name,
+              ]}
+            />
+            <TableColumnResizing defaultColumnWidths={tableColumnExtensions} />
 
-          <IntegratedSorting />
-          <IntegratedFiltering />
+            <TableHeaderRow
+              showSortingControls
+              titleComponent={({ children }) => {
+                return (
+                  <Typography style={{ fontSize: 14, fontWeight: 'bold' }}>
+                    {children}
+                  </Typography>
+                );
+              }}
+            />
+            <TableColumnVisibility
+              columnExtensions={tableColumnVisibilityColumnExtensions}
+              defaultHiddenColumnNames={[]}
+            />
+            <DataTypeProvider
+              for={['time']}
+              formatterComponent={actionTimeFormatter}
+            ></DataTypeProvider>
+            <DataTypeProvider
+              for={['sent']}
+              formatterComponent={(props: any) =>
+                sentFormatter({ ...props, editRAction })
+              }
+            ></DataTypeProvider>
 
-          <VirtualTable
-            height={height - 100}
-            messages={{
-              noData: isRTL ? 'لا يوجد بيانات' : 'no data',
-            }}
-            estimatedRowHeight={40}
-          />
+            <Toolbar />
+            <ColumnChooser />
+            <PagingPanel pageSizes={pageSizes} />
 
-          <DataTypeProvider
-            for={['time']}
-            formatterComponent={actionTimeFormatter}
-          ></DataTypeProvider>
-          <DataTypeProvider
-            for={['sent']}
-            formatterComponent={(props: any) =>
-              sentFormatter({ ...props, editRAction })
-            }
-          ></DataTypeProvider>
-
-          <TableHeaderRow
-            showSortingControls
-            titleComponent={({ children }) => {
-              return (
-                <Typography style={{ fontSize: 14, fontWeight: 'bold' }}>
-                  {children}
-                </Typography>
-              );
-            }}
-          />
-
-          {<Toolbar />}
-
-          <SearchPanel
-            inputComponent={(props: any) => {
-              return <SearchTable isRTL={isRTL} {...props}></SearchTable>;
-            }}
-          />
-        </Grid>
+            <SearchPanel
+              inputComponent={(props: any) => {
+                return <SearchTable isRTL={isRTL} {...props}></SearchTable>;
+              }}
+            />
+          </Grid>
+        </Paper>
 
         {loading && <Loading isRTL={isRTL} />}
       </Box>

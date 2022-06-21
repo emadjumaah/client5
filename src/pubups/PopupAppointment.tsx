@@ -49,9 +49,6 @@ import useDepartmentsUp from '../hooks/useDepartmentsUp';
 import useEmployeesUp from '../hooks/useEmployeesUp';
 import PopupResourses from './PopupResourses';
 import useResoursesUp from '../hooks/useResoursesUp';
-import PopupTask from './PopupTask';
-import useTasks from '../hooks/useTasks';
-import useProjects from '../hooks/useProjects';
 import { SelectLocal } from '../pages/calendar/common/SelectLocal';
 import { eventLengthOptions } from '../constants/rrule';
 import { roles } from '../common';
@@ -114,7 +111,6 @@ const PopupAppointment = ({
   const [openDep, setOpenDep] = useState(false);
   const [openEmp, setOpenEmp] = useState(false);
   const [openRes, setOpenRes] = useState(false);
-  const [openTsk, setOpenTsk] = useState(false);
 
   const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
 
@@ -132,9 +128,7 @@ const PopupAppointment = ({
   const { addDepartment, editDepartment } = useDepartmentsUp();
   const { addEmployee, editEmployee } = useEmployeesUp();
   const { addResourse, editResourse } = useResoursesUp();
-  const { addTask, editTask } = useTasks();
   const { tempwords, tempoptions } = useTemplate();
-  const { projects } = useProjects();
   const { products } = useProducts();
 
   const { register, handleSubmit } = useForm({});
@@ -171,13 +165,6 @@ const PopupAppointment = ({
   };
   const onCloseResourse = () => {
     setOpenRes(false);
-    setNewtext('');
-  };
-  const openTask = () => {
-    setOpenTsk(true);
-  };
-  const onCloseTask = () => {
-    setOpenTsk(false);
     setNewtext('');
   };
   useEffect(() => {
@@ -494,9 +481,6 @@ const PopupAppointment = ({
   const onNewResoChange = (nextValue: any) => {
     setResovalue(nextValue);
   };
-  const onNewTaskChange = (nextValue: any) => {
-    setTaskvalue(nextValue);
-  };
 
   const resetAllForms = () => {
     setStartDate(null);
@@ -766,31 +750,7 @@ const PopupAppointment = ({
                         setSelectValue={setTaskvalue}
                         register={register}
                         isRTL={isRTL}
-                        openAdd={openTask}
                         fullWidth
-                        mb={0}
-                      ></AutoFieldLocal>
-                    </Grid>
-                  )}
-
-                  {!tempoptions?.noEmp && (
-                    <Grid item xs={6}>
-                      <AutoFieldLocal
-                        name="employee"
-                        title={tempwords?.employee}
-                        disabled={isemployee}
-                        words={words}
-                        options={employees}
-                        value={emplvalue}
-                        setSelectValue={setEmplvalue}
-                        setSelectError={setEmplError}
-                        selectError={emplError}
-                        refernce={emplRef}
-                        register={register}
-                        openAdd={openEmployee}
-                        isRTL={isRTL}
-                        fullWidth
-                        day={day}
                         mb={0}
                       ></AutoFieldLocal>
                     </Grid>
@@ -816,6 +776,29 @@ const PopupAppointment = ({
                       ></AutoFieldLocal>
                     </Grid>
                   )}
+                  {!tempoptions?.noEmp && (
+                    <Grid item xs={6}>
+                      <AutoFieldLocal
+                        name="employee"
+                        title={tempwords?.employee}
+                        disabled={isemployee}
+                        words={words}
+                        options={employees}
+                        value={emplvalue}
+                        setSelectValue={setEmplvalue}
+                        setSelectError={setEmplError}
+                        selectError={emplError}
+                        refernce={emplRef}
+                        register={register}
+                        openAdd={openEmployee}
+                        isRTL={isRTL}
+                        fullWidth
+                        day={day}
+                        mb={0}
+                      ></AutoFieldLocal>
+                    </Grid>
+                  )}
+
                   <Grid item xs={6}>
                     <AutoFieldLocal
                       name="department"
@@ -1040,21 +1023,6 @@ const PopupAppointment = ({
           editAction={editDepartment}
           depType={1}
         ></PopupDeprtment>
-        <PopupTask
-          newtext={newtext}
-          open={openTsk}
-          onClose={onCloseTask}
-          isNew={true}
-          setNewValue={onNewTaskChange}
-          row={null}
-          employees={employees}
-          resourses={resourses}
-          departments={departments}
-          projects={projects}
-          customers={customers}
-          addAction={addTask}
-          editAction={editTask}
-        ></PopupTask>
         <PopupEmployee
           newtext={newtext}
           departments={departments}

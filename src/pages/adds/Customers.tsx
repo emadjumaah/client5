@@ -36,13 +36,11 @@ import { getColumns } from '../../common/columns';
 import {
   appointmentsFormatter,
   avataManageFormatter,
-  expensesFormatter,
-  kaidsFormatter,
   nameManageLinkFormat,
+  raseedFormatter,
   salesFormatter,
 } from '../../Shared/colorFormat';
 import PopupCustomerView from '../../pubups/PopupCustomerView';
-import useTasks from '../../hooks/useTasks';
 import {
   createCustomer,
   deleteCustomer,
@@ -50,10 +48,6 @@ import {
   updateCustomer,
 } from '../../graphql';
 import { useLazyQuery, useMutation } from '@apollo/client';
-import useEmployeesUp from '../../hooks/useEmployeesUp';
-import useDepartmentsUp from '../../hooks/useDepartmentsUp';
-import useResoursesUp from '../../hooks/useResoursesUp';
-import { useProducts, useServices } from '../../hooks';
 import { Box, Paper, Typography } from '@material-ui/core';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
 import { TableComponent } from '../../Shared/TableComponent';
@@ -64,18 +58,12 @@ import createMultiCustomers from '../../graphql/mutation/createMultiCustomers';
 export default function Customers(props: any) {
   const { isRTL, words, menuitem, theme, company } = props;
   const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
-  const [pageSizes] = useState([5, 6, 10, 20, 50, 0]);
+  const [pageSizes] = useState([5, 10, 20, 50, 0]);
   const [rows, setRows] = useState([]);
   const [item, setItem] = useState(null);
   const [openImport, setOpenImport] = useState(false);
   const [openItem, setOpenItem] = useState(false);
   const { height, width } = useWindowDimensions();
-  const { tasks } = useTasks();
-  const { departments } = useDepartmentsUp();
-  const { employees } = useEmployeesUp();
-  const { resourses } = useResoursesUp();
-  const { services } = useServices();
-  const { products } = useProducts();
 
   const onCloseItem = () => {
     setOpenItem(false);
@@ -88,20 +76,18 @@ export default function Customers(props: any) {
     col.name,
     col.appointments,
     col.sales,
-    col.expenses,
-    col.kaids,
+    col.raseed,
     { name: 'phone', title: words.phoneNumber },
     { name: 'email', title: words.email },
     { name: 'address', title: words.address },
   ]);
 
   const [tableColumnExtensions]: any = useState([
-    { columnName: 'avatar', width: 110 },
-    { columnName: col.name.name, width: 250 },
-    { columnName: col.appointments.name, width: 250, align: 'center' },
-    { columnName: col.sales.name, width: 240 },
-    { columnName: col.kaids.name, width: 200 },
-    { columnName: col.expenses.name, width: 200 },
+    { columnName: 'avatar', width: 150 },
+    { columnName: col.name.name, width: 300 },
+    { columnName: col.appointments.name, width: 300 },
+    { columnName: col.sales.name, width: 300 },
+    { columnName: col.raseed.name, width: 200 },
     { columnName: 'phone', width: 150 },
     { columnName: 'email', width: 200 },
     { columnName: 'address', width: 200 },
@@ -158,7 +144,13 @@ export default function Customers(props: any) {
   useEffect(() => {
     if (custssData?.data?.getCustomers?.data) {
       const { data } = custssData.data.getCustomers;
-      setRows(data);
+      const rdata = data.map((d: any) => {
+        return {
+          ...d,
+          raseed: d?.totalinvoiced - d?.totalpaid - d?.totalDiscount || 0,
+        };
+      });
+      setRows(rdata);
     }
   }, [custssData]);
 
@@ -205,7 +197,7 @@ export default function Customers(props: any) {
             <SortingState />
             <EditingState onCommitChanges={commitChanges} />
             <SearchState />
-            <PagingState defaultCurrentPage={0} defaultPageSize={6} />
+            <PagingState defaultCurrentPage={0} defaultPageSize={5} />
 
             <IntegratedSorting />
             <IntegratedFiltering />
@@ -218,7 +210,7 @@ export default function Customers(props: any) {
               }}
               tableComponent={TableComponent}
               rowComponent={(props: any) => (
-                <Table.Row {...props} style={{ height: 110 }}></Table.Row>
+                <Table.Row {...props} style={{ height: 130 }}></Table.Row>
               )}
               columnExtensions={tableColumnExtensions}
             />
@@ -228,8 +220,7 @@ export default function Customers(props: any) {
                 col.name.name,
                 col.appointments.name,
                 col.sales.name,
-                col.kaids.name,
-                col.expenses.name,
+                col.raseed.name,
                 'phone',
                 'email',
                 'address',
@@ -258,6 +249,7 @@ export default function Customers(props: any) {
                   setItem,
                   setOpenItem,
                   isRTL,
+                  height: 110,
                 })
               }
             ></DataTypeProvider>
@@ -277,26 +269,18 @@ export default function Customers(props: any) {
             <DataTypeProvider
               for={[col.appointments.name]}
               formatterComponent={(props: any) =>
-                appointmentsFormatter({ ...props, theme, isRTL })
+                appointmentsFormatter({ ...props, theme, isRTL, height: 110 })
               }
             ></DataTypeProvider>
             <DataTypeProvider
               for={[col.sales.name]}
               formatterComponent={(props: any) =>
-                salesFormatter({ ...props, theme, isRTL })
+                salesFormatter({ ...props, theme, isRTL, height: 110 })
               }
             ></DataTypeProvider>
             <DataTypeProvider
-              for={[col.expenses.name]}
-              formatterComponent={(props: any) =>
-                expensesFormatter({ ...props, theme, isRTL })
-              }
-            ></DataTypeProvider>
-            <DataTypeProvider
-              for={[col.kaids.name]}
-              formatterComponent={(props: any) =>
-                kaidsFormatter({ ...props, theme, isRTL })
-              }
+              for={[col.raseed.name]}
+              formatterComponent={raseedFormatter}
             ></DataTypeProvider>
             <TableEditColumn
               showEditCommand
@@ -334,18 +318,8 @@ export default function Customers(props: any) {
           open={openItem}
           onClose={onCloseItem}
           row={item}
-          isNew={false}
-          addAction={addCustomer}
-          editAction={editCustomer}
           theme={theme}
-          departments={departments}
           company={company}
-          employees={employees}
-          resourses={resourses}
-          servicesproducts={services}
-          products={products}
-          customers={rows}
-          tasks={tasks}
         ></PopupCustomerView>
         <PopupCustomerImport
           open={openImport}

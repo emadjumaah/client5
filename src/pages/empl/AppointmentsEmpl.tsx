@@ -163,7 +163,7 @@ export default function AppointmentsEmpl({
   };
 
   const { tasks } = useTasks();
-  const { customers, addCustomer, editCustomer } = useCustomers();
+  const { customers } = useCustomers();
   const { departments, addDepartment, editDepartment } = useDepartments();
   const { employees, addEmployee, editEmployee } = useEmployees();
   const { resourses } = useResoursesUp();
@@ -555,32 +555,14 @@ export default function AppointmentsEmpl({
           tasks={tasks}
           isNew={false}
           theme={theme}
-          resourses={resourses}
-          employees={employees}
-          departments={departments}
-          customers={customers}
-          addCustomer={addCustomer}
-          editCustomer={editCustomer}
           company={company}
-          servicesproducts={servicesproducts}
-          products={products}
         ></PopupTaskView>
         <PopupCustomerView
           open={openCustomerItem}
           onClose={onCloseCustomerItem}
           row={item}
-          isNew={false}
-          addAction={addCustomer}
-          editAction={editCustomer}
           theme={theme}
-          departments={departments}
           company={company}
-          employees={employees}
-          resourses={resourses}
-          servicesproducts={servicesproducts}
-          products={products}
-          customers={rows}
-          tasks={tasks}
         ></PopupCustomerView>
       </Paper>
     </PageLayout>

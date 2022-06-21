@@ -8,14 +8,22 @@ import {
   IntegratedFiltering,
   DataTypeProvider,
   EditingState,
+  PagingState,
+  IntegratedPaging,
 } from '@devexpress/dx-react-grid';
 import {
   Grid,
   TableHeaderRow,
-  VirtualTable,
   Toolbar,
   SearchPanel,
   TableEditColumn,
+  DragDropProvider,
+  Table,
+  TableColumnReordering,
+  TableColumnResizing,
+  TableColumnVisibility,
+  ColumnChooser,
+  PagingPanel,
 } from '@devexpress/dx-react-grid-material-ui';
 import { getRowId } from '../../common';
 import { SearchTable } from '../../components';
@@ -24,7 +32,7 @@ import useWindowDimensions from '../../hooks/useWindowDimensions';
 import { useLazyQuery, useMutation } from '@apollo/client';
 import { TableComponent } from '../../Shared/TableComponent';
 import { EventsContext } from '../../contexts';
-import { Box, colors, Typography } from '@material-ui/core';
+import { Box, colors, Paper, Typography } from '@material-ui/core';
 import DateNavigatorReports from '../../components/filters/DateNavigatorReports';
 import {
   mobilesFormatter,
@@ -55,6 +63,20 @@ export default function Messages({
     { name: 'total', title: words.total },
   ]);
 
+  const [tableColumnExtensions]: any = useState([
+    { columnName: 'createdAt', width: 100 },
+    { columnName: 'phones', width: 200 },
+    { columnName: 'body', width: 150 },
+    { columnName: 'qty', width: 200 },
+    { columnName: 'total', width: 200 },
+  ]);
+
+  const [tableColumnVisibilityColumnExtensions] = useState([
+    { columnName: 'createdAt', togglingEnabled: false },
+  ]);
+  const [pageSizes] = useState([5, 10, 20, 50, 0]);
+  const { width, height } = useWindowDimensions();
+
   const {
     state: { currentDate, currentViewName, endDate },
     dispatch,
@@ -70,7 +92,6 @@ export default function Messages({
     dispatch({ type: 'setEndDate', payload: curDate });
   };
 
-  const { height } = useWindowDimensions();
   const [loadMsgs, msgsData]: any = useLazyQuery(getMessages);
 
   const refresQuery = {
@@ -127,8 +148,6 @@ export default function Messages({
           height: height - 50,
           overflow: 'auto',
           backgroundColor: '#fff',
-          marginLeft: 5,
-          marginRight: 5,
         }}
       >
         <Box
@@ -180,59 +199,85 @@ export default function Messages({
             </Typography>
           </Box>
         </Box>
+        <Paper
+          elevation={5}
+          style={{
+            margin: 40,
+            marginTop: 80,
+            overflow: 'auto',
+            width: width - 330,
+            borderRadius: 10,
+          }}
+        >
+          <Grid rows={rows} columns={columns} getRowId={getRowId}>
+            <SortingState />
+            <EditingState onCommitChanges={commitChanges} />
+            <SearchState />
+            <PagingState defaultCurrentPage={0} defaultPageSize={10} />
+            <IntegratedSorting />
+            <IntegratedFiltering />
+            <IntegratedPaging />
+            <DragDropProvider />
+            <Table
+              messages={{
+                noData: isRTL ? 'لا يوجد بيانات' : 'no data',
+              }}
+              tableComponent={TableComponent}
+              rowComponent={(props: any) => (
+                <Table.Row {...props} style={{ height: 60 }}></Table.Row>
+              )}
+              columnExtensions={tableColumnExtensions}
+            />
 
-        <Grid rows={rows} columns={columns} getRowId={getRowId}>
-          <SortingState />
-          <SearchState />
-          <EditingState onCommitChanges={commitChanges} />
+            <TableColumnReordering
+              defaultOrder={['createdAt', 'phones', 'body', 'qty', 'total']}
+            />
+            <TableColumnResizing defaultColumnWidths={tableColumnExtensions} />
 
-          <IntegratedSorting />
-          <IntegratedFiltering />
+            <TableHeaderRow
+              showSortingControls
+              titleComponent={({ children }) => {
+                return (
+                  <Typography style={{ fontSize: 14, fontWeight: 'bold' }}>
+                    {children}
+                  </Typography>
+                );
+              }}
+            />
 
-          <VirtualTable
-            height={height - 100}
-            messages={{
-              noData: isRTL ? 'لا يوجد بيانات' : 'no data',
-            }}
-            estimatedRowHeight={45}
-            tableComponent={TableComponent}
-          />
-          <DataTypeProvider
-            for={['createdAt']}
-            formatterComponent={actionTimeFormatter}
-          ></DataTypeProvider>
-          <DataTypeProvider
-            for={['phones']}
-            formatterComponent={mobilesFormatter}
-          ></DataTypeProvider>
-          <DataTypeProvider
-            for={['total']}
-            formatterComponent={(props: any) => totalFormatter({ ...props })}
-          ></DataTypeProvider>
-          <TableHeaderRow
-            showSortingControls
-            titleComponent={({ children }) => {
-              return (
-                <Typography style={{ fontSize: 14, fontWeight: 'bold' }}>
-                  {children}
-                </Typography>
-              );
-            }}
-          />
-          <TableEditColumn
-            showAddCommand
-            commandComponent={Command}
-          ></TableEditColumn>
-          <Toolbar />
-          <SearchPanel
-            inputComponent={(props: any) => {
-              return <SearchTable isRTL={isRTL} {...props}></SearchTable>;
-            }}
-          />
-          <PopupEditing theme={theme} addAction={addSMS}>
-            <PopupSendSMS></PopupSendSMS>
-          </PopupEditing>
-        </Grid>
+            <TableColumnVisibility
+              columnExtensions={tableColumnVisibilityColumnExtensions}
+              defaultHiddenColumnNames={['address', 'notes']}
+            />
+            <DataTypeProvider
+              for={['createdAt']}
+              formatterComponent={actionTimeFormatter}
+            ></DataTypeProvider>
+            <DataTypeProvider
+              for={['phones']}
+              formatterComponent={mobilesFormatter}
+            ></DataTypeProvider>
+            <DataTypeProvider
+              for={['total']}
+              formatterComponent={(props: any) => totalFormatter({ ...props })}
+            ></DataTypeProvider>
+            <TableEditColumn
+              showAddCommand
+              commandComponent={Command}
+            ></TableEditColumn>
+            <Toolbar />
+            <ColumnChooser />
+            <PagingPanel pageSizes={pageSizes} />
+            <SearchPanel
+              inputComponent={(props: any) => {
+                return <SearchTable isRTL={isRTL} {...props}></SearchTable>;
+              }}
+            />
+            <PopupEditing theme={theme} addAction={addSMS}>
+              <PopupSendSMS></PopupSendSMS>
+            </PopupEditing>
+          </Grid>
+        </Paper>
       </Box>
     </PageLayout>
   );

@@ -20,7 +20,7 @@ import {
   ColumnChooser,
 } from '@devexpress/dx-react-grid-material-ui';
 import { Command, errorAlert, Loading, PopupEditing } from '../../Shared';
-import { useCustomers, useProducts, useServices } from '../../hooks';
+import { useCustomers } from '../../hooks';
 import { getRowId, roles } from '../../common';
 import {
   avatarPatternFormatter,
@@ -35,7 +35,6 @@ import { AlertLocal, SearchTable } from '../../components';
 import { errorDeleteAlert } from '../../Shared/helpers';
 import PageLayout from '../main/PageLayout';
 import { getColumns } from '../../common/columns';
-import useTasks from '../../hooks/useTasks';
 import useEmployeesUp from '../../hooks/useEmployeesUp';
 import useResoursesUp from '../../hooks/useResoursesUp';
 import useProjects from '../../hooks/useProjects';
@@ -59,13 +58,10 @@ export default function ManageProjects({
   const [openItem, setOpenItem] = useState(false);
   const col = getColumns({ isRTL, words });
 
-  const { tasks } = useTasks();
   const { employees } = useEmployeesUp();
   const { departments } = useDepartmentsUp();
   const { resourses } = useResoursesUp();
   const { customers } = useCustomers();
-  const { services } = useServices();
-  const { products } = useProducts();
   const { height } = useWindowDimensions();
   const onCloseItem = () => {
     setOpenItem(false);
@@ -268,19 +264,7 @@ export default function ManageProjects({
           open={openItem}
           onClose={onCloseItem}
           row={item}
-          isNew={false}
-          addAction={addProject}
-          editAction={editProject}
           theme={theme}
-          projects={projects}
-          departments={departments}
-          company={company}
-          resourses={resourses}
-          employees={employees}
-          servicesproducts={services}
-          products={products}
-          customers={customers}
-          tasks={tasks}
         ></PopupProjectView>
       </Box>
     </PageLayout>

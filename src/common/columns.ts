@@ -281,6 +281,24 @@ export const getColumns = ({ isRTL, words }: any) => {
       name: 'type',
       title: isRTL ? 'النوع' : 'Type',
     },
+    raseed: {
+      id: 37,
+      ref: 'raseed',
+      name: 'raseed',
+      title: isRTL ? 'الرصيد' : 'Balance',
+    },
+    taskdata: {
+      id: 38,
+      ref: 'taskdata',
+      name: 'taskdata',
+      title: isRTL ? 'البيانات' : 'Information',
+    },
+    daysdata: {
+      id: 38,
+      ref: 'daysdata',
+      name: 'daysdata',
+      title: isRTL ? 'الأيام' : 'Days',
+    },
   };
 };
 

@@ -15,7 +15,7 @@ import React from 'react';
 
 const PopupGantt = ({ open, onClose, theme, tasks, isRTL }: any) => {
   const [rows, setRows] = useState([]);
-  const [view, setView] = useState<ViewMode>(ViewMode.Day);
+  const [view, setView] = useState<ViewMode>(ViewMode.Month);
   const [isChecked, setIsChecked] = useState(false);
 
   let columnWidth = 60;

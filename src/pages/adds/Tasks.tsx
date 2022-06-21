@@ -9,16 +9,22 @@ import {
   DataTypeProvider,
   SearchState,
   IntegratedFiltering,
+  PagingState,
+  IntegratedPaging,
 } from '@devexpress/dx-react-grid';
 import {
   Grid,
   TableHeaderRow,
   TableEditColumn,
-  VirtualTable,
   Toolbar,
   SearchPanel,
   TableColumnVisibility,
   ColumnChooser,
+  DragDropProvider,
+  Table,
+  TableColumnReordering,
+  TableColumnResizing,
+  PagingPanel,
 } from '@devexpress/dx-react-grid-material-ui';
 import { Command, Loading, PopupEditing } from '../../Shared';
 import {
@@ -30,28 +36,28 @@ import {
 } from '../../graphql';
 import { useLazyQuery, useMutation } from '@apollo/client';
 import {
+  appointTaskFormatter,
   createdAtFormatter,
-  currencyFormatterEmpty,
+  daysdataFormatter,
   dueAmountFormatter,
-  incomeAmountFormatter,
-  invoiceReceiptFormatter,
-  nameLinkFormat,
-  progressFormatter,
-  taskStatusFormat,
-  taskTypeFormat,
+  expensesFormatter,
+  kaidsFormatter,
+  raseedFormatter,
+  salesTaskFormatter,
+  taskdataFormatter,
+  taskTitleNameFormatter,
 } from '../../Shared/colorFormat';
 import PageLayout from '../main/PageLayout';
 import { AlertLocal, SearchTable } from '../../components';
 import { getColumns } from '../../common/columns';
-import { Box, Button, Typography } from '@material-ui/core';
+import { Box, Typography } from '@material-ui/core';
 import TasksContext from '../../contexts/tasks';
 import getTasks from '../../graphql/query/getTasks';
 import PopupTask from '../../pubups/PopupTask';
 import createTask from '../../graphql/mutation/createTask';
 import updateTask from '../../graphql/mutation/updateTask';
 import deleteTaskById from '../../graphql/mutation/deleteTaskById';
-import { useCustomers, useProducts, useServices } from '../../hooks';
-import PopupGantt from '../../pubups/PopupGantt';
+import { useCustomers } from '../../hooks';
 import { errorAlert, errorDeleteAlert } from '../../Shared/helpers';
 import { TableComponent } from '../../Shared/TableComponent';
 import DateNavigatorReports from '../../components/filters/DateNavigatorReports';
@@ -69,10 +75,18 @@ export const getRowId = (row: { _id: any }) => row._id;
 
 export default function Tasks({ isRTL, words, menuitem, theme, company }) {
   const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
+  const [pageSizes] = useState([5, 6, 10, 20, 50, 0]);
 
   const col = getColumns({ isRTL, words });
 
   const [columns] = useState([
+    col.name,
+    col.taskdata,
+    col.daysdata,
+    col.appointments,
+    col.sales,
+    col.expenses,
+    col.kaids,
     col.title,
     col.createdAt,
     col.type,
@@ -84,25 +98,31 @@ export default function Tasks({ isRTL, words, menuitem, theme, company }) {
     col.customer,
     col.department,
     col.employee,
-    col.evQty,
-    col.progress,
     { name: 'amount', title: isRTL ? 'الاجمالي' : 'Total' },
-    col.totalinvoiced,
-    col.totalpaid,
-    {
-      id: 40,
-      ref: 'due',
-      name: 'due',
-      title: isRTL ? 'المتبقي' : 'Due Payment',
-    },
-    col.toatlExpenses,
-    {
-      id: 38,
-      ref: 'income',
-      name: 'income',
-      title: isRTL ? 'صافي الايراد' : 'Total Income',
-    },
   ]);
+
+  const [tableColumnExtensions]: any = useState([
+    { columnName: col.name.name, width: 250 },
+    { columnName: col.taskdata.name, width: 250 },
+    { columnName: col.daysdata.name, width: 280 },
+    { columnName: col.appointments.name, width: 280 },
+    { columnName: col.sales.name, width: 280 },
+    { columnName: col.expenses.name, width: 200 },
+    { columnName: col.kaids.name, width: 230 },
+    { columnName: col.title.name, width: 200 },
+    { columnName: col.createdAt.name, width: 150 },
+    { columnName: col.type.name, width: 100 },
+    { columnName: col.status.name, width: 100 },
+    { columnName: col.start.name, width: 120 },
+    { columnName: col.end.name, width: 120 },
+    { columnName: col.project.name, width: 200 },
+    { columnName: col.resourse.name, width: 200 },
+    { columnName: col.customer.name, width: 200 },
+    { columnName: col.department.name, width: 200 },
+    { columnName: col.employee.name, width: 200 },
+    { columnName: 'amount', width: 150 },
+  ]);
+
   const [columnsViewer] = useState([
     col.title,
     col.start,
@@ -116,7 +136,6 @@ export default function Tasks({ isRTL, words, menuitem, theme, company }) {
 
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [openGantt, setOpenGantt] = useState(false);
   const [start, setStart] = useState<any>(null);
   const [end, setEnd] = useState<any>(null);
   const [periodvalue, setPeriodvalue] = useState<any>(null);
@@ -127,9 +146,8 @@ export default function Tasks({ isRTL, words, menuitem, theme, company }) {
   const { employees } = useEmployeesUp();
   const { resourses } = useResoursesUp();
   const { projects } = useProjects();
-  const { services } = useServices();
-  const { products } = useProducts();
-  const { height } = useWindowDimensions();
+  const { height, width } = useWindowDimensions();
+
   const onCloseItem = () => {
     setOpenItem(false);
     setItem(null);
@@ -149,7 +167,9 @@ export default function Tasks({ isRTL, words, menuitem, theme, company }) {
     dispatch({ type: 'setEndDate', payload: curDate });
   };
 
-  const [loadTasks, tasksData]: any = useLazyQuery(getTasks);
+  const [loadTasks, tasksData]: any = useLazyQuery(getTasks, {
+    fetchPolicy: 'cache-and-network',
+  });
 
   const refresQuery = {
     refetchQueries: [
@@ -160,27 +180,12 @@ export default function Tasks({ isRTL, words, menuitem, theme, company }) {
           end: end ? end.setHours(23, 59, 59, 999) : undefined,
         },
       },
-      {
-        query: getTasks,
-      },
-      {
-        query: getCustomers,
-      },
-      {
-        query: getEmployees,
-        variables: { isRTL, resType: 1 },
-      },
-      {
-        query: getDepartments,
-        variables: { isRTL, depType: 1 },
-      },
-      {
-        query: getResourses,
-        variables: { isRTL, resType: 1 },
-      },
-      {
-        query: getProjects,
-      },
+      { query: getTasks },
+      { query: getCustomers },
+      { query: getEmployees, variables: { isRTL, resType: 1 } },
+      { query: getDepartments, variables: { isRTL, depType: 1 } },
+      { query: getResourses, variables: { isRTL, resType: 1 } },
+      { query: getProjects },
     ],
   };
 
@@ -238,7 +243,6 @@ export default function Tasks({ isRTL, words, menuitem, theme, company }) {
   const refresh = () => {
     tasksData?.refetch();
   };
-
   return (
     <PageLayout
       menuitem={menuitem}
@@ -248,15 +252,12 @@ export default function Tasks({ isRTL, words, menuitem, theme, company }) {
       refresh={refresh}
       periodvalue={periodvalue}
       setPeriodvalue={setPeriodvalue}
-      // bgcolor={colors.deepPurple[400]}
     >
       <Box
         style={{
           height: height - 50,
           overflow: 'auto',
           backgroundColor: '#fff',
-          marginLeft: 5,
-          marginRight: 5,
         }}
       >
         <Box
@@ -266,6 +267,8 @@ export default function Tasks({ isRTL, words, menuitem, theme, company }) {
             zIndex: 111,
             flexDirection: 'row',
             alignItems: 'center',
+            marginTop: 8,
+            marginRight: 45,
           }}
         >
           <DateNavigatorReports
@@ -282,24 +285,20 @@ export default function Tasks({ isRTL, words, menuitem, theme, company }) {
             words={words}
             theme={theme}
           ></DateNavigatorReports>
-          {rows?.length > 0 && (
-            <Button
-              variant="outlined"
-              color="primary"
-              onClick={() => setOpenGantt(true)}
-              style={{
-                height: 32,
-                width: 120,
-              }}
-            >
-              <Typography style={{ fontSize: 13, fontWeight: 'bold' }}>
-                {isRTL ? 'عرض زمني' : 'Time View'}
-              </Typography>
-            </Button>
-          )}
         </Box>
 
-        <Paper>
+        <Paper
+          elevation={5}
+          style={{
+            marginTop: 10,
+            marginLeft: 40,
+            marginRight: 40,
+            marginBottom: 20,
+            overflow: 'auto',
+            width: width - 320,
+            borderRadius: 10,
+          }}
+        >
           <Grid
             rows={rows}
             columns={roles.isEditor() ? columns : columnsViewer}
@@ -308,18 +307,47 @@ export default function Tasks({ isRTL, words, menuitem, theme, company }) {
             <SortingState />
             <EditingState onCommitChanges={commitChanges} />
             <SearchState />
+            <PagingState defaultCurrentPage={0} defaultPageSize={6} />
 
             <IntegratedSorting />
             <IntegratedFiltering />
-
-            <VirtualTable
-              height={height - 98}
+            <IntegratedPaging />
+            <DragDropProvider />
+            <Table
               messages={{
                 noData: isRTL ? 'لا يوجد بيانات' : 'no data',
               }}
-              estimatedRowHeight={60}
               tableComponent={TableComponent}
+              rowComponent={(props: any) => (
+                <Table.Row {...props} style={{ height: 120 }}></Table.Row>
+              )}
+              columnExtensions={tableColumnExtensions}
             />
+            <TableColumnReordering
+              defaultOrder={[
+                col.name.name,
+                col.taskdata.name,
+                col.daysdata.name,
+                col.appointments.name,
+                col.sales.name,
+                col.expenses.name,
+                col.kaids.name,
+                col.title.name,
+                col.createdAt.name,
+                col.type.name,
+                col.status.name,
+                col.start.name,
+                col.end.name,
+                col.project.name,
+                col.resourse.name,
+                col.customer.name,
+                col.department.name,
+                col.employee.name,
+                'amount',
+              ]}
+            />
+
+            <TableColumnResizing defaultColumnWidths={tableColumnExtensions} />
             <TableHeaderRow
               showSortingControls
               titleComponent={({ children }) => {
@@ -333,27 +361,23 @@ export default function Tasks({ isRTL, words, menuitem, theme, company }) {
             <TableColumnVisibility
               columnExtensions={tableColumnVisibilityColumnExtensions}
               defaultHiddenColumnNames={[
+                col.title.name,
+                col.type.name,
+                col.expenses.name,
+                col.kaids.name,
+                col.status.name,
+                col.start.name,
+                col.end.name,
                 col.createdAt.name,
                 col.department.name,
                 col.project.name,
-                col.evQty.name,
-                col.toatlExpenses.name,
-                // col.end.name,
-                'progress',
-                'totalinvoiced',
-                'totalpaid',
-                'due',
-                'income',
+                col.resourse.name,
+                col.customer.name,
+                col.department.name,
+                col.employee.name,
+                'amount',
               ]}
             />
-            {roles.isEditor() && (
-              <DataTypeProvider
-                for={['title']}
-                formatterComponent={(props: any) =>
-                  nameLinkFormat({ ...props, setItem, setOpenItem, isRTL })
-                }
-              ></DataTypeProvider>
-            )}
             <DataTypeProvider
               for={['start', 'end', 'createdAt']}
               formatterComponent={createdAtFormatter}
@@ -362,31 +386,59 @@ export default function Tasks({ isRTL, words, menuitem, theme, company }) {
               for={['due']}
               formatterComponent={dueAmountFormatter}
             ></DataTypeProvider>
+            {roles.isEditor() && (
+              <DataTypeProvider
+                for={[col.name.name]}
+                formatterComponent={(props: any) =>
+                  taskTitleNameFormatter({
+                    ...props,
+                    setItem,
+                    setOpenItem,
+                    isRTL,
+                  })
+                }
+              ></DataTypeProvider>
+            )}
             <DataTypeProvider
-              for={['amount', 'toatlExpenses', 'totalpaid']}
-              formatterComponent={currencyFormatterEmpty}
+              for={[col.taskdata.name]}
+              formatterComponent={(props: any) =>
+                taskdataFormatter({ ...props, theme, isRTL })
+              }
             ></DataTypeProvider>
             <DataTypeProvider
-              for={['totalinvoiced']}
-              formatterComponent={invoiceReceiptFormatter}
+              for={[col.daysdata.name]}
+              formatterComponent={(props: any) =>
+                daysdataFormatter({ ...props, theme, isRTL })
+              }
             ></DataTypeProvider>
             <DataTypeProvider
-              for={['income']}
-              formatterComponent={incomeAmountFormatter}
+              for={[col.appointments.name]}
+              formatterComponent={(props: any) =>
+                appointTaskFormatter({ ...props, theme, isRTL })
+              }
             ></DataTypeProvider>
             <DataTypeProvider
-              for={['type']}
-              formatterComponent={taskTypeFormat}
+              for={[col.sales.name]}
+              formatterComponent={(props: any) =>
+                salesTaskFormatter({ ...props, theme, isRTL })
+              }
             ></DataTypeProvider>
             <DataTypeProvider
-              for={['status']}
-              formatterComponent={taskStatusFormat}
+              for={[col.expenses.name]}
+              formatterComponent={(props: any) =>
+                expensesFormatter({ ...props, theme, isRTL })
+              }
             ></DataTypeProvider>
             <DataTypeProvider
-              for={['progress']}
-              formatterComponent={progressFormatter}
+              for={[col.kaids.name]}
+              formatterComponent={(props: any) =>
+                kaidsFormatter({ ...props, theme, isRTL })
+              }
             ></DataTypeProvider>
-
+            <DataTypeProvider
+              for={['amount']}
+              formatterComponent={raseedFormatter}
+            ></DataTypeProvider>
             <TableEditColumn
               showEditCommand
               showDeleteCommand
@@ -396,6 +448,8 @@ export default function Tasks({ isRTL, words, menuitem, theme, company }) {
 
             <Toolbar />
             <ColumnChooser />
+            <PagingPanel pageSizes={pageSizes} />
+
             <SearchPanel
               inputComponent={(props: any) => {
                 return <SearchTable isRTL={isRTL} {...props}></SearchTable>;
@@ -420,13 +474,6 @@ export default function Tasks({ isRTL, words, menuitem, theme, company }) {
             </PopupEditing>
           </Grid>
           {loading && <Loading isRTL={isRTL} />}
-          <PopupGantt
-            open={openGantt}
-            onClose={() => setOpenGantt(false)}
-            tasks={rows}
-            theme={theme}
-            isRTL={isRTL}
-          ></PopupGantt>
           {alrt.show && (
             <AlertLocal
               isRTL={isRTL}
@@ -443,20 +490,7 @@ export default function Tasks({ isRTL, words, menuitem, theme, company }) {
               tasks={rows}
               isNew={false}
               theme={theme}
-              resourses={resourses}
-              employees={employees}
-              departments={departments}
-              customers={customers}
-              addCustomer={addCustomer}
-              editCustomer={editCustomer}
               company={company}
-              servicesproducts={services}
-              products={products}
-              refresh={refresh}
-              startrange={start}
-              endrange={end}
-              addAction={addTask}
-              editAction={editTask}
               stopTask={stopTask}
             ></PopupTaskView>
           )}

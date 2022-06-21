@@ -13,6 +13,7 @@ import {
 } from '@material-ui/core';
 import React from 'react';
 import { nameToColor, roles } from '../common';
+import { getTaskTimeAmountData } from '../common/helpers';
 import {
   isSuperAdmin,
   isBranchAdmin,
@@ -96,57 +97,89 @@ export const rolesFormatter = ({ row, isRTL }: any) => {
   const isV = isViewer(user);
 
   if (isSuperAdmin(user)) {
-    return <Box>{isRTL ? 'الأدمن' : 'Main Admin'}</Box>;
+    return <Typography>{isRTL ? 'الأدمن' : 'Main Admin'}</Typography>;
   }
   if (isBranchAdmin(user)) {
-    return <Box>{isRTL ? 'مدير عام' : 'Branch Admin'}</Box>;
+    return <Typography>{isRTL ? 'مدير عام' : 'Branch Admin'}</Typography>;
   }
   if (isA) {
     if (isF && isO) {
-      return <Box>{isRTL ? 'مدير حسابات وعمليات' : 'Admin / General'}</Box>;
+      return (
+        <Typography>
+          {isRTL ? 'مدير حسابات وعمليات' : 'Admin / General'}
+        </Typography>
+      );
     } else if (isF) {
-      return <Box>{isRTL ? 'مدير حسابات' : 'Admin / Accountant'}</Box>;
+      return (
+        <Typography>{isRTL ? 'مدير حسابات' : 'Admin / Accountant'}</Typography>
+      );
     } else if (isO) {
-      return <Box>{isRTL ? 'مدير عمليات' : 'Admin / Accountant'}</Box>;
+      return (
+        <Typography>{isRTL ? 'مدير عمليات' : 'Admin / Accountant'}</Typography>
+      );
     } else {
-      return <Box>{isRTL ? 'مدير' : 'Admin'}</Box>;
+      return <Typography>{isRTL ? 'مدير' : 'Admin'}</Typography>;
     }
   }
   if (isE) {
     if (isF && isO) {
-      return <Box>{isRTL ? 'محرر حسابات وعمليات' : 'Editor / General'}</Box>;
+      return (
+        <Typography>
+          {isRTL ? 'محرر حسابات وعمليات' : 'Editor / General'}
+        </Typography>
+      );
     } else if (isF) {
-      return <Box>{isRTL ? 'محرر حسابات' : 'Editor / Accountant'}</Box>;
+      return (
+        <Typography>{isRTL ? 'محرر حسابات' : 'Editor / Accountant'}</Typography>
+      );
     } else if (isO) {
-      return <Box>{isRTL ? 'محرر عمليات' : 'Editor / Accountant'}</Box>;
+      return (
+        <Typography>{isRTL ? 'محرر عمليات' : 'Editor / Accountant'}</Typography>
+      );
     } else {
-      return <Box>{isRTL ? 'محرر' : 'Editor'}</Box>;
+      return <Typography>{isRTL ? 'محرر' : 'Editor'}</Typography>;
     }
   }
   if (isW) {
     if (isF && isO) {
-      return <Box>{isRTL ? 'كاتب حسابات وعمليات' : 'writer / General'}</Box>;
+      return (
+        <Typography>
+          {isRTL ? 'كاتب حسابات وعمليات' : 'writer / General'}
+        </Typography>
+      );
     } else if (isF) {
-      return <Box>{isRTL ? 'كاتب حسابات' : 'writer / Accountant'}</Box>;
+      return (
+        <Typography>{isRTL ? 'كاتب حسابات' : 'writer / Accountant'}</Typography>
+      );
     } else if (isO) {
-      return <Box>{isRTL ? 'كاتب عمليات' : 'writer / Accountant'}</Box>;
+      return (
+        <Typography>{isRTL ? 'كاتب عمليات' : 'writer / Accountant'}</Typography>
+      );
     } else {
-      return <Box>{isRTL ? 'كاتب' : 'writer'}</Box>;
+      return <Typography>{isRTL ? 'كاتب' : 'writer'}</Typography>;
     }
   }
   if (isV) {
     if (isF && isO) {
-      return <Box>{isRTL ? 'زائر حسابات وعمليات ' : 'Viewer / General'}</Box>;
+      return (
+        <Typography>
+          {isRTL ? 'زائر حسابات وعمليات ' : 'Viewer / General'}
+        </Typography>
+      );
     } else if (isF) {
-      return <Box>{isRTL ? 'زائر حسابات' : 'Viewer / Accountant'}</Box>;
+      return (
+        <Typography>{isRTL ? 'زائر حسابات' : 'Viewer / Accountant'}</Typography>
+      );
     } else if (isO) {
-      return <Box>{isRTL ? 'زائر عمليات' : 'Viewer / Accountant'}</Box>;
+      return (
+        <Typography>{isRTL ? 'زائر عمليات' : 'Viewer / Accountant'}</Typography>
+      );
     } else {
-      return <Box>{isRTL ? 'زائر' : 'Viewer'}</Box>;
+      return <Typography>{isRTL ? 'زائر' : 'Viewer'}</Typography>;
     }
   }
 
-  return <Box></Box>;
+  return <Typography></Typography>;
 };
 
 export const avatarPatternFormatter = ({ row }: any) => {
@@ -158,9 +191,14 @@ export const avatarPatternFormatter = ({ row }: any) => {
     </Box>
   );
 };
-export const avataManageFormatter = ({ row, setItem, setOpenItem }: any) => {
+export const avataManageFormatter = ({
+  row,
+  setItem,
+  setOpenItem,
+  height = 100,
+}: any) => {
   const { color, logo, name } = row;
-  const bgcolor = name ? nameToColor(`${name}`) : '';
+  const bgcolor = name ? nameToColor(`${name}Jadwal2!@`) : '';
   const letter = name?.substring(0, 1)?.toUpperCase() || '';
   if (color) {
     return (
@@ -169,7 +207,7 @@ export const avataManageFormatter = ({ row, setItem, setOpenItem }: any) => {
         style={{
           flex: 1,
           width: 10,
-          height: 100,
+          height,
           backgroundColor: fade(color, 0.8),
           borderRadius: 5,
         }}
@@ -183,8 +221,8 @@ export const avataManageFormatter = ({ row, setItem, setOpenItem }: any) => {
           overflow: 'hidden',
           borderRadius: 5,
           backgroundColor: '#ddd',
-          width: 100,
-          height: 100,
+          width: height,
+          height,
           cursor: 'pointer',
         }}
         onClick={() => {
@@ -198,8 +236,8 @@ export const avataManageFormatter = ({ row, setItem, setOpenItem }: any) => {
             borderRadius: 5,
             objectFit: 'cover',
           }}
-          width={100}
-          height={100}
+          width={height}
+          height={height}
           src={logo}
         />
       </div>
@@ -211,8 +249,8 @@ export const avataManageFormatter = ({ row, setItem, setOpenItem }: any) => {
         overflow: 'hidden',
         borderRadius: 5,
         backgroundColor: bgcolor,
-        width: 100,
-        height: 100,
+        width: height,
+        height,
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
@@ -279,10 +317,11 @@ export const sectionsTypeFormatter = ({ value }: any) => {
 
 export const avatarFormatter = ({ row }: any) => {
   const { name, username, color } = row;
+  const bgcolor = color ? color : nameToColor(`${name}Jadwal2!@`);
 
   return (
     <Box>
-      <Avatar username={username} name={name} bg={color}></Avatar>
+      <Avatar username={username} name={name} bg={bgcolor}></Avatar>
     </Box>
   );
 };
@@ -564,6 +603,400 @@ export const eventStatusFormatter = ({ value }: any) => {
     return <div></div>;
   }
 };
+
+const renderTag = ({ value, color, bgcolor, fontSize = 12 }) => {
+  if (!value) return <></>;
+  return (
+    <Box
+      style={{
+        display: 'flex',
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: 75,
+        height: 24,
+        backgroundColor: bgcolor,
+        borderRadius: 5,
+        margin: 4,
+      }}
+    >
+      <Typography
+        style={{
+          fontSize,
+          fontWeight: 'bold',
+          color,
+        }}
+      >
+        {value}
+      </Typography>
+    </Box>
+  );
+};
+
+export const taskTitleNameFormatter = ({
+  row,
+  isRTL,
+  setItem,
+  setOpenItem,
+}: any) => {
+  const {
+    title,
+    start,
+    end,
+    docNo,
+    customerNameAr,
+    customerName,
+    customerPhone,
+  } = row;
+
+  return (
+    <Grid container spacing={0}>
+      <Grid item xs={12} style={{ paddingLeft: 10, paddingRight: 10 }}>
+        <Typography style={{ fontSize: 10 }}> {docNo} </Typography>
+      </Grid>
+      <Grid item xs={12} style={{ marginTop: 5 }}>
+        <Button
+          onClick={() => {
+            if (setItem) {
+              setItem(row);
+              setOpenItem(true);
+            }
+          }}
+          variant="contained"
+          color="primary"
+          fullWidth
+          style={{
+            height: 30,
+            alignItems: 'center',
+            justifyContent: 'flex-start',
+          }}
+        >
+          <Typography style={{ fontSize: 14 }}> {title} </Typography>
+        </Button>
+      </Grid>
+      <Grid
+        item
+        xs={12}
+        style={{ paddingLeft: 10, paddingRight: 10, marginTop: 5 }}
+      >
+        <Typography style={{ fontWeight: 'bold', fontSize: 14 }}>
+          {isRTL ? customerNameAr : customerName} ({' '}
+          {customerPhone?.substring(3)} )
+        </Typography>
+      </Grid>
+
+      <Grid item xs={4} style={{ paddingLeft: 10, paddingRight: 10 }}>
+        <Typography variant="caption">{simpleDateFormatter2(start)}</Typography>
+      </Grid>
+      <Grid item xs={4}>
+        <Typography variant="caption">{simpleDateFormatter2(end)}</Typography>
+      </Grid>
+    </Grid>
+  );
+};
+export const taskdataFormatter = ({ row, isRTL }: any) => {
+  const {
+    resourseName,
+    resourseNameAr,
+    departmentName,
+    departmentNameAr,
+    employeeName,
+    employeeNameAr,
+  } = row;
+  const { status, type } = row;
+  let color;
+  let bgcolor;
+  if (status === 'مقفل' || status === 'Closed') {
+    color = colors.blue[500];
+    bgcolor = colors.blue[50];
+  }
+  if (status === 'لم يبدأ بعد' || status === 'Not Started') {
+    color = colors.deepPurple[500];
+    bgcolor = colors.deepPurple[50];
+  }
+  if (status === 'غير مقفل' || status === 'Not Closed') {
+    color = colors.orange[500];
+    bgcolor = colors.orange[50];
+  }
+  if (status === 'ساري' || status === 'In Progress') {
+    color = colors.green[500];
+    bgcolor = colors.green[50];
+  }
+  return (
+    <Grid container spacing={0}>
+      <Grid item xs={12} style={{ marginTop: 5 }}>
+        <Box
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+          }}
+        >
+          {renderTag({ value: status, color, bgcolor })}
+          {renderTag({
+            value: type,
+            color: '#333',
+            bgcolor: colors.blueGrey[50],
+          })}
+        </Box>
+      </Grid>
+      <Grid item xs={12}>
+        <Box
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+          }}
+        >
+          {renderTag({
+            value: isRTL ? resourseNameAr : resourseName,
+            color: '#333',
+            bgcolor: colors.blueGrey[50],
+            fontSize: 14,
+          })}
+        </Box>
+      </Grid>
+      <Grid item xs={12}>
+        <Box
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+          }}
+        >
+          {renderTag({
+            value: isRTL ? departmentNameAr : departmentName,
+            color: '#333',
+            bgcolor: colors.blueGrey[50],
+          })}
+          {renderTag({
+            value: isRTL ? employeeNameAr : employeeName,
+            color: '#333',
+            bgcolor: colors.blueGrey[50],
+          })}
+        </Box>
+      </Grid>
+    </Grid>
+  );
+};
+export const daysdataFormatter = ({
+  row,
+  isRTL,
+  theme,
+  height = 100,
+  bc = '#ddd',
+}: any) => {
+  const daysData = getTaskTimeAmountData(row);
+  const marginTop = height > 100 ? 20 : 8;
+  return (
+    <Box
+      display={'flex'}
+      border={0.2}
+      borderColor={bc}
+      borderRadius={15}
+      style={{ flex: 1, height }}
+    >
+      <Grid container spacing={0}>
+        <Grid item xs={5}>
+          <PercentChartTask
+            pricolor={colors.deepPurple[500]}
+            seccolor={colors.deepPurple[200]}
+            progress={daysData?.progress}
+            height={height - 10}
+          />
+        </Grid>
+        <Grid item xs={7}>
+          <Grid container spacing={0}>
+            <Grid item xs={6} style={{ marginTop }}>
+              <Typography
+                variant="body2"
+                style={{ fontSize: 12, fontWeight: 'bold' }}
+              >
+                {isRTL ? 'عدد الايام' : 'Days'}
+              </Typography>
+            </Grid>
+            <Grid item xs={6} style={{ marginTop }}>
+              <Typography
+                variant="body2"
+                style={{ fontSize: 12, fontWeight: 'bold' }}
+              >
+                {daysData?.days}
+              </Typography>
+            </Grid>
+            {daysData?.daysnow && (
+              <>
+                <Grid item xs={6}>
+                  <Typography
+                    variant="body2"
+                    style={{ fontSize: 12, fontWeight: 'bold' }}
+                  >
+                    {isRTL ? 'أيام مضت' : 'Spent Days'}
+                  </Typography>
+                </Grid>
+                <Grid item xs={6}>
+                  <Typography
+                    variant="body2"
+                    style={{ fontSize: 12, fontWeight: 'bold' }}
+                  >
+                    {daysData?.daysnow}
+                  </Typography>
+                </Grid>
+              </>
+            )}
+            {daysData?.dayamount && (
+              <>
+                <Grid item xs={6}>
+                  <Typography
+                    variant="body2"
+                    style={{ fontSize: 12, fontWeight: 'bold' }}
+                  >
+                    {isRTL ? 'تكلفة اليوم' : 'Day cost'}
+                  </Typography>
+                </Grid>
+                <Grid item xs={6}>
+                  <Typography
+                    variant="body2"
+                    style={{ fontSize: 12, fontWeight: 'bold' }}
+                  >
+                    {moneyFormat(daysData?.dayamount)}
+                  </Typography>
+                </Grid>
+              </>
+            )}
+            <Grid item xs={6}>
+              {rCell(isRTL ? 'المستحق' : 'Due', '#333')}
+            </Grid>
+            <Grid item xs={6}>
+              {rCell(moneyFormat(daysData?.amountnow), '#333')}
+            </Grid>
+            <Grid item xs={6}>
+              <Typography
+                variant="body2"
+                style={{ fontSize: 12, fontWeight: 'bold' }}
+              >
+                {isRTL ? 'المتبقي' : 'Amount'}
+              </Typography>
+            </Grid>
+            <Grid item xs={6}>
+              <Typography
+                variant="body2"
+                style={{ fontSize: 12, fontWeight: 'bold' }}
+              >
+                {moneyFormat(daysData?.remaining)}
+              </Typography>
+            </Grid>
+          </Grid>
+        </Grid>
+      </Grid>
+    </Box>
+  );
+};
+export const daysdataMainFormatter = ({
+  row,
+  isRTL,
+  theme,
+  height = 250,
+  bc = '#ddd',
+}: any) => {
+  const daysData = getTaskTimeAmountData(row);
+  const marginTop = height > 100 ? 20 : 8;
+  return (
+    <Box display={'flex'} style={{ flex: 1, height }}>
+      <Grid container spacing={0}>
+        <Grid item xs={6}>
+          <PercentChartTask
+            pricolor={colors.deepPurple[500]}
+            seccolor={colors.deepPurple[200]}
+            progress={daysData?.progress}
+            height={height - 10}
+          />
+        </Grid>
+        <Grid item xs={6}>
+          <Grid container spacing={2}>
+            <Grid item xs={6} style={{ marginTop }}>
+              <Typography
+                variant="body2"
+                style={{ fontSize: 16, fontWeight: 'bold' }}
+              >
+                {isRTL ? 'عدد الايام' : 'Days'}
+              </Typography>
+            </Grid>
+            <Grid item xs={6} style={{ marginTop }}>
+              <Typography
+                variant="body2"
+                style={{ fontSize: 16, fontWeight: 'bold' }}
+              >
+                {daysData?.days}
+              </Typography>
+            </Grid>
+            {daysData?.daysnow && (
+              <>
+                <Grid item xs={6}>
+                  <Typography
+                    variant="body2"
+                    style={{ fontSize: 16, fontWeight: 'bold' }}
+                  >
+                    {isRTL ? 'أيام مضت' : 'Spent Days'}
+                  </Typography>
+                </Grid>
+                <Grid item xs={6}>
+                  <Typography
+                    variant="body2"
+                    style={{ fontSize: 16, fontWeight: 'bold' }}
+                  >
+                    {daysData?.daysnow}
+                  </Typography>
+                </Grid>
+              </>
+            )}
+            {daysData?.dayamount && (
+              <>
+                <Grid item xs={6}>
+                  <Typography
+                    variant="body2"
+                    style={{ fontSize: 16, fontWeight: 'bold' }}
+                  >
+                    {isRTL ? 'تكلفة اليوم' : 'Day cost'}
+                  </Typography>
+                </Grid>
+                <Grid item xs={6}>
+                  <Typography
+                    variant="body2"
+                    style={{ fontSize: 16, fontWeight: 'bold' }}
+                  >
+                    {moneyFormat(daysData?.dayamount)}
+                  </Typography>
+                </Grid>
+              </>
+            )}
+            <Grid item xs={6}>
+              {rCellMain(isRTL ? 'المستحق' : 'Due', '#333')}
+            </Grid>
+            <Grid item xs={6}>
+              {rCellMain(moneyFormat(daysData?.amountnow), '#333')}
+            </Grid>
+            <Grid item xs={6}>
+              <Typography
+                variant="body2"
+                style={{ fontSize: 16, fontWeight: 'bold' }}
+              >
+                {isRTL ? 'المتبقي' : 'Amount'}
+              </Typography>
+            </Grid>
+            <Grid item xs={6}>
+              <Typography
+                variant="body2"
+                style={{ fontSize: 16, fontWeight: 'bold' }}
+              >
+                {moneyFormat(daysData?.remaining)}
+              </Typography>
+            </Grid>
+          </Grid>
+        </Grid>
+      </Grid>
+    </Box>
+  );
+};
 export const taskStatusFormatter = ({ value }: any) => {
   return (
     <Box
@@ -815,6 +1248,21 @@ export const doneFormatter = ({ row, editEvent }: any) => {
     </span>
   );
 };
+export const doneShowFormatter = ({ row }: any) => {
+  if (row.amount === 0) {
+    return <span></span>;
+  }
+  return (
+    <span>
+      <Checkbox
+        style={{ padding: 5 }}
+        checked={row.status === 10}
+        disabled
+        color="primary"
+      />
+    </span>
+  );
+};
 export const sentFormatter = ({ row, value, editRAction }: any) => {
   const sent = !value;
   const _id = row._id;
@@ -838,6 +1286,18 @@ export const sentFormatter = ({ row, value, editRAction }: any) => {
             },
           });
         }}
+        color="primary"
+      />
+    </span>
+  );
+};
+export const sentShowFormatter = ({ value }: any) => {
+  return (
+    <span>
+      <Checkbox
+        style={{ padding: 5 }}
+        checked={value}
+        disabled
         color="primary"
       />
     </span>
@@ -975,7 +1435,7 @@ export const nameManageLinkFormat = ({
 }: any) => {
   if (!value || value === '') return <div></div>;
   return (
-    <Box style={{ width: 250 }}>
+    <Box>
       <Button
         onClick={() => {
           if (setItem) {
@@ -983,25 +1443,21 @@ export const nameManageLinkFormat = ({
             setOpenItem(true);
           }
         }}
-        variant="text"
+        variant="contained"
         color="primary"
+        fullWidth
         style={{
-          width: 235,
+          height: 30,
           alignItems: 'center',
           justifyContent: 'flex-start',
+          marginBottom: 5,
+          marginTop: 5,
         }}
       >
-        <Typography
-          style={{
-            fontSize: 16,
-            fontWeight: 'bold',
-            paddingLeft: 5,
-            paddingRight: 5,
-          }}
-        >
-          {value}
-        </Typography>
+        <Typography style={{ fontSize: 14 }}>{value}</Typography>
       </Button>
+      {row?.carstatus && carstatusFormatter({ value: row.carstatus, isRTL })}
+
       <Box
         style={{
           paddingLeft: 10,
@@ -1009,11 +1465,6 @@ export const nameManageLinkFormat = ({
         }}
       >
         <Grid container spacing={0}>
-          {row?.carstatus && (
-            <Grid item xs={12} style={{ marginBottom: 5 }}>
-              {carstatusFormatter({ value: row.carstatus, isRTL })}
-            </Grid>
-          )}
           {row?.phone && (
             <Grid item xs={12}>
               <Typography
@@ -1083,6 +1534,247 @@ export const nameManageLinkFormat = ({
           </Grid>
         )}
       </Box>
+    </Box>
+  );
+};
+
+export const taskDataView = ({ row, words, isRTL }) => {
+  const {
+    title,
+    start,
+    end,
+    docNo,
+    status,
+    type,
+    customerNameAr,
+    customerName,
+    customerPhone,
+    employeeNameAr,
+    employeeName,
+    departmentNameAr,
+    departmentName,
+    resourseNameAr,
+    resourseName,
+  } = row;
+  let color;
+  let bgcolor;
+  if (status === 'مقفل' || status === 'Closed') {
+    color = colors.blue[500];
+    bgcolor = colors.blue[50];
+  }
+  if (status === 'لم يبدأ بعد' || status === 'Not Started') {
+    color = colors.deepPurple[500];
+    bgcolor = colors.deepPurple[50];
+  }
+  if (status === 'غير مقفل' || status === 'Not Closed') {
+    color = colors.orange[500];
+    bgcolor = colors.orange[50];
+  }
+  if (status === 'ساري' || status === 'In Progress') {
+    color = colors.green[500];
+    bgcolor = colors.green[50];
+  }
+  return (
+    <Box style={{ padding: 10 }}>
+      <Grid container spacing={1}>
+        <Grid item xs={10}>
+          <Typography style={{ fontSize: 18, fontWeight: 'bold' }}>
+            {title}
+          </Typography>
+        </Grid>
+        <Grid item xs={2}>
+          <Typography style={{ fontSize: 14 }}>{docNo}</Typography>
+        </Grid>
+
+        <Grid item xs={12}>
+          <Typography style={{ fontSize: 16, fontWeight: 'bold' }}>
+            {isRTL ? resourseNameAr : resourseName}
+          </Typography>
+        </Grid>
+        <Grid item xs={2}>
+          <Typography>{words.customer}</Typography>
+        </Grid>
+        <Grid item xs={10}>
+          <Typography>{isRTL ? customerNameAr : customerName}</Typography>
+          <Typography>{customerPhone}</Typography>
+        </Grid>
+        <Grid item xs={2}>
+          <Typography>{words.employee}</Typography>
+        </Grid>
+        <Grid item xs={10}>
+          <Typography>{isRTL ? employeeNameAr : employeeName}</Typography>
+        </Grid>
+        <Grid item xs={2}>
+          <Typography>{words.department}</Typography>
+        </Grid>
+        <Grid item xs={10}>
+          <Typography>{isRTL ? departmentNameAr : departmentName}</Typography>
+        </Grid>
+        <Grid item xs={2}>
+          <Typography>{words.time}</Typography>
+        </Grid>
+        <Grid item xs={3} style={{ paddingLeft: 10, paddingRight: 10 }}>
+          <Typography>{simpleDateFormatter2(start)}</Typography>
+        </Grid>
+        <Grid item xs={3}>
+          <Typography>{simpleDateFormatter2(end)}</Typography>
+        </Grid>
+        <Grid item xs={4}></Grid>
+        <Grid item xs={4}>
+          <Typography>
+            {renderTag({ value: status, color, bgcolor })}
+          </Typography>
+        </Grid>
+        <Grid item xs={4}>
+          <Typography>
+            {' '}
+            {renderTag({
+              value: type,
+              color: '#333',
+              bgcolor: colors.blueGrey[50],
+            })}
+          </Typography>
+        </Grid>
+        <Grid item xs={4}></Grid>
+      </Grid>
+    </Box>
+  );
+};
+export const resourseDataView = ({ row, words, isRTL }) => {
+  const { name, nameAr, carstatus, plate, insurance, brand, model, info } = row;
+
+  return (
+    <Box style={{ padding: 20 }}>
+      <Grid container spacing={1}>
+        <Grid item xs={8}>
+          <Typography variant="h6">{isRTL ? nameAr : name}</Typography>
+        </Grid>
+        {plate && (
+          <Grid item xs={4}>
+            <Typography
+              style={{
+                fontSize: 12,
+                fontWeight: 'bold',
+                marginRight: 5,
+                marginLeft: 5,
+              }}
+              variant="caption"
+            >
+              {plate}
+            </Typography>
+          </Grid>
+        )}
+        <Grid item xs={6}>
+          {carstatus && carstatusFormatter({ value: carstatus, isRTL })}
+        </Grid>
+
+        {insurance && (
+          <Grid item xs={6}>
+            <Typography style={{ fontSize: 12 }} variant="caption">
+              {isRTL ? 'التأمين : ' : 'Insurance : '} {insurance}
+            </Typography>
+          </Grid>
+        )}
+        {brand && (
+          <Grid item xs={6}>
+            <Typography style={{ fontSize: 12 }} variant="caption">
+              {isRTL ? 'الماركة : ' : 'Brand : '} {brand}
+            </Typography>
+          </Grid>
+        )}
+        {model && (
+          <Grid item xs={6}>
+            <Typography style={{ fontSize: 12 }} variant="caption">
+              {isRTL ? 'السنة : ' : 'Model : '} {model}
+            </Typography>
+          </Grid>
+        )}
+        {info && (
+          <Grid item xs={12}>
+            <Typography style={{ fontSize: 12 }} variant="caption">
+              {isRTL ? 'معلومات : ' : 'Information : '} {info}
+            </Typography>
+          </Grid>
+        )}
+      </Grid>
+    </Box>
+  );
+};
+export const employeeDataView = ({ row, words, isRTL }) => {
+  const { name, nameAr, phone, email, daysoff } = row;
+
+  return (
+    <Box style={{ padding: 20 }}>
+      <Grid container spacing={1}>
+        <Grid item xs={12}>
+          <Typography variant="h6">{isRTL ? nameAr : name}</Typography>
+        </Grid>
+
+        {daysoff && (
+          <Grid item xs={12}>
+            <Typography variant="caption">
+              العطلة: {daysoffFormatter({ value: row.daysoff, isRTL })}
+            </Typography>
+          </Grid>
+        )}
+
+        {phone && (
+          <Grid item xs={12}>
+            <Typography style={{ fontSize: 12 }} variant="caption">
+              {isRTL ? 'الهاتف : ' : '؛Phone : '} {phone}
+            </Typography>
+          </Grid>
+        )}
+        {email && (
+          <Grid item xs={12}>
+            <Typography style={{ fontSize: 12 }} variant="caption">
+              {isRTL ? 'البريد : ' : 'Email : '} {email}
+            </Typography>
+          </Grid>
+        )}
+      </Grid>
+    </Box>
+  );
+};
+export const customerDataView = ({ row, words, isRTL }) => {
+  const { name, nameAr, phone, mobile, email, address } = row;
+
+  return (
+    <Box style={{ padding: 20 }}>
+      <Grid container spacing={1}>
+        <Grid item xs={12}>
+          <Typography variant="h6">{isRTL ? nameAr : name}</Typography>
+        </Grid>
+
+        {phone && (
+          <Grid item xs={6}>
+            <Typography style={{ fontSize: 12 }} variant="caption">
+              {isRTL ? 'الهاتف : ' : '؛Phone : '} {phone}
+            </Typography>
+          </Grid>
+        )}
+        {mobile && (
+          <Grid item xs={6}>
+            <Typography style={{ fontSize: 12 }} variant="caption">
+              {isRTL ? 'الجوال : ' : 'Mobile : '} {mobile}
+            </Typography>
+          </Grid>
+        )}
+        {email && (
+          <Grid item xs={12}>
+            <Typography style={{ fontSize: 12 }} variant="caption">
+              {isRTL ? 'البريد : ' : 'Email : '} {email}
+            </Typography>
+          </Grid>
+        )}
+        {address && (
+          <Grid item xs={12}>
+            <Typography style={{ fontSize: 12 }} variant="caption">
+              {isRTL ? 'العنوان : ' : 'Address : '} {address}
+            </Typography>
+          </Grid>
+        )}
+      </Grid>
     </Box>
   );
 };
@@ -1166,7 +1858,6 @@ export const taskIdLinkFormat = ({
   const task = tasks.filter((tsk: any) => tsk.id === value)?.[0];
   if (task) {
     return (
-      // <Tooltip title={isRTL ? 'استعراض صفحة الادارة' : 'Managment Page'}>
       <Button
         onClick={() => {
           if (roles.isEditor()) {
@@ -1189,7 +1880,6 @@ export const taskIdLinkFormat = ({
           {task.title}
         </Typography>
       </Button>
-      // </Tooltip>
     );
   } else {
     return <span></span>;
@@ -1250,13 +1940,20 @@ export const progressFormatter = ({ value }: any) => {
     </Box>
   );
 };
-export const appointmentsFormatter = ({ row, theme, isRTL }: any) => {
+export const appointmentsFormatter = ({
+  row,
+  theme,
+  isRTL,
+  height = 100,
+  bc = '#ddd',
+}: any) => {
   return (
     <Box
       display={'flex'}
       border={0.2}
-      borderColor="#ddd"
-      style={{ flex: 1, height: 100 }}
+      borderColor={bc}
+      borderRadius={15}
+      style={{ flex: 1, height }}
     >
       <Grid container spacing={0}>
         <Grid item xs={6}>
@@ -1264,40 +1961,28 @@ export const appointmentsFormatter = ({ row, theme, isRTL }: any) => {
             pricolor={theme.palette.primary.main}
             seccolor={theme.palette.secondary.main}
             progress={row?.progress / 100}
-            height={100}
+            height={height - 10}
           />
         </Grid>
         <Grid item xs={6}>
           <Grid container spacing={0}>
             <Grid item xs={9} style={{ marginTop: 8 }}>
-              <Typography
-                style={{ fontWeight: 'bold', fontSize: 12 }}
-                variant="caption"
-              >
+              <Typography style={{ fontSize: 12 }} variant="caption">
                 {isRTL ? 'عدد المواعيد' : 'Appointments'}
               </Typography>
             </Grid>
             <Grid item xs={3} style={{ marginTop: 8 }}>
-              <Typography
-                style={{ fontWeight: 'bold', fontSize: 12 }}
-                variant="caption"
-              >
+              <Typography style={{ fontSize: 12 }} variant="caption">
                 {row?.evQty || 0}
               </Typography>
             </Grid>
             <Grid item xs={9}>
-              <Typography
-                style={{ fontWeight: 'bold', fontSize: 12 }}
-                variant="caption"
-              >
+              <Typography style={{ fontSize: 12 }} variant="caption">
                 {isRTL ? 'المواعيد المنجزة' : 'Done Appointments'}
               </Typography>
             </Grid>
             <Grid item xs={3}>
-              <Typography
-                style={{ fontWeight: 'bold', fontSize: 12 }}
-                variant="caption"
-              >
+              <Typography style={{ fontSize: 12 }} variant="caption">
                 {row?.evDone || 0}
               </Typography>
             </Grid>
@@ -1321,9 +2006,221 @@ export const appointmentsFormatter = ({ row, theme, isRTL }: any) => {
     </Box>
   );
 };
+export const appointTaskFormatter = ({
+  row,
+  theme,
+  isRTL,
+  height = 100,
+  bc = '#ddd',
+}: any) => {
+  // const marginTop = height > 100 ? 20 : 10;
+  // const pcolor = colors.green[400];
+  const eventamount = row?.amount / row?.evQty;
+  const amountnow = eventamount * row?.evDone;
+  const remaining = row?.amount - amountnow;
+  // const raseed = amountnow - row?.totalpaid;
+
+  return (
+    <Box
+      display={'flex'}
+      border={0.2}
+      borderColor={bc}
+      borderRadius={15}
+      style={{ flex: 1, height }}
+    >
+      <Grid container spacing={0}>
+        <Grid item xs={5}>
+          <PercentChartTask
+            pricolor={theme.palette.primary.main}
+            seccolor={theme.palette.secondary.main}
+            progress={row?.progress / 100}
+            height={height - 10}
+          />
+        </Grid>
+        <Grid item xs={7}>
+          <Grid container spacing={0}>
+            <Grid item xs={6} style={{ marginTop: 8 }}>
+              <Typography
+                variant="body2"
+                style={{ fontSize: 12, fontWeight: 'bold' }}
+              >
+                {isRTL ? 'المواعيد' : 'Appointments'}
+              </Typography>
+            </Grid>
+            <Grid item xs={6} style={{ marginTop: 8 }}>
+              <Typography
+                variant="body2"
+                style={{ fontSize: 12, fontWeight: 'bold' }}
+              >
+                {row?.evQty || 0}
+              </Typography>
+            </Grid>
+            <Grid item xs={6}>
+              <Typography
+                variant="body2"
+                style={{ fontSize: 12, fontWeight: 'bold' }}
+              >
+                {isRTL ? 'المنجزة' : 'Done'}
+              </Typography>
+            </Grid>
+            <Grid item xs={6}>
+              <Typography
+                variant="body2"
+                style={{ fontSize: 12, fontWeight: 'bold' }}
+              >
+                {row?.evDone || 0}
+              </Typography>
+            </Grid>
+            <Grid item xs={6}>
+              <Typography
+                variant="body2"
+                style={{ fontSize: 12, fontWeight: 'bold' }}
+              >
+                {isRTL ? 'تكلفة الموعد' : 'Appointment Cost'}
+              </Typography>
+            </Grid>
+            <Grid item xs={6}>
+              <Typography
+                variant="body2"
+                style={{ fontSize: 12, fontWeight: 'bold' }}
+              >
+                {moneyFormat(eventamount)}
+              </Typography>
+            </Grid>
+            <Grid item xs={6}>
+              {rCell(isRTL ? 'المستحق' : 'Due', '#333')}
+            </Grid>
+            <Grid item xs={6}>
+              {rCell(moneyFormat(amountnow), '#333')}
+            </Grid>
+            <Grid item xs={6}>
+              <Typography
+                variant="body2"
+                style={{ fontSize: 12, fontWeight: 'bold' }}
+              >
+                {isRTL ? 'المتبقي' : 'Amount'}
+              </Typography>
+            </Grid>
+            <Grid item xs={6}>
+              <Typography
+                variant="body2"
+                style={{ fontSize: 12, fontWeight: 'bold' }}
+              >
+                {moneyFormat(remaining)}
+              </Typography>
+            </Grid>
+          </Grid>
+        </Grid>
+      </Grid>
+    </Box>
+  );
+};
+export const appointTaskMainFormatter = ({
+  row,
+  theme,
+  isRTL,
+  height = 250,
+  bc = '#ddd',
+}: any) => {
+  // const marginTop = height > 100 ? 20 : 10;
+  // const pcolor = colors.green[400];
+  const eventamount = row?.amount / row?.evQty;
+  const amountnow = eventamount * row?.evDone;
+  const remaining = row?.amount - amountnow;
+  // const raseed = amountnow - row?.totalpaid;
+
+  return (
+    <Box display={'flex'} style={{ flex: 1, height }}>
+      <Grid container spacing={0}>
+        <Grid item xs={6}>
+          <PercentChartTask
+            pricolor={theme.palette.primary.main}
+            seccolor={theme.palette.secondary.main}
+            progress={row?.progress / 100}
+            height={height - 10}
+          />
+        </Grid>
+        <Grid item xs={6}>
+          <Grid container spacing={2}>
+            <Grid item xs={6} style={{ marginTop: 20 }}>
+              <Typography
+                variant="body2"
+                style={{ fontSize: 16, fontWeight: 'bold' }}
+              >
+                {isRTL ? 'المواعيد' : 'Appointments'}
+              </Typography>
+            </Grid>
+            <Grid item xs={6} style={{ marginTop: 20 }}>
+              <Typography
+                variant="body2"
+                style={{ fontSize: 16, fontWeight: 'bold' }}
+              >
+                {row?.evQty || 0}
+              </Typography>
+            </Grid>
+            <Grid item xs={6}>
+              <Typography
+                variant="body2"
+                style={{ fontSize: 16, fontWeight: 'bold' }}
+              >
+                {isRTL ? 'المنجزة' : 'Done'}
+              </Typography>
+            </Grid>
+            <Grid item xs={6}>
+              <Typography
+                variant="body2"
+                style={{ fontSize: 16, fontWeight: 'bold' }}
+              >
+                {row?.evDone || 0}
+              </Typography>
+            </Grid>
+            <Grid item xs={6}>
+              <Typography
+                variant="body2"
+                style={{ fontSize: 16, fontWeight: 'bold' }}
+              >
+                {isRTL ? 'تكلفة الموعد' : 'Appointment Cost'}
+              </Typography>
+            </Grid>
+            <Grid item xs={6}>
+              <Typography
+                variant="body2"
+                style={{ fontSize: 16, fontWeight: 'bold' }}
+              >
+                {moneyFormat(eventamount)}
+              </Typography>
+            </Grid>
+            <Grid item xs={6}>
+              {rCellMain(isRTL ? 'المستحق' : 'Due', '#333')}
+            </Grid>
+            <Grid item xs={6}>
+              {rCellMain(moneyFormat(amountnow), '#333')}
+            </Grid>
+            <Grid item xs={6}>
+              <Typography
+                variant="body2"
+                style={{ fontSize: 16, fontWeight: 'bold' }}
+              >
+                {isRTL ? 'المتبقي' : 'Amount'}
+              </Typography>
+            </Grid>
+            <Grid item xs={6}>
+              <Typography
+                variant="body2"
+                style={{ fontSize: 16, fontWeight: 'bold' }}
+              >
+                {moneyFormat(remaining)}
+              </Typography>
+            </Grid>
+          </Grid>
+        </Grid>
+      </Grid>
+    </Box>
+  );
+};
 export const appointmentsMainFormatter = ({ row, theme, isRTL }: any) => {
   return (
-    <Box display={'flex'} style={{ flex: 1, paddingTop: 40, height: 240 }}>
+    <Box display={'flex'} style={{ flex: 1, paddingTop: 15, height: 240 }}>
       <Grid container spacing={0}>
         <Grid item xs={6}>
           <PercentChartTask
@@ -1334,13 +2231,13 @@ export const appointmentsMainFormatter = ({ row, theme, isRTL }: any) => {
           />
         </Grid>
         <Grid item xs={6}>
-          <Grid container spacing={0}>
-            <Grid item xs={7} style={{ marginTop: 28 }}>
+          <Grid container spacing={1}>
+            <Grid item xs={7} style={{ marginTop: 50 }}>
               <Typography style={{ fontWeight: 'bold' }} variant="subtitle1">
                 {isRTL ? 'عدد المواعيد' : 'Appointments'}
               </Typography>
             </Grid>
-            <Grid item xs={5} style={{ marginTop: 28 }}>
+            <Grid item xs={5} style={{ marginTop: 50 }}>
               <Typography style={{ fontWeight: 'bold' }} variant="subtitle1">
                 {row?.evQty || 0}
               </Typography>
@@ -1357,14 +2254,14 @@ export const appointmentsMainFormatter = ({ row, theme, isRTL }: any) => {
             </Grid>
             <Grid item xs={7}>
               <Typography
-                style={{ fontWeight: 'bold', fontSize: 18, marginTop: 25 }}
+                style={{ fontWeight: 'bold', fontSize: 18, marginTop: 30 }}
               >
                 {isRTL ? 'الاجمالي' : 'Total'}
               </Typography>
             </Grid>
             <Grid item xs={5}>
               <Typography
-                style={{ fontWeight: 'bold', fontSize: 18, marginTop: 25 }}
+                style={{ fontWeight: 'bold', fontSize: 18, marginTop: 30 }}
               >
                 {moneyFormat(row?.amount)}
               </Typography>
@@ -1400,17 +2297,50 @@ const rCellMain = (title: any, color: any) => (
   </Typography>
 );
 
-export const salesFormatter = ({ row, isRTL, theme }: any) => {
+export const raseedFormatter = ({ value }: any) => {
+  const color = value < 0 ? colors.red[600] : colors.grey[800];
+  return (
+    <Box
+      display={'flex'}
+      style={{
+        flex: 1,
+        alignItems: 'center',
+      }}
+    >
+      <Typography
+        style={{
+          color,
+          fontWeight: 'bold',
+          fontSize: 16,
+          paddingLeft: 10,
+          paddingRight: 10,
+        }}
+      >
+        {moneyFormat(value)}
+      </Typography>
+    </Box>
+  );
+};
+export const salesFormatter = ({
+  row,
+  isRTL,
+  theme,
+  height = 100,
+  bc = '#ddd',
+}: any) => {
+  const acolor = colors.grey[700];
   const scolor = colors.blue[400];
   const pcolor = colors.green[400];
   const dcolor = colors.orange[400];
+  const marginTop = height > 100 ? 20 : 10;
+  const raseed = row?.totalinvoiced - row?.totalpaid - row?.totalDiscount;
   return (
     <Box
       border={0.2}
-      borderColor="#ddd"
-      borderRadius={5}
+      borderColor={bc}
       display={'flex'}
-      style={{ flex: 1, height: 100 }}
+      borderRadius={15}
+      style={{ flex: 1, height }}
     >
       <Grid container spacing={1}>
         <Grid item xs={5}>
@@ -1424,10 +2354,90 @@ export const salesFormatter = ({ row, isRTL, theme }: any) => {
         </Grid>
         <Grid item xs={7}>
           <Grid container spacing={0}>
-            <Grid item xs={6} style={{ marginTop: 10 }}>
-              {rCell(isRTL ? 'المبيعات' : 'Sales', scolor)}
+            <Grid item xs={6} style={{ marginTop }}>
+              {rCell(isRTL ? 'القيمة' : 'Amount', acolor)}
             </Grid>
-            <Grid item xs={6} style={{ marginTop: 10 }}>
+            <Grid item xs={6} style={{ marginTop }}>
+              {rCell(moneyFormat(row?.amount), acolor)}
+            </Grid>
+            <Grid item xs={6}>
+              {rCell(isRTL ? 'الفواتير' : 'Invoices', scolor)}
+            </Grid>
+            <Grid item xs={6}>
+              {rCell(moneyFormat(row?.totalinvoiced), scolor)}
+            </Grid>
+            <Grid item xs={6}>
+              {rCell(isRTL ? 'الخصومات' : 'Discounts', dcolor)}
+            </Grid>
+            <Grid item xs={6}>
+              {rCell(moneyFormat(row?.totalDiscount), dcolor)}
+            </Grid>
+            <Grid item xs={6}>
+              {rCell(isRTL ? 'المقبوضات' : 'Receipts', pcolor)}
+            </Grid>
+            <Grid item xs={6}>
+              {rCell(moneyFormat(row?.totalpaid), pcolor)}
+            </Grid>
+            <Grid item xs={6}>
+              <Box>{rCell(isRTL ? 'الرصيد' : 'Balance', '#333')}</Box>
+            </Grid>
+            <Grid item xs={6}>
+              <Box>
+                {rCell(
+                  moneyFormat(raseed),
+                  raseed < 0 ? colors.red[400] : '#333'
+                )}
+              </Box>
+            </Grid>
+          </Grid>
+        </Grid>
+      </Grid>
+    </Box>
+  );
+};
+export const salesTaskFormatter = ({
+  row,
+  isRTL,
+  theme,
+  height = 100,
+  bc = '#ddd',
+}: any) => {
+  const scolor = colors.blue[400];
+  const pcolor = colors.green[400];
+  const dcolor = colors.orange[400];
+  const marginTop = height > 100 ? 20 : 8;
+  const raseed = row?.totalinvoiced - row?.totalpaid - row?.totalDiscount;
+
+  return (
+    <Box
+      border={0.2}
+      borderColor={bc}
+      display={'flex'}
+      borderRadius={15}
+      style={{ flex: 1, height }}
+    >
+      <Grid container spacing={1}>
+        <Grid item xs={5}>
+          <SalesChart
+            scolor={scolor}
+            pcolor={pcolor}
+            dcolor={dcolor}
+            row={row}
+            theme={theme}
+          ></SalesChart>
+        </Grid>
+        <Grid item xs={7}>
+          <Grid container spacing={0}>
+            <Grid item xs={6} style={{ marginTop }}>
+              {rCell(isRTL ? 'قيمة العقد' : 'Contract Amount', '#333')}
+            </Grid>
+            <Grid item xs={6} style={{ marginTop }}>
+              {rCell(moneyFormat(row?.amount), '#333')}
+            </Grid>
+            <Grid item xs={6}>
+              {rCell(isRTL ? 'الفواتير' : 'Invoices', scolor)}
+            </Grid>
+            <Grid item xs={6}>
               {rCell(moneyFormat(row?.totalinvoiced), scolor)}
             </Grid>
             <Grid item xs={6}>
@@ -1443,19 +2453,13 @@ export const salesFormatter = ({ row, isRTL, theme }: any) => {
               {rCell(moneyFormat(row?.totalDiscount), dcolor)}
             </Grid>
             <Grid item xs={6}>
-              <Box style={{ marginTop: 10 }}>
-                {rCell(isRTL ? 'الرصيد' : 'Balance', '#333')}
-              </Box>
+              {rCell(isRTL ? 'الرصيد' : 'Balance', '#333')}
             </Grid>
             <Grid item xs={6}>
-              <Box style={{ marginTop: 10 }}>
-                {rCell(
-                  moneyFormat(
-                    row?.totalinvoiced - row?.totalpaid - row?.totalDiscount
-                  ),
-                  '#333'
-                )}
-              </Box>
+              {rCell(
+                moneyFormat(raseed),
+                raseed < 0 ? colors.red[400] : '#333'
+              )}
             </Grid>
           </Grid>
         </Grid>
@@ -1463,24 +2467,100 @@ export const salesFormatter = ({ row, isRTL, theme }: any) => {
     </Box>
   );
 };
-export const expensesFormatter = ({ row, theme, isRTL }: any) => {
+export const salesTaskMainFormatter = ({
+  row,
+  isRTL,
+  theme,
+  height = 250,
+  bc = '#ddd',
+}: any) => {
+  const acolor = colors.grey[700];
+  const scolor = colors.blue[400];
+  const pcolor = colors.green[400];
+  const dcolor = colors.orange[400];
+  const marginTop = height > 100 ? 20 : 8;
+  const raseed = row?.totalinvoiced - row?.totalpaid - row?.totalDiscount;
+
+  return (
+    <Box display={'flex'} style={{ flex: 1, height }}>
+      <Grid container spacing={1}>
+        <Grid item xs={5}>
+          <SalesChart
+            acolor={acolor}
+            scolor={scolor}
+            pcolor={pcolor}
+            dcolor={dcolor}
+            row={row}
+            theme={theme}
+          ></SalesChart>
+        </Grid>
+        <Grid item xs={7}>
+          <Grid container spacing={2}>
+            <Grid item xs={6} style={{ marginTop }}>
+              {rCellMain(isRTL ? 'قيمة العقد' : 'Contract Amount', '#333')}
+            </Grid>
+            <Grid item xs={6} style={{ marginTop }}>
+              {rCellMain(moneyFormat(row?.amount), '#333')}
+            </Grid>
+            <Grid item xs={6}>
+              {rCellMain(isRTL ? 'الفواتير' : 'Invoices', scolor)}
+            </Grid>
+            <Grid item xs={6}>
+              {rCellMain(moneyFormat(row?.totalinvoiced), scolor)}
+            </Grid>
+            <Grid item xs={6}>
+              {rCellMain(isRTL ? 'المقبوضات' : 'Receipts', pcolor)}
+            </Grid>
+            <Grid item xs={6}>
+              {rCellMain(moneyFormat(row?.totalpaid), pcolor)}
+            </Grid>
+            <Grid item xs={6}>
+              {rCellMain(isRTL ? 'الخصومات' : 'Discounts', dcolor)}
+            </Grid>
+            <Grid item xs={6}>
+              {rCellMain(moneyFormat(row?.totalDiscount), dcolor)}
+            </Grid>
+            <Grid item xs={6}>
+              {rCellMain(isRTL ? 'الرصيد' : 'Balance', '#333')}
+            </Grid>
+            <Grid item xs={6}>
+              {rCellMain(
+                moneyFormat(raseed),
+                raseed < 0 ? colors.red[400] : '#333'
+              )}
+            </Grid>
+          </Grid>
+        </Grid>
+      </Grid>
+    </Box>
+  );
+};
+export const expensesFormatter = ({
+  row,
+  theme,
+  isRTL,
+  height = 100,
+  bc = '#ddd',
+}: any) => {
   const pcolor = colors.red[300];
   const ecolor = colors.red[500];
+  const marginTop = height > 100 ? 20 : 10;
+
   return (
     <Box
       border={0.2}
-      borderColor="#ddd"
+      borderColor={bc}
       display={'flex'}
-      borderRadius={5}
-      style={{ flex: 1, height: 100, paddingLeft: 10, paddingRight: 10 }}
+      borderRadius={15}
+      style={{ flex: 1, height, paddingLeft: 10, paddingRight: 10 }}
     >
       <Grid container spacing={1}>
         <Grid item xs={9}>
           <Grid container spacing={0}>
-            <Grid item xs={7} style={{ marginTop: 10 }}>
+            <Grid item xs={7} style={{ marginTop }}>
               {rCell(isRTL ? 'الاستهلاك' : 'Products', pcolor)}
             </Grid>
-            <Grid item xs={5} style={{ marginTop: 10 }}>
+            <Grid item xs={5} style={{ marginTop }}>
               {rCell(moneyFormat(row?.toatlProdExpenses), pcolor)}
             </Grid>
             <Grid item xs={7}>
@@ -1516,25 +2596,32 @@ export const expensesFormatter = ({ row, theme, isRTL }: any) => {
     </Box>
   );
 };
-export const kaidsFormatter = ({ row, theme, isRTL }: any) => {
+export const kaidsFormatter = ({
+  row,
+  theme,
+  isRTL,
+  height = 100,
+  bc = '#ddd',
+}: any) => {
   const ccolor = colors.blueGrey[300];
   const dcolor = colors.brown[400];
+  const marginTop = height > 100 ? 20 : 10;
 
   return (
     <Box
       border={0.2}
-      borderColor="#ddd"
+      borderColor={bc}
       display={'flex'}
-      borderRadius={5}
-      style={{ flex: 1, height: 100, paddingLeft: 10, paddingRight: 10 }}
+      borderRadius={15}
+      style={{ flex: 1, height, paddingLeft: 10, paddingRight: 10 }}
     >
       <Grid container spacing={1}>
         <Grid item xs={8}>
           <Grid container spacing={0}>
-            <Grid item xs={5} style={{ marginTop: 10 }}>
+            <Grid item xs={5} style={{ marginTop }}>
               {rCell(isRTL ? 'المدينة' : 'Debit', dcolor)}
             </Grid>
-            <Grid item xs={7} style={{ marginTop: 10 }}>
+            <Grid item xs={7} style={{ marginTop }}>
               {rCell(moneyFormat(row?.totalkaidsdebit), dcolor)}
             </Grid>
             <Grid item xs={5}>
@@ -1570,17 +2657,28 @@ export const kaidsFormatter = ({ row, theme, isRTL }: any) => {
     </Box>
   );
 };
-export const purchaseFormatter = ({ row, theme, isRTL }: any) => {
+export const purchaseFormatter = ({
+  row,
+  theme,
+  isRTL,
+  height = 100,
+  bc = '#ddd',
+}: any) => {
   const scolor = colors.deepPurple[400];
   const pcolor = colors.green[400];
   const dcolor = colors.orange[400];
+  const marginTop = height > 100 ? 20 : 10;
+  const raseed =
+    row?.totalPurchaseInvoiced -
+    row?.totalPurchasePaid -
+    row?.totalPurchaseDiscount;
   return (
     <Box
       border={0.2}
-      borderColor="#ddd"
+      borderColor={bc}
       display={'flex'}
-      borderRadius={5}
-      style={{ flex: 1, height: 100 }}
+      borderRadius={15}
+      style={{ flex: 1, height }}
     >
       <Grid container spacing={1}>
         <Grid item xs={5}>
@@ -1594,10 +2692,10 @@ export const purchaseFormatter = ({ row, theme, isRTL }: any) => {
         </Grid>
         <Grid item xs={7}>
           <Grid container spacing={0}>
-            <Grid item xs={6} style={{ marginTop: 10 }}>
+            <Grid item xs={6} style={{ marginTop }}>
               {rCell(isRTL ? 'المشتريات' : 'Purchases', scolor)}
             </Grid>
-            <Grid item xs={6} style={{ marginTop: 10 }}>
+            <Grid item xs={6} style={{ marginTop }}>
               {rCell(moneyFormat(row?.totalPurchaseInvoiced), scolor)}
             </Grid>
             <Grid item xs={6}>
@@ -1613,19 +2711,13 @@ export const purchaseFormatter = ({ row, theme, isRTL }: any) => {
               {rCell(moneyFormat(row?.totalPurchaseDiscount), dcolor)}
             </Grid>
             <Grid item xs={6}>
-              <Box style={{ marginTop: 10 }}>
-                {rCell(isRTL ? 'الرصيد' : 'Balance', '#333')}
-              </Box>
+              <Box>{rCell(isRTL ? 'الرصيد' : 'Balance', '#333')}</Box>
             </Grid>
             <Grid item xs={6}>
-              <Box style={{ marginTop: 10 }}>
+              <Box>
                 {rCell(
-                  moneyFormat(
-                    row?.totalPurchaseInvoiced -
-                      row?.totalPurchasePaid -
-                      row?.totalPurchaseDiscount
-                  ),
-                  '#333'
+                  moneyFormat(raseed),
+                  raseed < 0 ? colors.red[400] : '#333'
                 )}
               </Box>
             </Grid>
@@ -1635,29 +2727,44 @@ export const purchaseFormatter = ({ row, theme, isRTL }: any) => {
     </Box>
   );
 };
-export const salesMainFormatter = ({ row, isRTL, theme }: any) => {
+
+export const salesMainFormatter = ({
+  row,
+  isRTL,
+  theme,
+  height = 250,
+}: any) => {
   const scolor = colors.blue[400];
+  const acolor = colors.grey[700];
+
   const pcolor = colors.green[400];
   const dcolor = colors.orange[400];
   return (
-    <Box style={{ display: 'flex', flex: 1, height: 200 }}>
+    <Box style={{ display: 'flex', flex: 1, height }}>
       <Grid container spacing={0}>
         <Grid item xs={5}>
           <SalesChart
             scolor={scolor}
             pcolor={pcolor}
+            acolor={acolor}
             dcolor={dcolor}
             row={row}
             theme={theme}
-            height={200}
+            height={height}
           ></SalesChart>
         </Grid>
         <Grid item xs={7}>
-          <Grid container spacing={0}>
+          <Grid container spacing={1}>
             <Grid item xs={6} style={{ marginTop: 30 }}>
-              {rCellMain(isRTL ? 'المبيعات' : 'Sales', scolor)}
+              {rCellMain(isRTL ? 'القيمة' : 'Amount', acolor)}
             </Grid>
             <Grid item xs={6} style={{ marginTop: 30 }}>
+              {rCellMain(moneyFormat(row?.amount), acolor)}
+            </Grid>
+            <Grid item xs={6}>
+              {rCellMain(isRTL ? 'الفواتير' : 'Invoices', scolor)}
+            </Grid>
+            <Grid item xs={6}>
               {rCellMain(moneyFormat(row?.totalinvoiced), scolor)}
             </Grid>
             <Grid item xs={6}>
@@ -1693,12 +2800,17 @@ export const salesMainFormatter = ({ row, isRTL, theme }: any) => {
     </Box>
   );
 };
-export const purchaseMainFormatter = ({ row, theme, isRTL }: any) => {
+export const purchaseMainFormatter = ({
+  row,
+  theme,
+  isRTL,
+  height = 250,
+}: any) => {
   const scolor = colors.deepPurple[400];
   const pcolor = colors.green[400];
   const dcolor = colors.orange[400];
   return (
-    <Box style={{ display: 'flex', flex: 1, height: 200 }}>
+    <Box style={{ display: 'flex', flex: 1, height }}>
       <Grid container spacing={0}>
         <Grid item xs={5}>
           <PurchaseChart
@@ -1707,15 +2819,15 @@ export const purchaseMainFormatter = ({ row, theme, isRTL }: any) => {
             dcolor={dcolor}
             row={row}
             theme={theme}
-            height={200}
+            height={height}
           ></PurchaseChart>
         </Grid>
         <Grid item xs={7}>
-          <Grid container spacing={0}>
-            <Grid item xs={6} style={{ marginTop: 30 }}>
+          <Grid container spacing={1}>
+            <Grid item xs={6} style={{ marginTop: 60 }}>
               {rCellMain(isRTL ? 'المشتريات' : 'Purchases', scolor)}
             </Grid>
-            <Grid item xs={6} style={{ marginTop: 30 }}>
+            <Grid item xs={6} style={{ marginTop: 60 }}>
               {rCellMain(moneyFormat(row?.totalPurchaseInvoiced), scolor)}
             </Grid>
             <Grid item xs={6}>
@@ -1753,18 +2865,32 @@ export const purchaseMainFormatter = ({ row, theme, isRTL }: any) => {
     </Box>
   );
 };
-export const expensesMainFormatter = ({ row, theme, isRTL }: any) => {
+export const expensesMainFormatter = ({
+  row,
+  theme,
+  isRTL,
+  height = 250,
+}: any) => {
   const pcolor = colors.red[300];
   const ecolor = colors.red[500];
   return (
-    <Box style={{ flex: 1, height: 140, paddingLeft: 20, paddingRight: 20 }}>
+    <Box style={{ display: 'flex', flex: 1, height }}>
       <Grid container spacing={1}>
-        <Grid item xs={9}>
-          <Grid container spacing={0}>
-            <Grid item xs={7} style={{ marginTop: 15 }}>
+        <Grid item xs={4}>
+          <ExpensesChart
+            ecolor={ecolor}
+            pcolor={pcolor}
+            row={row}
+            theme={theme}
+            height={height}
+          ></ExpensesChart>
+        </Grid>
+        <Grid item xs={8}>
+          <Grid container spacing={1}>
+            <Grid item xs={7} style={{ marginTop: 80 }}>
               {rCellMain(isRTL ? 'الاستهلاك' : 'Products', pcolor)}
             </Grid>
-            <Grid item xs={5} style={{ marginTop: 15 }}>
+            <Grid item xs={5} style={{ marginTop: 80 }}>
               {rCellMain(moneyFormat(row?.toatlProdExpenses), pcolor)}
             </Grid>
             <Grid item xs={7}>
@@ -1788,37 +2914,42 @@ export const expensesMainFormatter = ({ row, theme, isRTL }: any) => {
             </Grid>
           </Grid>
         </Grid>
-        <Grid item xs={3}>
-          <ExpensesChart
-            ecolor={ecolor}
-            pcolor={pcolor}
-            row={row}
-            theme={theme}
-            height={150}
-          ></ExpensesChart>
-        </Grid>
       </Grid>
     </Box>
   );
 };
-export const kaidsMainFormatter = ({ row, theme, isRTL }: any) => {
+export const kaidsMainFormatter = ({
+  row,
+  theme,
+  isRTL,
+  height = 250,
+}: any) => {
   const ccolor = colors.blueGrey[300];
   const dcolor = colors.brown[400];
   return (
-    <Box style={{ flex: 1, height: 140, paddingLeft: 20, paddingRight: 20 }}>
+    <Box style={{ display: 'flex', flex: 1, height }}>
       <Grid container spacing={1}>
+        <Grid item xs={5}>
+          <KaidsChart
+            ccolor={ccolor}
+            dcolor={dcolor}
+            row={row}
+            theme={theme}
+            height={height}
+          ></KaidsChart>
+        </Grid>
         <Grid item xs={7}>
-          <Grid container spacing={0}>
-            <Grid item xs={7}>
+          <Grid container spacing={1}>
+            <Grid item xs={7} style={{ marginTop: 80 }}>
               {rCellMain(isRTL ? 'القيود المدينة' : 'Debit', dcolor)}
             </Grid>
-            <Grid item xs={5}>
+            <Grid item xs={5} style={{ marginTop: 80 }}>
               {rCellMain(moneyFormat(row?.totalkaidsdebit), dcolor)}
             </Grid>
-            <Grid item xs={7} style={{ marginTop: 15 }}>
+            <Grid item xs={7}>
               {rCellMain(isRTL ? 'القيود الدائنة' : 'Credit', ccolor)}
             </Grid>
-            <Grid item xs={5} style={{ marginTop: 15 }}>
+            <Grid item xs={5}>
               {rCellMain(moneyFormat(row?.totalKaidscredit), ccolor)}
             </Grid>
             <Grid item xs={7}>
@@ -1835,15 +2966,6 @@ export const kaidsMainFormatter = ({ row, theme, isRTL }: any) => {
               </Box>
             </Grid>
           </Grid>
-        </Grid>
-        <Grid item xs={5}>
-          <KaidsChart
-            ccolor={ccolor}
-            dcolor={dcolor}
-            row={row}
-            theme={theme}
-            height={150}
-          ></KaidsChart>
         </Grid>
       </Grid>
     </Box>
@@ -1862,31 +2984,21 @@ export const carstatusFormatter = ({ value, isRTL }: any) => {
       : value === 10
       ? colors.blue[500]
       : '#333';
+  const bgcolor =
+    value === 1
+      ? colors.green[50]
+      : value === 3
+      ? colors.red[50]
+      : value === 2
+      ? colors.grey[50]
+      : value === 10
+      ? colors.blue[50]
+      : '#ddd';
   const cstat = carstatuss.filter((cs: any) => cs.id === value)?.[0];
   if (cstat?.nameAr) {
     status = isRTL ? cstat?.nameAr : cstat?.name;
   }
-  const fcolor = fade(color, 0.7);
-  return (
-    <Box display={'flex'} style={{ alignContent: 'center' }}>
-      <Box
-        style={{
-          width: 12,
-          height: 12,
-          borderRadius: 6,
-          backgroundColor: fcolor,
-          marginLeft: 5,
-          marginRight: 5,
-          marginTop: 5,
-        }}
-      ></Box>
-      <Box>
-        <Typography style={{ color: fcolor, fontSize: 12 }}>
-          {status}
-        </Typography>
-      </Box>
-    </Box>
-  );
+  return <>{renderTag({ value: status, color, bgcolor })}</>;
 };
 export const deleteFormatter = ({ removeItem, row }: any) => {
   return (

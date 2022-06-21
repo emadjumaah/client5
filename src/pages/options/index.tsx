@@ -57,18 +57,8 @@ const Options = ({ isRTL, words, company, editCompany }: any) => {
         marginRight: 5,
       }}
     >
-      <Box style={{ margin: 10 }}>
+      <Box style={{ margin: 10, marginBottom: 20 }}>
         <Grid container spacing={2}>
-          {roles.isBranchAdmin() && (
-            <Grid item xs={12}>
-              <Company
-                company={company}
-                editCompany={editCompany}
-                words={words}
-                isRTL={isRTL}
-              ></Company>
-            </Grid>
-          )}
           <Grid item xs={12}>
             <Grid container spacing={2}>
               <Grid item xs={12} md={4}>
@@ -95,6 +85,16 @@ const Options = ({ isRTL, words, company, editCompany }: any) => {
               </Grid>
             </Grid>
           </Grid>
+          {roles.isBranchAdmin() && (
+            <Grid item xs={12}>
+              <Company
+                company={company}
+                editCompany={editCompany}
+                words={words}
+                isRTL={isRTL}
+              ></Company>
+            </Grid>
+          )}
         </Grid>
       </Box>
       {/* <Box style={{ flexGrow: 1, height: '100%', overflow: 'hidden' }}>

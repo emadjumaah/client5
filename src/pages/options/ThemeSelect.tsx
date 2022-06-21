@@ -32,7 +32,7 @@ const GenTheme = ({ themeId, setThemeId, isRTL }) => {
   };
 
   return (
-    <Paper>
+    <Paper style={{ height: 300, marginTop: 10 }}>
       <Box padding={3}>
         <Typography variant="h6">{isRTL ? 'الثيمة' : 'Themes'}</Typography>
 
@@ -40,6 +40,7 @@ const GenTheme = ({ themeId, setThemeId, isRTL }) => {
           aria-label="Views"
           style={{ marginTop: 12 }}
           name="views"
+          row
           value={themeId}
           onChange={onchange}
         >
@@ -48,7 +49,7 @@ const GenTheme = ({ themeId, setThemeId, isRTL }) => {
               <Box
                 key={index}
                 display="flex"
-                style={{ flexDirection: 'row', marginBottom: 20 }}
+                style={{ flexDirection: 'row', marginTop: 10, marginRight: 50 }}
               >
                 <FormControlLabel
                   value={index}

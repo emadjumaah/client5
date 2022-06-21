@@ -8,6 +8,8 @@ export default gql`
     $title: String
     $time: Date
     $desc: String
+    $periodfrom: Date
+    $periodto: Date
     $customer: CustomerInput
     $department: DepartmentInput
     $employee: EmployeeInput
@@ -39,6 +41,8 @@ export default gql`
       title: $title
       time: $time
       desc: $desc
+      periodfrom: $periodfrom
+      periodto: $periodto
       customer: $customer
       department: $department
       employee: $employee

@@ -65,7 +65,6 @@ import useWindowDimensions from '../../hooks/useWindowDimensions';
 
 export default function Invoices({ isRTL, words, menuitem, theme, company }) {
   const col = getColumns({ isRTL, words });
-  const [pageSizes] = useState([5, 10, 20, 50, 0]);
 
   const { tempoptions } = useTemplate();
 
@@ -110,6 +109,7 @@ export default function Invoices({ isRTL, words, menuitem, theme, company }) {
     { columnName: 'time', togglingEnabled: false },
     { columnName: 'docNo', togglingEnabled: false },
   ]);
+  const [pageSizes] = useState([5, 10, 20, 50, 0]);
 
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(false);

@@ -8,14 +8,22 @@ import {
   SearchState,
   IntegratedFiltering,
   EditingState,
+  PagingState,
+  IntegratedPaging,
 } from '@devexpress/dx-react-grid';
 import {
   Grid,
   TableHeaderRow,
-  VirtualTable,
   Toolbar,
   SearchPanel,
   TableEditColumn,
+  DragDropProvider,
+  Table,
+  TableColumnReordering,
+  TableColumnResizing,
+  TableColumnVisibility,
+  ColumnChooser,
+  PagingPanel,
 } from '@devexpress/dx-react-grid-material-ui';
 import { Command, Loading, PopupEditing } from '../../Shared';
 import { getRowId } from '../../common';
@@ -24,7 +32,7 @@ import { actionTimeFormatter } from '../../Shared/colorFormat';
 import { AlertLocal, SearchTable } from '../../components';
 import { getColumns } from '../../common/columns';
 
-import { Box, Typography, useMediaQuery } from '@material-ui/core';
+import { Box, Paper, Typography } from '@material-ui/core';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
 import PageLayout from '../main/PageLayout';
 import { errorAlert, errorDeleteAlert } from '../../Shared/helpers';
@@ -43,6 +51,7 @@ import useDepartmentsUp from '../../hooks/useDepartmentsUp';
 import useResoursesUp from '../../hooks/useResoursesUp';
 import { useExpenseItems, useTemplate } from '../../hooks';
 import getRemindersActions from '../../graphql/query/getRemindersActions';
+import { TableComponent } from '../../Shared/TableComponent';
 
 export default function Reminders(props: any) {
   const { isRTL, words, menuitem, theme } = props;
@@ -54,7 +63,7 @@ export default function Reminders(props: any) {
   const [end, setEnd] = useState<any>(null);
 
   const col = getColumns({ isRTL, words });
-  const isMobile = useMediaQuery('(max-width:600px)');
+  // const isMobile = useMediaQuery('(max-width:600px)');
 
   const { tempoptions } = useTemplate();
   const [columns] = useState(
@@ -70,7 +79,21 @@ export default function Reminders(props: any) {
         ]
   );
 
-  const { height } = useWindowDimensions();
+  const [tableColumnExtensions]: any = useState([
+    { columnName: col.time.name, width: 120 },
+    { columnName: col.title.name, width: 250 },
+    { columnName: col.resourse.name, width: 250 },
+    { columnName: col.employee.name, width: 250 },
+    { columnName: col.department.name, width: 250 },
+    { columnName: col.amount.name, width: 120 },
+  ]);
+
+  const [tableColumnVisibilityColumnExtensions] = useState([
+    { columnName: 'time', togglingEnabled: false },
+  ]);
+  const [pageSizes] = useState([5, 10, 20, 50, 0]);
+
+  const { width, height } = useWindowDimensions();
   const { employees } = useEmployeesUp();
   const { departments } = useDepartmentsUp();
   const { resourses } = useResoursesUp();
@@ -222,8 +245,6 @@ export default function Reminders(props: any) {
           height: height - 50,
           overflow: 'auto',
           backgroundColor: '#fff',
-          marginLeft: 5,
-          marginRight: 5,
         }}
       >
         <Box
@@ -250,60 +271,92 @@ export default function Reminders(props: any) {
             theme={theme}
           ></DateNavigatorReports>
         </Box>
+        <Paper
+          elevation={5}
+          style={{
+            margin: 40,
+            marginTop: 80,
+            overflow: 'auto',
+            width: width - 330,
+            // height: height - 200,
+            borderRadius: 10,
+          }}
+        >
+          <Grid rows={rows} columns={columns} getRowId={getRowId}>
+            <SortingState />
+            <EditingState onCommitChanges={commitChanges} />
+            <SearchState />
+            <PagingState defaultCurrentPage={0} defaultPageSize={10} />
+            <IntegratedSorting />
+            <IntegratedFiltering />
+            <IntegratedPaging />
+            <DragDropProvider />
+            <Table
+              messages={{
+                noData: isRTL ? 'لا يوجد بيانات' : 'no data',
+              }}
+              tableComponent={TableComponent}
+              rowComponent={(props: any) => (
+                <Table.Row {...props} style={{ height: 60 }}></Table.Row>
+              )}
+              columnExtensions={tableColumnExtensions}
+            />
 
-        <Grid rows={rows} columns={columns} getRowId={getRowId}>
-          <SortingState />
-          {!isMobile && <SearchState />}
-          <EditingState onCommitChanges={commitChanges} />
+            <TableColumnReordering
+              defaultOrder={[
+                col.time.name,
+                col.title.name,
+                col.resourse.name,
+                col.employee.name,
+                col.department.name,
+                col.amount.name,
+              ]}
+            />
+            <TableColumnResizing defaultColumnWidths={tableColumnExtensions} />
 
-          <IntegratedSorting />
-          {!isMobile && <IntegratedFiltering />}
+            <TableHeaderRow
+              showSortingControls
+              titleComponent={({ children }) => {
+                return (
+                  <Typography style={{ fontSize: 14, fontWeight: 'bold' }}>
+                    {children}
+                  </Typography>
+                );
+              }}
+            />
+            <TableColumnVisibility
+              columnExtensions={tableColumnVisibilityColumnExtensions}
+              defaultHiddenColumnNames={[]}
+            />
+            <DataTypeProvider
+              for={['time']}
+              formatterComponent={actionTimeFormatter}
+            ></DataTypeProvider>
+            <TableEditColumn
+              showEditCommand
+              showDeleteCommand
+              showAddCommand
+              commandComponent={Command}
+            ></TableEditColumn>
 
-          <VirtualTable
-            height={height - 100}
-            messages={{
-              noData: isRTL ? 'لا يوجد بيانات' : 'no data',
-            }}
-            estimatedRowHeight={40}
-          />
+            <Toolbar />
+            <ColumnChooser />
+            <PagingPanel pageSizes={pageSizes} />
 
-          <DataTypeProvider
-            for={['time']}
-            formatterComponent={actionTimeFormatter}
-          ></DataTypeProvider>
-          <TableEditColumn
-            showEditCommand
-            showDeleteCommand
-            showAddCommand
-            commandComponent={Command}
-          ></TableEditColumn>
-          <TableHeaderRow
-            showSortingControls
-            titleComponent={({ children }) => {
-              return (
-                <Typography style={{ fontSize: 14, fontWeight: 'bold' }}>
-                  {children}
-                </Typography>
-              );
-            }}
-          />
-
-          {!isMobile && <Toolbar />}
-          {!isMobile && (
             <SearchPanel
               inputComponent={(props: any) => {
                 return <SearchTable isRTL={isRTL} {...props}></SearchTable>;
               }}
             />
-          )}
-          <PopupEditing
-            theme={theme}
-            addAction={addReminder}
-            editAction={editReminder}
-          >
-            <PopupReminder servicesproducts={expenseItems}></PopupReminder>
-          </PopupEditing>
-        </Grid>
+            <PopupEditing
+              theme={theme}
+              addAction={addReminder}
+              editAction={editReminder}
+            >
+              <PopupReminder servicesproducts={expenseItems}></PopupReminder>
+            </PopupEditing>
+          </Grid>
+        </Paper>
 
         {loading && <Loading isRTL={isRTL} />}
         {alrt.show && (

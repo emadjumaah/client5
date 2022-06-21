@@ -3,12 +3,10 @@
 import React, { useEffect } from 'react';
 import { useState } from 'react';
 import { Box, colors, Grid } from '@material-ui/core';
-import DateNavigatorReports from '../components/filters/DateNavigatorReports';
 import {
   appointmentsMainFormatter,
   expensesMainFormatter,
   kaidsMainFormatter,
-  nameManageLinkFormat,
   salesMainFormatter,
   purchaseMainFormatter,
   appointmentsFormatter,
@@ -16,6 +14,13 @@ import {
   purchaseFormatter,
   expensesFormatter,
   kaidsFormatter,
+  taskDataView,
+  appointTaskMainFormatter,
+  salesTaskMainFormatter,
+  daysdataMainFormatter,
+  resourseDataView,
+  employeeDataView,
+  customerDataView,
 } from './colorFormat';
 import { useLazyQuery } from '@apollo/client';
 import getGereralCalculation from '../graphql/query/getGereralCalculation';
@@ -29,25 +34,14 @@ export default function MainCustomer({
   value: row,
   width,
   height,
-}) {
+  start,
+  end,
+}: any) {
   const [data, setData] = useState<any>(null);
-  const [start, setStart] = useState<any>(null);
-  const [end, setEnd] = useState<any>(null);
-  const [currentViewName, setCurrentViewName] = useState('Month');
-  const [currentDate, setCurrentDate] = useState(new Date());
-  const [endDate, setEndDate] = useState(new Date());
-  const currentViewNameChange = (e: any) => {
-    setCurrentViewName(e.target.value);
-  };
-  const currentDateChange = (curDate: any) => {
-    setCurrentDate(curDate);
-  };
 
-  const endDateChange = (curDate: any) => {
-    setEndDate(curDate);
-  };
-
-  const [loadCalcss, calcsData]: any = useLazyQuery(getGereralCalculation);
+  const [loadCalcss, calcsData]: any = useLazyQuery(getGereralCalculation, {
+    fetchPolicy: 'cache-and-network',
+  });
 
   useEffect(() => {
     const variables = {
@@ -68,148 +62,177 @@ export default function MainCustomer({
     }
   }, [calcsData]);
 
-  // const totalkaids = totalkaidsdebit - totalKaidscredit;
-  // const income =
-  //   totalinvoiced -
-  //   toatlExpenses -
-  //   toatlProdExpenses -
-  //   totalDiscount -
-  //   totalkaids;
+  const isCust = name === 'customerId';
+  const isSupp = name === 'supplierId';
+  const isTask = name === 'taskId';
+  const isReso = name === 'resourseId';
+  const isEmpl = name === 'employeeId';
+  const isDepart = name === 'departmentId';
   return (
     <Box
       style={{
-        height: height - 230,
+        height: height - 280,
         width: width - 300,
         margin: 10,
       }}
     >
       <Box
         style={{
-          height: height - 240,
+          height: height - 290,
           width: width - 320,
         }}
       >
-        <Box display="flex" style={{ backgroundColor: '#fff' }}>
-          <DateNavigatorReports
-            setStart={setStart}
-            setEnd={setEnd}
-            currentDate={currentDate}
-            currentDateChange={currentDateChange}
-            currentViewName={currentViewName}
-            currentViewNameChange={currentViewNameChange}
-            endDate={endDate}
-            endDateChange={endDateChange}
-            views={[1, 7, 30, 365, 1000]}
-            isRTL={isRTL}
-            words={words}
-            theme={theme}
-          ></DateNavigatorReports>
-        </Box>
         {data && (
           <Box mt={1}>
-            <Grid container spacing={1}>
-              <Grid item xs={4}>
-                <Box style={{ height: 555 }}>
-                  <Box style={{ backgroundColor: '#fff', height: 285 }}>
-                    {nameManageLinkFormat({
-                      row,
-                      value: row.name,
-                      theme,
-                      isRTL,
-                    })}
+            <Box
+              style={{
+                display: 'flex',
+                flex: 1,
+                height: 525,
+                marginBottom: 10,
+              }}
+            >
+              <Grid container spacing={1}>
+                <Grid item xs={4}>
+                  <Box style={{ backgroundColor: '#fff', height: 250 }}>
+                    {isTask && taskDataView({ row, words, isRTL })}
+                    {isReso && resourseDataView({ row, words, isRTL })}
+                    {(isEmpl || isDepart) &&
+                      employeeDataView({ row, words, isRTL })}
+                    {(isCust || isSupp) &&
+                      customerDataView({ row, words, isRTL })}
                   </Box>
-                  <Box
-                    style={{
-                      backgroundColor: '#fff',
-                      height: 260,
-                      marginTop: 10,
-                    }}
-                  >
-                    {appointmentsMainFormatter({ row: data, theme, isRTL })}
-                  </Box>
-                </Box>
-              </Grid>
+                </Grid>
 
-              <Grid item xs={8}>
-                <Box style={{ height: 555 }}>
-                  <Grid container spacing={1}>
-                    <Grid item xs={6}>
-                      <Box
-                        style={{
-                          backgroundColor: '#fff',
-                          height: 230,
-                          paddingTop: 15,
-                        }}
-                      >
-                        {salesMainFormatter({ row: data, theme, isRTL })}
-                      </Box>
-                    </Grid>
-                    <Grid item xs={6}>
-                      <Box
-                        style={{
-                          backgroundColor: '#fff',
-                          height: 230,
-                          paddingTop: 15,
-                        }}
-                      >
-                        {purchaseMainFormatter({ row: data, theme, isRTL })}
-                      </Box>
-                    </Grid>
-                    <Grid item xs={6}>
-                      <Box
-                        style={{
-                          backgroundColor: '#fff',
-                          height: 150,
-                          paddingTop: 15,
-                        }}
-                      >
-                        {expensesMainFormatter({ row: data, theme, isRTL })}
-                      </Box>
-                    </Grid>
-                    <Grid item xs={6}>
-                      <Box
-                        style={{
-                          backgroundColor: '#fff',
-                          height: 150,
-                          paddingTop: 15,
-                        }}
-                      >
-                        {kaidsMainFormatter({ row: data, theme, isRTL })}
-                      </Box>
-                    </Grid>
+                {isTask && (
+                  <Grid item xs={4}>
+                    <Box style={{ backgroundColor: '#fff', height: 250 }}>
+                      {daysdataMainFormatter({ row, theme, isRTL })}
+                    </Box>
                   </Grid>
-                </Box>
+                )}
+                {isTask && (
+                  <Grid item xs={4}>
+                    <Box style={{ backgroundColor: '#fff', height: 250 }}>
+                      {appointTaskMainFormatter({ row, theme, isRTL })}
+                    </Box>
+                  </Grid>
+                )}
+                {isTask && (
+                  <Grid item xs={4}>
+                    <Box style={{ backgroundColor: '#fff', height: 250 }}>
+                      {salesTaskMainFormatter({ row, theme, isRTL })}
+                    </Box>
+                  </Grid>
+                )}
+                {!isSupp && !isTask && (
+                  <Grid item xs={4}>
+                    <Box style={{ backgroundColor: '#fff', height: 250 }}>
+                      {appointmentsMainFormatter({ row: data, theme, isRTL })}
+                    </Box>
+                  </Grid>
+                )}
+                {!isSupp && !isTask && (
+                  <Grid item xs={4}>
+                    <Box style={{ backgroundColor: '#fff', height: 250 }}>
+                      {salesMainFormatter({ row: data, theme, isRTL })}
+                    </Box>
+                  </Grid>
+                )}
+                {!isCust && !isTask && (
+                  <Grid item xs={4}>
+                    <Box style={{ backgroundColor: '#fff', height: 250 }}>
+                      {purchaseMainFormatter({ row: data, theme, isRTL })}
+                    </Box>
+                  </Grid>
+                )}
+                {!isCust && !isSupp && (
+                  <Grid item xs={4}>
+                    <Box style={{ backgroundColor: '#fff', height: 250 }}>
+                      {expensesMainFormatter({ row: data, theme, isRTL })}
+                    </Box>
+                  </Grid>
+                )}
+                {!isCust && !isSupp && (
+                  <Grid item xs={4}>
+                    <Box style={{ backgroundColor: '#fff', height: 250 }}>
+                      {kaidsMainFormatter({ row: data, theme, isRTL })}
+                    </Box>
+                  </Grid>
+                )}
               </Grid>
-              <Grid item xs={12}>
+            </Box>
+            <Box>
+              {!isTask && (
                 <Box
                   display="flex"
+                  borderRadius={15}
                   style={{
                     alignItems: 'center',
-                    // justifyContent: 'space-between',
-                    backgroundColor: colors.lime[50],
-                    height: 110,
+                    backgroundColor: colors.indigo[50],
+                    height: 145,
                     paddingLeft: 10,
                     paddingRight: 10,
                   }}
                 >
-                  <Box style={{ width: 270, marginLeft: 10 }}>
-                    {appointmentsFormatter({ row, theme, isRTL })}
-                  </Box>
-                  <Box style={{ width: 270, marginLeft: 10 }}>
-                    {salesFormatter({ row, theme, isRTL })}
-                  </Box>
-                  <Box style={{ width: 270, marginLeft: 10 }}>
-                    {purchaseFormatter({ row, theme, isRTL })}
-                  </Box>
-                  <Box style={{ width: 200, marginLeft: 10 }}>
-                    {expensesFormatter({ row, theme, isRTL })}
-                  </Box>
-                  <Box style={{ width: 200, marginLeft: 10 }}>
-                    {kaidsFormatter({ row, theme, isRTL })}
-                  </Box>
+                  {!isSupp && (
+                    <Box style={{ width: 270, marginLeft: 15 }}>
+                      {appointmentsFormatter({
+                        row,
+                        theme,
+                        isRTL,
+                        height: 120,
+                        bc: '#bbb',
+                      })}
+                    </Box>
+                  )}
+                  {!isSupp && (
+                    <Box style={{ width: 270, marginLeft: 15 }}>
+                      {salesFormatter({
+                        row,
+                        theme,
+                        isRTL,
+                        height: 120,
+                        bc: '#bbb',
+                      })}
+                    </Box>
+                  )}
+                  {!isCust && (
+                    <Box style={{ width: 270, marginLeft: 15 }}>
+                      {purchaseFormatter({
+                        row,
+                        theme,
+                        isRTL,
+                        height: 120,
+                        bc: '#bbb',
+                      })}
+                    </Box>
+                  )}
+                  {!isCust && !isSupp && (
+                    <Box style={{ width: 270, marginLeft: 15 }}>
+                      {expensesFormatter({
+                        row,
+                        theme,
+                        isRTL,
+                        height: 120,
+                        bc: '#bbb',
+                      })}
+                    </Box>
+                  )}
+                  {!isCust && !isSupp && (
+                    <Box style={{ width: 270, marginLeft: 15 }}>
+                      {kaidsFormatter({
+                        row,
+                        theme,
+                        isRTL,
+                        height: 120,
+                        bc: '#bbb',
+                      })}
+                    </Box>
+                  )}
                 </Box>
-              </Grid>
-            </Grid>
+              )}
+            </Box>
           </Box>
         )}
       </Box>

@@ -3,15 +3,7 @@
 import React, { useContext } from 'react';
 import { GContextTypes } from '../types';
 import { GlobalContext } from '../contexts';
-import {
-  Box,
-  colors,
-  Grid,
-  makeStyles,
-  Tab,
-  Tabs,
-  Typography,
-} from '@material-ui/core';
+import { Box, colors, Grid, Tab, Tabs, Typography } from '@material-ui/core';
 import PopupLayout from '../pages/main/PopupLayout';
 import { moneyFormat } from '../Shared/colorFormat';
 import EventsCustomer from '../Shared/EventsCustomer';
@@ -23,68 +15,9 @@ import { projectManamentTabs } from '../constants/rrule';
 import ProjectsCustomer from '../Shared/ProjectsCustomer';
 import KaidsCustomer from '../Shared/KaidsCustomer';
 import useWindowDimensions from '../hooks/useWindowDimensions';
+import { TabPanel, useStyles, a11yProps } from '../Shared/TabPanel';
 
-function TabPanel(props) {
-  const { children, value, index, ...other } = props;
-
-  return (
-    <div
-      role="tabpanel"
-      hidden={value !== index}
-      id={`vertical-tabpanel-${index}`}
-      aria-labelledby={`vertical-tab-${index}`}
-      {...other}
-    >
-      {value === index && (
-        <Box>
-          <Typography>{children}</Typography>
-        </Box>
-      )}
-    </div>
-  );
-}
-
-function a11yProps(index: any) {
-  return {
-    id: `vertical-tab-${index}`,
-    'aria-controls': `vertical-tabpanel-${index}`,
-  };
-}
-
-const useStyles = makeStyles((theme) => ({
-  root: {
-    backgroundColor: theme.palette.background.paper,
-    display: 'flex',
-    height: 300,
-  },
-  tabs: {
-    borderRight: `2px solid ${theme.palette.divider}`,
-  },
-}));
-
-export const indexTheList = (list: any) => {
-  return list.map((item: any, index: any) => {
-    return {
-      ...item,
-      index,
-    };
-  });
-};
-
-const PopupProjectView = ({
-  open,
-  onClose,
-  row,
-  isNew,
-  theme,
-  departments,
-  company,
-  employees,
-  resourses,
-  servicesproducts,
-  products,
-  customers,
-}: any) => {
+const PopupProjectView = ({ open, onClose, row, theme }: any) => {
   const classes = useStyles();
   const [value, setValue] = React.useState(1);
   const { width, height } = useWindowDimensions();
@@ -135,69 +68,53 @@ const PopupProjectView = ({
               <Box style={{ marginBottom: 20 }}>
                 <TabPanel value={value} index={0}>
                   <ProjectsCustomer
-                    servicesproducts={servicesproducts}
-                    products={products}
                     isRTL={isRTL}
                     words={words}
-                    theme={theme}
-                    company={company}
                     name="projectId"
-                    value={row}
                     id={row?._id}
                     width={width}
                     height={height}
+                    start={null}
+                    end={null}
                   ></ProjectsCustomer>
                 </TabPanel>
                 <TabPanel value={value} index={1}>
                   <TasksCustomer
-                    servicesproducts={servicesproducts}
-                    products={products}
                     isRTL={isRTL}
                     words={words}
                     theme={theme}
-                    company={company}
                     name="projectId"
-                    value={row}
                     id={row?._id}
                     width={width}
                     height={height}
+                    start={null}
+                    end={null}
                   ></TasksCustomer>
                 </TabPanel>
                 <TabPanel value={value} index={2}>
                   <EventsCustomer
-                    resourses={resourses}
-                    employees={employees}
-                    departments={departments}
-                    customers={customers}
-                    servicesproducts={servicesproducts}
-                    products={products}
                     isRTL={isRTL}
                     words={words}
                     theme={theme}
-                    isNew={isNew}
                     name="projectId"
-                    value={row}
                     id={row?._id}
                     width={width}
                     height={height}
+                    start={null}
+                    end={null}
                   ></EventsCustomer>
                 </TabPanel>
                 <TabPanel value={value} index={3}>
                   <InvoicesCustomer
                     isRTL={isRTL}
                     words={words}
-                    employees={employees}
-                    resourses={resourses}
-                    departments={departments}
-                    company={company}
                     theme={theme}
-                    servicesproducts={servicesproducts}
-                    products={products}
                     name="projectId"
-                    value={row}
                     id={row?._id}
                     width={width}
                     height={height}
+                    start={null}
+                    end={null}
                   ></InvoicesCustomer>
                 </TabPanel>
                 <TabPanel value={value} index={4}>
@@ -206,10 +123,11 @@ const PopupProjectView = ({
                     words={words}
                     theme={theme}
                     name="projectId"
-                    value={row}
                     id={row?._id}
                     width={width}
                     height={height}
+                    start={null}
+                    end={null}
                   ></ReceiptCustomer>
                 </TabPanel>
                 <TabPanel value={value} index={5}>
@@ -218,10 +136,11 @@ const PopupProjectView = ({
                     words={words}
                     theme={theme}
                     name="projectId"
-                    value={row}
                     id={row?._id}
                     width={width}
                     height={height}
+                    start={null}
+                    end={null}
                   ></ExpensesCustomer>
                 </TabPanel>
                 <TabPanel value={value} index={6}>
@@ -230,10 +149,11 @@ const PopupProjectView = ({
                     words={words}
                     theme={theme}
                     name="projectId"
-                    value={row}
                     id={row?._id}
                     width={width}
                     height={height}
+                    start={null}
+                    end={null}
                   ></KaidsCustomer>
                 </TabPanel>
                 <Box

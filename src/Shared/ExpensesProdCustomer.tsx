@@ -3,15 +3,15 @@
 import React, { useEffect, useState } from 'react';
 import Paper from '@material-ui/core/Paper';
 import {
-  EditingState,
   SortingState,
   IntegratedSorting,
   DataTypeProvider,
+  EditingState,
 } from '@devexpress/dx-react-grid';
 import {
   Grid,
-  TableHeaderRow,
   TableEditColumn,
+  TableHeaderRow,
   VirtualTable,
 } from '@devexpress/dx-react-grid-material-ui';
 import { Command, Loading, PopupEditing } from '.';
@@ -38,25 +38,26 @@ import {
 } from './colorFormat';
 import useAccounts from '../hooks/useAccounts';
 import useTasks from '../hooks/useTasks';
-import getTasks from '../graphql/query/getTasks';
-import useCompany from '../hooks/useCompany';
 import { Box, Typography } from '@material-ui/core';
-import DateNavigatorReports from '../components/filters/DateNavigatorReports';
 import { useProducts, useTemplate } from '../hooks';
-import useDepartmentsUp from '../hooks/useDepartmentsUp';
-import useEmployeesUp from '../hooks/useEmployeesUp';
-import useResoursesUp from '../hooks/useResoursesUp';
 import PopupExpProducts from '../pubups/PopupExpProducts';
+import useResoursesUp from '../hooks/useResoursesUp';
+import useEmployeesUp from '../hooks/useEmployeesUp';
+import useDepartmentsUp from '../hooks/useDepartmentsUp';
+import getTasks from '../graphql/query/getTasks';
 
 export default function ExpensesProdCustomer({
   isRTL,
   words,
   theme,
   name,
-  id,
   value,
+  company,
+  id,
   width,
   height,
+  start,
+  end,
 }) {
   const { tempoptions, tempwords } = useTemplate();
   const [columns] = useState(
@@ -101,29 +102,11 @@ export default function ExpensesProdCustomer({
   const [loading, setLoading] = useState(false);
 
   const { tasks } = useTasks();
-  const { company } = useCompany();
   const { accounts } = useAccounts();
   const { products } = useProducts();
   const { departments } = useDepartmentsUp();
   const { employees } = useEmployeesUp();
   const { resourses } = useResoursesUp();
-
-  const [start, setStart] = useState<any>(null);
-  const [end, setEnd] = useState<any>(null);
-  const [currentViewName, setCurrentViewName] = useState('Month');
-  const [currentDate, setCurrentDate] = useState(new Date());
-  const [endDate, setEndDate] = useState(new Date());
-
-  const currentViewNameChange = (e: any) => {
-    setCurrentViewName(e.target.value);
-  };
-  const currentDateChange = (curDate: any) => {
-    setCurrentDate(curDate);
-  };
-
-  const endDateChange = (curDate: any) => {
-    setEndDate(curDate);
-  };
 
   const [loadExpenses, expensesData]: any = useLazyQuery(getExpenses);
   const refresQuery = {
@@ -204,36 +187,21 @@ export default function ExpensesProdCustomer({
   return (
     <Box
       style={{
-        height: height - 230,
+        height: height - 280,
         width: width - 300,
         margin: 10,
       }}
     >
       <Paper
         style={{
-          height: height - 240,
+          height: height - 290,
           width: width - 320,
         }}
       >
-        <Box display="flex">
-          <DateNavigatorReports
-            setStart={setStart}
-            setEnd={setEnd}
-            currentDate={currentDate}
-            currentDateChange={currentDateChange}
-            currentViewName={currentViewName}
-            currentViewNameChange={currentViewNameChange}
-            endDate={endDate}
-            endDateChange={endDateChange}
-            views={[1, 7, 30, 365, 1000]}
-            isRTL={isRTL}
-            words={words}
-            theme={theme}
-          ></DateNavigatorReports>
-        </Box>
         <Grid rows={rows} columns={columns} getRowId={getRowId}>
           <SortingState />
           <EditingState onCommitChanges={commitChanges} />
+
           <IntegratedSorting />
           <VirtualTable
             height={680}

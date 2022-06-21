@@ -37,14 +37,11 @@ import {
 import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
 import DeleteOutlinedIcon from '@material-ui/icons/DeleteOutlined';
 import PopupAction from '../../../pubups/PopupAction';
-import PopupTask from '../../../pubups/PopupTask';
 import PopupResourses from '../../../pubups/PopupResourses';
 import useDepartmentsUp from '../../../hooks/useDepartmentsUp';
 import useEmployeesUp from '../../../hooks/useEmployeesUp';
 import useResoursesUp from '../../../hooks/useResoursesUp';
 import useTasks from '../../../hooks/useTasks';
-import useProjects from '../../../hooks/useProjects';
-// import MyIcon from '../../../Shared/MyIcon';
 import PopupMaps from '../../../pubups/PopupMaps';
 import { SelectLocal } from './SelectLocal';
 import { eventLengthOptions } from '../../../constants/rrule';
@@ -96,15 +93,13 @@ export const AppointForm = (props: any) => {
   const [openDep, setOpenDep] = useState(false);
   const [openEmp, setOpenEmp] = useState(false);
   const [openRes, setOpenRes] = useState(false);
-  const [openTsk, setOpenTsk] = useState(false);
 
   const { customers, addCustomer, editCustomer } = useCustomers();
   const { tempwords, tempoptions } = useTemplate();
   const { departments, addDepartment, editDepartment } = useDepartmentsUp();
   const { employees, addEmployee, editEmployee } = useEmployeesUp();
   const { resourses, addResourse, editResourse } = useResoursesUp();
-  const { tasks, addTask, editTask } = useTasks();
-  const { projects } = useProjects();
+  const { tasks } = useTasks();
   const { services } = useServices();
   const { products } = useProducts();
 
@@ -141,13 +136,6 @@ export const AppointForm = (props: any) => {
   };
   const onCloseResourse = () => {
     setOpenRes(false);
-    setNewtext('');
-  };
-  const openTask = () => {
-    setOpenTsk(true);
-  };
-  const onCloseTask = () => {
-    setOpenTsk(false);
     setNewtext('');
   };
   const openCustomer = () => {
@@ -675,27 +663,7 @@ export const AppointForm = (props: any) => {
                   value={taskvalue}
                   setSelectValue={selectTask}
                   isRTL={isRTL}
-                  openAdd={openTask}
                   fullWidth
-                  mb={0}
-                ></AutoFieldLocal>
-              </Grid>
-            )}
-
-            {!tempoptions?.noEmp && (
-              <Grid item xs={6}>
-                <AutoFieldLocal
-                  name="employee"
-                  title={tempwords?.employee}
-                  words={words}
-                  options={employees}
-                  disabled={isemployee}
-                  value={emplvalue}
-                  setSelectValue={selectEmployee}
-                  openAdd={openEmployee}
-                  isRTL={isRTL}
-                  fullWidth
-                  day={day}
                   mb={0}
                 ></AutoFieldLocal>
               </Grid>
@@ -710,6 +678,24 @@ export const AppointForm = (props: any) => {
                   value={resovalue}
                   setSelectValue={selectResourse}
                   openAdd={openResourse}
+                  isRTL={isRTL}
+                  fullWidth
+                  day={day}
+                  mb={0}
+                ></AutoFieldLocal>
+              </Grid>
+            )}
+            {!tempoptions?.noEmp && (
+              <Grid item xs={6}>
+                <AutoFieldLocal
+                  name="employee"
+                  title={tempwords?.employee}
+                  words={words}
+                  options={employees}
+                  disabled={isemployee}
+                  value={emplvalue}
+                  setSelectValue={selectEmployee}
+                  openAdd={openEmployee}
                   isRTL={isRTL}
                   fullWidth
                   day={day}
@@ -853,37 +839,6 @@ export const AppointForm = (props: any) => {
             width={170}
           ></StatusSelect>
         </Grid>
-        {/*   <Grid item xs={4}>
-          <Box
-            m={1}
-            display="flex"
-            style={{ flex: 1, justifyContent: 'center' }}
-          >
-            <Button
-              size="medium"
-              color="primary"
-              variant="contained"
-              onClick={() => setOpenMap(true)}
-            >
-              {isRTL ? 'الموقع الجغرافي' : 'Location'}
-            </Button>
-            {location?.lat && (
-              <>
-                <MyIcon size={32} color="#ff80ed" icon="location"></MyIcon>
-                <Box
-                  onClick={() => {
-                    setLocation(null);
-                    onNewFieldChange(null, 'location');
-                  }}
-                  style={{ cursor: 'pointer', padding: 4 }}
-                >
-                  <MyIcon size={28} color="#777" icon="close"></MyIcon>
-                </Box>
-              </>
-            )}
-          </Box>
-        </Grid> */}
-
         <PopupCustomer
           newtext={newtext}
           open={openCust}
@@ -905,21 +860,6 @@ export const AppointForm = (props: any) => {
           editAction={editDepartment}
           depType={1}
         ></PopupDeprtment>
-        <PopupTask
-          newtext={newtext}
-          open={openTsk}
-          onClose={onCloseTask}
-          isNew={true}
-          setNewValue={selectTask}
-          row={null}
-          employees={employees}
-          resourses={resourses}
-          departments={departments}
-          projects={projects}
-          customers={customers}
-          addAction={addTask}
-          editAction={editTask}
-        ></PopupTask>
         <PopupEmployee
           newtext={newtext}
           departments={departments}

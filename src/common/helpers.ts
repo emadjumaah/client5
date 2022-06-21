@@ -549,6 +549,9 @@ export const getTaskTimeAmountData = (task: any, time = new Date()) => {
 
   const days = Math.ceil((endms - startms) / (1000 * 60 * 60 * 24));
 
+  const daysnow = Math.ceil((now - startms) / (1000 * 60 * 60 * 24));
+  const dayamount = Math.round(amount / days);
+
   if (now < startms) {
     return {
       progress: 0,
@@ -557,6 +560,7 @@ export const getTaskTimeAmountData = (task: any, time = new Date()) => {
       amountnow: null,
       remaining: amount,
       amount,
+      dayamount,
     };
   }
 
@@ -564,15 +568,13 @@ export const getTaskTimeAmountData = (task: any, time = new Date()) => {
     return {
       progress: 1,
       days,
-      daysnow: null,
+      daysnow: days,
       amountnow: amount,
       remaining: 0,
       amount,
+      dayamount,
     };
   }
-
-  const daysnow = Math.ceil((now - startms) / (1000 * 60 * 60 * 24));
-  const dayamount = Math.round(amount / days);
 
   const amountnow = Math.round(dayamount * daysnow);
   const remaining = Math.round(amount - amountnow);
@@ -586,6 +588,7 @@ export const getTaskTimeAmountData = (task: any, time = new Date()) => {
     amountnow,
     remaining,
     amount,
+    dayamount,
   };
 };
 

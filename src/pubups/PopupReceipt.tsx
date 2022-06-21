@@ -23,6 +23,7 @@ const PopupReceipt = ({
   open,
   onClose,
   row,
+  task,
   isNew,
   addAction,
   editAction,
@@ -53,7 +54,6 @@ const PopupReceipt = ({
   const { register, handleSubmit, errors, reset } = useForm(
     yup.depositResolver
   );
-
   const {
     translate: { words, isRTL },
     store: { user },
@@ -96,6 +96,14 @@ const PopupReceipt = ({
   }, [custvalue, open]);
 
   useEffect(() => {
+    if (name && value) {
+      if (name === 'customerId') {
+        setCustvalue(value);
+      }
+    }
+  }, [name, value, open]);
+
+  useEffect(() => {
     if (invoicesData?.data?.getInvoicesList?.data) {
       const { data } = invoicesData.data.getInvoicesList;
       if (data?.length > 0) {
@@ -108,9 +116,14 @@ const PopupReceipt = ({
             nameAr: title,
           };
         });
-        setInvoices(ndata);
-        if (row.refNo) {
-          const inv = ndata.filter((ts: any) => ts.docNo === row.refNo)?.[0];
+        if (task) {
+          const tndata = ndata.filter((nd: any) => nd.taskId === task.id);
+          setInvoices(tndata);
+        } else {
+          setInvoices(ndata);
+        }
+        if (row?.refNo) {
+          const inv = ndata.filter((ts: any) => ts.docNo === row?.refNo)?.[0];
           setInvoicevalue(inv);
         }
       }
@@ -258,7 +271,7 @@ const PopupReceipt = ({
       time: selectedDate,
       debitAcc: debitAcc.code,
       creditAcc: creditAcc.code,
-      taskId: invoicevalue ? invoicevalue.taskId : null,
+      taskId: task ? task.id : invoicevalue ? invoicevalue.taskId : null,
       refNo: invoicevalue ? invoicevalue.docNo : undefined,
       customer,
       department,

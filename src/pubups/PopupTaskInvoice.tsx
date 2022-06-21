@@ -100,37 +100,14 @@ const PopupTaskInvoice = ({
 
   const refresQuery = {
     refetchQueries: [
-      {
-        query: getInvoices,
-        variables: {
-          start: new Date().setHours(0, 0, 0, 0),
-          end: new Date().setHours(23, 59, 59, 999),
-        },
-      },
-      {
-        query: getLastNos,
-      },
-      {
-        query: getTasks,
-      },
-      {
-        query: getCustomers,
-      },
-      {
-        query: getEmployees,
-        variables: { isRTL, resType: 1 },
-      },
-      {
-        query: getDepartments,
-        variables: { isRTL, depType: 1 },
-      },
-      {
-        query: getResourses,
-        variables: { isRTL, resType: 1 },
-      },
-      {
-        query: getProjects,
-      },
+      { query: getInvoices, variables: { taskId: task.id } },
+      { query: getLastNos },
+      { query: getTasks },
+      { query: getCustomers },
+      { query: getEmployees, variables: { isRTL, resType: 1 } },
+      { query: getDepartments, variables: { isRTL, depType: 1 } },
+      { query: getResourses, variables: { isRTL, resType: 1 } },
+      { query: getProjects },
     ],
   };
 
@@ -233,7 +210,7 @@ const PopupTaskInvoice = ({
     if (items) {
       setItemsList(items);
     }
-  }, [task, services, customers, items]);
+  }, [task, services, customers, items, open]);
 
   const getOverallTotal = () => {
     const totalsin = itemsList.map((litem: any) => litem.itemtotal);
@@ -511,6 +488,7 @@ const PopupTaskInvoice = ({
             selectError={custError}
             isRTL={isRTL}
             fullWidth
+            disabled
             // openAdd={openCustomer}
           ></AutoFieldLocal>
         </Grid>
@@ -549,26 +527,6 @@ const PopupTaskInvoice = ({
             />
           </Box>
         </Grid>
-
-        {!tempoptions?.noEmp && (
-          <Grid item xs={4}>
-            <AutoFieldLocal
-              name="employee"
-              title={tempwords?.employee}
-              words={words}
-              options={employees}
-              value={emplvalue}
-              setSelectValue={setEmplvalue}
-              setSelectError={setEmplError}
-              selectError={emplError}
-              refernce={emplRef}
-              noPlus
-              isRTL={isRTL}
-              fullWidth
-            ></AutoFieldLocal>
-          </Grid>
-        )}
-        {!tempoptions?.noRes && <Grid item xs={4}></Grid>}
         {!tempoptions?.noRes && (
           <Grid item xs={4}>
             <AutoFieldLocal
@@ -584,6 +542,26 @@ const PopupTaskInvoice = ({
               noPlus
               isRTL={isRTL}
               fullWidth
+              disabled
+            ></AutoFieldLocal>
+          </Grid>
+        )}
+        {!tempoptions?.noEmp && (
+          <Grid item xs={4}>
+            <AutoFieldLocal
+              name="employee"
+              title={tempwords?.employee}
+              words={words}
+              options={employees}
+              value={emplvalue}
+              setSelectValue={setEmplvalue}
+              setSelectError={setEmplError}
+              selectError={emplError}
+              refernce={emplRef}
+              noPlus
+              isRTL={isRTL}
+              fullWidth
+              disabled
             ></AutoFieldLocal>
           </Grid>
         )}
@@ -601,6 +579,7 @@ const PopupTaskInvoice = ({
             noPlus
             isRTL={isRTL}
             fullWidth
+            disabled
           ></AutoFieldLocal>
         </Grid>
         <Grid item xs={12}>

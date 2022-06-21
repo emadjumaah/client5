@@ -329,10 +329,10 @@ export const periods = [
   { id: 4, period: 'py', name: 'Previous Year', nameAr: 'السنة السابقة' },
 ];
 export const carstatuss = [
-  { id: 1, name: 'Available', nameAr: 'متوفر', color: colors.green[400] },
+  { id: 1, name: 'Available', nameAr: 'متوفرة', color: colors.green[400] },
   { id: 2, name: 'In Garage', nameAr: 'قيد الصيانة', color: colors.grey[400] },
-  { id: 3, name: 'Broken', nameAr: 'معطل', color: colors.red[400] },
-  { id: 10, name: 'Busy', nameAr: 'مشغول', color: colors.blue[400] },
+  { id: 3, name: 'Broken', nameAr: 'معطلة', color: colors.red[400] },
+  { id: 10, name: 'Busy', nameAr: 'مشغولة', color: colors.blue[400] },
 ];
 
 export const eventColors = {

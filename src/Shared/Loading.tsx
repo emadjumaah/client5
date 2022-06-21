@@ -8,8 +8,8 @@ const Loading = ({ isRTL }) => {
       style={{
         position: 'absolute',
         top: 5,
-        right: isRTL ? undefined : 32,
-        left: isRTL ? 32 : undefined,
+        right: isRTL ? undefined : 25,
+        left: isRTL ? 25 : undefined,
       }}
       display="flex"
       flex="1"

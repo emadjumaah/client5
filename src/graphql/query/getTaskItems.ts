@@ -32,7 +32,6 @@ export default gql`
         taskId
         refNo
         refType
-        stockId
         qty
         doneQty
         totalCost

@@ -27,16 +27,11 @@ import {
   PagingPanel,
 } from '@devexpress/dx-react-grid-material-ui';
 import { Command, PopupEditing } from '../../Shared';
-import { useProducts, useServices } from '../../hooks';
 import { getRowId, roles } from '../../common';
 import { AlertLocal, SearchTable } from '../../components';
 import { errorAlert, errorDeleteAlert } from '../../Shared/helpers';
 import PopupSupplier from '../../pubups/PopupSupplier';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
-import useTasks from '../../hooks/useTasks';
-import useDepartmentsUp from '../../hooks/useDepartmentsUp';
-import useEmployeesUp from '../../hooks/useEmployeesUp';
-import useResoursesUp from '../../hooks/useResoursesUp';
 import { getColumns } from '../../common/columns';
 import {
   createSupplier,
@@ -50,27 +45,20 @@ import PageLayout from '../main/PageLayout';
 import { TableComponent } from '../../Shared/TableComponent';
 import {
   avataManageFormatter,
-  expensesFormatter,
-  kaidsFormatter,
   nameManageLinkFormat,
   purchaseFormatter,
+  raseedFormatter,
 } from '../../Shared/colorFormat';
 import PopupSupplierView from '../../pubups/PopupSupplierView';
 
 export default function Suppliers(props: any) {
   const { isRTL, words, menuitem, theme, company } = props;
   const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
-  const [pageSizes] = useState([5, 6, 10, 20, 50, 0]);
+  const [pageSizes] = useState([5, 10, 20, 50, 0]);
   const [rows, setRows] = useState([]);
   const [item, setItem] = useState(null);
   const [openItem, setOpenItem] = useState(false);
   const { height, width } = useWindowDimensions();
-  const { tasks } = useTasks();
-  const { departments } = useDepartmentsUp();
-  const { employees } = useEmployeesUp();
-  const { resourses } = useResoursesUp();
-  const { services } = useServices();
-  const { products } = useProducts();
 
   const onCloseItem = () => {
     setOpenItem(false);
@@ -82,19 +70,17 @@ export default function Suppliers(props: any) {
     { name: 'avatar', title: ' ' },
     col.name,
     col.purchase,
-    col.expenses,
-    col.kaids,
+    col.raseed,
     { name: 'phone', title: words.phoneNumber },
     { name: 'email', title: words.email },
     { name: 'address', title: words.address },
   ]);
 
   const [tableColumnExtensions]: any = useState([
-    { columnName: 'avatar', width: 110 },
+    { columnName: 'avatar', width: 150 },
     { columnName: col.name.name, width: 300 },
-    { columnName: col.purchase.name, width: 250 },
-    { columnName: col.kaids.name, width: 250 },
-    { columnName: col.expenses.name, width: 250 },
+    { columnName: col.purchase.name, width: 300 },
+    { columnName: col.raseed.name, width: 200 },
     { columnName: 'phone', width: 150 },
     { columnName: 'email', width: 200 },
     { columnName: 'address', width: 200 },
@@ -151,7 +137,16 @@ export default function Suppliers(props: any) {
   useEffect(() => {
     if (supplsData?.data?.getSuppliers?.data) {
       const { data } = supplsData.data.getSuppliers;
-      setRows(data);
+      const rdata = data.map((d: any) => {
+        return {
+          ...d,
+          raseed:
+            d?.totalPurchaseInvoiced -
+              d?.totalPurchasePaid -
+              d?.totalPurchaseDiscount || 0,
+        };
+      });
+      setRows(rdata);
     }
   }, [supplsData]);
 
@@ -194,7 +189,7 @@ export default function Suppliers(props: any) {
             <SortingState />
             <EditingState onCommitChanges={commitChanges} />
             <SearchState />
-            <PagingState defaultCurrentPage={0} defaultPageSize={6} />
+            <PagingState defaultCurrentPage={0} defaultPageSize={5} />
 
             <IntegratedSorting />
             <IntegratedFiltering />
@@ -207,7 +202,7 @@ export default function Suppliers(props: any) {
               }}
               tableComponent={TableComponent}
               rowComponent={(props: any) => (
-                <Table.Row {...props} style={{ height: 110 }}></Table.Row>
+                <Table.Row {...props} style={{ height: 130 }}></Table.Row>
               )}
               columnExtensions={tableColumnExtensions}
             />
@@ -216,8 +211,7 @@ export default function Suppliers(props: any) {
                 'avatar',
                 col.name.name,
                 col.purchase.name,
-                col.kaids.name,
-                col.expenses.name,
+                col.raseed.name,
                 'phone',
                 'email',
                 'address',
@@ -245,6 +239,7 @@ export default function Suppliers(props: any) {
                   setItem,
                   setOpenItem,
                   isRTL,
+                  height: 110,
                 })
               }
             ></DataTypeProvider>
@@ -264,20 +259,12 @@ export default function Suppliers(props: any) {
             <DataTypeProvider
               for={[col.purchase.name]}
               formatterComponent={(props: any) =>
-                purchaseFormatter({ ...props, theme, isRTL })
+                purchaseFormatter({ ...props, theme, isRTL, height: 110 })
               }
             ></DataTypeProvider>
             <DataTypeProvider
-              for={[col.expenses.name]}
-              formatterComponent={(props: any) =>
-                expensesFormatter({ ...props, theme, isRTL })
-              }
-            ></DataTypeProvider>
-            <DataTypeProvider
-              for={[col.kaids.name]}
-              formatterComponent={(props: any) =>
-                kaidsFormatter({ ...props, theme, isRTL })
-              }
+              for={[col.raseed.name]}
+              formatterComponent={raseedFormatter}
             ></DataTypeProvider>
             <TableEditColumn
               showEditCommand
@@ -314,18 +301,8 @@ export default function Suppliers(props: any) {
           open={openItem}
           onClose={onCloseItem}
           row={item}
-          isNew={false}
-          addAction={addSupplier}
-          editAction={editSupplier}
           theme={theme}
-          departments={departments}
           company={company}
-          employees={employees}
-          resourses={resourses}
-          servicesproducts={services}
-          products={products}
-          customers={rows}
-          tasks={tasks}
         ></PopupSupplierView>
       </Box>
     </PageLayout>

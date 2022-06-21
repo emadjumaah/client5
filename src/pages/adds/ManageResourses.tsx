@@ -33,25 +33,16 @@ import {
   expensesFormatter,
   kaidsFormatter,
   nameManageLinkFormat,
-  purchaseFormatter,
   salesFormatter,
 } from '../../Shared/colorFormat';
 import { AlertLocal, SearchTable } from '../../components';
 import { errorAlert, errorDeleteAlert } from '../../Shared/helpers';
 import PageLayout from '../main/PageLayout';
 import { getColumns } from '../../common/columns';
-import useTasks from '../../hooks/useTasks';
-import {
-  useCustomers,
-  useProducts,
-  useServices,
-  useTemplate,
-} from '../../hooks';
+import { useTemplate } from '../../hooks';
 import PopupResoursesView from '../../pubups/PopupResoursesView';
 import PopupResourses from '../../pubups/PopupResourses';
 import useResoursesUp from '../../hooks/useResoursesUp';
-import useDepartmentsUp from '../../hooks/useDepartmentsUp';
-import useEmployeesUp from '../../hooks/useEmployeesUp';
 import { Box, Paper, Typography } from '@material-ui/core';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
 import { TableComponent } from '../../Shared/TableComponent';
@@ -68,13 +59,6 @@ export default function ManageResourses({
   const [item, setItem] = useState(null);
   const [openItem, setOpenItem] = useState(false);
   const col = getColumns({ isRTL, words });
-
-  const { tasks } = useTasks();
-  const { departments } = useDepartmentsUp();
-  const { employees } = useEmployeesUp();
-  const { customers } = useCustomers();
-  const { services } = useServices();
-  const { products } = useProducts();
   const { tempwords } = useTemplate();
 
   const onCloseItem = () => {
@@ -87,7 +71,6 @@ export default function ManageResourses({
     col.name,
     col.appointments,
     col.sales,
-    col.purchase,
     col.expenses,
     col.kaids,
     { name: 'plate', title: words.plate },
@@ -101,9 +84,8 @@ export default function ManageResourses({
     { columnName: col.name.name, width: 250 },
     { columnName: col.appointments.name, width: 250, align: 'center' },
     { columnName: col.sales.name, width: 240 },
-    { columnName: col.purchase.name, width: 240 },
-    { columnName: col.expenses.name, width: 180 },
-    { columnName: col.kaids.name, width: 180 },
+    { columnName: col.expenses.name, width: 220 },
+    { columnName: col.kaids.name, width: 220 },
     { columnName: 'plate', width: 100 },
     { columnName: col.carstatus.name, width: 100 },
     { columnName: col.department.name, width: 150 },
@@ -206,7 +188,6 @@ export default function ManageResourses({
                 col.name.name,
                 col.appointments.name,
                 col.sales.name,
-                col.purchase.name,
                 col.expenses.name,
                 col.kaids.name,
                 'plate',
@@ -273,12 +254,6 @@ export default function ManageResourses({
               }
             ></DataTypeProvider>
             <DataTypeProvider
-              for={[col.purchase.name]}
-              formatterComponent={(props: any) =>
-                purchaseFormatter({ ...props, theme, isRTL })
-              }
-            ></DataTypeProvider>
-            <DataTypeProvider
               for={[col.expenses.name]}
               formatterComponent={(props: any) =>
                 expensesFormatter({ ...props, theme, isRTL })
@@ -326,19 +301,9 @@ export default function ManageResourses({
           open={openItem}
           onClose={onCloseItem}
           row={item}
-          isNew={false}
-          addAction={addResourse}
-          editAction={editResourse}
           theme={theme}
-          departments={departments}
-          company={company}
-          employees={employees}
-          resourses={resourses}
-          servicesproducts={services}
-          products={products}
-          customers={customers}
-          tasks={tasks}
           tempwords={tempwords}
+          company={company}
         ></PopupResoursesView>
       </Box>
     </PageLayout>
