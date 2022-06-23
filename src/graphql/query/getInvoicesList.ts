@@ -32,6 +32,9 @@ export default gql`
         desc
         taskId
 
+        periodfrom
+        periodto
+
         customerId
         customerName
         customerNameAr

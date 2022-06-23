@@ -36,6 +36,7 @@ export default gql`
         type
         freq
         interval
+        weekdays
         start
         end
         progress
@@ -49,6 +50,8 @@ export default gql`
         amount
         evQty
         evDone
+
+        periodfrom
 
         status
         totalinvoiced

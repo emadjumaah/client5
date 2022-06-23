@@ -269,6 +269,7 @@ export default function Tasks({ isRTL, words, menuitem, theme, company }) {
             alignItems: 'center',
             marginTop: 8,
             marginRight: 45,
+            marginLeft: 45,
           }}
         >
           <DateNavigatorReports

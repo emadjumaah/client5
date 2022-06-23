@@ -2,7 +2,11 @@
 import { Grid, Box, Typography } from '@material-ui/core';
 import React from 'react';
 import { tafkeet } from '../common/helpers';
-import { moneyFormat, simpleSpanDateFormatter } from '../Shared/colorFormat';
+import {
+  moneyFormat,
+  simpleSpanDateFormatter,
+  simpleDateFormatterData,
+} from '../Shared/colorFormat';
 
 const printcolor = '#777';
 
@@ -200,7 +204,7 @@ export class ReceiptPrint extends React.PureComponent<any, any> {
             borderLeft={0}
             borderTop={0}
           >
-            <Typography>{tafkeet(data?.amount)}</Typography>
+            <Typography>{tafkeet(data?.amount, data.isRTL)}</Typography>
           </Box>
         </Grid>
         <Grid item xs={2}>
@@ -264,9 +268,19 @@ export class ReceiptPrint extends React.PureComponent<any, any> {
             borderLeft={0}
             borderTop={0}
           >
-            <Typography>
-              {data?.refNo ? `${data?.refNo} :Invoice No فاتورة رقم` : ``}
+            <Typography style={{ marginRight: 20 }}>
+              {data?.invoice?.docNo
+                ? `Invoice No فاتورة رقم ${data?.invoice?.docNo} `
+                : ``}
+              {data?.invoice?.amount
+                ? ` Amount: ${data?.invoice?.amount} QR`
+                : ``}
             </Typography>
+            <Typography>{` ${simpleDateFormatterData(
+              data?.invoice?.periodfrom
+            )} - ${simpleDateFormatterData(
+              data?.invoice?.periodto
+            )}`}</Typography>
           </Box>
         </Grid>
         <Grid item xs={2}>

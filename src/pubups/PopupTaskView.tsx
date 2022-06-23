@@ -3,13 +3,13 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { GContextTypes } from '../types';
 import { GlobalContext } from '../contexts';
-import { Box, Button, Tab, Tabs, Typography } from '@material-ui/core';
+import { Box, Button, colors, Tab, Tabs, Typography } from '@material-ui/core';
 import PopupLayout from '../pages/main/PopupLayout';
 import { Grid } from '@material-ui/core';
 import { useLazyQuery, useMutation } from '@apollo/client';
 import _ from 'lodash';
 import PopupTaskInvoice from './PopupTaskInvoice';
-import getTaskItems from '../graphql/query/getTaskItems';
+// import getTaskItems from '../graphql/query/getTaskItems';
 import { taskManamentTabs } from '../constants/rrule';
 import EventsCustomer from '../Shared/EventsCustomer';
 import InvoicesCustomer from '../Shared/InvoicesCustomer';
@@ -17,10 +17,12 @@ import ReceiptCustomer from '../Shared/ReceiptCustomer';
 import getObjectEvents from '../graphql/query/getObjectEvents';
 import {
   createEvent,
+  createExpenses,
   createFinance,
   getCustomers,
   getDepartments,
   getEmployees,
+  getExpenses,
   getLastNos,
   getOperationItems,
   getProjects,
@@ -35,7 +37,12 @@ import {
 import { ContractPrint } from '../print';
 import { useReactToPrint } from 'react-to-print';
 import KaidsCustomer from '../Shared/KaidsCustomer';
-import { useCustomers, useServices, useTemplate } from '../hooks';
+import {
+  useCustomers,
+  useExpenseItems,
+  useServices,
+  useTemplate,
+} from '../hooks';
 import PopupCloseDate from './PopupCloseDate';
 import useWindowDimensions from '../hooks/useWindowDimensions';
 import useDepartmentsUp from '../hooks/useDepartmentsUp';
@@ -47,6 +54,8 @@ import MainCustomer from '../Shared/MainCustomer';
 import PopupReceipt from './PopupReceipt';
 import getReceipts from '../graphql/query/getReceipts';
 import ExpensesCustomer from '../Shared/ExpensesCustomer';
+import PopupExpensesDoc from './PopupExpensesDoc';
+import DateNavigatorReports from '../components/filters/DateNavigatorReports';
 
 const PopupTaskView = ({
   open,
@@ -63,8 +72,6 @@ const PopupTaskView = ({
   const [row, setRow] = useState(item);
   const [value, setValue] = React.useState(0);
 
-  const [start, setStart]: any = useState(null);
-  const [end, setEnd]: any = useState(null);
   const [custvalue, setCustvalue] = useState(null);
   const [resovalue, setResovalue] = useState(null);
   const [info, setInfo] = useState<any>(null);
@@ -74,14 +81,30 @@ const PopupTaskView = ({
   const [openCloseDate, setOpenCloseDate] = useState<any>(false);
   const [openInvoice, setOpenInvoice] = useState(false);
   const [openReceipt, setOpenReceipt] = useState(false);
+  const [openExpenses, setOpenExpenses] = useState(false);
 
-  const [itemsList, setItemsList] = useState<any>([]);
+  const [start, setStart]: any = useState(null);
+  const [end, setEnd]: any = useState(null);
+  const [currentViewName, setCurrentViewName] = useState('Month');
+  const [currentDate, setCurrentDate] = useState(new Date());
+  const [endDate, setEndDate] = useState(new Date());
+  const currentViewNameChange = (e: any) => {
+    setCurrentViewName(e.target.value);
+  };
+  const currentDateChange = (curDate: any) => {
+    setCurrentDate(curDate);
+  };
+
+  const endDateChange = (curDate: any) => {
+    setEndDate(curDate);
+  };
 
   const { departments } = useDepartmentsUp();
   const { employees } = useEmployeesUp();
   const { resourses } = useResoursesUp();
   const { services } = useServices();
   const { customers } = useCustomers();
+  const { expenseItems } = useExpenseItems();
 
   const { tempwords } = useTemplate();
   const { width, height } = useWindowDimensions();
@@ -124,7 +147,14 @@ const PopupTaskView = ({
 
   const refresQuery = {
     refetchQueries: [
-      { query: getObjectEvents, variables: { taskId: row?.id } },
+      {
+        query: getObjectEvents,
+        variables: {
+          taskId: row?.id,
+          start: start ? new Date(start).setHours(0, 0, 0, 0) : undefined,
+          end: end ? new Date(end).setHours(23, 59, 59, 999) : undefined,
+        },
+      },
       { query: getTasks },
       { query: getCustomers },
       { query: getEmployees, variables: { isRTL, resType: 1 } },
@@ -135,7 +165,14 @@ const PopupTaskView = ({
   };
   const refresReceiptQuery = {
     refetchQueries: [
-      { query: getReceipts, variables: { taskId: row?.id } },
+      {
+        query: getReceipts,
+        variables: {
+          taskId: row?.id,
+          start: start ? new Date(start).setHours(0, 0, 0, 0) : undefined,
+          end: end ? new Date(end).setHours(23, 59, 59, 999) : undefined,
+        },
+      },
       { query: getLastNos },
       { query: getTasks },
       { query: getCustomers },
@@ -145,8 +182,28 @@ const PopupTaskView = ({
       { query: getProjects },
     ],
   };
+  const refresExpensesQuery = {
+    refetchQueries: [
+      {
+        query: getExpenses,
+        variables: {
+          opType: 60,
+          start: start ? new Date(start).setHours(0, 0, 0, 0) : undefined,
+          end: end ? new Date(end).setHours(23, 59, 59, 999) : undefined,
+        },
+      },
+      { query: getTasks },
+      { query: getCustomers },
+      { query: getEmployees, variables: { isRTL, resType: 1 } },
+      { query: getDepartments, variables: { isRTL, depType: 1 } },
+      { query: getResourses, variables: { isRTL, resType: 1 } },
+    ],
+  };
 
   const [addFinance] = useMutation(createFinance, refresReceiptQuery);
+
+  const [addExpenses] = useMutation(createExpenses, refresExpensesQuery);
+
   const [addEvent] = useMutation(createEvent, refresQuery);
 
   const [getEvents, eventsData]: any = useLazyQuery(getObjectEvents, {
@@ -172,9 +229,9 @@ const PopupTaskView = ({
     }
   }, [eventsData, item]);
 
-  const [getItems, itemsData]: any = useLazyQuery(getTaskItems, {
-    fetchPolicy: 'cache-and-network',
-  });
+  // const [getItems, itemsData]: any = useLazyQuery(getTaskItems, {
+  //   fetchPolicy: 'cache-and-network',
+  // });
 
   const addNewEvent = async () => {
     if (!event) return;
@@ -218,95 +275,95 @@ const PopupTaskView = ({
     setCloseloading(false);
   };
 
-  useEffect(() => {
-    if (open) {
-      const items = itemsData?.data?.['getTaskItems']?.data || [];
-      if (items && items.length > 0) {
-        const ids = items.map((it: any) => it.itemId);
-        const servlist = services.filter((ser: any) => ids.includes(ser._id));
+  // useEffect(() => {
+  //   if (open) {
+  //     const items = itemsData?.data?.['getTaskItems']?.data || [];
+  //     if (items && items.length > 0) {
+  //       const ids = items.map((it: any) => it.itemId);
+  //       const servlist = services.filter((ser: any) => ids.includes(ser._id));
 
-        const itemsWqtyprice = items.map((item: any, index: any) => {
-          const {
-            categoryId,
-            categoryName,
-            categoryNameAr,
-            departmentId,
-            departmentName,
-            departmentNameAr,
-            departmentColor,
-            employeeId,
-            employeeName,
-            employeeNameAr,
-            employeeColor,
-            resourseId,
-            resourseName,
-            resourseNameAr,
-            resourseColor,
-          } = item;
-          const serv = servlist.filter((se: any) => se._id === item.itemId)[0];
-          return {
-            ...serv,
-            categoryId,
-            categoryName,
-            categoryNameAr,
-            departmentId,
-            departmentName,
-            departmentNameAr,
-            departmentColor,
-            employeeId,
-            employeeName,
-            employeeNameAr,
-            employeeColor,
-            resourseId,
-            resourseName,
-            resourseNameAr,
-            resourseColor,
-            index,
-            itemprice: item.itemPrice,
-            itemqty: item.qty,
-            itemtotal: item.total,
-            // itemtotalcost: item.qty * serv.cost,
-          };
-        });
-        const finalItems = _(itemsWqtyprice)
-          .groupBy('_id')
-          .map((array) => ({
-            _id: array[0]._id,
-            name: array[0].name,
-            nameAr: array[0].nameAr,
-            categoryId: array[0].categoryId,
-            categoryName: array[0].categoryName,
-            categoryNameAr: array[0].categoryNameAr,
-            departmentId: array[0].departmentId,
-            departmentName: array[0].departmentName,
-            departmentNameAr: array[0].departmentNameAr,
-            departmentColor: array[0].departmentColor,
-            employeeId: array[0].employeeId,
-            employeeName: array[0].employeeName,
-            employeeNameAr: array[0].employeeNameAr,
-            employeeColor: array[0].employeeColor,
-            autoNo: array[0].autoNo,
-            docNo: array[0].docNo,
-            cost: array[0].cost,
-            itemType: array[0].itemType,
-            index: array[0].index,
-            itemprice: array[0].itemprice,
-            itemqty: _.sumBy(array, 'itemqty'),
-            itemtotal: _.sumBy(array, 'itemtotal'),
-          }))
-          .orderBy('index')
-          .value();
-        setItemsList(finalItems);
-      }
-    }
-  }, [itemsData, open]);
+  //       const itemsWqtyprice = items.map((item: any, index: any) => {
+  //         const {
+  //           categoryId,
+  //           categoryName,
+  //           categoryNameAr,
+  //           departmentId,
+  //           departmentName,
+  //           departmentNameAr,
+  //           departmentColor,
+  //           employeeId,
+  //           employeeName,
+  //           employeeNameAr,
+  //           employeeColor,
+  //           resourseId,
+  //           resourseName,
+  //           resourseNameAr,
+  //           resourseColor,
+  //         } = item;
+  //         const serv = servlist.filter((se: any) => se._id === item.itemId)[0];
+  //         return {
+  //           ...serv,
+  //           categoryId,
+  //           categoryName,
+  //           categoryNameAr,
+  //           departmentId,
+  //           departmentName,
+  //           departmentNameAr,
+  //           departmentColor,
+  //           employeeId,
+  //           employeeName,
+  //           employeeNameAr,
+  //           employeeColor,
+  //           resourseId,
+  //           resourseName,
+  //           resourseNameAr,
+  //           resourseColor,
+  //           index,
+  //           itemprice: item.itemPrice,
+  //           itemqty: item.qty,
+  //           itemtotal: item.total,
+  //           // itemtotalcost: item.qty * serv.cost,
+  //         };
+  //       });
+  //       const finalItems = _(itemsWqtyprice)
+  //         .groupBy('_id')
+  //         .map((array) => ({
+  //           _id: array[0]._id,
+  //           name: array[0].name,
+  //           nameAr: array[0].nameAr,
+  //           categoryId: array[0].categoryId,
+  //           categoryName: array[0].categoryName,
+  //           categoryNameAr: array[0].categoryNameAr,
+  //           departmentId: array[0].departmentId,
+  //           departmentName: array[0].departmentName,
+  //           departmentNameAr: array[0].departmentNameAr,
+  //           departmentColor: array[0].departmentColor,
+  //           employeeId: array[0].employeeId,
+  //           employeeName: array[0].employeeName,
+  //           employeeNameAr: array[0].employeeNameAr,
+  //           employeeColor: array[0].employeeColor,
+  //           autoNo: array[0].autoNo,
+  //           docNo: array[0].docNo,
+  //           cost: array[0].cost,
+  //           itemType: array[0].itemType,
+  //           index: array[0].index,
+  //           itemprice: array[0].itemprice,
+  //           itemqty: _.sumBy(array, 'itemqty'),
+  //           itemtotal: _.sumBy(array, 'itemtotal'),
+  //         }))
+  //         .orderBy('index')
+  //         .value();
+  //       setItemsList(finalItems);
+  //     }
+  //   }
+  // }, [itemsData, open]);
 
-  useEffect(() => {
-    if (row && row._id) {
-      const variables = { taskId: row.id };
-      getItems({ variables });
-    }
-  }, [row]);
+  // useEffect(() => {
+  //   if (row && row._id) {
+  //     const variables = { taskId: row.id };
+  //     getItems({ variables });
+  //   }
+  // }, [row]);
   const printData = {
     ...row,
     no: row?.docNo,
@@ -353,7 +410,23 @@ const PopupTaskView = ({
       canceltitle={isRTL ? 'اغلاق' : 'close'}
     >
       <Box>
-        <Box style={{ display: 'flex', marginTop: 20, marginBottom: 20 }}>
+        <Box display="flex" style={{ backgroundColor: '#fff', height: 50 }}>
+          <DateNavigatorReports
+            setStart={setStart}
+            setEnd={setEnd}
+            currentDate={currentDate}
+            currentDateChange={currentDateChange}
+            currentViewName={currentViewName}
+            currentViewNameChange={currentViewNameChange}
+            endDate={endDate}
+            endDateChange={endDateChange}
+            views={[1, 7, 30, 365, 1000]}
+            isRTL={isRTL}
+            words={words}
+            theme={theme}
+          ></DateNavigatorReports>
+        </Box>
+        <Box style={{ display: 'flex', marginTop: 0 }}>
           <Grid container spacing={0} style={{ width: width - 300 }}>
             <Grid item xs={12}>
               <Box
@@ -374,8 +447,8 @@ const PopupTaskView = ({
                         id={row?.id}
                         width={width}
                         height={height}
-                        start={null}
-                        end={null}
+                        start={start ? new Date(start) : null}
+                        end={end ? new Date(end) : null}
                         closeloading={closeloading}
                         setOpenCloseDate={setOpenCloseDate}
                         daysData={daysData}
@@ -390,8 +463,8 @@ const PopupTaskView = ({
                         name="taskId"
                         width={width}
                         height={height}
-                        start={null}
-                        end={null}
+                        start={start ? new Date(start) : null}
+                        end={end ? new Date(end) : null}
                         value={row}
                         company={company}
                       ></EventsCustomer>
@@ -405,8 +478,8 @@ const PopupTaskView = ({
                         id={row?.id}
                         width={width}
                         height={height}
-                        start={null}
-                        end={null}
+                        start={start ? new Date(start) : null}
+                        end={end ? new Date(end) : null}
                         value={row}
                         company={company}
                       ></InvoicesCustomer>
@@ -420,8 +493,8 @@ const PopupTaskView = ({
                         id={row?.id}
                         width={width}
                         height={height}
-                        start={null}
-                        end={null}
+                        start={start ? new Date(start) : null}
+                        end={end ? new Date(end) : null}
                         value={row}
                         company={company}
                       ></ReceiptCustomer>
@@ -435,8 +508,8 @@ const PopupTaskView = ({
                         id={row?.id}
                         width={width}
                         height={height}
-                        start={null}
-                        end={null}
+                        start={start ? new Date(start) : null}
+                        end={end ? new Date(end) : null}
                         value={row}
                         company={company}
                       ></ExpensesCustomer>
@@ -450,8 +523,8 @@ const PopupTaskView = ({
                         id={row?.id}
                         width={width}
                         height={height}
-                        start={null}
-                        end={null}
+                        start={start ? new Date(start) : null}
+                        end={end ? new Date(end) : null}
                       ></KaidsCustomer>
                     </TabPanel>
                     <TabPanel value={value} index={6}>
@@ -463,8 +536,8 @@ const PopupTaskView = ({
                         id={row?.id}
                         width={width}
                         height={height}
-                        start={null}
-                        end={null}
+                        start={start ? new Date(start) : null}
+                        end={end ? new Date(end) : null}
                       ></ReminderCustomer>
                     </TabPanel>
                   </Box>
@@ -516,8 +589,11 @@ const PopupTaskView = ({
                   fullWidth
                   color="primary"
                   onClick={() => setOpenInvoice(true)}
+                  style={{ backgroundColor: colors.blue[500] }}
                 >
-                  <Typography>{words.newInvoice}</Typography>
+                  <Typography style={{ fontSize: 14 }}>
+                    {words.newInvoice}
+                  </Typography>
                 </Button>
               </Box>
               <Box style={{ padding: 10 }}>
@@ -525,12 +601,28 @@ const PopupTaskView = ({
                   variant="contained"
                   fullWidth
                   color="primary"
+                  style={{ backgroundColor: colors.green[500] }}
                   onClick={() => setOpenReceipt(true)}
                 >
-                  <Typography>{words.receipts}</Typography>
+                  <Typography style={{ fontSize: 14 }}>
+                    {isRTL ? 'اضافة سند قبض' : 'New Receipt'}
+                  </Typography>
                 </Button>
               </Box>
               <Box style={{ padding: 10 }}>
+                <Button
+                  variant="contained"
+                  fullWidth
+                  color="primary"
+                  onClick={() => setOpenExpenses(true)}
+                  style={{ backgroundColor: colors.red[500] }}
+                >
+                  <Typography style={{ fontSize: 14 }}>
+                    {isRTL ? 'اضافة مصروف' : 'New Expenses'}
+                  </Typography>
+                </Button>
+              </Box>
+              <Box style={{ padding: 10, marginTop: 50 }}>
                 <Button
                   variant="contained"
                   fullWidth
@@ -538,7 +630,9 @@ const PopupTaskView = ({
                   disabled={loading || row.isClosed}
                   onClick={() => addNewEvent()}
                 >
-                  <Typography>{words.newPeriod}</Typography>
+                  <Typography style={{ fontSize: 14 }}>
+                    {words.newPeriod}
+                  </Typography>
                 </Button>
               </Box>
               <Box style={{ padding: 10 }}>
@@ -554,7 +648,7 @@ const PopupTaskView = ({
                   }
                   onClick={() => setOpenCloseDate(true)}
                 >
-                  <Typography>
+                  <Typography style={{ fontSize: 14 }}>
                     {words.shutdown} {tempwords?.task}
                   </Typography>
                 </Button>
@@ -573,7 +667,7 @@ const PopupTaskView = ({
               departments={departments}
               company={company}
               theme={theme}
-              items={itemsList}
+              // items={itemsList}
             ></PopupTaskInvoice>
           )}
           {row && (
@@ -589,6 +683,24 @@ const PopupTaskView = ({
               name="customerId"
               value={custvalue}
             ></PopupReceipt>
+          )}
+          {row && (
+            <PopupExpensesDoc
+              open={openExpenses}
+              onClose={() => setOpenExpenses(false)}
+              task={row}
+              isNew={true}
+              addAction={addExpenses}
+              editAction={() => null}
+              resourses={resourses}
+              employees={employees}
+              departments={departments}
+              servicesproducts={expenseItems}
+              theme={theme}
+              company={company}
+              name="taskId"
+              value={row}
+            ></PopupExpensesDoc>
           )}
           {row && (
             <PopupCloseDate

@@ -186,6 +186,7 @@ const PopupReceipt = ({
     chequeBank: row?.chequeBank,
     chequeNo: row?.chequeNo,
     chequeDate: row?.chequeDate,
+    invoice: invoicevalue,
   };
   const onSubmit = async (data: any) => {
     const { startPeriod, endPeriod } = getAppStartEndPeriod();

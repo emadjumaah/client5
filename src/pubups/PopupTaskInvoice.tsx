@@ -8,7 +8,13 @@ import { dublicateAlert, errorAlert, messageAlert } from '../Shared';
 import { GContextTypes } from '../types';
 import { GlobalContext } from '../contexts';
 
-import { Box, TextField, Typography } from '@material-ui/core';
+import {
+  Box,
+  Checkbox,
+  FormControlLabel,
+  TextField,
+  Typography,
+} from '@material-ui/core';
 import ServiceItemForm from '../Shared/ServiceItemForm';
 import ItemsTable from '../Shared/ItemsTable';
 import { PriceTotal } from '../Shared/TotalPrice';
@@ -34,6 +40,7 @@ import { getAppStartEndPeriod } from '../common/time';
 import getTasks from '../graphql/query/getTasks';
 import { useReactToPrint } from 'react-to-print';
 import { InvoicePrint } from '../print';
+import { getInvDays } from '../common/helpers';
 
 export const indexTheList = (list: any) => {
   return list.map((item: any, index: any) => {
@@ -61,8 +68,13 @@ const PopupTaskInvoice = ({
   const classes = invoiceClasses();
   const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
   const [saving, setSaving] = useState(false);
-  const [selectedDate, setSelectedDate] = React.useState(new Date());
+  const [selectedDate, setSelectedDate] = useState(new Date());
   const [invNo, setInvNo] = useState<any>('');
+
+  const [isPeriod, setIsPeriod] = useState(false);
+  const [periodfrom, setPeriodfrom] = useState(null);
+  const [periodto, setPeriodto] = useState(null);
+  const [invdays, setInvdays] = useState(0);
 
   const [itemsList, setItemsList] = useState<any>([]);
   const [accounts, setAccounts] = useState<any>([]);
@@ -73,19 +85,19 @@ const PopupTaskInvoice = ({
 
   const [custvalue, setCustvalue] = useState<any>(null);
   const [custError, setCustError] = useState<any>(false);
-  const custRef: any = React.useRef();
+  const custRef: any = useRef();
 
   const [departvalue, setDepartvalue] = useState<any>(null);
   const [departError, setDepartError] = useState<any>(false);
-  const departRef: any = React.useRef();
+  const departRef: any = useRef();
 
   const [emplvalue, setEmplvalue] = useState<any>(null);
   const [emplError, setEmplError] = useState<any>(false);
-  const emplRef: any = React.useRef();
+  const emplRef: any = useRef();
 
   const [resovalue, setResovalue] = useState<any>(null);
   const [resoError, setResoError] = useState<any>(false);
-  const resoRef: any = React.useRef();
+  const resoRef: any = useRef();
 
   const [isCash, setIsCash] = useState(true);
   const { tempwords, tempoptions } = useTemplate();
@@ -128,6 +140,10 @@ const PopupTaskInvoice = ({
     setDepartvalue(null);
     setEmplvalue(null);
     setResovalue(null);
+    setIsPeriod(false);
+    setPeriodfrom(null);
+    setPeriodto(null);
+    setInvdays(0);
   };
 
   const addItemToList = (item: any) => {
@@ -181,6 +197,23 @@ const PopupTaskInvoice = ({
       setInvNo(lastNos?.salesInvoice ? Number(lastNos?.salesInvoice) + 1 : 1);
     }
   }, [open]);
+
+  useEffect(() => {
+    if (isPeriod === true) {
+      setPeriodfrom(task?.periodfrom ? task?.periodfrom : task.start);
+      setPeriodto(new Date());
+    } else {
+      setPeriodfrom(null);
+      setPeriodto(null);
+      setInvdays(0);
+    }
+  }, [isPeriod]);
+  useEffect(() => {
+    if (periodfrom && periodto) {
+      const days = getInvDays(periodfrom, periodto);
+      setInvdays(days);
+    }
+  }, [periodfrom, periodto]);
 
   useEffect(() => {
     getOverallTotal();
@@ -313,8 +346,14 @@ const PopupTaskInvoice = ({
       );
       return;
     }
+    if (isPeriod && Number(invdays) < 0) {
+      await messageAlert(
+        setAlrt,
+        isRTL ? `الفترة الزمنية غير صحيحة` : `Incorrect Time`
+      );
+      return;
+    }
     setSaving(true);
-
     const { amount, costAmount, profit, total } = totals;
 
     const variables: any = {
@@ -378,6 +417,8 @@ const PopupTaskInvoice = ({
       amountPaid: isCash ? amount : 0,
       accounts,
       paymentType: ptype,
+      periodfrom,
+      periodto,
       userId: user._id,
       taskId: task.id,
     };
@@ -459,15 +500,66 @@ const PopupTaskInvoice = ({
       // bgcolor={colors.green[500]}
     >
       <Grid container spacing={1}>
-        <Grid item xs={4}>
-          <CalenderLocal
-            isRTL={isRTL}
-            label={words.time}
-            value={selectedDate}
-            onChange={handleDateChange}
-          ></CalenderLocal>
+        <Grid item xs={5}>
+          <Grid container spacing={0}>
+            <Grid item xs={6}>
+              <CalenderLocal
+                isRTL={isRTL}
+                label={words.time}
+                value={selectedDate}
+                onChange={handleDateChange}
+              ></CalenderLocal>
+            </Grid>
+            <Grid item xs={6}>
+              <FormControlLabel
+                style={{ marginTop: 25, marginLeft: 10, marginRight: 10 }}
+                control={
+                  <Checkbox
+                    checked={isPeriod}
+                    onChange={() => setIsPeriod(!isPeriod)}
+                    color="primary"
+                  />
+                }
+                label={
+                  <Typography
+                    style={{ color: theme.palette.primary.main }}
+                    variant="body2"
+                  >
+                    {isRTL ? 'فاتورة وقت' : 'Time Invoice'}
+                  </Typography>
+                }
+              />
+            </Grid>
+            {isPeriod && (
+              <Grid item xs={5}>
+                <CalenderLocal
+                  isRTL={isRTL}
+                  label={words.start}
+                  value={periodfrom}
+                  onChange={setPeriodfrom}
+                ></CalenderLocal>
+              </Grid>
+            )}
+            {isPeriod && (
+              <Grid item xs={5}>
+                <CalenderLocal
+                  isRTL={isRTL}
+                  label={words.end}
+                  value={periodto}
+                  onChange={setPeriodto}
+                ></CalenderLocal>
+              </Grid>
+            )}
+            {isPeriod && (
+              <Grid item xs={2}>
+                <Typography
+                  style={{ marginTop: 35, marginLeft: 10, marginRight: 10 }}
+                >{`( ${invdays} )`}</Typography>
+              </Grid>
+            )}
+          </Grid>
         </Grid>
-        <Grid item xs={8}>
+        <Grid item xs={7}>
           <PaymentSelect
             words={words}
             ptype={ptype}

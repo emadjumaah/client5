@@ -88,6 +88,7 @@ export default function InvoicesCustomer({
             title: words.customer,
           },
           { name: 'customerPhone', title: words.phoneNumber },
+          col.resourse,
           { name: 'total', title: words.total },
           { name: 'discount', title: words.discount },
           { name: 'amount', title: words.amount },

@@ -3,7 +3,7 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { invoiceClasses } from '../themes';
-import { useCustomers, useTemplate } from '../hooks';
+import { useTemplate } from '../hooks';
 import { dublicateAlert, errorAlert, messageAlert } from '../Shared';
 import { GContextTypes } from '../types';
 import { GlobalContext } from '../contexts';
@@ -21,13 +21,11 @@ import { weekdaysNNo } from '../constants/datatypes';
 import useTasks from '../hooks/useTasks';
 import useCompany from '../hooks/useCompany';
 import PopupDeprtment from './PopupDeprtment';
-import PopupTask from './PopupTask';
 import PopupEmployee from './PopupEmployee';
 import PopupResourses from './PopupResourses';
 import useDepartmentsUp from '../hooks/useDepartmentsUp';
 import useEmployeesUp from '../hooks/useEmployeesUp';
 import useResoursesUp from '../hooks/useResoursesUp';
-import useProjects from '../hooks/useProjects';
 import ExpensesItemForm from '../Shared/ExpensesItemForm';
 import ExpensesItemsTable from '../Shared/ExpensesItemsTable';
 import { accountCode } from '../constants/kaid';
@@ -97,15 +95,10 @@ const PopupExpProducts = ({
   const [openDep, setOpenDep] = useState(false);
   const [openEmp, setOpenEmp] = useState(false);
   const [openRes, setOpenRes] = useState(false);
-  const [openTsk, setOpenTsk] = useState(false);
-  const { customers } = useCustomers();
   const { addDepartment, editDepartment } = useDepartmentsUp();
   const { addEmployee, editEmployee } = useEmployeesUp();
   const { addResourse, editResourse } = useResoursesUp();
-  const { addTask, editTask } = useTasks();
   const { tempwords, tempoptions } = useTemplate();
-
-  const { projects } = useProjects();
 
   const {
     translate: { words, isRTL },
@@ -139,13 +132,6 @@ const PopupExpProducts = ({
     setOpenRes(false);
     setNewtext('');
   };
-  const openTask = () => {
-    setOpenTsk(true);
-  };
-  const onCloseTask = () => {
-    setOpenTsk(false);
-    setNewtext('');
-  };
 
   const onNewDepartChange = (nextValue: any) => {
     setDepartvalue(nextValue);
@@ -155,9 +141,6 @@ const PopupExpProducts = ({
   };
   const onNewResoChange = (nextValue: any) => {
     setResovalue(nextValue);
-  };
-  const onNewTaskChange = (nextValue: any) => {
-    setTaskvalue(nextValue);
   };
 
   useEffect(() => {
@@ -543,6 +526,22 @@ const PopupExpProducts = ({
           />
         </Grid>
         <Grid item xs={3}></Grid>
+        {!tempoptions?.noTsk && (
+          <Grid item xs={6}>
+            <AutoFieldLocal
+              name="task"
+              title={tempwords?.task}
+              words={words}
+              options={tasks}
+              value={taskvalue}
+              setSelectValue={setTaskvalue}
+              isRTL={isRTL}
+              fullWidth
+              disabled={name === 'taskId'}
+              mb={0}
+            ></AutoFieldLocal>
+          </Grid>
+        )}
         {!tempoptions?.noRes && (
           <Grid item xs={6}>
             <AutoFieldLocal
@@ -560,41 +559,6 @@ const PopupExpProducts = ({
               isRTL={isRTL}
               fullWidth
               day={day}
-              mb={0}
-            ></AutoFieldLocal>
-          </Grid>
-        )}
-        <Grid item xs={6}>
-          <AutoFieldLocal
-            name="department"
-            title={tempwords?.department}
-            words={words}
-            options={departments}
-            value={departvalue}
-            setSelectValue={setDepartvalue}
-            setSelectError={setDepartError}
-            selectError={departError}
-            refernce={departRef}
-            openAdd={openDepartment}
-            isRTL={isRTL}
-            fullWidth
-            disabled={name === 'departmentId'}
-            mb={0}
-          ></AutoFieldLocal>
-        </Grid>
-        {!tempoptions?.noTsk && (
-          <Grid item xs={6}>
-            <AutoFieldLocal
-              name="task"
-              title={tempwords?.task}
-              words={words}
-              options={tasks}
-              value={taskvalue}
-              setSelectValue={setTaskvalue}
-              isRTL={isRTL}
-              fullWidth
-              openAdd={openTask}
-              disabled={name === 'taskId'}
               mb={0}
             ></AutoFieldLocal>
           </Grid>
@@ -620,6 +584,25 @@ const PopupExpProducts = ({
             ></AutoFieldLocal>
           </Grid>
         )}
+        <Grid item xs={6}>
+          <AutoFieldLocal
+            name="department"
+            title={tempwords?.department}
+            words={words}
+            options={departments}
+            value={departvalue}
+            setSelectValue={setDepartvalue}
+            setSelectError={setDepartError}
+            selectError={departError}
+            refernce={departRef}
+            openAdd={openDepartment}
+            isRTL={isRTL}
+            fullWidth
+            disabled={name === 'departmentId'}
+            mb={0}
+          ></AutoFieldLocal>
+        </Grid>
+
         {/* <Grid item xs={12}>
           <TextFieldLocal
             name="desc"
@@ -701,21 +684,6 @@ const PopupExpProducts = ({
           editAction={editDepartment}
           depType={1}
         ></PopupDeprtment>
-        <PopupTask
-          newtext={newtext}
-          open={openTsk}
-          onClose={onCloseTask}
-          isNew={true}
-          setNewValue={onNewTaskChange}
-          row={null}
-          employees={employees}
-          resourses={resourses}
-          departments={departments}
-          projects={projects}
-          customers={customers}
-          addAction={addTask}
-          editAction={editTask}
-        ></PopupTask>
         <PopupEmployee
           newtext={newtext}
           departments={departments}

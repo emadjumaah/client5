@@ -178,33 +178,6 @@ const PopupService = ({
             <Grid item xs={6}>
               <TextFieldLocal
                 required
-                autoFocus
-                name="nameAr"
-                label={words.name}
-                register={register}
-                errors={errors}
-                row={row}
-                fullWidth
-                mb={0}
-              />
-            </Grid>
-            <Grid item xs={6}>
-              <TextFieldLocal
-                required
-                name="name"
-                ltr
-                label={words.nameEn}
-                register={register}
-                errors={errors}
-                row={row}
-                newtext={newtext}
-                fullWidth
-                mb={0}
-              />
-            </Grid>
-            <Grid item xs={6}>
-              <TextFieldLocal
-                required
                 name="price"
                 label={words.price}
                 register={register}

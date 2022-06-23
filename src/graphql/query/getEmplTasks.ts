@@ -48,6 +48,8 @@ export default gql`
         evQty
         evDone
 
+        periodfrom
+
         status
         totalinvoiced
         totalDiscount

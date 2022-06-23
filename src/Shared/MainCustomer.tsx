@@ -21,6 +21,8 @@ import {
   resourseDataView,
   employeeDataView,
   customerDataView,
+  incomeMainFormatter,
+  incomeFormatter,
 } from './colorFormat';
 import { useLazyQuery } from '@apollo/client';
 import getGereralCalculation from '../graphql/query/getGereralCalculation';
@@ -46,8 +48,8 @@ export default function MainCustomer({
   useEffect(() => {
     const variables = {
       [name]: id,
-      start: start ? start.setHours(0, 0, 0, 0) : undefined,
-      end: end ? end.setHours(23, 59, 59, 999) : undefined,
+      start: start ? new Date(start).setHours(0, 0, 0, 0) : undefined,
+      end: end ? new Date(end).setHours(23, 59, 59, 999) : undefined,
     };
     loadCalcss({
       variables,
@@ -60,7 +62,7 @@ export default function MainCustomer({
       const data = JSON.parse(res);
       setData(data);
     }
-  }, [calcsData]);
+  }, [calcsData, start, end]);
 
   const isCust = name === 'customerId';
   const isSupp = name === 'supplierId';
@@ -107,21 +109,25 @@ export default function MainCustomer({
                 {isTask && (
                   <Grid item xs={4}>
                     <Box style={{ backgroundColor: '#fff', height: 250 }}>
-                      {daysdataMainFormatter({ row, theme, isRTL })}
+                      {daysdataMainFormatter({
+                        row,
+                        theme,
+                        isRTL,
+                      })}
                     </Box>
                   </Grid>
                 )}
                 {isTask && (
                   <Grid item xs={4}>
                     <Box style={{ backgroundColor: '#fff', height: 250 }}>
-                      {appointTaskMainFormatter({ row, theme, isRTL })}
+                      {appointTaskMainFormatter({ row: data, theme, isRTL })}
                     </Box>
                   </Grid>
                 )}
                 {isTask && (
-                  <Grid item xs={4}>
+                  <Grid item xs={3}>
                     <Box style={{ backgroundColor: '#fff', height: 250 }}>
-                      {salesTaskMainFormatter({ row, theme, isRTL })}
+                      {salesTaskMainFormatter({ row: data, theme, isRTL })}
                     </Box>
                   </Grid>
                 )}
@@ -133,30 +139,41 @@ export default function MainCustomer({
                   </Grid>
                 )}
                 {!isSupp && !isTask && (
-                  <Grid item xs={4}>
+                  <Grid item xs={3}>
                     <Box style={{ backgroundColor: '#fff', height: 250 }}>
                       {salesMainFormatter({ row: data, theme, isRTL })}
                     </Box>
                   </Grid>
                 )}
                 {!isCust && !isTask && (
-                  <Grid item xs={4}>
+                  <Grid item xs={3}>
                     <Box style={{ backgroundColor: '#fff', height: 250 }}>
                       {purchaseMainFormatter({ row: data, theme, isRTL })}
                     </Box>
                   </Grid>
                 )}
-                {!isCust && !isSupp && (
-                  <Grid item xs={4}>
+                {!isSupp && (
+                  <Grid item xs={3}>
                     <Box style={{ backgroundColor: '#fff', height: 250 }}>
                       {expensesMainFormatter({ row: data, theme, isRTL })}
                     </Box>
                   </Grid>
                 )}
-                {!isCust && !isSupp && (
-                  <Grid item xs={4}>
+                {!isSupp && (
+                  <Grid item xs={3}>
                     <Box style={{ backgroundColor: '#fff', height: 250 }}>
                       {kaidsMainFormatter({ row: data, theme, isRTL })}
+                    </Box>
+                  </Grid>
+                )}
+                {!isSupp && (
+                  <Grid item xs={3}>
+                    <Box style={{ backgroundColor: '#fff', height: 250 }}>
+                      {incomeMainFormatter({
+                        row: data,
+                        theme,
+                        isRTL,
+                      })}
                     </Box>
                   </Grid>
                 )}
@@ -176,7 +193,7 @@ export default function MainCustomer({
                   }}
                 >
                   {!isSupp && (
-                    <Box style={{ width: 270, marginLeft: 15 }}>
+                    <Box style={{ width: 250, marginLeft: 15 }}>
                       {appointmentsFormatter({
                         row,
                         theme,
@@ -187,7 +204,7 @@ export default function MainCustomer({
                     </Box>
                   )}
                   {!isSupp && (
-                    <Box style={{ width: 270, marginLeft: 15 }}>
+                    <Box style={{ width: 250, marginLeft: 15 }}>
                       {salesFormatter({
                         row,
                         theme,
@@ -198,7 +215,7 @@ export default function MainCustomer({
                     </Box>
                   )}
                   {!isCust && (
-                    <Box style={{ width: 270, marginLeft: 15 }}>
+                    <Box style={{ width: 250, marginLeft: 15 }}>
                       {purchaseFormatter({
                         row,
                         theme,
@@ -209,7 +226,7 @@ export default function MainCustomer({
                     </Box>
                   )}
                   {!isCust && !isSupp && (
-                    <Box style={{ width: 270, marginLeft: 15 }}>
+                    <Box style={{ width: 250, marginLeft: 15 }}>
                       {expensesFormatter({
                         row,
                         theme,
@@ -220,8 +237,19 @@ export default function MainCustomer({
                     </Box>
                   )}
                   {!isCust && !isSupp && (
-                    <Box style={{ width: 270, marginLeft: 15 }}>
+                    <Box style={{ width: 250, marginLeft: 15 }}>
                       {kaidsFormatter({
+                        row,
+                        theme,
+                        isRTL,
+                        height: 120,
+                        bc: '#bbb',
+                      })}
+                    </Box>
+                  )}
+                  {!isSupp && (
+                    <Box style={{ width: 250, marginLeft: 15 }}>
+                      {incomeFormatter({
                         row,
                         theme,
                         isRTL,

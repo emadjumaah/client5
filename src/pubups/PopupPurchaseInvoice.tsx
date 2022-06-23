@@ -3,7 +3,7 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { invoiceClasses } from '../themes';
-import { useCustomers, useLastNos, useSuppliers, useTemplate } from '../hooks';
+import { useLastNos, useSuppliers, useTemplate } from '../hooks';
 import { dublicateAlert, errorAlert, messageAlert } from '../Shared';
 import { GContextTypes } from '../types';
 import { GlobalContext } from '../contexts';
@@ -25,13 +25,11 @@ import PopupSupplier from './PopupSupplier';
 import _ from 'lodash';
 import useTasks from '../hooks/useTasks';
 import PopupDeprtment from './PopupDeprtment';
-import PopupTask from './PopupTask';
 import PopupEmployee from './PopupEmployee';
 import PopupResourses from './PopupResourses';
 import useDepartmentsUp from '../hooks/useDepartmentsUp';
 import useEmployeesUp from '../hooks/useEmployeesUp';
 import useResoursesUp from '../hooks/useResoursesUp';
-import useProjects from '../hooks/useProjects';
 import { weekdaysNNo } from '../constants/datatypes';
 import { InvoicePrint } from '../print';
 import { useReactToPrint } from 'react-to-print';
@@ -115,7 +113,6 @@ const PopupPurchaseInvoice = ({
   const [openDep, setOpenDep] = useState(false);
   const [openEmp, setOpenEmp] = useState(false);
   const [openRes, setOpenRes] = useState(false);
-  const [openTsk, setOpenTsk] = useState(false);
 
   const { lastNos, freshlastNos } = useLastNos();
 
@@ -123,10 +120,7 @@ const PopupPurchaseInvoice = ({
   const { addDepartment, editDepartment } = useDepartmentsUp();
   const { addEmployee, editEmployee } = useEmployeesUp();
   const { addResourse, editResourse } = useResoursesUp();
-  const { addTask, editTask } = useTasks();
   const { tempwords, tempoptions } = useTemplate();
-  const { projects } = useProjects();
-  const { customers } = useCustomers();
 
   const {
     translate: { words, isRTL },
@@ -160,13 +154,7 @@ const PopupPurchaseInvoice = ({
     setOpenRes(false);
     setNewtext('');
   };
-  const openTask = () => {
-    setOpenTsk(true);
-  };
-  const onCloseTask = () => {
-    setOpenTsk(false);
-    setNewtext('');
-  };
+
   const openSupplier = () => {
     setOpenSupp(true);
   };
@@ -185,9 +173,6 @@ const PopupPurchaseInvoice = ({
   };
   const onNewResoChange = (nextValue: any) => {
     setResovalue(nextValue);
-  };
-  const onNewTaskChange = (nextValue: any) => {
-    setTaskvalue(nextValue);
   };
 
   useEffect(() => {
@@ -785,7 +770,6 @@ const PopupPurchaseInvoice = ({
               setSelectValue={setTaskvalue}
               isRTL={isRTL}
               fullWidth
-              openAdd={openTask}
               disabled={name === 'taskId'}
             ></AutoFieldLocal>
           </Grid>
@@ -930,21 +914,6 @@ const PopupPurchaseInvoice = ({
             editAction={editDepartment}
             depType={1}
           ></PopupDeprtment>
-          <PopupTask
-            newtext={newtext}
-            open={openTsk}
-            onClose={onCloseTask}
-            isNew={true}
-            setNewValue={onNewTaskChange}
-            row={null}
-            employees={employees}
-            resourses={resourses}
-            departments={departments}
-            projects={projects}
-            customers={customers}
-            addAction={addTask}
-            editAction={editTask}
-          ></PopupTask>
           <PopupEmployee
             newtext={newtext}
             departments={departments}

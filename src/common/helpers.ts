@@ -1,3 +1,4 @@
+/* eslint-disable eqeqeq */
 /* eslint-disable array-callback-return */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import * as Tafgeet from 'tafgeetjs';
@@ -194,10 +195,15 @@ export const getSendTime = ({
   return new Date(final);
 };
 
-export const tafkeet = (number: any) => {
+export const tafkeet = (number: any, isRTL: any) => {
   if (!number) return '';
-  const stringText = new Tafgeet(number, 'QAR').parse();
-  return stringText;
+  let numtostr = '';
+  if (isRTL) {
+    numtostr = new Tafgeet(number, 'QAR').parse();
+  } else {
+    numtostr = `${toWords(number)} QAR`;
+  }
+  return numtostr;
 };
 
 export const isValidEmail = (email: any) => {
@@ -591,10 +597,20 @@ export const getTaskTimeAmountData = (task: any, time = new Date()) => {
     dayamount,
   };
 };
+export const getInvDays = (start, end) => {
+  if (!start || !end) return 0;
+
+  const startms = new Date(start).getTime();
+  const endms = new Date(end).getTime();
+
+  const days = Math.ceil((endms - startms) / (1000 * 60 * 60 * 24));
+  return days;
+};
 
 export const getTaskStatus = (tasks: any, isRTL: any) => {
   const rtasks = tasks.map((task: any) => {
     const { isClosed, start, end, freq, interval } = task;
+
     const type =
       freq === 1 || (freq === 3 && interval > 27)
         ? isRTL
@@ -614,12 +630,24 @@ export const getTaskStatus = (tasks: any, isRTL: any) => {
       const endms = new Date(end).getTime();
       const now = new Date().getTime();
       if (now < startms) {
-        return { ...task, status: isRTL ? 'لم يبدأ بعد' : 'Not Started', type };
+        return {
+          ...task,
+          status: isRTL ? 'لم يبدأ بعد' : 'Not Started',
+          type,
+        };
       }
       if (now > endms) {
-        return { ...task, status: isRTL ? 'غير مقفل' : 'Not Closed', type };
+        return {
+          ...task,
+          status: isRTL ? 'غير مقفل' : 'Not Closed',
+          type,
+        };
       }
-      return { ...task, status: isRTL ? 'ساري' : 'In Progress', type };
+      return {
+        ...task,
+        status: isRTL ? 'ساري' : 'In Progress',
+        type,
+      };
     }
   });
   return rtasks;
@@ -666,4 +694,78 @@ export const updateOpDocRefNumbers = (data: any) => {
     };
   });
   return rdata;
+};
+
+var th = ['', 'thousand', 'million', 'billion', 'trillion'];
+
+var dg = [
+  'zero',
+  'one',
+  'two',
+  'three',
+  'four',
+  'five',
+  'six',
+  'seven',
+  'eight',
+  'nine',
+];
+var tn = [
+  'ten',
+  'eleven',
+  'twelve',
+  'thirteen',
+  'fourteen',
+  'fifteen',
+  'sixteen',
+  'seventeen',
+  'eighteen',
+  'nineteen',
+];
+var tw = [
+  'twenty',
+  'thirty',
+  'forty',
+  'fifty',
+  'sixty',
+  'seventy',
+  'eighty',
+  'ninety',
+];
+export const toWords = (s: any) => {
+  s = s.toString();
+  s = s.replace(/[\\, ]/g, '');
+  if (s != parseFloat(s)) return 'not a number';
+  let x = s.indexOf('.');
+  if (x == -1) x = s.length;
+  if (x > 15) return 'too big';
+  let n = s.split('');
+  let str = '';
+  let sk = 0;
+  for (let i = 0; i < x; i++) {
+    if ((x - i) % 3 == 2) {
+      if (n[i] === '1') {
+        str += tn[Number(n[i + 1])] + ' ';
+        i++;
+        sk = 1;
+      } else if (n[i] != 0) {
+        str += tw[n[i] - 2] + ' ';
+        sk = 1;
+      }
+    } else if (n[i] != 0) {
+      str += dg[n[i]] + ' ';
+      if ((x - i) % 3 == 0) str += 'hundred ';
+      sk = 1;
+    }
+    if ((x - i) % 3 == 1) {
+      if (sk) str += th[(x - i - 1) / 3] + ' ';
+      sk = 0;
+    }
+  }
+  if (x !== s.length) {
+    let y = s.length;
+    str += 'point ';
+    for (let i = x + 1; i < y; i++) str += dg[n[i]] + ' ';
+  }
+  return str.replace(/\s+/g, ' ');
 };

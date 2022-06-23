@@ -12,6 +12,7 @@ export default gql`
     $tasktype: Int
     $freq: Int
     $interval: Int
+    $weekdays: String
     $status: Int
     $evQty: Int
     $evDone: Int
@@ -38,6 +39,7 @@ export default gql`
       tasktype: $tasktype
       freq: $freq
       interval: $interval
+      weekdays: $weekdays
       status: $status
       evQty: $evQty
       evDone: $evDone

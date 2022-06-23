@@ -3,7 +3,7 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { invoiceClasses } from '../themes';
-import { useCustomers, useSuppliers, useTemplate } from '../hooks';
+import { useSuppliers, useTemplate } from '../hooks';
 import { dublicateAlert, errorAlert, messageAlert } from '../Shared';
 import { GContextTypes } from '../types';
 import { GlobalContext } from '../contexts';
@@ -21,13 +21,11 @@ import { weekdaysNNo } from '../constants/datatypes';
 import useTasks from '../hooks/useTasks';
 import useCompany from '../hooks/useCompany';
 import PopupDeprtment from './PopupDeprtment';
-import PopupTask from './PopupTask';
 import PopupEmployee from './PopupEmployee';
 import PopupResourses from './PopupResourses';
 import useDepartmentsUp from '../hooks/useDepartmentsUp';
 import useEmployeesUp from '../hooks/useEmployeesUp';
 import useResoursesUp from '../hooks/useResoursesUp';
-import useProjects from '../hooks/useProjects';
 import ExpensesItemForm from '../Shared/ExpensesItemForm';
 import ExpensesItemsTable from '../Shared/ExpensesItemsTable';
 import { parents } from '../constants/kaid';
@@ -106,16 +104,12 @@ const PopupExpensesDoc = ({
   const [openDep, setOpenDep] = useState(false);
   const [openEmp, setOpenEmp] = useState(false);
   const [openRes, setOpenRes] = useState(false);
-  const [openTsk, setOpenTsk] = useState(false);
-  const { customers } = useCustomers();
   const { addDepartment, editDepartment } = useDepartmentsUp();
   const { addEmployee, editEmployee } = useEmployeesUp();
   const { addResourse, editResourse } = useResoursesUp();
-  const { addTask, editTask } = useTasks();
   const { tempwords, tempoptions } = useTemplate();
   const { accounts } = useAccounts();
 
-  const { projects } = useProjects();
   const { suppliers } = useSuppliers();
   const {
     translate: { words, isRTL },
@@ -149,13 +143,6 @@ const PopupExpensesDoc = ({
     setOpenRes(false);
     setNewtext('');
   };
-  const openTask = () => {
-    setOpenTsk(true);
-  };
-  const onCloseTask = () => {
-    setOpenTsk(false);
-    setNewtext('');
-  };
 
   const onNewDepartChange = (nextValue: any) => {
     setDepartvalue(nextValue);
@@ -165,9 +152,6 @@ const PopupExpensesDoc = ({
   };
   const onNewResoChange = (nextValue: any) => {
     setResovalue(nextValue);
-  };
-  const onNewTaskChange = (nextValue: any) => {
-    setTaskvalue(nextValue);
   };
 
   useEffect(() => {
@@ -319,6 +303,36 @@ const PopupExpensesDoc = ({
   }, [itemsList]);
 
   useEffect(() => {
+    if (name === 'taskId') {
+      setTaskvalue(value);
+    }
+  }, [name, value, open]);
+  useEffect(() => {
+    if (isNew && !isemployee) {
+      if (taskvalue) {
+        if (taskvalue?.departmentId && name !== 'departmentId') {
+          const dept = departments.filter(
+            (dep: any) => dep._id === taskvalue?.departmentId
+          )?.[0];
+          setDepartvalue(dept);
+        }
+        if (taskvalue?.employeeId && name !== 'employeeId') {
+          const emp = employees.filter(
+            (dep: any) => dep._id === taskvalue?.employeeId
+          )?.[0];
+          setEmplvalue(emp);
+        }
+        if (taskvalue?.resourseId && name !== 'resourseId') {
+          const res = resourses.filter(
+            (dep: any) => dep._id === taskvalue?.resourseId
+          )?.[0];
+          setResovalue(res);
+        }
+      }
+    }
+  }, [taskvalue, open]);
+
+  useEffect(() => {
     if (row && row._id) {
       const ca = row.creditAcc;
       const da = row.debitAcc;
@@ -381,7 +395,7 @@ const PopupExpensesDoc = ({
       setCreditAcc(filteredcredit?.[0]);
       setDebitAcc(filtereddebits?.[0]);
     }
-  }, [row]);
+  }, [row, open]);
 
   const getOverallTotal = () => {
     const totalsin = itemsList.map((litem: any) => litem.itemtotal);
@@ -637,6 +651,22 @@ const PopupExpensesDoc = ({
             )}
           </Grid>
         </Grid>
+        {!tempoptions?.noTsk && (
+          <Grid item xs={6}>
+            <AutoFieldLocal
+              name="task"
+              title={tempwords?.task}
+              words={words}
+              options={tasks}
+              value={taskvalue}
+              setSelectValue={setTaskvalue}
+              isRTL={isRTL}
+              fullWidth
+              disabled={name === 'taskId'}
+              mb={0}
+            ></AutoFieldLocal>
+          </Grid>
+        )}
         {!tempoptions?.noRes && (
           <Grid item xs={6}>
             <AutoFieldLocal
@@ -645,12 +675,35 @@ const PopupExpensesDoc = ({
               words={words}
               options={resourses}
               value={resovalue}
-              disabled={name === 'resourseId'}
+              disabled={name === 'resourseId' || name === 'taskId'}
               setSelectValue={setResovalue}
               setSelectError={setResoError}
               selectError={resoError}
               refernce={resoRef}
               openAdd={openResourse}
+              isRTL={isRTL}
+              fullWidth
+              day={day}
+              mb={0}
+            ></AutoFieldLocal>
+          </Grid>
+        )}
+        {!tempoptions?.noEmp && (
+          <Grid item xs={6}>
+            <AutoFieldLocal
+              name="employee"
+              title={tempwords?.employee}
+              words={words}
+              options={employees}
+              value={emplvalue}
+              disabled={
+                isemployee || name === 'employeeId' || name === 'taskId'
+              }
+              setSelectValue={setEmplvalue}
+              setSelectError={setEmplError}
+              selectError={emplError}
+              refernce={emplRef}
+              openAdd={openEmployee}
               isRTL={isRTL}
               fullWidth
               day={day}
@@ -672,48 +725,10 @@ const PopupExpensesDoc = ({
             openAdd={openDepartment}
             isRTL={isRTL}
             fullWidth
-            disabled={name === 'departmentId'}
+            disabled={name === 'departmentId' || name === 'taskId'}
             mb={0}
           ></AutoFieldLocal>
         </Grid>
-        {!tempoptions?.noTsk && (
-          <Grid item xs={6}>
-            <AutoFieldLocal
-              name="task"
-              title={tempwords?.task}
-              words={words}
-              options={tasks}
-              value={taskvalue}
-              setSelectValue={setTaskvalue}
-              isRTL={isRTL}
-              fullWidth
-              openAdd={openTask}
-              disabled={name === 'taskId'}
-              mb={0}
-            ></AutoFieldLocal>
-          </Grid>
-        )}
-        {!tempoptions?.noEmp && (
-          <Grid item xs={6}>
-            <AutoFieldLocal
-              name="employee"
-              title={tempwords?.employee}
-              words={words}
-              options={employees}
-              value={emplvalue}
-              disabled={isemployee || name === 'employeeId'}
-              setSelectValue={setEmplvalue}
-              setSelectError={setEmplError}
-              selectError={emplError}
-              refernce={emplRef}
-              openAdd={openEmployee}
-              isRTL={isRTL}
-              fullWidth
-              day={day}
-              mb={0}
-            ></AutoFieldLocal>
-          </Grid>
-        )}
 
         <Grid item xs={12}>
           <Box
@@ -831,21 +846,6 @@ const PopupExpensesDoc = ({
           editAction={editDepartment}
           depType={1}
         ></PopupDeprtment>
-        <PopupTask
-          newtext={newtext}
-          open={openTsk}
-          onClose={onCloseTask}
-          isNew={true}
-          setNewValue={onNewTaskChange}
-          row={null}
-          employees={employees}
-          resourses={resourses}
-          departments={departments}
-          projects={projects}
-          customers={customers}
-          addAction={addTask}
-          editAction={editTask}
-        ></PopupTask>
         <PopupEmployee
           newtext={newtext}
           departments={departments}

@@ -421,6 +421,7 @@ const PopupTask = ({
   useEffect(() => {
     if (isNew) {
       const start = new Date();
+      start.setHours(8, 0, 0);
       setStart(start);
       setStatus(taskStatus.filter((es: any) => es.id === 1)?.[0]);
       setEvList([]);
@@ -748,7 +749,7 @@ const PopupTask = ({
         <Grid container spacing={2}>
           <Grid item xs={8}>
             <Grid container spacing={1}>
-              <Grid item xs={2}>
+              <Grid item xs={3}>
                 <CalenderLocal
                   label={words.start}
                   value={start}
@@ -757,10 +758,9 @@ const PopupTask = ({
                   time
                   disabled={!isNew}
                   mb={0}
-                  width={125}
+                  width={150}
                 ></CalenderLocal>
               </Grid>
-              <Grid item xs={1}></Grid>
               <Grid item xs={2} style={{ marginTop: 10 }}>
                 {isNew && (
                   <SelectLocal
@@ -799,9 +799,7 @@ const PopupTask = ({
                   />
                 )}
               </Grid>
-              <Grid item xs={1}></Grid>
-
-              <Grid item xs={2}>
+              <Grid item xs={3}>
                 {rrule?.all && (
                   <CalenderLocal
                     isRTL={isRTL}
@@ -812,7 +810,7 @@ const PopupTask = ({
                     format="dd/MM/yyyy - hh:mm"
                     time
                     mb={0}
-                    width={125}
+                    width={150}
                   ></CalenderLocal>
                 )}
               </Grid>

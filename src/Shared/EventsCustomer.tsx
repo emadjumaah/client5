@@ -110,6 +110,7 @@ export default function EventsCustomer({
           col.fromto,
           col.docNo,
           col.taskId,
+          col.customer,
           col.resourse,
           col.department,
           col.employee,

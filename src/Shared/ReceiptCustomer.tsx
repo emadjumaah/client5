@@ -41,6 +41,7 @@ import { Box, Typography } from '@material-ui/core';
 import useTasks from '../hooks/useTasks';
 import PopupReceipt from '../pubups/PopupReceipt';
 import getTasks from '../graphql/query/getTasks';
+import { getColumns } from '../common/columns';
 
 export default function ReceiptCustomer({
   isRTL,
@@ -55,11 +56,14 @@ export default function ReceiptCustomer({
   start,
   end,
 }: any) {
+  const col = getColumns({ isRTL, words });
+
   const [columns] = useState([
     { name: 'time', title: words.time },
     { name: 'creditAcc', title: words.customer },
     { name: 'debitAcc', title: isRTL ? 'حساب القبض' : 'Receipt Acc' },
-
+    col.customer,
+    col.resourse,
     { name: 'desc', title: words.description },
     { name: 'docNo', title: words.no },
     { name: 'amount', title: words.amount },

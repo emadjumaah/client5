@@ -198,7 +198,7 @@ export class VoucherPrint extends React.PureComponent<any, any> {
             borderLeft={0}
             borderTop={0}
           >
-            <Typography>{tafkeet(data?.amount)}</Typography>
+            <Typography>{tafkeet(data?.amount, data.isRTL)}</Typography>
           </Box>
         </Grid>
         <Grid item xs={2}>

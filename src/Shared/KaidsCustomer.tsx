@@ -60,6 +60,8 @@ export default function KaidsCustomer({
           col.opDocNo,
           col.acc,
           col.taskId,
+          col.customer,
+          col.resourse,
           col.employee,
           col.department,
           col.amountdebit,

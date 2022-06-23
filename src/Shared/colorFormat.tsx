@@ -25,6 +25,7 @@ import {
   isAdmin,
 } from '../common/roles';
 import ExpensesChart from '../components/charts/ExpensesChart';
+import IncomeChart from '../components/charts/IncomeChart';
 import KaidsChart from '../components/charts/KaidsChart';
 import PercentChartTask from '../components/charts/PercentChartTask';
 import PurchaseChart from '../components/charts/PurchaseChart';
@@ -1529,7 +1530,8 @@ export const nameManageLinkFormat = ({
         {row?.daysoff && (
           <Grid item xs={12}>
             <Typography variant="caption">
-              العطلة: {daysoffFormatter({ value: row.daysoff, isRTL })}
+              {isRTL ? 'يوم العطلة' : 'Day Off'}:{' '}
+              {daysoffFormatter({ value: row.daysoff, isRTL })}
             </Typography>
           </Grid>
         )}
@@ -1594,8 +1596,10 @@ export const taskDataView = ({ row, words, isRTL }) => {
         <Grid item xs={2}>
           <Typography>{words.customer}</Typography>
         </Grid>
-        <Grid item xs={10}>
+        <Grid item xs={7}>
           <Typography>{isRTL ? customerNameAr : customerName}</Typography>
+        </Grid>
+        <Grid item xs={3}>
           <Typography>{customerPhone}</Typography>
         </Grid>
         <Grid item xs={2}>
@@ -1713,7 +1717,10 @@ export const employeeDataView = ({ row, words, isRTL }) => {
         {daysoff && (
           <Grid item xs={12}>
             <Typography variant="caption">
-              العطلة: {daysoffFormatter({ value: row.daysoff, isRTL })}
+              <Typography variant="caption">
+              {isRTL ? "يوم العطلة" : "Day Off"}:{' '}
+                {daysoffFormatter({ value: row.daysoff, isRTL })}
+              </Typography>
             </Typography>
           </Grid>
         )}
@@ -1947,6 +1954,8 @@ export const appointmentsFormatter = ({
   height = 100,
   bc = '#ddd',
 }: any) => {
+  const progress = Math.round((row?.evDone / row?.evQty) * 100) / 100;
+
   return (
     <Box
       display={'flex'}
@@ -1960,7 +1969,7 @@ export const appointmentsFormatter = ({
           <PercentChartTask
             pricolor={theme.palette.primary.main}
             seccolor={theme.palette.secondary.main}
-            progress={row?.progress / 100}
+            progress={progress}
             height={height - 10}
           />
         </Grid>
@@ -1978,7 +1987,7 @@ export const appointmentsFormatter = ({
             </Grid>
             <Grid item xs={9}>
               <Typography style={{ fontSize: 12 }} variant="caption">
-                {isRTL ? 'المواعيد المنجزة' : 'Done Appointments'}
+                {isRTL ? 'المواعيد المنجزة' : 'Done'}
               </Typography>
             </Grid>
             <Grid item xs={3}>
@@ -2013,12 +2022,10 @@ export const appointTaskFormatter = ({
   height = 100,
   bc = '#ddd',
 }: any) => {
-  // const marginTop = height > 100 ? 20 : 10;
-  // const pcolor = colors.green[400];
   const eventamount = row?.amount / row?.evQty;
   const amountnow = eventamount * row?.evDone;
   const remaining = row?.amount - amountnow;
-  // const raseed = amountnow - row?.totalpaid;
+  const progress = Math.round((row?.evDone / row?.evQty) * 100) / 100;
 
   return (
     <Box
@@ -2033,7 +2040,7 @@ export const appointTaskFormatter = ({
           <PercentChartTask
             pricolor={theme.palette.primary.main}
             seccolor={theme.palette.secondary.main}
-            progress={row?.progress / 100}
+            progress={progress}
             height={height - 10}
           />
         </Grid>
@@ -2044,7 +2051,7 @@ export const appointTaskFormatter = ({
                 variant="body2"
                 style={{ fontSize: 12, fontWeight: 'bold' }}
               >
-                {isRTL ? 'المواعيد' : 'Appointments'}
+                {isRTL ? 'المواعيد' : 'Appoints'}
               </Typography>
             </Grid>
             <Grid item xs={6} style={{ marginTop: 8 }}>
@@ -2076,7 +2083,7 @@ export const appointTaskFormatter = ({
                 variant="body2"
                 style={{ fontSize: 12, fontWeight: 'bold' }}
               >
-                {isRTL ? 'تكلفة الموعد' : 'Appointment Cost'}
+                {isRTL ? 'تكلفة الموعد' : 'One Cost'}
               </Typography>
             </Grid>
             <Grid item xs={6}>
@@ -2120,14 +2127,11 @@ export const appointTaskMainFormatter = ({
   theme,
   isRTL,
   height = 250,
-  bc = '#ddd',
 }: any) => {
-  // const marginTop = height > 100 ? 20 : 10;
-  // const pcolor = colors.green[400];
   const eventamount = row?.amount / row?.evQty;
   const amountnow = eventamount * row?.evDone;
   const remaining = row?.amount - amountnow;
-  // const raseed = amountnow - row?.totalpaid;
+  const progress = Math.round((row?.evDone / row?.evQty) * 100) / 100;
 
   return (
     <Box display={'flex'} style={{ flex: 1, height }}>
@@ -2136,7 +2140,7 @@ export const appointTaskMainFormatter = ({
           <PercentChartTask
             pricolor={theme.palette.primary.main}
             seccolor={theme.palette.secondary.main}
-            progress={row?.progress / 100}
+            progress={progress}
             height={height - 10}
           />
         </Grid>
@@ -2219,6 +2223,8 @@ export const appointTaskMainFormatter = ({
   );
 };
 export const appointmentsMainFormatter = ({ row, theme, isRTL }: any) => {
+  const progress = Math.round((row?.evDone / row?.evQty) * 100) / 100;
+
   return (
     <Box display={'flex'} style={{ flex: 1, paddingTop: 15, height: 240 }}>
       <Grid container spacing={0}>
@@ -2226,7 +2232,7 @@ export const appointmentsMainFormatter = ({ row, theme, isRTL }: any) => {
           <PercentChartTask
             pricolor={theme.palette.primary.main}
             seccolor={theme.palette.secondary.main}
-            progress={row?.progress / 100}
+            progress={progress}
             height={200}
           />
         </Grid>
@@ -2429,7 +2435,7 @@ export const salesTaskFormatter = ({
         <Grid item xs={7}>
           <Grid container spacing={0}>
             <Grid item xs={6} style={{ marginTop }}>
-              {rCell(isRTL ? 'قيمة العقد' : 'Contract Amount', '#333')}
+              {rCell(isRTL ? 'قيمة العقد' : 'Amount', '#333')}
             </Grid>
             <Grid item xs={6} style={{ marginTop }}>
               {rCell(moneyFormat(row?.amount), '#333')}
@@ -2792,6 +2798,122 @@ export const salesMainFormatter = ({
                   ),
                   '#333'
                 )}
+              </Box>
+            </Grid>
+          </Grid>
+        </Grid>
+      </Grid>
+    </Box>
+  );
+};
+export const incomeFormatter = ({
+  row,
+  isRTL,
+  theme,
+  height = 100,
+  bc = '#ddd',
+}: any) => {
+  const scolor = colors.blue[400];
+  const ecolor = colors.red[500];
+  const sales = row?.totalinvoiced - row?.totalDiscount;
+  const expenses = row?.toatlExpenses + row?.toatlProdExpenses;
+  const balance = sales - expenses;
+  return (
+    <Box
+      border={0.2}
+      borderColor={bc}
+      display={'flex'}
+      borderRadius={15}
+      style={{ flex: 1, height, paddingLeft: 10, paddingRight: 10 }}
+    >
+      <Grid container spacing={1}>
+        <Grid item xs={8}>
+          <Grid container spacing={1}>
+            <Grid item xs={7} style={{ marginTop: 10 }}>
+              {rCell(isRTL ? 'المبيعات' : 'Net Sales', scolor)}
+            </Grid>
+            <Grid item xs={5} style={{ marginTop: 10 }}>
+              {rCell(moneyFormat(sales), scolor)}
+            </Grid>
+            <Grid item xs={7}>
+              {rCell(isRTL ? 'المصروفات' : 'Net Expenses', ecolor)}
+            </Grid>
+            <Grid item xs={5}>
+              {rCell(moneyFormat(expenses), ecolor)}
+            </Grid>
+
+            <Grid item xs={7}>
+              <Box style={{ marginTop: 25 }}>
+                {rCell(isRTL ? 'صافي الربح' : 'Balance', '#333')}
+              </Box>
+            </Grid>
+            <Grid item xs={5}>
+              <Box style={{ marginTop: 25 }}>
+                {rCell(moneyFormat(balance), '#333')}
+              </Box>
+            </Grid>
+          </Grid>
+        </Grid>
+
+        <Grid item xs={4}>
+          <IncomeChart
+            scolor={scolor}
+            ecolor={ecolor}
+            row={row}
+            theme={theme}
+            height={height}
+          ></IncomeChart>
+        </Grid>
+      </Grid>
+    </Box>
+  );
+};
+export const incomeMainFormatter = ({
+  row,
+  isRTL,
+  theme,
+  height = 250,
+}: any) => {
+  const scolor = colors.blue[400];
+  const ecolor = colors.red[500];
+  const sales = row?.totalinvoiced - row?.totalDiscount;
+  const expenses = row?.toatlExpenses + row?.toatlProdExpenses;
+  const balance = sales - expenses;
+  return (
+    <Box style={{ display: 'flex', flex: 1, height }}>
+      <Grid container spacing={0}>
+        <Grid item xs={5}>
+          <IncomeChart
+            scolor={scolor}
+            ecolor={ecolor}
+            row={row}
+            theme={theme}
+            height={height}
+          ></IncomeChart>
+        </Grid>
+        <Grid item xs={7}>
+          <Grid container spacing={1}>
+            <Grid item xs={6} style={{ marginTop: 80 }}>
+              {rCellMain(isRTL ? 'المبيعات' : 'Net Sales', scolor)}
+            </Grid>
+            <Grid item xs={6} style={{ marginTop: 80 }}>
+              {rCellMain(moneyFormat(sales), scolor)}
+            </Grid>
+            <Grid item xs={6}>
+              {rCellMain(isRTL ? 'المصروفات' : 'Net Expenses', ecolor)}
+            </Grid>
+            <Grid item xs={6}>
+              {rCellMain(moneyFormat(expenses), ecolor)}
+            </Grid>
+
+            <Grid item xs={6}>
+              <Box style={{ marginTop: 30 }}>
+                {rCellMain(isRTL ? 'صافي الربح' : 'Balance', '#333')}
+              </Box>
+            </Grid>
+            <Grid item xs={6}>
+              <Box style={{ marginTop: 30 }}>
+                {rCellMain(moneyFormat(balance), '#333')}
               </Box>
             </Grid>
           </Grid>

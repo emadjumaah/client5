@@ -44,6 +44,7 @@ import useEmployeesUp from '../hooks/useEmployeesUp';
 import useResoursesUp from '../hooks/useResoursesUp';
 import PopupExpensesDoc from '../pubups/PopupExpensesDoc';
 import getTasks from '../graphql/query/getTasks';
+import { getColumns } from '../common/columns';
 
 export default function ExpensesCustomer({
   isRTL,
@@ -59,6 +60,8 @@ export default function ExpensesCustomer({
   end,
 }: any) {
   const { tempoptions, tempwords } = useTemplate();
+  const col = getColumns({ isRTL, words });
+
   const [columns] = useState(
     tempoptions?.noTsk
       ? [
@@ -92,6 +95,8 @@ export default function ExpensesCustomer({
             name: 'taskId',
             title: tempwords.task,
           },
+          col.customer,
+          col.resourse,
           { name: 'desc', title: words.description },
           { name: 'amount', title: words.amount },
         ]

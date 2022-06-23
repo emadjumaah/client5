@@ -547,7 +547,7 @@ export class ContractPrint extends React.PureComponent<any, any> {
               height: 30,
             }}
           >
-            {amount && <Box>{tafkeet(amount)}</Box>}
+            {amount && <Box>{tafkeet(amount, isRTL)}</Box>}
           </Box>
         </Grid>
       </Grid>
