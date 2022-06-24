@@ -33,12 +33,6 @@ import {
   updatePurchaseInvoice,
   deletePurchaseInvoice,
   getLastNos,
-  getSuppliers,
-  getEmployees,
-  getResourses,
-  getProjects,
-  getDepartments,
-  getProducts,
 } from '../../graphql';
 import { useLazyQuery, useMutation } from '@apollo/client';
 import {
@@ -58,7 +52,6 @@ import useEmployeesUp from '../../hooks/useEmployeesUp';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
 import useResoursesUp from '../../hooks/useResoursesUp';
 import useTasks from '../../hooks/useTasks';
-import getTasks from '../../graphql/query/getTasks';
 import { Box, Paper, Typography } from '@material-ui/core';
 import { TableComponent } from '../../Shared/ItemsTable';
 
@@ -156,31 +149,6 @@ export default function PurchaseInvoices({
 
       {
         query: getLastNos,
-      },
-      {
-        query: getTasks,
-      },
-      {
-        query: getSuppliers,
-      },
-      {
-        query: getProducts,
-        variables: { isRTL },
-      },
-      {
-        query: getEmployees,
-        variables: { isRTL, resType: 1 },
-      },
-      {
-        query: getDepartments,
-        variables: { isRTL, depType: 1 },
-      },
-      {
-        query: getResourses,
-        variables: { isRTL, resType: 1 },
-      },
-      {
-        query: getProjects,
       },
     ],
   };

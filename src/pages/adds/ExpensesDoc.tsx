@@ -31,14 +31,7 @@ import { useLazyQuery, useMutation } from '@apollo/client';
 import {
   createExpenses,
   deleteExpenses,
-  getCustomers,
-  getDepartments,
-  getEmployees,
   getExpenses,
-  getLastNos,
-  getProducts,
-  getProjects,
-  getResourses,
   updateExpenses,
 } from '../../graphql';
 import {
@@ -54,7 +47,6 @@ import { SearchTable } from '../../components';
 import { ExpensesContext } from '../../contexts';
 import DateNavigatorReports from '../../components/filters/DateNavigatorReports';
 import useTasks from '../../hooks/useTasks';
-import getTasks from '../../graphql/query/getTasks';
 import { getColumns } from '../../common/columns';
 import { Box, Paper, Typography } from '@material-ui/core';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
@@ -148,7 +140,9 @@ export default function ExpensesDoc({
     dispatch({ type: 'setEndDate', payload: curDate });
   };
 
-  const [loadExpenses, expensesData]: any = useLazyQuery(getExpenses);
+  const [loadExpenses, expensesData]: any = useLazyQuery(getExpenses, {
+    fetchPolicy: 'cache-and-network',
+  });
   const { accounts } = useAccounts();
   const refresQuery = {
     refetchQueries: [
@@ -159,34 +153,6 @@ export default function ExpensesDoc({
           end: end ? end.setHours(23, 59, 59, 999) : undefined,
           opType: 60,
         },
-      },
-      {
-        query: getLastNos,
-      },
-      {
-        query: getTasks,
-      },
-      {
-        query: getCustomers,
-      },
-      {
-        query: getProducts,
-        variables: { isRTL },
-      },
-      {
-        query: getEmployees,
-        variables: { isRTL, resType: 1 },
-      },
-      {
-        query: getDepartments,
-        variables: { isRTL, depType: 1 },
-      },
-      {
-        query: getResourses,
-        variables: { isRTL, resType: 1 },
-      },
-      {
-        query: getProjects,
       },
     ],
   };

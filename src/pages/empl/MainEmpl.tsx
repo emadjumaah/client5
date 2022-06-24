@@ -25,16 +25,7 @@ import { AppointTooltipEmpl } from '../calendar/common/AppointTooltipEmpl';
 import { AppointmentContent } from '../calendar/common';
 import { CommandAppointment } from '../../Shared';
 import { useLazyQuery, useMutation } from '@apollo/client';
-import {
-  createEvent,
-  deleteEvent,
-  getCustomers,
-  getDepartments,
-  getEmployees,
-  getProjects,
-  getResourses,
-  updateEvent,
-} from '../../graphql';
+import { createEvent, deleteEvent, updateEvent } from '../../graphql';
 import { Box, Grid, useMediaQuery } from '@material-ui/core';
 import { getStartEndEventView } from '../../common/time';
 import { DateNavigator } from '../../components';
@@ -42,7 +33,6 @@ import { CalendarContext } from '../../contexts';
 import PopupLayoutBox from '../main/PopupLayoutBox';
 import { eventStatus } from '../../constants';
 import useTasks from '../../hooks/useTasks';
-import getTasks from '../../graphql/query/getTasks';
 import getEmplEvents from '../../graphql/query/getEmplEvents';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
 
@@ -83,34 +73,6 @@ const MainEmpl = (props: any) => {
         variables: {
           start,
           end,
-        },
-      },
-      {
-        query: getTasks,
-      },
-      {
-        query: getCustomers,
-      },
-      {
-        query: getEmployees,
-        variables: { isRTL, resType: 1 },
-      },
-      {
-        query: getDepartments,
-        variables: { isRTL, depType: 1 },
-      },
-      {
-        query: getResourses,
-        variables: { isRTL, resType: 1 },
-      },
-      {
-        query: getProjects,
-      },
-      {
-        query: getTasks,
-        variables: {
-          start: start ? start.setHours(0, 0, 0, 0) : undefined,
-          end: end ? end.setHours(23, 59, 59, 999) : undefined,
         },
       },
     ],

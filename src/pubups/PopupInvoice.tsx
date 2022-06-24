@@ -261,7 +261,6 @@ const PopupInvoice = ({
       const servlist = [...servicesproducts, ...products].filter((ser: any) =>
         ids.includes(ser._id)
       );
-
       const itemsWqtyprice = items.map((item: any, index: any) => {
         const {
           categoryId,
@@ -303,6 +302,7 @@ const PopupInvoice = ({
           itemprice: item.itemPrice,
           itemqty: item.qty,
           itemtotal: item.total,
+          itemtotalcost: item.totalCost,
           note,
         };
       });
@@ -501,6 +501,7 @@ const PopupInvoice = ({
 
     setAccounts(accs);
   };
+
   const onSubmit = async () => {
     const { startPeriod, endPeriod } = getAppStartEndPeriod();
     if (selectedDate < startPeriod || selectedDate > endPeriod) {

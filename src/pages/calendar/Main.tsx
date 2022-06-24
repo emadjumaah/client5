@@ -25,13 +25,7 @@ import { useLazyQuery, useMutation } from '@apollo/client';
 import {
   createEvent,
   deleteEvent,
-  getCustomers,
-  getDepartments,
-  getEmployees,
   getEvents,
-  getProducts,
-  getProjects,
-  getResourses,
   updateEvent,
 } from '../../graphql';
 import { Box, Grid, Hidden, useMediaQuery } from '@material-ui/core';
@@ -40,7 +34,6 @@ import { getStartEndEventView } from '../../common/time';
 import { DateNavigator } from '../../components';
 import { CalendarContext } from '../../contexts';
 import PopupLayoutBox from '../main/PopupLayoutBox';
-import getTasks from '../../graphql/query/getTasks';
 import { getPopupGeneralTitle } from '../../constants/menu';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
 
@@ -70,38 +63,6 @@ const Main = (props: any) => {
           status: status ? status.id : undefined,
           start,
           end,
-        },
-      },
-      {
-        query: getTasks,
-      },
-      {
-        query: getCustomers,
-      },
-      {
-        query: getProducts,
-        variables: { isRTL },
-      },
-      {
-        query: getEmployees,
-        variables: { isRTL, resType: 1 },
-      },
-      {
-        query: getDepartments,
-        variables: { isRTL, depType: 1 },
-      },
-      {
-        query: getResourses,
-        variables: { isRTL, resType: 1 },
-      },
-      {
-        query: getProjects,
-      },
-      {
-        query: getTasks,
-        variables: {
-          start: start ? start.setHours(0, 0, 0, 0) : undefined,
-          end: end ? end.setHours(23, 59, 59, 999) : undefined,
         },
       },
     ],
@@ -164,21 +125,6 @@ const Main = (props: any) => {
     getCalEvents,
     status,
   ]);
-
-  // useEffect(() => {
-  //   let res: any;
-  //   if (mainResourceName === 'employeeId') {
-  //     res = employees;
-  //   }
-  //   if (mainResourceName === 'status') {
-  //     res = eventStatus;
-  //   }
-  //   if (mainResourceName === 'departmentId') {
-  //     res = departments;
-  //   }
-  //   const resourses = getCalendarResourses(res, mainResourceName, 'Data');
-  //   setResourseData(resourses);
-  // }, [mainResourceName, departments]);
 
   const setDepartvalueDispatch = (value: any) => {
     dispatch({ type: 'setDepartvalue', payload: value });

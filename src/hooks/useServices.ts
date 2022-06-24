@@ -12,6 +12,7 @@ export default () => {
   const isRTL = lang === 'ar' ? true : false;
   const [getsevs, itmData]: any = useLazyQuery(getServices, {
     variables: { isRTL },
+    nextFetchPolicy: 'cache-and-network',
   });
 
   const [addService] = useMutation(createItem, {

@@ -22,16 +22,7 @@ import {
 } from '@devexpress/dx-react-grid-material-ui';
 import { Command, Loading, PopupEditing } from '../../Shared';
 import { getRowId } from '../../common';
-import {
-  createEvent,
-  deleteEventById,
-  getCustomers,
-  getDepartments,
-  getEmployees,
-  getProjects,
-  getResourses,
-  updateEvent,
-} from '../../graphql';
+import { createEvent, deleteEventById, updateEvent } from '../../graphql';
 import { useLazyQuery, useMutation } from '@apollo/client';
 import {
   createdAtFormatter,
@@ -57,7 +48,6 @@ import {
   Typography,
 } from '@material-ui/core';
 import useTasks from '../../hooks/useTasks';
-import getTasks from '../../graphql/query/getTasks';
 import { Getter } from '@devexpress/dx-react-core';
 import { TableComponent } from '../../Shared/TableComponent';
 import {
@@ -193,27 +183,6 @@ export default function AppointmentsEmpl({
           start: start ? start.setHours(0, 0, 0, 0) : undefined,
           end: end ? end.setHours(23, 59, 59, 999) : undefined,
         },
-      },
-      {
-        query: getTasks,
-      },
-      {
-        query: getCustomers,
-      },
-      {
-        query: getEmployees,
-        variables: { isRTL, resType: 1 },
-      },
-      {
-        query: getDepartments,
-        variables: { isRTL, depType: 1 },
-      },
-      {
-        query: getResourses,
-        variables: { isRTL, resType: 1 },
-      },
-      {
-        query: getProjects,
       },
     ],
   };

@@ -31,14 +31,8 @@ import { PopupInvoice } from '../../pubups';
 import {
   createInvoice,
   deleteInvoice,
-  getCustomers,
-  getDepartments,
-  getEmployees,
   getInvoices,
   getLastNos,
-  getProducts,
-  getProjects,
-  getResourses,
   updateInvoice,
 } from '../../graphql';
 import { useLazyQuery, useMutation } from '@apollo/client';
@@ -56,7 +50,6 @@ import { getColumns } from '../../common/columns';
 import useTasks from '../../hooks/useTasks';
 import { TableComponent } from '../reports/SalesReport';
 import { Box, Paper, Typography } from '@material-ui/core';
-import getTasks from '../../graphql/query/getTasks';
 import useResoursesUp from '../../hooks/useResoursesUp';
 import useDepartmentsUp from '../../hooks/useDepartmentsUp';
 import useEmployeesUp from '../../hooks/useEmployeesUp';
@@ -139,7 +132,9 @@ export default function Invoices({ isRTL, words, menuitem, theme, company }) {
     dispatch({ type: 'setEndDate', payload: curDate });
   };
 
-  const [loadInvoices, opData]: any = useLazyQuery(getInvoices);
+  const [loadInvoices, opData]: any = useLazyQuery(getInvoices, {
+    fetchPolicy: 'cache-and-network',
+  });
 
   const refresQuery = {
     refetchQueries: [
@@ -152,31 +147,6 @@ export default function Invoices({ isRTL, words, menuitem, theme, company }) {
       },
       {
         query: getLastNos,
-      },
-      {
-        query: getTasks,
-      },
-      {
-        query: getCustomers,
-      },
-      {
-        query: getProducts,
-        variables: { isRTL },
-      },
-      {
-        query: getEmployees,
-        variables: { isRTL, resType: 1 },
-      },
-      {
-        query: getDepartments,
-        variables: { isRTL, depType: 1 },
-      },
-      {
-        query: getResourses,
-        variables: { isRTL, resType: 1 },
-      },
-      {
-        query: getProjects,
       },
     ],
   };

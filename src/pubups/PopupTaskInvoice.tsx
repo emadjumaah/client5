@@ -20,16 +20,7 @@ import ItemsTable from '../Shared/ItemsTable';
 import { PriceTotal } from '../Shared/TotalPrice';
 import { operationTypes } from '../constants';
 import { useMutation } from '@apollo/client';
-import {
-  createInvoice,
-  getCustomers,
-  getDepartments,
-  getEmployees,
-  getInvoices,
-  getLastNos,
-  getProjects,
-  getResourses,
-} from '../graphql';
+import { createInvoice, getInvoices, getLastNos } from '../graphql';
 import { accountCode } from '../constants/kaid';
 import PaymentSelect from '../pages/options/PaymentSelect';
 import PopupLayout from '../pages/main/PopupLayout';
@@ -115,11 +106,6 @@ const PopupTaskInvoice = ({
       { query: getInvoices, variables: { taskId: task.id } },
       { query: getLastNos },
       { query: getTasks },
-      { query: getCustomers },
-      { query: getEmployees, variables: { isRTL, resType: 1 } },
-      { query: getDepartments, variables: { isRTL, depType: 1 } },
-      { query: getResourses, variables: { isRTL, resType: 1 } },
-      { query: getProjects },
     ],
   };
 

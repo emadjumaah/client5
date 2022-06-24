@@ -19,14 +19,8 @@ import {
   createEvent,
   createExpenses,
   createFinance,
-  getCustomers,
-  getDepartments,
-  getEmployees,
   getExpenses,
-  getLastNos,
   getOperationItems,
-  getProjects,
-  getResourses,
 } from '../graphql';
 import getTasks from '../graphql/query/getTasks';
 import {
@@ -128,8 +122,8 @@ const PopupTaskView = ({
       if (row?.info) {
         setInfo(JSON.parse(row?.info));
       }
-      setStart(row?.start);
-      setEnd(row?.end);
+      // setStart(row?.start);
+      // setEnd(row?.end);
       if (resId) {
         const empl = resourses.filter((emp: any) => emp._id === resId)[0];
         setResovalue(empl);
@@ -156,11 +150,6 @@ const PopupTaskView = ({
         },
       },
       { query: getTasks },
-      { query: getCustomers },
-      { query: getEmployees, variables: { isRTL, resType: 1 } },
-      { query: getDepartments, variables: { isRTL, depType: 1 } },
-      { query: getResourses, variables: { isRTL, resType: 1 } },
-      { query: getProjects },
     ],
   };
   const refresReceiptQuery = {
@@ -173,13 +162,7 @@ const PopupTaskView = ({
           end: end ? new Date(end).setHours(23, 59, 59, 999) : undefined,
         },
       },
-      { query: getLastNos },
       { query: getTasks },
-      { query: getCustomers },
-      { query: getEmployees, variables: { isRTL, resType: 1 } },
-      { query: getDepartments, variables: { isRTL, depType: 1 } },
-      { query: getResourses, variables: { isRTL, resType: 1 } },
-      { query: getProjects },
     ],
   };
   const refresExpensesQuery = {
@@ -193,10 +176,6 @@ const PopupTaskView = ({
         },
       },
       { query: getTasks },
-      { query: getCustomers },
-      { query: getEmployees, variables: { isRTL, resType: 1 } },
-      { query: getDepartments, variables: { isRTL, depType: 1 } },
-      { query: getResourses, variables: { isRTL, resType: 1 } },
     ],
   };
 
@@ -447,8 +426,8 @@ const PopupTaskView = ({
                         id={row?.id}
                         width={width}
                         height={height}
-                        start={start ? new Date(start) : null}
-                        end={end ? new Date(end) : null}
+                        start={start}
+                        end={end}
                         closeloading={closeloading}
                         setOpenCloseDate={setOpenCloseDate}
                         daysData={daysData}
@@ -463,8 +442,8 @@ const PopupTaskView = ({
                         name="taskId"
                         width={width}
                         height={height}
-                        start={start ? new Date(start) : null}
-                        end={end ? new Date(end) : null}
+                        start={start}
+                        end={end}
                         value={row}
                         company={company}
                       ></EventsCustomer>
@@ -478,8 +457,8 @@ const PopupTaskView = ({
                         id={row?.id}
                         width={width}
                         height={height}
-                        start={start ? new Date(start) : null}
-                        end={end ? new Date(end) : null}
+                        start={start}
+                        end={end}
                         value={row}
                         company={company}
                       ></InvoicesCustomer>
@@ -493,8 +472,8 @@ const PopupTaskView = ({
                         id={row?.id}
                         width={width}
                         height={height}
-                        start={start ? new Date(start) : null}
-                        end={end ? new Date(end) : null}
+                        start={start}
+                        end={end}
                         value={row}
                         company={company}
                       ></ReceiptCustomer>
@@ -508,8 +487,8 @@ const PopupTaskView = ({
                         id={row?.id}
                         width={width}
                         height={height}
-                        start={start ? new Date(start) : null}
-                        end={end ? new Date(end) : null}
+                        start={start}
+                        end={end}
                         value={row}
                         company={company}
                       ></ExpensesCustomer>
@@ -523,8 +502,8 @@ const PopupTaskView = ({
                         id={row?.id}
                         width={width}
                         height={height}
-                        start={start ? new Date(start) : null}
-                        end={end ? new Date(end) : null}
+                        start={start}
+                        end={end}
                       ></KaidsCustomer>
                     </TabPanel>
                     <TabPanel value={value} index={6}>
@@ -536,8 +515,8 @@ const PopupTaskView = ({
                         id={row?.id}
                         width={width}
                         height={height}
-                        start={start ? new Date(start) : null}
-                        end={end ? new Date(end) : null}
+                        start={start}
+                        end={end}
                       ></ReminderCustomer>
                     </TabPanel>
                   </Box>

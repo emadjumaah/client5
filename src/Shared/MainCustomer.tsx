@@ -28,6 +28,7 @@ import { useLazyQuery } from '@apollo/client';
 import getGereralCalculation from '../graphql/query/getGereralCalculation';
 
 export default function MainCustomer({
+  open,
   isRTL,
   words,
   theme,
@@ -46,6 +47,8 @@ export default function MainCustomer({
   });
 
   useEffect(() => {
+    console.log('start', start);
+    console.log('end', end);
     const variables = {
       [name]: id,
       start: start ? new Date(start).setHours(0, 0, 0, 0) : undefined,

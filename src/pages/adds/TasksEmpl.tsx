@@ -21,13 +21,6 @@ import {
   ColumnChooser,
 } from '@devexpress/dx-react-grid-material-ui';
 import { Command, Loading, PopupEditing } from '../../Shared';
-import {
-  getCustomers,
-  getDepartments,
-  getEmployees,
-  getProjects,
-  getResourses,
-} from '../../graphql';
 import { useLazyQuery, useMutation } from '@apollo/client';
 import {
   createdAtFormatter,
@@ -149,27 +142,6 @@ export default function TasksEmpl({
           start: start ? start.setHours(0, 0, 0, 0) : undefined,
           end: end ? end.setHours(23, 59, 59, 999) : undefined,
         },
-      },
-      {
-        query: getEmplTasks,
-      },
-      {
-        query: getCustomers,
-      },
-      {
-        query: getEmployees,
-        variables: { isRTL, resType: 1 },
-      },
-      {
-        query: getDepartments,
-        variables: { isRTL, depType: 1 },
-      },
-      {
-        query: getResourses,
-        variables: { isRTL, resType: 1 },
-      },
-      {
-        query: getProjects,
       },
     ],
   };

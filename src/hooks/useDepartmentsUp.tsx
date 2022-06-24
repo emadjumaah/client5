@@ -17,24 +17,25 @@ export default () => {
   const isRTL = lang === 'ar' ? true : false;
   const [getDeparts, depData]: any = useLazyQuery(getDepartments, {
     variables: { isRTL, depType: 1 },
+    fetchPolicy: 'cache-and-network',
   });
 
   const [addDepartment] = useMutation(createDepartment, {
     refetchQueries: [
       { query: getDepartments, variables: { isRTL, depType: 1 } },
-      { query: getDepartments, variables: { isRTL } },
+      // { query: getDepartments, variables: { isRTL } },
     ],
   });
   const [editDepartment] = useMutation(updateDepartment, {
     refetchQueries: [
       { query: getDepartments, variables: { isRTL, depType: 1 } },
-      { query: getDepartments, variables: { isRTL } },
+      // { query: getDepartments, variables: { isRTL } },
     ],
   });
   const [removeDepartment] = useMutation(deleteDepartment, {
     refetchQueries: [
       { query: getDepartments, variables: { isRTL, depType: 1 } },
-      { query: getDepartments, variables: { isRTL } },
+      // { query: getDepartments, variables: { isRTL } },
     ],
   });
 

@@ -30,12 +30,7 @@ import { updateDocNumbers, getRowId, roles } from '../../common';
 import {
   createEvent,
   deleteEventById,
-  getCustomers,
-  getDepartments,
-  getEmployees,
   getEvents,
-  getProjects,
-  getResourses,
   updateEvent,
 } from '../../graphql';
 import { useLazyQuery, useMutation } from '@apollo/client';
@@ -64,7 +59,6 @@ import {
   Typography,
 } from '@material-ui/core';
 import useTasks from '../../hooks/useTasks';
-import getTasks from '../../graphql/query/getTasks';
 import { Getter } from '@devexpress/dx-react-core';
 import { TableComponent } from '../../Shared/TableComponent';
 import { useCustomers, useServices, useTemplate } from '../../hooks';
@@ -249,27 +243,6 @@ export default function Appointments({
           end: end ? end.setHours(23, 59, 59, 999) : undefined,
           due,
         },
-      },
-      {
-        query: getTasks,
-      },
-      {
-        query: getCustomers,
-      },
-      {
-        query: getEmployees,
-        variables: { isRTL, resType: 1 },
-      },
-      {
-        query: getDepartments,
-        variables: { isRTL, depType: 1 },
-      },
-      {
-        query: getResourses,
-        variables: { isRTL, resType: 1 },
-      },
-      {
-        query: getProjects,
       },
     ],
   };

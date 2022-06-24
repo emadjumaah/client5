@@ -23,13 +23,7 @@ import { useLazyQuery, useMutation } from '@apollo/client';
 import {
   createGeneralFinance,
   deleteGeneralFinance,
-  getCustomers,
-  getDepartments,
-  getEmployees,
   getGeneralFinances,
-  getLastNos,
-  getProjects,
-  getResourses,
   updateGeneralFinance,
 } from '../../graphql';
 import {
@@ -46,7 +40,6 @@ import { SearchTable } from '../../components';
 import { FinanceContext } from '../../contexts';
 import DateNavigatorReports from '../../components/filters/DateNavigatorReports';
 import PopupFinanceAll from '../../pubups/PopupFinanceAll';
-import getTasks from '../../graphql/query/getTasks';
 import { Box, Typography } from '@material-ui/core';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
 import { TableComponent } from '../../Shared/TableComponent';
@@ -83,7 +76,9 @@ export default function FinanceAll({ isRTL, words, menuitem, theme }) {
     dispatch({ type: 'setEndDate', payload: curDate });
   };
 
-  const [loadFinances, financeData]: any = useLazyQuery(getGeneralFinances);
+  const [loadFinances, financeData]: any = useLazyQuery(getGeneralFinances, {
+    fetchPolicy: 'cache-and-network',
+  });
   const { accounts } = useAccounts();
   const refresQuery = {
     refetchQueries: [
@@ -93,31 +88,6 @@ export default function FinanceAll({ isRTL, words, menuitem, theme }) {
           start: start ? start.setHours(0, 0, 0, 0) : undefined,
           end: end ? end.setHours(23, 59, 59, 999) : undefined,
         },
-      },
-
-      {
-        query: getLastNos,
-      },
-      {
-        query: getTasks,
-      },
-      {
-        query: getCustomers,
-      },
-      {
-        query: getEmployees,
-        variables: { isRTL, resType: 1 },
-      },
-      {
-        query: getDepartments,
-        variables: { isRTL, depType: 1 },
-      },
-      {
-        query: getResourses,
-        variables: { isRTL, resType: 1 },
-      },
-      {
-        query: getProjects,
       },
     ],
   };

@@ -31,13 +31,7 @@ import { useLazyQuery, useMutation } from '@apollo/client';
 import {
   createGeneralFinance,
   deleteGeneralFinance,
-  getCustomers,
-  getDepartments,
-  getEmployees,
   getGeneralFinances,
-  getLastNos,
-  getProjects,
-  getResourses,
   updateGeneralFinance,
 } from '../../graphql';
 import {
@@ -49,7 +43,6 @@ import PageLayout from '../main/PageLayout';
 import { SearchTable } from '../../components';
 import { FinanceContext } from '../../contexts';
 import DateNavigatorReports from '../../components/filters/DateNavigatorReports';
-import getTasks from '../../graphql/query/getTasks';
 import { Box, Paper, Typography } from '@material-ui/core';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
 import { TableComponent } from '../../Shared/TableComponent';
@@ -109,7 +102,9 @@ export default function FinanceAllKaid({
     dispatch({ type: 'setEndDate', payload: curDate });
   };
 
-  const [loadFinances, financeData]: any = useLazyQuery(getGeneralFinances);
+  const [loadFinances, financeData]: any = useLazyQuery(getGeneralFinances, {
+    fetchPolicy: 'cache-and-network',
+  });
   const refresQuery = {
     refetchQueries: [
       {
@@ -118,32 +113,6 @@ export default function FinanceAllKaid({
           start: start ? start.setHours(0, 0, 0, 0) : undefined,
           end: end ? end.setHours(23, 59, 59, 999) : undefined,
         },
-      },
-      {
-        query: getLastNos,
-      },
-      {
-        query: getTasks,
-      },
-      {
-        query: getCustomers,
-        variables: { isRTL },
-      },
-      {
-        query: getEmployees,
-        variables: { isRTL, resType: 1 },
-      },
-      {
-        query: getDepartments,
-        variables: { isRTL, depType: 1 },
-      },
-      {
-        query: getResourses,
-        variables: { isRTL, resType: 1 },
-      },
-      {
-        query: getProjects,
-        variables: { isRTL },
       },
     ],
   };

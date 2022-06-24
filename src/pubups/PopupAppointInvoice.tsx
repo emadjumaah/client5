@@ -13,17 +13,7 @@ import ItemsTable from '../Shared/ItemsTable';
 import { PriceTotal } from '../Shared/TotalPrice';
 import { operationTypes } from '../constants';
 import { useMutation } from '@apollo/client';
-import {
-  createInvoice,
-  getCustomers,
-  getDepartments,
-  getEmployees,
-  getInvoices,
-  getLastNos,
-  getProducts,
-  getProjects,
-  getResourses,
-} from '../graphql';
+import { createInvoice, getInvoices, getLastNos } from '../graphql';
 import { accountCode } from '../constants/kaid';
 import PaymentSelect from '../pages/options/PaymentSelect';
 import PopupLayout from '../pages/main/PopupLayout';
@@ -32,7 +22,6 @@ import AutoFieldLocal from '../components/fields/AutoFieldLocal';
 import { CalenderLocal } from '../components';
 import PopupCustomer from './PopupCustomer';
 import { weekdaysNNo } from '../constants/datatypes';
-import getTasks from '../graphql/query/getTasks';
 import useTasks from '../hooks/useTasks';
 import { useReactToPrint } from 'react-to-print';
 import useCompany from '../hooks/useCompany';
@@ -120,31 +109,6 @@ const PopupAppointInvoice = ({
       },
       {
         query: getLastNos,
-      },
-      {
-        query: getTasks,
-      },
-      {
-        query: getCustomers,
-      },
-      {
-        query: getProducts,
-        variables: { isRTL },
-      },
-      {
-        query: getEmployees,
-        variables: { isRTL, resType: 1 },
-      },
-      {
-        query: getDepartments,
-        variables: { isRTL, depType: 1 },
-      },
-      {
-        query: getResourses,
-        variables: { isRTL, resType: 1 },
-      },
-      {
-        query: getProjects,
       },
     ],
   };

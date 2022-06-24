@@ -28,17 +28,7 @@ import {
 import { Command, Loading, PopupEditing } from '../../Shared';
 import { getRowId, updateDocNumbers } from '../../common';
 import { useLazyQuery, useMutation } from '@apollo/client';
-import {
-  createFinance,
-  deleteFinance,
-  getDepartments,
-  getEmployees,
-  getLastNos,
-  getProjects,
-  getResourses,
-  getSuppliers,
-  updateFinance,
-} from '../../graphql';
+import { createFinance, deleteFinance, updateFinance } from '../../graphql';
 import {
   accountFormatter,
   currencyFormatter,
@@ -53,7 +43,6 @@ import { ReceiptContext } from '../../contexts';
 import DateNavigatorReports from '../../components/filters/DateNavigatorReports';
 import getPayments from '../../graphql/query/getPayments';
 import useTasks from '../../hooks/useTasks';
-import getTasks from '../../graphql/query/getTasks';
 import { Box, Paper, Typography } from '@material-ui/core';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
 import { TableComponent } from '../../Shared/TableComponent';
@@ -109,7 +98,9 @@ export default function Payment({ isRTL, words, menuitem, theme, company }) {
     dispatch({ type: 'setEndDate', payload: curDate });
   };
 
-  const [loadFinances, financeData]: any = useLazyQuery(getPayments);
+  const [loadFinances, financeData]: any = useLazyQuery(getPayments, {
+    fetchPolicy: 'cache-and-network',
+  });
   const { accounts } = useAccounts();
   const refresQuery = {
     refetchQueries: [
@@ -119,30 +110,6 @@ export default function Payment({ isRTL, words, menuitem, theme, company }) {
           start: start ? start.setHours(0, 0, 0, 0) : undefined,
           end: end ? end.setHours(23, 59, 59, 999) : undefined,
         },
-      },
-      {
-        query: getLastNos,
-      },
-      {
-        query: getTasks,
-      },
-      {
-        query: getSuppliers,
-      },
-      {
-        query: getEmployees,
-        variables: { isRTL, resType: 1 },
-      },
-      {
-        query: getDepartments,
-        variables: { isRTL, depType: 1 },
-      },
-      {
-        query: getResourses,
-        variables: { isRTL, resType: 1 },
-      },
-      {
-        query: getProjects,
       },
     ],
   };
