@@ -10,9 +10,9 @@ import {
 } from '../Shared/colorFormat';
 import { carlist, custlist } from './lists';
 
-const printcolor = '#333';
+const printcolor = '#0E9DAD';
 
-export class ContractPrint extends React.PureComponent<any, any> {
+export class SVContractPrint extends React.PureComponent<any, any> {
   renderHeader = (company: any) => (
     <Grid item xs={12}>
       <img
@@ -41,6 +41,32 @@ export class ContractPrint extends React.PureComponent<any, any> {
     </Grid>
   );
 
+  renderCarFooter = () => (
+    <img
+      src={
+        'https://res.cloudinary.com/fivegstore/image/upload/v1649414122/car_2_gs0d21.png'
+      }
+      alt={'car'}
+      height="auto"
+      width="100%"
+      style={{
+        objectFit: 'contain',
+      }}
+    />
+  );
+  renderCarTameen = () => (
+    <img
+      src={
+        'https://res.cloudinary.com/fivegstore/image/upload/v1649415448/tameen_evlk8b.png'
+      }
+      alt={'car insurance'}
+      height="auto"
+      width="100%"
+      style={{
+        objectFit: 'contain',
+      }}
+    />
+  );
   renderNotes = (info: any, isRTL: any) => {
     const notes = info?.[2]?.value;
     return (
@@ -49,10 +75,23 @@ export class ContractPrint extends React.PureComponent<any, any> {
       </Box>
     );
   };
+  renderSignatureFooter = () => (
+    <img
+      src={
+        'https://res.cloudinary.com/fivegstore/image/upload/v1647785315/signature_xjbt4u.png'
+      }
+      alt={'car'}
+      height="auto"
+      width="100%"
+      style={{
+        objectFit: 'contain',
+      }}
+    />
+  );
   renderBunud = () => (
     <img
       src={
-        'https://res.cloudinary.com/jadwalio/image/upload/v1656146342/bunud2_gufzye.png'
+        'https://res.cloudinary.com/fivegstore/image/upload/v1647780352/bunud_x6o6im.png'
       }
       alt={'car'}
       height="auto"
@@ -64,8 +103,11 @@ export class ContractPrint extends React.PureComponent<any, any> {
   );
   renderPetrol = () => (
     <img
+      // src={
+      //   'https://res.cloudinary.com/fivegstore/image/upload/v1648541509/petrol_dsgxej.jpg'
+      // }
       src={
-        'https://res.cloudinary.com/jadwalio/image/upload/v1656146821/footerbig2_hgdooi.png'
+        'https://res.cloudinary.com/fivegstore/image/upload/v1652033731/footerbig_qciqee.png'
       }
       alt={'car'}
       height="auto"
@@ -193,7 +235,8 @@ export class ContractPrint extends React.PureComponent<any, any> {
               direction: 'rtl',
               display: 'flex',
               flexDirection: 'column',
-              color: printcolor,
+              backgroundColor: '#0E9DAD',
+              color: '#fff',
               fontSize: 10,
               height: 30,
             }}
@@ -240,7 +283,8 @@ export class ContractPrint extends React.PureComponent<any, any> {
               direction: 'ltr',
               display: 'flex',
               alignItems: 'center',
-              color: printcolor,
+              backgroundColor: '#0E9DAD',
+              color: '#fff',
               fontSize: 9,
               height: 26,
               paddingRight: 2,
@@ -275,7 +319,8 @@ export class ContractPrint extends React.PureComponent<any, any> {
               direction: 'rtl',
               display: 'flex',
               alignItems: 'center',
-              color: printcolor,
+              backgroundColor: '#0E9DAD',
+              color: '#fff',
               fontSize: 9,
               height: 26,
               paddingRight: 2,
@@ -439,7 +484,8 @@ export class ContractPrint extends React.PureComponent<any, any> {
               justifyContent: 'center',
               fontSize: 11,
               flexDirection: 'column',
-              color: printcolor,
+              backgroundColor: '#0E9DAD',
+              color: '#fff',
               height: 60,
             }}
           >
@@ -477,7 +523,8 @@ export class ContractPrint extends React.PureComponent<any, any> {
               paddingRight: 5,
               fontSize: 10,
               flexDirection: 'column',
-              color: printcolor,
+              backgroundColor: '#0E9DAD',
+              color: '#fff',
               height: 30,
             }}
           >
@@ -495,7 +542,8 @@ export class ContractPrint extends React.PureComponent<any, any> {
               justifyContent: 'center',
               fontSize: 11,
               flexDirection: 'column',
-              color: printcolor,
+              backgroundColor: '#0E9DAD',
+              color: '#fff',
               height: 30,
             }}
           >
@@ -556,7 +604,8 @@ export class ContractPrint extends React.PureComponent<any, any> {
               paddingRight: 5,
               fontSize: 10,
               flexDirection: 'column',
-              color: printcolor,
+              backgroundColor: '#0E9DAD',
+              color: '#fff',
               height: 30,
             }}
           >
@@ -608,7 +657,8 @@ export class ContractPrint extends React.PureComponent<any, any> {
               paddingRight: 5,
               fontSize: 10,
               flexDirection: 'column',
-              color: printcolor,
+              backgroundColor: '#0E9DAD',
+              color: '#fff',
               height: 30,
             }}
           >
@@ -662,7 +712,8 @@ export class ContractPrint extends React.PureComponent<any, any> {
               paddingRight: 5,
               fontSize: 10,
               flexDirection: 'column',
-              color: printcolor,
+              backgroundColor: '#0E9DAD',
+              color: '#fff',
               height: 30,
             }}
           >
@@ -748,6 +799,7 @@ export class ContractPrint extends React.PureComponent<any, any> {
                 </Grid>
               </Box>
               {this.renderDivider(5)}
+              {this.renderFooter(company)}
             </Grid>
           </Grid>
         </Box>

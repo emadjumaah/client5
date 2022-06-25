@@ -79,7 +79,9 @@ export default function TasksCustomer({
   const [item, setItem] = useState(null);
   const [openItem, setOpenItem] = useState(false);
 
-  const [loadTasks, tasksData]: any = useLazyQuery(getTasks);
+  const [loadTasks, tasksData]: any = useLazyQuery(getTasks, {
+    fetchPolicy: 'cache-and-network',
+  });
 
   useEffect(() => {
     if (openItem) {

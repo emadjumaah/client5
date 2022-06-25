@@ -434,6 +434,7 @@ export class ReceiptPrint extends React.PureComponent<any, any> {
               <Box ml={6} mr={6}>
                 <Grid container spacing={2}>
                   {this.renderTitle(data)}
+                  {this.renderDivider(3)}
                   {this.renderRows(data)}
                   {this.renderFooter(data)}
                 </Grid>
@@ -441,14 +442,14 @@ export class ReceiptPrint extends React.PureComponent<any, any> {
             </Grid>
           </Grid>
         </Box>
-        <Box mt={2}>
+        <Box mt={8}>
           <Grid container spacing={0}>
             {this.renderHeader(company)}
             <Grid item xs={12}>
               <Box ml={6} mr={6}>
                 <Grid container spacing={2}>
                   {this.renderTitle(data)}
-                  {this.renderDivider(1)}
+                  {this.renderDivider(3)}
                   {this.renderRows(data)}
                   {this.renderFooter(data)}
                 </Grid>

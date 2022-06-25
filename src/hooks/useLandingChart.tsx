@@ -19,7 +19,7 @@ export default () => {
   const isRTL = lang === 'ar' ? true : false;
 
   const [freshChartData, chartData]: any = useLazyQuery(getLandingChartData, {
-    // fetchPolicy: 'cache-and-network',
+    fetchPolicy: 'cache-and-network',
   });
   const { departments } = useDepartments();
 

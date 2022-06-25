@@ -1,3 +1,11 @@
+// 1 general
+// 2 salon
+// 3 education
+// 4 rentcar
+// 5 cleaning
+// 6 contracting
+// 7 realestate
+// 8 services
 export const templates = [
   {
     id: 1,

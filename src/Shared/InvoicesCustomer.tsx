@@ -105,7 +105,9 @@ export default function InvoicesCustomer({
   const { resourses } = useResoursesUp();
   const { services } = useServices();
 
-  const [loadInvoices, opData]: any = useLazyQuery(getInvoices);
+  const [loadInvoices, opData]: any = useLazyQuery(getInvoices, {
+    fetchPolicy: 'cache-and-network',
+  });
 
   const refresQuery = {
     refetchQueries: [

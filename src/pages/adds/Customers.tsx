@@ -98,7 +98,9 @@ export default function Customers(props: any) {
     { name: 'avatar', title: words.color },
   ]);
 
-  const [loadCusts, custssData]: any = useLazyQuery(getCustomers);
+  const [loadCusts, custssData]: any = useLazyQuery(getCustomers, {
+    fetchPolicy: 'cache-and-network',
+  });
 
   const refresQuery = {
     refetchQueries: [

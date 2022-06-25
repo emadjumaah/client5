@@ -441,7 +441,14 @@ const PopupTaskAppointment = ({
             resourseColor: undefined,
           },
     };
-    const eventlist = getEventsList({ event, rrule, actionslist, isRTL });
+    const eventlist = getEventsList({
+      event,
+      rrule,
+      actionslist,
+      isRTL,
+      start: new Date(), // todo
+      byweekday: [], // todo
+    });
     addEventsToList(eventlist);
     onCloseForm();
   };

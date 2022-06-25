@@ -158,7 +158,9 @@ export default function EventsCustomer({
     ],
   };
 
-  const [getEvents, eventsData]: any = useLazyQuery(getObjectEvents);
+  const [getEvents, eventsData]: any = useLazyQuery(getObjectEvents, {
+    fetchPolicy: 'cache-and-network',
+  });
 
   useEffect(() => {
     const variables = {

@@ -113,7 +113,9 @@ export default function ExpensesCustomer({
   const { employees } = useEmployeesUp();
   const { resourses } = useResoursesUp();
 
-  const [loadExpenses, expensesData]: any = useLazyQuery(getExpenses);
+  const [loadExpenses, expensesData]: any = useLazyQuery(getExpenses, {
+    fetchPolicy: 'cache-and-network',
+  });
   const refresQuery = {
     refetchQueries: [
       {

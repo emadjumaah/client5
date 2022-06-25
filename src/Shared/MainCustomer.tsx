@@ -183,86 +183,84 @@ export default function MainCustomer({
               </Grid>
             </Box>
             <Box>
-              {!isTask && (
-                <Box
-                  display="flex"
-                  borderRadius={15}
-                  style={{
-                    alignItems: 'center',
-                    backgroundColor: colors.indigo[50],
-                    height: 145,
-                    paddingLeft: 10,
-                    paddingRight: 10,
-                  }}
-                >
-                  {!isSupp && (
-                    <Box style={{ width: 250, marginLeft: 15 }}>
-                      {appointmentsFormatter({
-                        row,
-                        theme,
-                        isRTL,
-                        height: 120,
-                        bc: '#bbb',
-                      })}
-                    </Box>
-                  )}
-                  {!isSupp && (
-                    <Box style={{ width: 250, marginLeft: 15 }}>
-                      {salesFormatter({
-                        row,
-                        theme,
-                        isRTL,
-                        height: 120,
-                        bc: '#bbb',
-                      })}
-                    </Box>
-                  )}
-                  {!isCust && (
-                    <Box style={{ width: 250, marginLeft: 15 }}>
-                      {purchaseFormatter({
-                        row,
-                        theme,
-                        isRTL,
-                        height: 120,
-                        bc: '#bbb',
-                      })}
-                    </Box>
-                  )}
-                  {!isCust && !isSupp && (
-                    <Box style={{ width: 250, marginLeft: 15 }}>
-                      {expensesFormatter({
-                        row,
-                        theme,
-                        isRTL,
-                        height: 120,
-                        bc: '#bbb',
-                      })}
-                    </Box>
-                  )}
-                  {!isCust && !isSupp && (
-                    <Box style={{ width: 250, marginLeft: 15 }}>
-                      {kaidsFormatter({
-                        row,
-                        theme,
-                        isRTL,
-                        height: 120,
-                        bc: '#bbb',
-                      })}
-                    </Box>
-                  )}
-                  {!isSupp && (
-                    <Box style={{ width: 250, marginLeft: 15 }}>
-                      {incomeFormatter({
-                        row,
-                        theme,
-                        isRTL,
-                        height: 120,
-                        bc: '#bbb',
-                      })}
-                    </Box>
-                  )}
-                </Box>
-              )}
+              <Box
+                display="flex"
+                borderRadius={15}
+                style={{
+                  alignItems: 'center',
+                  backgroundColor: colors.indigo[50],
+                  height: 145,
+                  paddingLeft: 10,
+                  paddingRight: 10,
+                }}
+              >
+                {!isSupp && (
+                  <Box style={{ width: 250, marginLeft: 15 }}>
+                    {appointmentsFormatter({
+                      row,
+                      theme,
+                      isRTL,
+                      height: 120,
+                      bc: '#bbb',
+                    })}
+                  </Box>
+                )}
+                {!isSupp && (
+                  <Box style={{ width: 250, marginLeft: 15 }}>
+                    {salesFormatter({
+                      row,
+                      theme,
+                      isRTL,
+                      height: 120,
+                      bc: '#bbb',
+                    })}
+                  </Box>
+                )}
+                {!isCust && !isTask && (
+                  <Box style={{ width: 250, marginLeft: 15 }}>
+                    {purchaseFormatter({
+                      row,
+                      theme,
+                      isRTL,
+                      height: 120,
+                      bc: '#bbb',
+                    })}
+                  </Box>
+                )}
+                {!isCust && !isSupp && (
+                  <Box style={{ width: 250, marginLeft: 15 }}>
+                    {expensesFormatter({
+                      row,
+                      theme,
+                      isRTL,
+                      height: 120,
+                      bc: '#bbb',
+                    })}
+                  </Box>
+                )}
+                {!isCust && !isSupp && (
+                  <Box style={{ width: 250, marginLeft: 15 }}>
+                    {kaidsFormatter({
+                      row,
+                      theme,
+                      isRTL,
+                      height: 120,
+                      bc: '#bbb',
+                    })}
+                  </Box>
+                )}
+                {!isSupp && (
+                  <Box style={{ width: 250, marginLeft: 15 }}>
+                    {incomeFormatter({
+                      row,
+                      theme,
+                      isRTL,
+                      height: 120,
+                      bc: '#bbb',
+                    })}
+                  </Box>
+                )}
+              </Box>
             </Box>
           </Box>
         )}

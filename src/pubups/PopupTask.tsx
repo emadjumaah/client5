@@ -48,7 +48,7 @@ import ServiceItemForm from '../Shared/ServiceItemForm';
 import ItemsTable from '../Shared/ItemsTable';
 import { invoiceClasses } from '../themes';
 import { SelectLocal } from '../pages/calendar/common/SelectLocal';
-import { intervalOptions } from '../constants/rrule';
+import { byweekdayOptions, intervalOptions } from '../constants/rrule';
 import RRule from 'rrule';
 import getRruleData from '../common/getRruleData';
 import { getEventsList } from '../common/helpers';
@@ -57,6 +57,7 @@ import { useReactToPrint } from 'react-to-print';
 import DeleteOutlinedIcon from '@material-ui/icons/DeleteOutlined';
 import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
 import PopupAction from './PopupAction';
+import SelectMulti from '../Shared/SelectMulti';
 
 export const indexTheList = (list: any) => {
   return list.map((item: any, index: any) => {
@@ -137,6 +138,8 @@ const PopupTask = ({
 
   const [itemsList, setItemsList] = useState<any>([]);
   const [rrule, setRrule] = useState<any>(null);
+  const [weekdays, setWeekdays] = useState([]);
+  const [byweekday, setByweekday] = useState([]);
 
   const [freq, setFreq] = useState(RRule.DAILY);
   const [count, setCount] = useState(1);
@@ -265,10 +268,23 @@ const PopupTask = ({
   }, [taskExtra]);
 
   useEffect(() => {
+    if (weekdays && weekdays.length > 0) {
+      const bwd = weekdays.map((wd: any) => wd.value);
+      setByweekday(bwd);
+    }
+  }, [weekdays]);
+  useEffect(() => {
+    if (freq !== RRule.WEEKLY) {
+      setWeekdays([]);
+      setByweekday([]);
+    }
+  }, [freq]);
+
+  useEffect(() => {
     if (isNew) {
       const rdata = getRruleData({
         freq,
-        byweekday: undefined,
+        byweekday: byweekday.length > 0 ? byweekday : undefined,
         dtstart: start,
         until: null,
         interval,
@@ -276,7 +292,7 @@ const PopupTask = ({
       });
       setRrule(rdata);
     }
-  }, [start, freq, count, interval]);
+  }, [start, freq, count, interval, byweekday]);
 
   useEffect(() => {
     if (isNew && rrule?.all && rrule?.all?.length > 0) {
@@ -577,7 +593,14 @@ const PopupTask = ({
         items: JSON.stringify(itemsList),
         user: user._id,
       };
-      const eventlist = getEventsList({ event, rrule, actionslist, isRTL });
+      const eventlist = getEventsList({
+        start,
+        event,
+        rrule,
+        actionslist,
+        isRTL,
+        byweekday,
+      });
       const sorted = _.sortBy(eventlist, 'startDate');
       const listwithindex = indexTheList(sorted);
       setEvList(listwithindex);
@@ -737,7 +760,11 @@ const PopupTask = ({
       onSubmit={onHandleSubmit}
       theme={theme}
       alrt={alrt}
-      print={!isNew ? handleReactPrint : undefined}
+      print={
+        !isNew && [4, 5, 7, 8].includes(company?.tempId)
+          ? handleReactPrint
+          : undefined
+      }
       maxWidth={isNew ? 'lg' : 'xl'}
       fullWidth
       preventclose
@@ -772,6 +799,19 @@ const PopupTask = ({
                   ></SelectLocal>
                 )}
               </Grid>
+              {freq === RRule.WEEKLY && (
+                <Grid item xs={3} style={{ marginTop: 18 }}>
+                  <SelectMulti
+                    options={byweekdayOptions}
+                    value={weekdays}
+                    setValue={setWeekdays}
+                    words={words}
+                    isRTL={isRTL}
+                    name="weekdays"
+                    width={180}
+                  ></SelectMulti>
+                </Grid>
+              )}
               <Grid item xs={2} style={{ marginTop: 10 }}>
                 {isNew && (
                   <TextFieldLocal
@@ -799,6 +839,7 @@ const PopupTask = ({
                   />
                 )}
               </Grid>
+              {freq !== RRule.WEEKLY && <Grid item xs={3}></Grid>}
               <Grid item xs={3}>
                 {rrule?.all && (
                   <CalenderLocal
@@ -814,7 +855,7 @@ const PopupTask = ({
                   ></CalenderLocal>
                 )}
               </Grid>
-              <Grid item xs={8}>
+              <Grid item xs={9}>
                 <TextFieldLocal
                   required
                   autoFocus={true}

@@ -75,7 +75,7 @@ export default function KaidsCustomer({
   const { tasks } = useTasks();
 
   const [loadKaids, kaidsData]: any = useLazyQuery(getGereralKaids, {
-    // fetchPolicy: 'cache-and-network',
+    fetchPolicy: 'cache-and-network',
   });
 
   useEffect(() => {

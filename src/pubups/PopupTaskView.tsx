@@ -381,7 +381,11 @@ const PopupTaskView = ({
       theme={theme}
       alrt={{}}
       maxWidth={'xl'}
-      print={!isNew ? handleReactPrint : undefined}
+      print={
+        !isNew && [4, 5, 7, 8].includes(company?.tempId)
+          ? handleReactPrint
+          : undefined
+      }
       mb={0}
       mt={0}
       onlyclose

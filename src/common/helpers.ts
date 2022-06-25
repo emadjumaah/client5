@@ -83,7 +83,14 @@ export const getparentAccountsNames = () => {
   return numberlist;
 };
 
-export const getEventsList = ({ event, rrule, actionslist, isRTL }) => {
+export const getEventsList = ({
+  event,
+  rrule,
+  actionslist,
+  isRTL,
+  start,
+  byweekday,
+}) => {
   if (!event) {
     return [];
   }
@@ -95,6 +102,9 @@ export const getEventsList = ({ event, rrule, actionslist, isRTL }) => {
     const endhour = event.endDate.getHours();
     const endminute = event.endDate.getMinutes();
     const dates = rrule.all;
+    if (byweekday?.length > 0 && dates?.[0] !== start) {
+      dates.unshift(start);
+    }
     const ritems = JSON.parse(event.items);
     const isTitle = event?.title && event?.title?.trim()?.length > 0;
     const title = isTitle

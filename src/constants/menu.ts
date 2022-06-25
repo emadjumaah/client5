@@ -150,7 +150,7 @@ export const mainmenu = [
     icon: 'expenses',
     req: null,
     dep: null,
-    role: menuRoles.operateWriter,
+    role: menuRoles.financeWriter,
     subMenu: [
       {
         id: 21,
@@ -219,7 +219,7 @@ export const mainmenu = [
     icon: 'inventory',
     req: null,
     dep: null,
-    role: menuRoles.operateWriter,
+    role: menuRoles.financeWriter,
     subMenu: [
       {
         id: 31,
@@ -299,6 +299,7 @@ export const mainmenu = [
     icon: 'expenses',
     req: 'pos',
     dep: null,
+    role: menuRoles.financeWriter,
     subMenu: [
       {
         id: 41,
@@ -347,6 +348,7 @@ export const mainmenu = [
     icon: 'business',
     req: 'pos',
     dep: null,
+    role: menuRoles.financeWriter,
     subMenu: [
       {
         id: 51,
@@ -406,6 +408,7 @@ export const mainmenu = [
     icon: 'add',
     req: null,
     dep: null,
+    role: menuRoles.writer,
     subMenu: [
       {
         id: 61,
@@ -449,6 +452,7 @@ export const mainmenu = [
         titleEn: 'Items Report',
         req: 'cal',
         dep: 'pos',
+        role: menuRoles.writer,
       },
     ],
   },
@@ -499,6 +503,7 @@ export const mainmenu = [
     icon: 'email',
     req: 'pos',
     dep: null,
+    role: menuRoles.writer,
     subMenu: [
       {
         id: 81,
@@ -529,6 +534,7 @@ export const mainmenu = [
         req: 'pos',
         icon: 'email',
         dep: null,
+        role: menuRoles.editor,
       },
       {
         id: 84,
@@ -539,6 +545,7 @@ export const mainmenu = [
         icon: 'camp',
         req: 'pos',
         dep: null,
+        role: menuRoles.editor,
       },
     ],
   },
@@ -549,10 +556,10 @@ export const mainmenu = [
     uri: 'users',
     titleAr: 'المستخدمين',
     titleEn: 'Users',
-    role: menuRoles.branchAdmin,
     icon: 'user',
     req: null,
     dep: null,
+    role: menuRoles.branchAdmin,
   },
   {
     id: 10,
