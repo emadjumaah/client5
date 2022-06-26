@@ -33,6 +33,7 @@ import {
   covertToTimeDateDigit,
   createdAtFormatter,
   currencyFormatter,
+  moneyFormat,
   opTypeFormatter,
   taskIdFormatter,
 } from '../../Shared/colorFormat';
@@ -164,10 +165,6 @@ export default function FinanceReport({
   const setAccvalueDispatch = (value: any) => {
     dispatch({ type: 'setAccvalue', payload: value ? [value] : [] });
   };
-
-  // const setPaccvalueDispatch = (value: any) => {
-  //   dispatch({ type: 'setPaccvalue', payload: value ? [value] : [] });
-  // };
 
   useEffect(() => {
     const slsData = summaryData?.data?.['getMonthlyReport']?.data || [];
@@ -303,8 +300,8 @@ export default function FinanceReport({
           <Box
             style={{
               position: 'absolute',
-              left: isRTL ? 340 : undefined,
-              right: isRTL ? undefined : 340,
+              left: isRTL ? 360 : undefined,
+              right: isRTL ? undefined : 360,
               top: 51,
               zIndex: 112,
             }}
@@ -356,10 +353,10 @@ export default function FinanceReport({
               isRTL={isRTL}
               name="account"
               nomulti
-              width={350}
+              width={250}
             ></FilterSelectCkeckBox>
           </Box>
-          <Box style={{ marginLeft: 50, marginRight: 50 }}>
+          <Box style={{ marginLeft: 10, marginRight: 10 }}>
             <FormControlLabel
               control={
                 <Checkbox
@@ -380,6 +377,20 @@ export default function FinanceReport({
               style={{ fontSize: 14 }}
             />
           </Box>
+        </Box>
+        <Box
+          style={{
+            position: 'absolute',
+            zIndex: 111,
+            right: isRTL ? undefined : 420,
+            left: isRTL ? 420 : undefined,
+            marginTop: 12,
+          }}
+        >
+          <Typography style={{ fontWeight: 'bold', color: '#403795' }}>
+            {isRTL ? 'الرصيد' : 'Balance'}:{' '}
+            {moneyFormat(rows?.[rows?.length - 1]?.rased)}
+          </Typography>
         </Box>
         <Grid rows={rows} columns={columns} getRowId={getRowId}>
           <SortingState
@@ -411,7 +422,7 @@ export default function FinanceReport({
           />
           <TableColumnVisibility
             columnExtensions={tableColumnVisibilityColumnExtensions}
-            defaultHiddenColumnNames={[col.amount.name]}
+            defaultHiddenColumnNames={[col.amount.name, col.rased.name]}
           />
           <DataTypeProvider
             for={['opTime']}

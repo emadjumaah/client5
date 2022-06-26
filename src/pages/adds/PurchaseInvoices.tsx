@@ -38,6 +38,7 @@ import { useLazyQuery, useMutation } from '@apollo/client';
 import {
   amountFormatter,
   currencyFormatter,
+  moneyFormat,
   timeFormatter,
 } from '../../Shared/colorFormat';
 import { getColumns } from '../../common/columns';
@@ -54,6 +55,7 @@ import useResoursesUp from '../../hooks/useResoursesUp';
 import useTasks from '../../hooks/useTasks';
 import { Box, Paper, Typography } from '@material-ui/core';
 import { TableComponent } from '../../Shared/ItemsTable';
+import _ from 'lodash';
 
 export default function PurchaseInvoices({
   isRTL,
@@ -107,6 +109,7 @@ export default function PurchaseInvoices({
   ]);
 
   const [rows, setRows] = useState([]);
+  const [sum, setSum] = useState(0);
   const [loading, setLoading] = useState(false);
   const [start, setStart] = useState<any>(null);
   const [end, setEnd] = useState<any>(null);
@@ -185,6 +188,8 @@ export default function PurchaseInvoices({
     if (opData?.data?.getPurchaseInvoices?.data) {
       const { data } = opData.data.getPurchaseInvoices;
       const rdata = updateDocNumbers(data);
+      const samount = _.sumBy(rdata, 'amount');
+      setSum(samount);
       setRows(rdata);
       setLoading(false);
     }
@@ -232,6 +237,19 @@ export default function PurchaseInvoices({
             words={words}
             theme={theme}
           ></DateNavigatorReports>
+        </Box>
+        <Box
+          style={{
+            position: 'absolute',
+            zIndex: 111,
+            right: isRTL ? undefined : 160,
+            left: isRTL ? 160 : undefined,
+            bottom: 25,
+          }}
+        >
+          <Typography style={{ fontWeight: 'bold', color: '#403795' }}>
+            {isRTL ? ' المجموع ' : ' Total '}: {moneyFormat(sum)}
+          </Typography>
         </Box>
         <Paper
           elevation={5}

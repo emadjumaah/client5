@@ -33,6 +33,7 @@ import {
   accountFormatter,
   currencyFormatter,
   customerAccountFormatter,
+  moneyFormat,
   samllFormatter,
   timeFormatter,
 } from '../../Shared/colorFormat';
@@ -47,6 +48,7 @@ import useTasks from '../../hooks/useTasks';
 import { Box, Paper, Typography } from '@material-ui/core';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
 import { TableComponent } from '../../Shared/TableComponent';
+import _ from 'lodash';
 
 export default function Receipt({ isRTL, words, menuitem, theme, company }) {
   const [columns] = useState([
@@ -75,6 +77,7 @@ export default function Receipt({ isRTL, words, menuitem, theme, company }) {
   const [pageSizes] = useState([5, 10, 20, 50, 0]);
 
   const [rows, setRows] = useState([]);
+  const [sum, setSum] = useState(0);
   const [loading, setLoading] = useState(false);
 
   const [start, setStart] = useState<any>(null);
@@ -141,6 +144,8 @@ export default function Receipt({ isRTL, words, menuitem, theme, company }) {
     if (financeData?.data?.getReceipts?.data) {
       const { data } = financeData.data.getReceipts;
       const rdata = updateDocNumbers(data);
+      const samount = _.sumBy(rdata, 'amount');
+      setSum(samount);
       setRows(rdata);
       setLoading(false);
     }
@@ -188,6 +193,19 @@ export default function Receipt({ isRTL, words, menuitem, theme, company }) {
             words={words}
             theme={theme}
           ></DateNavigatorReports>
+        </Box>
+        <Box
+          style={{
+            position: 'absolute',
+            zIndex: 111,
+            right: isRTL ? undefined : 160,
+            left: isRTL ? 160 : undefined,
+            bottom: 25,
+          }}
+        >
+          <Typography style={{ fontWeight: 'bold', color: '#403795' }}>
+            {isRTL ? ' المجموع ' : ' Total '}: {moneyFormat(sum)}
+          </Typography>
         </Box>
         <Paper
           elevation={5}

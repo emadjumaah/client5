@@ -37,6 +37,7 @@ import {
 import {
   accountFormatter,
   currencyFormatter,
+  moneyFormat,
   samllFormatter,
   taskIdFormatter,
   timeFormatter,
@@ -56,6 +57,7 @@ import useEmployeesUp from '../../hooks/useEmployeesUp';
 import useResoursesUp from '../../hooks/useResoursesUp';
 import { useProducts, useTemplate } from '../../hooks';
 import PopupExpProducts from '../../pubups/PopupExpProducts';
+import _ from 'lodash';
 
 export default function ExpProducts({
   isRTL,
@@ -112,6 +114,8 @@ export default function ExpProducts({
   ]);
   const [pageSizes] = useState([5, 10, 20, 50, 0]);
   const [rows, setRows] = useState([]);
+  const [sum, setSum] = useState(0);
+
   const [loading, setLoading] = useState(false);
 
   const [start, setStart] = useState<any>(null);
@@ -186,6 +190,8 @@ export default function ExpProducts({
     if (expensesData?.data?.getExpenses?.data) {
       const { data } = expensesData.data.getExpenses;
       const rdata = updateDocNumbers(data);
+      const samount = _.sumBy(rdata, 'amount');
+      setSum(samount);
       setRows(rdata);
       setLoading(false);
     }
@@ -233,6 +239,19 @@ export default function ExpProducts({
             words={words}
             theme={theme}
           ></DateNavigatorReports>
+        </Box>
+        <Box
+          style={{
+            position: 'absolute',
+            zIndex: 111,
+            right: isRTL ? undefined : 160,
+            left: isRTL ? 160 : undefined,
+            bottom: 25,
+          }}
+        >
+          <Typography style={{ fontWeight: 'bold', color: '#403795' }}>
+            {isRTL ? ' المجموع ' : ' Total '}: {moneyFormat(sum)}
+          </Typography>
         </Box>
         <Paper
           elevation={5}

@@ -238,6 +238,14 @@ export class ReceiptPrint extends React.PureComponent<any, any> {
             borderTop={0}
           >
             <Typography>{data.title}</Typography>
+            <Typography style={{ marginRight: 20 }}>
+              {data?.invoice?.docNo
+                ? `Invoice No${data?.invoice?.docNo}, `
+                : ``}
+              {data?.invoice?.amount
+                ? `Amount: ${data?.invoice?.amount} QR`
+                : ``}
+            </Typography>
           </Box>
         </Grid>
         <Grid item xs={2}>
@@ -268,19 +276,24 @@ export class ReceiptPrint extends React.PureComponent<any, any> {
             borderLeft={0}
             borderTop={0}
           >
-            <Typography style={{ marginRight: 20 }}>
-              {data?.invoice?.docNo
-                ? `Invoice No فاتورة رقم ${data?.invoice?.docNo} `
-                : ``}
-              {data?.invoice?.amount
-                ? ` Amount: ${data?.invoice?.amount} QR`
-                : ``}
-            </Typography>
-            <Typography>{` ${simpleDateFormatterData(
-              data?.invoice?.periodfrom
-            )} - ${simpleDateFormatterData(
-              data?.invoice?.periodto
-            )}`}</Typography>
+            {data?.invoice?.periodfrom && data?.invoice?.periodto && (
+              <Box>
+                <Typography>{`Contract: ${simpleDateFormatterData(
+                  data?.invoice?.periodfrom
+                )} - ${simpleDateFormatterData(
+                  data?.invoice?.periodto
+                )}`}</Typography>
+              </Box>
+            )}
+            {data?.invoice?.resourseName && (
+              <Box>
+                <Typography style={{ marginLeft: 10, marginRight: 10 }}>
+                  {data.isRTL
+                    ? data?.invoice?.resourseNameAr
+                    : data?.invoice?.resourseName}
+                </Typography>
+              </Box>
+            )}
           </Box>
         </Grid>
         <Grid item xs={2}>
@@ -434,7 +447,7 @@ export class ReceiptPrint extends React.PureComponent<any, any> {
               <Box ml={6} mr={6}>
                 <Grid container spacing={2}>
                   {this.renderTitle(data)}
-                  {this.renderDivider(3)}
+                  {/* {this.renderDivider(1)} */}
                   {this.renderRows(data)}
                   {this.renderFooter(data)}
                 </Grid>
@@ -442,14 +455,14 @@ export class ReceiptPrint extends React.PureComponent<any, any> {
             </Grid>
           </Grid>
         </Box>
-        <Box mt={8}>
+        <Box mt={0}>
           <Grid container spacing={0}>
             {this.renderHeader(company)}
             <Grid item xs={12}>
               <Box ml={6} mr={6}>
                 <Grid container spacing={2}>
                   {this.renderTitle(data)}
-                  {this.renderDivider(3)}
+                  {/* {this.renderDivider(1)} */}
                   {this.renderRows(data)}
                   {this.renderFooter(data)}
                 </Grid>

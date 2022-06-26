@@ -11,9 +11,7 @@ import {
   SortingState,
   IntegratedSorting,
   DataTypeProvider,
-  GroupingState,
   SummaryState,
-  IntegratedGrouping,
   IntegratedSummary,
   SearchState,
   IntegratedFiltering,
@@ -26,7 +24,6 @@ import {
   ExportPanel,
   TableColumnVisibility,
   ColumnChooser,
-  TableGroupRow,
   TableSummaryRow,
   SearchPanel,
 } from '@devexpress/dx-react-grid-material-ui';
@@ -36,12 +33,15 @@ import {
   covertToTimeDateDigit,
   createdAtFormatter,
   currencyFormatterEmpty,
+  moneyFormat,
   opTypeFormatter,
   taskIdFormatter,
 } from '../../Shared/colorFormat';
 import {
   Box,
+  Checkbox,
   fade,
+  FormControlLabel,
   IconButton,
   Typography,
   withStyles,
@@ -89,6 +89,7 @@ export default function CustomerReport({
   const [end, setEnd] = useState<any>(null);
 
   const [rows, setRows] = useState([]);
+  const [isRaseed, setIsRaseed] = useState(true);
 
   const col = getColumns({ isRTL, words });
 
@@ -174,7 +175,8 @@ export default function CustomerReport({
       summaryData?.data?.['getCustMonthlyReport']?.message || null;
     const updatedRows = slsData.map((x: any) => x);
 
-    const amount = balance ? JSON.parse(balance) : null;
+    const amount = isRaseed && balance ? JSON.parse(balance) : null;
+
     if (amount !== null) {
       const { credit, debit } = amount;
 
@@ -206,7 +208,7 @@ export default function CustomerReport({
         : [];
 
     setRows(updatedRows2);
-  }, [summaryData]);
+  }, [summaryData, isRaseed]);
 
   const getIds = (list: any) =>
     list && list?.length > 0 ? list.map((sv: any) => sv._id) : undefined;
@@ -260,43 +262,9 @@ export default function CustomerReport({
   const setSortDispatch = (value: any) => {
     dispatch({ type: 'setSort', payload: value });
   };
-
   const totalSummaryItems = [
     { columnName: 'credit', type: 'sum' },
     { columnName: 'debit', type: 'sum' },
-  ];
-  // const [totalSummaryItems] = useState([
-  //   { columnName: columnName, type: "count" },
-  //   { columnName: "qty", type: "count" },
-  //   { columnName: "amount", type: "sum" },
-  // ]);
-  const grouping = [{ columnName: sumcolumn }];
-  // const [grouping] = useState([{ columnName: sumcolumn }]);
-  const groupSummaryItems = [
-    {
-      columnName: col.category.name,
-      type: 'count',
-      alignByColumn: true,
-      // showInGroupFooter: true,
-    },
-    {
-      columnName: 'amount',
-      type: 'sum',
-      // showInGroupFooter: true,
-      alignByColumn: true,
-    },
-    {
-      columnName: col.category.name,
-      type: 'count',
-      // alignByColumn: true,
-      showInGroupFooter: true,
-    },
-    {
-      columnName: 'amount',
-      type: 'sum',
-      showInGroupFooter: true,
-      // alignByColumn: true,
-    },
   ];
 
   const print = useReactToPrint({
@@ -326,8 +294,8 @@ export default function CustomerReport({
           <Box
             style={{
               position: 'absolute',
-              left: isRTL ? 340 : undefined,
-              right: isRTL ? undefined : 340,
+              left: isRTL ? 360 : undefined,
+              right: isRTL ? undefined : 360,
               top: 51,
               zIndex: 112,
             }}
@@ -378,21 +346,51 @@ export default function CustomerReport({
               isRTL={isRTL}
               name="customer"
               nomulti
-              width={350}
+              width={250}
             ></FilterSelectCkeckBox>
           </Box>
+          <Box style={{ marginLeft: 10, marginRight: 10 }}>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  style={{ padding: 7 }}
+                  checked={isRaseed}
+                  onChange={() => setIsRaseed(!isRaseed)}
+                  color="primary"
+                />
+              }
+              label={
+                <Typography
+                  style={{ color: theme.palette.primary.main }}
+                  variant="subtitle2"
+                >
+                  {isRTL ? 'رصيد افتتاحي' : 'Opening Balance'}
+                </Typography>
+              }
+              style={{ fontSize: 14 }}
+            />
+          </Box>
+        </Box>
+        <Box
+          style={{
+            position: 'absolute',
+            zIndex: 111,
+            right: isRTL ? undefined : 420,
+            left: isRTL ? 420 : undefined,
+            marginTop: 12,
+          }}
+        >
+          <Typography style={{ fontWeight: 'bold', color: '#403795' }}>
+            {isRTL ? 'الرصيد' : 'Balance'}:{' '}
+            {moneyFormat(rows?.[rows?.length - 1]?.rased)}
+          </Typography>
         </Box>
         <Grid rows={rows} columns={columns} getRowId={getRowId}>
           <SortingState
             defaultSorting={sort}
             onSortingChange={(srt: any) => setSortDispatch(srt)}
           />
-          {group && <GroupingState grouping={grouping} />}
-          <SummaryState
-            totalItems={totalSummaryItems}
-            groupItems={groupSummaryItems}
-          />
-          {group && <IntegratedGrouping />}
+          <SummaryState totalItems={totalSummaryItems} />
           <IntegratedSummary />
           <IntegratedSorting />
           <SearchState />
@@ -417,6 +415,7 @@ export default function CustomerReport({
           />
           <TableColumnVisibility
             columnExtensions={tableColumnVisibilityColumnExtensions}
+            defaultHiddenColumnNames={[col.rased.name]}
             onHiddenColumnNamesChange={(hcs: string[]) => {
               const all = [...columns];
               const newcol = all.filter((a: any) => !hcs.includes(a.name));
@@ -451,15 +450,10 @@ export default function CustomerReport({
             }}
           />
           <ExportPanel startExport={startExport} />
-          {group && <TableGroupRow showColumnsWhenGrouped />}
           <TableSummaryRow
             messages={{
-              sum: '',
+              sum: isRTL ? 'المجموع' : 'Total',
             }}
-            // messages={{
-            //   sum: isRTL ? "المجموع" : "Total",
-            //   count: isRTL ? "العدد" : "Count",
-            // }}
           ></TableSummaryRow>
         </Grid>
         <GridExporter

@@ -5,7 +5,6 @@ import AddIcon from '@material-ui/icons/Add';
 import OptionItem from '../../Shared/OptionItem';
 import { Grid } from '@material-ui/core';
 import OptionItemData from '../../Shared/OptionItemData';
-import AutoPopper from '../../Shared/AutoPopper';
 import _ from 'lodash';
 import ListboxComponent from './ListboxComponent';
 
@@ -45,7 +44,6 @@ export default function AutoFieldLocal({
         <Autocomplete
           openOnFocus={openOnFocus}
           autoSelect
-          PopperComponent={AutoPopper}
           ListboxComponent={ListboxComponent}
           options={sorted}
           getOptionLabel={(option: any) => {

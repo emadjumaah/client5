@@ -37,121 +37,149 @@ export const operationTypes = {
   kaid: 90,
 };
 
+export const accountType = {
+  DEBIT: 1,
+  CREDIT: 2,
+};
+
 export const opTypesNames = {
   10: {
     name: 'Invlice',
     nameAr: 'فاتورة',
     ref: 'salesInvoice',
+    type: accountType.CREDIT,
   },
   11: {
     name: 'Qoutation',
     nameAr: 'عرض سعر',
     ref: 'salesQoutation',
+    type: 1,
   },
   12: {
     name: 'Sales Delivery',
     nameAr: 'سند تسليم',
     ref: 'salesDelivery',
+    type: 1,
   },
   13: {
     name: 'Sales Return',
     nameAr: 'مرتجع مبيعات',
     ref: 'salesReturn',
+    type: 1,
   },
   14: {
     name: 'Receipt',
     nameAr: 'سند قبض',
     ref: 'customerReceipt',
+    type: accountType.DEBIT,
   },
   15: {
     name: 'Sales Discount',
     nameAr: 'خصم مبيعات',
     ref: 'customerDiscount',
+    type: accountType.DEBIT,
   },
   30: {
     name: 'Purchase Invoice',
     nameAr: 'فاتورة شراء',
     ref: 'purchaseInvoice',
+    type: accountType.DEBIT,
   },
   31: {
     name: 'Purchase Order',
     nameAr: 'طلب شراء',
     ref: 'purchaseOrder',
+    type: 1,
   },
   32: {
     name: 'Purchase Delivery',
     nameAr: 'سند استلام',
     ref: 'purchaseDelivery',
+    type: 1,
   },
   33: {
     name: 'Purchase Return',
     nameAr: 'مرتجع مشتريات',
     ref: 'purchaseReturn',
+    type: 1,
   },
   34: {
     name: 'Payemnt',
     nameAr: 'سند دفع',
     ref: 'supplierPayemnt',
+    type: accountType.CREDIT,
   },
   35: {
     name: 'Purchase Discount',
     nameAr: 'خصم مشتريات',
     ref: 'supplierDiscount',
+    type: accountType.CREDIT,
   },
   50: {
     name: 'Stock In',
     nameAr: 'وارد مخزن',
     ref: 'interDeliveryIn',
+    type: 1,
   },
   51: {
     name: 'Stock Out',
     nameAr: 'صادر مخزن',
     ref: 'interDeliveryOut',
+    type: 1,
   },
   60: {
     name: 'Expenses',
     nameAr: 'مصاريف',
     ref: 'expenses',
+    type: accountType.DEBIT,
   },
   61: {
     name: 'Products Expenses',
     nameAr: 'استهلاك بضاعة',
     ref: 'expproducts',
+    type: accountType.DEBIT,
   },
   70: {
     name: 'Deposet',
     nameAr: 'ايداع',
     ref: 'deposet',
+    type: 1,
   },
   71: {
     name: 'Draw - Partner',
     nameAr: 'سحب - شريك',
     ref: 'ownerDraw',
+    type: 1,
   },
   72: {
     name: 'Deposit - Partner',
     nameAr: 'ايداع - شريك',
     ref: 'ownerDeposit',
+    type: 1,
   },
   80: {
     name: 'Appointment',
     nameAr: 'موعد',
     ref: 'event',
+    type: accountType.DEBIT,
   },
   90: {
     name: 'Jornal Vaucher',
     nameAr: 'قيد يومية',
     ref: 'kaid',
+    type: 1,
   },
   94: {
     name: 'Opening Balancee',
     nameAr: 'رصيد افتتاحي',
     ref: 'print',
+    type: 1,
   },
   95: {
     name: 'Reminder',
     nameAr: 'تذكير',
     ref: 'reminder',
+    type: 1,
   },
 };
 

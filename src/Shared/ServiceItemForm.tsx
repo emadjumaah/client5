@@ -17,7 +17,6 @@ import { useForm } from 'react-hook-form';
 import { Autocomplete } from '@material-ui/lab';
 import OptionProductData from './OptionProductData';
 import { yup } from '../constants';
-import AutoPopper from './AutoPopper';
 import { useProducts, useServices } from '../hooks';
 import ListboxComponent from '../components/fields/ListboxComponent';
 import PopupServiceItem from '../pubups/PopupServiceItem';
@@ -145,7 +144,6 @@ export default function ServiceItemForm({
         <Grid container spacing={1}>
           <Grid item xs={5}>
             <Autocomplete
-              PopperComponent={AutoPopper}
               autoSelect
               size="small"
               options={items}

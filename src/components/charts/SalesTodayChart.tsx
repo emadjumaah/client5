@@ -1,14 +1,9 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import React from "react";
-import { Paper } from "@material-ui/core";
-import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from "recharts";
-import _ from "lodash";
+import React from 'react';
+import { Paper } from '@material-ui/core';
+import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
 
 const SalesTodayChart = ({ height, data }) => {
-  const total = _.sumBy(data, "value");
-
-  console.log("total", total);
-
   return (
     <Paper style={{ height }}>
       <ResponsiveContainer width="100%" height="100%">

@@ -108,9 +108,9 @@ export default function Appointments({
           col.fromto,
           col.docNo,
           col.customer,
+          col.resourse,
           col.taskId,
           col.employee,
-          col.resourse,
           col.department,
           col.status,
           col.done,
@@ -127,8 +127,8 @@ export default function Appointments({
     { columnName: 'docNo', width: 120 },
     { columnName: col.customer.name, width: 200 },
     { columnName: 'taskId', width: 200 },
-    { columnName: col.employee.name, width: 200 },
     { columnName: col.resourse.name, width: 200 },
+    { columnName: col.employee.name, width: 200 },
     { columnName: col.department.name, width: 200 },
     { columnName: 'status', width: 100 },
     { columnName: 'done', width: 100 },
@@ -232,7 +232,9 @@ export default function Appointments({
     dispatch({ type: 'setEndDate', payload: curDate });
   };
 
-  const [loadEvents, eventsData]: any = useLazyQuery(getEvents);
+  const [loadEvents, eventsData]: any = useLazyQuery(getEvents, {
+    fetchPolicy: 'cache-and-network',
+  });
 
   const refresQuery = {
     refetchQueries: [
@@ -446,8 +448,8 @@ export default function Appointments({
                 col.docNo.name,
                 col.customer.name,
                 col.taskId.name,
-                col.employee.name,
                 col.resourse.name,
+                col.employee.name,
                 col.department.name,
                 col.status.name,
                 col.done.name,
@@ -472,7 +474,7 @@ export default function Appointments({
               defaultHiddenColumnNames={[
                 col.createdAt.name,
                 col.status.name,
-                col.resourse.name,
+                col.fromto.name,
                 col.location.name,
                 col.nots.name,
               ]}

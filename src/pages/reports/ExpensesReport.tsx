@@ -36,6 +36,7 @@ import {
   covertToTimeDateDigit,
   createdAtFormatter,
   currencyFormatter,
+  moneyFormat,
   opTypeFormatter,
   taskIdFormatter,
 } from '../../Shared/colorFormat';
@@ -107,7 +108,6 @@ export default function ExpensesReport({
           col.opDocNo,
           col.acc,
           col.opAcc,
-          col.project,
           col.taskId,
           col.desc,
           col.opType,
@@ -382,7 +382,7 @@ export default function ExpensesReport({
               paddingRight: 20,
             }}
           >
-            {projects && projects.length > 0 && (
+            {!tempoptions?.noPro && projects && projects.length > 0 && (
               <Box style={{ marginLeft: 10, marginRight: 10 }}>
                 <FilterSelectCkeckBox
                   options={projects}
@@ -392,7 +392,7 @@ export default function ExpensesReport({
                   isRTL={isRTL}
                   name="project"
                   nomulti
-                  width={350}
+                  width={250}
                 ></FilterSelectCkeckBox>
               </Box>
             )}
@@ -406,7 +406,7 @@ export default function ExpensesReport({
                   isRTL={isRTL}
                   name="task"
                   nomulti
-                  width={350}
+                  width={250}
                 ></FilterSelectCkeckBox>
               </Box>
             )}
@@ -418,22 +418,21 @@ export default function ExpensesReport({
               isRTL={isRTL}
               name="account"
               nomulti
-              width={350}
+              width={250}
             ></FilterSelectCkeckBox>
-            <Box
-              display="flex"
-              style={{
-                alignItems: 'center',
-                justifyContent: 'flex-end',
-                minWidth: 120,
-                marginRight: 90,
-              }}
-            >
-              <Typography variant="subtitle1" style={{ fontWeight: 'bold' }}>
-                {currencyFormatter({ value: total })}
-              </Typography>
-            </Box>
           </Box>
+        </Box>
+        <Box
+          style={{
+            position: 'absolute',
+            zIndex: 111,
+            left: 380,
+            marginTop: 12,
+          }}
+        >
+          <Typography style={{ fontWeight: 'bold' }}>
+            {isRTL ? 'المجموع' : 'Total'}: {moneyFormat(total)}
+          </Typography>
         </Box>
         <Grid rows={rows} columns={columns} getRowId={getRowId}>
           <SortingState
@@ -470,6 +469,7 @@ export default function ExpensesReport({
           />
           <TableColumnVisibility
             columnExtensions={tableColumnVisibilityColumnExtensions}
+            defaultHiddenColumnNames={[col.rased.name]}
             onHiddenColumnNamesChange={(hcs: string[]) => {
               const all = [...columns];
               const newcol = all.filter((a: any) => !hcs.includes(a.name));

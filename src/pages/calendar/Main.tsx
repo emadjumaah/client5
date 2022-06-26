@@ -72,17 +72,24 @@ const Main = (props: any) => {
   const [editEvent] = useMutation(updateEvent, refresQuery);
   const [removeEvent] = useMutation(deleteEvent, refresQuery);
 
-  const [getCalEvents, evnData]: any = useLazyQuery(getEvents);
+  const [getCalEvents, evnData]: any = useLazyQuery(getEvents, {
+    fetchPolicy: 'cache-and-network',
+  });
 
   useEffect(() => {
     const eventsData = evnData?.data?.['getEvents']?.data || [];
     const events =
       eventsData.length > 0
         ? eventsData.map((ap: any) => {
+            const end = new Date(ap.endDate);
+            if (ap.startDate === ap.endDate) {
+              end.setHours(end.getHours() + 1);
+            }
+
             return {
               ...ap,
               startDate: new Date(ap.startDate),
-              endDate: new Date(ap.endDate),
+              endDate: end,
               start: ap.startDate,
               end: ap.endDate,
             };

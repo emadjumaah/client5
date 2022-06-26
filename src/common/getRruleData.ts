@@ -10,14 +10,14 @@ export default function getRruleData({
   until = end,
   interval = 1,
   count = 1,
-}) {
+}: any) {
   const rule = new RRule({
     freq,
     interval,
     byweekday,
     dtstart,
     until,
-    count: count + 1,
+    count: byweekday ? count : count + 1,
   });
   const all = rule.all();
   const str = rule.toString();

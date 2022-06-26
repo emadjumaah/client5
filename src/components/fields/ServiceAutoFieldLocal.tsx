@@ -5,7 +5,6 @@ import AddIcon from '@material-ui/icons/Add';
 
 import { Autocomplete } from '@material-ui/lab';
 import OptionItemData from '../../Shared/OptionItemData';
-import AutoPopper from '../../Shared/AutoPopper';
 import _ from 'lodash';
 
 export default function ServiceAutoFieldLocal({
@@ -47,7 +46,6 @@ export default function ServiceAutoFieldLocal({
         <Autocomplete
           autoSelect
           options={sorted}
-          PopperComponent={AutoPopper}
           getOptionLabel={(option: any) =>
             isRTL ? option.nameAr : option.name
           }

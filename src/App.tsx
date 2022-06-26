@@ -41,7 +41,6 @@ function App() {
       },
     };
   });
-  // console.log('store', store);
   const errorLink = onError(({ graphQLErrors, networkError }) => {
     try {
       if (graphQLErrors)

@@ -8,7 +8,6 @@ import { useForm } from 'react-hook-form';
 import { Autocomplete } from '@material-ui/lab';
 import OptionProductData from './OptionProductData';
 import { yup } from '../constants';
-import AutoPopper from './AutoPopper';
 import { PopupExpenseItem } from '../pubups';
 import { useExpenseItems } from '../hooks';
 import ListboxComponent from '../components/fields/ListboxComponent';
@@ -107,7 +106,6 @@ export default function ExpensesItemForm({
         <Grid container spacing={1}>
           <Grid item xs={5}>
             <Autocomplete
-              PopperComponent={AutoPopper}
               autoSelect
               size="small"
               options={items}

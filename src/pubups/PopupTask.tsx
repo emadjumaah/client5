@@ -284,7 +284,7 @@ const PopupTask = ({
     if (isNew) {
       const rdata = getRruleData({
         freq,
-        byweekday: byweekday.length > 0 ? byweekday : undefined,
+        byweekday: weekdays?.length > 0 ? byweekday : undefined,
         dtstart: start,
         until: null,
         interval,
@@ -292,8 +292,7 @@ const PopupTask = ({
       });
       setRrule(rdata);
     }
-  }, [start, freq, count, interval, byweekday]);
-
+  }, [start, freq, count, interval, byweekday, weekdays]);
   useEffect(() => {
     if (isNew && rrule?.all && rrule?.all?.length > 0) {
       setEnd(rrule.all[rrule.all.length - 1]);
@@ -599,7 +598,7 @@ const PopupTask = ({
         rrule,
         actionslist,
         isRTL,
-        byweekday,
+        weekdays,
       });
       const sorted = _.sortBy(eventlist, 'startDate');
       const listwithindex = indexTheList(sorted);
@@ -816,12 +815,11 @@ const PopupTask = ({
                 {isNew && (
                   <TextFieldLocal
                     required
-                    name="interval"
-                    label={words.interval}
-                    value={interval}
-                    onChange={onChangeInterval}
+                    name="count"
+                    label={words.qty}
+                    value={count}
+                    onChange={onChangeCount}
                     type="number"
-                    mb={0}
                     fullWidth
                   />
                 )}
@@ -830,11 +828,12 @@ const PopupTask = ({
                 {isNew && (
                   <TextFieldLocal
                     required
-                    name="count"
-                    label={words.qty}
-                    value={count}
-                    onChange={onChangeCount}
+                    name="interval"
+                    label={words.interval}
+                    value={interval}
+                    onChange={onChangeInterval}
                     type="number"
+                    mb={0}
                     fullWidth
                   />
                 )}

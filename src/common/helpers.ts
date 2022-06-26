@@ -89,8 +89,8 @@ export const getEventsList = ({
   actionslist,
   isRTL,
   start,
-  byweekday,
-}) => {
+  weekdays,
+}: any) => {
   if (!event) {
     return [];
   }
@@ -102,7 +102,7 @@ export const getEventsList = ({
     const endhour = event.endDate.getHours();
     const endminute = event.endDate.getMinutes();
     const dates = rrule.all;
-    if (byweekday?.length > 0 && dates?.[0] !== start) {
+    if (dates?.length > 0 && weekdays?.length > 0 && dates?.[0] !== start) {
       dates.unshift(start);
     }
     const ritems = JSON.parse(event.items);

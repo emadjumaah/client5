@@ -447,7 +447,6 @@ const PopupTaskAppointment = ({
       actionslist,
       isRTL,
       start: new Date(), // todo
-      byweekday: [], // todo
     });
     addEventsToList(eventlist);
     onCloseForm();

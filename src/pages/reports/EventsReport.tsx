@@ -597,7 +597,7 @@ export default function SalesReport({ isRTL, words, menuitem, theme }: any) {
               isRTL={isRTL}
               name="status"
               nomulti
-              width={350}
+              width={200}
             ></FilterSelectCkeckBox>
           </Box>
         </Box>
