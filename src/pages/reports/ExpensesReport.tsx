@@ -426,8 +426,9 @@ export default function ExpensesReport({
           style={{
             position: 'absolute',
             zIndex: 111,
-            left: 380,
-            marginTop: 12,
+            right: isRTL ? undefined : 100,
+            left: isRTL ? 100 : undefined,
+            top: 15,
           }}
         >
           <Typography style={{ fontWeight: 'bold' }}>

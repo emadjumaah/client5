@@ -382,9 +382,9 @@ export default function FinanceReport({
           style={{
             position: 'absolute',
             zIndex: 111,
-            right: isRTL ? undefined : 420,
-            left: isRTL ? 420 : undefined,
-            marginTop: 12,
+            right: isRTL ? undefined : 100,
+            left: isRTL ? 100 : undefined,
+            top: 15,
           }}
         >
           <Typography style={{ fontWeight: 'bold', color: '#403795' }}>
