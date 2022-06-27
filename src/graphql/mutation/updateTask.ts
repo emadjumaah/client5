@@ -10,10 +10,13 @@ export default gql`
     $start: Date
     $end: Date
     $progress: Float
-    $tasktype: Int
     $freq: Int
     $interval: Int
     $weekdays: String
+    $tasktype: Int
+    $periodType: Int
+    $periodCost: Float
+    $dayCost: Float
     $status: Int
     $evQty: Int
     $evDone: Int
@@ -38,10 +41,13 @@ export default gql`
       start: $start
       end: $end
       progress: $progress
-      tasktype: $tasktype
       freq: $freq
       interval: $interval
       weekdays: $weekdays
+      tasktype: $tasktype
+      periodType: $periodType
+      periodCost: $periodCost
+      dayCost: $dayCost
       status: $status
       evQty: $evQty
       evDone: $evDone

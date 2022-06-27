@@ -44,7 +44,7 @@ export const taskTypes = [
   },
   {
     id: 3,
-    name: 'Rent & Services',
+    name: 'Rent & Services - Time',
     nameAr: 'خدمات وتأجير',
   },
 ];

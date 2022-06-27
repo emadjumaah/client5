@@ -10,29 +10,13 @@ import {
 } from '../Shared';
 import { GContextTypes } from '../types';
 import { GlobalContext } from '../contexts';
-import {
-  Box,
-  Button,
-  colors,
-  fade,
-  IconButton,
-  ListItem,
-  ListItemText,
-  Paper,
-  Typography,
-} from '@material-ui/core';
+import { Box, colors, fade } from '@material-ui/core';
 import PopupLayout from '../pages/main/PopupLayout';
 import { Grid } from '@material-ui/core';
 import AutoFieldLocal from '../components/fields/AutoFieldLocal';
 import { CalenderLocal, TextFieldLocal } from '../components';
 import { taskStatus, weekdaysNNo } from '../constants/datatypes';
-import { compressEvents } from '../common/time';
-import {
-  actionTypeFormatter,
-  getDateDayTimeFormat,
-  getDateDayWeek,
-} from '../Shared/colorFormat';
-import _ from 'lodash';
+
 import { getPopupTitle } from '../constants/menu';
 import { useCustomers, useProducts, useServices, useTemplate } from '../hooks';
 import PopupCustomer from './PopupCustomer';
@@ -47,17 +31,9 @@ import useProjects from '../hooks/useProjects';
 import ServiceItemForm from '../Shared/ServiceItemForm';
 import ItemsTable from '../Shared/ItemsTable';
 import { invoiceClasses } from '../themes';
-import { SelectLocal } from '../pages/calendar/common/SelectLocal';
-import { byweekdayOptions, intervalOptions } from '../constants/rrule';
 import RRule from 'rrule';
-import getRruleData from '../common/getRruleData';
-import { getEventsList } from '../common/helpers';
 import { ContractPrint } from '../print';
 import { useReactToPrint } from 'react-to-print';
-import DeleteOutlinedIcon from '@material-ui/icons/DeleteOutlined';
-import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
-import PopupAction from './PopupAction';
-import SelectMulti from '../Shared/SelectMulti';
 
 export const indexTheList = (list: any) => {
   return list.map((item: any, index: any) => {
@@ -68,7 +44,7 @@ export const indexTheList = (list: any) => {
   });
 };
 
-const PopupTask = ({
+const PopupTaskTime = ({
   open,
   onClose,
   row,
@@ -81,15 +57,12 @@ const PopupTask = ({
   projects,
   customers,
   theme,
-  refresh,
   value = null,
   name = null,
-  setNewValue,
   company,
 }: any) => {
   const classes = invoiceClasses();
 
-  const [tasktype, setTasktype] = useState(2);
   const [saving, setSaving] = useState(false);
   const [tasktitle, setTasktitle]: any = useState(null);
   const [start, setStart]: any = useState(null);
@@ -126,10 +99,8 @@ const PopupTask = ({
 
   const [status, setStatus]: any = useState(null);
 
-  const [evList, setEvList] = useState<any>([]);
-  const [total, setTotal] = useState<any>(null);
-
   const [newtext, setNewtext] = useState('');
+  const [total, setTotal] = useState<any>(0);
 
   const [openCust, setOpenCust] = useState(false);
   const [openDep, setOpenDep] = useState(false);
@@ -138,23 +109,12 @@ const PopupTask = ({
   const [openRes, setOpenRes] = useState(false);
 
   const [itemsList, setItemsList] = useState<any>([]);
-  const [rrule, setRrule] = useState<any>(null);
-  const [weekdays, setWeekdays] = useState([]);
-  const [byweekday, setByweekday] = useState([]);
 
   const [freq, setFreq] = useState(RRule.DAILY);
   const [count, setCount] = useState(1);
-  const [interval, setInterval] = useState(1);
-  const [rruletype, setRruletype] = useState(1);
-  const [totals, setTotals] = useState<any>({});
   const [info, setInfo] = useState<any>(null);
 
   const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
-
-  const [openAction, setOpenAction] = useState(false);
-  const [type, setType] = useState(null);
-  const [actionslist, setActionslist] = useState([]);
-  const [selected, setSelected] = useState(null);
 
   const { addCustomer, editCustomer } = useCustomers();
   const { addDepartment, editDepartment } = useDepartmentsUp();
@@ -170,36 +130,6 @@ const PopupTask = ({
     store: { user },
   }: GContextTypes = useContext(GlobalContext);
 
-  const addActionToList = (item: any) => {
-    const newArray = [...actionslist, item];
-    const listwithindex = indexTheList(newArray);
-    setActionslist(listwithindex);
-  };
-  const editActionInList = (item: any) => {
-    const newArray = actionslist.map((it: any) => {
-      if (item._id) {
-        if (it._id === item._id) {
-          return item;
-        } else {
-          return it;
-        }
-      } else {
-        if (it.index === item.index) {
-          return item;
-        } else {
-          return it;
-        }
-      }
-    });
-    const listwithindex = indexTheList(newArray);
-    setActionslist(listwithindex);
-  };
-  const removeActionFromList = (item: any) => {
-    const newlist = actionslist.filter((il: any) => il.index !== item.index);
-    const listwithindex = indexTheList(newlist);
-    setActionslist(listwithindex);
-  };
-
   const setExtra = ({ item, value }) => {
     const newitem = { ...item, value };
     const newinfo = info?.map((initem: any) => {
@@ -214,91 +144,15 @@ const PopupTask = ({
 
   const onChangeCount = (e: any) => {
     const value = Number(e.target.value);
-    const count = value < 1 ? 1 : value > 365 ? 365 : value;
+    const count = value < 1 ? 1 : value > 1000 ? 1000 : value;
     setCount(count);
   };
-
-  const onChangeRruletype = (e: any) => {
-    const value = e.target.value;
-    setRruletype(value);
-    if (value === 1) {
-      setFreq(RRule.DAILY);
-      setInterval(value);
-    } else if (value > 5 && value < 9) {
-      setFreq(RRule.WEEKLY);
-      setInterval(1);
-    } else if (value === 30) {
-      setFreq(RRule.DAILY);
-      setInterval(value);
-    } else if (value === 31) {
-      setFreq(RRule.MONTHLY);
-      setInterval(1);
-    }
-  };
-
-  const onChangeInterval = (e: any) => {
-    const value = Number(e.target.value);
-    setInterval(value > 1 ? value : 1);
-  };
-
-  const getEventOverallTotal = () => {
-    const totalsin = itemsList.map((litem: any) => litem.itemtotal);
-    const sum = totalsin.reduce((psum: any, a: any) => psum + a, 0);
-    const costtotals = itemsList.map((litem: any) => litem.itemtotalcost);
-    const costsum = costtotals.reduce((psum: any, a: any) => psum + a, 0);
-    const amount = sum;
-    const profit = sum - costsum;
-    const tots = {
-      itemsSum: amount,
-      itemsCostSum: costsum,
-      costAmount: costsum,
-      total: sum,
-      amount,
-      profit,
-    };
-    setTotals(tots);
-  };
-  useEffect(() => {
-    getEventOverallTotal();
-  }, [itemsList]);
 
   useEffect(() => {
     if (isNew && !info) {
       setInfo(taskExtra);
     }
   }, [taskExtra]);
-
-  useEffect(() => {
-    if (weekdays && weekdays.length > 0) {
-      const bwd = weekdays.map((wd: any) => wd.value);
-      setByweekday(bwd);
-    }
-  }, [weekdays]);
-  useEffect(() => {
-    if (freq !== RRule.WEEKLY) {
-      setWeekdays([]);
-      setByweekday([]);
-    }
-  }, [freq]);
-
-  useEffect(() => {
-    if (isNew) {
-      const rdata = getRruleData({
-        freq,
-        byweekday: weekdays?.length > 0 ? byweekday : undefined,
-        dtstart: start,
-        until: null,
-        interval,
-        count,
-      });
-      setRrule(rdata);
-    }
-  }, [start, freq, count, interval, byweekday, weekdays]);
-  useEffect(() => {
-    if (isNew && rrule?.all && rrule?.all?.length > 0) {
-      setEnd(rrule.all[rrule.all.length - 1]);
-    }
-  }, [rrule]);
 
   const addItemToList = (item: any) => {
     const isInList = itemsList?.filter((li: any) => li._id === item._id)?.[0];
@@ -341,6 +195,16 @@ const PopupTask = ({
     const listwithindex = indexTheList(newList);
     setItemsList(listwithindex);
   };
+
+  useEffect(() => {
+    if (itemsList?.length > 0) {
+      const totalsin = itemsList.map((litem: any) => litem.itemtotal);
+      const sum = totalsin.reduce((psum: any, a: any) => psum + a, 0);
+      setTotal(sum);
+    } else {
+      setTotal(0);
+    }
+  }, [itemsList]);
 
   const componentRef: any = useRef();
   const handleReactPrint = useReactToPrint({
@@ -413,15 +277,6 @@ const PopupTask = ({
   const isemployee = user?.isEmployee && user?.employeeId;
 
   useEffect(() => {
-    if (isemployee) {
-      const emp = employees.filter(
-        (em: any) => em._id === user.employeeId
-      )?.[0];
-      setEmplvalue(emp);
-    }
-  }, [user, employees]);
-
-  useEffect(() => {
     if (isNew) {
       if (emplvalue && name !== 'departmentId') {
         if (emplvalue?.departmentId) {
@@ -440,7 +295,6 @@ const PopupTask = ({
       start.setHours(8, 0, 0);
       setStart(start);
       setStatus(taskStatus.filter((es: any) => es.id === 1)?.[0]);
-      setEvList([]);
       if (name === 'employeeId') {
         if (value?.departmentId) {
           const dept = departments.filter(
@@ -451,18 +305,6 @@ const PopupTask = ({
       }
     }
   }, [open]);
-  const getOverallTotal = () => {
-    const evssum = _.sumBy(evList, 'amount');
-    if (freq !== RRule.DAILY || interval !== 1) {
-      const namount = evssum - totals.amount;
-      setTotal(namount);
-    } else {
-      setTotal(evssum);
-    }
-  };
-  useEffect(() => {
-    getOverallTotal();
-  }, [evList]);
 
   useEffect(() => {
     if (row && row._id) {
@@ -577,45 +419,6 @@ const PopupTask = ({
         projectColor: undefined,
       };
 
-  useEffect(() => {
-    if (isNew && start && end) {
-      const event = {
-        title: tasktitle,
-        startDate: start,
-        endDate: end,
-        amount: totals.amount,
-        customer,
-        department,
-        employee,
-        resourse,
-        project,
-        status: 2,
-        items: JSON.stringify(itemsList),
-        user: user._id,
-      };
-      const eventlist = getEventsList({
-        start,
-        event,
-        rrule,
-        actionslist,
-        isRTL,
-        weekdays,
-      });
-      const sorted = _.sortBy(eventlist, 'startDate');
-      const listwithindex = indexTheList(sorted);
-      setEvList(listwithindex);
-    }
-  }, [
-    itemsList,
-    rrule,
-    projvalue,
-    departvalue,
-    custvalue,
-    emplvalue,
-    start,
-    totals,
-  ]);
-
   const resetAllForms = () => {
     setStart(null);
     setEnd(null);
@@ -627,13 +430,10 @@ const PopupTask = ({
     setStatus(null);
     setTasktitle(null);
     setSaving(false);
-    setRrule(null);
     setItemsList([]);
     setCount(1);
-    setInterval(1);
-    setRruletype(1);
     setFreq(RRule.DAILY);
-    setTotals({});
+    setTotal(0);
     setInfo(null);
   };
 
@@ -681,19 +481,14 @@ const PopupTask = ({
     }
 
     setSaving(true);
-    const events =
-      evList && evList.length > 0 ? compressEvents(evList) : undefined;
     const variables: any = {
       id: row && row.id ? row.id : undefined, // is it new or edit
       title: tasktitle ? tasktitle : custvalue?.name,
       start,
       end,
-      amount: isNew ? total : undefined,
+      amount: total,
       status: isNew ? status?.id : 1,
-      tasktype, // 1: single event, 2: multi events, 3: no events - only items and time
-      events,
-      evQty: isNew ? evList?.length : undefined,
-      evDone: isNew ? 0 : undefined,
+      tasktype: 3, // 1: single event, 2: multi events, 3: no events - only items and time
       customer,
       department,
       employee,
@@ -701,25 +496,16 @@ const PopupTask = ({
       project,
       info: JSON.stringify(info),
       freq,
-      interval,
     };
     const mutate = isNew ? addAction : editAction;
     apply(mutate, variables);
   };
   const apply = async (mutate: any, variables: any) => {
     try {
-      if (evList?.length === 0) {
-        mutate({ variables });
-        await successAlert(setAlrt, isRTL);
-        setSaving(false);
-        onCloseForm();
-      } else {
-        await mutate({ variables });
-        setTimeout(() => {
-          refresh();
-          onCloseForm();
-        }, 1000);
-      }
+      mutate({ variables });
+      await successAlert(setAlrt, isRTL);
+      setSaving(false);
+      onCloseForm();
     } catch (error) {
       onError(error);
       console.log(error);
@@ -790,30 +576,6 @@ const PopupTask = ({
               </Grid>
               <Grid item xs={2} style={{ marginTop: 10 }}>
                 {isNew && (
-                  <SelectLocal
-                    options={intervalOptions}
-                    value={rruletype}
-                    onChange={onChangeRruletype}
-                    isRTL={isRTL}
-                    width={128}
-                  ></SelectLocal>
-                )}
-              </Grid>
-              {freq === RRule.WEEKLY && (
-                <Grid item xs={3} style={{ marginTop: 18 }}>
-                  <SelectMulti
-                    options={byweekdayOptions}
-                    value={weekdays}
-                    setValue={setWeekdays}
-                    words={words}
-                    isRTL={isRTL}
-                    name="weekdays"
-                    width={180}
-                  ></SelectMulti>
-                </Grid>
-              )}
-              <Grid item xs={2} style={{ marginTop: 10 }}>
-                {isNew && (
                   <TextFieldLocal
                     required
                     name="count"
@@ -825,35 +587,18 @@ const PopupTask = ({
                   />
                 )}
               </Grid>
-              <Grid item xs={2} style={{ marginTop: 10 }}>
-                {isNew && (
-                  <TextFieldLocal
-                    required
-                    name="interval"
-                    label={words.interval}
-                    value={interval}
-                    onChange={onChangeInterval}
-                    type="number"
-                    mb={0}
-                    fullWidth
-                  />
-                )}
-              </Grid>
-              {freq !== RRule.WEEKLY && <Grid item xs={3}></Grid>}
               <Grid item xs={3}>
-                {rrule?.all && (
-                  <CalenderLocal
-                    isRTL={isRTL}
-                    label={words.end}
-                    value={end}
-                    disabled
-                    onChange={(d: any) => setEnd(d)}
-                    format="dd/MM/yyyy - hh:mm"
-                    time
-                    mb={0}
-                    width={150}
-                  ></CalenderLocal>
-                )}
+                <CalenderLocal
+                  isRTL={isRTL}
+                  label={words.end}
+                  value={end}
+                  disabled
+                  onChange={(d: any) => setEnd(d)}
+                  format="dd/MM/yyyy - hh:mm"
+                  time
+                  mb={0}
+                  width={150}
+                ></CalenderLocal>
               </Grid>
               <Grid item xs={9}>
                 <TextFieldLocal
@@ -971,51 +716,6 @@ const PopupTask = ({
               )}
             </Grid>
           </Grid>
-          {isNew && (
-            <Grid item xs={4}>
-              <Grid container spacing={1}>
-                <Grid item xs={12}>
-                  {rrule?.all && (
-                    <Paper
-                      style={{
-                        maxHeight: 240,
-                        overflow: 'auto',
-                        minHeight: 240,
-                      }}
-                      elevation={3}
-                    >
-                      <Box style={{ flexDirection: 'row' }}>
-                        {rrule?.all?.map((al: any, index: any) => {
-                          if (index === 0) {
-                            return null;
-                          }
-                          return (
-                            <Box
-                              display="flex"
-                              style={{
-                                flexDirection: 'row',
-                                alignItems: 'center',
-                                justifyContent: 'space-between',
-                                backgroundColor: '#f5f5f5',
-                                margin: 4,
-                                padding: 4,
-                              }}
-                            >
-                              <Typography>
-                                {getDateDayWeek(al, isRTL)}
-                              </Typography>
-                              <Typography variant="caption">{index}</Typography>
-                            </Box>
-                          );
-                        })}
-                      </Box>
-                    </Paper>
-                  )}
-                </Grid>
-              </Grid>
-            </Grid>
-          )}
-          {isNew && <Grid item xs={6}></Grid>}
         </Grid>
         {isNew && (
           <Grid xs={12}>
@@ -1054,67 +754,6 @@ const PopupTask = ({
                     ></ItemsTable>
                   </Box>
                 </Box>
-              </Grid>
-              <Grid
-                item
-                xs={4}
-                style={{
-                  marginTop: 20,
-                  backgroundColor: fade(colors.grey[400], 0.2),
-                  borderRadius: 10,
-                  height: 268,
-                }}
-              >
-                <Button
-                  variant="outlined"
-                  style={{
-                    margin: 10,
-                    fontSize: 14,
-                    minWidth: 80,
-                  }}
-                  onClick={() => {
-                    setSelected(null);
-                    setType(3);
-                    setOpenAction(true);
-                  }}
-                >
-                  <Typography style={{ fontSize: 13, fontWeight: 'bold' }}>
-                    {isRTL ? 'اضافة تنبيه' : 'Add Reminder'}
-                  </Typography>
-                </Button>
-                <Paper style={{ height: 195, overflow: 'auto' }}>
-                  {actionslist.map((act: any) => {
-                    return (
-                      <ListItem>
-                        <ListItemText
-                          primary={actionTypeFormatter({ row: act })}
-                          secondary={getDateDayTimeFormat(act.sendtime, isRTL)}
-                        />
-                        <IconButton
-                          onClick={() => removeActionFromList(act)}
-                          title="Delete row"
-                          style={{ padding: 5 }}
-                        >
-                          <DeleteOutlinedIcon
-                            style={{ fontSize: 22, color: '#a76f9a' }}
-                          />
-                        </IconButton>
-                        <IconButton
-                          style={{ padding: 5 }}
-                          onClick={() => {
-                            setSelected(act);
-                            setOpenAction(true);
-                          }}
-                          title="Edit row"
-                        >
-                          <EditOutlinedIcon
-                            style={{ fontSize: 22, color: '#729aaf' }}
-                          />
-                        </IconButton>
-                      </ListItem>
-                    );
-                  })}
-                </Paper>
               </Grid>
             </Grid>
           </Grid>
@@ -1199,21 +838,6 @@ const PopupTask = ({
           addAction={addProject}
           editAction={editProject}
         ></PopupProject>
-        <PopupAction
-          open={openAction}
-          onClose={() => {
-            setOpenAction(false);
-            setSelected(null);
-          }}
-          row={selected}
-          type={type}
-          isNew={selected ? false : true}
-          customer={custvalue}
-          addAction={addActionToList}
-          editAction={editActionInList}
-          theme={theme}
-          event={{ ...evList?.[0], startDate: start, endDate: end }}
-        ></PopupAction>
         <Box>
           <div style={{ display: 'none' }}>
             <ContractPrint
@@ -1229,4 +853,4 @@ const PopupTask = ({
   );
 };
 
-export default PopupTask;
+export default PopupTaskTime;

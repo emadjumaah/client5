@@ -42,6 +42,9 @@ export default gql`
         progress
         isDisabled
         tasktype
+        periodType
+        periodCost
+        dayCost
         location {
           lat
           lng
