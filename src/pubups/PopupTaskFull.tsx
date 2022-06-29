@@ -42,7 +42,11 @@ import ServiceItemForm from '../Shared/ServiceItemForm';
 import ItemsTable from '../Shared/ItemsTable';
 import { invoiceClasses } from '../themes';
 import { SelectLocal } from '../pages/calendar/common/SelectLocal';
-import { byweekdayOptions, intervalOptions } from '../constants/rrule';
+import {
+  byweekdayOptions,
+  intervalOptions,
+  monthdaysOptions,
+} from '../constants/rrule';
 import RRule from 'rrule';
 import getRruleData from '../common/getRruleData';
 import { getEventsList } from '../common/helpers';
@@ -129,7 +133,9 @@ const PopupTaskFull = ({
   const [rrule, setRrule] = useState<any>(null);
   const [weekdays, setWeekdays]: any = useState([]);
   const [byweekday, setByweekday] = useState([]);
-  const [bymonthday, setBymonthday] = useState(null);
+  const [monthdays, setMonthdays] = useState([]);
+  const [bymonthday, setBymonthday] = useState([]);
+
   const [isCustom, setIsCustom] = useState(false);
   const [isLastday, setIsLastday] = useState(false); // lastday of month
   const [isatStart, setIsatStart] = useState(false);
@@ -191,32 +197,38 @@ const PopupTaskFull = ({
     if (value === 1) {
       setFreq(RRule.DAILY);
       setInterval(value);
-      setBymonthday(null);
+      setMonthdays([]);
+      setBymonthday([]);
       setIsCustom(false);
     } else if (value === 7) {
       setFreq(RRule.WEEKLY);
       setInterval(1);
-      setBymonthday(null);
+      setMonthdays([]);
+      setBymonthday([]);
       setIsCustom(false);
     } else if (value === 30) {
       setFreq(RRule.DAILY);
       setInterval(value);
-      setBymonthday(null);
+      setMonthdays([]);
+      setBymonthday([]);
       setIsCustom(false);
     } else if (value === 31) {
       setFreq(RRule.MONTHLY);
       setInterval(1);
-      setBymonthday(null);
+      setMonthdays([]);
+      setBymonthday([]);
       setIsCustom(false);
     } else if (value === 11) {
       setFreq(1);
       setInterval(1);
+      setMonthdays([{ id: 1, name: '1', nameAr: '1', value: 1 }]);
       setBymonthday([1]);
       setIsCustom(false);
       setIsLastday(false);
     } else if (value === 33) {
       setFreq(1);
       setInterval(1);
+      setMonthdays([{ id: 1, name: '1', nameAr: '1', value: 1 }]);
       setBymonthday([1]);
       setIsCustom(false);
       setIsLastday(true);
@@ -224,7 +236,8 @@ const PopupTaskFull = ({
       setFreq(1);
       setInterval(1);
       setCount(1);
-      setBymonthday(null);
+      setMonthdays([]);
+      setBymonthday([]);
       setIsCustom(true);
       const rdata = getRruleData({
         freq: 1,
@@ -323,6 +336,13 @@ const PopupTaskFull = ({
   }, [weekdays]);
 
   useEffect(() => {
+    if (monthdays && monthdays.length > 0) {
+      const bmd = monthdays.map((wd: any) => wd.value);
+      setBymonthday(bmd);
+    }
+  }, [monthdays]);
+
+  useEffect(() => {
     if (freq !== RRule.WEEKLY) {
       setWeekdays([]);
       setByweekday([]);
@@ -337,14 +357,24 @@ const PopupTaskFull = ({
         dtstart: start,
         until: undefined,
         interval,
-        bymonthday,
+        bymonthday: monthdays?.length > 0 ? bymonthday : undefined,
         count,
         isCustom,
       });
       setEnd(rdata.all[rdata.all.length - 1]);
       setRrule(rdata);
     }
-  }, [start, freq, count, interval, weekdays, byweekday, bymonthday, isCustom]);
+  }, [
+    start,
+    freq,
+    count,
+    interval,
+    weekdays,
+    byweekday,
+    monthdays,
+    bymonthday,
+    isCustom,
+  ]);
 
   useEffect(() => {
     if (start && end && isEvents) {
@@ -367,7 +397,7 @@ const PopupTaskFull = ({
         rrule,
         isRTL,
         weekdays,
-        bymonthday,
+        monthdays,
         isLastday,
         isatStart,
       });
@@ -577,10 +607,12 @@ const PopupTaskFull = ({
       setCount(row?.count ? row?.count : row?.evQty || 1);
       setIsEvents(row?.tasktype !== 3 ? true : false);
       setWeekdays(row?.weekdays ? JSON.parse(row?.weekdays) : []);
+      setMonthdays(row?.monthdays ? JSON.parse(row?.monthdays) : []);
       setDayCost(row?.dayCost || 0);
-      setBymonthday(
-        row?.periodType === 11 || row?.periodType === 33 ? [1] : null
-      );
+      if (row?.periodType === 11 || row?.periodType === 33) {
+        setMonthdays([{ id: 1, name: '1', nameAr: '1', value: 1 }]);
+        setBymonthday([1]);
+      }
       setIsCustom(row?.periodType === 100 ? true : false);
       setIsLastday(row?.periodType === 33 ? true : false);
 
@@ -713,6 +745,7 @@ const PopupTaskFull = ({
     setIsCustom(false);
     setIsLastday(false);
     setIsatStart(false);
+    setMonthdays([]);
   };
 
   const onSubmit = async () => {
@@ -784,6 +817,7 @@ const PopupTaskFull = ({
       periodCost: total,
       dayCost,
       weekdays: JSON.stringify(weekdays),
+      monthdays: JSON.stringify(monthdays),
     };
     const mutate = isNew ? addAction : editAction;
     apply(mutate, variables);
@@ -919,6 +953,21 @@ const PopupTaskFull = ({
                     isRTL={isRTL}
                     name="weekdays"
                     disabled={freq !== RRule.WEEKLY}
+                    fullWidth
+                    mb={0}
+                  ></SelectMulti>
+                </Grid>
+              )}
+              {!isCustom && freq === RRule.MONTHLY && periodType === 31 && (
+                <Grid item xs={3} style={{ marginTop: 18 }}>
+                  <SelectMulti
+                    options={monthdaysOptions}
+                    value={monthdays}
+                    setValue={setMonthdays}
+                    words={words}
+                    isRTL={isRTL}
+                    name="monthdays"
+                    disabled={freq !== RRule.MONTHLY}
                     fullWidth
                     mb={0}
                   ></SelectMulti>
@@ -1142,7 +1191,6 @@ const PopupTaskFull = ({
                         label={words.end}
                         onChange={(d: any) => setEnd(d)}
                         format="dd/MM/yyyy"
-                        disabled
                         style={{ marginTop: 0, width: 150 }}
                         mb={0}
                       ></CalenderLocal>
@@ -1236,7 +1284,7 @@ const PopupTaskFull = ({
                   >
                     <Box style={{ flexDirection: 'row' }}>
                       {rrule?.all?.map((al: any, index: any) => {
-                        const isfrom = weekdays?.[0] || bymonthday?.[0];
+                        const isfrom = weekdays?.[0] || monthdays?.[0];
                         if (!isfrom) {
                           if (!isatStart && index === 0) {
                             return null;

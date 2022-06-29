@@ -88,7 +88,7 @@ export const getEventsList = ({
   rrule,
   isRTL,
   weekdays,
-  bymonthday,
+  monthdays,
   isLastday,
   isatStart,
 }: any) => {
@@ -104,7 +104,7 @@ export const getEventsList = ({
     const endminute = event.endDate.getMinutes();
     const dates = [...rrule.all];
 
-    const isfrom = weekdays?.[0] || bymonthday?.[0];
+    const isfrom = weekdays?.[0] || monthdays?.[0];
     if (!isfrom) {
       if (!isatStart) {
         dates.shift();

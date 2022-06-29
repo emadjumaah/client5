@@ -38,6 +38,7 @@ export default gql`
         count
         interval
         weekdays
+        monthdays
         start
         end
         progress

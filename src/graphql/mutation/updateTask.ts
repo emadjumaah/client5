@@ -14,6 +14,7 @@ export default gql`
     $count: Int
     $interval: Int
     $weekdays: String
+    $monthdays: String
     $tasktype: Int
     $periodType: Int
     $periodCost: Float
@@ -46,6 +47,7 @@ export default gql`
       count: $count
       interval: $interval
       weekdays: $weekdays
+      monthdays: $monthdays
       tasktype: $tasktype
       periodType: $periodType
       periodCost: $periodCost

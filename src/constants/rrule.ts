@@ -86,6 +86,37 @@ export const intervalOptions = [
   // },
 ];
 
+export const monthdaysOptions = [
+  { id: 1, name: '1', nameAr: '1', value: 1 },
+  { id: 2, name: '2', nameAr: '2', value: 2 },
+  { id: 3, name: '3', nameAr: '3', value: 3 },
+  { id: 4, name: '4', nameAr: '4', value: 4 },
+  { id: 5, name: '5', nameAr: '5', value: 5 },
+  { id: 6, name: '6', nameAr: '6', value: 6 },
+  { id: 7, name: '7', nameAr: '7', value: 7 },
+  { id: 8, name: '8', nameAr: '8', value: 8 },
+  { id: 9, name: '9', nameAr: '9', value: 9 },
+  { id: 10, name: '10', nameAr: '10', value: 10 },
+  { id: 11, name: '11', nameAr: '11', value: 11 },
+  { id: 12, name: '12', nameAr: '12', value: 12 },
+  { id: 13, name: '13', nameAr: '13', value: 13 },
+  { id: 14, name: '14', nameAr: '14', value: 14 },
+  { id: 15, name: '15', nameAr: '15', value: 15 },
+  { id: 16, name: '16', nameAr: '16', value: 16 },
+  { id: 17, name: '17', nameAr: '17', value: 17 },
+  { id: 18, name: '18', nameAr: '18', value: 18 },
+  { id: 19, name: '19', nameAr: '19', value: 19 },
+  { id: 20, name: '20', nameAr: '20', value: 20 },
+  { id: 21, name: '21', nameAr: '21', value: 21 },
+  { id: 22, name: '22', nameAr: '22', value: 22 },
+  { id: 23, name: '23', nameAr: '23', value: 23 },
+  { id: 24, name: '24', nameAr: '24', value: 24 },
+  { id: 25, name: '25', nameAr: '25', value: 25 },
+  { id: 26, name: '26', nameAr: '26', value: 26 },
+  { id: 27, name: '27', nameAr: '27', value: 27 },
+  { id: 28, name: '28', nameAr: '28', value: 28 },
+];
+
 export const byweekdayOptions = [
   {
     id: 1,
