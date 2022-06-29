@@ -52,6 +52,7 @@
     "category": "Category",
     "brand": "Brand",
     "cost": "Cost",
+    "dayCost": "Day Price",
     "price": "Price",
     "theprice": "Price",
     "used": "Used",

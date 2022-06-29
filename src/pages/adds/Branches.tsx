@@ -40,13 +40,6 @@ export default function Branches({ isRTL, theme, words }: any) {
     { name: 'template', title: words.template },
     { name: 'tel1', title: words.phoneNumber },
     { name: 'email', title: words.email },
-    // { name: 'packName', title: isRTL ? 'الاشتراك' : 'Package' },
-    // { name: 'packStart', title: isRTL ? 'بداية الاشتراك' : 'Start' },
-    // { name: 'packEnd', title: isRTL ? 'نهاية الاشتراك' : 'End' },
-    // { name: 'packCost', title: words.price },
-    // { name: 'packQty', title: words.qty },
-    // { name: 'username', title: isRTL ? 'المدير' : 'Manager' },
-    // { name: 'reqpack', title: isRTL ? 'المطلوب' : 'Requested' },
   ];
 
   const [columns] = useState(branchCol);

@@ -13,15 +13,13 @@ const OptionProductData = ({ item, isRTL, price = true }: any) => {
   return (
     <Box
       display="flex"
-      ml={1}
-      mr={1}
       style={{
         flex: 1,
         direction: isRTL ? 'rtl' : 'ltr',
       }}
     >
       <Grid container spacing={1}>
-        <Grid item xs={6}>
+        <Grid item xs={5}>
           <Typography
             style={{
               textAlign: isRTL ? 'right' : 'left',

@@ -1718,7 +1718,7 @@ export const employeeDataView = ({ row, words, isRTL }) => {
           <Grid item xs={12}>
             <Typography variant="caption">
               <Typography variant="caption">
-              {isRTL ? "يوم العطلة" : "Day Off"}:{' '}
+                {isRTL ? 'يوم العطلة' : 'Day Off'}:{' '}
                 {daysoffFormatter({ value: row.daysoff, isRTL })}
               </Typography>
             </Typography>
@@ -1954,7 +1954,9 @@ export const appointmentsFormatter = ({
   height = 100,
   bc = '#ddd',
 }: any) => {
-  const progress = Math.round((row?.evDone / row?.evQty) * 100) / 100;
+  const progress = row?.evQty
+    ? Math.round((row?.evDone / row?.evQty) * 100) / 100
+    : 0;
 
   return (
     <Box
@@ -2022,10 +2024,12 @@ export const appointTaskFormatter = ({
   height = 100,
   bc = '#ddd',
 }: any) => {
-  const eventamount = row?.amount / row?.evQty;
-  const amountnow = eventamount * row?.evDone;
-  const remaining = row?.amount - amountnow;
-  const progress = Math.round((row?.evDone / row?.evQty) * 100) / 100;
+  const eventamount = row?.evQty ? row?.amount / row?.evQty : 0;
+  const amountnow = row?.evQty ? eventamount * row?.evDone : 0;
+  const remaining = row?.evQty ? row?.amount - amountnow : 0;
+  const progress = row?.evQty
+    ? Math.round((row?.evDone / row?.evQty) * 100) / 100
+    : 0;
 
   return (
     <Box
@@ -2128,10 +2132,12 @@ export const appointTaskMainFormatter = ({
   isRTL,
   height = 250,
 }: any) => {
-  const eventamount = row?.amount / row?.evQty;
-  const amountnow = eventamount * row?.evDone;
-  const remaining = row?.amount - amountnow;
-  const progress = Math.round((row?.evDone / row?.evQty) * 100) / 100;
+  const eventamount = row?.evQty ? row?.amount / row?.evQty : 0;
+  const amountnow = row?.evQty ? eventamount * row?.evDone : 0;
+  const remaining = row?.evQty ? row?.amount - amountnow : 0;
+  const progress = row?.evQty
+    ? Math.round((row?.evDone / row?.evQty) * 100) / 100
+    : 0;
 
   return (
     <Box display={'flex'} style={{ flex: 1, height }}>
@@ -2223,7 +2229,9 @@ export const appointTaskMainFormatter = ({
   );
 };
 export const appointmentsMainFormatter = ({ row, theme, isRTL }: any) => {
-  const progress = Math.round((row?.evDone / row?.evQty) * 100) / 100;
+  const progress = row?.evQty
+    ? Math.round((row?.evDone / row?.evQty) * 100) / 100
+    : 0;
 
   return (
     <Box display={'flex'} style={{ flex: 1, paddingTop: 15, height: 240 }}>

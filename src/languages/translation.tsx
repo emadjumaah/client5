@@ -55,6 +55,7 @@ export const translation = (lang: LanguageType) => {
     category: lang.words.category,
     brand: lang.words.brand,
     cost: lang.words.cost,
+    dayCost: lang.words.dayCost,
     price: lang.words.price,
     theprice: lang.words.theprice,
     used: lang.words.used,

@@ -55,13 +55,31 @@ export const intervalOptions = [
   },
   {
     id: 30,
-    name: 'Monthly 30 Days',
-    nameAr: 'شهري 30 يوم',
+    name: 'Every 30 Days',
+    nameAr: 'كل 30 يوم',
     value: 30,
+  },
+  {
+    id: 11,
+    name: 'On Month Start',
+    nameAr: 'بداية كل شهر',
+    value: 11,
+  },
+  {
+    id: 33,
+    name: 'On Month End',
+    nameAr: 'نهاية كل شهر',
+    value: 33,
+  },
+  {
+    id: 100,
+    name: 'Custom Date',
+    nameAr: 'مخصص',
+    value: 100,
   },
 
   // {
-  //   id: 4,
+  //   id: 1000,
   //   name: 'Yearly',
   //   nameAr: 'سنوي',
   //   value: RRule.YEARLY,

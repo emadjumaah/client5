@@ -142,7 +142,7 @@ export default function ServiceItemForm({
       </RadioGroup>
       <Box display="flex" style={{ flex: 1 }}>
         <Grid container spacing={1}>
-          <Grid item xs={5}>
+          <Grid item xs={6}>
             <Autocomplete
               autoSelect
               size="small"
@@ -238,25 +238,6 @@ export default function ServiceItemForm({
               }}
             />
           </Grid>
-          {/* {!tempoptions?.noTsk && <Grid item xs={2}></Grid>}
-          {!tempoptions?.noTsk && (
-            <Grid item xs={10}>
-              <TextField
-                name="desc"
-                label={words.description}
-                onChange={(e: any) => setDesc(e.target.value)}
-                value={desc}
-                variant="outlined"
-                inputRef={register}
-                margin="dense"
-                fullWidth
-                inputProps={{
-                  style: { textAlign: 'right', fontSize: 13, height: 13 },
-                }}
-              />
-            </Grid>
-          )} */}
-          <Grid item xs={1}></Grid>
           <Grid item xs={1}>
             <Fab
               style={{ marginLeft: 10, marginTop: 5, width: 36, height: 36 }}

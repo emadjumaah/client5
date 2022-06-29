@@ -6,25 +6,35 @@ const end = null;
 export default function getRruleData({
   freq = RRule.WEEKLY,
   byweekday,
-  dtstart = start,
-  until = end,
+  dtstart,
+  until,
   interval = 1,
+  bymonthday,
   count = 1,
+  isCustom,
 }: any) {
-  const rule = new RRule({
-    freq,
-    interval,
-    byweekday,
-    dtstart,
-    until,
-    count: byweekday ? count : count + 1,
-  });
-  const all = rule.all();
-  const str = rule.toString();
-  const txt = rule.toText();
-
-  return { all, str, txt };
+  if (isCustom) {
+    const all = [dtstart, until];
+    const str = `${dtstart}, ${until}`;
+    const txt = `Custom ${dtstart}, ${until}`;
+    return { all, str, txt };
+  } else {
+    const rule = new RRule({
+      freq,
+      interval,
+      byweekday,
+      bymonthday,
+      dtstart,
+      until: end,
+      count: byweekday?.[0] || bymonthday?.[0] ? count : count + 1,
+    });
+    const all = rule.all();
+    const str = rule.toString();
+    const txt = rule.toText();
+    return { all, str, txt };
+  }
 }
+
 export const getReminderRruleData = ({
   freq = RRule.DAILY,
   byweekday,

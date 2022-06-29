@@ -17,6 +17,8 @@ export default function SelectMulti({
   name,
   width,
   nomulti = false,
+  fullWidth,
+  disabled,
 }: any) {
   return (
     <Autocomplete
@@ -26,6 +28,8 @@ export default function SelectMulti({
       disableCloseOnSelect
       disableListWrap
       getOptionLabel={(option: any) => (isRTL ? option.nameAr : option.name)}
+      fullWidth={fullWidth}
+      disabled={disabled}
       renderOption={(option, { selected }) => (
         <Box
           style={{
@@ -61,7 +65,7 @@ export default function SelectMulti({
           label={words[name]}
           variant="outlined"
           style={{
-            width: width ? width : 200,
+            width: fullWidth ? undefined : width ? width : 200,
             marginRight: 5,
             marginLeft: 5,
             fontSize: 10,

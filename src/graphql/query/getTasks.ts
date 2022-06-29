@@ -35,6 +35,7 @@ export default gql`
         name
         type
         freq
+        count
         interval
         weekdays
         start

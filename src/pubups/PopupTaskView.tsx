@@ -7,9 +7,7 @@ import { Box, Button, colors, Tab, Tabs, Typography } from '@material-ui/core';
 import PopupLayout from '../pages/main/PopupLayout';
 import { Grid } from '@material-ui/core';
 import { useLazyQuery, useMutation } from '@apollo/client';
-import _ from 'lodash';
 import PopupTaskInvoice from './PopupTaskInvoice';
-// import getTaskItems from '../graphql/query/getTaskItems';
 import { taskManamentTabs } from '../constants/rrule';
 import EventsCustomer from '../Shared/EventsCustomer';
 import InvoicesCustomer from '../Shared/InvoicesCustomer';
@@ -23,11 +21,7 @@ import {
   getOperationItems,
 } from '../graphql';
 import getTasks from '../graphql/query/getTasks';
-import {
-  getReadyCloseEventData,
-  getReadyEventData,
-  getTaskTimeAmountData,
-} from '../common/helpers';
+import { getReadyEventData, getTaskTimeAmountData } from '../common/helpers';
 import { ContractPrint } from '../print';
 import { useReactToPrint } from 'react-to-print';
 import KaidsCustomer from '../Shared/KaidsCustomer';
@@ -208,10 +202,6 @@ const PopupTaskView = ({
     }
   }, [eventsData, item]);
 
-  // const [getItems, itemsData]: any = useLazyQuery(getTaskItems, {
-  //   fetchPolicy: 'cache-and-network',
-  // });
-
   const addNewEvent = async () => {
     if (!event) return;
     setLoading(true);
@@ -224,125 +214,18 @@ const PopupTaskView = ({
     setLoading(false);
   };
   const toCloseTask = async (time: any) => {
-    if (!event) return;
     setCloseloading(true);
-    const data = eventsData?.data?.['getObjectEvents']?.data;
-    const events = data || [];
 
-    const fevents = events.filter(
-      (ev: any) => new Date(ev.startDate) < new Date(time)
-    );
-    const sum = _.sumBy(fevents, 'amount');
-    const days = getTaskTimeAmountData(row, time);
-
-    const amount = days?.amountnow - sum;
-    const evdata = getReadyCloseEventData(
-      event,
-      row,
-      amount,
-      eventItemsData,
-      services,
-      time
-    );
     await stopTask({
       variables: {
         id: row.id,
         time,
-        event: JSON.stringify(evdata),
+        del: true,
       },
     });
     setCloseloading(false);
   };
 
-  // useEffect(() => {
-  //   if (open) {
-  //     const items = itemsData?.data?.['getTaskItems']?.data || [];
-  //     if (items && items.length > 0) {
-  //       const ids = items.map((it: any) => it.itemId);
-  //       const servlist = services.filter((ser: any) => ids.includes(ser._id));
-
-  //       const itemsWqtyprice = items.map((item: any, index: any) => {
-  //         const {
-  //           categoryId,
-  //           categoryName,
-  //           categoryNameAr,
-  //           departmentId,
-  //           departmentName,
-  //           departmentNameAr,
-  //           departmentColor,
-  //           employeeId,
-  //           employeeName,
-  //           employeeNameAr,
-  //           employeeColor,
-  //           resourseId,
-  //           resourseName,
-  //           resourseNameAr,
-  //           resourseColor,
-  //         } = item;
-  //         const serv = servlist.filter((se: any) => se._id === item.itemId)[0];
-  //         return {
-  //           ...serv,
-  //           categoryId,
-  //           categoryName,
-  //           categoryNameAr,
-  //           departmentId,
-  //           departmentName,
-  //           departmentNameAr,
-  //           departmentColor,
-  //           employeeId,
-  //           employeeName,
-  //           employeeNameAr,
-  //           employeeColor,
-  //           resourseId,
-  //           resourseName,
-  //           resourseNameAr,
-  //           resourseColor,
-  //           index,
-  //           itemprice: item.itemPrice,
-  //           itemqty: item.qty,
-  //           itemtotal: item.total,
-  //           // itemtotalcost: item.qty * serv.cost,
-  //         };
-  //       });
-  //       const finalItems = _(itemsWqtyprice)
-  //         .groupBy('_id')
-  //         .map((array) => ({
-  //           _id: array[0]._id,
-  //           name: array[0].name,
-  //           nameAr: array[0].nameAr,
-  //           categoryId: array[0].categoryId,
-  //           categoryName: array[0].categoryName,
-  //           categoryNameAr: array[0].categoryNameAr,
-  //           departmentId: array[0].departmentId,
-  //           departmentName: array[0].departmentName,
-  //           departmentNameAr: array[0].departmentNameAr,
-  //           departmentColor: array[0].departmentColor,
-  //           employeeId: array[0].employeeId,
-  //           employeeName: array[0].employeeName,
-  //           employeeNameAr: array[0].employeeNameAr,
-  //           employeeColor: array[0].employeeColor,
-  //           autoNo: array[0].autoNo,
-  //           docNo: array[0].docNo,
-  //           cost: array[0].cost,
-  //           itemType: array[0].itemType,
-  //           index: array[0].index,
-  //           itemprice: array[0].itemprice,
-  //           itemqty: _.sumBy(array, 'itemqty'),
-  //           itemtotal: _.sumBy(array, 'itemtotal'),
-  //         }))
-  //         .orderBy('index')
-  //         .value();
-  //       setItemsList(finalItems);
-  //     }
-  //   }
-  // }, [itemsData, open]);
-
-  // useEffect(() => {
-  //   if (row && row._id) {
-  //     const variables = { taskId: row.id };
-  //     getItems({ variables });
-  //   }
-  // }, [row]);
   const printData = {
     ...row,
     no: row?.docNo,

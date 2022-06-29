@@ -9,6 +9,7 @@ export const SelectLocal = ({
   isRTL,
   width = 150,
   disabled = false,
+  fullWidth,
 }: any) => {
   return (
     <FormControl>
@@ -18,9 +19,10 @@ export const SelectLocal = ({
         disabled={disabled}
         onChange={onChange}
         variant="outlined"
+        fullWidth={fullWidth}
         style={{
           height: 38,
-          width: width,
+          width: fullWidth ? undefined : width,
           alignSelf: 'flex-end',
           fontSize: 12,
           fontWeight: 'bold',

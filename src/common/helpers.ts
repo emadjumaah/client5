@@ -86,10 +86,11 @@ export const getparentAccountsNames = () => {
 export const getEventsList = ({
   event,
   rrule,
-  actionslist,
   isRTL,
-  start,
   weekdays,
+  bymonthday,
+  isLastday,
+  isatStart,
 }: any) => {
   if (!event) {
     return [];
@@ -101,10 +102,18 @@ export const getEventsList = ({
     const startminute = event.startDate.getMinutes();
     const endhour = event.endDate.getHours();
     const endminute = event.endDate.getMinutes();
-    const dates = rrule.all;
-    if (dates?.length > 0 && weekdays?.length > 0 && dates?.[0] !== start) {
-      dates.unshift(start);
+    const dates = [...rrule.all];
+
+    const isfrom = weekdays?.[0] || bymonthday?.[0];
+    if (!isfrom) {
+      if (!isatStart) {
+        dates.shift();
+      }
+      if (isatStart) {
+        dates.pop();
+      }
     }
+    console.log('dates', dates);
     const ritems = JSON.parse(event.items);
     const isTitle = event?.title && event?.title?.trim()?.length > 0;
     const title = isTitle
@@ -113,34 +122,23 @@ export const getEventsList = ({
       ? ritems[0]?.nameAr
       : ritems[0]?.name;
     const list = dates.map((da: any) => {
-      const year = da.getFullYear();
-      const month = da.getMonth();
-      const day = da.getDate();
+      let d = da;
+      const da2 = new Date(da);
+      if (isLastday && da2.getDate() === 1) {
+        da2.setDate(da2.getDate() - 1);
+        d = da2;
+      }
+
+      const year = d.getFullYear();
+      const month = d.getMonth();
+      const day = d.getDate();
       const startDate = new Date(year, month, day, starthour, startminute);
       const endDate = new Date(year, month, day, endhour, endminute);
-
-      const actionsl =
-        actionslist?.length > 0
-          ? actionslist.map((al: any) => {
-              const { timeunit, timerelate, qty } = al;
-              const sendtime = getSendTime({
-                startDate,
-                endDate,
-                timeunit,
-                timerelate,
-                qty,
-              });
-              return {
-                ...al,
-                sendtime,
-              };
-            })
-          : null;
 
       return {
         ...event,
         title,
-        actions: actionsl ? JSON.stringify(actionsl) : null,
+        actions: null,
         startDate,
         endDate,
       };

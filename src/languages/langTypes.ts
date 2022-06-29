@@ -85,6 +85,7 @@ export interface LanguageType {
     category: string;
     brand: string;
     cost: string;
+    dayCost: string;
     price: string;
     theprice: string;
     used: string;

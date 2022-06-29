@@ -47,7 +47,7 @@ import { getColumns } from '../../common/columns';
 import { Box, Typography } from '@material-ui/core';
 import TasksContext from '../../contexts/tasks';
 import getTasks from '../../graphql/query/getTasks';
-import PopupTask from '../../pubups/PopupTask';
+import PopupTaskFull from '../../pubups/PopupTaskFull';
 import createTask from '../../graphql/mutation/createTask';
 import updateTask from '../../graphql/mutation/updateTask';
 import deleteTaskById from '../../graphql/mutation/deleteTaskById';
@@ -445,7 +445,7 @@ export default function Tasks({ isRTL, words, menuitem, theme, company }) {
             />
 
             <PopupEditing addAction={addTask} editAction={editTask}>
-              <PopupTask
+              <PopupTaskFull
                 resourses={resourses}
                 employees={employees}
                 departments={departments}
@@ -458,7 +458,7 @@ export default function Tasks({ isRTL, words, menuitem, theme, company }) {
                 refresh={refresh}
                 startrange={start}
                 endrange={end}
-              ></PopupTask>
+              ></PopupTaskFull>
             </PopupEditing>
           </Grid>
           {loading && <Loading isRTL={isRTL} />}

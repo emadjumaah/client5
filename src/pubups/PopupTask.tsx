@@ -89,7 +89,6 @@ const PopupTask = ({
 }: any) => {
   const classes = invoiceClasses();
 
-  const [tasktype, setTasktype] = useState(2);
   const [saving, setSaving] = useState(false);
   const [tasktitle, setTasktitle]: any = useState(null);
   const [start, setStart]: any = useState(null);
@@ -690,7 +689,7 @@ const PopupTask = ({
       end,
       amount: isNew ? total : undefined,
       status: isNew ? status?.id : 1,
-      tasktype, // 1: single event, 2: multi events, 3: no events - only items and time
+      tasktype: 2, // 1: single event, 2: multi events, 3: no events - only items and time
       events,
       evQty: isNew ? evList?.length : undefined,
       evDone: isNew ? 0 : undefined,

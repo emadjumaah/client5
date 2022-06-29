@@ -19,6 +19,7 @@ export default function TextFieldLocal({
   mb = 20,
   ltr,
   maxLength,
+  style = {},
   ...res
 }: any) {
   return (
@@ -34,7 +35,7 @@ export default function TextFieldLocal({
       error={errors ? (errors[name] ? true : false) : false}
       inputRef={register}
       variant="outlined"
-      inputProps={{ maxLength }}
+      inputProps={{ maxLength, ...style }}
       style={{
         width,
         marginBottom: mb,
