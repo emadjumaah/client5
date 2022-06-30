@@ -73,8 +73,8 @@ export const intervalOptions = [
   },
   {
     id: 100,
-    name: 'Custom Date',
-    nameAr: 'مخصص',
+    name: 'One Appointment',
+    nameAr: 'موعد واحد',
     value: 100,
   },
 

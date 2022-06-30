@@ -361,7 +361,10 @@ const PopupTaskFull = ({
         count,
         isCustom,
       });
-      setEnd(rdata.all[rdata.all.length - 1]);
+      const lastapp = rdata.all[rdata.all.length - 1];
+      if (lastapp && lastapp > end) {
+        setEnd(rdata.all[rdata.all.length - 1]);
+      }
       setRrule(rdata);
     }
   }, [
@@ -889,40 +892,28 @@ const PopupTaskFull = ({
     >
       <Box>
         <Grid container spacing={3}>
-          <Grid item xs={8} style={{ marginBottom: 30 }}>
+          <Grid item xs={8}>
             <Grid container spacing={1}>
-              <Grid item xs={3} style={{ marginTop: 10 }}>
+              <Grid item xs={3}>
                 <CalenderLocal
                   label={words.start}
                   value={start}
                   onChange={(d: any) => setStart(d)}
                   format="dd/MM/yyyy"
                   mb={0}
-                  style={{ marginTop: 0, width: 180 }}
+                  style={{
+                    marginTop: 0,
+                    width: 180,
+                  }}
                 ></CalenderLocal>
               </Grid>
-
-              <Grid item xs={2} style={{ marginTop: 10 }}>
-                <SelectLocal
-                  options={intervalOptions}
-                  value={periodType}
-                  onChange={onChangePeriodType}
-                  isRTL={isRTL}
-                  width={128}
-                ></SelectLocal>
-              </Grid>
-
-              {isCustom && (
-                <Grid
-                  item
-                  xs={3}
-                  style={{ marginTop: 10, marginLeft: 15, marginRight: 15 }}
-                >
-                  <CalenderLocal
-                    value={end}
-                    label={words.end}
-                    minDate={start}
-                    onChange={(d: any) => {
+              <Grid item xs={3}>
+                <CalenderLocal
+                  value={end}
+                  label={words.end}
+                  onChange={(d: any) => {
+                    setEnd(d);
+                    if (isCustom) {
                       const rdata = getRruleData({
                         freq: 1,
                         byweekday: null,
@@ -934,74 +925,138 @@ const PopupTaskFull = ({
                         isCustom,
                       });
                       setRrule(rdata);
-                      setEnd(d);
-                    }}
-                    format="dd/MM/yyyy"
-                    style={{ marginTop: 0, width: 180 }}
-                    mb={0}
-                  ></CalenderLocal>
-                </Grid>
-              )}
+                    }
+                  }}
+                  format="dd/MM/yyyy"
+                  style={{
+                    marginTop: 0,
+                    width: 180,
+                  }}
+                  mb={0}
+                ></CalenderLocal>
+              </Grid>
+              <Grid item xs={1}></Grid>
+              <Grid item xs={5} style={{ marginTop: 15 }}>
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={isEvents}
+                      onChange={() => {
+                        setIsEvents(!isEvents);
+                        setIsatStart(false);
+                      }}
+                      color="primary"
+                    />
+                  }
+                  label={
+                    <Typography
+                      style={{
+                        color: theme.palette.primary.main,
+                        marginTop: 8,
+                      }}
+                      variant="subtitle1"
+                    >
+                      {isRTL ? 'تفعيل المواعيد' : 'Activate Appointments'}
+                    </Typography>
+                  }
+                  style={{ fontSize: 14 }}
+                />
+                {isEvents && (
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        checked={isatStart}
+                        onChange={() => setIsatStart(!isatStart)}
+                        color="primary"
+                      />
+                    }
+                    label={
+                      <Typography
+                        style={{
+                          color: theme.palette.primary.main,
+                          marginTop: 8,
+                        }}
+                        variant="subtitle1"
+                      >
+                        {isRTL ? 'مع بداية الفترة' : 'At Beginning'}
+                      </Typography>
+                    }
+                    style={{ fontSize: 14 }}
+                  />
+                )}
+              </Grid>
+              {isEvents && (
+                <>
+                  <Grid item xs={3} style={{ marginTop: 10 }}>
+                    <SelectLocal
+                      options={intervalOptions}
+                      value={periodType}
+                      onChange={onChangePeriodType}
+                      isRTL={isRTL}
+                      width={195}
+                    ></SelectLocal>
+                  </Grid>
 
-              {!isCustom && freq === RRule.WEEKLY && (
-                <Grid item xs={3} style={{ marginTop: 18 }}>
-                  <SelectMulti
-                    options={byweekdayOptions}
-                    value={weekdays}
-                    setValue={setWeekdays}
-                    words={words}
-                    isRTL={isRTL}
-                    name="weekdays"
-                    disabled={freq !== RRule.WEEKLY}
-                    fullWidth
-                    mb={0}
-                  ></SelectMulti>
-                </Grid>
+                  {!isCustom && freq === RRule.WEEKLY && (
+                    <Grid item xs={3} style={{ marginTop: 18 }}>
+                      <SelectMulti
+                        options={byweekdayOptions}
+                        value={weekdays}
+                        setValue={setWeekdays}
+                        words={words}
+                        isRTL={isRTL}
+                        name="weekdays"
+                        disabled={freq !== RRule.WEEKLY}
+                        fullWidth
+                        mb={0}
+                      ></SelectMulti>
+                    </Grid>
+                  )}
+                  {!isCustom && freq === RRule.MONTHLY && periodType === 31 && (
+                    <Grid item xs={3} style={{ marginTop: 18 }}>
+                      <SelectMulti
+                        options={monthdaysOptions}
+                        value={monthdays}
+                        setValue={setMonthdays}
+                        words={words}
+                        isRTL={isRTL}
+                        name="monthdays"
+                        disabled={freq !== RRule.MONTHLY}
+                        fullWidth
+                        mb={0}
+                      ></SelectMulti>
+                    </Grid>
+                  )}
+                  {!isCustom && (
+                    <Grid item xs={3} style={{ marginTop: 10 }}>
+                      <TextFieldLocal
+                        required
+                        name="count"
+                        label={words.qty}
+                        value={count}
+                        onChange={onChangeCount}
+                        type="number"
+                        fullWidth
+                        mb={0}
+                      />
+                    </Grid>
+                  )}
+                  {!isCustom && (
+                    <Grid item xs={3} style={{ marginTop: 10 }}>
+                      <TextFieldLocal
+                        required
+                        name="interval"
+                        label={words.interval}
+                        value={interval}
+                        onChange={onChangeInterval}
+                        type="number"
+                        fullWidth
+                        mb={0}
+                      />
+                    </Grid>
+                  )}
+                </>
               )}
-              {!isCustom && freq === RRule.MONTHLY && periodType === 31 && (
-                <Grid item xs={3} style={{ marginTop: 18 }}>
-                  <SelectMulti
-                    options={monthdaysOptions}
-                    value={monthdays}
-                    setValue={setMonthdays}
-                    words={words}
-                    isRTL={isRTL}
-                    name="monthdays"
-                    disabled={freq !== RRule.MONTHLY}
-                    fullWidth
-                    mb={0}
-                  ></SelectMulti>
-                </Grid>
-              )}
-              {!isCustom && (
-                <Grid item xs={2} style={{ marginTop: 10 }}>
-                  <TextFieldLocal
-                    required
-                    name="count"
-                    label={words.qty}
-                    value={count}
-                    onChange={onChangeCount}
-                    type="number"
-                    fullWidth
-                    mb={0}
-                  />
-                </Grid>
-              )}
-              {!isCustom && (
-                <Grid item xs={2} style={{ marginTop: 10 }}>
-                  <TextFieldLocal
-                    required
-                    name="interval"
-                    label={words.interval}
-                    value={interval}
-                    onChange={onChangeInterval}
-                    type="number"
-                    fullWidth
-                    mb={0}
-                  />
-                </Grid>
-              )}
-              {!isCustom && freq !== RRule.WEEKLY && <Grid item xs={3}></Grid>}
               <Grid item xs={12}>
                 <TextFieldLocal
                   required
@@ -1185,19 +1240,6 @@ const PopupTaskFull = ({
               <Grid item xs={12}>
                 <Grid container spacing={1}>
                   <Grid item xs={6}>
-                    {!isCustom && (
-                      <CalenderLocal
-                        value={end}
-                        label={words.end}
-                        onChange={(d: any) => setEnd(d)}
-                        format="dd/MM/yyyy"
-                        style={{ marginTop: 0, width: 150 }}
-                        mb={0}
-                      ></CalenderLocal>
-                    )}
-                  </Grid>
-                  <Grid item xs={6}></Grid>
-                  <Grid item xs={6}>
                     <TextFieldLocal
                       name="dayCost"
                       label={words.dayCost}
@@ -1228,51 +1270,7 @@ const PopupTaskFull = ({
                   ))}
                 </Grid>
               </Grid>
-              <Grid item xs={12}>
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      style={{ padding: 7 }}
-                      checked={isEvents}
-                      onChange={() => {
-                        setIsEvents(!isEvents);
-                        setIsatStart(false);
-                      }}
-                      color="primary"
-                    />
-                  }
-                  label={
-                    <Typography
-                      style={{ color: theme.palette.primary.main }}
-                      variant="subtitle2"
-                    >
-                      {isRTL ? 'تفعيل المواعيد' : 'Activate Appointments'}
-                    </Typography>
-                  }
-                  style={{ fontSize: 14 }}
-                />
-                {isEvents && (
-                  <FormControlLabel
-                    control={
-                      <Checkbox
-                        style={{ padding: 7 }}
-                        checked={isatStart}
-                        onChange={() => setIsatStart(!isatStart)}
-                        color="primary"
-                      />
-                    }
-                    label={
-                      <Typography
-                        style={{ color: theme.palette.primary.main }}
-                        variant="subtitle2"
-                      >
-                        {isRTL ? 'مع بداية الفترة' : 'At Beginning'}
-                      </Typography>
-                    }
-                    style={{ fontSize: 14 }}
-                  />
-                )}
-              </Grid>
+
               <Grid item xs={12}>
                 {rrule?.all && isEvents && (
                   <Paper
