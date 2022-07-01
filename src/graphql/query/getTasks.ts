@@ -33,6 +33,7 @@ export default gql`
 
         id
         name
+        nameAr
         type
         freq
         count

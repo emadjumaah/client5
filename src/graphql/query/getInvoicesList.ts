@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client';
 export default gql`
   query getInvoicesList(
-    $taskId: Int
+    $contractId: String
     $customerId: String
     $supplierId: String
     $departmentId: String
@@ -10,7 +10,7 @@ export default gql`
     $resourseId: String
   ) {
     getInvoicesList(
-      taskId: $taskId
+      contractId: $contractId
       customerId: $customerId
       supplierId: $supplierId
       departmentId: $departmentId
@@ -30,7 +30,6 @@ export default gql`
         time
         title
         desc
-        taskId
 
         periodfrom
         periodto
@@ -64,6 +63,10 @@ export default gql`
         resourseName
         resourseNameAr
         resourseColor
+
+        contractId
+        contractName
+        contractNameAr
 
         refNo
         refType

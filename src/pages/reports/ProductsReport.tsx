@@ -44,7 +44,6 @@ import {
   moneyFormat,
   opTypeFormatter,
   outFormatter,
-  taskIdFormatter,
 } from '../../Shared/colorFormat';
 import {
   Box,
@@ -119,7 +118,7 @@ export default function ProductsReport({
     col.opType,
     col.opDocNo,
     col.project,
-    col.taskId,
+    col.contract,
     col.employee,
     col.resourse,
     col.department,
@@ -145,7 +144,7 @@ export default function ProductsReport({
           col.product,
           col.opType,
           col.opDocNo,
-          col.taskId,
+          col.contract,
           col.project,
           col.employee,
           col.resourse,
@@ -257,8 +256,7 @@ export default function ProductsReport({
 
   const getIds = (list: any) =>
     list && list?.length > 0 ? list.map((sv: any) => sv._id) : undefined;
-  const getTaskIds = (list: any) =>
-    list && list?.length > 0 ? list.map((sv: any) => sv.id) : undefined;
+
   const fetchData = () => {
     const variables = {
       itemType: 1,
@@ -268,7 +266,7 @@ export default function ProductsReport({
       resourseIds: getIds(resovalue),
       employeeIds: getIds(emplvalue),
       customerIds: getIds(custvalue),
-      taskIds: getTaskIds(taskvalue),
+      contractIds: getIds(taskvalue),
       types: [
         operationTypes.salesInvoice,
         operationTypes.purchaseInvoice,
@@ -380,9 +378,9 @@ export default function ProductsReport({
               ? row[col.customer.name]
               : ' - '
             : undefined,
-          taskId: inActiveColumns('taskId')
-            ? row[col.taskId.name]
-              ? row[col.taskId.name]
+          contract: inActiveColumns('contract')
+            ? row[col.contract.name]
+              ? row[col.contract.name]
               : ' - '
             : undefined,
           opType: inActiveColumns('opType')
@@ -697,12 +695,6 @@ export default function ProductsReport({
           <DataTypeProvider
             for={['out']}
             formatterComponent={outFormatter}
-          ></DataTypeProvider>
-          <DataTypeProvider
-            for={['taskId']}
-            formatterComponent={(props: any) =>
-              taskIdFormatter({ ...props, tasks })
-            }
           ></DataTypeProvider>
           <DataTypeProvider
             for={['opType']}

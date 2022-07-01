@@ -71,7 +71,7 @@ export class GeneralKaidPrint extends React.PureComponent<any, any> {
     );
   };
   renderItem = (item: any, isRTL: any, tasks: any) => {
-    const task = tasks.filter((tsk: any) => tsk.id === item?.taskId)?.[0];
+    const task = tasks.filter((tsk: any) => tsk._id === item?.contractId)?.[0];
     const debit = moneyFormatEmpty(item?.debit);
     const credit = moneyFormatEmpty(item?.credit);
     return (

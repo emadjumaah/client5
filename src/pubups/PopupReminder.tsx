@@ -197,8 +197,6 @@ const PopupReminder = ({
       const depId = row.departmentId;
       const empId = row.employeeId;
       const resId = row.resourseId;
-      // const custId = row.customerId;
-      // const taskId = row.taskId;
 
       setRtitle(row?.title);
       setRuntime(new Date(row?.runtime));
@@ -232,14 +230,6 @@ const PopupReminder = ({
         const res = resourses.filter((emp: any) => emp._id === resId)[0];
         setResovalue(res);
       }
-      // if (taskId) {
-      //   const tsk = tasks.filter((ts: any) => ts.id === taskId)[0];
-      //   setTaskvalue(tsk);
-      // }
-      // if (custId) {
-      //   const cust = customers.filter((cu: any) => cu._id === custId)[0];
-      //   setCustvalue(cust);
-      // }
       if (row?.actions) {
         setActionslist(JSON.parse(row?.actions));
       }
@@ -363,11 +353,9 @@ const PopupReminder = ({
       rRule: rrule?.str,
       rruledata: rrule ? JSON.stringify(rrule) : undefined,
       actions: actionslist ? JSON.stringify(actionslist) : undefined,
-      // customerId: custvalue ? custvalue._id : undefined,
       departmentId: departvalue ? departvalue._id : undefined,
       employeeId: emplvalue ? emplvalue._id : undefined,
       resourseId: resovalue ? resovalue._id : undefined,
-      // taskId: taskvalue ? taskvalue.id : undefined,
       items: itemsList ? JSON.stringify(itemsList) : undefined,
       amount,
       freq,

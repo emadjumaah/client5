@@ -33,7 +33,6 @@ import {
   accountFormatter,
   currencyFormatter,
   samllFormatter,
-  taskIdFormatter,
   timeFormatter,
 } from './colorFormat';
 import useAccounts from '../hooks/useAccounts';
@@ -90,7 +89,7 @@ export default function ExpensesProdCustomer({
             title: `${words.employee}`,
           },
           {
-            name: 'taskId',
+            name: isRTL ? 'contractNameAr' : 'contractName',
             title: tempwords.task,
           },
           { name: 'desc', title: words.description },
@@ -238,12 +237,6 @@ export default function ExpensesProdCustomer({
             for={['creditAcc']}
             formatterComponent={(props) =>
               accountFormatter(props, accounts, isRTL)
-            }
-          ></DataTypeProvider>
-          <DataTypeProvider
-            for={['taskId']}
-            formatterComponent={(props: any) =>
-              taskIdFormatter({ ...props, tasks })
             }
           ></DataTypeProvider>
           <DataTypeProvider

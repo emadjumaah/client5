@@ -22,9 +22,7 @@ import {
   createdAtFormatter,
   currencyFormatterEmpty,
   opTypeFormatter,
-  taskIdFormatter,
 } from './colorFormat';
-import useTasks from '../hooks/useTasks';
 import getGereralKaids from '../graphql/query/getGereralKaids';
 import { getColumns } from '../common/columns';
 import { Box, Typography } from '@material-ui/core';
@@ -59,7 +57,7 @@ export default function KaidsCustomer({
           col.opTime,
           col.opDocNo,
           col.acc,
-          col.taskId,
+          col.contract,
           col.customer,
           col.resourse,
           col.employee,
@@ -71,8 +69,6 @@ export default function KaidsCustomer({
 
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(false);
-
-  const { tasks } = useTasks();
 
   const [loadKaids, kaidsData]: any = useLazyQuery(getGereralKaids, {
     fetchPolicy: 'cache-and-network',
@@ -153,12 +149,6 @@ export default function KaidsCustomer({
           <DataTypeProvider
             for={['opType']}
             formatterComponent={opTypeFormatter}
-          ></DataTypeProvider>
-          <DataTypeProvider
-            for={['taskId']}
-            formatterComponent={(props: any) =>
-              taskIdFormatter({ ...props, tasks })
-            }
           ></DataTypeProvider>
           <TableSummaryRow
             messages={{

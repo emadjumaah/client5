@@ -5,7 +5,7 @@ export default gql`
     $type: Int
     $active: Boolean
     $eventId: Int
-    $taskId: Int
+    $contractId: String
     $reminderId: Int
     $start: Date
     $end: Date
@@ -14,7 +14,7 @@ export default gql`
       type: $type
       active: $active
       eventId: $eventId
-      taskId: $taskId
+      contractId: $contractId
       reminderId: $reminderId
       start: $start
       end: $end
@@ -44,13 +44,13 @@ export default gql`
 
         reminderId
         eventId
-        taskId
 
         employeeId
         departmentId
         customerId
         resourseId
         projectId
+        contractId
 
         data
         info

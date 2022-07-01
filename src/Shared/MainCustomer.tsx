@@ -47,8 +47,6 @@ export default function MainCustomer({
   });
 
   useEffect(() => {
-    console.log('start', start);
-    console.log('end', end);
     const variables = {
       [name]: id,
       start: start ? new Date(start).setHours(0, 0, 0, 0) : undefined,
@@ -69,7 +67,7 @@ export default function MainCustomer({
 
   const isCust = name === 'customerId';
   const isSupp = name === 'supplierId';
-  const isTask = name === 'taskId';
+  const isCont = name === 'contractId';
   const isReso = name === 'resourseId';
   const isEmpl = name === 'employeeId';
   const isDepart = name === 'departmentId';
@@ -100,7 +98,7 @@ export default function MainCustomer({
               <Grid container spacing={1}>
                 <Grid item xs={4}>
                   <Box style={{ backgroundColor: '#fff', height: 250 }}>
-                    {isTask && taskDataView({ row, words, isRTL })}
+                    {isCont && taskDataView({ row, words, isRTL })}
                     {isReso && resourseDataView({ row, words, isRTL })}
                     {(isEmpl || isDepart) &&
                       employeeDataView({ row, words, isRTL })}
@@ -109,7 +107,7 @@ export default function MainCustomer({
                   </Box>
                 </Grid>
 
-                {isTask && (
+                {isCont && (
                   <Grid item xs={4}>
                     <Box style={{ backgroundColor: '#fff', height: 250 }}>
                       {daysdataMainFormatter({
@@ -120,35 +118,35 @@ export default function MainCustomer({
                     </Box>
                   </Grid>
                 )}
-                {isTask && (
+                {isCont && (
                   <Grid item xs={4}>
                     <Box style={{ backgroundColor: '#fff', height: 250 }}>
                       {appointTaskMainFormatter({ row: data, theme, isRTL })}
                     </Box>
                   </Grid>
                 )}
-                {isTask && (
+                {isCont && (
                   <Grid item xs={3}>
                     <Box style={{ backgroundColor: '#fff', height: 250 }}>
                       {salesTaskMainFormatter({ row: data, theme, isRTL })}
                     </Box>
                   </Grid>
                 )}
-                {!isSupp && !isTask && (
+                {!isSupp && !isCont && (
                   <Grid item xs={4}>
                     <Box style={{ backgroundColor: '#fff', height: 250 }}>
                       {appointmentsMainFormatter({ row: data, theme, isRTL })}
                     </Box>
                   </Grid>
                 )}
-                {!isSupp && !isTask && (
+                {!isSupp && !isCont && (
                   <Grid item xs={3}>
                     <Box style={{ backgroundColor: '#fff', height: 250 }}>
                       {salesMainFormatter({ row: data, theme, isRTL })}
                     </Box>
                   </Grid>
                 )}
-                {!isCust && !isTask && (
+                {!isCust && !isCont && (
                   <Grid item xs={3}>
                     <Box style={{ backgroundColor: '#fff', height: 250 }}>
                       {purchaseMainFormatter({ row: data, theme, isRTL })}
@@ -216,7 +214,7 @@ export default function MainCustomer({
                     })}
                   </Box>
                 )}
-                {!isCust && !isTask && (
+                {!isCust && !isCont && (
                   <Box style={{ width: 250, marginLeft: 15 }}>
                     {purchaseFormatter({
                       row,

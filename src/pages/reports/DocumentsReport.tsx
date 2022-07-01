@@ -39,7 +39,6 @@ import {
   documentTimeFormatter,
   eventStatusFormatter,
   opTypeFormatter,
-  taskIdFormatter,
 } from '../../Shared/colorFormat';
 import {
   Box,
@@ -132,7 +131,7 @@ export default function DocumentsReport({
           col.refNo,
           col.customer,
           col.supplier,
-          col.taskId,
+          col.contract,
           col.resourse,
           col.employee,
           col.resourse,
@@ -242,8 +241,6 @@ export default function DocumentsReport({
 
   const getIds = (list: any) =>
     list && list?.length > 0 ? list.map((sv: any) => sv._id) : undefined;
-  const getTaskIds = (list: any) =>
-    list && list?.length > 0 ? list.map((sv: any) => sv.id) : undefined;
   const getTypesValue = (list: any) =>
     list && list?.length > 0 ? list.map((sv: any) => sv.value) : undefined;
   const fetchData = () => {
@@ -254,7 +251,7 @@ export default function DocumentsReport({
       resourseIds: getIds(resovalue),
       customerIds: getIds(custvalue),
       supplierIds: getIds(suppvalue),
-      taskIds: getTaskIds(taskvalue),
+      contractIds: getIds(taskvalue),
       types: getTypesValue(types),
       start: start ? start.setHours(0, 0, 0, 0) : undefined,
       end: end
@@ -511,13 +508,7 @@ export default function DocumentsReport({
           <DataTypeProvider
             for={['amount']}
             formatterComponent={currencyFormatter}
-          ></DataTypeProvider>{' '}
-          <DataTypeProvider
-            for={['taskId']}
-            formatterComponent={(props: any) =>
-              taskIdFormatter({ ...props, tasks })
-            }
-          ></DataTypeProvider>{' '}
+          ></DataTypeProvider>
           <DataTypeProvider
             for={['opType']}
             formatterComponent={opTypeFormatter}

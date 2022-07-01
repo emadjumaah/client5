@@ -16,9 +16,9 @@ export default gql`
     $endDate: Date
     $active: Boolean
     $eventId: Int
-    $taskId: Int
     $projectId: String
     $customerId: String
+    $contractId: String
     $departmentId: String
     $employeeId: String
     $resourseId: String
@@ -44,12 +44,12 @@ export default gql`
       endDate: $endDate
       active: $active
       eventId: $eventId
-      taskId: $taskId
       projectId: $projectId
       customerId: $customerId
       departmentId: $departmentId
       employeeId: $employeeId
       resourseId: $resourseId
+      contractId: $contractId
       freq: $freq
       count: $count
       interval: $interval

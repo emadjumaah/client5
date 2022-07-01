@@ -20,7 +20,7 @@ export default gql`
         employeeId
         projectId
         resourseId
-        taskId
+        contractId
         reminderId
         userId
 

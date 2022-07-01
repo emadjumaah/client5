@@ -160,7 +160,9 @@ const PopupFinanceAllKaid = ({
       projectId: projvalue ? projvalue._id : undefined,
       projectName: projvalue ? projvalue.name : undefined,
       projectNameAr: projvalue ? projvalue.nameAr : undefined,
-      taskId: taskvalue ? taskvalue.id : null,
+      contractId: taskvalue ? taskvalue._id : undefined,
+      contractName: taskvalue ? taskvalue.name : undefined,
+      contractNameAr: taskvalue ? taskvalue.nameAr : undefined,
 
       branch: user.branch,
       userId: user._id,

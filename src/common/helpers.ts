@@ -265,13 +265,13 @@ export const subscribePushToken = async (company: any, checked: any) => {
 
 export const getReadyEventData = (
   event: any,
-  task: any,
+  contract: any,
   itemsData: any,
   servicesproducts: any
 ) => {
-  const freq = task?.freq;
-  const interval = task?.interval ? task?.interval : 1;
-  if (!task || !event || !freq) {
+  const freq = contract?.freq;
+  const interval = contract?.interval ? contract?.interval : 1;
+  if (!contract || !event || !freq) {
     return null;
   }
   let itemsList: any;
@@ -299,6 +299,9 @@ export const getReadyEventData = (
         resourseName,
         resourseNameAr,
         resourseColor,
+        contractId,
+        contractName,
+        contractNameAr,
         note,
       } = item;
       const serv = servlist.filter((se: any) => se._id === item.itemId)[0];
@@ -319,6 +322,9 @@ export const getReadyEventData = (
         resourseName,
         resourseNameAr,
         resourseColor,
+        contractId,
+        contractName,
+        contractNameAr,
         index,
         itemprice: item.itemPrice,
         itemqty: item.qty,
@@ -360,13 +366,12 @@ export const getReadyEventData = (
     amount: event.amount,
     status: 2,
     items: JSON.stringify(itemsList),
-    taskId: event.taskId,
-    customer: task.customerId
+    customer: contract.customerId
       ? {
-          customerId: task.customerId,
-          customerName: task.customerName,
-          customerNameAr: task.customerNameAr,
-          customerPhone: task.customerPhone,
+          customerId: contract.customerId,
+          customerName: contract.customerName,
+          customerNameAr: contract.customerNameAr,
+          customerPhone: contract.customerPhone,
         }
       : {
           customerId: undefined,
@@ -374,12 +379,12 @@ export const getReadyEventData = (
           customerNameAr: undefined,
           customerPhone: undefined,
         },
-    department: task.departmentId
+    department: contract.departmentId
       ? {
-          departmentId: task.departmentId,
-          departmentName: task.departmentName,
-          departmentNameAr: task.departmentNameAr,
-          departmentColor: task.departmentColor,
+          departmentId: contract.departmentId,
+          departmentName: contract.departmentName,
+          departmentNameAr: contract.departmentNameAr,
+          departmentColor: contract.departmentColor,
         }
       : {
           departmentId: undefined,
@@ -387,13 +392,13 @@ export const getReadyEventData = (
           departmentNameAr: undefined,
           departmentColor: undefined,
         },
-    employee: task.employeeId
+    employee: contract.employeeId
       ? {
-          employeeId: task.employeeId,
-          employeeName: task.employeeName,
-          employeeNameAr: task.employeeNameAr,
-          employeeColor: task.employeeColor,
-          employeePhone: task.employeePhone,
+          employeeId: contract.employeeId,
+          employeeName: contract.employeeName,
+          employeeNameAr: contract.employeeNameAr,
+          employeeColor: contract.employeeColor,
+          employeePhone: contract.employeePhone,
         }
       : {
           employeeId: undefined,
@@ -402,12 +407,12 @@ export const getReadyEventData = (
           employeeColor: undefined,
           employeePhone: undefined,
         },
-    resourse: task.resourseId
+    resourse: contract.resourseId
       ? {
-          resourseId: task.resourseId,
-          resourseName: task.resourseName,
-          resourseNameAr: task.resourseNameAr,
-          resourseColor: task.resourseColor,
+          resourseId: contract.resourseId,
+          resourseName: contract.resourseName,
+          resourseNameAr: contract.resourseNameAr,
+          resourseColor: contract.resourseColor,
         }
       : {
           resourseId: undefined,
@@ -415,18 +420,23 @@ export const getReadyEventData = (
           resourseNameAr: undefined,
           resourseColor: undefined,
         },
+    contract: {
+      contractId: contract._id,
+      contractName: contract.name,
+      contractNameAr: contract.nameAr,
+    },
   };
   return variables;
 };
 export const getReadyCloseEventData = (
   event: any,
-  task: any,
+  contract: any,
   amount: any,
   itemsData: any,
   servicesproducts: any,
   time: any
 ) => {
-  if (!task || !event) {
+  if (!contract || !event) {
     return null;
   }
   let itemsList: any;
@@ -453,6 +463,9 @@ export const getReadyCloseEventData = (
         resourseName,
         resourseNameAr,
         resourseColor,
+        contractId,
+        contractName,
+        contractNameAr,
         note,
       } = item;
       const serv = servlist.filter((se: any) => se._id === item.itemId)?.[0];
@@ -473,6 +486,9 @@ export const getReadyCloseEventData = (
         resourseName,
         resourseNameAr,
         resourseColor,
+        contractId,
+        contractName,
+        contractNameAr,
         index,
         itemprice: amount,
         itemqty: 1,
@@ -493,13 +509,12 @@ export const getReadyCloseEventData = (
     amount,
     status: 2,
     items: JSON.stringify([itemsList?.[0]]),
-    taskId: event.taskId,
-    customer: task.customerId
+    customer: contract.customerId
       ? {
-          customerId: task.customerId,
-          customerName: task.customerName,
-          customerNameAr: task.customerNameAr,
-          customerPhone: task.customerPhone,
+          customerId: contract.customerId,
+          customerName: contract.customerName,
+          customerNameAr: contract.customerNameAr,
+          customerPhone: contract.customerPhone,
         }
       : {
           customerId: undefined,
@@ -507,12 +522,12 @@ export const getReadyCloseEventData = (
           customerNameAr: undefined,
           customerPhone: undefined,
         },
-    department: task.departmentId
+    department: contract.departmentId
       ? {
-          departmentId: task.departmentId,
-          departmentName: task.departmentName,
-          departmentNameAr: task.departmentNameAr,
-          departmentColor: task.departmentColor,
+          departmentId: contract.departmentId,
+          departmentName: contract.departmentName,
+          departmentNameAr: contract.departmentNameAr,
+          departmentColor: contract.departmentColor,
         }
       : {
           departmentId: undefined,
@@ -520,13 +535,13 @@ export const getReadyCloseEventData = (
           departmentNameAr: undefined,
           departmentColor: undefined,
         },
-    employee: task.employeeId
+    employee: contract.employeeId
       ? {
-          employeeId: task.employeeId,
-          employeeName: task.employeeName,
-          employeeNameAr: task.employeeNameAr,
-          employeeColor: task.employeeColor,
-          employeePhone: task.employeePhone,
+          employeeId: contract.employeeId,
+          employeeName: contract.employeeName,
+          employeeNameAr: contract.employeeNameAr,
+          employeeColor: contract.employeeColor,
+          employeePhone: contract.employeePhone,
         }
       : {
           employeeId: undefined,
@@ -535,12 +550,12 @@ export const getReadyCloseEventData = (
           employeeColor: undefined,
           employeePhone: undefined,
         },
-    resourse: task.resourseId
+    resourse: contract.resourseId
       ? {
-          resourseId: task.resourseId,
-          resourseName: task.resourseName,
-          resourseNameAr: task.resourseNameAr,
-          resourseColor: task.resourseColor,
+          resourseId: contract.resourseId,
+          resourseName: contract.resourseName,
+          resourseNameAr: contract.resourseNameAr,
+          resourseColor: contract.resourseColor,
         }
       : {
           resourseId: undefined,
@@ -548,6 +563,11 @@ export const getReadyCloseEventData = (
           resourseNameAr: undefined,
           resourseColor: undefined,
         },
+    contract: {
+      contractId: contract._id,
+      contractName: contract.name,
+      contractNameAr: contract.nameAr,
+    },
   };
   return variables;
 };

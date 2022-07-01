@@ -2,23 +2,22 @@ import { gql } from '@apollo/client';
 
 export default gql`
   query getDueEvents(
-    $taskId: String
     $departmentId: String
     $employeeId: String
     $customerId: String
+    $contractId: String
   ) {
     getDueEvents(
-      taskId: $taskId
       departmentId: $departmentId
       employeeId: $employeeId
       customerId: $customerId
+      contractId: $contractId
     ) {
       ok
       error
       data {
         _id
         id
-        taskId
         branch
         title
         startDate
@@ -55,10 +54,15 @@ export default gql`
         projectName
         projectNameAr
         projectColor
+
         resourseId
         resourseName
         resourseNameAr
         resourseColor
+
+        contractId
+        contractName
+        contractNameAr
 
         refNo
         refType

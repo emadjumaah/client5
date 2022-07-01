@@ -5,6 +5,7 @@ export default gql`
     $branch: String
     $title: String
     $name: String
+    $nameAr: String
     $type: String
     $start: Date
     $end: Date
@@ -37,6 +38,7 @@ export default gql`
       branch: $branch
       title: $title
       name: $name
+      nameAr: $nameAr
       type: $type
       start: $start
       end: $end

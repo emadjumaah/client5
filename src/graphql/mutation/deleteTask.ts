@@ -1,8 +1,8 @@
-import { gql } from "@apollo/client";
+import { gql } from '@apollo/client';
 
 export default gql`
-  mutation deleteTask($id: Int) {
-    deleteTask(id: $id) {
+  mutation deleteTask($_id: Int) {
+    deleteTask(_id: $_id) {
       ok
       message
       error

@@ -69,12 +69,14 @@ export const AppointTooltipEmpl = ({
     status,
     amount,
     docNo,
-    taskId,
+    contractId,
+    contractName,
+    contractNameAr,
     title,
     location,
   } = appointmentData;
 
-  const task = tasks.filter((t: any) => t.id === taskId)?.[0];
+  const task = tasks.filter((t: any) => t._id === contractId)?.[0];
 
   const [getItems, itemsData]: any = useLazyQuery(getOperationItems, {
     fetchPolicy: 'cache-and-network',
@@ -131,6 +133,9 @@ export const AppointTooltipEmpl = ({
           resourseName,
           resourseNameAr,
           resourseColor,
+          contractId,
+          contractName,
+          contractNameAr,
           index,
           itemprice: item.itemPrice,
           itemqty: item.qty,

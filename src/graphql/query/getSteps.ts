@@ -1,8 +1,8 @@
 import { gql } from '@apollo/client';
 
 export default gql`
-  query getSteps($eventId: Int, $taskId: Int) {
-    getSteps(eventId: $eventId, taskId: $taskId) {
+  query getSteps($eventId: Int, $contractId: String) {
+    getSteps(eventId: $eventId, contractId: $contractId) {
       ok
       error
       data {

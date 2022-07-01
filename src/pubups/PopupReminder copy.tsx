@@ -210,7 +210,7 @@ const PopupReminder = ({
       const empId = row.employeeId;
       const resId = row.resourseId;
       const custId = row.customerId;
-      const taskId = row.taskId;
+      const contId = row.contractId;
       setRtitle(row?.title);
       setRuntime(new Date(row?.runtime));
       setStartDate(new Date(row?.startDate));
@@ -227,8 +227,8 @@ const PopupReminder = ({
         const res = resourses.filter((emp: any) => emp._id === resId)[0];
         setResovalue(res);
       }
-      if (taskId) {
-        const tsk = tasks.filter((ts: any) => ts.id === taskId)[0];
+      if (contId) {
+        const tsk = tasks.filter((ts: any) => ts._id === contId)[0];
         setTaskvalue(tsk);
       }
       if (custId) {
@@ -261,32 +261,6 @@ const PopupReminder = ({
       setRuntime(start);
     }
   }, [open]);
-
-  // useEffect(() => {
-  //   if (isNew) {
-  //     if (emplvalue) {
-  //       if (emplvalue?.departmentId) {
-  //         const dept = departments.filter(
-  //           (dep: any) => dep._id === emplvalue?.departmentId
-  //         )?.[0];
-  //         setDepartvalue(dept);
-  //       }
-  //     }
-  //   }
-  // }, [emplvalue]);
-
-  // useEffect(() => {
-  //   if (isNew) {
-  //     if (resovalue) {
-  //       if (resovalue?.departmentId) {
-  //         const dept = departments.filter(
-  //           (dep: any) => dep._id === resovalue?.departmentId
-  //         )?.[0];
-  //         setDepartvalue(dept);
-  //       }
-  //     }
-  //   }
-  // }, [resovalue]);
 
   useEffect(() => {
     if (isNew) {
@@ -362,7 +336,7 @@ const PopupReminder = ({
       departmentId: departvalue ? departvalue._id : undefined,
       employeeId: emplvalue ? emplvalue._id : undefined,
       resourseId: resovalue ? resovalue._id : undefined,
-      taskId: taskvalue ? taskvalue.id : undefined,
+      contractId: taskvalue ? taskvalue._id : undefined,
     };
     const mutate = isNew ? addAction : editAction;
     apply(mutate, variables);
@@ -468,16 +442,6 @@ const PopupReminder = ({
                       mb={0}
                     />
                   </Grid>
-                  {/* <Grid item xs={4}>
-                    <TextFieldLocal
-                      required
-                      name="interval"
-                      label={words.interval}
-                      value={interval}
-                      onChange={onChangeInterval}
-                      type="number"
-                    />
-                  </Grid> */}
                   <Grid item xs={12}>
                     <TextFieldLocal
                       autoFocus={true}
@@ -547,22 +511,6 @@ const PopupReminder = ({
                       ></AutoFieldLocal>
                     </Grid>
                   )}
-                  {/* <Grid item xs={4}>
-                    <AutoFieldLocal
-                      name="customer"
-                      title={tempwords?.customer}
-                      words={words}
-                      options={customers}
-                      value={custvalue}
-                      setSelectValue={setCustvalue}
-                      register={register}
-                      isRTL={isRTL}
-                      openAdd={openCustomer}
-                      showphone
-                      fullWidth
-                    ></AutoFieldLocal>
-                  </Grid> */}
-
                   <Grid item xs={6}>
                     <AutoFieldLocal
                       name="department"

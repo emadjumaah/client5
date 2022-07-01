@@ -42,7 +42,6 @@ import {
   fromToFormatter,
   locationFormatter,
   nameLinkFormat,
-  taskIdLinkFormat,
 } from '../../Shared/colorFormat';
 import PageLayout from '../main/PageLayout';
 import { SearchTable } from '../../components';
@@ -109,7 +108,7 @@ export default function Appointments({
           col.docNo,
           col.customer,
           col.resourse,
-          col.taskId,
+          col.contract,
           col.employee,
           col.department,
           col.status,
@@ -126,7 +125,7 @@ export default function Appointments({
     { columnName: 'fromto', width: 70 },
     { columnName: 'docNo', width: 120 },
     { columnName: col.customer.name, width: 200 },
-    { columnName: 'taskId', width: 200 },
+    { columnName: col.contract.name, width: 200 },
     { columnName: col.resourse.name, width: 200 },
     { columnName: col.employee.name, width: 200 },
     { columnName: col.department.name, width: 200 },
@@ -447,7 +446,7 @@ export default function Appointments({
                 col.fromto.name,
                 col.docNo.name,
                 col.customer.name,
-                col.taskId.name,
+                col.contract.name,
                 col.resourse.name,
                 col.employee.name,
                 col.department.name,
@@ -506,19 +505,18 @@ export default function Appointments({
                 doneFormatter({ ...props, editEvent })
               }
             ></DataTypeProvider>
-            <DataTypeProvider
-              for={['taskId']}
-              formatterComponent={(props: any) =>
-                taskIdLinkFormat({
-                  ...props,
-                  tasks,
-                  setItem,
-                  setOpenItem: setOpenTaskItem,
-                  setName,
-                  isRTL,
-                })
-              }
-            ></DataTypeProvider>
+            {roles.isEditor() && (
+              <DataTypeProvider
+                for={['contractNameAr', 'contractName']}
+                formatterComponent={(props: any) =>
+                  nameLinkFormat({
+                    ...props,
+                    setItem,
+                    setOpenItem: setOpenTaskItem,
+                  })
+                }
+              ></DataTypeProvider>
+            )}
             {roles.isEditor() && (
               <DataTypeProvider
                 for={['employeeNameAr', 'employeeName']}

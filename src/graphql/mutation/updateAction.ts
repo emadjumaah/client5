@@ -16,12 +16,12 @@ export default gql`
     $smsqty: Int
     $reminderId: Int
     $eventId: Int
-    $taskId: Int
     $employeeId: String
     $departmentId: String
     $customerId: String
     $resourseId: String
     $projectId: String
+    $contractId: String
     $user: String
     $data: String
     $timeunit: String
@@ -44,12 +44,12 @@ export default gql`
       smsqty: $smsqty
       reminderId: $reminderId
       eventId: $eventId
-      taskId: $taskId
       employeeId: $employeeId
       departmentId: $departmentId
       customerId: $customerId
       resourseId: $resourseId
       projectId: $projectId
+      contractId: $contractId
       user: $user
       data: $data
       timeunit: $timeunit

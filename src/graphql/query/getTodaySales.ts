@@ -38,6 +38,10 @@ export default gql`
         resourseNameAr
         resourseColor
 
+        contractId
+        contractName
+        contractNameAr
+
         categoryId
         categoryName
         categoryNameAr

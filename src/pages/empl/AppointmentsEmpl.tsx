@@ -32,7 +32,6 @@ import {
   fromToFormatter,
   locationFormatter,
   nameLinkFormat,
-  taskIdLinkFormat,
 } from '../../Shared/colorFormat';
 import PageLayout from '../main/PageLayout';
 import { SearchTable } from '../../components';
@@ -85,7 +84,7 @@ export default function AppointmentsEmpl({
     col.fromto,
     col.customer,
     col.docNo,
-    col.taskId,
+    col.contract,
     col.employee,
     col.department,
     col.status,
@@ -394,14 +393,12 @@ export default function AppointmentsEmpl({
             }
           ></DataTypeProvider>
           <DataTypeProvider
-            for={['taskId']}
+            for={['contractNameAr', 'contractName']}
             formatterComponent={(props: any) =>
-              taskIdLinkFormat({
+              nameLinkFormat({
                 ...props,
-                tasks,
                 setItem,
                 setOpenItem: setOpenTaskItem,
-                setName,
               })
             }
           ></DataTypeProvider>

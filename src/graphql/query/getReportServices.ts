@@ -11,7 +11,7 @@ export default gql`
     $resourseIds: [String]
     $customerIds: [String]
     $supplierIds: [String]
-    $taskIds: [Int]
+    $contractIds: [String]
     $start: Date
     $end: Date
     $itemType: Int
@@ -27,7 +27,7 @@ export default gql`
       resourseIds: $resourseIds
       customerIds: $customerIds
       supplierIds: $supplierIds
-      taskIds: $taskIds
+      contractIds: $contractIds
       start: $start
       end: $end
       itemType: $itemType
@@ -62,7 +62,6 @@ export default gql`
         opTime
         opDocNo
         eventId
-        taskId
         refNo
         refType
         qty
@@ -95,6 +94,9 @@ export default gql`
         resourseNameAr
         resourseColor
 
+        contractId
+        contractName
+        contractNameAr
         customerId
         customerName
         customerNameAr

@@ -51,7 +51,7 @@ export const groupList = (isRTL: any, product = false) => [
   },
   {
     id: 8,
-    value: 'taskId',
+    value: 'contractId',
     name: isRTL ? `تجميع بحسب ${words.task}` : `Group By  ${words.task}`,
   },
   {

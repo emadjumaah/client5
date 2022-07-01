@@ -17,6 +17,7 @@ export default gql`
     $department: DepartmentInput
     $employee: EmployeeInput
     $resourse: ResourseInput
+    $contract: ContractInput
     $desc: String
     $color: String
   ) {
@@ -36,6 +37,7 @@ export default gql`
       department: $department
       employee: $employee
       resourse: $resourse
+      contract: $contract
       desc: $desc
       color: $color
     ) {

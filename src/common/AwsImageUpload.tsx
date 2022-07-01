@@ -12,8 +12,8 @@ const AwsImageUpload = ({
   employeeId,
   projectId,
   resourseId,
-  taskId,
   reminderId,
+  contractId,
   userId,
 }: any) => {
   const [progress, setProgress] = useState(0);
@@ -43,8 +43,8 @@ const AwsImageUpload = ({
       employeeId,
       projectId,
       resourseId,
-      taskId,
       reminderId,
+      contractId,
       userId,
     });
     return;

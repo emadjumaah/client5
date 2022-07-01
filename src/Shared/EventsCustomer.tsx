@@ -23,7 +23,6 @@ import {
   eventStatusFormatter,
   fromToFormatter,
   locationFormatter,
-  taskIdFormat,
 } from './colorFormat';
 import { useLazyQuery, useMutation } from '@apollo/client';
 
@@ -109,7 +108,7 @@ export default function EventsCustomer({
           col.startDate,
           col.fromto,
           col.docNo,
-          col.taskId,
+          col.contract,
           col.customer,
           col.resourse,
           col.department,
@@ -240,15 +239,6 @@ export default function EventsCustomer({
               for={['done']}
               formatterComponent={(props: any) =>
                 doneFormatter({ ...props, editEvent })
-              }
-            ></DataTypeProvider>
-            <DataTypeProvider
-              for={['taskId']}
-              formatterComponent={(props: any) =>
-                taskIdFormat({
-                  ...props,
-                  tasks,
-                })
               }
             ></DataTypeProvider>
             <NumberTypeProvider for={['index']} />

@@ -33,7 +33,6 @@ import { useLazyQuery, useMutation } from '@apollo/client';
 import {
   amountFormatter,
   currencyFormatter,
-  taskIdFormatter,
   timeFormatter,
 } from './colorFormat';
 
@@ -83,7 +82,7 @@ export default function InvoicesSupplier({
           { name: 'time', title: words.time },
           { name: 'docNo', title: words.no },
           col.eventNo,
-          col.taskId,
+          col.contract,
           {
             name: isRTL ? 'supplierNameAr' : 'supplierName',
             title: words.supplier,
@@ -231,12 +230,6 @@ export default function InvoicesSupplier({
           <DataTypeProvider
             for={['total', 'discount']}
             formatterComponent={currencyFormatter}
-          ></DataTypeProvider>
-          <DataTypeProvider
-            for={['taskId']}
-            formatterComponent={(props: any) =>
-              taskIdFormatter({ ...props, tasks })
-            }
           ></DataTypeProvider>
           <TableEditColumn
             showEditCommand

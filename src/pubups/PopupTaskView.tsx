@@ -103,8 +103,8 @@ const PopupTaskView = ({
     setValue(newValue);
   };
   useEffect(() => {
-    if (item?.id && tasks && tasks.length > 0) {
-      const opened = tasks.filter((ts: any) => ts.id === item.id)?.[0];
+    if (item?._id && tasks && tasks.length > 0) {
+      const opened = tasks.filter((ts: any) => ts._id === item._id)?.[0];
       setRow(opened);
     }
   }, [tasks]);
@@ -138,7 +138,7 @@ const PopupTaskView = ({
       {
         query: getObjectEvents,
         variables: {
-          taskId: row?.id,
+          contractId: row?._id,
           start: start ? new Date(start).setHours(0, 0, 0, 0) : undefined,
           end: end ? new Date(end).setHours(23, 59, 59, 999) : undefined,
         },
@@ -151,7 +151,7 @@ const PopupTaskView = ({
       {
         query: getReceipts,
         variables: {
-          taskId: row?.id,
+          contractId: row?._id,
           start: start ? new Date(start).setHours(0, 0, 0, 0) : undefined,
           end: end ? new Date(end).setHours(23, 59, 59, 999) : undefined,
         },
@@ -164,6 +164,7 @@ const PopupTaskView = ({
       {
         query: getExpenses,
         variables: {
+          contractId: row?._id,
           opType: 60,
           start: start ? new Date(start).setHours(0, 0, 0, 0) : undefined,
           end: end ? new Date(end).setHours(23, 59, 59, 999) : undefined,
@@ -188,9 +189,9 @@ const PopupTaskView = ({
   });
 
   useEffect(() => {
-    const variables = { taskId: row?.id };
+    const variables = { contractId: row?._id };
     getEvents({ variables });
-  }, [row?.id, row]);
+  }, [row]);
 
   useEffect(() => {
     const data = eventsData?.data?.['getObjectEvents']?.data;
@@ -308,9 +309,9 @@ const PopupTaskView = ({
                         isRTL={isRTL}
                         words={words}
                         theme={theme}
-                        name="taskId"
+                        name="contractId"
                         value={row}
-                        id={row?.id}
+                        id={row?._id}
                         width={width}
                         height={height}
                         start={start}
@@ -325,8 +326,8 @@ const PopupTaskView = ({
                         isRTL={isRTL}
                         words={words}
                         theme={theme}
-                        id={row?.id}
-                        name="taskId"
+                        id={row?._id}
+                        name="contractId"
                         width={width}
                         height={height}
                         start={start}
@@ -340,8 +341,8 @@ const PopupTaskView = ({
                         isRTL={isRTL}
                         words={words}
                         theme={theme}
-                        name="taskId"
-                        id={row?.id}
+                        name="contractId"
+                        id={row?._id}
                         width={width}
                         height={height}
                         start={start}
@@ -355,8 +356,8 @@ const PopupTaskView = ({
                         isRTL={isRTL}
                         words={words}
                         theme={theme}
-                        name="taskId"
-                        id={row?.id}
+                        name="contractId"
+                        id={row?._id}
                         width={width}
                         height={height}
                         start={start}
@@ -370,8 +371,8 @@ const PopupTaskView = ({
                         isRTL={isRTL}
                         words={words}
                         theme={theme}
-                        name="taskId"
-                        id={row?.id}
+                        name="contractId"
+                        id={row?._id}
                         width={width}
                         height={height}
                         start={start}
@@ -385,8 +386,8 @@ const PopupTaskView = ({
                         isRTL={isRTL}
                         words={words}
                         theme={theme}
-                        name="taskId"
-                        id={row?.id}
+                        name="contractId"
+                        id={row?._id}
                         width={width}
                         height={height}
                         start={start}
@@ -398,8 +399,8 @@ const PopupTaskView = ({
                         isRTL={isRTL}
                         words={words}
                         theme={theme}
-                        name="taskId"
-                        id={row?.id}
+                        name="contractId"
+                        id={row?._id}
                         width={width}
                         height={height}
                         start={start}
@@ -564,7 +565,7 @@ const PopupTaskView = ({
               servicesproducts={expenseItems}
               theme={theme}
               company={company}
-              name="taskId"
+              name="contractId"
               value={row}
             ></PopupExpensesDoc>
           )}

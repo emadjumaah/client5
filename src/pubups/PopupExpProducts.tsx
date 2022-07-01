@@ -88,7 +88,7 @@ const PopupExpProducts = ({
   const resoRef: any = React.useRef();
 
   const [taskvalue, setTaskvalue] = useState<any>(
-    name === 'taskId' ? value : null
+    name === 'contractId' ? value : null
   );
 
   const [newtext, setNewtext] = useState('');
@@ -312,8 +312,8 @@ const PopupExpProducts = ({
         setResovalue(empl);
       }
 
-      if (!task && row.taskId) {
-        const tsk = tasks.filter((ts: any) => ts.id === row.taskId)[0];
+      if (!task && row.contractId) {
+        const tsk = tasks.filter((ts: any) => ts._id === row.contractId)[0];
         setTaskvalue(tsk);
       }
 
@@ -383,7 +383,6 @@ const PopupExpProducts = ({
       debitAcc: accountCode.cost_of_sales,
       creditAcc: accountCode.inventory,
       amount,
-      taskId: taskvalue ? taskvalue.id : null,
       customer: taskvalue
         ? {
             customerId: taskvalue.customerId,
@@ -438,6 +437,17 @@ const PopupExpProducts = ({
             resourseName: undefined,
             resourseNameAr: undefined,
             resourseColor: undefined,
+          },
+      contract: taskvalue
+        ? {
+            contractId: taskvalue._id,
+            contractName: taskvalue.name,
+            contractNameAr: taskvalue.nameAr,
+          }
+        : {
+            contractId: undefined,
+            contractName: undefined,
+            contractNameAr: undefined,
           },
       items: JSON.stringify(itemsList),
       title,
@@ -537,7 +547,7 @@ const PopupExpProducts = ({
               setSelectValue={setTaskvalue}
               isRTL={isRTL}
               fullWidth
-              disabled={name === 'taskId'}
+              disabled={name === 'contractId'}
               mb={0}
             ></AutoFieldLocal>
           </Grid>

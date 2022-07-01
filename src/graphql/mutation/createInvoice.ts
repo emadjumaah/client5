@@ -15,6 +15,7 @@ export default gql`
     $employee: EmployeeInput
     $project: ProjectInput
     $resourse: ResourseInput
+    $contract: ContractInput
     $accounts: [AccountInput]
     $items: String
     $costAmount: Float
@@ -30,7 +31,6 @@ export default gql`
     $isCash: Boolean
     $opId: String
     $userId: String
-    $taskId: Int
     $eventId: Int
     $eventNo: String
   ) {
@@ -48,6 +48,7 @@ export default gql`
       employee: $employee
       project: $project
       resourse: $resourse
+      contract: $contract
       accounts: $accounts
       items: $items
       costAmount: $costAmount
@@ -63,7 +64,6 @@ export default gql`
       isCash: $isCash
       opId: $opId
       userId: $userId
-      taskId: $taskId
       eventId: $eventId
       eventNo: $eventNo
     ) {

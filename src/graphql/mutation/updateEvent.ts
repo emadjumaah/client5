@@ -4,7 +4,6 @@ export default gql`
   mutation updateEvent(
     $branch: String
     $id: Int
-    $taskId: Int
     $title: String
     $docNo: String
     $rRule: String
@@ -25,11 +24,11 @@ export default gql`
     $employee: EmployeeInput
     $project: ProjectInput
     $resourse: ResourseInput
+    $contract: ContractInput
   ) {
     updateEvent(
       branch: $branch
       id: $id
-      taskId: $taskId
       title: $title
       docNo: $docNo
       rRule: $rRule
@@ -50,10 +49,10 @@ export default gql`
       employee: $employee
       project: $project
       resourse: $resourse
+      contract: $contract
     ) {
       _id
       id
-      taskId
       branch
       title
       startDate
@@ -73,6 +72,10 @@ export default gql`
       customerName
       customerNameAr
       customerPhone
+
+      contractId
+      contractName
+      contractNameAr
 
       itemId
       itemName

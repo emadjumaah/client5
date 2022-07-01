@@ -83,7 +83,7 @@ const PopupPayment = ({
       loadInvoices({ variables });
     }
     if (isNew) {
-      if (name === 'taskId') {
+      if (name === 'contractId') {
         if (value?.supplierId) {
           const dept = suppliers.filter(
             (dep: any) => dep._id === value?.supplierId
@@ -250,6 +250,17 @@ const PopupPayment = ({
           resourseNameAr: undefined,
           resourseColor: undefined,
         };
+    const contract = invoicevalue
+      ? {
+          contractId: invoicevalue.contractId,
+          contractName: invoicevalue.contractName,
+          contractNameAr: invoicevalue.contractNameAr,
+        }
+      : {
+          contractId: undefined,
+          contractName: undefined,
+          contractNameAr: undefined,
+        };
 
     const variables: any = {
       _id: row && row._id ? row._id : undefined, // is it new or edit
@@ -257,12 +268,12 @@ const PopupPayment = ({
       time: selectedDate,
       debitAcc: debitAcc.code,
       creditAcc: creditAcc.code,
-      taskId: invoicevalue ? invoicevalue.taskId : null,
       refNo: invoicevalue ? invoicevalue.docNo : undefined,
       supplier,
       department,
       employee,
       resourse,
+      contract,
       amount,
       chequeBank,
       chequeNo,

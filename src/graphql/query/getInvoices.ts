@@ -4,7 +4,7 @@ export default gql`
     $start: Date
     $end: Date
     $search: String
-    $taskId: Int
+    $contractId: String
     $customerId: String
     $departmentId: String
     $employeeId: String
@@ -15,7 +15,7 @@ export default gql`
       start: $start
       end: $end
       search: $search
-      taskId: $taskId
+      contractId: $contractId
       customerId: $customerId
       departmentId: $departmentId
       employeeId: $employeeId
@@ -34,7 +34,6 @@ export default gql`
         time
         title
         desc
-        taskId
 
         periodfrom
         periodto
@@ -68,6 +67,10 @@ export default gql`
         resourseName
         resourseNameAr
         resourseColor
+
+        contractId
+        contractName
+        contractNameAr
 
         refNo
         refType

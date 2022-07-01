@@ -16,7 +16,7 @@ export default gql`
     $employeeId: String
     $projectId: String
     $resourseId: String
-    $taskId: String
+    $contractId: String
     $reminderId: String
     $userId: String
   ) {
@@ -35,7 +35,7 @@ export default gql`
       employeeId: $employeeId
       projectId: $projectId
       resourseId: $resourseId
-      taskId: $taskId
+      contractId: $contractId
       reminderId: $reminderId
       userId: $userId
     ) {

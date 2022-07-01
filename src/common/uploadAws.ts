@@ -26,7 +26,7 @@ export const uploadAwsFile = async ({
   employeeId,
   projectId,
   resourseId,
-  taskId,
+  contractId,
   reminderId,
   userId,
 }) => {
@@ -73,7 +73,7 @@ export const uploadAwsFile = async ({
         employeeId,
         projectId,
         resourseId,
-        taskId,
+        contractId,
         reminderId,
         userId,
       };

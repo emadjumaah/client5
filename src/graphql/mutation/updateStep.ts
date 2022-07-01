@@ -5,7 +5,7 @@ export default gql`
     $_id: String
     $branch: String
     $eventId: Int
-    $taskId: Int
+    $contractId: String
     $opId: String
     $title: String
     $desc: String
@@ -19,7 +19,7 @@ export default gql`
       _id: $_id
       branch: $branch
       eventId: $eventId
-      taskId: $taskId
+      contractId: $contractId
       opId: $opId
       title: $title
       desc: $desc

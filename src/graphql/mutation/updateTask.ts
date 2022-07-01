@@ -2,10 +2,12 @@ import { gql } from '@apollo/client';
 
 export default gql`
   mutation updateTask(
+    $_id: String
     $id: Int
     $branch: String
     $title: String
     $name: String
+    $nameAr: String
     $type: String
     $start: Date
     $end: Date
@@ -35,10 +37,12 @@ export default gql`
     $info: String
   ) {
     updateTask(
+      _id: $_id
       id: $id
       branch: $branch
       title: $title
       name: $name
+      nameAr: $nameAr
       type: $type
       start: $start
       end: $end

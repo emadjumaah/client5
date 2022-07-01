@@ -103,7 +103,7 @@ const PopupTaskInvoice = ({
 
   const refresQuery = {
     refetchQueries: [
-      { query: getInvoices, variables: { taskId: task.id } },
+      { query: getInvoices, variables: { contractId: task._id } },
       { query: getLastNos },
       { query: getTasks },
     ],
@@ -392,6 +392,12 @@ const PopupTaskInvoice = ({
             resourseNameAr: undefined,
             resourseColor: undefined,
           },
+      contract: {
+        contractId: task._id,
+        contractName: task.name,
+        contractNameAr: task.nameAr,
+      },
+
       items: JSON.stringify(itemsList),
       costAmount,
       total,
@@ -406,7 +412,6 @@ const PopupTaskInvoice = ({
       periodfrom,
       periodto,
       userId: user._id,
-      taskId: task.id,
     };
 
     apply(addInvoice, variables);

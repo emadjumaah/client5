@@ -104,7 +104,7 @@ const PopupPurchaseInvoice = ({
   );
 
   const [taskvalue, setTaskvalue] = useState<any>(
-    name === 'taskId' ? value : null
+    name === 'contractId' ? value : null
   );
 
   const [newtext, setNewtext] = useState('');
@@ -372,7 +372,7 @@ const PopupPurchaseInvoice = ({
       );
     }
     if (isNew) {
-      if (name === 'taskId') {
+      if (name === 'contractId') {
         if (value?.departmentId) {
           const dept = departments.filter(
             (dep: any) => dep._id === value?.departmentId
@@ -431,8 +431,8 @@ const PopupPurchaseInvoice = ({
         setResovalue(empl);
       }
 
-      if (!task && row.taskId) {
-        const tsk = tasks.filter((ts: any) => ts.id === row.taskId)[0];
+      if (!task && row.contractId) {
+        const tsk = tasks.filter((ts: any) => ts._id === row.contractId)[0];
         setTaskvalue(tsk);
       }
 
@@ -607,6 +607,17 @@ const PopupPurchaseInvoice = ({
             resourseNameAr: undefined,
             resourseColor: undefined,
           },
+      contract: taskvalue
+        ? {
+            contractId: taskvalue._id,
+            contractName: taskvalue.name,
+            contractNameAr: taskvalue.nameAr,
+          }
+        : {
+            contractId: undefined,
+            contractName: undefined,
+            contractNameAr: undefined,
+          },
       items: JSON.stringify(itemsList),
       costAmount,
       total,
@@ -617,7 +628,6 @@ const PopupPurchaseInvoice = ({
       amountPaid: isCash ? amount : 0,
       accounts,
       paymentType: ptype,
-      taskId: taskvalue ? taskvalue.id : null,
       userId: user._id,
     };
     const mutate = isNew ? addAction : editAction;
@@ -770,7 +780,7 @@ const PopupPurchaseInvoice = ({
               setSelectValue={setTaskvalue}
               isRTL={isRTL}
               fullWidth
-              disabled={name === 'taskId'}
+              disabled={name === 'contractId'}
             ></AutoFieldLocal>
           </Grid>
         )}

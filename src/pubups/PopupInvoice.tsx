@@ -101,7 +101,7 @@ const PopupInvoice = ({
     name === 'customerId' ? value : null
   );
   const [taskvalue, setTaskvalue] = useState<any>(
-    name === 'taskId' ? value : null
+    name === 'contractId' ? value : null
   );
 
   const [isCash, setIsCash] = useState(true);
@@ -383,7 +383,7 @@ const PopupInvoice = ({
       setInvNo(lastNos?.salesInvoice ? Number(lastNos?.salesInvoice) + 1 : 1);
     }
     if (isNew) {
-      if (name === 'taskId') {
+      if (name === 'contractId') {
         if (value?.departmentId) {
           const dept = departments.filter(
             (dep: any) => dep._id === value?.departmentId
@@ -442,8 +442,8 @@ const PopupInvoice = ({
         setResovalue(empl);
       }
 
-      if (!task && row.taskId) {
-        const tsk = tasks.filter((ts: any) => ts.id === row.taskId)[0];
+      if (!task && row.contractId) {
+        const tsk = tasks.filter((ts: any) => ts._id === row.contractId)[0];
         setTaskvalue(tsk);
       }
       setCustvalue(cust);
@@ -614,6 +614,17 @@ const PopupInvoice = ({
             resourseNameAr: undefined,
             resourseColor: undefined,
           },
+      contract: taskvalue
+        ? {
+            contractId: taskvalue._id,
+            contractName: taskvalue.name,
+            contractNameAr: taskvalue.nameAr,
+          }
+        : {
+            contractId: undefined,
+            contractName: undefined,
+            contractNameAr: undefined,
+          },
       items: JSON.stringify(itemsList),
       costAmount,
       total,
@@ -625,7 +636,6 @@ const PopupInvoice = ({
       amountPaid: isCash ? amount : 0,
       accounts,
       paymentType: ptype,
-      taskId: taskvalue ? taskvalue.id : null,
       userId: user._id,
     };
     const mutate = isNew ? addAction : editAction;
@@ -777,8 +787,7 @@ const PopupInvoice = ({
               setSelectValue={setTaskvalue}
               isRTL={isRTL}
               fullWidth
-              // openAdd={openTask}
-              disabled={name === 'taskId'}
+              disabled={name === 'contractId'}
             ></AutoFieldLocal>
           </Grid>
         )}

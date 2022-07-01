@@ -45,7 +45,7 @@ import React from 'react';
 import useCompany from '../hooks/useCompany';
 import { Typography } from '@material-ui/core';
 
-export default function ReceiptTask({ isRTL, words, theme, taskId }) {
+export default function ReceiptTask({ isRTL, words, theme, contractId }) {
   const [columns] = useState([
     { name: 'time', title: words.time },
     { name: 'creditAcc', title: words.customer },
@@ -69,7 +69,7 @@ export default function ReceiptTask({ isRTL, words, theme, taskId }) {
       {
         query: getReceipts,
         variables: {
-          taskId,
+          contractId,
         },
       },
       {
@@ -101,12 +101,12 @@ export default function ReceiptTask({ isRTL, words, theme, taskId }) {
 
   useEffect(() => {
     const variables = {
-      taskId,
+      contractId,
     };
     loadFinances({
       variables,
     });
-  }, [taskId]);
+  }, [contractId]);
 
   const [addFinance] = useMutation(createFinance, refresQuery);
   const [editFinance] = useMutation(updateFinance, refresQuery);

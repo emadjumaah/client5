@@ -222,8 +222,10 @@ const PopupAppointInvoice = ({
       const empl = resourses.filter((emp: any) => emp._id === resId)[0];
       setResovalue(empl);
     }
-    if (appoint.taskId) {
-      const empl = tasks.filter((emp: any) => emp.id === appoint.taskId)[0];
+    if (appoint.contractId) {
+      const empl = tasks.filter(
+        (emp: any) => emp._id === appoint.contractId
+      )[0];
       setTaskvalue(empl);
     }
     if (items) {
@@ -388,6 +390,17 @@ const PopupAppointInvoice = ({
             resourseNameAr: undefined,
             resourseColor: undefined,
           },
+      contract: taskvalue
+        ? {
+            contractId: taskvalue._id,
+            contractName: taskvalue.name,
+            contractNameAr: taskvalue.nameAr,
+          }
+        : {
+            contractId: undefined,
+            contractName: undefined,
+            contractNameAr: undefined,
+          },
       items: JSON.stringify(itemsList),
       costAmount,
       total,
@@ -401,7 +414,6 @@ const PopupAppointInvoice = ({
       paymentType: ptype,
       userId: user._id,
       eventId: appoint.id,
-      taskId: taskvalue ? taskvalue.id : null,
       eventNo: appoint.docNo,
     };
 

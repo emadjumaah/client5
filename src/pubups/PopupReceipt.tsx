@@ -84,7 +84,7 @@ const PopupReceipt = ({
       loadInvoices({ variables });
     }
     if (isNew) {
-      if (name === 'taskId') {
+      if (name === 'contractId') {
         if (value?.customerId) {
           const dept = customers.filter(
             (dep: any) => dep._id === value?.customerId
@@ -117,7 +117,7 @@ const PopupReceipt = ({
           };
         });
         if (task) {
-          const tndata = ndata.filter((nd: any) => nd.taskId === task.id);
+          const tndata = ndata.filter((nd: any) => nd.contractId === task._id);
           setInvoices(tndata);
         } else {
           setInvoices(ndata);
@@ -265,6 +265,25 @@ const PopupReceipt = ({
           resourseNameAr: undefined,
           resourseColor: undefined,
         };
+    const contract = task
+      ? {
+          contractId: task._id,
+          contractName: task.name,
+          contractNameAr: task.nameAr,
+        }
+      : invoicevalue
+      ? {
+          contractId: invoicevalue.contractId,
+          contractName: invoicevalue.contractName,
+          contractNameAr: invoicevalue.contractNameAr,
+          contractColor: invoicevalue.contractColor,
+        }
+      : {
+          contractId: undefined,
+          contractName: undefined,
+          contractNameAr: undefined,
+          contractColor: undefined,
+        };
 
     const variables: any = {
       _id: row && row._id ? row._id : undefined, // is it new or edit
@@ -272,12 +291,12 @@ const PopupReceipt = ({
       time: selectedDate,
       debitAcc: debitAcc.code,
       creditAcc: creditAcc.code,
-      taskId: task ? task.id : invoicevalue ? invoicevalue.taskId : null,
       refNo: invoicevalue ? invoicevalue.docNo : undefined,
       customer,
       department,
       employee,
       resourse,
+      contract,
       amount,
       chequeBank,
       chequeNo,

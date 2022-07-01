@@ -338,7 +338,7 @@ const PopupAppointment = ({
       const resId = row.resourseId;
       const custId = row.customerId;
       const statNo = row.status;
-      const taskId = row.taskId;
+      const contractId = row.contractId;
       setTasktitle(row?.title);
       setStartDate(new Date(row?.startDate));
       setEndDate(new Date(row?.endDate));
@@ -347,8 +347,8 @@ const PopupAppointment = ({
         const depart = departments.filter((dep: any) => dep._id === depId)[0];
         setDepartvalue(depart);
       }
-      if (taskId) {
-        const tsk = tasks.filter((ts: any) => ts.id === taskId)[0];
+      if (contractId) {
+        const tsk = tasks.filter((ts: any) => ts._id === contractId)[0];
         setTaskvalue(tsk);
       }
       if (empId) {
@@ -525,9 +525,7 @@ const PopupAppointment = ({
       amount: totals.amount,
       status: status ? status.id : 2,
       items: JSON.stringify(itemsList),
-      // daction,
       actions: JSON.stringify(actionslist),
-      taskId: taskvalue ? taskvalue.id : null,
       customer: custvalue
         ? {
             customerId: custvalue._id,
@@ -540,6 +538,17 @@ const PopupAppointment = ({
             customerName: undefined,
             customerNameAr: undefined,
             customerPhone: undefined,
+          },
+      contract: taskvalue
+        ? {
+            contractId: taskvalue._id,
+            contractName: taskvalue.name,
+            contractNameAr: taskvalue.nameAr,
+          }
+        : {
+            contractId: undefined,
+            contractName: undefined,
+            contractNameAr: undefined,
           },
 
       department: departvalue
@@ -591,6 +600,7 @@ const PopupAppointment = ({
         ...variables.department,
         ...variables.employee,
         ...variables.resourse,
+        ...variables.contract,
       };
       if (!isNew) {
         editAction({

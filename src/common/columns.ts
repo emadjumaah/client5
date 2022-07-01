@@ -47,6 +47,12 @@ export const getColumns = ({ isRTL, words }: any) => {
       name: isRTL ? 'departmentNameAr' : 'departmentName',
       title: tempwords?.department,
     },
+    contract: {
+      id: 8.5,
+      ref: 'contract',
+      name: isRTL ? 'contractNameAr' : 'contractName',
+      title: tempwords?.task,
+    },
     resourse: {
       id: 9,
       ref: 'resourse',
@@ -166,12 +172,6 @@ export const getColumns = ({ isRTL, words }: any) => {
       ref: 'evQty',
       name: 'evQty',
       title: isRTL ? 'عدد المواعيد' : 'Appointments',
-    },
-    taskId: {
-      id: 24,
-      ref: 'taskId',
-      name: 'taskId',
-      title: tempwords?.task,
     },
     id: {
       id: 25,

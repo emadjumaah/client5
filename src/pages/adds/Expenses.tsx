@@ -36,7 +36,6 @@ import {
   accountFormatter,
   currencyFormatter,
   samllFormatter,
-  taskIdFormatter,
   timeFormatter,
 } from '../../Shared/colorFormat';
 import useAccounts from '../../hooks/useAccounts';
@@ -61,7 +60,7 @@ export default function Expenses({ isRTL, words, menuitem, theme, company }) {
     { name: 'creditAcc', title: isRTL ? 'حساب الدفع' : 'Payment Acc' },
     col.department,
     col.employee,
-    col.taskId,
+    col.contract,
     { name: 'desc', title: words.description },
     { name: 'amount', title: words.amount },
   ]);
@@ -254,12 +253,6 @@ export default function Expenses({ isRTL, words, menuitem, theme, company }) {
             for={['creditAcc']}
             formatterComponent={(props) =>
               accountFormatter(props, accounts, isRTL)
-            }
-          ></DataTypeProvider>
-          <DataTypeProvider
-            for={['taskId']}
-            formatterComponent={(props: any) =>
-              taskIdFormatter({ ...props, tasks })
             }
           ></DataTypeProvider>
           <DataTypeProvider

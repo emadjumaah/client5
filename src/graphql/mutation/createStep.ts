@@ -4,7 +4,7 @@ export default gql`
   mutation createStep(
     $branch: String
     $eventId: Int
-    $taskId: Int
+    $contractId: String
     $opId: String
     $title: String
     $desc: String
@@ -17,7 +17,7 @@ export default gql`
     createStep(
       branch: $branch
       eventId: $eventId
-      taskId: $taskId
+      contractId: $contractId
       opId: $opId
       title: $title
       desc: $desc

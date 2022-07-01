@@ -235,8 +235,8 @@ export const AppointForm = (props: any) => {
   }, []);
   useEffect(() => {
     if (row && row._id) {
-      if (row.taskId && tasks.length > 0 && !taskvalue) {
-        const tks = tasks.filter((t: any) => t.id === row.taskId)?.[0];
+      if (row.contractId && tasks.length > 0 && !taskvalue) {
+        const tks = tasks.filter((t: any) => t._id === row.contractId)?.[0];
         setTaskvalue(tks);
       }
       if (row.employee && employees.length > 0 && !emplvalue) {
@@ -433,9 +433,8 @@ export const AppointForm = (props: any) => {
     }
   };
   const selectTask = (value: any) => {
-    let newValue = value?.id;
     setTaskvalue(value);
-    onNewFieldChange(newValue ? newValue : null, 'taskId');
+    onNewFieldChange(value, 'contract');
     if (value?.employeeId) {
       const empl = employees.filter(
         (em: any) => em._id === value?.employeeId

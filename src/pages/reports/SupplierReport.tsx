@@ -35,7 +35,6 @@ import {
   currencyFormatterEmpty,
   moneyFormat,
   opTypeFormatter,
-  taskIdFormatter,
 } from '../../Shared/colorFormat';
 import {
   Box,
@@ -54,7 +53,6 @@ import PageLayout from '../main/PageLayout';
 import DateNavigatorReports from '../../components/filters/DateNavigatorReports';
 import FilterSelectCkeckBox from '../../Shared/FilterSelectCkeckBox';
 import { useSuppliers, useTemplate } from '../../hooks';
-import useTasks from '../../hooks/useTasks';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
 import { CustomerReportPrint } from '../../print/CustomerReportPrint';
 import { useReactToPrint } from 'react-to-print';
@@ -111,7 +109,7 @@ export default function SupplierReport({
           col.supplier,
           col.opType,
           col.project,
-          col.taskId,
+          col.contract,
           col.opDocNo,
           col.opAcc,
           col.amountdebit,
@@ -131,7 +129,6 @@ export default function SupplierReport({
   const componentRef: any = useRef();
 
   const { suppliers } = useSuppliers();
-  const { tasks } = useTasks();
   const { height } = useWindowDimensions();
   const {
     state: {
@@ -435,12 +432,6 @@ export default function SupplierReport({
           <DataTypeProvider
             for={['opType']}
             formatterComponent={opTypeFormatter}
-          ></DataTypeProvider>
-          <DataTypeProvider
-            for={['taskId']}
-            formatterComponent={(props: any) =>
-              taskIdFormatter({ ...props, tasks })
-            }
           ></DataTypeProvider>
           <Toolbar />
           <ColumnChooser />

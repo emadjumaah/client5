@@ -103,6 +103,8 @@ const PopupBranch = ({
           temp: JSON.stringify(temp),
         };
     const mutate = isNew ? addAction : editAction;
+    console.log('mutate', mutate);
+    console.log('variables', variables);
 
     apply(mutate, variables);
     dispatch({
@@ -110,7 +112,7 @@ const PopupBranch = ({
       payload: { template: temp, tempId: temp?.id },
     });
 
-    window.location.reload();
+    // window.location.reload();
   };
 
   const apply = async (mutate: any, variables: any) => {

@@ -30,19 +30,13 @@ import {
   TableSummaryRow,
   SearchPanel,
 } from '@devexpress/dx-react-grid-material-ui';
-// import PrintIcon from '@material-ui/icons/Print';
 import { getRowId } from '../../common';
 import {
-  // covertToDate,
   covertToTimeDateDigit,
-  // covertToTimeOnly,
   createdAtFormatter,
   currencyFormatter,
   dateTimeFormatter,
   eventStatusFormatter,
-  // eventStatusPrintDataFormatter,
-  // moneyFormat,
-  taskIdFormatter,
 } from '../../Shared/colorFormat';
 import { Box, fade, Typography, withStyles } from '@material-ui/core';
 import { getReportEvents } from '../../graphql';
@@ -51,8 +45,6 @@ import ReportsFilter from '../../Shared/ReportsFilter';
 import { GridExporter } from '@devexpress/dx-react-grid-export';
 import saveAs from 'file-saver';
 import { getColumns } from '../../common/columns';
-// import { reportprint } from '../../common/ipc';
-// import _ from 'lodash';
 import PageLayout from '../main/PageLayout';
 import { ReportGroupBySwitcher } from '../calendar/common/ReportGroupBySwitcher';
 import DateNavigatorReports from '../../components/filters/DateNavigatorReports';
@@ -60,7 +52,6 @@ import { groupList } from '../../constants/reports';
 import EventsReportContext from '../../contexts/eventsreport';
 import FilterSelectCkeckBox from '../../Shared/FilterSelectCkeckBox';
 import { eventStatus } from '../../constants';
-// import { groupSumCount } from '../../common/reports';
 import { useCustomers, useServices, useTemplate } from '../../hooks';
 import useTasks from '../../hooks/useTasks';
 import useDepartmentsUp from '../../hooks/useDepartmentsUp';
@@ -113,7 +104,7 @@ export default function SalesReport({ isRTL, words, menuitem, theme }: any) {
           col.startDate,
           col.time,
           col.project,
-          col.taskId,
+          col.contract,
           col.employee,
           col.resourse,
           col.department,
@@ -223,8 +214,6 @@ export default function SalesReport({ isRTL, words, menuitem, theme }: any) {
 
   const getIds = (list: any) =>
     list && list?.length > 0 ? list.map((sv: any) => sv._id) : undefined;
-  const getTaskIds = (list: any) =>
-    list && list?.length > 0 ? list.map((sv: any) => sv.id) : undefined;
   const fetchData = () => {
     const variables = {
       serviceIds: getIds(servicevalue),
@@ -232,7 +221,7 @@ export default function SalesReport({ isRTL, words, menuitem, theme }: any) {
       employeeIds: getIds(emplvalue),
       resourseIds: getIds(resovalue),
       customerIds: getIds(custvalue),
-      taskIds: getTaskIds(taskvalue),
+      contractIds: getIds(taskvalue),
       projectIds: getIds(projvalue),
       start: start ? start.setHours(0, 0, 0, 0) : undefined,
       end: end
@@ -278,157 +267,6 @@ export default function SalesReport({ isRTL, words, menuitem, theme }: any) {
       );
     });
   };
-
-  // const inActiveColumns = (name: any) => {
-  //   const fc = activecolumns.filter((ac: any) => ac.ref === name);
-  //   if (fc && fc.length > 0) {
-  //     return true;
-  //   } else {
-  //     return false;
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   if (group) {
-  //   } else {
-  //     const sortRows = _.orderBy(
-  //       rows,
-  //       [sort[0].columnName],
-  //       [sort[0].direction]
-  //     );
-  //     const printrows = sortRows.map((row: any) => {
-  //       return {
-  //         date: inActiveColumns('date')
-  //           ? row.startDate
-  //             ? covertToDate(row.startDate)
-  //             : ' - '
-  //           : undefined,
-  //         time: inActiveColumns('time')
-  //           ? row.startDate
-  //             ? covertToTimeOnly(row.startDate)
-  //             : ' - '
-  //           : undefined,
-  //         docNo: inActiveColumns('docNo')
-  //           ? row.docNo
-  //             ? row.docNo
-  //             : ' - '
-  //           : undefined,
-  //         status: inActiveColumns('status')
-  //           ? row.status
-  //             ? eventStatusPrintDataFormatter(row.status)
-  //             : ' - '
-  //           : undefined,
-  //         employee: inActiveColumns('employee')
-  //           ? row[col.employee.name]
-  //             ? row[col.employee.name]
-  //             : ' - '
-  //           : undefined,
-  //         service: inActiveColumns('service')
-  //           ? row[col.service.name]
-  //             ? row[col.service.name]
-  //             : ' - '
-  //           : undefined,
-  //         department: inActiveColumns('department')
-  //           ? row[col.department.name]
-  //             ? row[col.department.name]
-  //             : ' - '
-  //           : undefined,
-  //         customer: inActiveColumns('customer')
-  //           ? row[col.customer.name]
-  //             ? row[col.customer.name]
-  //             : ' - '
-  //           : undefined,
-  //         taskId: inActiveColumns('taskId')
-  //           ? row[col.taskId.name]
-  //             ? row[col.taskId.name]
-  //             : ' - '
-  //           : undefined,
-  //         amount: inActiveColumns('amount')
-  //           ? row.amount
-  //             ? moneyFormat(row.amount)
-  //             : ' - '
-  //           : undefined,
-  //       };
-  //     });
-
-  //     setPrintRows(printrows);
-  //   }
-  // }, [activecolumns, rows, sort]);
-
-  // const arrangeParing = () => {
-  //   const cols = activecolumns.map((co: any) => {
-  //     return { name: co.title };
-  //   });
-
-  //   const filters: any = [];
-  //   if (emplvalue) {
-  //     filters.push({ name: isRTL ? emplvalue?.nameAr : emplvalue?.name });
-  //   }
-  //   if (status) {
-  //     filters.push({ name: isRTL ? status?.nameAr : status?.name });
-  //   }
-  //   if (departvalue) {
-  //     filters.push({ name: isRTL ? departvalue?.nameAr : departvalue?.name });
-  //   }
-  //   if (servicevalue) {
-  //     filters.push({ name: isRTL ? servicevalue?.nameAr : servicevalue?.name });
-  //   }
-  //   if (taskvalue) {
-  //     filters.push({ name: isRTL ? taskvalue?.nameAr : taskvalue?.name });
-  //   }
-
-  //   const rest = {
-  //     isRTL,
-  //     totl: words.total,
-  //     totalamount: total ? moneyFormat(total) : '',
-  //     reportname: isRTL ? 'تقرير المواعيد' : 'Appointment Report',
-  //     logo: company.logo,
-  //     phone: company.tel1,
-  //     mobile: company.mob,
-  //     address: company.address,
-  //     company: isRTL ? company.nameAr : company.name,
-  //     start: start ? covertToDate(start) : '',
-  //     end: end ? covertToDate(end) : '',
-  //     filters,
-  //     color: '#afbddf',
-  //     now: covertToTimeDateDigit(new Date()),
-  //   };
-
-  //   reportprint({ rows: printRows, cols, ...rest });
-  // };
-
-  // const arrangeGroupParing = () => {
-  //   const cols = [
-  //     { name: isRTL ? 'الاسم' : 'Name' },
-  //     { name: isRTL ? 'العدد' : 'Count' },
-  //     { name: isRTL ? 'المجموع' : 'Total' },
-  //   ];
-  //   const readyItems = totalRows.items.map((it: any) => {
-  //     return {
-  //       ...it,
-  //       total: moneyFormat(it.total),
-  //     };
-  //   });
-  //   const rest = {
-  //     isRTL,
-  //     totl: words.total,
-  //     totalamount: total ? moneyFormat(totalRows.total) : '',
-  //     count: totalRows?.count,
-  //     reportname: isRTL ? 'تقرير المبيعات' : 'Sales Report',
-  //     logo: company.logo,
-  //     phone: company.tel1,
-  //     mobile: company.mob,
-  //     address: company.address,
-  //     company: isRTL ? company.nameAr : company.name,
-  //     start: start ? covertToDate(start) : '',
-  //     end: end ? covertToDate(end) : '',
-  //     color: '#b2e2be',
-  //     now: covertToTimeDateDigit(new Date()),
-  //   };
-
-  //   reportprint({ rows: readyItems, cols, ...rest });
-  // };
-
   const refresh = () => {
     summaryData?.refetch();
   };
@@ -661,12 +499,6 @@ export default function SalesReport({ isRTL, words, menuitem, theme }: any) {
             for={['amount']}
             formatterComponent={currencyFormatter}
           ></DataTypeProvider>{' '}
-          <DataTypeProvider
-            for={['taskId']}
-            formatterComponent={(props: any) =>
-              taskIdFormatter({ ...props, tasks })
-            }
-          ></DataTypeProvider>
           <Toolbar />
           <ColumnChooser />
           <SearchPanel

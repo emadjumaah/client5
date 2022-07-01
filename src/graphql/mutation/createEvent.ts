@@ -3,7 +3,6 @@ import { gql } from '@apollo/client';
 export default gql`
   mutation createEvent(
     $branch: String
-    $taskId: Int
     $title: String
     $prefix: String
     $docNo: String
@@ -24,10 +23,10 @@ export default gql`
     $employee: EmployeeInput
     $project: ProjectInput
     $resourse: ResourseInput
+    $contract: ContractInput
   ) {
     createEvent(
       branch: $branch
-      taskId: $taskId
       title: $title
       prefix: $prefix
       docNo: $docNo
@@ -48,10 +47,10 @@ export default gql`
       employee: $employee
       project: $project
       resourse: $resourse
+      contract: $contract
     ) {
       _id
       id
-      taskId
       branch
       title
       startDate
@@ -91,6 +90,10 @@ export default gql`
       resourseName
       resourseNameAr
       resourseColor
+
+      contractId
+      contractName
+      contractNameAr
 
       createdAt
       updatedAt

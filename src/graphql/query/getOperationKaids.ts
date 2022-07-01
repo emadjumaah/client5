@@ -42,7 +42,9 @@ export default gql`
         resourseId
         resourseName
         resourseNameAr
-        taskId
+        contractId
+        contractName
+        contractNameAr
 
         kaidType
         amount

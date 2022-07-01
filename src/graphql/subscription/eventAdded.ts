@@ -1,4 +1,4 @@
-import { gql } from "@apollo/client";
+import { gql } from '@apollo/client';
 
 export default gql`
   subscription OnEventAdded() {
@@ -6,7 +6,6 @@ export default gql`
       _id
       branch
       id
-      taskId
       title
       startDate
       endDate
@@ -36,6 +35,11 @@ export default gql`
       departmentName
       departmentNameAr
       departmentColor
+
+
+      contractId
+      contractName
+      contractNameAr
 
       employeeId
       employeeName

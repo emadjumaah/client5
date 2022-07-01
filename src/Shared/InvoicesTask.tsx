@@ -34,7 +34,6 @@ import { useLazyQuery, useMutation } from '@apollo/client';
 import {
   amountFormatter,
   currencyFormatter,
-  taskIdFormatter,
   timeFormatter,
 } from './colorFormat';
 
@@ -50,7 +49,7 @@ export default function InvoicesTask({
   departments,
   company,
   servicesproducts,
-  taskId,
+  contractId,
   tasks,
   task,
 }) {
@@ -60,7 +59,7 @@ export default function InvoicesTask({
     { name: 'time', title: words.time },
     { name: 'docNo', title: words.no },
     col.eventNo,
-    col.taskId,
+    col.contract,
     { name: isRTL ? 'customerNameAr' : 'customerName', title: words.customer },
     { name: 'customerPhone', title: words.phoneNumber },
     { name: 'total', title: words.total },
@@ -78,7 +77,7 @@ export default function InvoicesTask({
       {
         query: getInvoices,
         variables: {
-          taskId,
+          contractId,
         },
       },
       {
@@ -110,13 +109,13 @@ export default function InvoicesTask({
 
   useEffect(() => {
     const variables = {
-      taskId,
+      contractId,
     };
 
     loadInvoices({
       variables,
     });
-  }, [taskId]);
+  }, [contractId]);
 
   const [addInvoice] = useMutation(createInvoice, refresQuery);
   const [editInvoice] = useMutation(updateInvoice, refresQuery);
@@ -189,13 +188,6 @@ export default function InvoicesTask({
           for={['total', 'discount']}
           formatterComponent={currencyFormatter}
         ></DataTypeProvider>
-        <DataTypeProvider
-          for={['taskId']}
-          formatterComponent={(props: any) =>
-            taskIdFormatter({ ...props, tasks })
-          }
-        ></DataTypeProvider>
-
         <TableEditColumn
           showEditCommand
           showDeleteCommand

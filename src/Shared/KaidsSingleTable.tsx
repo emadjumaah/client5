@@ -8,14 +8,9 @@ import {
 } from '@devexpress/dx-react-grid-material-ui';
 import { Box, fade, Paper, Typography, withStyles } from '@material-ui/core';
 import { DataTypeProvider, EditingState } from '@devexpress/dx-react-grid';
-import {
-  accountFormatter,
-  currencyFormatter,
-  taskIdFormatter,
-} from './colorFormat';
+import { accountFormatter, currencyFormatter } from './colorFormat';
 import { CommandSmall } from './CommandSmall';
 import { getColumns } from '../common/columns';
-import useTasks from '../hooks/useTasks';
 import { useTemplate } from '../hooks';
 
 export const getRowId = (row: any) => row.index;
@@ -54,7 +49,6 @@ export default function KaidsSingleTable({
   editItem,
 }: any) {
   const col = getColumns({ isRTL, words });
-  const { tasks } = useTasks();
 
   const { tempoptions } = useTemplate();
   const [columns] = useState(
@@ -72,7 +66,7 @@ export default function KaidsSingleTable({
           { name: 'amountDebit', title: words.amountDebit },
           { name: 'amountCredit', title: words.amountCredit },
           { name: 'desc', title: words.description },
-          col.taskId,
+          col.contract,
           col.resourse,
         ]
   );
@@ -113,15 +107,6 @@ export default function KaidsSingleTable({
             for={['acc']}
             formatterComponent={(props) =>
               accountFormatter(props, accounts, isRTL)
-            }
-          ></DataTypeProvider>
-          <DataTypeProvider
-            for={['taskId']}
-            formatterComponent={(props: any) =>
-              taskIdFormatter({
-                ...props,
-                tasks,
-              })
             }
           ></DataTypeProvider>
           <TableEditColumn

@@ -1,23 +1,23 @@
 import { gql } from '@apollo/client';
 export default gql`
   query getPurchaseInvoices(
-    $taskId: Int
     $departmentId: String
     $employeeId: String
     $projectId: String
     $resourseId: String
     $supplierId: String
+    $contractId: String
     $start: Date
     $end: Date
     $search: String
   ) {
     getPurchaseInvoices(
-      taskId: $taskId
       departmentId: $departmentId
       employeeId: $employeeId
       projectId: $projectId
       resourseId: $resourseId
       supplierId: $supplierId
+      contractId: $contractId
       start: $start
       end: $end
       search: $search
@@ -59,6 +59,10 @@ export default gql`
         resourseName
         resourseNameAr
         resourseColor
+
+        contractId
+        contractName
+        contractNameAr
 
         refNo
         refType

@@ -15,7 +15,10 @@ export default gql`
         time
         title
         desc
-        taskId
+
+        contractId
+        contractName
+        contractNameAr
 
         customerId
         customerName

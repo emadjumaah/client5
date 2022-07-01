@@ -39,7 +39,6 @@ import {
   currencyFormatter,
   moneyFormat,
   samllFormatter,
-  taskIdFormatter,
   timeFormatter,
 } from '../../Shared/colorFormat';
 import useAccounts from '../../hooks/useAccounts';
@@ -89,7 +88,7 @@ export default function ExpProducts({
           { name: 'creditAcc', title: isRTL ? 'حساب الدفع' : 'Payment Acc' },
           col.department,
           col.employee,
-          col.taskId,
+          col.contract,
           { name: 'desc', title: words.description },
           { name: 'amount', title: words.amount },
         ]
@@ -102,7 +101,7 @@ export default function ExpProducts({
     { columnName: 'creditAcc', width: 150 },
     { columnName: col.department.name, width: 180 },
     { columnName: col.employee.name, width: 180 },
-    { columnName: col.taskId.name, width: 180 },
+    { columnName: col.contract.name, width: 180 },
     { columnName: 'desc', width: 200 },
     { columnName: 'amount', width: 120 },
   ]);
@@ -292,7 +291,7 @@ export default function ExpProducts({
                 'creditAcc',
                 col.department.name,
                 col.employee.name,
-                col.taskId.name,
+                col.contract.name,
                 'desc',
                 'amount',
               ]}
@@ -329,12 +328,6 @@ export default function ExpProducts({
               for={['creditAcc']}
               formatterComponent={(props) =>
                 accountFormatter(props, accounts, isRTL)
-              }
-            ></DataTypeProvider>
-            <DataTypeProvider
-              for={['taskId']}
-              formatterComponent={(props: any) =>
-                taskIdFormatter({ ...props, tasks })
               }
             ></DataTypeProvider>
             <DataTypeProvider

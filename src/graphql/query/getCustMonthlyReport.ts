@@ -12,8 +12,8 @@ export default gql`
     $resourseIds: [String]
     $employeeIds: [String]
     $customerIds: [String]
+    $contractIds: [String]
     $parentcodes: [Int]
-    $taskIds: [Int]
     $start: Date
     $end: Date
   ) {
@@ -28,8 +28,8 @@ export default gql`
       resourseIds: $resourseIds
       employeeIds: $employeeIds
       customerIds: $customerIds
+      contractIds: $contractIds
       parentcodes: $parentcodes
-      taskIds: $taskIds
       start: $start
       end: $end
     ) {
@@ -71,6 +71,10 @@ export default gql`
         categoryName
         categoryNameAr
 
+        contractId
+        contractName
+        contractNameAr
+
         itemId
         itemName
         itemNameAr
@@ -79,8 +83,6 @@ export default gql`
         itemPrice
 
         eventId
-        taskId
-
         amount
         debit
         credit

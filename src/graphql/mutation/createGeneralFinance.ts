@@ -16,9 +16,9 @@ export default gql`
     $department: DepartmentInput
     $project: ProjectInput
     $resourse: ResourseInput
+    $contract: ContractInput
     $debitAcc: Int
     $creditAcc: Int
-    $taskId: Int
     $userId: String
   ) {
     createGeneralFinance(
@@ -36,9 +36,9 @@ export default gql`
       department: $department
       project: $project
       resourse: $resourse
+      contract: $contract
       debitAcc: $debitAcc
       creditAcc: $creditAcc
-      taskId: $taskId
       userId: $userId
     ) {
       ok

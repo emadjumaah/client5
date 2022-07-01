@@ -39,7 +39,6 @@ import {
   createdAtFormatter,
   currencyFormatter,
   moneyFormat,
-  taskIdFormatter,
 } from '../../Shared/colorFormat';
 import {
   Box,
@@ -115,7 +114,7 @@ export default function SalesReport({
     col.service,
     col.department,
     col.project,
-    col.taskId,
+    col.contract,
     col.customer,
     col.opDocNo,
     col.amount,
@@ -140,7 +139,7 @@ export default function SalesReport({
           col.service,
           col.department,
           col.project,
-          col.taskId,
+          col.contract,
           col.customer,
           col.opDocNo,
           col.amount,
@@ -276,7 +275,7 @@ export default function SalesReport({
       resourseIds: getIds(resovalue),
       customerIds: getIds(custvalue),
       projectIds: getIds(projvalue),
-      taskIds: getTaskIds(taskvalue),
+      contractIds: getIds(taskvalue),
       itemtypes: getTaskIds(itemtypes),
       start: start ? start.setHours(0, 0, 0, 0) : undefined,
       end: end
@@ -377,9 +376,9 @@ export default function SalesReport({
               ? row[col.customer.name]
               : ' - '
             : undefined,
-          taskId: inActiveColumns('taskId')
-            ? row[col.taskId.name]
-              ? row[col.taskId.name]
+          contract: inActiveColumns('contract')
+            ? row[col.contract.name]
+              ? row[col.contract.name]
               : ' - '
             : undefined,
           amount: inActiveColumns('amount')
@@ -672,12 +671,6 @@ export default function SalesReport({
             for={['amount']}
             formatterComponent={currencyFormatter}
           ></DataTypeProvider>{' '}
-          <DataTypeProvider
-            for={['taskId']}
-            formatterComponent={(props: any) =>
-              taskIdFormatter({ ...props, tasks })
-            }
-          ></DataTypeProvider>
           <Toolbar />
           <ColumnChooser />
           <SearchPanel

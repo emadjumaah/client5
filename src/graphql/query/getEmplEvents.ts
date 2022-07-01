@@ -8,10 +8,10 @@ export default gql`
     $projectId: String
     $resourseId: String
     $customerId: String
+    $contractId: String
     $status: Int
     $start: Date
     $end: Date
-    $taskId: Int
     $due: Boolean
   ) {
     getEmplEvents(
@@ -21,10 +21,10 @@ export default gql`
       projectId: $projectId
       resourseId: $resourseId
       customerId: $customerId
+      contractId: $contractId
       status: $status
       start: $start
       end: $end
-      taskId: $taskId
       due: $due
     ) {
       ok
@@ -32,7 +32,6 @@ export default gql`
       data {
         _id
         id
-        taskId
         branch
         title
         startDate
@@ -72,6 +71,11 @@ export default gql`
         projectName
         projectNameAr
         projectColor
+
+        contractId
+        contractName
+        contractNameAr
+
         resourseId
         resourseName
         resourseNameAr

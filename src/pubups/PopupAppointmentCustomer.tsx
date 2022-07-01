@@ -38,15 +38,11 @@ import { getPopupTitle } from '../constants/menu';
 import { useCustomers, useProducts, useTemplate } from '../hooks';
 import PopupCustomer from './PopupCustomer';
 import PopupDeprtment from './PopupDeprtment';
-import PopupTask from './PopupTask';
 import PopupEmployee from './PopupEmployee';
 import PopupResourses from './PopupResourses';
 import useDepartmentsUp from '../hooks/useDepartmentsUp';
 import useEmployeesUp from '../hooks/useEmployeesUp';
 import useResoursesUp from '../hooks/useResoursesUp';
-import useTasks from '../hooks/useTasks';
-import useProjects from '../hooks/useProjects';
-// import MyIcon from '../Shared/MyIcon';
 import PopupMaps from './PopupMaps';
 import { SelectLocal } from '../pages/calendar/common/SelectLocal';
 import { eventLengthOptions } from '../constants/rrule';
@@ -121,7 +117,7 @@ const PopupAppointmentCustomer = ({
   const [openMulti, setOpenMulti] = useState(false);
   const [openInvoice, setOpenInvoice] = useState(false);
   const [taskvalue, setTaskvalue] = useState<any>(
-    name === 'taskId' ? value : null
+    name === 'contractId' ? value : null
   );
 
   const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
@@ -137,15 +133,12 @@ const PopupAppointmentCustomer = ({
   const [openDep, setOpenDep] = useState(false);
   const [openEmp, setOpenEmp] = useState(false);
   const [openRes, setOpenRes] = useState(false);
-  const [openTsk, setOpenTsk] = useState(false);
 
   const { addCustomer, editCustomer } = useCustomers();
   const { addDepartment, editDepartment } = useDepartmentsUp();
   const { addEmployee, editEmployee } = useEmployeesUp();
   const { addResourse, editResourse } = useResoursesUp();
-  const { addTask, editTask } = useTasks();
   const { tempwords, tempoptions } = useTemplate();
-  const { projects } = useProjects();
   const { products } = useProducts();
 
   const { register, handleSubmit } = useForm({});
@@ -184,13 +177,6 @@ const PopupAppointmentCustomer = ({
     setOpenRes(false);
     setNewtext('');
   };
-  const openTask = () => {
-    setOpenTsk(true);
-  };
-  const onCloseTask = () => {
-    setOpenTsk(false);
-    setNewtext('');
-  };
   const openCustomer = () => {
     setOpenCust(true);
   };
@@ -210,9 +196,6 @@ const PopupAppointmentCustomer = ({
   };
   const onNewResoChange = (nextValue: any) => {
     setResovalue(nextValue);
-  };
-  const onNewTaskChange = (nextValue: any) => {
-    setTaskvalue(nextValue);
   };
 
   useEffect(() => {
@@ -337,7 +320,7 @@ const PopupAppointmentCustomer = ({
       setStartDate(start);
       setEndDate(end);
       setStatus(eventStatus.filter((es: any) => es.id === 2)?.[0]);
-      if (name === 'taskId') {
+      if (name === 'contractId') {
         if (value?.departmentId) {
           const dept = departments.filter(
             (dep: any) => dep._id === value?.departmentId
@@ -393,7 +376,7 @@ const PopupAppointmentCustomer = ({
       const empId = row.employeeId;
       const resId = row.resourseId;
       const custId = row.customerId;
-      const taskId = row.taskId;
+      const contractId = row.contractId;
       const statNo = row.status;
 
       setStartDate(row?.startDate);
@@ -420,8 +403,8 @@ const PopupAppointmentCustomer = ({
         const stat = eventStatus.filter((es: any) => es.id === statNo)[0];
         setStatus(stat);
       }
-      if (taskId) {
-        const tsk = tasks.filter((ts: any) => ts.id === taskId)[0];
+      if (contractId) {
+        const tsk = tasks.filter((ts: any) => ts._id === contractId)[0];
         setTaskvalue(tsk);
       }
       if (row.location) {
@@ -577,7 +560,6 @@ const PopupAppointmentCustomer = ({
       items: JSON.stringify(itemsList),
       actions: JSON.stringify(actionslist),
       rRule,
-      taskId: taskvalue ? taskvalue.id : null,
       customer: custvalue
         ? {
             customerId: custvalue._id,
@@ -632,6 +614,17 @@ const PopupAppointmentCustomer = ({
             resourseName: undefined,
             resourseNameAr: undefined,
             resourseColor: undefined,
+          },
+      contract: taskvalue
+        ? {
+            contractId: taskvalue._id,
+            contractName: taskvalue.name,
+            contractNameAr: taskvalue.nameAr,
+          }
+        : {
+            contractId: undefined,
+            contractName: undefined,
+            contractNameAr: undefined,
           },
     };
     const mutate = isNew ? addAction : editAction;
@@ -796,8 +789,7 @@ const PopupAppointmentCustomer = ({
                         register={register}
                         isRTL={isRTL}
                         fullWidth
-                        openAdd={openTask}
-                        disabled={name === 'taskId'}
+                        disabled={name === 'contractId'}
                         mb={0}
                       ></AutoFieldLocal>
                     </Grid>
@@ -1086,21 +1078,6 @@ const PopupAppointmentCustomer = ({
           editAction={editDepartment}
           depType={1}
         ></PopupDeprtment>
-        <PopupTask
-          newtext={newtext}
-          open={openTsk}
-          onClose={onCloseTask}
-          isNew={true}
-          setNewValue={onNewTaskChange}
-          row={null}
-          employees={employees}
-          resourses={resourses}
-          departments={departments}
-          projects={projects}
-          customers={customers}
-          addAction={addTask}
-          editAction={editTask}
-        ></PopupTask>
         <PopupEmployee
           newtext={newtext}
           departments={departments}

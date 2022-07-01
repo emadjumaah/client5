@@ -8,7 +8,6 @@ export default gql`
       data {
         _id
         id
-        taskId
         branch
         title
         startDate
@@ -53,6 +52,10 @@ export default gql`
         resourseName
         resourseNameAr
         resourseColor
+
+        contractId
+        contractName
+        contractNameAr
 
         refNo
         refType

@@ -3,7 +3,7 @@ import { gql } from '@apollo/client';
 export default gql`
   mutation updateRelatedAndItems(
     $itemIds: [String]
-    $taskId: Int
+    $contractId: String
     $customerId: String
     $supplierId: String
     $employeeId: String
@@ -13,7 +13,7 @@ export default gql`
   ) {
     updateRelatedAndItems(
       itemIds: $itemIds
-      taskId: $taskId
+      contractId: $contractId
       customerId: $customerId
       supplierId: $supplierId
       employeeId: $employeeId

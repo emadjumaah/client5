@@ -40,7 +40,6 @@ import {
   amountFormatter,
   currencyFormatter,
   moneyFormat,
-  taskIdFormatter,
   timeFormatter,
 } from '../../Shared/colorFormat';
 import PageLayout from '../main/PageLayout';
@@ -79,7 +78,7 @@ export default function Invoices({ isRTL, words, menuitem, theme, company }) {
           { name: 'time', title: words.time },
           { name: 'docNo', title: words.no },
           col.eventNo,
-          col.taskId,
+          col.contract,
           col.customer,
           { name: 'customerPhone', title: words.phoneNumber },
           { name: 'total', title: words.total },
@@ -92,7 +91,7 @@ export default function Invoices({ isRTL, words, menuitem, theme, company }) {
     { columnName: 'time', width: 100 },
     { columnName: 'docNo', width: 120 },
     { columnName: col.eventNo.name, width: 120 },
-    { columnName: col.taskId.name, width: 250 },
+    { columnName: col.contract.name, width: 250 },
     { columnName: col.customer.name, width: 250 },
     { columnName: 'customerPhone', width: 150 },
     { columnName: 'total', width: 120 },
@@ -282,7 +281,7 @@ export default function Invoices({ isRTL, words, menuitem, theme, company }) {
                 'time',
                 'docNo',
                 col.eventNo.name,
-                col.taskId.name,
+                col.contract.name,
                 col.customer.name,
                 'customerPhone',
                 'total',
@@ -317,12 +316,6 @@ export default function Invoices({ isRTL, words, menuitem, theme, company }) {
             <DataTypeProvider
               for={['total', 'discount']}
               formatterComponent={currencyFormatter}
-            ></DataTypeProvider>
-            <DataTypeProvider
-              for={['taskId']}
-              formatterComponent={(props: any) =>
-                taskIdFormatter({ ...props, tasks })
-              }
             ></DataTypeProvider>
             <TableEditColumn
               showEditCommand

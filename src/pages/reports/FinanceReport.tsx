@@ -35,7 +35,6 @@ import {
   currencyFormatter,
   moneyFormat,
   opTypeFormatter,
-  taskIdFormatter,
 } from '../../Shared/colorFormat';
 import {
   Box,
@@ -55,7 +54,6 @@ import PageLayout from '../main/PageLayout';
 import DateNavigatorReports from '../../components/filters/DateNavigatorReports';
 import { FinanceContext } from '../../contexts';
 import FilterSelectCkeckBox from '../../Shared/FilterSelectCkeckBox';
-import useTasks from '../../hooks/useTasks';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
 import { FinanceReportPrint } from '../../print/FinanceReportPrint';
 import { useReactToPrint } from 'react-to-print';
@@ -116,7 +114,7 @@ export default function FinanceReport({
           col.opDocNo,
           col.refNo,
           col.opType,
-          col.taskId,
+          col.contract,
           col.opAcc,
           col.project,
           col.employee,
@@ -150,7 +148,6 @@ export default function FinanceReport({
     },
     dispatch,
   } = useContext(FinanceContext);
-  const { tasks } = useTasks();
   const { height } = useWindowDimensions();
   const currentViewNameChange = (e: any) => {
     dispatch({ type: 'setCurrentViewName', payload: e.target.value });
@@ -435,12 +432,6 @@ export default function FinanceReport({
           <DataTypeProvider
             for={['opType']}
             formatterComponent={opTypeFormatter}
-          ></DataTypeProvider>
-          <DataTypeProvider
-            for={['taskId']}
-            formatterComponent={(props: any) =>
-              taskIdFormatter({ ...props, tasks })
-            }
           ></DataTypeProvider>
           <Toolbar />
           <ColumnChooser />

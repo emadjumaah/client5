@@ -37,7 +37,6 @@ export const RenderToolTip = ({
 }: any) => {
   const [itemsList, setItemsList] = useState<any>([]);
   const [open, setOpen] = useState(false);
-  // const [isEditor, setIsEditor] = useState(false);
 
   const {
     translate: { words, isRTL },
@@ -49,12 +48,6 @@ export const RenderToolTip = ({
   const { departments } = useDepartmentsUp();
   const { services } = useServices();
   const { products } = useProducts();
-
-  // useEffect(() => {
-  //   const isCalPOSEditor = roles.isEditor();
-  //   const isEmployee = roles.isEmployee();
-  //   setIsEditor(isCalPOSEditor || isEmployee);
-  // }, []);
 
   const {
     startDate,
@@ -70,18 +63,20 @@ export const RenderToolTip = ({
     departmentId,
     departmentName,
     departmentNameAr,
+    contractId,
+    contractName,
+    contractNameAr,
     // resourseId,
     // resourseName,
     // resourseNameAr,
     status,
     amount,
     docNo,
-    taskId,
     title,
     location,
   } = appointmentData;
 
-  const task = tasks.filter((t: any) => t.id === taskId)?.[0];
+  const task = tasks.filter((t: any) => t._id === contractId)?.[0];
 
   const [getItems, itemsData]: any = useLazyQuery(getOperationItems, {
     fetchPolicy: 'cache-and-network',
@@ -140,6 +135,9 @@ export const RenderToolTip = ({
           resourseName,
           resourseNameAr,
           resourseColor,
+          contractId,
+          contractName,
+          contractNameAr,
           index,
           itemprice: item.itemPrice,
           itemqty: item.qty,

@@ -33,7 +33,6 @@ import {
   accountFormatter,
   currencyFormatter,
   samllFormatter,
-  taskIdFormatter,
   timeFormatter,
 } from './colorFormat';
 import useAccounts from '../hooks/useAccounts';
@@ -43,7 +42,7 @@ import getTasks from '../graphql/query/getTasks';
 import useCompany from '../hooks/useCompany';
 import { Typography } from '@material-ui/core';
 
-export default function ExpensesTask({ isRTL, words, theme, taskId }) {
+export default function ExpensesTask({ isRTL, words, theme, contractId }) {
   const [columns] = useState([
     { name: 'time', title: words.time },
     { name: 'debitAcc', title: isRTL ? 'حساب المصروف' : 'Expenses Acc' },
@@ -57,7 +56,7 @@ export default function ExpensesTask({ isRTL, words, theme, taskId }) {
       title: `${words.employee} / ${words.resourses}`,
     },
     {
-      name: 'taskId',
+      name: isRTL ? 'contractNameAr' : 'contractName',
       title: isRTL ? 'المهمة' : 'Task',
     },
     { name: 'desc', title: words.description },
@@ -78,7 +77,7 @@ export default function ExpensesTask({ isRTL, words, theme, taskId }) {
       {
         query: getExpenses,
         variables: {
-          taskId,
+          contractId,
         },
       },
       {
@@ -110,12 +109,12 @@ export default function ExpensesTask({ isRTL, words, theme, taskId }) {
 
   useEffect(() => {
     const variables = {
-      taskId,
+      contractId,
     };
     loadExpenses({
       variables,
     });
-  }, [taskId]);
+  }, [contractId]);
 
   const [addExpenses] = useMutation(createExpenses, refresQuery);
   const [editExpenses] = useMutation(updateExpenses, refresQuery);
@@ -187,12 +186,6 @@ export default function ExpensesTask({ isRTL, words, theme, taskId }) {
           for={['creditAcc']}
           formatterComponent={(props) =>
             accountFormatter(props, accounts, isRTL)
-          }
-        ></DataTypeProvider>
-        <DataTypeProvider
-          for={['taskId']}
-          formatterComponent={(props: any) =>
-            taskIdFormatter({ ...props, tasks })
           }
         ></DataTypeProvider>
         <DataTypeProvider

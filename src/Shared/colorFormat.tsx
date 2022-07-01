@@ -1392,7 +1392,7 @@ export const invoiceReceiptFormatter = ({ value, row }: any) => {
 };
 
 export const taskIdFormatter = ({ value, tasks }: any) => {
-  const task = tasks.filter((tsk: any) => tsk.id === value);
+  const task = tasks.filter((tsk: any) => tsk._id === value);
   if (task && task.length > 0) {
     return <span>{task[0].title}</span>;
   } else {
@@ -1862,7 +1862,7 @@ export const taskIdLinkFormat = ({
   setOpenItem,
   setName,
 }: any) => {
-  const task = tasks.filter((tsk: any) => tsk.id === value)?.[0];
+  const task = tasks.filter((tsk: any) => tsk._id === value)?.[0];
   if (task) {
     return (
       <Button
@@ -1893,7 +1893,7 @@ export const taskIdLinkFormat = ({
   }
 };
 export const taskIdFormat = ({ value, tasks }: any) => {
-  const task = tasks.filter((tsk: any) => tsk.id === value)?.[0];
+  const task = tasks.filter((tsk: any) => tsk._id === value)?.[0];
   if (task) {
     return (
       <Typography

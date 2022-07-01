@@ -4,13 +4,13 @@ export default gql`
   query getNotifications(
     $userId: String
     $eventId: Int
-    $taskId: Int
+    $contractId: String
     $read: Boolean
   ) {
     getNotifications(
       userId: $userId
       eventId: $eventId
-      taskId: $taskId
+      contractId: $contractId
       read: $read
     ) {
       ok
@@ -23,8 +23,8 @@ export default gql`
         body
         reminderId
         eventId
-        taskId
         projectId
+        contractId
         customerId
         departmentId
         employeeId
@@ -32,7 +32,6 @@ export default gql`
         read
         event {
           id
-          taskId
           branch
           title
           startDate
@@ -72,10 +71,15 @@ export default gql`
           projectName
           projectNameAr
           projectColor
+
           resourseId
           resourseName
           resourseNameAr
           resourseColor
+
+          contractId
+          contractName
+          contractNameAr
 
           refNo
           refType

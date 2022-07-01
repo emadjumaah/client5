@@ -33,7 +33,6 @@ import {
   createdAtFormatter,
   currencyFormatterEmpty,
   opTypeFormatter,
-  taskIdFormatter,
 } from '../../Shared/colorFormat';
 import {
   Box,
@@ -53,8 +52,6 @@ import PageLayout from '../main/PageLayout';
 import DateNavigatorReports from '../../components/filters/DateNavigatorReports';
 import { FinanceContext } from '../../contexts';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
-import useTasks from '../../hooks/useTasks';
-// import getTrialBalance from '../../graphql/query/getTrialBalance';
 
 const styles = (theme) => ({
   tableStriped: {
@@ -83,7 +80,7 @@ export default function BudgetReport({ isRTL, words, menuitem, theme }: any) {
   const [columns] = useState([
     col.opTime,
     col.acc,
-    col.taskId,
+    col.contract,
     col.refNo,
     col.opType,
     col.employee,
@@ -114,7 +111,6 @@ export default function BudgetReport({ isRTL, words, menuitem, theme }: any) {
     state: { currentDate, currentViewName, endDate, sort },
     dispatch,
   } = useContext(FinanceContext);
-  const { tasks } = useTasks();
   const { height } = useWindowDimensions();
 
   const currentViewNameChange = (e: any) => {
@@ -192,7 +188,7 @@ export default function BudgetReport({ isRTL, words, menuitem, theme }: any) {
   const grouping = [{ columnName: col.acc.name }];
   const groupSummaryItems = [
     {
-      columnName: col.taskId.name,
+      columnName: col.contract.name,
       type: 'count',
       alignByColumn: true,
     },
@@ -341,12 +337,6 @@ export default function BudgetReport({ isRTL, words, menuitem, theme }: any) {
           <DataTypeProvider
             for={['opType']}
             formatterComponent={opTypeFormatter}
-          ></DataTypeProvider>
-          <DataTypeProvider
-            for={['taskId']}
-            formatterComponent={(props: any) =>
-              taskIdFormatter({ ...props, tasks })
-            }
           ></DataTypeProvider>
           <Toolbar />
           <ColumnChooser />

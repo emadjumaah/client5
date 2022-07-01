@@ -35,7 +35,6 @@ import {
   currencyFormatterEmpty,
   moneyFormat,
   opTypeFormatter,
-  taskIdFormatter,
 } from '../../Shared/colorFormat';
 import {
   Box,
@@ -56,7 +55,6 @@ import DateNavigatorReports from '../../components/filters/DateNavigatorReports'
 import { CustomerReportContext } from '../../contexts';
 import FilterSelectCkeckBox from '../../Shared/FilterSelectCkeckBox';
 import { useCustomers, useTemplate } from '../../hooks';
-import useTasks from '../../hooks/useTasks';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
 import { CustomerReportPrint } from '../../print/CustomerReportPrint';
 import { useReactToPrint } from 'react-to-print';
@@ -111,7 +109,7 @@ export default function CustomerReport({
           col.customer,
           col.opType,
           col.project,
-          col.taskId,
+          col.contract,
           col.opDocNo,
           col.opAcc,
           col.amountdebit,
@@ -131,7 +129,6 @@ export default function CustomerReport({
   const componentRef: any = useRef();
 
   const { customers } = useCustomers();
-  const { tasks } = useTasks();
   const { height } = useWindowDimensions();
 
   const {
@@ -435,12 +432,6 @@ export default function CustomerReport({
           <DataTypeProvider
             for={['opType']}
             formatterComponent={opTypeFormatter}
-          ></DataTypeProvider>
-          <DataTypeProvider
-            for={['taskId']}
-            formatterComponent={(props: any) =>
-              taskIdFormatter({ ...props, tasks })
-            }
           ></DataTypeProvider>
           <Toolbar />
           <ColumnChooser />

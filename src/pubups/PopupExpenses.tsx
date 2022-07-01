@@ -62,7 +62,7 @@ const PopupExpenses = ({
   const [departError, setDepartError] = useState<any>(false);
 
   const [taskvalue, setTaskvalue] = useState<any>(
-    name === 'taskId' ? value : null
+    name === 'contractId' ? value : null
   );
 
   const [newtext, setNewtext] = useState('');
@@ -195,7 +195,7 @@ const PopupExpenses = ({
 
   useEffect(() => {
     if (isNew) {
-      if (name === 'taskId') {
+      if (name === 'contractId') {
         if (value?.departmentId) {
           const dept = departments.filter(
             (dep: any) => dep._id === value?.departmentId
@@ -232,7 +232,7 @@ const PopupExpenses = ({
       const da = row.debitAcc;
       const depId = row.departmentId;
       const empId = row.employeeId;
-      const taskId = row.taskId;
+      const contId = row.contractId;
       const resId = row.resourseId;
 
       if (depId) {
@@ -247,8 +247,8 @@ const PopupExpenses = ({
         const empl = resourses.filter((emp: any) => emp._id === resId)[0];
         setResovalue(empl);
       }
-      if (taskId) {
-        const tsk = tasks.filter((ts: any) => ts.id === taskId)[0];
+      if (contId) {
+        const tsk = tasks.filter((ts: any) => ts._id === contId)[0];
         setTaskvalue(tsk);
       }
       const filtereddebits = accounts.filter(
@@ -374,6 +374,17 @@ const PopupExpenses = ({
           resourseNameAr: undefined,
           resourseColor: undefined,
         };
+    const contract = taskvalue
+      ? {
+          contractId: taskvalue._id,
+          contractName: taskvalue.name,
+          contractNameAr: taskvalue.nameAr,
+        }
+      : {
+          contractId: undefined,
+          contractName: undefined,
+          contractNameAr: undefined,
+        };
 
     const variables: any = {
       _id: row && row._id ? row._id : undefined, // is it new or edit
@@ -381,11 +392,11 @@ const PopupExpenses = ({
       debitAcc: debitAcc.code,
       creditAcc: creditAcc.code,
       amount,
-      taskId: taskvalue ? taskvalue.id : null,
       customer,
       department,
       employee,
       resourse,
+      contract,
       title,
       desc,
       chequeBank,
@@ -580,7 +591,7 @@ const PopupExpenses = ({
                 isRTL={isRTL}
                 fullWidth
                 openAdd={openTask}
-                disabled={name === 'taskId'}
+                disabled={name === 'contractId'}
                 mb={0}
               ></AutoFieldLocal>
             </Grid>

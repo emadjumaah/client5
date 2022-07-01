@@ -1,14 +1,13 @@
 import { gql } from '@apollo/client';
 
 export default gql`
-  query getTaskEvents($taskId: Int) {
-    getTaskEvents(taskId: $taskId) {
+  query getTaskEvents($contractId: String) {
+    getTaskEvents(contractId: $contractId) {
       ok
       error
       data {
         _id
         id
-        taskId
         branch
         title
         startDate
@@ -49,6 +48,9 @@ export default gql`
         resourseName
         resourseNameAr
         resourseColor
+        contractId
+        contractName
+        contractNameAr
 
         refNo
         refType

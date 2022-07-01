@@ -12,8 +12,8 @@ const AwsUpload = ({
   employeeId,
   projectId,
   resourseId,
-  taskId,
   reminderId,
+  contractId,
   userId,
 }: any) => {
   const [progress, setProgress] = useState(0);
@@ -39,8 +39,8 @@ const AwsUpload = ({
       employeeId,
       projectId,
       resourseId,
-      taskId,
       reminderId,
+      contractId,
       userId,
     });
     return;

@@ -1,8 +1,8 @@
 import { gql } from '@apollo/client';
 
 export default gql`
-  query getTaskItems($taskId: Int) {
-    getTaskItems(taskId: $taskId) {
+  query getTaskItems($contractId: String) {
+    getTaskItems(contractId: $contractId) {
       ok
       error
       data {
@@ -29,7 +29,6 @@ export default gql`
         opType
         opDocNo
         eventId
-        taskId
         refNo
         refType
         qty
@@ -60,6 +59,10 @@ export default gql`
         resourseName
         resourseNameAr
         resourseColor
+
+        contractId
+        contractName
+        contractNameAr
         note
         createdAt
         updatedAt

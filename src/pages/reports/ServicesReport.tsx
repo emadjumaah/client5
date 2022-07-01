@@ -42,7 +42,6 @@ import {
   eventStatusPrintDataFormatter,
   moneyFormat,
   opTypeFormatter,
-  taskIdFormatter,
 } from '../../Shared/colorFormat';
 import {
   Box,
@@ -118,7 +117,7 @@ export default function ServicesReport({
     col.opDocNo,
     col.customer,
     col.project,
-    col.taskId,
+    col.contract,
     col.employee,
     col.resourse,
     col.department,
@@ -146,7 +145,7 @@ export default function ServicesReport({
           col.opType,
           col.opDocNo,
           col.customer,
-          col.taskId,
+          col.contract,
           col.project,
           col.employee,
           col.resourse,
@@ -270,7 +269,7 @@ export default function ServicesReport({
       resourseIds: getIds(resovalue),
       employeeIds: getIds(emplvalue),
       customerIds: getIds(custvalue),
-      taskIds: getTaskIds(taskvalue),
+      contractIds: getIds(taskvalue),
       itemtypes: getTaskIds(itemtypes),
       types: getTypesValue(types),
       start: start ? start.setHours(0, 0, 0, 0) : undefined,
@@ -378,9 +377,9 @@ export default function ServicesReport({
               ? row[col.customer.name]
               : ' - '
             : undefined,
-          taskId: inActiveColumns('taskId')
-            ? row[col.taskId.name]
-              ? row[col.taskId.name]
+          contract: inActiveColumns('contract')
+            ? row[col.contract.name]
+              ? row[col.contract.name]
               : ' - '
             : undefined,
           opType: inActiveColumns('opType')
@@ -687,13 +686,7 @@ export default function ServicesReport({
           <DataTypeProvider
             for={['amount']}
             formatterComponent={currencyFormatter}
-          ></DataTypeProvider>{' '}
-          <DataTypeProvider
-            for={['taskId']}
-            formatterComponent={(props: any) =>
-              taskIdFormatter({ ...props, tasks })
-            }
-          ></DataTypeProvider>{' '}
+          ></DataTypeProvider>
           <DataTypeProvider
             for={['opType']}
             formatterComponent={opTypeFormatter}

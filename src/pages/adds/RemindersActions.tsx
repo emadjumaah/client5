@@ -20,11 +20,7 @@ import { getRowId } from '../../common';
 import { useLazyQuery } from '@apollo/client';
 import getRemindersActions from '../../graphql/query/getRemindersActions';
 
-import {
-  actionTimeFormatter,
-  taskIdFormatter,
-  userFormatter,
-} from '../../Shared/colorFormat';
+import { actionTimeFormatter, userFormatter } from '../../Shared/colorFormat';
 import PageLayout from '../main/PageLayout';
 import { SearchTable } from '../../components';
 import { EventsContext } from '../../contexts';
@@ -33,7 +29,6 @@ import { Box, Typography } from '@material-ui/core';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
 import { TableComponent } from '../../Shared/TableComponent';
 import { useUsers } from '../../hooks';
-import useTasks from '../../hooks/useTasks';
 import useEmployeesUp from '../../hooks/useEmployeesUp';
 import useDepartmentsUp from '../../hooks/useDepartmentsUp';
 import useResoursesUp from '../../hooks/useResoursesUp';
@@ -48,7 +43,7 @@ export default function RemindersActions({ isRTL, words, menuitem, theme }) {
     col.resourse,
     col.employee,
     col.department,
-    col.taskId,
+    col.contract,
     col.amount,
   ]);
 
@@ -63,7 +58,6 @@ export default function RemindersActions({ isRTL, words, menuitem, theme }) {
     dispatch,
   } = useContext(EventsContext);
 
-  const { tasks } = useTasks();
   const { employees } = useEmployeesUp();
   const { departments } = useDepartmentsUp();
   const { resourses } = useResoursesUp();
@@ -215,12 +209,6 @@ export default function RemindersActions({ isRTL, words, menuitem, theme }) {
             for={['user']}
             formatterComponent={(props: any) =>
               userFormatter({ ...props, users })
-            }
-          ></DataTypeProvider>
-          <DataTypeProvider
-            for={['taskId']}
-            formatterComponent={(props: any) =>
-              taskIdFormatter({ ...props, tasks })
             }
           ></DataTypeProvider>
           <Toolbar />

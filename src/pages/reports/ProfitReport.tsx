@@ -33,7 +33,6 @@ import {
   createdAtFormatter,
   currencyFormatterEmpty,
   opTypeFormatter,
-  taskIdFormatter,
 } from '../../Shared/colorFormat';
 import {
   Box,
@@ -52,7 +51,6 @@ import { getColumns } from '../../common/columns';
 import PageLayout from '../main/PageLayout';
 import DateNavigatorReports from '../../components/filters/DateNavigatorReports';
 import { FinanceContext } from '../../contexts';
-import useTasks from '../../hooks/useTasks';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
 
 const styles = (theme) => ({
@@ -82,7 +80,7 @@ export default function ProfitReport({ isRTL, words, menuitem, theme }: any) {
   const [columns] = useState([
     col.opTime,
     col.acc,
-    col.taskId,
+    col.contract,
     col.refNo,
     col.opType,
     col.employee,
@@ -106,7 +104,6 @@ export default function ProfitReport({ isRTL, words, menuitem, theme }: any) {
     state: { currentDate, currentViewName, endDate, sort },
     dispatch,
   } = useContext(FinanceContext);
-  const { tasks } = useTasks();
   const { height } = useWindowDimensions();
 
   const currentViewNameChange = (e: any) => {
@@ -183,7 +180,7 @@ export default function ProfitReport({ isRTL, words, menuitem, theme }: any) {
   const grouping = [{ columnName: col.acc.name }];
   const groupSummaryItems = [
     {
-      columnName: col.taskId.name,
+      columnName: col.contract.name,
       type: 'count',
       alignByColumn: true,
     },
@@ -327,12 +324,6 @@ export default function ProfitReport({ isRTL, words, menuitem, theme }: any) {
           <DataTypeProvider
             for={['opType']}
             formatterComponent={opTypeFormatter}
-          ></DataTypeProvider>
-          <DataTypeProvider
-            for={['taskId']}
-            formatterComponent={(props: any) =>
-              taskIdFormatter({ ...props, tasks })
-            }
           ></DataTypeProvider>
           <Toolbar />
           <ColumnChooser />

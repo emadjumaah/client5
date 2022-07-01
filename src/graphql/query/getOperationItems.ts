@@ -29,7 +29,6 @@ export default gql`
         opType
         opDocNo
         eventId
-        taskId
         refNo
         refType
         qty
@@ -60,6 +59,9 @@ export default gql`
         resourseName
         resourseNameAr
         resourseColor
+        contractId
+        contractName
+        contractNameAr
         note
         createdAt
         updatedAt

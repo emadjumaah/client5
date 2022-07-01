@@ -38,7 +38,6 @@ import {
   currencyFormatter,
   moneyFormat,
   opTypeFormatter,
-  taskIdFormatter,
 } from '../../Shared/colorFormat';
 import { Box, fade, Typography, withStyles } from '@material-ui/core';
 import { getMonthlyReport } from '../../graphql';
@@ -46,7 +45,6 @@ import { useLazyQuery } from '@apollo/client';
 import { GridExporter } from '@devexpress/dx-react-grid-export';
 import saveAs from 'file-saver';
 import { getColumns } from '../../common/columns';
-// import { reportprint } from '../../common/ipc';
 import PageLayout from '../main/PageLayout';
 import DateNavigatorReports from '../../components/filters/DateNavigatorReports';
 import { ExpensesReportContext } from '../../contexts';
@@ -108,7 +106,7 @@ export default function ExpensesReport({
           col.opDocNo,
           col.acc,
           col.opAcc,
-          col.taskId,
+          col.contract,
           col.desc,
           col.opType,
           col.amount,
@@ -200,8 +198,6 @@ export default function ExpensesReport({
 
   const getIds = (list: any) =>
     list && list?.length > 0 ? list.map((sv: any) => sv._id) : undefined;
-  const getTaskIds = (list: any) =>
-    list && list?.length > 0 ? list.map((sv: any) => sv.id) : undefined;
 
   const fetchData = () => {
     const variables = {
@@ -212,7 +208,7 @@ export default function ExpensesReport({
       departmentIds: getIds(departvalue),
       employeeIds: getIds(emplvalue),
       customerIds: getIds(custvalue),
-      taskIds: getTaskIds(taskvalue),
+      contractIds: getIds(taskvalue),
       start: start ? start.setHours(0, 0, 0, 0) : undefined,
       end: end
         ? end.setHours(23, 59, 59, 999)
@@ -490,12 +486,6 @@ export default function ExpensesReport({
           <DataTypeProvider
             for={['opType']}
             formatterComponent={opTypeFormatter}
-          ></DataTypeProvider>
-          <DataTypeProvider
-            for={['taskId']}
-            formatterComponent={(props: any) =>
-              taskIdFormatter({ ...props, tasks })
-            }
           ></DataTypeProvider>
           <Toolbar />
           <ColumnChooser />

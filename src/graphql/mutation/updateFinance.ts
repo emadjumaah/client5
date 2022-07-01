@@ -16,9 +16,9 @@ export default gql`
     $department: DepartmentInput
     $project: ProjectInput
     $resourse: ResourseInput
+    $contract: ContractInput
     $debitAcc: Int
     $creditAcc: Int
-    $taskId: Int
     $refNo: String
     $chequeBank: String
     $chequeNo: String
@@ -40,9 +40,9 @@ export default gql`
       department: $department
       project: $project
       resourse: $resourse
+      contract: $contract
       debitAcc: $debitAcc
       creditAcc: $creditAcc
-      taskId: $taskId
       refNo: $refNo
       chequeBank: $chequeBank
       chequeNo: $chequeNo

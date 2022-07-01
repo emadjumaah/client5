@@ -97,7 +97,7 @@ const PopupExpensesDoc = ({
   const resoRef: any = React.useRef();
 
   const [taskvalue, setTaskvalue] = useState<any>(
-    name === 'taskId' ? value : null
+    name === 'contractId' ? value : null
   );
 
   const [newtext, setNewtext] = useState('');
@@ -303,7 +303,7 @@ const PopupExpensesDoc = ({
   }, [itemsList]);
 
   useEffect(() => {
-    if (name === 'taskId') {
+    if (name === 'contractId') {
       setTaskvalue(value);
     }
   }, [name, value, open]);
@@ -362,8 +362,8 @@ const PopupExpensesDoc = ({
         setSuppvalue(supp);
       }
 
-      if (!task && row.taskId) {
-        const tsk = tasks.filter((ts: any) => ts.id === row.taskId)[0];
+      if (!task && row.contractId) {
+        const tsk = tasks.filter((ts: any) => ts._id === row.contractId)[0];
         setTaskvalue(tsk);
       }
       const filteredcredit = accounts.filter(
@@ -465,7 +465,6 @@ const PopupExpensesDoc = ({
       debitAcc: debitAcc.code,
       creditAcc: creditAcc.code,
       amount,
-      taskId: taskvalue ? taskvalue.id : null,
       customer: taskvalue
         ? {
             customerId: taskvalue.customerId,
@@ -532,6 +531,17 @@ const PopupExpensesDoc = ({
             resourseName: undefined,
             resourseNameAr: undefined,
             resourseColor: undefined,
+          },
+      contract: taskvalue
+        ? {
+            contractId: taskvalue._id,
+            contractName: taskvalue.name,
+            contractNameAr: taskvalue.nameAr,
+          }
+        : {
+            contractId: undefined,
+            contractName: undefined,
+            contractNameAr: undefined,
           },
       items: JSON.stringify(itemsList),
       title,
@@ -662,7 +672,7 @@ const PopupExpensesDoc = ({
               setSelectValue={setTaskvalue}
               isRTL={isRTL}
               fullWidth
-              disabled={name === 'taskId'}
+              disabled={name === 'contractId'}
               mb={0}
             ></AutoFieldLocal>
           </Grid>
@@ -675,7 +685,7 @@ const PopupExpensesDoc = ({
               words={words}
               options={resourses}
               value={resovalue}
-              disabled={name === 'resourseId' || name === 'taskId'}
+              disabled={name === 'resourseId' || name === 'contractId'}
               setSelectValue={setResovalue}
               setSelectError={setResoError}
               selectError={resoError}
@@ -697,7 +707,7 @@ const PopupExpensesDoc = ({
               options={employees}
               value={emplvalue}
               disabled={
-                isemployee || name === 'employeeId' || name === 'taskId'
+                isemployee || name === 'employeeId' || name === 'contractId'
               }
               setSelectValue={setEmplvalue}
               setSelectError={setEmplError}
@@ -725,7 +735,7 @@ const PopupExpensesDoc = ({
             openAdd={openDepartment}
             isRTL={isRTL}
             fullWidth
-            disabled={name === 'departmentId' || name === 'taskId'}
+            disabled={name === 'departmentId' || name === 'contractId'}
             mb={0}
           ></AutoFieldLocal>
         </Grid>
