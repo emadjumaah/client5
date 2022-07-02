@@ -257,7 +257,7 @@ const PopupBranch = ({
               style={{ marginTop: 10, marginBottom: 20 }}
               variant="h5"
             >
-              النماذج
+              {isRTL ? 'النماذج' : 'Templates'}
             </Typography>
           </Grid>
 

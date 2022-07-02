@@ -26,7 +26,7 @@ export const SelectLocal = ({
           alignSelf: 'flex-end',
           fontSize: 12,
           fontWeight: 'bold',
-          color: '#555',
+          color: disabled ? '#bbb' : '#555',
         }}
       >
         {options.map((item: any) => {

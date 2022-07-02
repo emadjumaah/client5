@@ -185,6 +185,13 @@ export default function Appointments({
     setName(null);
   };
 
+  const setTaskItem = (data: any) => {
+    const cont = tasks.filter((co: any) => co._id === data.contractId)?.[0];
+    if (cont) {
+      setItem(cont);
+      setName('contract');
+    }
+  };
   const setEmployeeItem = (data: any) => {
     const empl = employees.filter((em: any) => em._id === data.employeeId)?.[0];
     if (empl) {
@@ -511,7 +518,7 @@ export default function Appointments({
                 formatterComponent={(props: any) =>
                   nameLinkFormat({
                     ...props,
-                    setItem,
+                    setItem: setTaskItem,
                     setOpenItem: setOpenTaskItem,
                   })
                 }
