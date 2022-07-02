@@ -6,22 +6,15 @@ import { GlobalContext } from '../contexts';
 import { Box, Button, colors, Tab, Tabs, Typography } from '@material-ui/core';
 import PopupLayout from '../pages/main/PopupLayout';
 import { Grid } from '@material-ui/core';
-import { useLazyQuery, useMutation } from '@apollo/client';
+import { useMutation } from '@apollo/client';
 import PopupTaskInvoice from './PopupTaskInvoice';
 import { taskManamentTabs } from '../constants/rrule';
 import EventsCustomer from '../Shared/EventsCustomer';
 import InvoicesCustomer from '../Shared/InvoicesCustomer';
 import ReceiptCustomer from '../Shared/ReceiptCustomer';
-import getObjectEvents from '../graphql/query/getObjectEvents';
-import {
-  createEvent,
-  createExpenses,
-  createFinance,
-  getExpenses,
-  getOperationItems,
-} from '../graphql';
+import { createExpenses, createFinance, getExpenses } from '../graphql';
 import getTasks from '../graphql/query/getTasks';
-import { getReadyEventData, getTaskTimeAmountData } from '../common/helpers';
+import { getTaskTimeAmountData } from '../common/helpers';
 import { ContractPrint } from '../print';
 import { useReactToPrint } from 'react-to-print';
 import KaidsCustomer from '../Shared/KaidsCustomer';
@@ -56,14 +49,13 @@ const PopupTaskView = ({
   stopTask,
 }: any) => {
   const classes = useStyles();
-  const [event, setEvent] = useState<any>(null);
   const [row, setRow] = useState(item);
   const [value, setValue] = React.useState(0);
+  const [del, setDel] = React.useState(true);
 
   const [custvalue, setCustvalue] = useState(null);
   const [resovalue, setResovalue] = useState(null);
   const [info, setInfo] = useState<any>(null);
-  const [loading, setLoading] = useState<any>(null);
   const [closeloading, setCloseloading] = useState<any>(null);
 
   const [openCloseDate, setOpenCloseDate] = useState<any>(false);
@@ -133,19 +125,6 @@ const PopupTaskView = ({
     store: { user },
   }: GContextTypes = useContext(GlobalContext);
 
-  const refresQuery = {
-    refetchQueries: [
-      {
-        query: getObjectEvents,
-        variables: {
-          contractId: row?._id,
-          start: start ? new Date(start).setHours(0, 0, 0, 0) : undefined,
-          end: end ? new Date(end).setHours(23, 59, 59, 999) : undefined,
-        },
-      },
-      { query: getTasks },
-    ],
-  };
   const refresReceiptQuery = {
     refetchQueries: [
       {
@@ -178,50 +157,14 @@ const PopupTaskView = ({
 
   const [addExpenses] = useMutation(createExpenses, refresExpensesQuery);
 
-  const [addEvent] = useMutation(createEvent, refresQuery);
-
-  const [getEvents, eventsData]: any = useLazyQuery(getObjectEvents, {
-    fetchPolicy: 'cache-and-network',
-  });
-
-  const [getEventItems, eventItemsData]: any = useLazyQuery(getOperationItems, {
-    fetchPolicy: 'cache-and-network',
-  });
-
-  useEffect(() => {
-    const variables = { contractId: row?._id };
-    getEvents({ variables });
-  }, [row]);
-
-  useEffect(() => {
-    const data = eventsData?.data?.['getObjectEvents']?.data;
-    const events = data || [];
-    if (events?.length > 0) {
-      const ev = events[events.length - 1];
-      getEventItems({ variables: { opId: ev._id } });
-      setEvent(events[events.length - 1]);
-    }
-  }, [eventsData, item]);
-
-  const addNewEvent = async () => {
-    if (!event) return;
-    setLoading(true);
-    const variables = getReadyEventData(event, row, eventItemsData, services);
-    if (!variables) {
-      setLoading(false);
-      return;
-    }
-    await addEvent({ variables });
-    setLoading(false);
-  };
   const toCloseTask = async (time: any) => {
     setCloseloading(true);
 
     await stopTask({
       variables: {
-        id: row.id,
+        _id: row._id,
         time,
-        del: true,
+        del,
       },
     });
     setCloseloading(false);
@@ -246,7 +189,6 @@ const PopupTaskView = ({
   });
 
   const resetAllForms = () => {
-    setEvent(null);
     setValue(0);
   };
 
@@ -489,19 +431,6 @@ const PopupTaskView = ({
                   </Typography>
                 </Button>
               </Box>
-              <Box style={{ padding: 10, marginTop: 50 }}>
-                <Button
-                  variant="contained"
-                  fullWidth
-                  color="primary"
-                  disabled={loading || row.isClosed}
-                  onClick={() => addNewEvent()}
-                >
-                  <Typography style={{ fontSize: 14 }}>
-                    {words.newPeriod}
-                  </Typography>
-                </Button>
-              </Box>
               <Box style={{ padding: 10 }}>
                 <Button
                   variant="contained"
@@ -534,7 +463,6 @@ const PopupTaskView = ({
               departments={departments}
               company={company}
               theme={theme}
-              // items={itemsList}
             ></PopupTaskInvoice>
           )}
           {row && (
@@ -576,9 +504,12 @@ const PopupTaskView = ({
               toCloseTask={toCloseTask}
               theme={theme}
               isRTL={isRTL}
-              title={`${words.shutdown} ${isRTL ? 'ال' : ''}${tempwords?.task}`}
+              title={`${words.shutdown} ${tempwords?.task}`}
               minDate={new Date(row.start)}
               maxDate={new Date()}
+              del={del}
+              setDel={setDel}
+              tasktype={row?.tasktype}
             ></PopupCloseDate>
           )}
           <Box>

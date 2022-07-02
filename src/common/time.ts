@@ -145,8 +145,6 @@ export const getLastYear = () => {
 export const getPreviousDMY = () => {
   const day = getLastDay();
   const month = getLastMonth();
-  console.log('month', month);
-
   const year = getLastYear();
   return { day, month, year };
 };
@@ -465,6 +463,7 @@ export const compressEvents = (events: any) => {
       return {
         startDate: ev.startDate,
         endDate: ev.endDate,
+        status: ev.status,
       };
     });
     return JSON.stringify({ event, times });

@@ -7,6 +7,7 @@ import {
   Typography,
   Checkbox,
   colors,
+  Divider,
 } from '@material-ui/core';
 import PopupLayout from '../pages/main/PopupLayout';
 import { CalenderLocal } from '../components';
@@ -21,6 +22,9 @@ const PopupCloseDate = ({
   title,
   minDate,
   maxDate,
+  del,
+  setDel,
+  tasktype,
 }: any) => {
   const [time, setTime] = useState<any>(new Date());
   const [view, setView] = useState<any>(false);
@@ -54,50 +58,81 @@ const PopupCloseDate = ({
             display="flex"
             style={{
               backgroundColor: '#fff',
-              direction: 'ltr',
+              // direction: 'ltr',
               minWidth: 400,
-              alignItems: 'center',
-              justifyContent: 'center',
+              // alignItems: 'center',
+              // justifyContent: 'center',
               flexDirection: 'column',
             }}
           >
             <Typography
-              style={{ fontSize: 16, fontWeight: 'bold', marginBottom: 40 }}
+              style={{ fontSize: 16, fontWeight: 'bold', marginBottom: 10 }}
             >
               {getDateDayTimeFormat(time, isRTL)}
             </Typography>
-            <FormControlLabel
-              control={
-                <Checkbox
-                  style={{ padding: 7 }}
-                  checked={view}
-                  onChange={() => setView(!view)}
-                  color="primary"
+            <Box style={{ height: 20 }}></Box>
+            {tasktype === 2 && (
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    style={{ padding: 7 }}
+                    checked={del}
+                    onChange={() => setDel(!del)}
+                    color="primary"
+                  />
+                }
+                label={
+                  <Typography
+                    style={{ color: colors.blue[700] }}
+                    variant="subtitle2"
+                  >
+                    {isRTL
+                      ? 'حذف المواعيد الزائدة'
+                      : 'Delete Extra Appointments'}
+                  </Typography>
+                }
+                style={{ fontSize: 14 }}
+              />
+            )}
+            <Box style={{ height: 20 }}></Box>
+            <Divider></Divider>
+            <Box style={{ height: 20 }}></Box>
+            <Box display={'flex'}>
+              <Box style={{ width: 160, marginTop: 15 }}>
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      style={{ padding: 7 }}
+                      checked={view}
+                      onChange={() => setView(!view)}
+                      color="primary"
+                    />
+                  }
+                  label={
+                    <Typography
+                      style={{ color: colors.blue[700] }}
+                      variant="subtitle2"
+                    >
+                      {isRTL ? 'تحديد وقت الاقفال' : 'Custom Close Time'}
+                    </Typography>
+                  }
+                  style={{ fontSize: 14 }}
                 />
-              }
-              label={
-                <Typography
-                  style={{ color: colors.blue[700] }}
-                  variant="subtitle2"
-                >
-                  {isRTL ? 'تفعيل الوقت' : 'Activate Date'}
-                </Typography>
-              }
-              style={{ fontSize: 14 }}
-            />
+              </Box>
 
-            <CalenderLocal
-              isRTL={isRTL}
-              label={isRTL ? 'توقيت الاقفال' : 'Close Time'}
-              value={time}
-              onChange={setTime}
-              format="dd/MM/yyyy - hh:mm"
-              time
-              disabled={!view}
-              width={250}
-              minDate={minDate}
-              maxDate={maxDate}
-            ></CalenderLocal>
+              <CalenderLocal
+                isRTL={isRTL}
+                label={isRTL ? ' قت الاقفال' : 'Close Time'}
+                value={time}
+                onChange={setTime}
+                format="dd/MM/yyyy - hh:mm"
+                time
+                disabled={!view}
+                width={160}
+                minDate={minDate}
+                maxDate={maxDate}
+              ></CalenderLocal>
+            </Box>
           </Box>
         </Grid>
       </Grid>

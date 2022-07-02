@@ -19,8 +19,13 @@ import ServiceItemForm from '../Shared/ServiceItemForm';
 import ItemsTable from '../Shared/ItemsTable';
 import { PriceTotal } from '../Shared/TotalPrice';
 import { operationTypes } from '../constants';
-import { useMutation } from '@apollo/client';
-import { createInvoice, getInvoices, getLastNos } from '../graphql';
+import { useLazyQuery, useMutation } from '@apollo/client';
+import {
+  createInvoice,
+  getInvoices,
+  getLastNos,
+  getOperationItems,
+} from '../graphql';
 import { accountCode } from '../constants/kaid';
 import PaymentSelect from '../pages/options/PaymentSelect';
 import PopupLayout from '../pages/main/PopupLayout';
@@ -54,7 +59,6 @@ const PopupTaskInvoice = ({
   company,
   isNew = true,
   theme,
-  items,
 }: any) => {
   const classes = invoiceClasses();
   const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
@@ -108,6 +112,10 @@ const PopupTaskInvoice = ({
       { query: getTasks },
     ],
   };
+
+  const [getItems, itemsData]: any = useLazyQuery(getOperationItems, {
+    fetchPolicy: 'cache-and-network',
+  });
 
   const [addInvoice] = useMutation(createInvoice, refresQuery);
 
@@ -206,7 +214,68 @@ const PopupTaskInvoice = ({
   }, [itemsList, discount, ptype, isCash]);
 
   useEffect(() => {
+    const items = itemsData?.data?.['getOperationItems']?.data || [];
+
+    if (items && items.length > 0) {
+      const ids = items.map((it: any) => it.itemId);
+      const servlist = [...services, ...products].filter((ser: any) =>
+        ids.includes(ser._id)
+      );
+      const itemsWqtyprice = items.map((item: any, index: any) => {
+        const {
+          categoryId,
+          categoryName,
+          categoryNameAr,
+          departmentId,
+          departmentName,
+          departmentNameAr,
+          departmentColor,
+          employeeId,
+          employeeName,
+          employeeNameAr,
+          employeeColor,
+          resourseId,
+          resourseName,
+          resourseNameAr,
+          resourseColor,
+          note,
+        } = item;
+        const serv = servlist.filter((se: any) => se._id === item.itemId)[0];
+        return {
+          ...serv,
+          categoryId,
+          categoryName,
+          categoryNameAr,
+          departmentId,
+          departmentName,
+          departmentNameAr,
+          departmentColor,
+          employeeId,
+          employeeName,
+          employeeNameAr,
+          employeeColor,
+          resourseId,
+          resourseName,
+          resourseNameAr,
+          resourseColor,
+          index,
+          itemprice: item.itemPrice,
+          itemqty: item.qty,
+          itemtotal: item.total,
+          note,
+        };
+      });
+      itemsWqtyprice.sort((a: any, b: any) =>
+        a.indx > b.indx ? 1 : b.indx > a.indx ? -1 : 0
+      );
+      setItemsList(itemsWqtyprice);
+    }
+  }, [itemsData]);
+
+  useEffect(() => {
     if (task && task.start) {
+      getItems({ variables: { opId: task._id } });
+
       const _id = task.customerId;
       const cust = customers.filter((it: any) => it._id === _id)[0];
       setCustvalue(cust);
@@ -226,10 +295,7 @@ const PopupTaskInvoice = ({
         setResovalue(empl);
       }
     }
-    if (items) {
-      setItemsList(items);
-    }
-  }, [task, services, customers, items, open]);
+  }, [task, services, customers, open]);
 
   const getOverallTotal = () => {
     const totalsin = itemsList.map((litem: any) => litem.itemtotal);

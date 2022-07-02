@@ -83,6 +83,25 @@ export const getparentAccountsNames = () => {
   return numberlist;
 };
 
+const getDateStatus = (times: any, startDate: any) => {
+  if (!times || times?.length === 0 || !startDate) return 2;
+  let status = 2;
+  const evYear = startDate.getFullYear();
+  const evMonth = startDate.getMonth();
+  const evDay = startDate.getDate();
+
+  for (const time of times) {
+    const d = new Date(time);
+    const tYear = d.getFullYear();
+    const tMonth = d.getMonth();
+    const tDay = d.getDate();
+    if (evYear === tYear && evMonth === tMonth && evDay === tDay) {
+      status = 10;
+    }
+  }
+  return status;
+};
+
 export const getEventsList = ({
   event,
   rrule,
@@ -91,6 +110,7 @@ export const getEventsList = ({
   monthdays,
   isLastday,
   isatStart,
+  doneEvents,
 }: any) => {
   if (!event) {
     return [];
@@ -113,7 +133,6 @@ export const getEventsList = ({
         dates.pop();
       }
     }
-    console.log('dates', dates);
     const ritems = JSON.parse(event.items);
     const isTitle = event?.title && event?.title?.trim()?.length > 0;
     const title = isTitle
@@ -134,9 +153,10 @@ export const getEventsList = ({
       const day = d.getDate();
       const startDate = new Date(year, month, day, starthour, startminute);
       const endDate = new Date(year, month, day, endhour, endminute);
-
+      const status = doneEvents ? getDateStatus(doneEvents, startDate) : 2;
       return {
         ...event,
+        status,
         title,
         actions: null,
         startDate,

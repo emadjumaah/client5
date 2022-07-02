@@ -55,6 +55,7 @@ import { useReactToPrint } from 'react-to-print';
 import SelectMulti from '../Shared/SelectMulti';
 import { useLazyQuery } from '@apollo/client';
 import { getOperationItems } from '../graphql';
+import getTaskDoneEvents from '../graphql/query/getTaskDoneEvents';
 
 export const indexTheList = (list: any) => {
   return list.map((item: any, index: any) => {
@@ -78,7 +79,6 @@ const PopupTaskFull = ({
   projects,
   customers,
   theme,
-  refresh,
   value = null,
   name = null,
   company,
@@ -121,8 +121,8 @@ const PopupTaskFull = ({
   const custRef: any = React.useRef();
 
   const [evList, setEvList] = useState<any>([]);
+  const [doneEvents, setDoneEvents] = useState<any>(null);
   const [newtext, setNewtext] = useState('');
-
   const [openCust, setOpenCust] = useState(false);
   const [openDep, setOpenDep] = useState(false);
   const [openPro, setOpenPro] = useState(false);
@@ -166,6 +166,9 @@ const PopupTaskFull = ({
   }: GContextTypes = useContext(GlobalContext);
 
   const [getItems, itemsData]: any = useLazyQuery(getOperationItems, {
+    fetchPolicy: 'cache-and-network',
+  });
+  const [getDoneEvents, doneEventsData]: any = useLazyQuery(getTaskDoneEvents, {
     fetchPolicy: 'cache-and-network',
   });
 
@@ -260,7 +263,10 @@ const PopupTaskFull = ({
 
   useEffect(() => {
     const items = itemsData?.data?.['getOperationItems']?.data || [];
-
+    const devents = doneEventsData?.data?.['getTaskDoneEvents']?.data;
+    if (devents) {
+      setDoneEvents(JSON.parse(devents));
+    }
     if (items && items.length > 0) {
       const ids = items.map((it: any) => it.itemId);
       const servlist = [...services, ...products].filter((ser: any) =>
@@ -315,8 +321,7 @@ const PopupTaskFull = ({
       );
       setItemsList(itemsWqtyprice);
     }
-  }, [itemsData]);
-
+  }, [itemsData, doneEventsData]);
   useEffect(() => {
     const itemsTotal = _.sumBy(itemsList, 'itemtotal');
     setTotal(itemsTotal);
@@ -403,6 +408,7 @@ const PopupTaskFull = ({
         monthdays,
         isLastday,
         isatStart,
+        doneEvents,
       });
       const sorted = _.sortBy(eventlist, 'startDate');
       const listwithindex = indexTheList(sorted);
@@ -577,6 +583,7 @@ const PopupTaskFull = ({
   useEffect(() => {
     if (row && row._id) {
       getItems({ variables: { opId: row._id } });
+      getDoneEvents({ variables: { contractId: row._id } });
       const depId = row.departmentId;
       const empId = row.employeeId;
       const custId = row.customerId;
@@ -749,6 +756,7 @@ const PopupTaskFull = ({
     setIsLastday(false);
     setIsatStart(false);
     setMonthdays([]);
+    setDoneEvents(null);
   };
 
   const onSubmit = async () => {
@@ -799,7 +807,7 @@ const PopupTaskFull = ({
       evList && evList.length > 0 ? compressEvents(evList) : undefined;
 
     const variables: any = {
-      id: row && row.id ? row.id : undefined, // is it new or edit
+      _id: row && row._id ? row._id : undefined, // is it new or edit
       title: tasktitle ? tasktitle : custvalue?.name,
       start,
       end,
@@ -822,24 +830,17 @@ const PopupTaskFull = ({
       weekdays: JSON.stringify(weekdays),
       monthdays: JSON.stringify(monthdays),
     };
+
     const mutate = isNew ? addAction : editAction;
     apply(mutate, variables);
   };
 
   const apply = async (mutate: any, variables: any) => {
     try {
-      if (evList?.length === 0) {
-        mutate({ variables });
-        await successAlert(setAlrt, isRTL);
-        setSaving(false);
-        onCloseForm();
-      } else {
-        await mutate({ variables });
-        setTimeout(() => {
-          refresh();
-          onCloseForm();
-        }, 1000);
-      }
+      await mutate({ variables });
+      await successAlert(setAlrt, isRTL);
+      setSaving(false);
+      onCloseForm();
     } catch (error) {
       onError(error);
       console.log(error);
@@ -1291,7 +1292,6 @@ const PopupTaskFull = ({
                             return null;
                           }
                         }
-
                         const al2 = new Date(al);
                         if (isLastday && al2.getDate() === 1) {
                           al2.setDate(al2.getDate() - 1);
