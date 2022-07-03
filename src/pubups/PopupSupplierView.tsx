@@ -15,6 +15,7 @@ import useWindowDimensions from '../hooks/useWindowDimensions';
 import MainCustomer from '../Shared/MainCustomer';
 import { TabPanel, useStyles, a11yProps } from '../Shared/TabPanel';
 import DateNavigatorReports from '../components/filters/DateNavigatorReports';
+import { useTemplate } from '../hooks';
 
 const PopupSupplierView = ({ open, onClose, row, theme, company }: any) => {
   const classes = useStyles();
@@ -37,6 +38,7 @@ const PopupSupplierView = ({ open, onClose, row, theme, company }: any) => {
   };
 
   const { width, height } = useWindowDimensions();
+  const { tempoptions } = useTemplate();
 
   const handleChange = (_, newValue) => {
     setValue(newValue);
@@ -149,6 +151,7 @@ const PopupSupplierView = ({ open, onClose, row, theme, company }: any) => {
                           end={end}
                           value={row}
                           company={company}
+                          tempoptions={tempoptions}
                         ></EventsCustomer>
                       </TabPanel>
                       <TabPanel value={value} index={4}>
@@ -164,6 +167,7 @@ const PopupSupplierView = ({ open, onClose, row, theme, company }: any) => {
                           end={end}
                           value={row}
                           company={company}
+                          tempoptions={tempoptions}
                         ></InvoicesSupplier>
                       </TabPanel>
                       <TabPanel value={value} index={5}>

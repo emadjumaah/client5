@@ -166,7 +166,7 @@ const PopupExpensesDoc = ({
   useEffect(() => {
     if (isNew) {
       if (resovalue) {
-        if (resovalue?.departmentId) {
+        if (resovalue?.departmentId && name !== 'departmentId') {
           const dept = departments.filter(
             (dep: any) => dep._id === resovalue?.departmentId
           )?.[0];
@@ -243,13 +243,13 @@ const PopupExpensesDoc = ({
     setDebitAcc(null);
     setItemsList([]);
     setTotals({});
-    setTaskvalue(null);
     setSelectedDate(new Date());
-    setDepartvalue(null);
-    setEmplvalue(null);
-    setResovalue(null);
     setSuppvalue(null);
     setLoading(false);
+    setDepartvalue(name === 'departmentId' ? value : null);
+    setEmplvalue(name === 'employeeId' ? value : null);
+    setResovalue(name === 'resourseId' ? value : null);
+    setTaskvalue(name === 'contractId' ? value : null);
   };
 
   const addItemToList = (item: any) => {

@@ -23,13 +23,13 @@ import { packages } from './roles';
 // export const graphqlURI = 'http://jadwal-main/graphql';
 
 // demo
-export const graphqlURI = 'https://jadwaldemo.herokuapp.com/graphql';
+// export const graphqlURI = 'https://jadwaldemo.herokuapp.com/graphql';
 
 // hilal
 // export const graphqlURI = 'https://hilaleng.herokuapp.com/';
 
 // Online
-// export const graphqlURI = process.env.REACT_APP_GRAPHQL_URI;
+export const graphqlURI = process.env.REACT_APP_GRAPHQL_URI;
 
 export {
   mainmenu,

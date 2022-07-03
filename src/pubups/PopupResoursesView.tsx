@@ -21,15 +21,9 @@ import useWindowDimensions from '../hooks/useWindowDimensions';
 import MainCustomer from '../Shared/MainCustomer';
 import { TabPanel, useStyles, a11yProps } from '../Shared/TabPanel';
 import DateNavigatorReports from '../components/filters/DateNavigatorReports';
+import { useTemplate } from '../hooks';
 
-const PopupResoursesView = ({
-  open,
-  onClose,
-  row,
-  theme,
-  tempwords,
-  company,
-}: any) => {
+const PopupResoursesView = ({ open, onClose, row, theme, company }: any) => {
   const classes = useStyles();
 
   const [value, setValue] = useState(0);
@@ -49,6 +43,7 @@ const PopupResoursesView = ({
     setEndDate(curDate);
   };
   const { width, height } = useWindowDimensions();
+  const { tempoptions, tempwords } = useTemplate();
 
   const handleChange = (_, newValue) => {
     setValue(newValue);
@@ -161,6 +156,7 @@ const PopupResoursesView = ({
                         end={end}
                         value={row}
                         company={company}
+                        tempoptions={tempoptions}
                       ></EventsCustomer>
                     </TabPanel>
                     <TabPanel value={value} index={4}>
@@ -176,6 +172,7 @@ const PopupResoursesView = ({
                         end={end}
                         value={row}
                         company={company}
+                        tempoptions={tempoptions}
                       ></InvoicesCustomer>
                     </TabPanel>
                     <TabPanel value={value} index={5}>
@@ -206,6 +203,7 @@ const PopupResoursesView = ({
                         end={end}
                         value={row}
                         company={company}
+                        tempoptions={tempoptions}
                       ></InvoicesSupplier>
                     </TabPanel>
                     <TabPanel value={value} index={7}>
@@ -236,6 +234,8 @@ const PopupResoursesView = ({
                         end={end}
                         value={row}
                         company={company}
+                        tempoptions={tempoptions}
+                        tempwords={tempwords}
                       ></ExpensesCustomer>
                     </TabPanel>
                     <TabPanel value={value} index={9}>
@@ -243,7 +243,7 @@ const PopupResoursesView = ({
                         isRTL={isRTL}
                         words={words}
                         theme={theme}
-                        name="departmentId"
+                        name="resourseId"
                         id={row?._id}
                         width={width}
                         height={height}
@@ -251,6 +251,8 @@ const PopupResoursesView = ({
                         end={end}
                         value={row}
                         company={company}
+                        tempoptions={tempoptions}
+                        tempwords={tempwords}
                       ></ExpensesProdCustomer>
                     </TabPanel>
                     <TabPanel value={value} index={10}>
@@ -264,6 +266,7 @@ const PopupResoursesView = ({
                         height={height}
                         start={start}
                         end={end}
+                        tempoptions={tempoptions}
                       ></KaidsCustomer>
                     </TabPanel>
                     <TabPanel value={value} index={11}>
@@ -277,6 +280,7 @@ const PopupResoursesView = ({
                         height={height}
                         start={start}
                         end={end}
+                        tempoptions={tempoptions}
                       ></ReminderCustomer>
                     </TabPanel>
                   </Box>

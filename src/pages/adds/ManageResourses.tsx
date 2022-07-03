@@ -39,7 +39,6 @@ import { AlertLocal, SearchTable } from '../../components';
 import { errorAlert, errorDeleteAlert } from '../../Shared/helpers';
 import PageLayout from '../main/PageLayout';
 import { getColumns } from '../../common/columns';
-import { useTemplate } from '../../hooks';
 import PopupResoursesView from '../../pubups/PopupResoursesView';
 import PopupResourses from '../../pubups/PopupResourses';
 import useResoursesUp from '../../hooks/useResoursesUp';
@@ -59,7 +58,6 @@ export default function ManageResourses({
   const [item, setItem] = useState(null);
   const [openItem, setOpenItem] = useState(false);
   const col = getColumns({ isRTL, words });
-  const { tempwords } = useTemplate();
 
   const onCloseItem = () => {
     setOpenItem(false);
@@ -302,7 +300,6 @@ export default function ManageResourses({
           onClose={onCloseItem}
           row={item}
           theme={theme}
-          tempwords={tempwords}
           company={company}
         ></PopupResoursesView>
       </Box>

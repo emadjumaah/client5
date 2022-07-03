@@ -82,16 +82,6 @@ const PopupPayment = ({
       const variables = { supplierId: suppvalue._id };
       loadInvoices({ variables });
     }
-    if (isNew) {
-      if (name === 'contractId') {
-        if (value?.supplierId) {
-          const dept = suppliers.filter(
-            (dep: any) => dep._id === value?.supplierId
-          )?.[0];
-          setSuppvalue(dept);
-        }
-      }
-    }
   }, [suppvalue, open]);
 
   useEffect(() => {
@@ -314,7 +304,7 @@ const PopupPayment = ({
     setDebitAcc(null);
     setCredaccounts([]);
     setInvoices([]);
-    setSuppvalue(null);
+    setSuppvalue(name === 'supplierId' ? value : null);
     setInvoicevalue(null);
   };
   const closeModal = () => {

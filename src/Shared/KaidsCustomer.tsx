@@ -26,7 +26,6 @@ import {
 import getGereralKaids from '../graphql/query/getGereralKaids';
 import { getColumns } from '../common/columns';
 import { Box, Typography } from '@material-ui/core';
-import { useTemplate } from '../hooks';
 
 export default function KaidsCustomer({
   isRTL,
@@ -38,10 +37,10 @@ export default function KaidsCustomer({
   height,
   start,
   end,
+  tempoptions,
 }) {
   const col = getColumns({ isRTL, words });
 
-  const { tempoptions } = useTemplate();
   const [columns] = useState(
     tempoptions?.noTsk
       ? [

@@ -81,7 +81,6 @@ const PopupAppointmentCustomer = ({
   const [startDate, setStartDate]: any = useState(null);
   const [endDate, setEndDate]: any = useState(null);
   const [eventLength, setEventLength]: any = useState(null);
-
   const [departvalue, setDepartvalue] = useState<any>(
     name === 'departmentId' ? value : null
   );
@@ -155,7 +154,6 @@ const PopupAppointmentCustomer = ({
   const [loadActions, actionsData]: any = useLazyQuery(getActions, {
     fetchPolicy: 'cache-and-network',
   });
-
   const openDepartment = () => {
     setOpenDep(true);
   };
@@ -208,26 +206,24 @@ const PopupAppointmentCustomer = ({
   }, [user, employees]);
 
   useEffect(() => {
-    if (isNew && !isemployee) {
-      if (taskvalue) {
-        if (taskvalue?.departmentId && name !== 'departmentId') {
-          const dept = departments.filter(
-            (dep: any) => dep._id === taskvalue?.departmentId
-          )?.[0];
-          setDepartvalue(dept);
-        }
-        if (taskvalue?.employeeId && name !== 'employeeId') {
-          const dept = employees.filter(
-            (dep: any) => dep._id === taskvalue?.employeeId
-          )?.[0];
-          setEmplvalue(dept);
-        }
-        if (taskvalue?.resourseId && name !== 'resourseId') {
-          const dept = resourses.filter(
-            (dep: any) => dep._id === taskvalue?.resourseId
-          )?.[0];
-          setResovalue(dept);
-        }
+    if (taskvalue) {
+      if (taskvalue?.departmentId && name !== 'departmentId') {
+        const dept = departments.filter(
+          (dep: any) => dep._id === taskvalue?.departmentId
+        )?.[0];
+        setDepartvalue(dept);
+      }
+      if (taskvalue?.employeeId && name !== 'employeeId') {
+        const dept = employees.filter(
+          (dep: any) => dep._id === taskvalue?.employeeId
+        )?.[0];
+        setEmplvalue(dept);
+      }
+      if (taskvalue?.resourseId && name !== 'resourseId') {
+        const dept = resourses.filter(
+          (dep: any) => dep._id === taskvalue?.resourseId
+        )?.[0];
+        setResovalue(dept);
       }
     }
   }, [taskvalue]);
@@ -235,7 +231,7 @@ const PopupAppointmentCustomer = ({
   useEffect(() => {
     if (isNew) {
       if (resovalue) {
-        if (resovalue?.departmentId) {
+        if (resovalue?.departmentId && name !== 'departmentId') {
           const dept = departments.filter(
             (dep: any) => dep._id === resovalue?.departmentId
           )?.[0];
@@ -320,42 +316,8 @@ const PopupAppointmentCustomer = ({
       setStartDate(start);
       setEndDate(end);
       setStatus(eventStatus.filter((es: any) => es.id === 2)?.[0]);
-      if (name === 'contractId') {
-        if (value?.departmentId) {
-          const dept = departments.filter(
-            (dep: any) => dep._id === value?.departmentId
-          )?.[0];
-          setDepartvalue(dept);
-        }
-        if (value?.employeeId) {
-          const dept = employees.filter(
-            (dep: any) => dep._id === value?.employeeId
-          )?.[0];
-          setEmplvalue(dept);
-        }
-        if (value?.resourseId) {
-          const dept = resourses.filter(
-            (dep: any) => dep._id === value?.resourseId
-          )?.[0];
-          setResovalue(dept);
-        }
-        if (value?.customerId) {
-          const dept = customers.filter(
-            (dep: any) => dep._id === value?.customerId
-          )?.[0];
-          setCustvalue(dept);
-        }
-      }
-      if (name === 'employeeId') {
-        if (value?.departmentId) {
-          const dept = departments.filter(
-            (dep: any) => dep._id === value?.departmentId
-          )?.[0];
-          setDepartvalue(dept);
-        }
-      }
     }
-  }, [open]);
+  }, [isNew, open]);
 
   useEffect(() => {
     getOverallTotal();
@@ -499,10 +461,11 @@ const PopupAppointmentCustomer = ({
   const resetAllForms = () => {
     setStartDate(null);
     setEndDate(null);
-    setCustvalue(null);
-    setDepartvalue(null);
-    setEmplvalue(null);
-    setResovalue(null);
+    setCustvalue(name === 'customerId' ? value : null);
+    setDepartvalue(name === 'departmentId' ? value : null);
+    setEmplvalue(name === 'employeeId' ? value : null);
+    setResovalue(name === 'resourseId' ? value : null);
+    setTaskvalue(name === 'contractId' ? value : null);
     setStatus(null);
     setRrule(null);
     setItemsList([]);
@@ -535,7 +498,7 @@ const PopupAppointmentCustomer = ({
       await messageAlert(
         setAlrt,
         isRTL
-          ? `يجب اضافة عنصر (خدمة او منتج) واحد للفاتورة على الأقل`
+          ? `يجب اضافة عنصر (خدمة او منتج) واحد على الأقل`
           : `You should add min one service to invoice`
       );
       return;

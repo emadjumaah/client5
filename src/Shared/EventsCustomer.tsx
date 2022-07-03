@@ -28,8 +28,7 @@ import { useLazyQuery, useMutation } from '@apollo/client';
 
 import getObjectEvents from '../graphql/query/getObjectEvents';
 import useTasks from '../hooks/useTasks';
-import React from 'react';
-import { useCustomers, useServices, useTemplate } from '../hooks';
+import { useCustomers, useServices } from '../hooks';
 import { updateDocNumbers } from '../common';
 import {
   createEvent,
@@ -87,10 +86,10 @@ export default function EventsCustomer({
   height,
   start,
   end,
+  tempoptions,
 }: any) {
   const col = getColumns({ isRTL, words });
 
-  const { tempoptions } = useTemplate();
   const [columns] = useState(
     tempoptions?.noTsk
       ? [

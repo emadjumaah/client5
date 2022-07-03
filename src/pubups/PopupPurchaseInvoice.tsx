@@ -215,31 +215,18 @@ const PopupPurchaseInvoice = ({
     }
   }, [taskvalue]);
 
-  // useEffect(() => {
-  //   if (isNew) {
-  //     if (emplvalue) {
-  //       if (emplvalue?.departmentId) {
-  //         const dept = departments.filter(
-  //           (dep: any) => dep._id === emplvalue?.departmentId
-  //         )?.[0];
-  //         setDepartvalue(dept);
-  //       }
-  //     }
-  //   }
-  // }, [emplvalue]);
-
-  // useEffect(() => {
-  //   if (isNew) {
-  //     if (resovalue) {
-  //       if (resovalue?.departmentId) {
-  //         const dept = departments.filter(
-  //           (dep: any) => dep._id === resovalue?.departmentId
-  //         )?.[0];
-  //         setDepartvalue(dept);
-  //       }
-  //     }
-  //   }
-  // }, [resovalue]);
+  useEffect(() => {
+    if (isNew) {
+      if (emplvalue) {
+        if (emplvalue?.departmentId && name !== 'departmentId') {
+          const dept = departments.filter(
+            (dep: any) => dep._id === emplvalue?.departmentId
+          )?.[0];
+          setDepartvalue(dept);
+        }
+      }
+    }
+  }, [emplvalue]);
 
   useEffect(() => {
     const items = itemsData?.data?.['getOperationItems']?.data || [];
@@ -304,7 +291,6 @@ const PopupPurchaseInvoice = ({
   const { handleSubmit, reset } = useForm({});
 
   const resetAllForms = () => {
-    setSuppvalue(null);
     reset();
     setItemsList([]);
     setDiscount(0);
@@ -312,12 +298,13 @@ const PopupPurchaseInvoice = ({
     setInvNo('');
     setAccounts([]);
     setPtype('cash');
-    setTaskvalue(null);
     setIsCash(false);
     setSelectedDate(new Date());
-    setDepartvalue(null);
-    setEmplvalue(null);
-    setResovalue(null);
+    setSuppvalue(name === 'supplierId' ? value : null);
+    setDepartvalue(name === 'departmentId' ? value : null);
+    setEmplvalue(name === 'employeeId' ? value : null);
+    setResovalue(name === 'resourseId' ? value : null);
+    setTaskvalue(name === 'contractId' ? value : null);
   };
   const addItemToList = (item: any) => {
     const isInList = itemsList?.filter((li: any) => li._id === item._id)?.[0];

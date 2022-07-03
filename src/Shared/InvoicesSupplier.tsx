@@ -40,7 +40,7 @@ import { getColumns } from '../common/columns';
 import useTasks from '../hooks/useTasks';
 import { TableComponent } from '../pages/reports/SalesReport';
 import { Box, Typography } from '@material-ui/core';
-import { useProducts, useTemplate } from '../hooks';
+import { useProducts } from '../hooks';
 import PopupPurchaseInvoice from '../pubups/PopupPurchaseInvoice';
 import getTasks from '../graphql/query/getTasks';
 import useResoursesUp from '../hooks/useResoursesUp';
@@ -59,10 +59,10 @@ export default function InvoicesSupplier({
   height,
   start,
   end,
+  tempoptions,
 }: any) {
   const col = getColumns({ isRTL, words });
 
-  const { tempoptions } = useTemplate();
   const [columns] = useState(
     tempoptions?.noTsk
       ? [

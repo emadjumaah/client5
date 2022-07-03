@@ -21,6 +21,7 @@ export const commitAppointmentChanges = async ({
         department,
         employee,
         resourse,
+        contract,
         ...rest
       } = added;
       const { startPeriod, endPeriod } = getAppStartEndPeriod();
@@ -81,6 +82,13 @@ export const commitAppointmentChanges = async ({
                 resourseColor: resourse.color,
               }
             : undefined,
+          contract: contract
+            ? {
+                contractId: contract._id,
+                contractName: contract.name,
+                contractNameAr: contract.nameAr,
+              }
+            : undefined,
           ...rest,
         };
         await addEvent({ variables });
@@ -89,7 +97,15 @@ export const commitAppointmentChanges = async ({
     if (changed) {
       const id = Object.keys(changed)[0];
       const data = changed[id];
-      const { items, customer, department, employee, resourse, ...rest } = data;
+      const {
+        items,
+        customer,
+        department,
+        employee,
+        resourse,
+        contract,
+        ...rest
+      } = data;
 
       const variables = {
         id: Number(id),
@@ -125,6 +141,13 @@ export const commitAppointmentChanges = async ({
               resourseName: resourse.name,
               resourseNameAr: resourse.nameAr,
               resourseColor: resourse.color,
+            }
+          : undefined,
+        contract: contract
+          ? {
+              contractId: contract._id,
+              contractName: contract.name,
+              contractNameAr: contract.nameAr,
             }
           : undefined,
         ...rest,
@@ -169,6 +192,7 @@ export const commitReminderChanges = async ({
         department,
         employee,
         resourse,
+        contract,
         ...rest
       } = added;
       const { startPeriod, endPeriod } = getAppStartEndPeriod();
@@ -229,6 +253,13 @@ export const commitReminderChanges = async ({
                 resourseColor: resourse.color,
               }
             : undefined,
+          contract: contract
+            ? {
+                contractId: contract._id,
+                contractName: contract.name,
+                contractNameAr: contract.nameAr,
+              }
+            : undefined,
           ...rest,
         };
         await addEvent({ variables });
@@ -237,7 +268,15 @@ export const commitReminderChanges = async ({
     if (changed) {
       const id = Object.keys(changed)[0];
       const data = changed[id];
-      const { items, customer, department, employee, resourse, ...rest } = data;
+      const {
+        items,
+        customer,
+        department,
+        employee,
+        resourse,
+        contract,
+        ...rest
+      } = data;
 
       const variables = {
         id: Number(id),
@@ -275,6 +314,13 @@ export const commitReminderChanges = async ({
               resourseColor: resourse.color,
             }
           : undefined,
+        contract: contract
+          ? {
+              contractId: contract._id,
+              contractName: contract.name,
+              contractNameAr: contract.nameAr,
+            }
+          : undefined,
         ...rest,
       };
 
@@ -299,7 +345,7 @@ export const commitReminderChanges = async ({
 };
 
 export const getSelectedFromAppointment = (row: any) => {
-  const { item, customer, department, employee } = row;
+  const { item, customer, department, employee, contract } = row;
   const selectedDepartment = row.departmentId
     ? {
         _id: department ? department._id : row.departmentId,
@@ -314,6 +360,14 @@ export const getSelectedFromAppointment = (row: any) => {
         name: employee ? employee.name : row.employeeName,
         nameAr: employee ? employee.nameAr : row.employeeNameAr,
         color: employee ? employee.color : row.employeeColor,
+      }
+    : null;
+  const selectedContract = row.contractId
+    ? {
+        _id: contract ? contract._id : row.contractId,
+        name: contract ? contract.name : row.contractName,
+        nameAr: contract ? contract.nameAr : row.contractNameAr,
+        color: contract ? contract.color : row.contractColor,
       }
     : null;
   const selectedItem = row.itemId
@@ -339,6 +393,7 @@ export const getSelectedFromAppointment = (row: any) => {
     selectedItem,
     priceValue,
     selectedCustomer,
+    selectedContract,
   };
 };
 export const setRowFromAppointment = (row: any) => {
@@ -355,6 +410,9 @@ export const setRowFromAppointment = (row: any) => {
     resourseName,
     resourseNameAr,
     resourseColor,
+    contractId,
+    contractName,
+    contractNameAr,
     itemId,
     itemName,
     itemNameAr,
@@ -396,6 +454,15 @@ export const setRowFromAppointment = (row: any) => {
           color: row.resourseColor,
         };
   }
+  if (contractId) {
+    newrow.contract = row.contract
+      ? row.contract
+      : {
+          _id: row.contractId,
+          name: row.contractName,
+          nameAr: row.contractNameAr,
+        };
+  }
   if (itemId) {
     newrow.item = row.item
       ? row.item
@@ -418,7 +485,7 @@ export const setRowFromAppointment = (row: any) => {
   return newrow;
 };
 export const addObjectsToAppointment = (row: any) => {
-  const { departmentId, employeeId, itemId, customerId } = row;
+  const { departmentId, employeeId, itemId, customerId, contractId } = row;
   const newRow = row;
   if (departmentId) {
     const department = {
@@ -437,6 +504,14 @@ export const addObjectsToAppointment = (row: any) => {
       color: row.employeeColor,
     };
     newRow.employee = employee;
+  }
+  if (contractId) {
+    const contract = {
+      _id: row.contractId,
+      name: row.contractName,
+      nameAr: row.contractNameAr,
+    };
+    newRow.contract = contract;
   }
   if (itemId) {
     const item = {

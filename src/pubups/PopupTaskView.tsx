@@ -37,6 +37,9 @@ import getReceipts from '../graphql/query/getReceipts';
 import ExpensesCustomer from '../Shared/ExpensesCustomer';
 import PopupExpensesDoc from './PopupExpensesDoc';
 import DateNavigatorReports from '../components/filters/DateNavigatorReports';
+import InvoicesSupplier from '../Shared/InvoicesSupplier';
+import PaymentSupplier from '../Shared/PaymentSupplier';
+import ExpensesProdCustomer from '../Shared/ExpensesProdCustomer';
 
 const PopupTaskView = ({
   open,
@@ -86,8 +89,8 @@ const PopupTaskView = ({
   const { customers } = useCustomers();
   const { expenseItems } = useExpenseItems();
 
-  const { tempwords } = useTemplate();
   const { width, height } = useWindowDimensions();
+  const { tempoptions, tempwords } = useTemplate();
 
   const daysData = getTaskTimeAmountData(row);
 
@@ -276,6 +279,7 @@ const PopupTaskView = ({
                         end={end}
                         value={row}
                         company={company}
+                        tempoptions={tempoptions}
                       ></EventsCustomer>
                     </TabPanel>
                     <TabPanel value={value} index={2}>
@@ -291,6 +295,7 @@ const PopupTaskView = ({
                         end={end}
                         value={row}
                         company={company}
+                        tempoptions={tempoptions}
                       ></InvoicesCustomer>
                     </TabPanel>
                     <TabPanel value={value} index={3}>
@@ -309,6 +314,37 @@ const PopupTaskView = ({
                       ></ReceiptCustomer>
                     </TabPanel>
                     <TabPanel value={value} index={4}>
+                      <InvoicesSupplier
+                        isRTL={isRTL}
+                        words={words}
+                        theme={theme}
+                        name="contractId"
+                        id={row?._id}
+                        width={width}
+                        height={height}
+                        start={start}
+                        end={end}
+                        value={row}
+                        company={company}
+                        tempoptions={tempoptions}
+                      ></InvoicesSupplier>
+                    </TabPanel>
+                    <TabPanel value={value} index={5}>
+                      <PaymentSupplier
+                        isRTL={isRTL}
+                        words={words}
+                        theme={theme}
+                        name="contractId"
+                        id={row?._id}
+                        width={width}
+                        height={height}
+                        start={start}
+                        end={end}
+                        value={row}
+                        company={company}
+                      ></PaymentSupplier>
+                    </TabPanel>
+                    <TabPanel value={value} index={6}>
                       <ExpensesCustomer
                         isRTL={isRTL}
                         words={words}
@@ -321,9 +357,28 @@ const PopupTaskView = ({
                         end={end}
                         value={row}
                         company={company}
+                        tempoptions={tempoptions}
+                        tempwords={tempwords}
                       ></ExpensesCustomer>
                     </TabPanel>
-                    <TabPanel value={value} index={5}>
+                    <TabPanel value={value} index={7}>
+                      <ExpensesProdCustomer
+                        isRTL={isRTL}
+                        words={words}
+                        theme={theme}
+                        name="contractId"
+                        id={row?._id}
+                        width={width}
+                        height={height}
+                        start={start}
+                        end={end}
+                        value={row}
+                        company={company}
+                        tempoptions={tempoptions}
+                        tempwords={tempwords}
+                      ></ExpensesProdCustomer>
+                    </TabPanel>
+                    <TabPanel value={value} index={8}>
                       <KaidsCustomer
                         isRTL={isRTL}
                         words={words}
@@ -334,9 +389,10 @@ const PopupTaskView = ({
                         height={height}
                         start={start}
                         end={end}
+                        tempoptions={tempoptions}
                       ></KaidsCustomer>
                     </TabPanel>
-                    <TabPanel value={value} index={6}>
+                    <TabPanel value={value} index={9}>
                       <ReminderCustomer
                         isRTL={isRTL}
                         words={words}
@@ -347,6 +403,7 @@ const PopupTaskView = ({
                         height={height}
                         start={start}
                         end={end}
+                        tempoptions={tempoptions}
                       ></ReminderCustomer>
                     </TabPanel>
                   </Box>

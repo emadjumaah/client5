@@ -21,6 +21,7 @@ import useWindowDimensions from '../hooks/useWindowDimensions';
 import MainCustomer from '../Shared/MainCustomer';
 import { TabPanel, useStyles, a11yProps } from '../Shared/TabPanel';
 import DateNavigatorReports from '../components/filters/DateNavigatorReports';
+import { useTemplate } from '../hooks';
 
 const PopupEmployeeView = ({ open, onClose, row, theme, company }: any) => {
   const classes = useStyles();
@@ -47,6 +48,7 @@ const PopupEmployeeView = ({ open, onClose, row, theme, company }: any) => {
   const handleChange = (_, newValue) => {
     setValue(newValue);
   };
+  const { tempoptions, tempwords } = useTemplate();
 
   const {
     translate: { words, isRTL },
@@ -155,6 +157,7 @@ const PopupEmployeeView = ({ open, onClose, row, theme, company }: any) => {
                           end={end}
                           value={row}
                           company={company}
+                          tempoptions={tempoptions}
                         ></EventsCustomer>
                       </TabPanel>
                       <TabPanel value={value} index={4}>
@@ -170,6 +173,7 @@ const PopupEmployeeView = ({ open, onClose, row, theme, company }: any) => {
                           end={end}
                           value={row}
                           company={company}
+                          tempoptions={tempoptions}
                         ></InvoicesCustomer>
                       </TabPanel>
                       <TabPanel value={value} index={5}>
@@ -200,6 +204,7 @@ const PopupEmployeeView = ({ open, onClose, row, theme, company }: any) => {
                           end={end}
                           value={row}
                           company={company}
+                          tempoptions={tempoptions}
                         ></InvoicesSupplier>
                       </TabPanel>
                       <TabPanel value={value} index={7}>
@@ -230,6 +235,8 @@ const PopupEmployeeView = ({ open, onClose, row, theme, company }: any) => {
                           end={end}
                           value={row}
                           company={company}
+                          tempoptions={tempoptions}
+                          tempwords={tempwords}
                         ></ExpensesCustomer>
                       </TabPanel>
                       <TabPanel value={value} index={9}>
@@ -245,6 +252,8 @@ const PopupEmployeeView = ({ open, onClose, row, theme, company }: any) => {
                           end={end}
                           value={row}
                           company={company}
+                          tempoptions={tempoptions}
+                          tempwords={tempwords}
                         ></ExpensesProdCustomer>
                       </TabPanel>
                       <TabPanel value={value} index={10}>
@@ -258,6 +267,7 @@ const PopupEmployeeView = ({ open, onClose, row, theme, company }: any) => {
                           height={height}
                           start={start}
                           end={end}
+                          tempoptions={tempoptions}
                         ></KaidsCustomer>
                       </TabPanel>
                       <TabPanel value={value} index={11}>
@@ -271,6 +281,7 @@ const PopupEmployeeView = ({ open, onClose, row, theme, company }: any) => {
                           height={height}
                           start={start}
                           end={end}
+                          tempoptions={tempoptions}
                         ></ReminderCustomer>
                       </TabPanel>
                     </Box>

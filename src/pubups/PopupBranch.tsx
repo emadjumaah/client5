@@ -103,9 +103,6 @@ const PopupBranch = ({
           temp: JSON.stringify(temp),
         };
     const mutate = isNew ? addAction : editAction;
-    console.log('mutate', mutate);
-    console.log('variables', variables);
-
     apply(mutate, variables);
     dispatch({
       type: 'setTemplate',

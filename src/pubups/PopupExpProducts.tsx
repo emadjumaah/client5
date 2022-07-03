@@ -155,11 +155,23 @@ const PopupExpProducts = ({
   useEffect(() => {
     if (isNew) {
       if (resovalue) {
-        if (resovalue?.departmentId) {
+        if (resovalue?.departmentId && name !== 'departmentId') {
           const dept = departments.filter(
             (dep: any) => dep._id === resovalue?.departmentId
           )?.[0];
           setDepartvalue(dept);
+        }
+        if (taskvalue?.employeeId && name !== 'employeeId') {
+          const emp = employees.filter(
+            (dep: any) => dep._id === taskvalue?.employeeId
+          )?.[0];
+          setEmplvalue(emp);
+        }
+        if (taskvalue?.resourseId && name !== 'resourseId') {
+          const res = resourses.filter(
+            (dep: any) => dep._id === taskvalue?.resourseId
+          )?.[0];
+          setResovalue(res);
         }
       }
     }
@@ -231,12 +243,12 @@ const PopupExpProducts = ({
     reset();
     setItemsList([]);
     setTotals({});
-    setTaskvalue(null);
     setSelectedDate(new Date());
-    setDepartvalue(null);
-    setEmplvalue(null);
-    setResovalue(null);
     setLoading(false);
+    setDepartvalue(name === 'departmentId' ? value : null);
+    setEmplvalue(name === 'employeeId' ? value : null);
+    setResovalue(name === 'resourseId' ? value : null);
+    setTaskvalue(name === 'contractId' ? value : null);
   };
 
   const addItemToList = (item: any) => {

@@ -60,7 +60,6 @@ export const AppointForm = (props: any) => {
   const { onFieldChange, appointmentData, theme } = props;
 
   const row = setRowFromAppointment(appointmentData);
-
   const classes = invoiceClasses();
   const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
 

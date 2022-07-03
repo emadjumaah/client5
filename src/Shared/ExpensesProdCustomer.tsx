@@ -38,7 +38,7 @@ import {
 import useAccounts from '../hooks/useAccounts';
 import useTasks from '../hooks/useTasks';
 import { Box, Typography } from '@material-ui/core';
-import { useProducts, useTemplate } from '../hooks';
+import { useProducts } from '../hooks';
 import PopupExpProducts from '../pubups/PopupExpProducts';
 import useResoursesUp from '../hooks/useResoursesUp';
 import useEmployeesUp from '../hooks/useEmployeesUp';
@@ -57,8 +57,9 @@ export default function ExpensesProdCustomer({
   height,
   start,
   end,
+  tempoptions,
+  tempwords,
 }) {
-  const { tempoptions, tempwords } = useTemplate();
   const [columns] = useState(
     tempoptions?.noTsk
       ? [

@@ -143,7 +143,8 @@ export default function PaymentSupplier({
       setLoading(false);
     }
   }, [financeData]);
-
+  const isEditable =
+    name !== 'resourseId' && name !== 'departmentId' && name !== 'employeeId';
   return (
     <Box
       style={{
@@ -205,9 +206,9 @@ export default function PaymentSupplier({
             }
           ></DataTypeProvider>
           <TableEditColumn
-            showEditCommand
-            showDeleteCommand
-            showAddCommand
+            showEditCommand={isEditable}
+            showDeleteCommand={isEditable}
+            showAddCommand={isEditable}
             commandComponent={Command}
           ></TableEditColumn>
           <PopupEditing

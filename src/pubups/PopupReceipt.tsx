@@ -129,6 +129,7 @@ const PopupReceipt = ({
       }
     }
   }, [invoicesData]);
+
   useEffect(() => {
     if (row && row._id) {
       const ca = row.creditAcc;
@@ -337,7 +338,7 @@ const PopupReceipt = ({
     setDebitAcc(null);
     setDebaccounts([]);
     setInvoices([]);
-    setCustvalue(null);
+    setCustvalue(name === 'customerId' ? value : null);
     setInvoicevalue(null);
     setCustError(false);
   };
@@ -390,7 +391,7 @@ const PopupReceipt = ({
                 isRTL={isRTL}
                 fullwidth
                 openAdd={openCustomer}
-                disabled={name === 'customerId'}
+                disabled={name === 'customerId' || name === 'contractId'}
                 mb={0}
               ></AutoFieldLocal>
             </Grid>

@@ -366,10 +366,11 @@ const PopupTaskFull = ({
         count,
         isCustom,
       });
-      const lastapp = rdata.all[rdata.all.length - 1];
-      if (lastapp && lastapp > end) {
-        setEnd(rdata.all[rdata.all.length - 1]);
-      }
+      setEnd(rdata.all[rdata.all.length - 1]);
+      // const lastapp = rdata.all[rdata.all.length - 1];
+      // if (lastapp && lastapp > end) {
+      //   setEnd(rdata.all[rdata.all.length - 1]);
+      // }
       setRrule(rdata);
     }
   }, [
@@ -757,6 +758,7 @@ const PopupTaskFull = ({
     setIsatStart(false);
     setMonthdays([]);
     setDoneEvents(null);
+    setDayCost(null);
   };
 
   const onSubmit = async () => {

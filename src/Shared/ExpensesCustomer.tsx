@@ -37,7 +37,7 @@ import {
 import useAccounts from '../hooks/useAccounts';
 import useTasks from '../hooks/useTasks';
 import { Box, Typography } from '@material-ui/core';
-import { useExpenseItems, useTemplate } from '../hooks';
+import { useExpenseItems } from '../hooks';
 import useDepartmentsUp from '../hooks/useDepartmentsUp';
 import useEmployeesUp from '../hooks/useEmployeesUp';
 import useResoursesUp from '../hooks/useResoursesUp';
@@ -57,8 +57,9 @@ export default function ExpensesCustomer({
   height,
   start,
   end,
+  tempoptions,
+  tempwords,
 }: any) {
-  const { tempoptions, tempwords } = useTemplate();
   const col = getColumns({ isRTL, words });
 
   const [columns] = useState(

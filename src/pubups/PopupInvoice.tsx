@@ -215,23 +215,10 @@ const PopupInvoice = ({
     }
   }, [taskvalue]);
 
-  // useEffect(() => {
-  //   if (isNew) {
-  //     if (emplvalue) {
-  //       if (emplvalue?.departmentId) {
-  //         const dept = departments.filter(
-  //           (dep: any) => dep._id === emplvalue?.departmentId
-  //         )?.[0];
-  //         setDepartvalue(dept);
-  //       }
-  //     }
-  //   }
-  // }, [emplvalue]);
-
   useEffect(() => {
     if (isNew) {
       if (resovalue) {
-        if (resovalue?.departmentId) {
+        if (resovalue?.departmentId && name !== 'departmentId') {
           const dept = departments.filter(
             (dep: any) => dep._id === resovalue?.departmentId
           )?.[0];
@@ -240,19 +227,6 @@ const PopupInvoice = ({
       }
     }
   }, [resovalue]);
-
-  // useEffect(() => {
-  //   if (isNew) {
-  //     if (custvalue) {
-  //       const ntasks = tasks.filter(
-  //         (tsk: any) => tsk.customerId === custvalue._id
-  //       );
-  //       setFTasks(ntasks);
-  //     } else {
-  //       setFTasks(tasks);
-  //     }
-  //   }
-  // }, [custvalue]);
 
   useEffect(() => {
     const items = itemsData?.data?.['getOperationItems']?.data || [];
@@ -320,16 +294,16 @@ const PopupInvoice = ({
     setItemsList([]);
     setDiscount(0);
     setTotals({});
-    setCustvalue(null);
     setInvNo('');
     setAccounts([]);
     setPtype('cash');
-    setTaskvalue(null);
     setIsCash(false);
     setSelectedDate(new Date());
-    setDepartvalue(null);
-    setEmplvalue(null);
-    setResovalue(null);
+    setCustvalue(name === 'customerId' ? value : null);
+    setDepartvalue(name === 'departmentId' ? value : null);
+    setEmplvalue(name === 'employeeId' ? value : null);
+    setResovalue(name === 'resourseId' ? value : null);
+    setTaskvalue(name === 'contractId' ? value : null);
   };
 
   const addItemToList = (item: any) => {

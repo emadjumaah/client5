@@ -146,7 +146,7 @@ export default function MainCustomer({
                     </Box>
                   </Grid>
                 )}
-                {!isCust && !isCont && (
+                {!isCust && (
                   <Grid item xs={3}>
                     <Box style={{ backgroundColor: '#fff', height: 250 }}>
                       {purchaseMainFormatter({ row: data, theme, isRTL })}

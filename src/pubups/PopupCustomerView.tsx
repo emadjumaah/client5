@@ -15,6 +15,7 @@ import MainCustomer from '../Shared/MainCustomer';
 import useWindowDimensions from '../hooks/useWindowDimensions';
 import { TabPanel, useStyles, a11yProps } from '../Shared/TabPanel';
 import DateNavigatorReports from '../components/filters/DateNavigatorReports';
+import { useTemplate } from '../hooks';
 
 const PopupCustomerView = ({ open, onClose, row, theme, company }: any) => {
   const classes = useStyles();
@@ -36,6 +37,7 @@ const PopupCustomerView = ({ open, onClose, row, theme, company }: any) => {
   };
 
   const { width, height } = useWindowDimensions();
+  const { tempoptions } = useTemplate();
 
   const [value, setValue] = React.useState(0);
   const handleChange = (_, newValue) => {
@@ -149,6 +151,7 @@ const PopupCustomerView = ({ open, onClose, row, theme, company }: any) => {
                           end={end}
                           value={row}
                           company={company}
+                          tempoptions={tempoptions}
                         ></EventsCustomer>
                       </TabPanel>
                       <TabPanel value={value} index={4}>
@@ -164,6 +167,7 @@ const PopupCustomerView = ({ open, onClose, row, theme, company }: any) => {
                           end={end}
                           value={row}
                           company={company}
+                          tempoptions={tempoptions}
                         ></InvoicesCustomer>
                       </TabPanel>
                       <TabPanel value={value} index={5}>

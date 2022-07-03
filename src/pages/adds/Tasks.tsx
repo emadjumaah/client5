@@ -36,6 +36,7 @@ import {
   dueAmountFormatter,
   expensesFormatter,
   kaidsFormatter,
+  purchaseFormatter,
   raseedFormatter,
   salesTaskFormatter,
   taskdataFormatter,
@@ -79,6 +80,7 @@ export default function Tasks({ isRTL, words, menuitem, theme, company }) {
     col.daysdata,
     col.appointments,
     col.sales,
+    col.purchase,
     col.expenses,
     col.kaids,
     col.title,
@@ -101,6 +103,7 @@ export default function Tasks({ isRTL, words, menuitem, theme, company }) {
     { columnName: col.daysdata.name, width: 280 },
     { columnName: col.appointments.name, width: 280 },
     { columnName: col.sales.name, width: 280 },
+    { columnName: col.purchase.name, width: 280 },
     { columnName: col.expenses.name, width: 200 },
     { columnName: col.kaids.name, width: 230 },
     { columnName: col.title.name, width: 200 },
@@ -318,6 +321,7 @@ export default function Tasks({ isRTL, words, menuitem, theme, company }) {
                 col.daysdata.name,
                 col.appointments.name,
                 col.sales.name,
+                col.purchase.name,
                 col.expenses.name,
                 col.kaids.name,
                 col.title.name,
@@ -409,6 +413,12 @@ export default function Tasks({ isRTL, words, menuitem, theme, company }) {
               for={[col.sales.name]}
               formatterComponent={(props: any) =>
                 salesTaskFormatter({ ...props, theme, isRTL })
+              }
+            ></DataTypeProvider>
+            <DataTypeProvider
+              for={[col.purchase.name]}
+              formatterComponent={(props: any) =>
+                purchaseFormatter({ ...props, theme, isRTL })
               }
             ></DataTypeProvider>
             <DataTypeProvider

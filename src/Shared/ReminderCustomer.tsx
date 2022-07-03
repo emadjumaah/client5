@@ -17,7 +17,6 @@ import { getColumns } from '../common/columns';
 import { actionTimeFormatter, sentShowFormatter } from './colorFormat';
 import { useLazyQuery } from '@apollo/client';
 
-import { useTemplate } from '../hooks';
 import getRemindersActions from '../graphql/query/getRemindersActions';
 import useDepartmentsUp from '../hooks/useDepartmentsUp';
 import useEmployeesUp from '../hooks/useEmployeesUp';
@@ -50,9 +49,9 @@ export default function ReminderCustomer({
   height,
   start,
   end,
+  tempoptions,
 }: any) {
   const col = getColumns({ isRTL, words });
-  const { tempoptions } = useTemplate();
   const [acolumns] = useState(
     tempoptions?.noTsk
       ? [col.time, col.title, col.employee, col.department, col.sent]
@@ -156,7 +155,6 @@ export default function ReminderCustomer({
             }}
             estimatedRowHeight={40}
           />
-
           <DataTypeProvider
             for={['time']}
             formatterComponent={actionTimeFormatter}

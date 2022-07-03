@@ -509,6 +509,15 @@ const PopupAppointment = ({
       return;
     }
     setSaving(true);
+    if (!itemsList || itemsList.length === 0) {
+      await messageAlert(
+        setAlrt,
+        isRTL
+          ? `يجب اضافة عنصر (خدمة او منتج) واحد على الأقل`
+          : `You should add min one service to invoice`
+      );
+      return;
+    }
 
     const title = tasktitle
       ? tasktitle
