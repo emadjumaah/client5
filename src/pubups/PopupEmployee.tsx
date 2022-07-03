@@ -89,7 +89,6 @@ const PopupEmployee = ({
   const onSubmit = async (data: any) => {
     setSaving(true);
     const name = data.name.trim();
-    const nameAr = data.nameAr.trim();
     const phone = data.phone;
     const email = data.email;
     const info = data.info;
@@ -109,7 +108,7 @@ const PopupEmployee = ({
     const variables: any = {
       _id: row && row._id ? row._id : undefined, // is it new or edit
       name,
-      nameAr,
+      nameAr: name,
       resType,
       email,
       color,
@@ -179,15 +178,15 @@ const PopupEmployee = ({
       mb={50}
       saving={saving}
     >
-      <Grid container spacing={2}>
+      <Grid container spacing={1}>
         <Grid item xs={1}></Grid>
         <Grid item xs={10}>
           <Grid container spacing={1}>
-            <Grid item xs={6}>
+            <Grid item xs={12}>
               <TextFieldLocal
                 required
                 autoFocus
-                name="nameAr"
+                name="name"
                 label={words.name}
                 register={register}
                 errors={errors}
@@ -197,71 +196,65 @@ const PopupEmployee = ({
                 mb={0}
               />
             </Grid>
-            <Grid item xs={6}>
+            <Grid item xs={12}>
               <TextFieldLocal
-                required
-                name="name"
-                ltr
-                label={words.nameEn}
+                name="phone"
+                label={words.phoneNumber}
                 register={register}
                 errors={errors}
                 row={row}
                 fullWidth
-                newtext={newtext}
                 margin={20}
+                mb={0}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextFieldLocal
+                name="email"
+                label={words.email}
+                register={register}
+                errors={errors}
+                row={row}
+                fullWidth
+                margin={20}
+                mb={0}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <AutoFieldLocal
+                name="department"
+                title={tempwords?.department}
+                words={words}
+                options={departments}
+                value={departvalue}
+                setSelectValue={setDepartvalue}
+                setSelectError={setDepError}
+                selectError={depError}
+                refernce={emplRef}
+                register={register}
+                openAdd={openDepartment}
+                isRTL={isRTL}
+                fullWidth
+                mb={0}
+              ></AutoFieldLocal>
+            </Grid>
+            <Grid item xs={12}>
+              <TextFieldLocal
+                name="info"
+                label={words.info}
+                register={register}
+                errors={errors}
+                row={row}
+                fullWidth
+                multiline
+                rowsMax={4}
+                rows={4}
                 mb={0}
               />
             </Grid>
           </Grid>
 
-          <TextFieldLocal
-            name="phone"
-            label={words.phoneNumber}
-            register={register}
-            errors={errors}
-            row={row}
-            fullWidth
-            margin={20}
-            mb={10}
-          />
-          <TextFieldLocal
-            name="email"
-            label={words.email}
-            register={register}
-            errors={errors}
-            row={row}
-            fullWidth
-            margin={20}
-            mb={10}
-          />
-          <AutoFieldLocal
-            name="department"
-            title={tempwords?.department}
-            words={words}
-            options={departments}
-            value={departvalue}
-            setSelectValue={setDepartvalue}
-            setSelectError={setDepError}
-            selectError={depError}
-            refernce={emplRef}
-            register={register}
-            openAdd={openDepartment}
-            isRTL={isRTL}
-            fullWidth
-            mb={20}
-          ></AutoFieldLocal>
-          <TextFieldLocal
-            name="info"
-            label={words.info}
-            register={register}
-            errors={errors}
-            row={row}
-            fullWidth
-            multiline
-            rowsMax={4}
-            rows={4}
-          />
-          <Grid container spacing={0}>
+          <Grid container spacing={2} style={{ padding: 20 }}>
             <Grid item xs={6}>
               <DaysOffView
                 isRTL={isRTL}
@@ -275,7 +268,11 @@ const PopupEmployee = ({
                 name="color"
                 value={row?.color ? row.color : color}
                 variant="outlined"
-                style={{ width: 200, backgroundColor: color }}
+                style={{
+                  width: 200,
+                  backgroundColor: color,
+                  marginTop: 20,
+                }}
                 InputProps={{ style: { borderRadius: 5, color: '#fff' } }}
                 margin="dense"
               />

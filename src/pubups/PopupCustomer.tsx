@@ -52,7 +52,6 @@ const PopupCustomer = ({
   const onSubmit = async (data: any) => {
     setSaving(true);
     const name = data.name.trim();
-    const nameAr = data.nameAr.trim();
     const {
       phone,
       email,
@@ -73,7 +72,7 @@ const PopupCustomer = ({
     const variables: any = {
       _id: row && row._id ? row._id : undefined, // is it new or edit
       name,
-      nameAr,
+      nameAr: name,
       phone,
       email,
       address,
@@ -162,7 +161,7 @@ const PopupCustomer = ({
                   <TextFieldLocal
                     autoFocus
                     required
-                    name="nameAr"
+                    name="name"
                     label={words.name}
                     register={register}
                     errors={errors}
@@ -174,33 +173,19 @@ const PopupCustomer = ({
                 <Grid item xs={12}>
                   <TextFieldLocal
                     required
-                    name="name"
-                    ltr
-                    label={words.nameEn}
+                    name="phone"
+                    label={words.phoneNumber}
                     register={register}
                     errors={errors}
                     row={row}
+                    newtext={newtext}
                     fullWidth
                     mb={0}
                   />
                 </Grid>
               </Grid>
             </Grid>
-
-            <Grid item xs={4}>
-              <TextFieldLocal
-                required
-                name="phone"
-                label={words.phoneNumber}
-                register={register}
-                errors={errors}
-                row={row}
-                newtext={newtext}
-                fullWidth
-                mb={0}
-              />
-            </Grid>
-            <Grid item xs={8}>
+            <Grid item xs={12}>
               <TextFieldLocal
                 name="email"
                 label={words.email}

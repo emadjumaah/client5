@@ -43,14 +43,13 @@ const PopupServiceItem = ({
   const onSubmit = async (data: any) => {
     setSaving(true);
     const name = data.name.trim();
-    const nameAr = data.nameAr.trim();
     const { price, cost, unit, desc } = data;
 
     const variables: any = {
       _id: row && row._id ? row._id : undefined,
       itemType: type,
       name,
-      nameAr,
+      nameAr: name,
       price: Number(price),
       cost: cost ? Number(cost) : undefined,
       unit,
@@ -126,11 +125,11 @@ const PopupServiceItem = ({
         <Grid item xs={1}></Grid>
         <Grid item xs={10}>
           <Grid container spacing={2}>
-            <Grid item xs={6}>
+            <Grid item xs={12}>
               <TextFieldLocal
                 required
                 autoFocus
-                name="nameAr"
+                name="name"
                 label={words.name}
                 register={register}
                 errors={errors}
@@ -139,20 +138,7 @@ const PopupServiceItem = ({
                 mb={0}
               />
             </Grid>
-            <Grid item xs={6}>
-              <TextFieldLocal
-                required
-                name="name"
-                ltr
-                label={words.nameEn}
-                register={register}
-                errors={errors}
-                row={row}
-                newtext={newtext}
-                fullWidth
-                mb={0}
-              />
-            </Grid>
+
             {type === 1 && (
               <Grid item xs={4}>
                 <TextFieldLocal

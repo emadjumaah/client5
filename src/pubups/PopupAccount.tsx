@@ -45,11 +45,9 @@ export const accountClasses = makeStyles((theme: Theme) =>
 
 const accountSchema = yup.object().shape({
   name: yup.string().required().min(3).max(100),
-  nameAr: yup.string().required().min(3).max(100),
 });
 const accountEditSchema = yup.object().shape({
   name: yup.string().required().min(3).max(100),
-  nameAr: yup.string().required().min(3).max(100),
 });
 export const accountResolver = { resolver: yupResolver(accountSchema) };
 export const accountEditResolver = { resolver: yupResolver(accountEditSchema) };
@@ -141,14 +139,13 @@ const PopupAccount = ({
     }
     setSaving(true);
     const name = data.name.trim();
-    const nameAr = data.nameAr.trim();
     const branch = branchvalue.basename;
     const variables: any = {
       _id: row._id ? row._id : undefined, // is it new or edit
       branch,
       code,
       name,
-      nameAr,
+      nameAr: name,
       canedit: row._id ? undefined : true,
       ...parentvalue,
     };
@@ -247,56 +244,18 @@ const PopupAccount = ({
             type="number"
             fullWidth
           />
-          {isRTL && (
-            <React.Fragment>
-              <TextFieldLocal
-                required
-                autoFocus
-                name="nameAr"
-                label={words.name}
-                register={register}
-                errors={errors}
-                row={row}
-                fullWidth
-              />
-              <TextFieldLocal
-                required
-                name="name"
-                ltr
-                label={words.nameEn}
-                register={register}
-                errors={errors}
-                row={row}
-                // newtext={newtext}
-                fullWidth
-              />
-            </React.Fragment>
-          )}
-          {!isRTL && (
-            <React.Fragment>
-              <TextFieldLocal
-                autoFocus
-                required
-                name="name"
-                ltr
-                label={words.name}
-                register={register}
-                errors={errors}
-                row={row}
-                // newtext={newtext}
-                fullWidth
-              />
-              <TextFieldLocal
-                required
-                name="nameAr"
-                label={words.nameAr}
-                register={register}
-                errors={errors}
-                row={row}
-                fullWidth
-              />
-            </React.Fragment>
-          )}
+          <React.Fragment>
+            <TextFieldLocal
+              required
+              autoFocus
+              name="name"
+              label={words.name}
+              register={register}
+              errors={errors}
+              row={row}
+              fullWidth
+            />
+          </React.Fragment>
         </Grid>
         <Grid item xs={2}></Grid>
       </Grid>

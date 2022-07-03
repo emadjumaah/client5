@@ -49,7 +49,7 @@ import {
 } from '../constants/rrule';
 import RRule from 'rrule';
 import getRruleData from '../common/getRruleData';
-import { getEventsList } from '../common/helpers';
+import { getEventsList, getInvDays } from '../common/helpers';
 import { ContractPrint } from '../print';
 import { useReactToPrint } from 'react-to-print';
 import SelectMulti from '../Shared/SelectMulti';
@@ -135,6 +135,8 @@ const PopupTaskFull = ({
   const [byweekday, setByweekday] = useState([]);
   const [monthdays, setMonthdays] = useState([]);
   const [bymonthday, setBymonthday] = useState([]);
+
+  const [invdays, setInvdays] = useState(0);
 
   const [isCustom, setIsCustom] = useState(false);
   const [isLastday, setIsLastday] = useState(false); // lastday of month
@@ -353,6 +355,13 @@ const PopupTaskFull = ({
       setByweekday([]);
     }
   }, [freq]);
+
+  useEffect(() => {
+    if (start && end) {
+      const days = getInvDays(start, end);
+      setInvdays(days);
+    }
+  }, [start, end]);
 
   useEffect(() => {
     if (!isCustom) {
@@ -759,6 +768,7 @@ const PopupTaskFull = ({
     setMonthdays([]);
     setDoneEvents(null);
     setDayCost(null);
+    setInvdays(0);
   };
 
   const onSubmit = async () => {
@@ -938,8 +948,12 @@ const PopupTaskFull = ({
                   mb={0}
                 ></CalenderLocal>
               </Grid>
-              <Grid item xs={1}></Grid>
-              <Grid item xs={5} style={{ marginTop: 15 }}>
+              <Grid item xs={2}>
+                <Typography
+                  style={{ marginTop: 20, marginLeft: 10, marginRight: 10 }}
+                >{`( ${invdays} ${isRTL ? 'يوم' : 'Day'} )`}</Typography>
+              </Grid>
+              <Grid item xs={4} style={{ marginTop: 15 }}>
                 <FormControlLabel
                   control={
                     <Checkbox
@@ -956,13 +970,14 @@ const PopupTaskFull = ({
                       style={{
                         color: theme.palette.primary.main,
                         marginTop: 5,
+                        fontSize: 12,
+                        fontWeight: 'bold',
                       }}
                       variant="subtitle1"
                     >
                       {isRTL ? 'تفعيل المواعيد' : 'Activate Appointments'}
                     </Typography>
                   }
-                  style={{ fontSize: 14 }}
                 />
                 {isEvents && (
                   <FormControlLabel
@@ -978,13 +993,14 @@ const PopupTaskFull = ({
                         style={{
                           color: theme.palette.primary.main,
                           marginTop: 5,
+                          fontSize: 12,
+                          fontWeight: 'bold',
                         }}
                         variant="subtitle1"
                       >
                         {isRTL ? 'مع بداية الفترة' : 'At Beginning'}
                       </Typography>
                     }
-                    style={{ fontSize: 14 }}
                   />
                 )}
               </Grid>

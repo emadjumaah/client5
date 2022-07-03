@@ -88,7 +88,6 @@ const PopupResourses = ({
   const onSubmit = async (data: any) => {
     setSaving(true);
     const name = data.name.trim();
-    const nameAr = data.nameAr.trim();
     const { info, brand, plate, cost, model, purtime, insurance } = data;
     const department = departvalue
       ? {
@@ -106,7 +105,7 @@ const PopupResourses = ({
     const variables: any = {
       _id: row && row._id ? row._id : undefined, // is it new or edit
       name,
-      nameAr,
+      nameAr: name,
       resType,
       color,
       brand,
@@ -188,7 +187,7 @@ const PopupResourses = ({
               <TextFieldLocal
                 required
                 autoFocus
-                name="nameAr"
+                name="name"
                 label={words.name}
                 register={register}
                 errors={errors}
@@ -197,20 +196,7 @@ const PopupResourses = ({
                 mb={0}
               />
             </Grid>
-            <Grid item xs={12}>
-              <TextFieldLocal
-                required
-                name="name"
-                ltr
-                label={words.nameEn}
-                register={register}
-                errors={errors}
-                row={row}
-                fullWidth
-                newtext={newtext}
-                mb={0}
-              />
-            </Grid>
+
             <Grid item xs={4}>
               <TextFieldLocal
                 name="plate"

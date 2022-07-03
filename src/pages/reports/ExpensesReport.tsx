@@ -107,6 +107,7 @@ export default function ExpensesReport({
           col.acc,
           col.opAcc,
           col.contract,
+          col.customer,
           col.desc,
           col.opType,
           col.amount,

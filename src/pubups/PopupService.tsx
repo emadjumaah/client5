@@ -55,7 +55,6 @@ const PopupService = ({
   const onSubmit = async (data: any) => {
     setSaving(true);
     const name = data.name.trim();
-    const nameAr = data.nameAr.trim();
     const { price, unit, desc } = data;
     let photo: any;
 
@@ -67,7 +66,7 @@ const PopupService = ({
       _id: row && row._id ? row._id : undefined,
       itemType: 2,
       name,
-      nameAr,
+      nameAr: name,
       price: Number(price),
       unit,
       desc,
@@ -151,7 +150,7 @@ const PopupService = ({
                   <TextFieldLocal
                     autoFocus
                     required
-                    name="nameAr"
+                    name="name"
                     label={words.name}
                     register={register}
                     errors={errors}
@@ -160,46 +159,34 @@ const PopupService = ({
                     mb={0}
                   />
                 </Grid>
-                <Grid item xs={12}>
+                <Grid item xs={8}>
                   <TextFieldLocal
                     required
-                    name="name"
-                    ltr
-                    label={words.nameEn}
+                    name="price"
+                    label={words.price}
+                    register={register}
+                    errors={errors}
+                    type="number"
+                    row={row}
+                    fullWidth
+                    mb={0}
+                  />
+                </Grid>
+                <Grid item xs={4}>
+                  <TextFieldLocal
+                    name="unit"
+                    label={words.unit}
                     register={register}
                     errors={errors}
                     row={row}
+                    newtext={newtext}
                     fullWidth
                     mb={0}
                   />
                 </Grid>
               </Grid>
             </Grid>
-            <Grid item xs={6}>
-              <TextFieldLocal
-                required
-                name="price"
-                label={words.price}
-                register={register}
-                errors={errors}
-                type="number"
-                row={row}
-                fullWidth
-                mb={0}
-              />
-            </Grid>
-            <Grid item xs={6}>
-              <TextFieldLocal
-                name="unit"
-                label={words.unit}
-                register={register}
-                errors={errors}
-                row={row}
-                newtext={newtext}
-                fullWidth
-                mb={0}
-              />
-            </Grid>
+
             <Grid item xs={12}>
               <TextFieldLocal
                 name="desc"

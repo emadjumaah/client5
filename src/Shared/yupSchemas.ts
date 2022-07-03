@@ -48,10 +48,10 @@ export const passResolver = { resolver: yupResolver(passSchema) };
 
 const departSchema = yup.object().shape({
   name: yup.string().required().min(3).max(100),
-  nameAr: yup.string().required().min(3).max(100),
   color: yup.string(),
 });
 export const departResolver = { resolver: yupResolver(departSchema) };
+
 const groupSchema = yup.object().shape({
   name: yup.string().required().min(3).max(100),
   color: yup.string(),
@@ -69,7 +69,6 @@ export const smsTempResolver = { resolver: yupResolver(smsTempSchema) };
 
 const custSchema = yup.object().shape({
   name: yup.string().required().min(3).max(100),
-  nameAr: yup.string().required(),
   phone: yup
     .string()
     .matches(phoneRegExp, 'Phone number is not valid')
@@ -89,23 +88,21 @@ export const contactResolver = { resolver: yupResolver(contactSchema) };
 const itmSchema = yup.object().shape({
   barcode: yup.string(),
   name: yup.string().required().min(3).max(100),
-  nameAr: yup.string().required(),
   price: yup.number().min(0).required(),
 });
 export const itmResolver = { resolver: yupResolver(itmSchema) };
 const expitmSchema = yup.object().shape({
   barcode: yup.string(),
   name: yup.string().required().min(3).max(100),
-  nameAr: yup.string().required(),
 });
 export const expitmResolver = { resolver: yupResolver(expitmSchema) };
 
 const emplSchema = yup.object().shape({
   name: yup.string().required().min(3).max(100),
-  nameAr: yup.string().required().min(3).max(100),
   phone: yup.string(),
 });
 export const emppResolver = { resolver: yupResolver(emplSchema) };
+
 const depositSchema = yup.object().shape({
   amount: yup.number().min(0).required().positive(),
 

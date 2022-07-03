@@ -147,12 +147,11 @@ const PopupProject = ({
   const onSubmit = async (data: any) => {
     setSaving(true);
     const name = data.name.trim();
-    const nameAr = data.nameAr.trim();
     const desc = data.desc;
     const variables: any = {
       _id: row && row._id ? row._id : undefined, // is it new or edit
       name,
-      nameAr,
+      nameAr: name,
       customer: custvalue
         ? {
             customerId: custvalue._id,
@@ -274,25 +273,12 @@ const PopupProject = ({
         <Grid item xs={1}></Grid>
         <Grid item xs={10}>
           <Grid container spacing={1}>
-            <Grid item xs={6}>
+            <Grid item xs={12}>
               <TextFieldLocal
                 autoFocus
                 required
-                name="nameAr"
-                label={words.name}
-                register={register}
-                errors={errors}
-                row={row}
-                fullWidth
-                mb={0}
-              />
-            </Grid>
-            <Grid item xs={6}>
-              <TextFieldLocal
-                required
                 name="name"
-                ltr
-                label={words.nameEn}
+                label={words.name}
                 register={register}
                 errors={errors}
                 row={row}

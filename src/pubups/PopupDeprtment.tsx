@@ -48,12 +48,11 @@ const PopupDeprtment = ({
   const onSubmit = async (data: any) => {
     setSaving(true);
     const name = data.name.trim();
-    const nameAr = data.nameAr.trim();
     const desc = data.desc;
     const variables: any = {
       _id: row && row._id ? row._id : undefined, // is it new or edit
       name,
-      nameAr,
+      nameAr: name,
       depType,
       desc,
       color,
@@ -116,11 +115,11 @@ const PopupDeprtment = ({
         <Grid item xs={1}></Grid>
         <Grid item xs={10}>
           <Grid container spacing={1}>
-            <Grid item xs={6}>
+            <Grid item xs={12}>
               <TextFieldLocal
                 autoFocus
                 required
-                name="nameAr"
+                name="name"
                 label={words.name}
                 register={register}
                 errors={errors}
@@ -129,31 +128,20 @@ const PopupDeprtment = ({
                 mb={0}
               />
             </Grid>
-            <Grid item xs={6}>
-              <TextFieldLocal
-                required
-                name="name"
-                label={words.nameEn}
-                register={register}
-                errors={errors}
-                row={row}
-                fullWidth
-                newtext={newtext}
-                mb={0}
-              />
-            </Grid>
           </Grid>
-          <TextFieldLocal
-            name="desc"
-            label={words.description}
-            register={register}
-            errors={errors}
-            row={row}
-            fullWidth
-            multiline
-            rowsMax={4}
-            rows={4}
-          />
+          <Grid item xs={12}>
+            <TextFieldLocal
+              name="desc"
+              label={words.description}
+              register={register}
+              errors={errors}
+              row={row}
+              fullWidth
+              multiline
+              rowsMax={4}
+              rows={4}
+            />
+          </Grid>
           <Grid container spacing={2}>
             <Grid item xs={8}>
               <TextField
@@ -164,6 +152,8 @@ const PopupDeprtment = ({
                 style={{
                   backgroundColor: color,
                   width: 200,
+                  marginLeft: 20,
+                  marginRight: 20,
                 }}
                 InputProps={{
                   style: { borderRadius: 5, color: '#fff' },

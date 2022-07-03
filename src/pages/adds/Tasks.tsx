@@ -355,6 +355,7 @@ export default function Tasks({ isRTL, words, menuitem, theme, company }) {
               defaultHiddenColumnNames={[
                 col.title.name,
                 col.type.name,
+                col.purchase.name,
                 col.expenses.name,
                 col.kaids.name,
                 col.status.name,

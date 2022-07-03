@@ -194,14 +194,25 @@ const PopupTaskInvoice = ({
 
   useEffect(() => {
     if (isPeriod === true) {
-      setPeriodfrom(task?.periodfrom ? task?.periodfrom : task.start);
-      setPeriodto(new Date());
+      if (!periodfrom) {
+        setPeriodfrom(task?.periodfrom ? task?.periodfrom : task.start);
+      }
+      if (!periodto) {
+        setPeriodto(new Date());
+      }
+      if (invdays) {
+        const litems = itemsList.map((it: any) => {
+          return { ...it, itemqty: invdays, itemtotal: invdays * it.itemprice };
+        });
+        setItemsList(litems);
+      }
     } else {
       setPeriodfrom(null);
       setPeriodto(null);
       setInvdays(0);
     }
-  }, [isPeriod]);
+  }, [isPeriod, invdays]);
+
   useEffect(() => {
     if (periodfrom && periodto) {
       const days = getInvDays(periodfrom, periodto);
