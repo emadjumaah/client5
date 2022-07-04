@@ -3,19 +3,19 @@
 /* eslint-disable import/no-anonymous-default-export */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 
-import { useLazyQuery } from "@apollo/client";
-import _ from "lodash";
-import { useEffect } from "react";
-import { getLastDays } from "../common/time";
+import { useLazyQuery } from '@apollo/client';
+import _ from 'lodash';
+import { useEffect } from 'react';
+import { getLastDays } from '../common/time';
 
-import { getDaysEvents, getDaysSales } from "../graphql";
-import { getDateFormat } from "../Shared/colorFormat";
-import { getStoreItem } from "../store";
+import { getDaysEvents, getDaysSales } from '../graphql';
+import { getDateFormat } from '../Shared/colorFormat';
+import { getStoreItem } from '../store';
 
 export default () => {
-  const store = getStoreItem("store");
-  const { lang } = store;
-  const isRTL = lang === "ar" ? true : false;
+  const store = getStoreItem('store');
+  const lang = store?.lang;
+  const isRTL = lang === 'ar' ? true : false;
 
   const [freshSalesData, salesData]: any = useLazyQuery(getDaysSales);
   const [freshEventsData, eventsData]: any = useLazyQuery(getDaysEvents);
@@ -25,8 +25,8 @@ export default () => {
     freshEventsData();
   }, [freshSalesData, freshEventsData]);
 
-  const daysSales = salesData?.data?.["getDaysSales"]?.data;
-  const daysEvents = eventsData?.data?.["getDaysEvents"]?.data;
+  const daysSales = salesData?.data?.['getDaysSales']?.data;
+  const daysEvents = eventsData?.data?.['getDaysEvents']?.data;
 
   const refreshDaysSales = () => salesData?.refetch();
   const refreshDaysEvents = () => eventsData?.refetch();
@@ -62,9 +62,9 @@ export default () => {
   }
 
   if (daysEvents) {
-    const sfname = isRTL ? "statusAr" : "statusEn";
+    const sfname = isRTL ? 'statusAr' : 'statusEn';
 
-    const daydata: any = _.groupBy(daysEvents, "date");
+    const daydata: any = _.groupBy(daysEvents, 'date');
     const dayskeys = Object.keys(daydata);
 
     const daysEvent = dayskeys.map((day: any) => {
@@ -72,15 +72,15 @@ export default () => {
         .groupBy(sfname)
         .map((array, key) => ({
           name: key,
-          count: _.sumBy(array, "count"),
-          amount: _.sumBy(array, "amount"),
+          count: _.sumBy(array, 'count'),
+          amount: _.sumBy(array, 'amount'),
         }))
-        .orderBy("count")
+        .orderBy('count')
         .value();
 
       const time: any = daydata[day]?.[0]?.date;
-      const total = _.sumBy(daydata[day], "amount");
-      const count = _.sumBy(daydata[day], "count");
+      const total = _.sumBy(daydata[day], 'amount');
+      const count = _.sumBy(daydata[day], 'count');
 
       const name = getDateFormat(time, isRTL);
       return {
@@ -105,7 +105,7 @@ export default () => {
         };
       }
     });
-    const nextdaysList = getLastDays(7, isRTL, "mid");
+    const nextdaysList = getLastDays(7, isRTL, 'mid');
     nextEventDays = nextdaysList.map((day: any) => {
       const is = daysEvent.filter((ds: any) => ds.name === day);
       if (is && is.length > 0) {

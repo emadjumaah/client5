@@ -617,6 +617,7 @@ const PopupPurchaseInvoice = ({
       paymentType: ptype,
       userId: user._id,
     };
+    console.log('variables', variables);
     const mutate = isNew ? addAction : editAction;
 
     apply(mutate, variables);

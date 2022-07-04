@@ -3,7 +3,7 @@
 import React, { useContext, useState } from 'react';
 import { GContextTypes } from '../types';
 import { GlobalContext } from '../contexts';
-import { Box, Grid, Tab, Tabs, Typography } from '@material-ui/core';
+import { Box, Grid, Paper, Tab, Tabs, Typography } from '@material-ui/core';
 import PopupLayout from '../pages/main/PopupLayout';
 import EventsCustomer from '../Shared/EventsCustomer';
 import TasksCustomer from '../Shared/TasksCustomer';
@@ -98,7 +98,10 @@ const PopupSupplierView = ({ open, onClose, row, theme, company }: any) => {
                 >
                   <Box display="flex" style={{ margin: 10 }}></Box>
                   {row && (
-                    <Box style={{ marginBottom: 20 }}>
+                    <Paper
+                      elevation={0}
+                      style={{ marginBottom: 10, backgroundColor: '#f5f5f5' }}
+                    >
                       <TabPanel value={value} index={0}>
                         <MainCustomer
                           isRTL={isRTL}
@@ -185,7 +188,7 @@ const PopupSupplierView = ({ open, onClose, row, theme, company }: any) => {
                           company={company}
                         ></PaymentSupplier>
                       </TabPanel>
-                    </Box>
+                    </Paper>
                   )}
                 </Box>
               </Grid>

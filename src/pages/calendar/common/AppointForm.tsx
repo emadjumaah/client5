@@ -234,8 +234,8 @@ export const AppointForm = (props: any) => {
   }, []);
   useEffect(() => {
     if (row && row._id) {
-      if (row.contractId && tasks.length > 0 && !taskvalue) {
-        const tks = tasks.filter((t: any) => t._id === row.contractId)?.[0];
+      if (row.contract && tasks.length > 0 && !taskvalue) {
+        const tks = tasks.filter((t: any) => t._id === row.contract?._id)?.[0];
         setTaskvalue(tks);
       }
       if (row.employee && employees.length > 0 && !emplvalue) {

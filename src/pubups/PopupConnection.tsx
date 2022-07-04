@@ -1,26 +1,26 @@
 /* eslint-disable no-shadow */
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from 'react';
 
-import { GContextTypes } from "../types";
-import { GlobalContext } from "../contexts";
-import PopupLayout from "../pages/main/PopupLayout";
+import { GContextTypes } from '../types';
+import { GlobalContext } from '../contexts';
+import PopupLayout from '../pages/main/PopupLayout';
 import {
   FormControlLabel,
   Grid,
   Radio,
   RadioGroup,
   TextField,
-} from "@material-ui/core";
-import { errorAlert } from "../Shared";
+} from '@material-ui/core';
+import { errorAlert } from '../Shared';
 // import { remote } from "electron";
 
 const PopupConnection = ({ open, onClose, theme }: any) => {
-  const [alrt, setAlrt] = useState({ show: false, msg: "", type: undefined });
-  const [net, setNet] = useState("");
-  const [web, setWeb] = useState("");
-  const [local, setLocal] = useState("");
+  const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
+  const [net, setNet] = useState('');
+  const [web, setWeb] = useState('');
+  const [local, setLocal] = useState('');
   // const appWindow: any = remote.BrowserWindow.getFocusedWindow();
 
   const {
@@ -35,22 +35,24 @@ const PopupConnection = ({ open, onClose, theme }: any) => {
     setLocal(localuri);
   }, [open]);
 
-  const { network, weburi, localuri } = store;
+  const network = store?.network;
+  const weburi = store?.weburi;
+  const localuri = store?.localuri;
 
   const setNetwork = (network: any) => {
-    dispatch({ type: "setNetwork", payload: network });
+    dispatch({ type: 'setNetwork', payload: network });
   };
   const setWeburi = (weburi: any) => {
-    dispatch({ type: "setWeburi", payload: weburi });
+    dispatch({ type: 'setWeburi', payload: weburi });
   };
   const setLocaluri = (localuri: any) => {
-    dispatch({ type: "setLocaluri", payload: localuri });
+    dispatch({ type: 'setLocaluri', payload: localuri });
   };
 
   const onSubmit = async () => {
     if (
-      (net === "local" && (!local || local.length === 0)) ||
-      (net === "web" && (!web || web.length === 0))
+      (net === 'local' && (!local || local.length === 0)) ||
+      (net === 'web' && (!web || web.length === 0))
     ) {
       await errorAlert(setAlrt, isRTL);
       return;
@@ -63,7 +65,7 @@ const PopupConnection = ({ open, onClose, theme }: any) => {
     onClose();
   };
 
-  const title = isRTL ? "كيفية الاتصال مع المخدم" : "Server Connection type";
+  const title = isRTL ? 'كيفية الاتصال مع المخدم' : 'Server Connection type';
 
   return (
     <PopupLayout
@@ -90,7 +92,7 @@ const PopupConnection = ({ open, onClose, theme }: any) => {
             <FormControlLabel
               value="local"
               control={<Radio color="primary" />}
-              label={isRTL ? "اتصال محلي" : "Local Connection"}
+              label={isRTL ? 'اتصال محلي' : 'Local Connection'}
             />
             <TextField
               name="localuri"
@@ -107,13 +109,13 @@ const PopupConnection = ({ open, onClose, theme }: any) => {
             <FormControlLabel
               value="web"
               control={<Radio color="primary" />}
-              label={isRTL ? "اتصال خارجي" : "Remote Connection"}
+              label={isRTL ? 'اتصال خارجي' : 'Remote Connection'}
             />
             <TextField
               name="weburi"
               defaultValue={weburi}
               value={web}
-              disabled={net !== "web"}
+              disabled={net !== 'web'}
               onChange={(e: any) => setWeb(e.target.value)}
               label="URI"
               variant="outlined"

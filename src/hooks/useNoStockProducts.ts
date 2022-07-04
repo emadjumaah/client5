@@ -1,21 +1,21 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable import/no-anonymous-default-export */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import { useLazyQuery, useMutation } from "@apollo/client";
-import { useEffect } from "react";
+import { useLazyQuery, useMutation } from '@apollo/client';
+import { useEffect } from 'react';
 import {
   createItem,
   deleteItem,
   getItems,
   getNoStockProducts,
   updateItem,
-} from "../graphql";
-import { getStoreItem } from "../store";
+} from '../graphql';
+import { getStoreItem } from '../store';
 
 export default () => {
-  const store = getStoreItem("store");
-  const { lang } = store;
-  const isRTL = lang === "ar" ? true : false;
+  const store = getStoreItem('store');
+  const lang = store?.lang;
+  const isRTL = lang === 'ar' ? true : false;
   const [getprods, itmData]: any = useLazyQuery(getNoStockProducts, {
     variables: { isRTL },
   });
@@ -43,7 +43,7 @@ export default () => {
     getprods();
   }, [getprods]);
 
-  const nsproducts = itmData?.data?.["getNoStockProducts"]?.data || [];
+  const nsproducts = itmData?.data?.['getNoStockProducts']?.data || [];
 
   const refreshnsproduct = () => itmData?.refetch();
 

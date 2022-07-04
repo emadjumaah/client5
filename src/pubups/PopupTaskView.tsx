@@ -3,7 +3,15 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { GContextTypes } from '../types';
 import { GlobalContext } from '../contexts';
-import { Box, Button, colors, Tab, Tabs, Typography } from '@material-ui/core';
+import {
+  Box,
+  Button,
+  colors,
+  Paper,
+  Tab,
+  Tabs,
+  Typography,
+} from '@material-ui/core';
 import PopupLayout from '../pages/main/PopupLayout';
 import { Grid } from '@material-ui/core';
 import { useMutation } from '@apollo/client';
@@ -248,7 +256,10 @@ const PopupTaskView = ({
               >
                 <Box display="flex" style={{}}></Box>
                 {row && (
-                  <Box style={{ marginBottom: 10 }}>
+                  <Paper
+                    elevation={0}
+                    style={{ marginBottom: 10, backgroundColor: '#f5f5f5' }}
+                  >
                     <TabPanel value={value} index={0}>
                       <MainCustomer
                         isRTL={isRTL}
@@ -406,7 +417,7 @@ const PopupTaskView = ({
                         tempoptions={tempoptions}
                       ></ReminderCustomer>
                     </TabPanel>
-                  </Box>
+                  </Paper>
                 )}
               </Box>
             </Grid>
@@ -449,7 +460,7 @@ const PopupTaskView = ({
                 </Tabs>
               </Box>
 
-              <Box style={{ padding: 10, marginTop: 50 }}>
+              <Box style={{ paddingLeft: 10, paddingRight: 10, marginTop: 30 }}>
                 <Button
                   variant="contained"
                   fullWidth
@@ -462,7 +473,7 @@ const PopupTaskView = ({
                   </Typography>
                 </Button>
               </Box>
-              <Box style={{ padding: 10 }}>
+              <Box style={{ paddingLeft: 10, paddingRight: 10, marginTop: 15 }}>
                 <Button
                   variant="contained"
                   fullWidth
@@ -475,7 +486,7 @@ const PopupTaskView = ({
                   </Typography>
                 </Button>
               </Box>
-              <Box style={{ padding: 10 }}>
+              <Box style={{ paddingLeft: 10, paddingRight: 10, marginTop: 15 }}>
                 <Button
                   variant="contained"
                   fullWidth
@@ -488,7 +499,7 @@ const PopupTaskView = ({
                   </Typography>
                 </Button>
               </Box>
-              <Box style={{ padding: 10 }}>
+              <Box style={{ paddingLeft: 10, paddingRight: 10, marginTop: 15 }}>
                 <Button
                   variant="contained"
                   fullWidth
@@ -502,7 +513,7 @@ const PopupTaskView = ({
                   onClick={() => setOpenCloseDate(true)}
                 >
                   <Typography style={{ fontSize: 14 }}>
-                    {words.shutdown} {tempwords?.task}
+                    {words.shutdown}
                   </Typography>
                 </Button>
               </Box>

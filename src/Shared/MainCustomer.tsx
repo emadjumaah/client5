@@ -106,6 +106,31 @@ export default function MainCustomer({
                       customerDataView({ row, words, isRTL })}
                   </Box>
                 </Grid>
+                {isCont && (
+                  <Grid item xs={4}>
+                    <Box style={{ backgroundColor: '#fff', height: 250 }}>
+                      {appointTaskMainFormatter({ row: data, theme, isRTL })}
+                    </Box>
+                  </Grid>
+                )}
+                {!isSupp && (
+                  <Grid item xs={2}>
+                    <Box style={{ backgroundColor: '#fff', height: 250 }}>
+                      {expensesMainFormatter({ row: data, theme, isRTL })}
+                    </Box>
+                  </Grid>
+                )}
+                {!isSupp && (
+                  <Grid item xs={2}>
+                    <Box style={{ backgroundColor: '#fff', height: 250 }}>
+                      {incomeMainFormatter({
+                        row: data,
+                        theme,
+                        isRTL,
+                      })}
+                    </Box>
+                  </Grid>
+                )}
 
                 {isCont && (
                   <Grid item xs={4}>
@@ -115,13 +140,6 @@ export default function MainCustomer({
                         theme,
                         isRTL,
                       })}
-                    </Box>
-                  </Grid>
-                )}
-                {isCont && (
-                  <Grid item xs={4}>
-                    <Box style={{ backgroundColor: '#fff', height: 250 }}>
-                      {appointTaskMainFormatter({ row: data, theme, isRTL })}
                     </Box>
                   </Grid>
                 )}
@@ -153,28 +171,11 @@ export default function MainCustomer({
                     </Box>
                   </Grid>
                 )}
+
                 {!isSupp && (
-                  <Grid item xs={3}>
-                    <Box style={{ backgroundColor: '#fff', height: 250 }}>
-                      {expensesMainFormatter({ row: data, theme, isRTL })}
-                    </Box>
-                  </Grid>
-                )}
-                {!isSupp && (
-                  <Grid item xs={3}>
+                  <Grid item xs={2}>
                     <Box style={{ backgroundColor: '#fff', height: 250 }}>
                       {kaidsMainFormatter({ row: data, theme, isRTL })}
-                    </Box>
-                  </Grid>
-                )}
-                {!isSupp && (
-                  <Grid item xs={3}>
-                    <Box style={{ backgroundColor: '#fff', height: 250 }}>
-                      {incomeMainFormatter({
-                        row: data,
-                        theme,
-                        isRTL,
-                      })}
                     </Box>
                   </Grid>
                 )}
@@ -214,7 +215,7 @@ export default function MainCustomer({
                     })}
                   </Box>
                 )}
-                {!isCust && !isCont && (
+                {!isCust && (
                   <Box style={{ width: 250, marginLeft: 15 }}>
                     {purchaseFormatter({
                       row,

@@ -13,7 +13,7 @@ import { getStoreItem } from '../store';
 
 export default () => {
   const store = getStoreItem('store');
-  const { lang } = store;
+  const lang = store?.lang;
   const isRTL = lang === 'ar' ? true : false;
   const [getDeparts, depData]: any = useLazyQuery(getDepartments, {
     variables: { isRTL, depType: 2 },

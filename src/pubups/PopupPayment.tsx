@@ -31,6 +31,7 @@ const PopupPayment = ({
   value,
   company,
 }: any) => {
+  const [saving, setSaving] = useState(false);
   const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
   const [selectedDate, setSelectedDate] = React.useState(new Date());
   const [ptype, setPtype] = React.useState('deposit');
@@ -187,7 +188,7 @@ const PopupPayment = ({
       );
       return;
     }
-
+    setSaving(true);
     const supplier = suppvalue
       ? {
           supplierId: suppvalue._id,
@@ -282,8 +283,10 @@ const PopupPayment = ({
     try {
       await mutate({ variables });
       closeModal();
+      setSaving(false);
     } catch (error) {
       onError(error);
+      setSaving(false);
     }
   };
 
@@ -306,6 +309,7 @@ const PopupPayment = ({
     setInvoices([]);
     setSuppvalue(name === 'supplierId' ? value : null);
     setInvoicevalue(null);
+    setSaving(false);
   };
   const closeModal = () => {
     resetAll();
@@ -327,6 +331,7 @@ const PopupPayment = ({
       title={words.payments}
       onSubmit={onHandleSubmit}
       theme={theme}
+      saving={saving}
       alrt={alrt}
       print={!isNew ? handleReactPrint : undefined}
       mt={10}

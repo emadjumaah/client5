@@ -14,7 +14,7 @@ import { getStoreItem } from '../store';
 
 export default () => {
   const store = getStoreItem('store');
-  const { lang } = store;
+  const lang = store?.lang;
   const isRTL = lang === 'ar' ? true : false;
   const [getsevs, itmData]: any = useLazyQuery(getExpenseItems, {
     variables: { isRTL },

@@ -7,7 +7,8 @@ import { PopupTextField } from '../../Shared';
 
 export default function Names({ isRTL, words, setNames }) {
   const { store } = useContext(GlobalContext);
-  const { names } = store;
+  const names = store?.names;
+
   const { register, handleSubmit, errors } = useForm({
     defaultValues: {
       tasks: names ? names?.tasks : null,

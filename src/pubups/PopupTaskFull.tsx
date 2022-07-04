@@ -375,11 +375,11 @@ const PopupTaskFull = ({
         count,
         isCustom,
       });
-      setEnd(rdata.all[rdata.all.length - 1]);
-      // const lastapp = rdata.all[rdata.all.length - 1];
-      // if (lastapp && lastapp > end) {
-      //   setEnd(rdata.all[rdata.all.length - 1]);
-      // }
+      if (isNew || isEvents) {
+        const d = rdata.all[rdata.all.length - 1];
+        d.setHours(9, 0, 0);
+        setEnd(d);
+      }
       setRrule(rdata);
     }
   }, [
@@ -925,6 +925,7 @@ const PopupTaskFull = ({
                   value={end}
                   label={words.end}
                   onChange={(d: any) => {
+                    d.setHours(9, 0, 0);
                     setEnd(d);
                     if (isCustom) {
                       const rdata = getRruleData({

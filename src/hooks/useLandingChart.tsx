@@ -15,7 +15,7 @@ import useDepartments from './useDepartments';
 
 export default () => {
   const store = getStoreItem('store');
-  const { lang } = store;
+  const lang = store?.lang;
   const isRTL = lang === 'ar' ? true : false;
 
   const [freshChartData, chartData]: any = useLazyQuery(getLandingChartData, {

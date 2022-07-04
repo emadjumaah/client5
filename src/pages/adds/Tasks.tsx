@@ -46,7 +46,6 @@ import PageLayout from '../main/PageLayout';
 import { AlertLocal, SearchTable } from '../../components';
 import { getColumns } from '../../common/columns';
 import { Box, Typography } from '@material-ui/core';
-import TasksContext from '../../contexts/tasks';
 import getTasks from '../../graphql/query/getTasks';
 import PopupTaskFull from '../../pubups/PopupTaskFull';
 import createTask from '../../graphql/mutation/createTask';
@@ -65,6 +64,7 @@ import useWindowDimensions from '../../hooks/useWindowDimensions';
 import { roles } from '../../common';
 import closeTask from '../../graphql/mutation/closeTask';
 import { getTaskStatus } from '../../common/helpers';
+import { ContractContext } from '../../contexts/managment';
 
 export const getRowId = (row: { _id: any }) => row._id;
 
@@ -150,9 +150,9 @@ export default function Tasks({ isRTL, words, menuitem, theme, company }) {
     setItem(null);
   };
   const {
-    state: { currentDate, currentViewName, endDate },
+    state: { currentDate, currentViewName, endDate, hiddenColumnNames },
     dispatch,
-  } = useContext(TasksContext);
+  } = useContext(ContractContext);
 
   const currentViewNameChange = (e: any) => {
     dispatch({ type: 'setCurrentViewName', payload: e.target.value });
@@ -162,6 +162,9 @@ export default function Tasks({ isRTL, words, menuitem, theme, company }) {
   };
   const endDateChange = (curDate: any) => {
     dispatch({ type: 'setEndDate', payload: curDate });
+  };
+  const setHiddenColumnNames = (hiddenColumns: any) => {
+    dispatch({ type: 'setHiddenColumnNames', payload: hiddenColumns });
   };
 
   const [loadTasks, tasksData]: any = useLazyQuery(getTasks, {
@@ -352,24 +355,9 @@ export default function Tasks({ isRTL, words, menuitem, theme, company }) {
             />
             <TableColumnVisibility
               columnExtensions={tableColumnVisibilityColumnExtensions}
-              defaultHiddenColumnNames={[
-                col.title.name,
-                col.type.name,
-                col.purchase.name,
-                col.expenses.name,
-                col.kaids.name,
-                col.status.name,
-                col.start.name,
-                col.end.name,
-                col.createdAt.name,
-                col.department.name,
-                col.project.name,
-                col.resourse.name,
-                col.customer.name,
-                col.department.name,
-                col.employee.name,
-                'amount',
-              ]}
+              defaultHiddenColumnNames={hiddenColumnNames}
+              hiddenColumnNames={hiddenColumnNames}
+              onHiddenColumnNamesChange={setHiddenColumnNames}
             />
             <DataTypeProvider
               for={['start', 'end', 'createdAt']}

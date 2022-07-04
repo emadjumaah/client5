@@ -26,7 +26,9 @@ const initcalendar = {
 
 const Options = ({ isRTL, words, company, editCompany }: any) => {
   const { store, dispatch }: GContextTypes = useContext(GlobalContext);
-  const { lang, themeId, calendar } = store;
+  const lang = store?.lang;
+  const calendar = store?.calendar;
+  const themeId = store?.themeId;
   const { height } = useWindowDimensions();
   const [addUserTheme] = useMutation(updateUserTheme);
 

@@ -9,7 +9,8 @@ import { roles } from '../common';
 
 const SaveButton = ({ onExecute }: any) => {
   const store = getStoreItem('store');
-  const { lang, user } = store;
+  const lang = store?.lang;
+  const user = store?.user;
   const isEditor = roles.isEditor();
   if (!isEditor && !user?.isEmployee) {
     return <div></div>;
@@ -43,7 +44,7 @@ const DeleteButton = () => <div></div>;
 
 // const DeleteButton = ({ onExecute }: any) => {
 //   const store = getStoreItem('store');
-//   const { lang } = store;
+//   const lang = store?.lang;;
 //   const isOpAdmin = roles.isOperateAdmin();
 //   if (!isOpAdmin) {
 //     return <div></div>;

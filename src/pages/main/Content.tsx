@@ -86,11 +86,6 @@ import Resourses from '../adds/Resourses';
 import Receipt from '../adds/Receipt';
 // import FinanceAll from '../adds/FinanceAll';
 import Tasks from '../adds/Tasks';
-import {
-  initTasksContext,
-  tasksReducer,
-} from '../../contexts/tasks/tasksReducer';
-import TasksContext from '../../contexts/tasks';
 import DocumentsReport from '../reports/DocumentsReport';
 import {
   documentsReportReducer,
@@ -145,6 +140,29 @@ import {
 import SupplierReportContext from '../../contexts/supplierReport';
 import StockItems from '../adds/StockItems';
 import ProductsReport from '../reports/ProductsReport';
+import {
+  ContractContext,
+  contractReducer,
+  DepartmentContext,
+  departmentReducer,
+  EmployeeContext,
+  employeeReducer,
+  initContractContext,
+  initDepartmentContext,
+  initEmployeeContext,
+  initResourseContext,
+  ResourseContext,
+  resourseReducer,
+  ProjectContext,
+  initProjectContext,
+  projectReducer,
+  CustomerContext,
+  initCustomerContext,
+  customerReducer,
+  SupplierContext,
+  initSupplierContext,
+  supplierReducer,
+} from '../../contexts/managment';
 
 const Content = () => {
   const classes = layoutClasses();
@@ -190,10 +208,7 @@ const Content = () => {
     servicesReportReducer,
     initServicesReportContext
   );
-  const [tasksStore, tasksDispatch] = useReducer(
-    tasksReducer,
-    initTasksContext
-  );
+
   const [salesStore, salesDispatch] = useReducer(
     salesReducer,
     initSalesContext
@@ -242,6 +257,34 @@ const Content = () => {
   const [calendarReportStore, calendarReportDispatch] = useReducer(
     calendarReportReducer,
     initCalendarReportContext
+  );
+  const [contractStore, contractDispatch] = useReducer(
+    contractReducer,
+    initContractContext
+  );
+  const [resourseStore, resourseDispatch] = useReducer(
+    resourseReducer,
+    initResourseContext
+  );
+  const [employeeStore, employeeDispatch] = useReducer(
+    employeeReducer,
+    initEmployeeContext
+  );
+  const [departmentStore, departmentDispatch] = useReducer(
+    departmentReducer,
+    initDepartmentContext
+  );
+  const [projectStore, projectDispatch] = useReducer(
+    projectReducer,
+    initProjectContext
+  );
+  const [customerStore, customerDispatch] = useReducer(
+    customerReducer,
+    initCustomerContext
+  );
+  const [supplierStore, supplierDispatch] = useReducer(
+    supplierReducer,
+    initSupplierContext
   );
 
   const accs = user.isSuperAdmin
@@ -387,8 +430,8 @@ const Content = () => {
           <Route
             path="/tasks"
             element={
-              <TasksContext.Provider
-                value={{ state: tasksStore, dispatch: tasksDispatch }}
+              <ContractContext.Provider
+                value={{ state: contractStore, dispatch: contractDispatch }}
               >
                 <Tasks
                   menuitem={menuitem}
@@ -397,7 +440,7 @@ const Content = () => {
                   theme={theme}
                   company={company}
                 ></Tasks>
-              </TasksContext.Provider>
+              </ContractContext.Provider>
             }
           />
           <Route
@@ -531,25 +574,33 @@ const Content = () => {
           <Route
             path="/customers"
             element={
-              <Customers
-                isRTL={isRTL}
-                words={words}
-                theme={theme}
-                menuitem={menuitem}
-                company={company}
-              ></Customers>
+              <CustomerContext.Provider
+                value={{ state: customerStore, dispatch: customerDispatch }}
+              >
+                <Customers
+                  isRTL={isRTL}
+                  words={words}
+                  theme={theme}
+                  menuitem={menuitem}
+                  company={company}
+                ></Customers>
+              </CustomerContext.Provider>
             }
           />
           <Route
             path="/supliers"
             element={
-              <Suppliers
-                isRTL={isRTL}
-                words={words}
-                theme={theme}
-                menuitem={menuitem}
-                company={company}
-              ></Suppliers>
+              <SupplierContext.Provider
+                value={{ state: supplierStore, dispatch: supplierDispatch }}
+              >
+                <Suppliers
+                  isRTL={isRTL}
+                  words={words}
+                  theme={theme}
+                  menuitem={menuitem}
+                  company={company}
+                ></Suppliers>
+              </SupplierContext.Provider>
             }
           />
           <Route
@@ -737,25 +788,33 @@ const Content = () => {
           <Route
             path="/managedepartments"
             element={
-              <ManageDepartments
-                menuitem={menuitem}
-                isRTL={isRTL}
-                words={words}
-                theme={theme}
-                company={company}
-              ></ManageDepartments>
+              <DepartmentContext.Provider
+                value={{ state: departmentStore, dispatch: departmentDispatch }}
+              >
+                <ManageDepartments
+                  menuitem={menuitem}
+                  isRTL={isRTL}
+                  words={words}
+                  theme={theme}
+                  company={company}
+                ></ManageDepartments>
+              </DepartmentContext.Provider>
             }
           />
           <Route
             path="/manageprojects"
             element={
-              <ManageProjects
-                menuitem={menuitem}
-                isRTL={isRTL}
-                words={words}
-                theme={theme}
-                company={company}
-              ></ManageProjects>
+              <ProjectContext.Provider
+                value={{ state: projectStore, dispatch: projectDispatch }}
+              >
+                <ManageProjects
+                  menuitem={menuitem}
+                  isRTL={isRTL}
+                  words={words}
+                  theme={theme}
+                  company={company}
+                ></ManageProjects>
+              </ProjectContext.Provider>
             }
           />
           <Route
@@ -772,15 +831,20 @@ const Content = () => {
           <Route
             path="/manageemployees"
             element={
-              <ManageEmployees
-                menuitem={menuitem}
-                isRTL={isRTL}
-                words={words}
-                theme={theme}
-                company={company}
-              ></ManageEmployees>
+              <EmployeeContext.Provider
+                value={{ state: employeeStore, dispatch: employeeDispatch }}
+              >
+                <ManageEmployees
+                  menuitem={menuitem}
+                  isRTL={isRTL}
+                  words={words}
+                  theme={theme}
+                  company={company}
+                ></ManageEmployees>
+              </EmployeeContext.Provider>
             }
           />
+
           <Route
             path="/resourses"
             element={
@@ -795,13 +859,17 @@ const Content = () => {
           <Route
             path="/manageresourses"
             element={
-              <ManageResourses
-                menuitem={menuitem}
-                isRTL={isRTL}
-                words={words}
-                theme={theme}
-                company={company}
-              ></ManageResourses>
+              <ResourseContext.Provider
+                value={{ state: resourseStore, dispatch: resourseDispatch }}
+              >
+                <ManageResourses
+                  menuitem={menuitem}
+                  isRTL={isRTL}
+                  words={words}
+                  theme={theme}
+                  company={company}
+                ></ManageResourses>
+              </ResourseContext.Provider>
             }
           />
           <Route

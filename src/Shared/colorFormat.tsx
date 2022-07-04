@@ -309,7 +309,7 @@ export const photoFormatter = ({ row }: any) => {
 };
 export const sectionsTypeFormatter = ({ value }: any) => {
   const store = getStoreItem('store');
-  const { lang } = store;
+  const lang = store?.lang;
   const nameObj = sectionTypes.filter((st: any) => st.value === value)?.[0];
   const name = nameObj ? (lang === 'ar' ? nameObj.nameAr : nameObj.name) : '';
 
@@ -336,7 +336,7 @@ export const arabicFormatter = ({ value }: any) => {
 };
 export const activeFormatter = ({ value }: any) => {
   const store = getStoreItem('store');
-  const { lang } = store;
+  const lang = store?.lang;
   return (
     <Typography style={{ color: !value ? 'green' : 'red' }}>
       {!value
@@ -545,7 +545,7 @@ export const dateTimePrintFormatter = ({ row }: any) => {
 };
 export const eventStatusPrintFormatter = ({ value }: any) => {
   const store = getStoreItem('store');
-  const { lang } = store;
+  const lang = store?.lang;
   const item = eventStatus.filter((es: any) => es.id === value);
   if (item && item.length > 0) {
     return (
@@ -592,7 +592,7 @@ export const valueTimeFormatter = ({ value }: any) => {
 };
 export const eventStatusFormatter = ({ value }: any) => {
   const store = getStoreItem('store');
-  const { lang } = store;
+  const lang = store?.lang;
   const item = eventStatus.filter((es: any) => es.id === value);
   if (item && item.length > 0) {
     return (
@@ -1016,7 +1016,7 @@ export const taskStatusFormatter = ({ value }: any) => {
 };
 export const eventStatusPrintDataFormatter = (value) => {
   const store = getStoreItem('store');
-  const { lang } = store;
+  const lang = store?.lang;
   const item = eventStatus.filter((es: any) => es.id === value);
   if (item && item.length > 0) {
     return lang === 'ar' ? item[0].nameAr : item[0].name;
@@ -1353,7 +1353,7 @@ export const isActiveViewFormatter = ({ value }: any) => {
 };
 export const invoiceReceiptFormatter = ({ value, row }: any) => {
   const store = getStoreItem('store');
-  const { lang } = store;
+  const lang = store?.lang;
   const isRTL = lang === 'ar';
   const { amount } = row;
   const valuePercent = (value / amount) * 100;
@@ -1912,7 +1912,7 @@ export const taskIdFormat = ({ value, tasks }: any) => {
 
 export const taskNameFormatter = ({ value }: any) => {
   const store = getStoreItem('store');
-  const { lang } = store;
+  const lang = store?.lang;
   const isRTL = lang === 'ar';
   return (
     <span style={{ color: '#403795' }}>
@@ -2302,7 +2302,7 @@ const rCell = (title: any, color: any) => (
 const rCellMain = (title: any, color: any) => (
   <Typography
     style={{
-      fontSize: 16,
+      fontSize: 14,
       color,
       fontWeight: 'bold',
     }}
@@ -2901,10 +2901,10 @@ export const incomeMainFormatter = ({
         </Grid>
         <Grid item xs={7}>
           <Grid container spacing={1}>
-            <Grid item xs={6} style={{ marginTop: 80 }}>
+            <Grid item xs={6} style={{ marginTop: 50 }}>
               {rCellMain(isRTL ? 'المبيعات' : 'Net Sales', scolor)}
             </Grid>
-            <Grid item xs={6} style={{ marginTop: 80 }}>
+            <Grid item xs={6} style={{ marginTop: 50 }}>
               {rCellMain(moneyFormat(sales), scolor)}
             </Grid>
             <Grid item xs={6}>
@@ -3017,10 +3017,10 @@ export const expensesMainFormatter = ({
         </Grid>
         <Grid item xs={8}>
           <Grid container spacing={1}>
-            <Grid item xs={7} style={{ marginTop: 80 }}>
+            <Grid item xs={7} style={{ marginTop: 50 }}>
               {rCellMain(isRTL ? 'الاستهلاك' : 'Products', pcolor)}
             </Grid>
-            <Grid item xs={5} style={{ marginTop: 80 }}>
+            <Grid item xs={5} style={{ marginTop: 50 }}>
               {rCellMain(moneyFormat(row?.toatlProdExpenses), pcolor)}
             </Grid>
             <Grid item xs={7}>
@@ -3070,10 +3070,10 @@ export const kaidsMainFormatter = ({
         </Grid>
         <Grid item xs={7}>
           <Grid container spacing={1}>
-            <Grid item xs={7} style={{ marginTop: 80 }}>
+            <Grid item xs={7} style={{ marginTop: 50 }}>
               {rCellMain(isRTL ? 'القيود المدينة' : 'Debit', dcolor)}
             </Grid>
-            <Grid item xs={5} style={{ marginTop: 80 }}>
+            <Grid item xs={5} style={{ marginTop: 50 }}>
               {rCellMain(moneyFormat(row?.totalkaidsdebit), dcolor)}
             </Grid>
             <Grid item xs={7}>
@@ -3142,7 +3142,7 @@ export const deleteFormatter = ({ removeItem, row }: any) => {
 };
 export const opTypeFormatter = ({ value }: any) => {
   const store = getStoreItem('store');
-  const { lang } = store;
+  const lang = store?.lang;
   const name =
     lang === 'ar' ? opTypesNames?.[value]?.nameAr : opTypesNames?.[value]?.name;
   return <span>{name}</span>;

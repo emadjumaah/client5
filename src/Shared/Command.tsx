@@ -44,7 +44,7 @@ const EditButton = ({ onExecute }) => {
 
 const DeleteButton = ({ onExecute }) => {
   const store = getStoreItem('store');
-  const { lang } = store;
+  const lang = store?.lang;
   const isAdmin = roles.isAdmin();
   const isEmployee = roles.isEmployee();
   if (!isAdmin && !isEmployee) {

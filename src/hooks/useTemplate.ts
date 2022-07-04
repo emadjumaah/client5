@@ -7,7 +7,8 @@ import { getStoreItem } from '../store';
 
 export default () => {
   const store = getStoreItem('store');
-  const { lang, template } = store;
+  const lang = store?.lang;
+  const template = store?.template;
 
   const [tempwords, setTempwords]: any = useState({});
 

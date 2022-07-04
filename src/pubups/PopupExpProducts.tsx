@@ -161,18 +161,6 @@ const PopupExpProducts = ({
           )?.[0];
           setDepartvalue(dept);
         }
-        if (taskvalue?.employeeId && name !== 'employeeId') {
-          const emp = employees.filter(
-            (dep: any) => dep._id === taskvalue?.employeeId
-          )?.[0];
-          setEmplvalue(emp);
-        }
-        if (taskvalue?.resourseId && name !== 'resourseId') {
-          const res = resourses.filter(
-            (dep: any) => dep._id === taskvalue?.resourseId
-          )?.[0];
-          setResovalue(res);
-        }
       }
     }
   }, [resovalue]);
@@ -300,6 +288,36 @@ const PopupExpProducts = ({
   useEffect(() => {
     getOverallTotal();
   }, [itemsList]);
+
+  useEffect(() => {
+    if (name === 'contractId') {
+      setTaskvalue(value);
+    }
+  }, [name, value, open]);
+  useEffect(() => {
+    if (isNew && !isemployee) {
+      if (taskvalue) {
+        if (taskvalue?.departmentId && name !== 'departmentId') {
+          const dept = departments.filter(
+            (dep: any) => dep._id === taskvalue?.departmentId
+          )?.[0];
+          setDepartvalue(dept);
+        }
+        if (taskvalue?.employeeId && name !== 'employeeId') {
+          const emp = employees.filter(
+            (dep: any) => dep._id === taskvalue?.employeeId
+          )?.[0];
+          setEmplvalue(emp);
+        }
+        if (taskvalue?.resourseId && name !== 'resourseId') {
+          const res = resourses.filter(
+            (dep: any) => dep._id === taskvalue?.resourseId
+          )?.[0];
+          setResovalue(res);
+        }
+      }
+    }
+  }, [taskvalue, open]);
 
   useEffect(() => {
     if (row && row._id) {
@@ -572,7 +590,7 @@ const PopupExpProducts = ({
               words={words}
               options={resourses}
               value={resovalue}
-              disabled={name === 'resourseId'}
+              disabled={name === 'resourseId' || name === 'contractId'}
               setSelectValue={setResovalue}
               setSelectError={setResoError}
               selectError={resoError}
@@ -593,7 +611,7 @@ const PopupExpProducts = ({
               words={words}
               options={employees}
               value={emplvalue}
-              disabled={isemployee || name === 'employeeId'}
+              disabled={name === 'employeeId' || name === 'contractId'}
               setSelectValue={setEmplvalue}
               setSelectError={setEmplError}
               selectError={emplError}
@@ -620,24 +638,10 @@ const PopupExpProducts = ({
             openAdd={openDepartment}
             isRTL={isRTL}
             fullWidth
-            disabled={name === 'departmentId'}
+            disabled={name === 'departmentId' || name === 'contractId'}
             mb={0}
           ></AutoFieldLocal>
         </Grid>
-
-        {/* <Grid item xs={12}>
-          <TextFieldLocal
-            name="desc"
-            multiline
-            rows={3}
-            label={words.description}
-            register={register}
-            errors={errors}
-            row={row}
-            fullWidth
-            mb={0}
-          />
-        </Grid> */}
         <Grid item xs={12}>
           <Box
             style={{

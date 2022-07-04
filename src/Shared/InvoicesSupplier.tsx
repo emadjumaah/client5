@@ -18,16 +18,11 @@ import {
 import { Command, Loading, PopupEditing } from '.';
 import { getRowId, updateDocNumbers } from '../common';
 import {
-  createInvoice,
-  deleteInvoice,
-  getDepartments,
-  getEmployees,
+  createPurchaseInvoice,
+  deletePurchaseInvoice,
   getLastNos,
-  getProjects,
   getPurchaseInvoices,
-  getResourses,
-  getSuppliers,
-  updateInvoice,
+  updatePurchaseInvoice,
 } from '../graphql';
 import { useLazyQuery, useMutation } from '@apollo/client';
 import {
@@ -42,7 +37,6 @@ import { TableComponent } from '../pages/reports/SalesReport';
 import { Box, Typography } from '@material-ui/core';
 import { useProducts } from '../hooks';
 import PopupPurchaseInvoice from '../pubups/PopupPurchaseInvoice';
-import getTasks from '../graphql/query/getTasks';
 import useResoursesUp from '../hooks/useResoursesUp';
 import useEmployeesUp from '../hooks/useEmployeesUp';
 import useDepartmentsUp from '../hooks/useDepartmentsUp';
@@ -54,7 +48,6 @@ export default function InvoicesSupplier({
   value,
   company,
   id,
-  theme,
   width,
   height,
   start,
@@ -112,34 +105,13 @@ export default function InvoicesSupplier({
       {
         query: getPurchaseInvoices,
         variables: {
-          [name]: id,
           start: start ? start.setHours(0, 0, 0, 0) : undefined,
           end: end ? end.setHours(23, 59, 59, 999) : undefined,
         },
       },
+
       {
         query: getLastNos,
-      },
-      {
-        query: getTasks,
-      },
-      {
-        query: getSuppliers,
-      },
-      {
-        query: getEmployees,
-        variables: { isRTL, resType: 1 },
-      },
-      {
-        query: getDepartments,
-        variables: { isRTL, depType: 1 },
-      },
-      {
-        query: getResourses,
-        variables: { isRTL, resType: 1 },
-      },
-      {
-        query: getProjects,
       },
     ],
   };
@@ -156,14 +128,17 @@ export default function InvoicesSupplier({
     });
   }, [id, start, end]);
 
-  const [addInvoice] = useMutation(createInvoice, refresQuery);
-  const [editInvoice] = useMutation(updateInvoice, refresQuery);
-  const [removeInvoice] = useMutation(deleteInvoice, refresQuery);
+  const [addPurchaseInvoice] = useMutation(createPurchaseInvoice, refresQuery);
+  const [editPurchaseInvoice] = useMutation(updatePurchaseInvoice, refresQuery);
+  const [removePurchaseInvoice] = useMutation(
+    deletePurchaseInvoice,
+    refresQuery
+  );
 
   const commitChanges = async ({ deleted }) => {
     if (deleted) {
       const _id = deleted[0];
-      removeInvoice({ variables: { _id } });
+      removePurchaseInvoice({ variables: { _id } });
       setRows(rows.filter((row: any) => row._id !== _id));
     }
   };
@@ -237,12 +212,15 @@ export default function InvoicesSupplier({
             showAddCommand
             commandComponent={Command}
           ></TableEditColumn>
-          <PopupEditing addAction={addInvoice} editAction={editInvoice}>
+          <PopupEditing
+            addAction={addPurchaseInvoice}
+            editAction={editPurchaseInvoice}
+          >
             <PopupPurchaseInvoice
               value={value}
               name={name}
-              employees={employees}
               resourses={resourses}
+              employees={employees}
               departments={departments}
               company={company}
               servicesproducts={products}

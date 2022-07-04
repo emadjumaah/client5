@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-shadow */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import {
   EditingState,
   SortingState,
@@ -54,6 +54,7 @@ import { TableComponent } from '../../Shared/TableComponent';
 import PopupCustomerImport from '../../pubups/PopupCustomerImport';
 import ImportBtn from '../../common/ImportBtn';
 import createMultiCustomers from '../../graphql/mutation/createMultiCustomers';
+import { CustomerContext } from '../../contexts/managment';
 
 export default function Customers(props: any) {
   const { isRTL, words, menuitem, theme, company } = props;
@@ -68,6 +69,14 @@ export default function Customers(props: any) {
   const onCloseItem = () => {
     setOpenItem(false);
     setItem(null);
+  };
+
+  const {
+    state: { hiddenColumnNames },
+    dispatch,
+  } = useContext(CustomerContext);
+  const setHiddenColumnNames = (hiddenColumns: any) => {
+    dispatch({ type: 'setHiddenColumnNames', payload: hiddenColumns });
   };
 
   const col = getColumns({ isRTL, words });
@@ -241,7 +250,9 @@ export default function Customers(props: any) {
               }}
             />
             <TableColumnVisibility
-              defaultHiddenColumnNames={['phone', 'email', 'address']}
+              defaultHiddenColumnNames={hiddenColumnNames}
+              hiddenColumnNames={hiddenColumnNames}
+              onHiddenColumnNamesChange={setHiddenColumnNames}
             />
             <DataTypeProvider
               for={['avatar']}

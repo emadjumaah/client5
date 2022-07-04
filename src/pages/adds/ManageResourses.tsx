@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import {
   EditingState,
   SortingState,
@@ -45,6 +45,7 @@ import useResoursesUp from '../../hooks/useResoursesUp';
 import { Box, Paper, Typography } from '@material-ui/core';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
 import { TableComponent } from '../../Shared/TableComponent';
+import { ResourseContext } from '../../contexts/managment';
 
 export default function ManageResourses({
   isRTL,
@@ -64,6 +65,13 @@ export default function ManageResourses({
     setItem(null);
   };
 
+  const {
+    state: { hiddenColumnNames },
+    dispatch,
+  } = useContext(ResourseContext);
+  const setHiddenColumnNames = (hiddenColumns: any) => {
+    dispatch({ type: 'setHiddenColumnNames', payload: hiddenColumns });
+  };
   const [columns] = useState([
     { name: 'avatar', title: ' ' },
     col.name,
@@ -207,12 +215,9 @@ export default function ManageResourses({
               }}
             />
             <TableColumnVisibility
-              defaultHiddenColumnNames={[
-                'plate',
-                col.carstatus.name,
-                col.department.name,
-                'info',
-              ]}
+              defaultHiddenColumnNames={hiddenColumnNames}
+              hiddenColumnNames={hiddenColumnNames}
+              onHiddenColumnNamesChange={setHiddenColumnNames}
             />
             <DataTypeProvider
               for={['avatar']}

@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import {
   EditingState,
   SortingState,
@@ -50,6 +50,7 @@ import PopupProject from '../../pubups/PopupProject';
 import { Box, Paper, Typography } from '@material-ui/core';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
 import { TableComponent } from '../../Shared/TableComponent';
+import { ProjectContext } from '../../contexts/managment';
 
 export default function ManageProjects({
   isRTL,
@@ -73,6 +74,14 @@ export default function ManageProjects({
   const onCloseItem = () => {
     setOpenItem(false);
     setItem(null);
+  };
+
+  const {
+    state: { hiddenColumnNames },
+    dispatch,
+  } = useContext(ProjectContext);
+  const setHiddenColumnNames = (hiddenColumns: any) => {
+    dispatch({ type: 'setHiddenColumnNames', payload: hiddenColumns });
   };
 
   const [columns] = useState([
@@ -165,7 +174,6 @@ export default function ManageProjects({
             <EditingState onCommitChanges={commitChanges} />
             <SearchState />
             <PagingState defaultCurrentPage={0} defaultPageSize={6} />
-
             <IntegratedSorting />
             <IntegratedFiltering />
             <IntegratedPaging />
@@ -192,7 +200,6 @@ export default function ManageProjects({
               ]}
             />
             <TableColumnResizing defaultColumnWidths={tableColumnExtensions} />
-
             <TableHeaderRow
               showSortingControls
               titleComponent={({ children }) => {
@@ -203,7 +210,11 @@ export default function ManageProjects({
                 );
               }}
             />
-            <TableColumnVisibility defaultHiddenColumnNames={[]} />
+            <TableColumnVisibility
+              defaultHiddenColumnNames={hiddenColumnNames}
+              hiddenColumnNames={hiddenColumnNames}
+              onHiddenColumnNamesChange={setHiddenColumnNames}
+            />{' '}
             <DataTypeProvider
               for={['avatar']}
               formatterComponent={(props: any) =>
@@ -228,7 +239,6 @@ export default function ManageProjects({
                 }
               ></DataTypeProvider>
             )}
-
             <DataTypeProvider
               for={[col.appointments.name]}
               formatterComponent={(props: any) =>
@@ -259,24 +269,20 @@ export default function ManageProjects({
                 kaidsFormatter({ ...props, theme, isRTL })
               }
             ></DataTypeProvider>
-
             <TableEditColumn
               showEditCommand
               showDeleteCommand
               showAddCommand
               commandComponent={Command}
             ></TableEditColumn>
-
             <Toolbar />
             <ColumnChooser />
             <PagingPanel pageSizes={pageSizes} />
-
             <SearchPanel
               inputComponent={(props: any) => {
                 return <SearchTable isRTL={isRTL} {...props}></SearchTable>;
               }}
             />
-
             <PopupEditing
               theme={theme}
               addAction={addProject}

@@ -32,6 +32,7 @@ const PopupReceipt = ({
   value,
   company,
 }: any) => {
+  const [saving, setSaving] = useState(false);
   const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
   const [selectedDate, setSelectedDate] = React.useState(new Date());
   const [ptype, setPtype] = React.useState('deposit');
@@ -213,7 +214,7 @@ const PopupReceipt = ({
       );
       return;
     }
-
+    setSaving(true);
     const customer = custvalue
       ? {
           customerId: custvalue._id,
@@ -316,8 +317,10 @@ const PopupReceipt = ({
     try {
       await mutate({ variables });
       closeModal();
+      setSaving(false);
     } catch (error) {
       onError(error);
+      setSaving(false);
     }
   };
 
@@ -341,6 +344,7 @@ const PopupReceipt = ({
     setCustvalue(name === 'customerId' ? value : null);
     setInvoicevalue(null);
     setCustError(false);
+    setSaving(false);
   };
   const closeModal = () => {
     resetAll();
@@ -361,6 +365,7 @@ const PopupReceipt = ({
       onClose={closeModal}
       title={words.receipts}
       onSubmit={onHandleSubmit}
+      saving={saving}
       theme={theme}
       alrt={alrt}
       print={!isNew ? handleReactPrint : undefined}
