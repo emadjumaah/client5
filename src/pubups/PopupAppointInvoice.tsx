@@ -3,7 +3,7 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { invoiceClasses } from '../themes';
-import { useCustomers, useLastNos, useProducts, useTemplate } from '../hooks';
+import { useCustomers, useProducts, useTemplate } from '../hooks';
 import { dublicateAlert, errorAlert, messageAlert } from '../Shared';
 import { GContextTypes } from '../types';
 import { GlobalContext } from '../contexts';
@@ -115,8 +115,6 @@ const PopupAppointInvoice = ({
 
   const [addInvoice] = useMutation(createInvoice, refresQuery);
 
-  const { lastNos, freshlastNos } = useLastNos();
-
   const openCustomer = () => {
     setOpenCust(true);
   };
@@ -190,12 +188,6 @@ const PopupAppointInvoice = ({
   const handleDateChange = (date: any) => {
     setSelectedDate(date);
   };
-
-  useEffect(() => {
-    if (isNew && lastNos) {
-      setInvNo(lastNos?.salesInvoice ? Number(lastNos?.salesInvoice) + 1 : 1);
-    }
-  }, [open]);
 
   useEffect(() => {
     getOverallTotal();
@@ -280,14 +272,6 @@ const PopupAppointInvoice = ({
   };
 
   const onSubmit = async () => {
-    // const { startPeriod, endPeriod } = getAppStartEndPeriod();
-    // if (selectedDate < startPeriod || selectedDate > endPeriod) {
-    //   await messageAlert(
-    //     setAlrt,
-    //     isRTL ? "يجب تعديل التاريخ" : "Date should be change"
-    //   );
-    //   return;
-    // }
     if (selectedDate > new Date()) {
       await messageAlert(
         setAlrt,
@@ -315,24 +299,6 @@ const PopupAppointInvoice = ({
       await messageAlert(
         setAlrt,
         isRTL ? 'يرجى اضافة عميل للفاتورة' : 'Please add Customer'
-      );
-      return;
-    }
-    if (isNew && Number(invNo) <= Number(lastNos.salesInvoice)) {
-      await messageAlert(
-        setAlrt,
-        isRTL
-          ? `Invoice no must be more than ${lastNos.salesInvoice}`
-          : `رقم الفاتورة يجب ان يكون أكبب من ${lastNos.salesInvoice}`
-      );
-      return;
-    }
-    if (!itemsList || itemsList.length === 0) {
-      await messageAlert(
-        setAlrt,
-        isRTL
-          ? `رقم الفاتورة يجب ان يكون أكبب من ${lastNos.salesInvoice}`
-          : `Invoice no must be more than ${lastNos.salesInvoice}`
       );
       return;
     }
@@ -401,6 +367,17 @@ const PopupAppointInvoice = ({
             contractName: undefined,
             contractNameAr: undefined,
           },
+      project: taskvalue
+        ? {
+            projectId: taskvalue.projectId,
+            projectName: taskvalue.projectName,
+            projectNameAr: taskvalue.projectNameAr,
+          }
+        : {
+            projectId: undefined,
+            projectName: undefined,
+            projectNameAr: undefined,
+          },
       items: JSON.stringify(itemsList),
       costAmount,
       total,
@@ -422,14 +399,13 @@ const PopupAppointInvoice = ({
 
   const apply = async (mutate: any, variables: any) => {
     try {
-      mutate({ variables });
-      editEvent({
+      await mutate({ variables });
+      await editEvent({
         variables: {
           id: appoint.id,
           status: 10,
         },
       });
-      freshlastNos();
       setSaving(false);
       onCloseForm();
       onCloseAppoint();
@@ -511,38 +487,38 @@ const PopupAppointInvoice = ({
             value={selectedDate}
             onChange={handleDateChange}
           ></CalenderLocal>
-          <Box
-            display="flex"
-            style={{
-              flex: 1,
-              flexDirection: isRTL ? 'row-reverse' : 'row',
-              alignItems: 'center',
-              justifyContent: 'flex-end',
-              marginLeft: isRTL ? undefined : 20,
-              marginRight: isRTL ? 20 : undefined,
-            }}
-          >
-            {isNew && (
-              <Typography style={{ color: '#777' }}>{words.no}</Typography>
-            )}
-            <TextField
-              name="invNo"
-              disabled={!isNew}
-              value={invNo}
-              onChange={(e: any) => setInvNo(Number(e.target.value))}
-              variant="outlined"
-              style={{ width: isNew ? 70 : 100, marginLeft: 20 }}
-              margin="dense"
-              // type="number"
-              inputProps={{
-                style: {
-                  textAlign: 'center',
-                  fontSize: 14,
-                  height: 13,
-                },
+          {!isNew && (
+            <Box
+              display="flex"
+              style={{
+                flex: 1,
+                flexDirection: isRTL ? 'row-reverse' : 'row',
+                alignItems: 'center',
+                justifyContent: 'flex-end',
+                marginLeft: isRTL ? undefined : 20,
+                marginRight: isRTL ? 20 : undefined,
               }}
-            />
-          </Box>
+            >
+              {isNew && (
+                <Typography style={{ color: '#777' }}>{words.no}</Typography>
+              )}
+              <TextField
+                name="invNo"
+                disabled
+                value={invNo}
+                variant="outlined"
+                style={{ width: isNew ? 70 : 100, marginLeft: 20 }}
+                margin="dense"
+                inputProps={{
+                  style: {
+                    textAlign: 'center',
+                    fontSize: 14,
+                    height: 13,
+                  },
+                }}
+              />
+            </Box>
+          )}
         </Grid>
         <Grid item xs={8}>
           <PaymentSelect

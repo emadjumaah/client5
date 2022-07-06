@@ -543,6 +543,17 @@ const PopupExpensesDoc = ({
             contractName: undefined,
             contractNameAr: undefined,
           },
+      project: taskvalue
+        ? {
+            projectId: taskvalue.projectId,
+            projectName: taskvalue.projectName,
+            projectNameAr: taskvalue.projectNameAr,
+          }
+        : {
+            projectId: undefined,
+            projectName: undefined,
+            projectNameAr: undefined,
+          },
       items: JSON.stringify(itemsList),
       title,
       desc,

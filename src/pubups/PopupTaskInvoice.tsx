@@ -3,7 +3,7 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { invoiceClasses } from '../themes';
-import { useLastNos, useProducts, useTemplate } from '../hooks';
+import { useProducts, useTemplate } from '../hooks';
 import { dublicateAlert, errorAlert, messageAlert } from '../Shared';
 import { GContextTypes } from '../types';
 import { GlobalContext } from '../contexts';
@@ -119,8 +119,6 @@ const PopupTaskInvoice = ({
 
   const [addInvoice] = useMutation(createInvoice, refresQuery);
 
-  const { lastNos, freshlastNos } = useLastNos();
-
   const resetAllForms = () => {
     setItemsList([]);
     setDiscount(0);
@@ -185,12 +183,6 @@ const PopupTaskInvoice = ({
   const handleDateChange = (date: any) => {
     setSelectedDate(date);
   };
-
-  useEffect(() => {
-    if (isNew && lastNos) {
-      setInvNo(lastNos?.salesInvoice ? Number(lastNos?.salesInvoice) + 1 : 1);
-    }
-  }, [open]);
 
   useEffect(() => {
     if (isPeriod === true) {
@@ -391,21 +383,12 @@ const PopupTaskInvoice = ({
       custRef.current.focus();
       return;
     }
-    if (isNew && Number(invNo) <= Number(lastNos.salesInvoice)) {
-      await messageAlert(
-        setAlrt,
-        isRTL
-          ? `Invoice no must be more than ${lastNos.salesInvoice}`
-          : `رقم الفاتورة يجب ان يكون أكبب من ${lastNos.salesInvoice}`
-      );
-      return;
-    }
     if (!itemsList || itemsList.length === 0) {
       await messageAlert(
         setAlrt,
         isRTL
-          ? `رقم الفاتورة يجب ان يكون أكبب من ${lastNos.salesInvoice}`
-          : `Invoice no must be more than ${lastNos.salesInvoice}`
+          ? `يجب اضافة عنصر واحد للفاتورة على الأقل`
+          : `You should add min one service to invoice`
       );
       return;
     }
@@ -420,7 +403,6 @@ const PopupTaskInvoice = ({
     const { amount, costAmount, profit, total } = totals;
 
     const variables: any = {
-      docNo: invNo ? invNo.toString() : undefined,
       time: selectedDate,
       customer: {
         customerId: custvalue._id,
@@ -474,6 +456,17 @@ const PopupTaskInvoice = ({
         contractName: task.name,
         contractNameAr: task.nameAr,
       },
+      project: task
+        ? {
+            projectId: task.projectId,
+            projectName: task.projectName,
+            projectNameAr: task.projectNameAr,
+          }
+        : {
+            projectId: undefined,
+            projectName: undefined,
+            projectNameAr: undefined,
+          },
 
       items: JSON.stringify(itemsList),
       costAmount,
@@ -496,9 +489,7 @@ const PopupTaskInvoice = ({
 
   const apply = async (mutate: any, variables: any) => {
     try {
-      mutate({ variables });
-      // handlePrint();
-      freshlastNos();
+      await mutate({ variables });
       setSaving(false);
       onCloseForm();
     } catch (error) {
@@ -654,38 +645,36 @@ const PopupTaskInvoice = ({
         </Grid>
         <Grid item xs={3}></Grid>
         <Grid item xs={2}>
-          <Box
-            display="flex"
-            style={{
-              flex: 1,
-              flexDirection: isRTL ? 'row-reverse' : 'row',
-              alignItems: 'center',
-              justifyContent: 'flex-end',
-              marginLeft: isRTL ? undefined : 20,
-              marginRight: isRTL ? 20 : undefined,
-            }}
-          >
-            {isNew && (
-              <Typography style={{ color: '#777' }}>{words.no}</Typography>
-            )}
-            <TextField
-              name="invNo"
-              disabled={!isNew}
-              value={invNo}
-              onChange={(e: any) => setInvNo(Number(e.target.value))}
-              variant="outlined"
-              style={{ width: isNew ? 70 : 100, marginLeft: 20 }}
-              margin="dense"
-              // type="number"
-              inputProps={{
-                style: {
-                  textAlign: 'center',
-                  fontSize: 14,
-                  height: 13,
-                },
+          {!isNew && (
+            <Box
+              display="flex"
+              style={{
+                flex: 1,
+                flexDirection: isRTL ? 'row-reverse' : 'row',
+                alignItems: 'center',
+                justifyContent: 'flex-end',
+                marginLeft: isRTL ? undefined : 20,
+                marginRight: isRTL ? 20 : undefined,
               }}
-            />
-          </Box>
+            >
+              <TextField
+                name="invNo"
+                disabled
+                value={invNo}
+                variant="outlined"
+                style={{ width: isNew ? 70 : 100, marginLeft: 20 }}
+                margin="dense"
+                // type="number"
+                inputProps={{
+                  style: {
+                    textAlign: 'center',
+                    fontSize: 14,
+                    height: 13,
+                  },
+                }}
+              />
+            </Box>
+          )}
         </Grid>
         {!tempoptions?.noRes && (
           <Grid item xs={4}>

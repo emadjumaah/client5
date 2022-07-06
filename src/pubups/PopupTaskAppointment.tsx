@@ -440,6 +440,18 @@ const PopupTaskAppointment = ({
             resourseNameAr: undefined,
             resourseColor: undefined,
           },
+      // TODO:
+      project: row
+        ? {
+            projectId: row.projectId,
+            projectName: row.projectName,
+            projectNameAr: row.projectNameAr,
+          }
+        : {
+            projectId: undefined,
+            projectName: undefined,
+            projectNameAr: undefined,
+          },
     };
     const eventlist = getEventsList({
       event,

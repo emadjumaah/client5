@@ -79,8 +79,10 @@ export default gql`
         costAmount
         total
         discount
-        amount
         profit
+        amount
+        credit
+        debit
 
         debitAcc
         creditAcc

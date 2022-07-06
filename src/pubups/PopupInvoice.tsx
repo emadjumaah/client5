@@ -3,7 +3,7 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { invoiceClasses } from '../themes';
-import { useCustomers, useLastNos, useProducts, useTemplate } from '../hooks';
+import { useCustomers, useProducts, useTemplate } from '../hooks';
 import { dublicateAlert, errorAlert, messageAlert } from '../Shared';
 import { GContextTypes } from '../types';
 import { GlobalContext } from '../contexts';
@@ -68,8 +68,6 @@ const PopupInvoice = ({
   const [selectedDate, setSelectedDate] = React.useState(new Date());
   const [invNo, setInvNo] = useState<any>('');
 
-  // const [fTasks, setFTasks] = useState(tasks);
-
   const [itemsList, setItemsList] = useState<any>([]);
   const [accounts, setAccounts] = useState<any>([]);
   const [ptype, setPtype] = useState<any>('cash');
@@ -112,8 +110,6 @@ const PopupInvoice = ({
   const [openDep, setOpenDep] = useState(false);
   const [openEmp, setOpenEmp] = useState(false);
   const [openRes, setOpenRes] = useState(false);
-
-  const { lastNos, freshlastNos } = useLastNos();
 
   const { customers, addCustomer, editCustomer } = useCustomers();
   const { addDepartment, editDepartment } = useDepartmentsUp();
@@ -353,9 +349,6 @@ const PopupInvoice = ({
   };
 
   useEffect(() => {
-    if (isNew && lastNos) {
-      setInvNo(lastNos?.salesInvoice ? Number(lastNos?.salesInvoice) + 1 : 1);
-    }
     if (isNew) {
       if (name === 'contractId') {
         if (value?.departmentId) {
@@ -515,17 +508,6 @@ const PopupInvoice = ({
       );
       return;
     }
-
-    if (isNew && Number(invNo) <= Number(lastNos.salesInvoice)) {
-      await messageAlert(
-        setAlrt,
-        isRTL
-          ? `رقم الفاتورة يجب ان يكون أكبب من ${lastNos.salesInvoice}`
-          : `Invoice no must be more than ${lastNos.salesInvoice}`
-      );
-
-      return;
-    }
     if (!itemsList || itemsList.length === 0) {
       await messageAlert(
         setAlrt,
@@ -599,6 +581,17 @@ const PopupInvoice = ({
             contractName: undefined,
             contractNameAr: undefined,
           },
+      project: taskvalue
+        ? {
+            projectId: taskvalue.projectId,
+            projectName: taskvalue.projectName,
+            projectNameAr: taskvalue.projectNameAr,
+          }
+        : {
+            projectId: undefined,
+            projectName: undefined,
+            projectNameAr: undefined,
+          },
       items: JSON.stringify(itemsList),
       costAmount,
       total,
@@ -619,12 +612,7 @@ const PopupInvoice = ({
 
   const apply = async (mutate: any, variables: any) => {
     try {
-      mutate({ variables });
-      // if (row && row._id) {
-      //   itemsData?.refetch();
-      // }
-      // // handlePrint();
-      freshlastNos({});
+      await mutate({ variables });
       setSaving(false);
       onCloseForm();
     } catch (error) {
@@ -693,36 +681,36 @@ const PopupInvoice = ({
             value={selectedDate}
             onChange={handleDateChange}
           ></CalenderLocal>
-          <Box
-            display="flex"
-            style={{
-              flex: 1,
-              flexDirection: isRTL ? 'row-reverse' : 'row',
-              alignItems: 'center',
-              justifyContent: 'flex-end',
-            }}
-          >
-            {isNew && (
-              <Typography style={{ color: '#777' }}>{words.no}</Typography>
-            )}
-            <TextField
-              name="invNo"
-              disabled={!isNew}
-              value={invNo}
-              onChange={(e: any) => setInvNo(Number(e.target.value))}
-              variant="outlined"
-              style={{ width: isNew ? 70 : 100, marginLeft: 20 }}
-              margin="dense"
-              // type="number"
-              inputProps={{
-                style: {
-                  textAlign: 'center',
-                  fontSize: 14,
-                  height: 13,
-                },
+          {!isNew && (
+            <Box
+              display="flex"
+              style={{
+                flex: 1,
+                flexDirection: isRTL ? 'row-reverse' : 'row',
+                alignItems: 'center',
+                justifyContent: 'flex-end',
               }}
-            />
-          </Box>
+            >
+              {isNew && (
+                <Typography style={{ color: '#777' }}>{words.no}</Typography>
+              )}
+              <TextField
+                name="invNo"
+                disabled
+                value={invNo}
+                variant="outlined"
+                style={{ width: isNew ? 70 : 100, marginLeft: 20 }}
+                margin="dense"
+                inputProps={{
+                  style: {
+                    textAlign: 'center',
+                    fontSize: 14,
+                    height: 13,
+                  },
+                }}
+              />
+            </Box>
+          )}
         </Grid>
         <Grid item xs={8}>
           <PaymentSelect

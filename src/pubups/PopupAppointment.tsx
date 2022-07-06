@@ -559,6 +559,17 @@ const PopupAppointment = ({
             contractName: undefined,
             contractNameAr: undefined,
           },
+      project: taskvalue
+        ? {
+            projectId: taskvalue.projectId,
+            projectName: taskvalue.projectName,
+            projectNameAr: taskvalue.projectNameAr,
+          }
+        : {
+            projectId: undefined,
+            projectName: undefined,
+            projectNameAr: undefined,
+          },
 
       department: departvalue
         ? {
