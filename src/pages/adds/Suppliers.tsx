@@ -100,9 +100,7 @@ export default function Suppliers(props: any) {
     { name: 'avatar', title: words.color },
   ]);
 
-  const [loadSuppls, supplsData]: any = useLazyQuery(getSuppliers, {
-    fetchPolicy: 'cache-and-network',
-  });
+  const [loadSuppls, supplsData]: any = useLazyQuery(getSuppliers);
 
   const refresQuery = {
     refetchQueries: [

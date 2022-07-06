@@ -26,6 +26,7 @@ import {
   createFinance,
   deleteFinance,
   getFinances,
+  getRefresQuery,
   updateFinance,
 } from '../../graphql';
 import {
@@ -55,6 +56,7 @@ export default function Finance({ isRTL, words, menuitem, theme }) {
     { name: 'docNo', title: words.no },
     { name: 'amount', title: words.amount },
   ]);
+  const [vars, setVars] = useState<any>({});
 
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -79,9 +81,7 @@ export default function Finance({ isRTL, words, menuitem, theme }) {
     dispatch({ type: 'setEndDate', payload: curDate });
   };
 
-  const [loadFinances, financeData]: any = useLazyQuery(getFinances, {
-    fetchPolicy: 'cache-and-network',
-  });
+  const [loadFinances, financeData]: any = useLazyQuery(getFinances);
   const { accounts } = useAccounts();
   const refresQuery = {
     refetchQueries: [
@@ -92,6 +92,7 @@ export default function Finance({ isRTL, words, menuitem, theme }) {
           end: end ? end.setHours(23, 59, 59, 999) : undefined,
         },
       },
+      ...getRefresQuery({ ...vars, isRTL }),
     ],
   };
 
@@ -233,7 +234,7 @@ export default function Finance({ isRTL, words, menuitem, theme }) {
             addAction={addFinance}
             editAction={editFinance}
           >
-            <PopupFinance></PopupFinance>
+            <PopupFinance setVars={setVars}></PopupFinance>
           </PopupEditing>
         </Grid>
         {loading && <Loading isRTL={isRTL} />}

@@ -20,12 +20,8 @@ import { useLazyQuery, useMutation } from '@apollo/client';
 import {
   createExpenses,
   deleteExpenses,
-  getCustomers,
-  getDepartments,
-  getEmployees,
   getExpenses,
-  getLastNos,
-  getResourses,
+  getRefresQuery,
   updateExpenses,
 } from '../graphql';
 import {
@@ -42,7 +38,6 @@ import useDepartmentsUp from '../hooks/useDepartmentsUp';
 import useEmployeesUp from '../hooks/useEmployeesUp';
 import useResoursesUp from '../hooks/useResoursesUp';
 import PopupExpensesDoc from '../pubups/PopupExpensesDoc';
-import getTasks from '../graphql/query/getTasks';
 import { getColumns } from '../common/columns';
 
 export default function ExpensesCustomer({
@@ -107,15 +102,14 @@ export default function ExpensesCustomer({
 
   const { tasks } = useTasks();
   const { accounts } = useAccounts();
+  const [vars, setVars] = useState<any>({});
 
   const { expenseItems } = useExpenseItems();
   const { departments } = useDepartmentsUp();
   const { employees } = useEmployeesUp();
   const { resourses } = useResoursesUp();
 
-  const [loadExpenses, expensesData]: any = useLazyQuery(getExpenses, {
-    fetchPolicy: 'cache-and-network',
-  });
+  const [loadExpenses, expensesData]: any = useLazyQuery(getExpenses);
   const refresQuery = {
     refetchQueries: [
       {
@@ -127,27 +121,7 @@ export default function ExpensesCustomer({
           opType: 60,
         },
       },
-      {
-        query: getLastNos,
-      },
-      {
-        query: getTasks,
-      },
-      {
-        query: getCustomers,
-      },
-      {
-        query: getEmployees,
-        variables: { isRTL, resType: 1 },
-      },
-      {
-        query: getDepartments,
-        variables: { isRTL, depType: 1 },
-      },
-      {
-        query: getResourses,
-        variables: { isRTL, resType: 1 },
-      },
+      ...getRefresQuery({ ...vars, isRTL }),
     ],
   };
 
@@ -267,6 +241,7 @@ export default function ExpensesCustomer({
               tasks={tasks}
               value={value}
               name={name}
+              setVars={setVars}
             ></PopupExpensesDoc>
           </PopupEditing>
         </Grid>

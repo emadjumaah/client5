@@ -151,9 +151,7 @@ export default function SalesReport({
     { columnName: col.amount.name, togglingEnabled: false },
   ]);
 
-  const [getSummary, summaryData]: any = useLazyQuery(getMonthlyReport, {
-    fetchPolicy: 'cache-and-network',
-  });
+  const [getSummary, summaryData]: any = useLazyQuery(getMonthlyReport);
   const { customers } = useCustomers();
   const { departments } = useDepartmentsUp();
   const { employees } = useEmployeesUp();

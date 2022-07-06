@@ -30,6 +30,7 @@ const PopupPayment = ({
   name,
   value,
   company,
+  setVars,
 }: any) => {
   const [saving, setSaving] = useState(false);
   const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
@@ -63,9 +64,7 @@ const PopupPayment = ({
   const { accounts } = useAccounts();
   const { suppliers, addSupplier, editSupplier } = useSuppliers();
 
-  const [loadInvoices, invoicesData]: any = useLazyQuery(getInvoicesList, {
-    fetchPolicy: 'cache-and-network',
-  });
+  const [loadInvoices, invoicesData]: any = useLazyQuery(getInvoicesList);
 
   const openSupplier = () => {
     setOpenCust(true);
@@ -274,7 +273,7 @@ const PopupPayment = ({
       branch: user.branch,
       userId: user._id,
     };
-
+    if (setVars) setVars(variables);
     const mutate = isNew ? addAction : editAction;
     apply(mutate, variables);
   };

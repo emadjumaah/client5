@@ -96,9 +96,7 @@ export default function ProfitReport({ isRTL, words, menuitem, theme }: any) {
     { columnName: col.amount.name, togglingEnabled: false },
   ]);
 
-  const [getSummary, summaryData]: any = useLazyQuery(getMonthlyReport, {
-    fetchPolicy: 'cache-and-network',
-  });
+  const [getSummary, summaryData]: any = useLazyQuery(getMonthlyReport);
 
   const {
     state: { currentDate, currentViewName, endDate, sort },

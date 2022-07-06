@@ -167,12 +167,8 @@ const PopupTaskFull = ({
     store: { user },
   }: GContextTypes = useContext(GlobalContext);
 
-  const [getItems, itemsData]: any = useLazyQuery(getOperationItems, {
-    fetchPolicy: 'cache-and-network',
-  });
-  const [getDoneEvents, doneEventsData]: any = useLazyQuery(getTaskDoneEvents, {
-    fetchPolicy: 'cache-and-network',
-  });
+  const [getItems, itemsData]: any = useLazyQuery(getOperationItems);
+  const [getDoneEvents, doneEventsData]: any = useLazyQuery(getTaskDoneEvents);
 
   const setExtra = ({ item, value }) => {
     const newitem = { ...item, value };

@@ -96,17 +96,7 @@ export default function BudgetReport({ isRTL, words, menuitem, theme }: any) {
     { columnName: col.amount.name, togglingEnabled: false },
   ]);
 
-  const [getSummary, summaryData]: any = useLazyQuery(getMonthlyReport, {
-    fetchPolicy: 'cache-and-network',
-  });
-  // const [getTB, tbData]: any = useLazyQuery(getTrialBalance, {
-  //   fetchPolicy: 'cache-and-network',
-  // });
-
-  // console.log('tbData', tbData);
-  // const dd = tbData?.data?.['getTrialBalance']?.data || '';
-  // console.log('JSON.parse(dd', JSON.parse(dd));
-
+  const [getSummary, summaryData]: any = useLazyQuery(getMonthlyReport);
   const {
     state: { currentDate, currentViewName, endDate, sort },
     dispatch,

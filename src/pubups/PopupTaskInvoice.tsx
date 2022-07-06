@@ -23,8 +23,8 @@ import { useLazyQuery, useMutation } from '@apollo/client';
 import {
   createInvoice,
   getInvoices,
-  getLastNos,
   getOperationItems,
+  getRefresQuery,
 } from '../graphql';
 import { accountCode } from '../constants/kaid';
 import PaymentSelect from '../pages/options/PaymentSelect';
@@ -33,7 +33,6 @@ import { Grid } from '@material-ui/core';
 import AutoFieldLocal from '../components/fields/AutoFieldLocal';
 import { CalenderLocal } from '../components';
 import { getAppStartEndPeriod } from '../common/time';
-import getTasks from '../graphql/query/getTasks';
 import { useReactToPrint } from 'react-to-print';
 import { InvoicePrint } from '../print';
 import { getInvDays } from '../common/helpers';
@@ -93,6 +92,7 @@ const PopupTaskInvoice = ({
   const [resovalue, setResovalue] = useState<any>(null);
   const [resoError, setResoError] = useState<any>(false);
   const resoRef: any = useRef();
+  const [vars, setVars] = useState<any>({});
 
   const [isCash, setIsCash] = useState(true);
   const { tempwords, tempoptions } = useTemplate();
@@ -108,14 +108,11 @@ const PopupTaskInvoice = ({
   const refresQuery = {
     refetchQueries: [
       { query: getInvoices, variables: { contractId: task._id } },
-      { query: getLastNos },
-      { query: getTasks },
+      ...getRefresQuery({ ...vars, isRTL }),
     ],
   };
 
-  const [getItems, itemsData]: any = useLazyQuery(getOperationItems, {
-    fetchPolicy: 'cache-and-network',
-  });
+  const [getItems, itemsData]: any = useLazyQuery(getOperationItems);
 
   const [addInvoice] = useMutation(createInvoice, refresQuery);
 
@@ -483,7 +480,7 @@ const PopupTaskInvoice = ({
       periodto,
       userId: user._id,
     };
-
+    setVars(variables);
     apply(addInvoice, variables);
   };
 

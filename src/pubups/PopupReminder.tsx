@@ -111,9 +111,7 @@ const PopupReminder = ({
     store: { user },
   }: GContextTypes = useContext(GlobalContext);
 
-  const [getItems, itemsData]: any = useLazyQuery(getOperationItems, {
-    fetchPolicy: 'cache-and-network',
-  });
+  const [getItems, itemsData]: any = useLazyQuery(getOperationItems);
 
   const isemployee = user?.isEmployee && user?.employeeId;
 

@@ -20,12 +20,7 @@ import { useLazyQuery, useMutation } from '@apollo/client';
 import {
   createFinance,
   deleteFinance,
-  getCustomers,
-  getDepartments,
-  getEmployees,
-  getLastNos,
-  getProjects,
-  getResourses,
+  getRefresQuery,
   updateFinance,
 } from '../graphql';
 import {
@@ -40,7 +35,6 @@ import getReceipts from '../graphql/query/getReceipts';
 import { Box, Typography } from '@material-ui/core';
 import useTasks from '../hooks/useTasks';
 import PopupReceipt from '../pubups/PopupReceipt';
-import getTasks from '../graphql/query/getTasks';
 import { getColumns } from '../common/columns';
 
 export default function ReceiptCustomer({
@@ -71,11 +65,10 @@ export default function ReceiptCustomer({
 
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [vars, setVars] = useState<any>({});
 
   const { tasks } = useTasks();
-  const [loadFinances, financeData]: any = useLazyQuery(getReceipts, {
-    fetchPolicy: 'cache-and-network',
-  });
+  const [loadFinances, financeData]: any = useLazyQuery(getReceipts);
   const { accounts } = useAccounts();
   const refresQuery = {
     refetchQueries: [
@@ -87,30 +80,7 @@ export default function ReceiptCustomer({
           end: end ? end.setHours(23, 59, 59, 999) : undefined,
         },
       },
-      {
-        query: getLastNos,
-      },
-      {
-        query: getTasks,
-      },
-      {
-        query: getCustomers,
-      },
-      {
-        query: getEmployees,
-        variables: { isRTL, resType: 1 },
-      },
-      {
-        query: getDepartments,
-        variables: { isRTL, depType: 1 },
-      },
-      {
-        query: getResourses,
-        variables: { isRTL, resType: 1 },
-      },
-      {
-        query: getProjects,
-      },
+      ...getRefresQuery({ ...vars, isRTL }),
     ],
   };
 
@@ -225,6 +195,7 @@ export default function ReceiptCustomer({
               name={name}
               value={value}
               tasks={tasks}
+              setVars={setVars}
             ></PopupReceipt>
           </PopupEditing>
         </Grid>

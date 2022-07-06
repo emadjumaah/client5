@@ -88,9 +88,7 @@ const PopupFinanceAllKaid = ({
     store: { user },
   }: GContextTypes = useContext(GlobalContext);
 
-  const [getItems, itemsData]: any = useLazyQuery(getOperationKaids, {
-    fetchPolicy: 'cache-and-network',
-  });
+  const [getItems, itemsData]: any = useLazyQuery(getOperationKaids);
   const { accounts } = useAccounts();
 
   useEffect(() => {

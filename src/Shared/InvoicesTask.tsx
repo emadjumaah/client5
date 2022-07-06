@@ -21,13 +21,8 @@ import { PopupInvoice } from '../pubups';
 import {
   createInvoice,
   deleteInvoice,
-  getCustomers,
-  getDepartments,
-  getEmployees,
   getInvoices,
-  getLastNos,
-  getProjects,
-  getResourses,
+  getRefresQuery,
   updateInvoice,
 } from '../graphql';
 import { useLazyQuery, useMutation } from '@apollo/client';
@@ -39,7 +34,6 @@ import {
 
 import { getColumns } from '../common/columns';
 import { TableComponent } from '../pages/reports/SalesReport';
-import getTasks from '../graphql/query/getTasks';
 import { Typography } from '@material-ui/core';
 
 export default function InvoicesTask({
@@ -69,6 +63,7 @@ export default function InvoicesTask({
 
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [vars, setVars] = useState<any>({});
 
   const [loadInvoices, opData]: any = useLazyQuery(getInvoices);
 
@@ -80,30 +75,7 @@ export default function InvoicesTask({
           contractId,
         },
       },
-      {
-        query: getLastNos,
-      },
-      {
-        query: getTasks,
-      },
-      {
-        query: getCustomers,
-      },
-      {
-        query: getEmployees,
-        variables: { isRTL, resType: 1 },
-      },
-      {
-        query: getDepartments,
-        variables: { isRTL, depType: 1 },
-      },
-      {
-        query: getResourses,
-        variables: { isRTL, resType: 1 },
-      },
-      {
-        query: getProjects,
-      },
+      ...getRefresQuery({ ...vars, isRTL }),
     ],
   };
 
@@ -201,6 +173,7 @@ export default function InvoicesTask({
             company={company}
             servicesproducts={servicesproducts}
             task={task}
+            setVars={setVars}
           ></PopupInvoice>
         </PopupEditing>
       </Grid>

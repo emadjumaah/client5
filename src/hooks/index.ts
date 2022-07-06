@@ -12,7 +12,6 @@ import useStore from './useStore';
 import useUsers from './useUsers';
 import userBranches from './userBranches';
 import useBrands from './useBrands';
-import useLastNos from './useLastNos';
 import useBranches from './useBranches';
 import useFinance from './useFinance';
 import useBackup from './useBackup';
@@ -42,7 +41,6 @@ export {
   useUsers,
   userBranches,
   useBrands,
-  useLastNos,
   useBranches,
   useFinance,
   useBackup,

@@ -32,6 +32,7 @@ import {
   createExpenses,
   deleteExpenses,
   getExpenses,
+  getRefresQuery,
   updateExpenses,
 } from '../../graphql';
 import {
@@ -66,6 +67,7 @@ export default function ExpensesDoc({
   company,
 }) {
   const col = getColumns({ isRTL, words });
+  const [vars, setVars] = useState<any>({});
 
   const { tempoptions } = useTemplate();
 
@@ -142,9 +144,7 @@ export default function ExpensesDoc({
     dispatch({ type: 'setEndDate', payload: curDate });
   };
 
-  const [loadExpenses, expensesData]: any = useLazyQuery(getExpenses, {
-    fetchPolicy: 'cache-and-network',
-  });
+  const [loadExpenses, expensesData]: any = useLazyQuery(getExpenses);
   const { accounts } = useAccounts();
   const refresQuery = {
     refetchQueries: [
@@ -156,6 +156,7 @@ export default function ExpensesDoc({
           opType: 60,
         },
       },
+      ...getRefresQuery({ ...vars, isRTL }),
     ],
   };
 
@@ -361,6 +362,7 @@ export default function ExpensesDoc({
                 company={company}
                 servicesproducts={expenseItems}
                 tasks={tasks}
+                setVars={setVars}
               ></PopupExpensesDoc>
             </PopupEditing>
           </Grid>

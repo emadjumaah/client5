@@ -71,9 +71,7 @@ export default function ReminderCustomer({
   const { resourses } = useResoursesUp();
   const { departments } = useDepartmentsUp();
 
-  const [loadActions, actionsData]: any = useLazyQuery(getRemindersActions, {
-    fetchPolicy: 'cache-and-network',
-  });
+  const [loadActions, actionsData]: any = useLazyQuery(getRemindersActions);
   useEffect(() => {
     const variables = {
       [name]: id,

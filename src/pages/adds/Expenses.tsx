@@ -23,13 +23,8 @@ import { useLazyQuery, useMutation } from '@apollo/client';
 import {
   createExpenses,
   deleteExpenses,
-  getCustomers,
-  getDepartments,
-  getEmployees,
   getExpenses,
-  getLastNos,
-  getProjects,
-  getResourses,
+  getRefresQuery,
   updateExpenses,
 } from '../../graphql';
 import {
@@ -45,7 +40,6 @@ import { ExpensesContext } from '../../contexts';
 import DateNavigatorReports from '../../components/filters/DateNavigatorReports';
 import PopupExpenses from '../../pubups/PopupExpenses';
 import useTasks from '../../hooks/useTasks';
-import getTasks from '../../graphql/query/getTasks';
 import { getColumns } from '../../common/columns';
 import { Box, Typography } from '@material-ui/core';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
@@ -67,6 +61,7 @@ export default function Expenses({ isRTL, words, menuitem, theme, company }) {
 
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [vars, setVars] = useState<any>({});
 
   const [start, setStart] = useState<any>(null);
   const [end, setEnd] = useState<any>(null);
@@ -100,30 +95,7 @@ export default function Expenses({ isRTL, words, menuitem, theme, company }) {
           opType: 60,
         },
       },
-      {
-        query: getLastNos,
-      },
-      {
-        query: getTasks,
-      },
-      {
-        query: getCustomers,
-      },
-      {
-        query: getEmployees,
-        variables: { isRTL, resType: 1 },
-      },
-      {
-        query: getDepartments,
-        variables: { isRTL, depType: 1 },
-      },
-      {
-        query: getResourses,
-        variables: { isRTL, resType: 1 },
-      },
-      {
-        query: getProjects,
-      },
+      ...getRefresQuery({ ...vars, isRTL }),
     ],
   };
 
@@ -279,7 +251,11 @@ export default function Expenses({ isRTL, words, menuitem, theme, company }) {
             addAction={addExpenses}
             editAction={editExpenses}
           >
-            <PopupExpenses company={company} tasks={tasks}></PopupExpenses>
+            <PopupExpenses
+              company={company}
+              tasks={tasks}
+              setVars={setVars}
+            ></PopupExpenses>
           </PopupEditing>
         </Grid>
         {loading && <Loading isRTL={isRTL} />}

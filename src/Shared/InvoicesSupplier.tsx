@@ -20,8 +20,8 @@ import { getRowId, updateDocNumbers } from '../common';
 import {
   createPurchaseInvoice,
   deletePurchaseInvoice,
-  getLastNos,
   getPurchaseInvoices,
+  getRefresQuery,
   updatePurchaseInvoice,
 } from '../graphql';
 import { useLazyQuery, useMutation } from '@apollo/client';
@@ -89,6 +89,7 @@ export default function InvoicesSupplier({
 
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [vars, setVars] = useState<any>({});
 
   const { tasks } = useTasks();
   const { departments } = useDepartmentsUp();
@@ -96,9 +97,7 @@ export default function InvoicesSupplier({
   const { resourses } = useResoursesUp();
   const { products } = useProducts();
 
-  const [loadInvoices, opData]: any = useLazyQuery(getPurchaseInvoices, {
-    fetchPolicy: 'cache-and-network',
-  });
+  const [loadInvoices, opData]: any = useLazyQuery(getPurchaseInvoices);
 
   const refresQuery = {
     refetchQueries: [
@@ -109,10 +108,7 @@ export default function InvoicesSupplier({
           end: end ? end.setHours(23, 59, 59, 999) : undefined,
         },
       },
-
-      {
-        query: getLastNos,
-      },
+      ...getRefresQuery({ ...vars, isRTL }),
     ],
   };
 
@@ -225,6 +221,7 @@ export default function InvoicesSupplier({
               company={company}
               servicesproducts={products}
               tasks={tasks}
+              setVars={setVars}
             ></PopupPurchaseInvoice>
           </PopupEditing>
         </Grid>

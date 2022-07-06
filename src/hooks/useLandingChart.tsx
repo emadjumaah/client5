@@ -18,9 +18,7 @@ export default () => {
   const lang = store?.lang;
   const isRTL = lang === 'ar' ? true : false;
 
-  const [freshChartData, chartData]: any = useLazyQuery(getLandingChartData, {
-    fetchPolicy: 'cache-and-network',
-  });
+  const [freshChartData, chartData]: any = useLazyQuery(getLandingChartData);
   const { departments } = useDepartments();
 
   useEffect(() => {

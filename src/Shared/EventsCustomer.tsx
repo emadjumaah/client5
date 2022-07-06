@@ -33,13 +33,9 @@ import { updateDocNumbers } from '../common';
 import {
   createEvent,
   deleteEventById,
-  getCustomers,
-  getDepartments,
-  getEmployees,
-  getResourses,
+  getRefresQuery,
   updateEvent,
 } from '../graphql';
-import getTasks from '../graphql/query/getTasks';
 import { Getter } from '@devexpress/dx-react-core';
 import PopupEditing from './PopupEditing';
 import { Command } from './Command';
@@ -119,6 +115,7 @@ export default function EventsCustomer({
 
   const { tasks } = useTasks();
   const [rows, setRows] = useState([]);
+  const [vars, setVars] = useState<any>({});
 
   const { departments } = useDepartmentsUp();
   const { employees } = useEmployeesUp();
@@ -135,30 +132,11 @@ export default function EventsCustomer({
           end: end ? end.setHours(23, 59, 59, 999) : undefined,
         },
       },
-      {
-        query: getTasks,
-      },
-      {
-        query: getCustomers,
-      },
-      {
-        query: getEmployees,
-        variables: { isRTL, resType: 1 },
-      },
-      {
-        query: getDepartments,
-        variables: { isRTL, depType: 1 },
-      },
-      {
-        query: getResourses,
-        variables: { isRTL, resType: 1 },
-      },
+      ...getRefresQuery({ ...vars, isRTL }),
     ],
   };
 
-  const [getEvents, eventsData]: any = useLazyQuery(getObjectEvents, {
-    fetchPolicy: 'cache-and-network',
-  });
+  const [getEvents, eventsData]: any = useLazyQuery(getObjectEvents);
 
   useEffect(() => {
     const variables = {
@@ -271,6 +249,7 @@ export default function EventsCustomer({
                 tasks={tasks}
                 name={name}
                 value={value}
+                setVars={setVars}
               ></PopupAppointmentCustomer>
             </PopupEditing>
 

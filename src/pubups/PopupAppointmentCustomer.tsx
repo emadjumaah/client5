@@ -75,6 +75,7 @@ const PopupAppointmentCustomer = ({
   tasks,
   name,
   value,
+  setVars,
 }: any) => {
   const classes = invoiceClasses();
   const [saving, setSaving] = useState(false);
@@ -147,13 +148,9 @@ const PopupAppointmentCustomer = ({
   }: GContextTypes = useContext(GlobalContext);
   const isemployee = user?.isEmployee && user?.employeeId;
 
-  const [getItems, itemsData]: any = useLazyQuery(getOperationItems, {
-    fetchPolicy: 'cache-and-network',
-  });
+  const [getItems, itemsData]: any = useLazyQuery(getOperationItems);
 
-  const [loadActions, actionsData]: any = useLazyQuery(getActions, {
-    fetchPolicy: 'cache-and-network',
-  });
+  const [loadActions, actionsData]: any = useLazyQuery(getActions);
   const openDepartment = () => {
     setOpenDep(true);
   };
@@ -601,8 +598,8 @@ const PopupAppointmentCustomer = ({
             projectNameAr: undefined,
           },
     };
+    if (setVars) setVars(variables);
     const mutate = isNew ? addAction : editAction;
-
     apply(mutate, variables);
   };
 

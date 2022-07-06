@@ -123,9 +123,7 @@ export default function CustomerReport({
     { columnName: col.amount.name, togglingEnabled: false },
   ]);
 
-  const [getSummary, summaryData]: any = useLazyQuery(getCustMonthlyReport, {
-    fetchPolicy: 'cache-and-network',
-  });
+  const [getSummary, summaryData]: any = useLazyQuery(getCustMonthlyReport);
   const componentRef: any = useRef();
 
   const { customers } = useCustomers();

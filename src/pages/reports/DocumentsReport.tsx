@@ -145,9 +145,7 @@ export default function DocumentsReport({
     // { columnName: col.amount.name, togglingEnabled: false },
   ]);
 
-  const [getSummary, summaryData]: any = useLazyQuery(getReportDocuments, {
-    fetchPolicy: 'cache-and-network',
-  });
+  const [getSummary, summaryData]: any = useLazyQuery(getReportDocuments);
   const { customers } = useCustomers();
   const { departments } = useDepartmentsUp();
   const { employees } = useEmployeesUp();

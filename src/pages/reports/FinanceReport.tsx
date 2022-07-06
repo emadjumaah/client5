@@ -130,9 +130,7 @@ export default function FinanceReport({
     { columnName: col.amount.name, togglingEnabled: false },
   ]);
 
-  const [getSummary, summaryData]: any = useLazyQuery(getMonthlyReport, {
-    fetchPolicy: 'cache-and-network',
-  });
+  const [getSummary, summaryData]: any = useLazyQuery(getMonthlyReport);
 
   const {
     state: {

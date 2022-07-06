@@ -31,6 +31,7 @@ const PopupReceipt = ({
   name,
   value,
   company,
+  setVars,
 }: any) => {
   const [saving, setSaving] = useState(false);
   const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
@@ -64,9 +65,7 @@ const PopupReceipt = ({
   const { customers, addCustomer, editCustomer } = useCustomers();
   const { tempwords } = useTemplate();
 
-  const [loadInvoices, invoicesData]: any = useLazyQuery(getInvoicesList, {
-    fetchPolicy: 'cache-and-network',
-  });
+  const [loadInvoices, invoicesData]: any = useLazyQuery(getInvoicesList);
 
   const openCustomer = () => {
     setOpenCust(true);
@@ -308,7 +307,7 @@ const PopupReceipt = ({
       branch: user.branch,
       userId: user._id,
     };
-
+    if (setVars) setVars(variables);
     const mutate = isNew ? addAction : editAction;
     apply(mutate, variables);
   };

@@ -119,9 +119,7 @@ export default function SalesReport({ isRTL, words, menuitem, theme }: any) {
     { columnName: col.opTime.name, togglingEnabled: false },
   ]);
 
-  const [getSummary, summaryData]: any = useLazyQuery(getReportEvents, {
-    fetchPolicy: 'cache-and-network',
-  });
+  const [getSummary, summaryData]: any = useLazyQuery(getReportEvents);
   const { customers } = useCustomers();
   const { departments } = useDepartmentsUp();
   const { employees } = useEmployeesUp();

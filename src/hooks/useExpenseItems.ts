@@ -18,7 +18,6 @@ export default () => {
   const isRTL = lang === 'ar' ? true : false;
   const [getsevs, itmData]: any = useLazyQuery(getExpenseItems, {
     variables: { isRTL },
-    fetchPolicy: 'cache-and-network',
   });
 
   const [addExpenseItem] = useMutation(createItem, {

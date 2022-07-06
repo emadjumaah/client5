@@ -69,9 +69,7 @@ export default function KaidsCustomer({
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  const [loadKaids, kaidsData]: any = useLazyQuery(getGereralKaids, {
-    fetchPolicy: 'cache-and-network',
-  });
+  const [loadKaids, kaidsData]: any = useLazyQuery(getGereralKaids);
 
   useEffect(() => {
     const variables = {

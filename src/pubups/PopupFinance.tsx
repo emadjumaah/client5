@@ -31,6 +31,7 @@ const PopupFinance = ({
   addAction,
   editAction,
   theme,
+  setVars,
 }: any) => {
   const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
   const [selectedDate, setSelectedDate] = React.useState(new Date());
@@ -214,6 +215,7 @@ const PopupFinance = ({
       branch: user.branch,
       userId: user._id,
     };
+    if (setVars) setVars(variables);
     const mutate = isNew ? addAction : editAction;
     apply(mutate, variables);
   };

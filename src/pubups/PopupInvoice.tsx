@@ -59,6 +59,7 @@ const PopupInvoice = ({
   task,
   value,
   name,
+  setVars,
 }: any) => {
   const classes = invoiceClasses();
   const [loading, setLoading] = useState(false);
@@ -125,9 +126,7 @@ const PopupInvoice = ({
 
   const isemployee = user?.isEmployee && user?.employeeId;
 
-  const [getItems, itemsData]: any = useLazyQuery(getOperationItems, {
-    fetchPolicy: 'cache-and-network',
-  });
+  const [getItems, itemsData]: any = useLazyQuery(getOperationItems);
 
   const openDepartment = () => {
     setOpenDep(true);
@@ -605,6 +604,7 @@ const PopupInvoice = ({
       paymentType: ptype,
       userId: user._id,
     };
+    if (setVars) setVars(variables);
     const mutate = isNew ? addAction : editAction;
 
     apply(mutate, variables);

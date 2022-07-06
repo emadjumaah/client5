@@ -20,12 +20,8 @@ import { getRowId, updateDocNumbers } from '../common';
 import {
   createInvoice,
   deleteInvoice,
-  getCustomers,
-  getDepartments,
-  getEmployees,
   getInvoices,
-  getLastNos,
-  getResourses,
+  getRefresQuery,
   updateInvoice,
 } from '../graphql';
 import { useLazyQuery, useMutation } from '@apollo/client';
@@ -41,7 +37,6 @@ import { TableComponent } from '../pages/reports/SalesReport';
 import { Box, Typography } from '@material-ui/core';
 import { useServices } from '../hooks';
 import { PopupInvoice } from '../pubups';
-import getTasks from '../graphql/query/getTasks';
 import useResoursesUp from '../hooks/useResoursesUp';
 import useEmployeesUp from '../hooks/useEmployeesUp';
 import useDepartmentsUp from '../hooks/useDepartmentsUp';
@@ -96,6 +91,7 @@ export default function InvoicesCustomer({
 
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [vars, setVars] = useState<any>({});
 
   const { tasks } = useTasks();
 
@@ -104,9 +100,7 @@ export default function InvoicesCustomer({
   const { resourses } = useResoursesUp();
   const { services } = useServices();
 
-  const [loadInvoices, opData]: any = useLazyQuery(getInvoices, {
-    fetchPolicy: 'cache-and-network',
-  });
+  const [loadInvoices, opData]: any = useLazyQuery(getInvoices);
 
   const refresQuery = {
     refetchQueries: [
@@ -118,27 +112,7 @@ export default function InvoicesCustomer({
           end: end ? end.setHours(23, 59, 59, 999) : undefined,
         },
       },
-      {
-        query: getLastNos,
-      },
-      {
-        query: getTasks,
-      },
-      {
-        query: getCustomers,
-      },
-      {
-        query: getEmployees,
-        variables: { isRTL, resType: 1 },
-      },
-      {
-        query: getDepartments,
-        variables: { isRTL, depType: 1 },
-      },
-      {
-        query: getResourses,
-        variables: { isRTL, resType: 1 },
-      },
+      ...getRefresQuery({ ...vars, isRTL }),
     ],
   };
 
@@ -246,6 +220,7 @@ export default function InvoicesCustomer({
               company={company}
               servicesproducts={services}
               tasks={tasks}
+              setVars={setVars}
             ></PopupInvoice>
           </PopupEditing>
         </Grid>

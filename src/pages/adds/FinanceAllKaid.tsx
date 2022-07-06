@@ -102,9 +102,7 @@ export default function FinanceAllKaid({
     dispatch({ type: 'setEndDate', payload: curDate });
   };
 
-  const [loadFinances, financeData]: any = useLazyQuery(getGeneralFinances, {
-    fetchPolicy: 'cache-and-network',
-  });
+  const [loadFinances, financeData]: any = useLazyQuery(getGeneralFinances);
   const refresQuery = {
     refetchQueries: [
       {

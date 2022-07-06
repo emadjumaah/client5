@@ -28,7 +28,12 @@ import {
 import { Command, Loading, PopupEditing } from '../../Shared';
 import { getRowId, updateDocNumbers } from '../../common';
 import { useLazyQuery, useMutation } from '@apollo/client';
-import { createFinance, deleteFinance, updateFinance } from '../../graphql';
+import {
+  createFinance,
+  deleteFinance,
+  getRefresQuery,
+  updateFinance,
+} from '../../graphql';
 import {
   accountFormatter,
   currencyFormatter,
@@ -79,6 +84,7 @@ export default function Receipt({ isRTL, words, menuitem, theme, company }) {
   const [rows, setRows] = useState([]);
   const [sum, setSum] = useState(0);
   const [loading, setLoading] = useState(false);
+  const [vars, setVars] = useState<any>({});
 
   const [start, setStart] = useState<any>(null);
   const [end, setEnd] = useState<any>(null);
@@ -112,6 +118,7 @@ export default function Receipt({ isRTL, words, menuitem, theme, company }) {
           end: end ? end.setHours(23, 59, 59, 999) : undefined,
         },
       },
+      ...getRefresQuery({ ...vars, isRTL }),
     ],
   };
 
@@ -308,7 +315,11 @@ export default function Receipt({ isRTL, words, menuitem, theme, company }) {
               addAction={addFinance}
               editAction={editFinance}
             >
-              <PopupReceipt company={company} tasks={tasks}></PopupReceipt>
+              <PopupReceipt
+                setVars={setVars}
+                company={company}
+                tasks={tasks}
+              ></PopupReceipt>
             </PopupEditing>
           </Grid>
         </Paper>

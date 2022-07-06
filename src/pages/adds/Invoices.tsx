@@ -32,7 +32,7 @@ import {
   createInvoice,
   deleteInvoice,
   getInvoices,
-  getLastNos,
+  getRefresQuery,
   updateInvoice,
 } from '../../graphql';
 import { useLazyQuery, useMutation } from '@apollo/client';
@@ -59,6 +59,7 @@ import _ from 'lodash';
 
 export default function Invoices({ isRTL, words, menuitem, theme, company }) {
   const col = getColumns({ isRTL, words });
+  const [vars, setVars] = useState<any>({});
 
   const { tempoptions } = useTemplate();
 
@@ -134,9 +135,7 @@ export default function Invoices({ isRTL, words, menuitem, theme, company }) {
     dispatch({ type: 'setEndDate', payload: curDate });
   };
 
-  const [loadInvoices, opData]: any = useLazyQuery(getInvoices, {
-    fetchPolicy: 'cache-and-network',
-  });
+  const [loadInvoices, opData]: any = useLazyQuery(getInvoices);
 
   const refresQuery = {
     refetchQueries: [
@@ -147,9 +146,7 @@ export default function Invoices({ isRTL, words, menuitem, theme, company }) {
           end: end ? end.setHours(23, 59, 59, 999) : undefined,
         },
       },
-      {
-        query: getLastNos,
-      },
+      ...getRefresQuery({ ...vars, isRTL }),
     ],
   };
 
@@ -341,6 +338,7 @@ export default function Invoices({ isRTL, words, menuitem, theme, company }) {
                 company={company}
                 servicesproducts={services}
                 tasks={tasks}
+                setVars={setVars}
               ></PopupInvoice>
             </PopupEditing>
           </Grid>

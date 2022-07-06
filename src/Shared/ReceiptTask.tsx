@@ -20,12 +20,7 @@ import { useLazyQuery, useMutation } from '@apollo/client';
 import {
   createFinance,
   deleteFinance,
-  getCustomers,
-  getDepartments,
-  getEmployees,
-  getLastNos,
-  getProjects,
-  getResourses,
+  getRefresQuery,
   updateFinance,
 } from '../graphql';
 import {
@@ -40,7 +35,6 @@ import useAccounts from '../hooks/useAccounts';
 import getReceipts from '../graphql/query/getReceipts';
 import PopupReceipt from '../pubups/PopupReceipt';
 import useTasks from '../hooks/useTasks';
-import getTasks from '../graphql/query/getTasks';
 import React from 'react';
 import useCompany from '../hooks/useCompany';
 import { Typography } from '@material-ui/core';
@@ -58,6 +52,7 @@ export default function ReceiptTask({ isRTL, words, theme, contractId }) {
 
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [vars, setVars] = useState<any>({});
 
   const { tasks } = useTasks();
   const { company } = useCompany();
@@ -72,30 +67,7 @@ export default function ReceiptTask({ isRTL, words, theme, contractId }) {
           contractId,
         },
       },
-      {
-        query: getLastNos,
-      },
-      {
-        query: getTasks,
-      },
-      {
-        query: getCustomers,
-      },
-      {
-        query: getEmployees,
-        variables: { isRTL, resType: 1 },
-      },
-      {
-        query: getDepartments,
-        variables: { isRTL, depType: 1 },
-      },
-      {
-        query: getResourses,
-        variables: { isRTL, resType: 1 },
-      },
-      {
-        query: getProjects,
-      },
+      ...getRefresQuery({ ...vars, isRTL }),
     ],
   };
 
@@ -197,7 +169,11 @@ export default function ReceiptTask({ isRTL, words, theme, contractId }) {
           addAction={addFinance}
           editAction={editFinance}
         >
-          <PopupReceipt company={company} tasks={tasks}></PopupReceipt>
+          <PopupReceipt
+            setVars={setVars}
+            company={company}
+            tasks={tasks}
+          ></PopupReceipt>
         </PopupEditing>
       </Grid>
       {loading && <Loading isRTL={isRTL} />}

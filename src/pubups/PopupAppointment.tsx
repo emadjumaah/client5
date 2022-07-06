@@ -76,6 +76,7 @@ const PopupAppointment = ({
   tasks,
   theme,
   company,
+  setVars,
 }: any) => {
   const classes = invoiceClasses();
   const [saving, setSaving] = useState(false);
@@ -117,7 +118,6 @@ const PopupAppointment = ({
   const [openAction, setOpenAction] = useState(false);
   const [type, setType] = useState(null);
   const [actionslist, setActionslist] = useState([]);
-  // const [daction, setDaction] = useState(false);
   const [selected, setSelected] = useState(null);
   const [tasktitle, setTasktitle]: any = useState(null);
 
@@ -137,12 +137,8 @@ const PopupAppointment = ({
     store: { user },
   }: GContextTypes = useContext(GlobalContext);
 
-  const [getItems, itemsData]: any = useLazyQuery(getOperationItems, {
-    fetchPolicy: 'cache-and-network',
-  });
-  const [loadActions, actionsData]: any = useLazyQuery(getActions, {
-    fetchPolicy: 'cache-and-network',
-  });
+  const [getItems, itemsData]: any = useLazyQuery(getOperationItems);
+  const [loadActions, actionsData]: any = useLazyQuery(getActions);
 
   const isemployee = user?.isEmployee && user?.employeeId;
 
@@ -613,6 +609,7 @@ const PopupAppointment = ({
             resourseColor: undefined,
           },
     };
+    if (setVars) setVars(variables);
     try {
       const rvariables = {
         ...variables,

@@ -33,9 +33,7 @@ const PopupGroupView = ({ open, onClose, theme, isRTL, words, item }: any) => {
   ]);
   const [data, setData] = useState([]);
 
-  const [loadConts, contsData]: any = useLazyQuery(getGroupContacts, {
-    fetchPolicy: 'cache-and-network',
-  });
+  const [loadConts, contsData]: any = useLazyQuery(getGroupContacts);
 
   const refresQuery = {
     refetchQueries: [

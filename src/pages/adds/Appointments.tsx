@@ -31,6 +31,7 @@ import {
   createEvent,
   deleteEventById,
   getEvents,
+  getRefresQuery,
   updateEvent,
 } from '../../graphql';
 import { useLazyQuery, useMutation } from '@apollo/client';
@@ -142,6 +143,7 @@ export default function Appointments({
   const [start, setStart] = useState<any>(null);
   const [end, setEnd] = useState<any>(null);
   const [periodvalue, setPeriodvalue] = useState<any>(null);
+  const [vars, setVars] = useState<any>({});
 
   const [item, setItem] = useState(null);
   const [name, setName] = useState(null);
@@ -238,10 +240,7 @@ export default function Appointments({
     dispatch({ type: 'setEndDate', payload: curDate });
   };
 
-  const [loadEvents, eventsData]: any = useLazyQuery(getEvents, {
-    fetchPolicy: 'cache-and-network',
-  });
-
+  const [loadEvents, eventsData]: any = useLazyQuery(getEvents);
   const refresQuery = {
     refetchQueries: [
       {
@@ -252,6 +251,7 @@ export default function Appointments({
           due,
         },
       },
+      ...getRefresQuery({ ...vars, isRTL }),
     ],
   };
 
@@ -599,6 +599,7 @@ export default function Appointments({
                 servicesproducts={services}
                 theme={theme}
                 tasks={tasks}
+                setVars={setVars}
               ></PopupAppointment>
             </PopupEditing>
             <Getter

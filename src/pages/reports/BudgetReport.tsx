@@ -102,9 +102,7 @@ export default function BudgetReport({
     setEndDate(curDate);
   };
 
-  const [getTB, tbData]: any = useLazyQuery(getTrialBalance, {
-    fetchPolicy: 'cache-and-network',
-  });
+  const [getTB, tbData]: any = useLazyQuery(getTrialBalance);
   const { height } = useWindowDimensions();
 
   useEffect(() => {

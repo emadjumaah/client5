@@ -17,7 +17,6 @@ export default () => {
   const isRTL = lang === 'ar' ? true : false;
   const [getemparts, empData]: any = useLazyQuery(getEmployees, {
     variables: { isRTL, resType: 1 },
-    fetchPolicy: 'cache-and-network',
   });
 
   const [addEmployee] = useMutation(createEmployee, {

@@ -13,7 +13,7 @@ import ItemsTable from '../Shared/ItemsTable';
 import { PriceTotal } from '../Shared/TotalPrice';
 import { operationTypes } from '../constants';
 import { useMutation } from '@apollo/client';
-import { createInvoice, getInvoices, getLastNos } from '../graphql';
+import { createInvoice, getInvoices, getRefresQuery } from '../graphql';
 import { accountCode } from '../constants/kaid';
 import PaymentSelect from '../pages/options/PaymentSelect';
 import PopupLayout from '../pages/main/PopupLayout';
@@ -82,6 +82,7 @@ const PopupAppointInvoice = ({
 
   const [openCust, setOpenCust] = useState(false);
   const [newtext, setNewtext] = useState('');
+  const [vars, setVars] = useState<any>({});
 
   const [isCash, setIsCash] = useState(true);
   const { customers, addCustomer, editCustomer } = useCustomers();
@@ -107,9 +108,7 @@ const PopupAppointInvoice = ({
           end: new Date().setHours(23, 59, 59, 999),
         },
       },
-      {
-        query: getLastNos,
-      },
+      ...getRefresQuery({ ...vars, isRTL }),
     ],
   };
 
@@ -393,7 +392,7 @@ const PopupAppointInvoice = ({
       eventId: appoint.id,
       eventNo: appoint.docNo,
     };
-
+    setVars(variables);
     apply(addInvoice, variables);
   };
 

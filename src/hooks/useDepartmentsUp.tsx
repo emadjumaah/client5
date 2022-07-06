@@ -17,7 +17,6 @@ export default () => {
   const isRTL = lang === 'ar' ? true : false;
   const [getDeparts, depData]: any = useLazyQuery(getDepartments, {
     variables: { isRTL, depType: 1 },
-    fetchPolicy: 'cache-and-network',
   });
 
   const [addDepartment] = useMutation(createDepartment, {

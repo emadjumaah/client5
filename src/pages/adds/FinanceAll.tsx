@@ -24,6 +24,7 @@ import {
   createGeneralFinance,
   deleteGeneralFinance,
   getGeneralFinances,
+  getRefresQuery,
   updateGeneralFinance,
 } from '../../graphql';
 import {
@@ -55,6 +56,7 @@ export default function FinanceAll({ isRTL, words, menuitem, theme }) {
 
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [vars, setVars] = useState<any>({});
 
   const [start, setStart] = useState<any>(null);
   const [end, setEnd] = useState<any>(null);
@@ -76,9 +78,7 @@ export default function FinanceAll({ isRTL, words, menuitem, theme }) {
     dispatch({ type: 'setEndDate', payload: curDate });
   };
 
-  const [loadFinances, financeData]: any = useLazyQuery(getGeneralFinances, {
-    fetchPolicy: 'cache-and-network',
-  });
+  const [loadFinances, financeData]: any = useLazyQuery(getGeneralFinances);
   const { accounts } = useAccounts();
   const refresQuery = {
     refetchQueries: [
@@ -89,6 +89,7 @@ export default function FinanceAll({ isRTL, words, menuitem, theme }) {
           end: end ? end.setHours(23, 59, 59, 999) : undefined,
         },
       },
+      ...getRefresQuery({ ...vars, isRTL }),
     ],
   };
 
@@ -248,7 +249,7 @@ export default function FinanceAll({ isRTL, words, menuitem, theme }) {
             addAction={addFinance}
             editAction={editFinance}
           >
-            <PopupFinanceAll></PopupFinanceAll>
+            <PopupFinanceAll setVars={setVars}></PopupFinanceAll>
           </PopupEditing>
         </Grid>
         {loading && <Loading isRTL={isRTL} />}

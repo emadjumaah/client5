@@ -57,6 +57,7 @@ const PopupExpensesDoc = ({
   task,
   value,
   name,
+  setVars,
 }: any) => {
   const classes = invoiceClasses();
   const [loading, setLoading] = useState(false);
@@ -118,9 +119,7 @@ const PopupExpensesDoc = ({
 
   const isemployee = user?.isEmployee && user?.employeeId;
 
-  const [getItems, itemsData]: any = useLazyQuery(getOperationItems, {
-    fetchPolicy: 'cache-and-network',
-  });
+  const [getItems, itemsData]: any = useLazyQuery(getOperationItems);
 
   const openDepartment = () => {
     setOpenDep(true);
@@ -563,6 +562,7 @@ const PopupExpensesDoc = ({
       branch: user.branch,
       userId: user._id,
     };
+    if (setVars) setVars(variables);
     const mutate = isNew ? addAction : editAction;
     apply(mutate, variables);
   };

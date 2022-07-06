@@ -20,13 +20,8 @@ import { useLazyQuery, useMutation } from '@apollo/client';
 import {
   createExpenses,
   deleteExpenses,
-  getCustomers,
-  getDepartments,
-  getEmployees,
   getExpenses,
-  getLastNos,
-  getProjects,
-  getResourses,
+  getRefresQuery,
   updateExpenses,
 } from '../graphql';
 import {
@@ -43,7 +38,6 @@ import PopupExpProducts from '../pubups/PopupExpProducts';
 import useResoursesUp from '../hooks/useResoursesUp';
 import useEmployeesUp from '../hooks/useEmployeesUp';
 import useDepartmentsUp from '../hooks/useDepartmentsUp';
-import getTasks from '../graphql/query/getTasks';
 
 export default function ExpensesProdCustomer({
   isRTL,
@@ -100,6 +94,7 @@ export default function ExpensesProdCustomer({
 
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [vars, setVars] = useState<any>({});
 
   const { tasks } = useTasks();
   const { accounts } = useAccounts();
@@ -108,9 +103,7 @@ export default function ExpensesProdCustomer({
   const { employees } = useEmployeesUp();
   const { resourses } = useResoursesUp();
 
-  const [loadExpenses, expensesData]: any = useLazyQuery(getExpenses, {
-    fetchPolicy: 'cache-and-network',
-  });
+  const [loadExpenses, expensesData]: any = useLazyQuery(getExpenses);
   const refresQuery = {
     refetchQueries: [
       {
@@ -122,31 +115,7 @@ export default function ExpensesProdCustomer({
           opType: 61,
         },
       },
-
-      {
-        query: getLastNos,
-      },
-      {
-        query: getTasks,
-      },
-      {
-        query: getCustomers,
-      },
-      {
-        query: getEmployees,
-        variables: { isRTL, resType: 1 },
-      },
-      {
-        query: getDepartments,
-        variables: { isRTL, depType: 1 },
-      },
-      {
-        query: getResourses,
-        variables: { isRTL, resType: 1 },
-      },
-      {
-        query: getProjects,
-      },
+      ...getRefresQuery({ ...vars, isRTL }),
     ],
   };
 
@@ -266,6 +235,7 @@ export default function ExpensesProdCustomer({
               tasks={tasks}
               value={value}
               name={name}
+              setVars={setVars}
             ></PopupExpProducts>
           </PopupEditing>
         </Grid>

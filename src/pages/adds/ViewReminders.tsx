@@ -103,9 +103,7 @@ export default function ViewReminders(props: any) {
     dispatch({ type: 'setEndDate', payload: curDate });
   };
 
-  const [loadActions, actionsData]: any = useLazyQuery(getRemindersActions, {
-    fetchPolicy: 'cache-and-network',
-  });
+  const [loadActions, actionsData]: any = useLazyQuery(getRemindersActions);
 
   const refresQuery = {
     refetchQueries: [

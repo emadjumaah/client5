@@ -10,10 +10,7 @@ export default () => {
   const store = getStoreItem('store');
   const lang = store?.lang;
   const isRTL = lang === 'ar' ? true : false;
-  const [getprods, itmData]: any = useLazyQuery(getProducts, {
-    variables: { isRTL },
-    fetchPolicy: 'cache-and-network',
-  });
+  const [getprods, itmData]: any = useLazyQuery(getProducts);
 
   let stockItems = [];
 

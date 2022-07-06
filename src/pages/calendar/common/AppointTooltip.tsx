@@ -78,9 +78,7 @@ export const RenderToolTip = ({
 
   const task = tasks.filter((t: any) => t._id === contractId)?.[0];
 
-  const [getItems, itemsData]: any = useLazyQuery(getOperationItems, {
-    fetchPolicy: 'cache-and-network',
-  });
+  const [getItems, itemsData]: any = useLazyQuery(getOperationItems);
 
   useEffect(() => {
     if (appointmentData && appointmentData._id) {

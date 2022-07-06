@@ -43,6 +43,7 @@ const PopupFinanceAll = ({
   addAction,
   editAction,
   theme,
+  setVars,
 }: any) => {
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -67,9 +68,7 @@ const PopupFinanceAll = ({
     store: { user },
   }: GContextTypes = useContext(GlobalContext);
 
-  const [getItems, itemsData]: any = useLazyQuery(getOperationKaids, {
-    fetchPolicy: 'cache-and-network',
-  });
+  const [getItems, itemsData]: any = useLazyQuery(getOperationKaids);
 
   const { accounts } = useAccounts();
   useEffect(() => {
@@ -208,6 +207,7 @@ const PopupFinanceAll = ({
       userId: user._id,
       amount: kaidsum,
     };
+    if (setVars) setVars(variables);
     const mutate = isNew ? addAction : editAction;
     apply(mutate, variables);
   };

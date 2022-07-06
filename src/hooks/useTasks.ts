@@ -9,9 +9,7 @@ import updateTask from '../graphql/mutation/updateTask';
 import getTasks from '../graphql/query/getTasks';
 
 export default () => {
-  const [getfins, finData] = useLazyQuery(getTasks, {
-    // fetchPolicy: 'cache-and-network',
-  });
+  const [getfins, finData] = useLazyQuery(getTasks);
 
   const [addTask] = useMutation(createTask, {
     refetchQueries: [{ query: getTasks }],

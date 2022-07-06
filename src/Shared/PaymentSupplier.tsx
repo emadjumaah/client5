@@ -20,12 +20,7 @@ import { useLazyQuery, useMutation } from '@apollo/client';
 import {
   createFinance,
   deleteFinance,
-  getDepartments,
-  getEmployees,
-  getLastNos,
-  getProjects,
-  getResourses,
-  getSuppliers,
+  getRefresQuery,
   updateFinance,
 } from '../graphql';
 import {
@@ -41,7 +36,6 @@ import getPayments from '../graphql/query/getPayments';
 import { Box, Typography } from '@material-ui/core';
 import PopupPayment from '../pubups/PopupPayment';
 import useTasks from '../hooks/useTasks';
-import getTasks from '../graphql/query/getTasks';
 
 export default function PaymentSupplier({
   isRTL,
@@ -66,11 +60,10 @@ export default function PaymentSupplier({
 
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [vars, setVars] = useState<any>({});
 
   const { tasks } = useTasks();
-  const [loadFinances, financeData]: any = useLazyQuery(getPayments, {
-    fetchPolicy: 'cache-and-network',
-  });
+  const [loadFinances, financeData]: any = useLazyQuery(getPayments);
   const { accounts } = useAccounts();
   const refresQuery = {
     refetchQueries: [
@@ -82,30 +75,7 @@ export default function PaymentSupplier({
           end: end ? end.setHours(23, 59, 59, 999) : undefined,
         },
       },
-      {
-        query: getLastNos,
-      },
-      {
-        query: getTasks,
-      },
-      {
-        query: getSuppliers,
-      },
-      {
-        query: getEmployees,
-        variables: { isRTL, resType: 1 },
-      },
-      {
-        query: getDepartments,
-        variables: { isRTL, depType: 1 },
-      },
-      {
-        query: getResourses,
-        variables: { isRTL, resType: 1 },
-      },
-      {
-        query: getProjects,
-      },
+      ...getRefresQuery({ ...vars, isRTL }),
     ],
   };
 
@@ -221,6 +191,7 @@ export default function PaymentSupplier({
               name={name}
               value={value}
               tasks={tasks}
+              setVars={setVars}
             ></PopupPayment>
           </PopupEditing>
         </Grid>

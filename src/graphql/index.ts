@@ -131,7 +131,7 @@ import {
   verifyEmail,
   createUserBranch,
 } from './mutation';
-
+import { getRefresQuery, rQueriesCustomer, rQueriesSupplier } from './refetech';
 export {
   client,
   getCategories,
@@ -264,4 +264,7 @@ export {
   sendVerificationCode,
   verifyEmail,
   createUserBranch,
+  getRefresQuery,
+  rQueriesCustomer,
+  rQueriesSupplier,
 };

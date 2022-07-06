@@ -43,9 +43,7 @@ const RemindCal = (props: any) => {
   } = useContext(CalendarContext);
   const { height } = useWindowDimensions();
 
-  const [loadReminders, remindersData]: any = useLazyQuery(getReminders, {
-    // fetchPolicy: 'cache-and-network',
-  });
+  const [loadReminders, remindersData]: any = useLazyQuery(getReminders);
 
   useEffect(() => {
     const variables = {
