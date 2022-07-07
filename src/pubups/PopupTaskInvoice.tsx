@@ -4,7 +4,12 @@ import React, { useContext, useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { invoiceClasses } from '../themes';
 import { useProducts, useTemplate } from '../hooks';
-import { dublicateAlert, errorAlert, messageAlert } from '../Shared';
+import {
+  dublicateAlert,
+  errorAlert,
+  messageAlert,
+  successAlert,
+} from '../Shared';
 import { GContextTypes } from '../types';
 import { GlobalContext } from '../contexts';
 
@@ -41,6 +46,7 @@ import { InvoicePrint } from '../print';
 import { getInvDays } from '../common/helpers';
 import getGereralCalculation from '../graphql/query/getGereralCalculation';
 import { getCustomers, getTasks } from '../graphql/query';
+import { sleep } from '../Shared/helpers';
 
 export const indexTheList = (list: any) => {
   return list.map((item: any, index: any) => {
@@ -503,6 +509,8 @@ const PopupTaskInvoice = ({
   const apply = async (mutate: any, variables: any) => {
     try {
       mutate({ variables });
+      await sleep(2);
+      await successAlert(setAlrt, isRTL);
       setSaving(false);
       onCloseForm();
     } catch (error) {

@@ -31,6 +31,7 @@ import ExpensesItemsTable from '../Shared/ExpensesItemsTable';
 import { accountCode } from '../constants/kaid';
 import { useReactToPrint } from 'react-to-print';
 import { VoucherPrint } from '../print';
+import { sleep, successAlert } from '../Shared/helpers';
 
 export const indexTheList = (list: any) => {
   return list.map((item: any, index: any) => {
@@ -58,6 +59,7 @@ const PopupExpProducts = ({
   name,
 }: any) => {
   const classes = invoiceClasses();
+  const [saving, setSaving] = useState(false);
   const [loading, setLoading] = useState(false);
   const { tasks } = useTasks();
   const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
@@ -235,6 +237,7 @@ const PopupExpProducts = ({
     setEmplvalue(name === 'employeeId' ? value : null);
     setResovalue(name === 'resourseId' ? value : null);
     setTaskvalue(name === 'contractId' ? value : null);
+    setSaving(false);
   };
 
   const addItemToList = (item: any) => {
@@ -400,6 +403,7 @@ const PopupExpProducts = ({
       );
       return;
     }
+    setSaving(true);
 
     const { title, desc } = data;
 
@@ -502,9 +506,9 @@ const PopupExpProducts = ({
   const apply = async (mutate: any, variables: any) => {
     try {
       mutate({ variables });
-      // if (row && row._id) {
-      //   itemsData?.refetch();
-      // }
+      await sleep(2);
+      await successAlert(setAlrt, isRTL);
+      setSaving(false);
       onCloseForm();
     } catch (error) {
       onError(error);
@@ -550,6 +554,7 @@ const PopupExpProducts = ({
       alrt={alrt}
       print={!isNew ? handleReactPrint : undefined}
       maxWidth="md"
+      saving={saving}
       mt={0}
       mb={20}
     >

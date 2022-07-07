@@ -38,6 +38,7 @@ import useDepartmentsUp from '../hooks/useDepartmentsUp';
 import useResoursesUp from '../hooks/useResoursesUp';
 import { InvoicePrint } from '../print';
 import ServiceItemForm from '../Shared/ServiceItemForm';
+import { sleep, successAlert } from '../Shared/helpers';
 
 export const indexTheList = (list: any) => {
   return list.map((item: any, index: any) => {
@@ -408,13 +409,15 @@ const PopupAppointInvoice = ({
 
   const apply = async (mutate: any, variables: any) => {
     try {
-      await mutate({ variables });
-      await editEvent({
+      mutate({ variables });
+      editEvent({
         variables: {
           id: appoint.id,
           status: 10,
         },
       });
+      await sleep(2);
+      await successAlert(setAlrt, isRTL);
       setSaving(false);
       onCloseForm();
       onCloseAppoint();

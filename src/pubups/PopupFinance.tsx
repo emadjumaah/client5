@@ -22,6 +22,7 @@ import { CalenderLocal, TextFieldLocal } from '../components';
 import { getAppStartEndPeriod } from '../common/time';
 import AutoFieldLocal from '../components/fields/AutoFieldLocal';
 import { useCustomers } from '../hooks';
+import { sleep } from '../Shared/helpers';
 
 const PopupFinance = ({
   open,
@@ -32,6 +33,7 @@ const PopupFinance = ({
   editAction,
   theme,
 }: any) => {
+  const [saving, setSaving] = useState(false);
   const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
   const [selectedDate, setSelectedDate] = React.useState(new Date());
   const [ptype, setPtype] = React.useState('deposit');
@@ -194,6 +196,7 @@ const PopupFinance = ({
       );
       return;
     }
+    setSaving(true);
 
     const customer = {
       customerId: custvalue?._id,
@@ -220,8 +223,10 @@ const PopupFinance = ({
 
   const apply = async (mutate: any, variables: any) => {
     try {
-      await mutate({ variables });
-      successAlert(setAlrt, isRTL);
+      mutate({ variables });
+      await sleep(2);
+      await successAlert(setAlrt, isRTL);
+      setSaving(false);
       closeModal();
     } catch (error) {
       onError(error);
@@ -245,6 +250,7 @@ const PopupFinance = ({
     setDebitAcc(null);
     setDebaccounts([]);
     setCridaccounts([]);
+    setSaving(false);
   };
   const closeModal = () => {
     resetAll();
@@ -268,6 +274,7 @@ const PopupFinance = ({
       onSubmit={onHandleSubmit}
       theme={theme}
       alrt={alrt}
+      saving={saving}
       mt={10}
     >
       <Grid container spacing={2}>

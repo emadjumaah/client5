@@ -19,7 +19,7 @@ import { Box, Button, Typography } from '@material-ui/core';
 import PopupLayout from '../pages/main/PopupLayout';
 import { Grid } from '@material-ui/core';
 import PopupPassword from './PopupPassword';
-import { errorAlertMsg } from '../Shared/helpers';
+import { errorAlertMsg, successAlert } from '../Shared/helpers';
 
 const PopupUser = ({
   open,
@@ -117,6 +117,8 @@ const PopupUser = ({
   const apply = async (mutate: any, variables: any) => {
     try {
       await mutate({ variables });
+      await successAlert(setAlrt, isRTL);
+      setSaving(false);
       onFormClose();
     } catch (error) {
       onError(error);
@@ -168,8 +170,8 @@ const PopupUser = ({
       onSubmit={onHandleSubmit}
       theme={theme}
       alrt={alrt}
-      mb={50}
       saving={saving}
+      mb={50}
     >
       <Grid container spacing={2}>
         <Grid item xs={1}></Grid>

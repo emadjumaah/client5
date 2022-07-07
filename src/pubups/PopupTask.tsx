@@ -58,6 +58,7 @@ import DeleteOutlinedIcon from '@material-ui/icons/DeleteOutlined';
 import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
 import PopupAction from './PopupAction';
 import SelectMulti from '../Shared/SelectMulti';
+import { sleep } from '../Shared/helpers';
 
 export const indexTheList = (list: any) => {
   return list.map((item: any, index: any) => {
@@ -707,18 +708,11 @@ const PopupTask = ({
   };
   const apply = async (mutate: any, variables: any) => {
     try {
-      if (evList?.length === 0) {
-        mutate({ variables });
-        await successAlert(setAlrt, isRTL);
-        setSaving(false);
-        onCloseForm();
-      } else {
-        await mutate({ variables });
-        setTimeout(() => {
-          refresh();
-          onCloseForm();
-        }, 1000);
-      }
+      mutate({ variables });
+      await sleep(3);
+      await successAlert(setAlrt, isRTL);
+      setSaving(false);
+      onCloseForm();
     } catch (error) {
       onError(error);
       console.log(error);

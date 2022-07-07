@@ -20,7 +20,7 @@ import AutoFieldLocal from '../components/fields/AutoFieldLocal';
 import { GlobalContext } from '../contexts';
 import { dublicateAlert, errorAlert } from '../Shared';
 import { getAccountCodeRange, getNewCode } from '../common/accounts';
-import { errorAlertMsg } from '../Shared/helpers';
+import { errorAlertMsg, sleep, successAlert } from '../Shared/helpers';
 
 export const accountClasses = makeStyles((theme: Theme) =>
   createStyles({
@@ -155,7 +155,9 @@ const PopupAccount = ({
 
   const apply = async (mutate: any, variables: any) => {
     try {
-      await mutate({ variables });
+      mutate({ variables });
+      await sleep(2);
+      await successAlert(setAlrt, isRTL);
       setSaving(false);
       closeForm();
     } catch (error) {

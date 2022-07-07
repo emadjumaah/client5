@@ -20,6 +20,7 @@ import { useTemplate } from '../hooks';
 import KaidsSingleTable from '../Shared/KaidsSingleTable';
 import { GeneralKaidPrint } from '../print/GeneralKaidPrint';
 import { useReactToPrint } from 'react-to-print';
+import { sleep, successAlert } from '../Shared/helpers';
 
 export const indexTheList = (list: any) => {
   return list.map((item: any, index: any) => {
@@ -247,9 +248,10 @@ const PopupFinanceAllKaid = ({
 
   const apply = async (mutate: any, variables: any) => {
     try {
-      await mutate({ variables });
+      mutate({ variables });
+      await sleep(2);
+      await successAlert(setAlrt, isRTL);
       setSaving(false);
-      closeModal();
     } catch (error) {
       onError(error);
     }

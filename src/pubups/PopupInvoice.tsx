@@ -34,6 +34,7 @@ import useDepartmentsUp from '../hooks/useDepartmentsUp';
 import useEmployeesUp from '../hooks/useEmployeesUp';
 import useResoursesUp from '../hooks/useResoursesUp';
 import { InvoicePrint } from '../print';
+import { sleep, successAlert } from '../Shared/helpers';
 
 export const indexTheList = (list: any) => {
   return list.map((item: any, index: any) => {
@@ -610,7 +611,9 @@ const PopupInvoice = ({
 
   const apply = async (mutate: any, variables: any) => {
     try {
-      await mutate({ variables });
+      mutate({ variables });
+      await sleep(2);
+      await successAlert(setAlrt, isRTL);
       setSaving(false);
       onCloseForm();
     } catch (error) {

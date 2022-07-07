@@ -56,6 +56,7 @@ import SelectMulti from '../Shared/SelectMulti';
 import { useLazyQuery } from '@apollo/client';
 import { getOperationItems } from '../graphql';
 import getTaskDoneEvents from '../graphql/query/getTaskDoneEvents';
+import { sleep } from '../Shared/helpers';
 
 export const indexTheList = (list: any) => {
   return list.map((item: any, index: any) => {
@@ -845,7 +846,8 @@ const PopupTaskFull = ({
 
   const apply = async (mutate: any, variables: any) => {
     try {
-      await mutate({ variables });
+      mutate({ variables });
+      await sleep(3);
       await successAlert(setAlrt, isRTL);
       setSaving(false);
       onCloseForm();

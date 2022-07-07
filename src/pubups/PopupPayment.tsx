@@ -19,6 +19,7 @@ import { useLazyQuery } from '@apollo/client';
 import getInvoicesList from '../graphql/query/getInvoicesList';
 import { ReceiptPrint } from '../print';
 import PopupSupplier from './PopupSupplier';
+import { sleep, successAlert } from '../Shared/helpers';
 const PopupPayment = ({
   open,
   onClose,
@@ -280,9 +281,11 @@ const PopupPayment = ({
 
   const apply = async (mutate: any, variables: any) => {
     try {
-      await mutate({ variables });
-      closeModal();
+      mutate({ variables });
+      await sleep(2);
+      await successAlert(setAlrt, isRTL);
       setSaving(false);
+      closeModal();
     } catch (error) {
       onError(error);
       setSaving(false);
