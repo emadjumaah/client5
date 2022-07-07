@@ -64,7 +64,9 @@ const PopupReceipt = ({
   const { customers, addCustomer, editCustomer } = useCustomers();
   const { tempwords } = useTemplate();
 
-  const [loadInvoices, invoicesData]: any = useLazyQuery(getInvoicesList);
+  const [loadInvoices, invoicesData]: any = useLazyQuery(getInvoicesList, {
+    fetchPolicy: 'cache-and-network',
+  });
 
   const openCustomer = () => {
     setOpenCust(true);
@@ -312,7 +314,7 @@ const PopupReceipt = ({
 
   const apply = async (mutate: any, variables: any) => {
     try {
-      await mutate({ variables });
+      mutate({ variables });
       closeModal();
       setSaving(false);
     } catch (error) {

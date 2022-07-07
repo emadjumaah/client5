@@ -63,7 +63,9 @@ const PopupPayment = ({
   const { accounts } = useAccounts();
   const { suppliers, addSupplier, editSupplier } = useSuppliers();
 
-  const [loadInvoices, invoicesData]: any = useLazyQuery(getInvoicesList);
+  const [loadInvoices, invoicesData]: any = useLazyQuery(getInvoicesList, {
+    fetchPolicy: 'cache-and-network',
+  });
 
   const openSupplier = () => {
     setOpenCust(true);
