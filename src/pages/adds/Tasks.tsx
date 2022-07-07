@@ -477,6 +477,8 @@ export default function Tasks({ isRTL, words, menuitem, theme, company }) {
               theme={theme}
               company={company}
               stopTask={stopTask}
+              mstart={start}
+              mend={end}
             ></PopupTaskView>
           )}
         </Paper>

@@ -21,7 +21,6 @@ import {
   createInvoice,
   deleteInvoice,
   getInvoices,
-  getRefresQuery,
   updateInvoice,
 } from '../graphql';
 import { useLazyQuery, useMutation } from '@apollo/client';
@@ -40,6 +39,15 @@ import { PopupInvoice } from '../pubups';
 import useResoursesUp from '../hooks/useResoursesUp';
 import useEmployeesUp from '../hooks/useEmployeesUp';
 import useDepartmentsUp from '../hooks/useDepartmentsUp';
+import getGereralCalculation from '../graphql/query/getGereralCalculation';
+import {
+  getCustomers,
+  getDepartments,
+  getEmployees,
+  getProducts,
+  getResourses,
+  getTasks,
+} from '../graphql/query';
 
 export default function InvoicesCustomer({
   isRTL,
@@ -53,6 +61,8 @@ export default function InvoicesCustomer({
   height,
   start,
   end,
+  mstart,
+  mend,
   tempoptions,
 }: any) {
   const col = getColumns({ isRTL, words });
@@ -91,7 +101,6 @@ export default function InvoicesCustomer({
 
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [vars, setVars] = useState<any>({});
 
   const { tasks } = useTasks();
 
@@ -100,7 +109,9 @@ export default function InvoicesCustomer({
   const { resourses } = useResoursesUp();
   const { services } = useServices();
 
-  const [loadInvoices, opData]: any = useLazyQuery(getInvoices);
+  const [loadInvoices, opData]: any = useLazyQuery(getInvoices, {
+    nextFetchPolicy: 'cache-and-network',
+  });
 
   const refresQuery = {
     refetchQueries: [
@@ -112,7 +123,30 @@ export default function InvoicesCustomer({
           end: end ? end.setHours(23, 59, 59, 999) : undefined,
         },
       },
-      ...getRefresQuery({ ...vars, isRTL }),
+      {
+        query: getGereralCalculation,
+        variables: {
+          [name]: id,
+          start: start ? new Date(start).setHours(0, 0, 0, 0) : undefined,
+          end: end ? new Date(end).setHours(23, 59, 59, 999) : undefined,
+        },
+      },
+      name === 'contractId'
+        ? {
+            query: getTasks,
+            variables: {
+              contractId: id,
+              start: mstart ? new Date(mstart).setHours(0, 0, 0, 0) : undefined,
+              end: mend ? new Date(mend).setHours(23, 59, 59, 999) : undefined,
+            },
+          }
+        : undefined,
+      name === 'contractId' ? { query: getTasks } : undefined,
+      { query: getDepartments, variables: { isRTL, depType: 1 } },
+      { query: getEmployees, variables: { isRTL, resType: 1 } },
+      { query: getResourses, variables: { isRTL, resType: 1 } },
+      { query: getCustomers },
+      { query: getProducts },
     ],
   };
 
@@ -220,7 +254,6 @@ export default function InvoicesCustomer({
               company={company}
               servicesproducts={services}
               tasks={tasks}
-              setVars={setVars}
             ></PopupInvoice>
           </PopupEditing>
         </Grid>

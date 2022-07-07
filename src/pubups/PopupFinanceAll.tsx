@@ -43,7 +43,6 @@ const PopupFinanceAll = ({
   addAction,
   editAction,
   theme,
-  setVars,
 }: any) => {
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -207,7 +206,6 @@ const PopupFinanceAll = ({
       userId: user._id,
       amount: kaidsum,
     };
-    if (setVars) setVars(variables);
     const mutate = isNew ? addAction : editAction;
     apply(mutate, variables);
   };

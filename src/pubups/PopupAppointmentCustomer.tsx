@@ -75,7 +75,6 @@ const PopupAppointmentCustomer = ({
   tasks,
   name,
   value,
-  setVars,
 }: any) => {
   const classes = invoiceClasses();
   const [saving, setSaving] = useState(false);
@@ -598,7 +597,6 @@ const PopupAppointmentCustomer = ({
             projectNameAr: undefined,
           },
     };
-    if (setVars) setVars(variables);
     const mutate = isNew ? addAction : editAction;
     apply(mutate, variables);
   };

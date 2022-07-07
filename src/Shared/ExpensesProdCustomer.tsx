@@ -21,7 +21,6 @@ import {
   createExpenses,
   deleteExpenses,
   getExpenses,
-  getRefresQuery,
   updateExpenses,
 } from '../graphql';
 import {
@@ -38,6 +37,15 @@ import PopupExpProducts from '../pubups/PopupExpProducts';
 import useResoursesUp from '../hooks/useResoursesUp';
 import useEmployeesUp from '../hooks/useEmployeesUp';
 import useDepartmentsUp from '../hooks/useDepartmentsUp';
+import getGereralCalculation from '../graphql/query/getGereralCalculation';
+import {
+  getCustomers,
+  getDepartments,
+  getEmployees,
+  getProducts,
+  getResourses,
+  getTasks,
+} from '../graphql/query';
 
 export default function ExpensesProdCustomer({
   isRTL,
@@ -51,9 +59,11 @@ export default function ExpensesProdCustomer({
   height,
   start,
   end,
+  mstart,
+  mend,
   tempoptions,
   tempwords,
-}) {
+}: any) {
   const [columns] = useState(
     tempoptions?.noTsk
       ? [
@@ -94,7 +104,6 @@ export default function ExpensesProdCustomer({
 
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [vars, setVars] = useState<any>({});
 
   const { tasks } = useTasks();
   const { accounts } = useAccounts();
@@ -103,7 +112,9 @@ export default function ExpensesProdCustomer({
   const { employees } = useEmployeesUp();
   const { resourses } = useResoursesUp();
 
-  const [loadExpenses, expensesData]: any = useLazyQuery(getExpenses);
+  const [loadExpenses, expensesData]: any = useLazyQuery(getExpenses, {
+    nextFetchPolicy: 'cache-and-network',
+  });
   const refresQuery = {
     refetchQueries: [
       {
@@ -115,7 +126,30 @@ export default function ExpensesProdCustomer({
           opType: 61,
         },
       },
-      ...getRefresQuery({ ...vars, isRTL }),
+      {
+        query: getGereralCalculation,
+        variables: {
+          [name]: id,
+          start: start ? new Date(start).setHours(0, 0, 0, 0) : undefined,
+          end: end ? new Date(end).setHours(23, 59, 59, 999) : undefined,
+        },
+      },
+      name === 'contractId'
+        ? {
+            query: getTasks,
+            variables: {
+              contractId: id,
+              start: mstart ? new Date(mstart).setHours(0, 0, 0, 0) : undefined,
+              end: mend ? new Date(mend).setHours(23, 59, 59, 999) : undefined,
+            },
+          }
+        : undefined,
+      name === 'contractId' ? { query: getTasks } : undefined,
+      { query: getDepartments, variables: { isRTL, depType: 1 } },
+      { query: getEmployees, variables: { isRTL, resType: 1 } },
+      { query: getResourses, variables: { isRTL, resType: 1 } },
+      { query: getCustomers },
+      { query: getProducts },
     ],
   };
 
@@ -235,7 +269,6 @@ export default function ExpensesProdCustomer({
               tasks={tasks}
               value={value}
               name={name}
-              setVars={setVars}
             ></PopupExpProducts>
           </PopupEditing>
         </Grid>

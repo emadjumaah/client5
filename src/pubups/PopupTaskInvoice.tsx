@@ -22,9 +22,12 @@ import { operationTypes } from '../constants';
 import { useLazyQuery, useMutation } from '@apollo/client';
 import {
   createInvoice,
+  getDepartments,
+  getEmployees,
   getInvoices,
   getOperationItems,
-  getRefresQuery,
+  getProjects,
+  getResourses,
 } from '../graphql';
 import { accountCode } from '../constants/kaid';
 import PaymentSelect from '../pages/options/PaymentSelect';
@@ -36,6 +39,8 @@ import { getAppStartEndPeriod } from '../common/time';
 import { useReactToPrint } from 'react-to-print';
 import { InvoicePrint } from '../print';
 import { getInvDays } from '../common/helpers';
+import getGereralCalculation from '../graphql/query/getGereralCalculation';
+import { getCustomers, getTasks } from '../graphql/query';
 
 export const indexTheList = (list: any) => {
   return list.map((item: any, index: any) => {
@@ -58,6 +63,8 @@ const PopupTaskInvoice = ({
   company,
   isNew = true,
   theme,
+  mstart,
+  mend,
 }: any) => {
   const classes = invoiceClasses();
   const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
@@ -92,7 +99,6 @@ const PopupTaskInvoice = ({
   const [resovalue, setResovalue] = useState<any>(null);
   const [resoError, setResoError] = useState<any>(false);
   const resoRef: any = useRef();
-  const [vars, setVars] = useState<any>({});
 
   const [isCash, setIsCash] = useState(true);
   const { tempwords, tempoptions } = useTemplate();
@@ -104,14 +110,25 @@ const PopupTaskInvoice = ({
     translate: { words, isRTL },
     store: { user },
   }: GContextTypes = useContext(GlobalContext);
-
   const refresQuery = {
     refetchQueries: [
       { query: getInvoices, variables: { contractId: task._id } },
-      ...getRefresQuery({ ...vars, isRTL }),
+      {
+        query: getGereralCalculation,
+        variables: {
+          contractId: task._id,
+          start: mstart ? new Date(mstart).setHours(0, 0, 0, 0) : undefined,
+          end: mend ? new Date(mend).setHours(23, 59, 59, 999) : undefined,
+        },
+      },
+      { query: getDepartments, variables: { isRTL, depType: 1 } },
+      { query: getEmployees, variables: { isRTL, resType: 1 } },
+      { query: getResourses, variables: { isRTL, resType: 1 } },
+      { query: getProjects },
+      { query: getTasks },
+      { query: getCustomers },
     ],
   };
-
   const [getItems, itemsData]: any = useLazyQuery(getOperationItems);
 
   const [addInvoice] = useMutation(createInvoice, refresQuery);
@@ -480,7 +497,6 @@ const PopupTaskInvoice = ({
       periodto,
       userId: user._id,
     };
-    setVars(variables);
     apply(addInvoice, variables);
   };
 

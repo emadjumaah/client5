@@ -31,8 +31,12 @@ import { useLazyQuery, useMutation } from '@apollo/client';
 import {
   createExpenses,
   deleteExpenses,
+  getCustomers,
+  getDepartments,
+  getEmployees,
   getExpenses,
-  getRefresQuery,
+  getProducts,
+  getResourses,
   updateExpenses,
 } from '../../graphql';
 import {
@@ -67,7 +71,6 @@ export default function ExpProducts({
   company,
 }) {
   const col = getColumns({ isRTL, words });
-  const [vars, setVars] = useState<any>({});
 
   const { tempoptions } = useTemplate();
 
@@ -156,7 +159,11 @@ export default function ExpProducts({
           opType: 61,
         },
       },
-      ...getRefresQuery({ ...vars, isRTL }),
+      { query: getDepartments, variables: { isRTL, depType: 1 } },
+      { query: getEmployees, variables: { isRTL, resType: 1 } },
+      { query: getResourses, variables: { isRTL, resType: 1 } },
+      { query: getCustomers },
+      { query: getProducts },
     ],
   };
 
@@ -364,7 +371,6 @@ export default function ExpProducts({
                 company={company}
                 servicesproducts={products}
                 tasks={tasks}
-                setVars={setVars}
               ></PopupExpProducts>
             </PopupEditing>
           </Grid>

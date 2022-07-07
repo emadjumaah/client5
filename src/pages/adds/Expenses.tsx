@@ -23,8 +23,11 @@ import { useLazyQuery, useMutation } from '@apollo/client';
 import {
   createExpenses,
   deleteExpenses,
+  getCustomers,
+  getDepartments,
+  getEmployees,
   getExpenses,
-  getRefresQuery,
+  getResourses,
   updateExpenses,
 } from '../../graphql';
 import {
@@ -61,7 +64,6 @@ export default function Expenses({ isRTL, words, menuitem, theme, company }) {
 
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [vars, setVars] = useState<any>({});
 
   const [start, setStart] = useState<any>(null);
   const [end, setEnd] = useState<any>(null);
@@ -95,7 +97,10 @@ export default function Expenses({ isRTL, words, menuitem, theme, company }) {
           opType: 60,
         },
       },
-      ...getRefresQuery({ ...vars, isRTL }),
+      { query: getDepartments, variables: { isRTL, depType: 1 } },
+      { query: getEmployees, variables: { isRTL, resType: 1 } },
+      { query: getResourses, variables: { isRTL, resType: 1 } },
+      { query: getCustomers },
     ],
   };
 
@@ -251,11 +256,7 @@ export default function Expenses({ isRTL, words, menuitem, theme, company }) {
             addAction={addExpenses}
             editAction={editExpenses}
           >
-            <PopupExpenses
-              company={company}
-              tasks={tasks}
-              setVars={setVars}
-            ></PopupExpenses>
+            <PopupExpenses company={company} tasks={tasks}></PopupExpenses>
           </PopupEditing>
         </Grid>
         {loading && <Loading isRTL={isRTL} />}

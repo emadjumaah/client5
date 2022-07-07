@@ -31,7 +31,10 @@ import { useLazyQuery, useMutation } from '@apollo/client';
 import {
   createFinance,
   deleteFinance,
-  getRefresQuery,
+  getCustomers,
+  getDepartments,
+  getEmployees,
+  getResourses,
   updateFinance,
 } from '../../graphql';
 import {
@@ -84,7 +87,6 @@ export default function Receipt({ isRTL, words, menuitem, theme, company }) {
   const [rows, setRows] = useState([]);
   const [sum, setSum] = useState(0);
   const [loading, setLoading] = useState(false);
-  const [vars, setVars] = useState<any>({});
 
   const [start, setStart] = useState<any>(null);
   const [end, setEnd] = useState<any>(null);
@@ -118,7 +120,10 @@ export default function Receipt({ isRTL, words, menuitem, theme, company }) {
           end: end ? end.setHours(23, 59, 59, 999) : undefined,
         },
       },
-      ...getRefresQuery({ ...vars, isRTL }),
+      { query: getDepartments, variables: { isRTL, depType: 1 } },
+      { query: getEmployees, variables: { isRTL, resType: 1 } },
+      { query: getResourses, variables: { isRTL, resType: 1 } },
+      { query: getCustomers },
     ],
   };
 
@@ -315,11 +320,7 @@ export default function Receipt({ isRTL, words, menuitem, theme, company }) {
               addAction={addFinance}
               editAction={editFinance}
             >
-              <PopupReceipt
-                setVars={setVars}
-                company={company}
-                tasks={tasks}
-              ></PopupReceipt>
+              <PopupReceipt company={company} tasks={tasks}></PopupReceipt>
             </PopupEditing>
           </Grid>
         </Paper>

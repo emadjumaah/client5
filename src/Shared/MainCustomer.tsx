@@ -42,7 +42,9 @@ export default function MainCustomer({
 }: any) {
   const [data, setData] = useState<any>(null);
 
-  const [loadCalcss, calcsData]: any = useLazyQuery(getGereralCalculation);
+  const [loadCalcss, calcsData]: any = useLazyQuery(getGereralCalculation, {
+    nextFetchPolicy: 'cache-and-network',
+  });
 
   useEffect(() => {
     const variables = {

@@ -20,7 +20,16 @@ import { taskManamentTabs } from '../constants/rrule';
 import EventsCustomer from '../Shared/EventsCustomer';
 import InvoicesCustomer from '../Shared/InvoicesCustomer';
 import ReceiptCustomer from '../Shared/ReceiptCustomer';
-import { createExpenses, createFinance, getExpenses } from '../graphql';
+import {
+  createExpenses,
+  createFinance,
+  getCustomers,
+  getDepartments,
+  getEmployees,
+  getExpenses,
+  getProjects,
+  getResourses,
+} from '../graphql';
 import getTasks from '../graphql/query/getTasks';
 import { getTaskTimeAmountData } from '../common/helpers';
 import { ContractPrint } from '../print';
@@ -48,6 +57,7 @@ import DateNavigatorReports from '../components/filters/DateNavigatorReports';
 import InvoicesSupplier from '../Shared/InvoicesSupplier';
 import PaymentSupplier from '../Shared/PaymentSupplier';
 import ExpensesProdCustomer from '../Shared/ExpensesProdCustomer';
+import getGereralCalculation from '../graphql/query/getGereralCalculation';
 
 const PopupTaskView = ({
   open,
@@ -58,6 +68,8 @@ const PopupTaskView = ({
   theme,
   company,
   stopTask,
+  mstart,
+  mend,
 }: any) => {
   const classes = useStyles();
   const [row, setRow] = useState(item);
@@ -146,7 +158,28 @@ const PopupTaskView = ({
           end: end ? new Date(end).setHours(23, 59, 59, 999) : undefined,
         },
       },
+      {
+        query: getGereralCalculation,
+        variables: {
+          contractId: row?._id,
+          start: start ? new Date(start).setHours(0, 0, 0, 0) : undefined,
+          end: end ? new Date(end).setHours(23, 59, 59, 999) : undefined,
+        },
+      },
+      {
+        query: getTasks,
+        variables: {
+          contractId: row?._id,
+          start: mstart ? new Date(mstart).setHours(0, 0, 0, 0) : undefined,
+          end: mend ? new Date(mend).setHours(23, 59, 59, 999) : undefined,
+        },
+      },
       { query: getTasks },
+      { query: getDepartments, variables: { isRTL, depType: 1 } },
+      { query: getEmployees, variables: { isRTL, resType: 1 } },
+      { query: getResourses, variables: { isRTL, resType: 1 } },
+      { query: getProjects },
+      { query: getCustomers },
     ],
   };
   const refresExpensesQuery = {
@@ -160,7 +193,29 @@ const PopupTaskView = ({
           end: end ? new Date(end).setHours(23, 59, 59, 999) : undefined,
         },
       },
+      {
+        query: getGereralCalculation,
+        variables: {
+          contractId: row?._id,
+          start: start ? new Date(start).setHours(0, 0, 0, 0) : undefined,
+          end: end ? new Date(end).setHours(23, 59, 59, 999) : undefined,
+        },
+      },
+      {
+        query: getTasks,
+        variables: {
+          contractId: row?._id,
+          start: mstart ? new Date(mstart).setHours(0, 0, 0, 0) : undefined,
+          end: mend ? new Date(mend).setHours(23, 59, 59, 999) : undefined,
+        },
+      },
+
       { query: getTasks },
+      { query: getDepartments, variables: { isRTL, depType: 1 } },
+      { query: getEmployees, variables: { isRTL, resType: 1 } },
+      { query: getResourses, variables: { isRTL, resType: 1 } },
+      { query: getProjects },
+      { query: getCustomers },
     ],
   };
 
@@ -288,6 +343,8 @@ const PopupTaskView = ({
                         height={height}
                         start={start}
                         end={end}
+                        mstart={mstart}
+                        mend={mend}
                         value={row}
                         company={company}
                         tempoptions={tempoptions}
@@ -304,6 +361,8 @@ const PopupTaskView = ({
                         height={height}
                         start={start}
                         end={end}
+                        mstart={mstart}
+                        mend={mend}
                         value={row}
                         company={company}
                         tempoptions={tempoptions}
@@ -320,6 +379,8 @@ const PopupTaskView = ({
                         height={height}
                         start={start}
                         end={end}
+                        mstart={mstart}
+                        mend={mend}
                         value={row}
                         company={company}
                       ></ReceiptCustomer>
@@ -335,6 +396,8 @@ const PopupTaskView = ({
                         height={height}
                         start={start}
                         end={end}
+                        mstart={mstart}
+                        mend={mend}
                         value={row}
                         company={company}
                         tempoptions={tempoptions}
@@ -351,6 +414,8 @@ const PopupTaskView = ({
                         height={height}
                         start={start}
                         end={end}
+                        mstart={mstart}
+                        mend={mend}
                         value={row}
                         company={company}
                       ></PaymentSupplier>
@@ -366,6 +431,8 @@ const PopupTaskView = ({
                         height={height}
                         start={start}
                         end={end}
+                        mstart={mstart}
+                        mend={mend}
                         value={row}
                         company={company}
                         tempoptions={tempoptions}
@@ -383,6 +450,8 @@ const PopupTaskView = ({
                         height={height}
                         start={start}
                         end={end}
+                        mstart={mstart}
+                        mend={mend}
                         value={row}
                         company={company}
                         tempoptions={tempoptions}
@@ -400,6 +469,8 @@ const PopupTaskView = ({
                         height={height}
                         start={start}
                         end={end}
+                        mstart={mstart}
+                        mend={mend}
                         tempoptions={tempoptions}
                       ></KaidsCustomer>
                     </TabPanel>
@@ -414,6 +485,8 @@ const PopupTaskView = ({
                         height={height}
                         start={start}
                         end={end}
+                        mstart={mstart}
+                        mend={mend}
                         tempoptions={tempoptions}
                       ></ReminderCustomer>
                     </TabPanel>
@@ -531,6 +604,8 @@ const PopupTaskView = ({
               departments={departments}
               company={company}
               theme={theme}
+              mstart={start}
+              mend={end}
             ></PopupTaskInvoice>
           )}
           {row && (

@@ -30,12 +30,7 @@ import getObjectEvents from '../graphql/query/getObjectEvents';
 import useTasks from '../hooks/useTasks';
 import { useCustomers, useServices } from '../hooks';
 import { updateDocNumbers } from '../common';
-import {
-  createEvent,
-  deleteEventById,
-  getRefresQuery,
-  updateEvent,
-} from '../graphql';
+import { createEvent, deleteEventById, updateEvent } from '../graphql';
 import { Getter } from '@devexpress/dx-react-core';
 import PopupEditing from './PopupEditing';
 import { Command } from './Command';
@@ -43,6 +38,14 @@ import PopupAppointmentCustomer from '../pubups/PopupAppointmentCustomer';
 import useDepartmentsUp from '../hooks/useDepartmentsUp';
 import useEmployeesUp from '../hooks/useEmployeesUp';
 import useResoursesUp from '../hooks/useResoursesUp';
+import getGereralCalculation from '../graphql/query/getGereralCalculation';
+import {
+  getCustomers,
+  getDepartments,
+  getEmployees,
+  getResourses,
+  getTasks,
+} from '../graphql/query';
 export const getRowId = (row: any) => row._id;
 
 const NumberTypeProvider = (props) => (
@@ -83,6 +86,8 @@ export default function EventsCustomer({
   start,
   end,
   tempoptions,
+  mstart,
+  mend,
 }: any) {
   const col = getColumns({ isRTL, words });
 
@@ -115,7 +120,6 @@ export default function EventsCustomer({
 
   const { tasks } = useTasks();
   const [rows, setRows] = useState([]);
-  const [vars, setVars] = useState<any>({});
 
   const { departments } = useDepartmentsUp();
   const { employees } = useEmployeesUp();
@@ -132,11 +136,35 @@ export default function EventsCustomer({
           end: end ? end.setHours(23, 59, 59, 999) : undefined,
         },
       },
-      ...getRefresQuery({ ...vars, isRTL }),
+      {
+        query: getGereralCalculation,
+        variables: {
+          [name]: id,
+          start: start ? new Date(start).setHours(0, 0, 0, 0) : undefined,
+          end: end ? new Date(end).setHours(23, 59, 59, 999) : undefined,
+        },
+      },
+      name === 'contractId'
+        ? {
+            query: getTasks,
+            variables: {
+              contractId: id,
+              start: mstart ? new Date(mstart).setHours(0, 0, 0, 0) : undefined,
+              end: mend ? new Date(mend).setHours(23, 59, 59, 999) : undefined,
+            },
+          }
+        : undefined,
+      name === 'contractId' ? { query: getTasks } : undefined,
+      { query: getDepartments, variables: { isRTL, depType: 1 } },
+      { query: getEmployees, variables: { isRTL, resType: 1 } },
+      { query: getResourses, variables: { isRTL, resType: 1 } },
+      { query: getCustomers },
     ],
   };
 
-  const [getEvents, eventsData]: any = useLazyQuery(getObjectEvents);
+  const [getEvents, eventsData]: any = useLazyQuery(getObjectEvents, {
+    nextFetchPolicy: 'cache-and-network',
+  });
 
   useEffect(() => {
     const variables = {
@@ -249,7 +277,6 @@ export default function EventsCustomer({
                 tasks={tasks}
                 name={name}
                 value={value}
-                setVars={setVars}
               ></PopupAppointmentCustomer>
             </PopupEditing>
 

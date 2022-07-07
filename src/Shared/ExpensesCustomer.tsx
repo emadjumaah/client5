@@ -21,7 +21,6 @@ import {
   createExpenses,
   deleteExpenses,
   getExpenses,
-  getRefresQuery,
   updateExpenses,
 } from '../graphql';
 import {
@@ -39,6 +38,14 @@ import useEmployeesUp from '../hooks/useEmployeesUp';
 import useResoursesUp from '../hooks/useResoursesUp';
 import PopupExpensesDoc from '../pubups/PopupExpensesDoc';
 import { getColumns } from '../common/columns';
+import getGereralCalculation from '../graphql/query/getGereralCalculation';
+import {
+  getCustomers,
+  getDepartments,
+  getEmployees,
+  getResourses,
+  getTasks,
+} from '../graphql/query';
 
 export default function ExpensesCustomer({
   isRTL,
@@ -52,6 +59,8 @@ export default function ExpensesCustomer({
   height,
   start,
   end,
+  mstart,
+  mend,
   tempoptions,
   tempwords,
 }: any) {
@@ -102,14 +111,15 @@ export default function ExpensesCustomer({
 
   const { tasks } = useTasks();
   const { accounts } = useAccounts();
-  const [vars, setVars] = useState<any>({});
 
   const { expenseItems } = useExpenseItems();
   const { departments } = useDepartmentsUp();
   const { employees } = useEmployeesUp();
   const { resourses } = useResoursesUp();
 
-  const [loadExpenses, expensesData]: any = useLazyQuery(getExpenses);
+  const [loadExpenses, expensesData]: any = useLazyQuery(getExpenses, {
+    nextFetchPolicy: 'cache-and-network',
+  });
   const refresQuery = {
     refetchQueries: [
       {
@@ -121,7 +131,29 @@ export default function ExpensesCustomer({
           opType: 60,
         },
       },
-      ...getRefresQuery({ ...vars, isRTL }),
+      {
+        query: getGereralCalculation,
+        variables: {
+          [name]: id,
+          start: start ? new Date(start).setHours(0, 0, 0, 0) : undefined,
+          end: end ? new Date(end).setHours(23, 59, 59, 999) : undefined,
+        },
+      },
+      name === 'contractId'
+        ? {
+            query: getTasks,
+            variables: {
+              contractId: id,
+              start: mstart ? new Date(mstart).setHours(0, 0, 0, 0) : undefined,
+              end: mend ? new Date(mend).setHours(23, 59, 59, 999) : undefined,
+            },
+          }
+        : undefined,
+      name === 'contractId' ? { query: getTasks } : undefined,
+      { query: getDepartments, variables: { isRTL, depType: 1 } },
+      { query: getEmployees, variables: { isRTL, resType: 1 } },
+      { query: getResourses, variables: { isRTL, resType: 1 } },
+      { query: getCustomers },
     ],
   };
 
@@ -241,7 +273,6 @@ export default function ExpensesCustomer({
               tasks={tasks}
               value={value}
               name={name}
-              setVars={setVars}
             ></PopupExpensesDoc>
           </PopupEditing>
         </Grid>

@@ -57,7 +57,6 @@ const PopupExpensesDoc = ({
   task,
   value,
   name,
-  setVars,
 }: any) => {
   const classes = invoiceClasses();
   const [loading, setLoading] = useState(false);
@@ -562,7 +561,6 @@ const PopupExpensesDoc = ({
       branch: user.branch,
       userId: user._id,
     };
-    if (setVars) setVars(variables);
     const mutate = isNew ? addAction : editAction;
     apply(mutate, variables);
   };

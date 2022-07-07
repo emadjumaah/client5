@@ -21,7 +21,6 @@ import {
   createPurchaseInvoice,
   deletePurchaseInvoice,
   getPurchaseInvoices,
-  getRefresQuery,
   updatePurchaseInvoice,
 } from '../graphql';
 import { useLazyQuery, useMutation } from '@apollo/client';
@@ -40,6 +39,15 @@ import PopupPurchaseInvoice from '../pubups/PopupPurchaseInvoice';
 import useResoursesUp from '../hooks/useResoursesUp';
 import useEmployeesUp from '../hooks/useEmployeesUp';
 import useDepartmentsUp from '../hooks/useDepartmentsUp';
+import getGereralCalculation from '../graphql/query/getGereralCalculation';
+import {
+  getDepartments,
+  getEmployees,
+  getProducts,
+  getResourses,
+  getSuppliers,
+  getTasks,
+} from '../graphql/query';
 
 export default function InvoicesSupplier({
   isRTL,
@@ -52,6 +60,8 @@ export default function InvoicesSupplier({
   height,
   start,
   end,
+  mstart,
+  mend,
   tempoptions,
 }: any) {
   const col = getColumns({ isRTL, words });
@@ -89,7 +99,6 @@ export default function InvoicesSupplier({
 
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [vars, setVars] = useState<any>({});
 
   const { tasks } = useTasks();
   const { departments } = useDepartmentsUp();
@@ -97,18 +106,44 @@ export default function InvoicesSupplier({
   const { resourses } = useResoursesUp();
   const { products } = useProducts();
 
-  const [loadInvoices, opData]: any = useLazyQuery(getPurchaseInvoices);
+  const [loadInvoices, opData]: any = useLazyQuery(getPurchaseInvoices, {
+    nextFetchPolicy: 'cache-and-network',
+  });
 
   const refresQuery = {
     refetchQueries: [
       {
         query: getPurchaseInvoices,
         variables: {
-          start: start ? start.setHours(0, 0, 0, 0) : undefined,
-          end: end ? end.setHours(23, 59, 59, 999) : undefined,
+          [name]: id,
+          start: start ? new Date(start).setHours(0, 0, 0, 0) : undefined,
+          end: end ? new Date(end).setHours(23, 59, 59, 999) : undefined,
         },
       },
-      ...getRefresQuery({ ...vars, isRTL }),
+      {
+        query: getGereralCalculation,
+        variables: {
+          [name]: id,
+          start: start ? new Date(start).setHours(0, 0, 0, 0) : undefined,
+          end: end ? new Date(end).setHours(23, 59, 59, 999) : undefined,
+        },
+      },
+      name === 'contractId'
+        ? {
+            query: getTasks,
+            variables: {
+              contractId: id,
+              start: mstart ? new Date(mstart).setHours(0, 0, 0, 0) : undefined,
+              end: mend ? new Date(mend).setHours(23, 59, 59, 999) : undefined,
+            },
+          }
+        : undefined,
+      name === 'contractId' ? { query: getTasks } : undefined,
+      { query: getDepartments, variables: { isRTL, depType: 1 } },
+      { query: getEmployees, variables: { isRTL, resType: 1 } },
+      { query: getResourses, variables: { isRTL, resType: 1 } },
+      { query: getSuppliers },
+      { query: getProducts },
     ],
   };
 
@@ -221,7 +256,6 @@ export default function InvoicesSupplier({
               company={company}
               servicesproducts={products}
               tasks={tasks}
-              setVars={setVars}
             ></PopupPurchaseInvoice>
           </PopupEditing>
         </Grid>

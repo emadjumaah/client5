@@ -17,12 +17,7 @@ import {
 import { Command, Loading, PopupEditing } from '.';
 import { getRowId, updateDocNumbers } from '../common';
 import { useLazyQuery, useMutation } from '@apollo/client';
-import {
-  createFinance,
-  deleteFinance,
-  getRefresQuery,
-  updateFinance,
-} from '../graphql';
+import { createFinance, deleteFinance, updateFinance } from '../graphql';
 import {
   accountFormatter,
   currencyFormatter,
@@ -36,6 +31,14 @@ import { Box, Typography } from '@material-ui/core';
 import useTasks from '../hooks/useTasks';
 import PopupReceipt from '../pubups/PopupReceipt';
 import { getColumns } from '../common/columns';
+import getGereralCalculation from '../graphql/query/getGereralCalculation';
+import {
+  getCustomers,
+  getDepartments,
+  getEmployees,
+  getResourses,
+  getTasks,
+} from '../graphql/query';
 
 export default function ReceiptCustomer({
   isRTL,
@@ -49,6 +52,8 @@ export default function ReceiptCustomer({
   height,
   start,
   end,
+  mstart,
+  mend,
 }: any) {
   const col = getColumns({ isRTL, words });
 
@@ -65,10 +70,11 @@ export default function ReceiptCustomer({
 
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [vars, setVars] = useState<any>({});
 
   const { tasks } = useTasks();
-  const [loadFinances, financeData]: any = useLazyQuery(getReceipts);
+  const [loadFinances, financeData]: any = useLazyQuery(getReceipts, {
+    nextFetchPolicy: 'cache-and-network',
+  });
   const { accounts } = useAccounts();
   const refresQuery = {
     refetchQueries: [
@@ -80,7 +86,29 @@ export default function ReceiptCustomer({
           end: end ? end.setHours(23, 59, 59, 999) : undefined,
         },
       },
-      ...getRefresQuery({ ...vars, isRTL }),
+      {
+        query: getGereralCalculation,
+        variables: {
+          [name]: id,
+          start: start ? new Date(start).setHours(0, 0, 0, 0) : undefined,
+          end: end ? new Date(end).setHours(23, 59, 59, 999) : undefined,
+        },
+      },
+      name === 'contractId'
+        ? {
+            query: getTasks,
+            variables: {
+              contractId: id,
+              start: mstart ? new Date(mstart).setHours(0, 0, 0, 0) : undefined,
+              end: mend ? new Date(mend).setHours(23, 59, 59, 999) : undefined,
+            },
+          }
+        : undefined,
+      name === 'contractId' ? { query: getTasks } : undefined,
+      { query: getDepartments, variables: { isRTL, depType: 1 } },
+      { query: getEmployees, variables: { isRTL, resType: 1 } },
+      { query: getResourses, variables: { isRTL, resType: 1 } },
+      { query: getCustomers },
     ],
   };
 
@@ -195,7 +223,6 @@ export default function ReceiptCustomer({
               name={name}
               value={value}
               tasks={tasks}
-              setVars={setVars}
             ></PopupReceipt>
           </PopupEditing>
         </Grid>

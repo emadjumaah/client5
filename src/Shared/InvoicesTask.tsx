@@ -22,7 +22,6 @@ import {
   createInvoice,
   deleteInvoice,
   getInvoices,
-  getRefresQuery,
   updateInvoice,
 } from '../graphql';
 import { useLazyQuery, useMutation } from '@apollo/client';
@@ -63,7 +62,6 @@ export default function InvoicesTask({
 
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [vars, setVars] = useState<any>({});
 
   const [loadInvoices, opData]: any = useLazyQuery(getInvoices);
 
@@ -75,7 +73,6 @@ export default function InvoicesTask({
           contractId,
         },
       },
-      ...getRefresQuery({ ...vars, isRTL }),
     ],
   };
 
@@ -173,7 +170,6 @@ export default function InvoicesTask({
             company={company}
             servicesproducts={servicesproducts}
             task={task}
-            setVars={setVars}
           ></PopupInvoice>
         </PopupEditing>
       </Grid>

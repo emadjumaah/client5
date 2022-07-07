@@ -38,7 +38,7 @@ export default function KaidsCustomer({
   start,
   end,
   tempoptions,
-}) {
+}: any) {
   const col = getColumns({ isRTL, words });
 
   const [columns] = useState(
@@ -69,7 +69,9 @@ export default function KaidsCustomer({
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  const [loadKaids, kaidsData]: any = useLazyQuery(getGereralKaids);
+  const [loadKaids, kaidsData]: any = useLazyQuery(getGereralKaids, {
+    nextFetchPolicy: 'cache-and-network',
+  });
 
   useEffect(() => {
     const variables = {

@@ -76,7 +76,6 @@ const PopupAppointment = ({
   tasks,
   theme,
   company,
-  setVars,
 }: any) => {
   const classes = invoiceClasses();
   const [saving, setSaving] = useState(false);
@@ -609,7 +608,6 @@ const PopupAppointment = ({
             resourseColor: undefined,
           },
     };
-    if (setVars) setVars(variables);
     try {
       const rvariables = {
         ...variables,

@@ -60,7 +60,6 @@ const PopupPurchaseInvoice = ({
   task,
   value,
   name,
-  setVars,
 }: any) => {
   const classes = invoiceClasses();
   const [loading, setLoading] = useState(false);
@@ -609,7 +608,6 @@ const PopupPurchaseInvoice = ({
       paymentType: ptype,
       userId: user._id,
     };
-    if (setVars) setVars(variables);
     const mutate = isNew ? addAction : editAction;
     apply(mutate, variables);
   };

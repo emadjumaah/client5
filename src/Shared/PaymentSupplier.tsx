@@ -20,7 +20,7 @@ import { useLazyQuery, useMutation } from '@apollo/client';
 import {
   createFinance,
   deleteFinance,
-  getRefresQuery,
+  getDepartments,
   updateFinance,
 } from '../graphql';
 import {
@@ -36,6 +36,13 @@ import getPayments from '../graphql/query/getPayments';
 import { Box, Typography } from '@material-ui/core';
 import PopupPayment from '../pubups/PopupPayment';
 import useTasks from '../hooks/useTasks';
+import getGereralCalculation from '../graphql/query/getGereralCalculation';
+import {
+  getEmployees,
+  getResourses,
+  getSuppliers,
+  getTasks,
+} from '../graphql/query';
 
 export default function PaymentSupplier({
   isRTL,
@@ -49,6 +56,8 @@ export default function PaymentSupplier({
   height,
   start,
   end,
+  mstart,
+  mend,
 }: any) {
   const [columns] = useState([
     { name: 'time', title: words.time },
@@ -60,10 +69,11 @@ export default function PaymentSupplier({
 
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [vars, setVars] = useState<any>({});
 
   const { tasks } = useTasks();
-  const [loadFinances, financeData]: any = useLazyQuery(getPayments);
+  const [loadFinances, financeData]: any = useLazyQuery(getPayments, {
+    nextFetchPolicy: 'cache-and-network',
+  });
   const { accounts } = useAccounts();
   const refresQuery = {
     refetchQueries: [
@@ -75,7 +85,29 @@ export default function PaymentSupplier({
           end: end ? end.setHours(23, 59, 59, 999) : undefined,
         },
       },
-      ...getRefresQuery({ ...vars, isRTL }),
+      {
+        query: getGereralCalculation,
+        variables: {
+          [name]: id,
+          start: start ? new Date(start).setHours(0, 0, 0, 0) : undefined,
+          end: end ? new Date(end).setHours(23, 59, 59, 999) : undefined,
+        },
+      },
+      name === 'contractId'
+        ? {
+            query: getTasks,
+            variables: {
+              contractId: id,
+              start: mstart ? new Date(mstart).setHours(0, 0, 0, 0) : undefined,
+              end: mend ? new Date(mend).setHours(23, 59, 59, 999) : undefined,
+            },
+          }
+        : undefined,
+      name === 'contractId' ? { query: getTasks } : undefined,
+      { query: getDepartments, variables: { isRTL, depType: 1 } },
+      { query: getEmployees, variables: { isRTL, resType: 1 } },
+      { query: getResourses, variables: { isRTL, resType: 1 } },
+      { query: getSuppliers },
     ],
   };
 
@@ -191,7 +223,6 @@ export default function PaymentSupplier({
               name={name}
               value={value}
               tasks={tasks}
-              setVars={setVars}
             ></PopupPayment>
           </PopupEditing>
         </Grid>

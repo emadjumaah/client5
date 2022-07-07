@@ -32,7 +32,10 @@ import {
   createPurchaseInvoice,
   updatePurchaseInvoice,
   deletePurchaseInvoice,
-  getRefresQuery,
+  getDepartments,
+  getEmployees,
+  getResourses,
+  getSuppliers,
 } from '../../graphql';
 import { useLazyQuery, useMutation } from '@apollo/client';
 import {
@@ -107,8 +110,6 @@ export default function PurchaseInvoices({
     { columnName: 'time', togglingEnabled: false },
     { columnName: 'docNo', togglingEnabled: false },
   ]);
-  const [vars, setVars] = useState<any>({});
-
   const [rows, setRows] = useState([]);
   const [sum, setSum] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -150,7 +151,10 @@ export default function PurchaseInvoices({
           end: end ? end.setHours(23, 59, 59, 999) : undefined,
         },
       },
-      ...getRefresQuery({ ...vars, isRTL }),
+      { query: getDepartments, variables: { isRTL, depType: 1 } },
+      { query: getEmployees, variables: { isRTL, resType: 1 } },
+      { query: getResourses, variables: { isRTL, resType: 1 } },
+      { query: getSuppliers },
     ],
   };
 
@@ -348,7 +352,6 @@ export default function PurchaseInvoices({
                 company={company}
                 servicesproducts={products}
                 tasks={tasks}
-                setVars={setVars}
               ></PopupPurchaseInvoice>
             </PopupEditing>
           </Grid>

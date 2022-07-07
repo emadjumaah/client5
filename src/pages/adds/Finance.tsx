@@ -25,8 +25,10 @@ import { useLazyQuery, useMutation } from '@apollo/client';
 import {
   createFinance,
   deleteFinance,
+  getDepartments,
+  getEmployees,
   getFinances,
-  getRefresQuery,
+  getResourses,
   updateFinance,
 } from '../../graphql';
 import {
@@ -56,8 +58,6 @@ export default function Finance({ isRTL, words, menuitem, theme }) {
     { name: 'docNo', title: words.no },
     { name: 'amount', title: words.amount },
   ]);
-  const [vars, setVars] = useState<any>({});
-
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -92,7 +92,9 @@ export default function Finance({ isRTL, words, menuitem, theme }) {
           end: end ? end.setHours(23, 59, 59, 999) : undefined,
         },
       },
-      ...getRefresQuery({ ...vars, isRTL }),
+      { query: getDepartments, variables: { isRTL, depType: 1 } },
+      { query: getEmployees, variables: { isRTL, resType: 1 } },
+      { query: getResourses, variables: { isRTL, resType: 1 } },
     ],
   };
 
@@ -234,7 +236,7 @@ export default function Finance({ isRTL, words, menuitem, theme }) {
             addAction={addFinance}
             editAction={editFinance}
           >
-            <PopupFinance setVars={setVars}></PopupFinance>
+            <PopupFinance></PopupFinance>
           </PopupEditing>
         </Grid>
         {loading && <Loading isRTL={isRTL} />}

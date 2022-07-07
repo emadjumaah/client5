@@ -30,8 +30,11 @@ import { updateDocNumbers, getRowId, roles } from '../../common';
 import {
   createEvent,
   deleteEventById,
+  getCustomers,
+  getDepartments,
+  getEmployees,
   getEvents,
-  getRefresQuery,
+  getResourses,
   updateEvent,
 } from '../../graphql';
 import { useLazyQuery, useMutation } from '@apollo/client';
@@ -143,7 +146,6 @@ export default function Appointments({
   const [start, setStart] = useState<any>(null);
   const [end, setEnd] = useState<any>(null);
   const [periodvalue, setPeriodvalue] = useState<any>(null);
-  const [vars, setVars] = useState<any>({});
 
   const [item, setItem] = useState(null);
   const [name, setName] = useState(null);
@@ -251,7 +253,10 @@ export default function Appointments({
           due,
         },
       },
-      ...getRefresQuery({ ...vars, isRTL }),
+      { query: getDepartments, variables: { isRTL, depType: 1 } },
+      { query: getEmployees, variables: { isRTL, resType: 1 } },
+      { query: getResourses, variables: { isRTL, resType: 1 } },
+      { query: getCustomers },
     ],
   };
 
@@ -599,7 +604,6 @@ export default function Appointments({
                 servicesproducts={services}
                 theme={theme}
                 tasks={tasks}
-                setVars={setVars}
               ></PopupAppointment>
             </PopupEditing>
             <Getter

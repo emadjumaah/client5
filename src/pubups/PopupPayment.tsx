@@ -30,7 +30,6 @@ const PopupPayment = ({
   name,
   value,
   company,
-  setVars,
 }: any) => {
   const [saving, setSaving] = useState(false);
   const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
@@ -273,7 +272,6 @@ const PopupPayment = ({
       branch: user.branch,
       userId: user._id,
     };
-    if (setVars) setVars(variables);
     const mutate = isNew ? addAction : editAction;
     apply(mutate, variables);
   };

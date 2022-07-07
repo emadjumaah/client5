@@ -56,7 +56,6 @@ const PopupExpProducts = ({
   task,
   value,
   name,
-  setVars,
 }: any) => {
   const classes = invoiceClasses();
   const [loading, setLoading] = useState(false);
@@ -495,8 +494,6 @@ const PopupExpProducts = ({
       branch: user.branch,
       userId: user._id,
     };
-    if (setVars) setVars(variables);
-
     const mutate = isNew ? addAction : editAction;
     // return;
     apply(mutate, variables);

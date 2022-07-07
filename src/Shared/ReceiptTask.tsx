@@ -17,12 +17,7 @@ import {
 import { Command, Loading, PopupEditing } from '.';
 import { getRowId, updateDocNumbers } from '../common';
 import { useLazyQuery, useMutation } from '@apollo/client';
-import {
-  createFinance,
-  deleteFinance,
-  getRefresQuery,
-  updateFinance,
-} from '../graphql';
+import { createFinance, deleteFinance, updateFinance } from '../graphql';
 import {
   accountFormatter,
   currencyFormatter,
@@ -52,7 +47,6 @@ export default function ReceiptTask({ isRTL, words, theme, contractId }) {
 
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [vars, setVars] = useState<any>({});
 
   const { tasks } = useTasks();
   const { company } = useCompany();
@@ -67,7 +61,6 @@ export default function ReceiptTask({ isRTL, words, theme, contractId }) {
           contractId,
         },
       },
-      ...getRefresQuery({ ...vars, isRTL }),
     ],
   };
 
@@ -169,11 +162,7 @@ export default function ReceiptTask({ isRTL, words, theme, contractId }) {
           addAction={addFinance}
           editAction={editFinance}
         >
-          <PopupReceipt
-            setVars={setVars}
-            company={company}
-            tasks={tasks}
-          ></PopupReceipt>
+          <PopupReceipt company={company} tasks={tasks}></PopupReceipt>
         </PopupEditing>
       </Grid>
       {loading && <Loading isRTL={isRTL} />}
