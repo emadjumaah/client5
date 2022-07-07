@@ -17,12 +17,7 @@ import {
 import { Command, Loading, PopupEditing } from '.';
 import { getRowId, updateDocNumbers } from '../common';
 import { useLazyQuery, useMutation } from '@apollo/client';
-import {
-  createFinance,
-  deleteFinance,
-  getDepartments,
-  updateFinance,
-} from '../graphql';
+import { createFinance, deleteFinance, updateFinance } from '../graphql';
 import {
   accountFormatter,
   currencyFormatter,
@@ -37,12 +32,7 @@ import { Box, Typography } from '@material-ui/core';
 import PopupPayment from '../pubups/PopupPayment';
 import useTasks from '../hooks/useTasks';
 import getGereralCalculation from '../graphql/query/getGereralCalculation';
-import {
-  getEmployees,
-  getResourses,
-  getSuppliers,
-  getTasks,
-} from '../graphql/query';
+import { getTasks } from '../graphql/query';
 
 export default function PaymentSupplier({
   isRTL,
@@ -104,10 +94,6 @@ export default function PaymentSupplier({
           }
         : undefined,
       name === 'contractId' ? { query: getTasks } : undefined,
-      { query: getDepartments, variables: { isRTL, depType: 1 } },
-      { query: getEmployees, variables: { isRTL, resType: 1 } },
-      { query: getResourses, variables: { isRTL, resType: 1 } },
-      { query: getSuppliers },
     ],
   };
 

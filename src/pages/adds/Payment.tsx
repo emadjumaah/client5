@@ -28,15 +28,7 @@ import {
 import { Command, Loading, PopupEditing } from '../../Shared';
 import { getRowId, updateDocNumbers } from '../../common';
 import { useLazyQuery, useMutation } from '@apollo/client';
-import {
-  createFinance,
-  deleteFinance,
-  getDepartments,
-  getEmployees,
-  getResourses,
-  getSuppliers,
-  updateFinance,
-} from '../../graphql';
+import { createFinance, deleteFinance, updateFinance } from '../../graphql';
 import {
   accountFormatter,
   currencyFormatter,
@@ -120,10 +112,6 @@ export default function Payment({ isRTL, words, menuitem, theme, company }) {
           end: end ? end.setHours(23, 59, 59, 999) : undefined,
         },
       },
-      { query: getDepartments, variables: { isRTL, depType: 1 } },
-      { query: getEmployees, variables: { isRTL, resType: 1 } },
-      { query: getResourses, variables: { isRTL, resType: 1 } },
-      { query: getSuppliers },
     ],
   };
 

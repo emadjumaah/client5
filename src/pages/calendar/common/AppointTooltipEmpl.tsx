@@ -78,7 +78,9 @@ export const AppointTooltipEmpl = ({
 
   const task = tasks.filter((t: any) => t._id === contractId)?.[0];
 
-  const [getItems, itemsData]: any = useLazyQuery(getOperationItems);
+  const [getItems, itemsData]: any = useLazyQuery(getOperationItems, {
+    fetchPolicy: 'cache-and-network',
+  });
 
   useEffect(() => {
     if (appointmentData && appointmentData._id) {

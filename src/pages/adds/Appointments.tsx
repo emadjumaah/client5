@@ -30,11 +30,7 @@ import { updateDocNumbers, getRowId, roles } from '../../common';
 import {
   createEvent,
   deleteEventById,
-  getCustomers,
-  getDepartments,
-  getEmployees,
   getEvents,
-  getResourses,
   updateEvent,
 } from '../../graphql';
 import { useLazyQuery, useMutation } from '@apollo/client';
@@ -253,10 +249,6 @@ export default function Appointments({
           due,
         },
       },
-      { query: getDepartments, variables: { isRTL, depType: 1 } },
-      { query: getEmployees, variables: { isRTL, resType: 1 } },
-      { query: getResourses, variables: { isRTL, resType: 1 } },
-      { query: getCustomers },
     ],
   };
 

@@ -167,7 +167,9 @@ export default function Tasks({ isRTL, words, menuitem, theme, company }) {
     dispatch({ type: 'setHiddenColumnNames', payload: hiddenColumns });
   };
 
-  const [loadTasks, tasksData]: any = useLazyQuery(getTasks);
+  const [loadTasks, tasksData]: any = useLazyQuery(getTasks, {
+    fetchPolicy: 'cache-and-network',
+  });
 
   const refresQuery = {
     refetchQueries: [

@@ -39,13 +39,7 @@ import useDepartmentsUp from '../hooks/useDepartmentsUp';
 import useEmployeesUp from '../hooks/useEmployeesUp';
 import useResoursesUp from '../hooks/useResoursesUp';
 import getGereralCalculation from '../graphql/query/getGereralCalculation';
-import {
-  getCustomers,
-  getDepartments,
-  getEmployees,
-  getResourses,
-  getTasks,
-} from '../graphql/query';
+import { getTasks } from '../graphql/query';
 export const getRowId = (row: any) => row._id;
 
 const NumberTypeProvider = (props) => (
@@ -155,10 +149,6 @@ export default function EventsCustomer({
           }
         : undefined,
       name === 'contractId' ? { query: getTasks } : undefined,
-      { query: getDepartments, variables: { isRTL, depType: 1 } },
-      { query: getEmployees, variables: { isRTL, resType: 1 } },
-      { query: getResourses, variables: { isRTL, resType: 1 } },
-      { query: getCustomers },
     ],
   };
 

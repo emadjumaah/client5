@@ -40,14 +40,7 @@ import useResoursesUp from '../hooks/useResoursesUp';
 import useEmployeesUp from '../hooks/useEmployeesUp';
 import useDepartmentsUp from '../hooks/useDepartmentsUp';
 import getGereralCalculation from '../graphql/query/getGereralCalculation';
-import {
-  getDepartments,
-  getEmployees,
-  getProducts,
-  getResourses,
-  getSuppliers,
-  getTasks,
-} from '../graphql/query';
+import { getProducts, getTasks } from '../graphql/query';
 
 export default function InvoicesSupplier({
   isRTL,
@@ -139,10 +132,6 @@ export default function InvoicesSupplier({
           }
         : undefined,
       name === 'contractId' ? { query: getTasks } : undefined,
-      { query: getDepartments, variables: { isRTL, depType: 1 } },
-      { query: getEmployees, variables: { isRTL, resType: 1 } },
-      { query: getResourses, variables: { isRTL, resType: 1 } },
-      { query: getSuppliers },
       { query: getProducts },
     ],
   };

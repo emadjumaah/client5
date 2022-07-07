@@ -38,14 +38,7 @@ import useResoursesUp from '../hooks/useResoursesUp';
 import useEmployeesUp from '../hooks/useEmployeesUp';
 import useDepartmentsUp from '../hooks/useDepartmentsUp';
 import getGereralCalculation from '../graphql/query/getGereralCalculation';
-import {
-  getCustomers,
-  getDepartments,
-  getEmployees,
-  getProducts,
-  getResourses,
-  getTasks,
-} from '../graphql/query';
+import { getProducts, getTasks } from '../graphql/query';
 
 export default function ExpensesProdCustomer({
   isRTL,
@@ -145,10 +138,6 @@ export default function ExpensesProdCustomer({
           }
         : undefined,
       name === 'contractId' ? { query: getTasks } : undefined,
-      { query: getDepartments, variables: { isRTL, depType: 1 } },
-      { query: getEmployees, variables: { isRTL, resType: 1 } },
-      { query: getResourses, variables: { isRTL, resType: 1 } },
-      { query: getCustomers },
       { query: getProducts },
     ],
   };

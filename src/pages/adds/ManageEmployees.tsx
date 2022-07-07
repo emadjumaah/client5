@@ -49,6 +49,8 @@ import useWindowDimensions from '../../hooks/useWindowDimensions';
 import { TableComponent } from '../../Shared/TableComponent';
 import { roles } from '../../common';
 import { EmployeeContext } from '../../contexts/managment';
+import { useLazyQuery } from '@apollo/client';
+import { getEmployees } from '../../graphql';
 
 export default function ManageEmployees({
   isRTL,
@@ -59,6 +61,8 @@ export default function ManageEmployees({
 }: any) {
   const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
   const [pageSizes] = useState([5, 6, 10, 20, 50, 0]);
+  const [rows, setRows] = useState([]);
+
   const [item, setItem] = useState(null);
   const [openItem, setOpenItem] = useState(false);
   const col = getColumns({ isRTL, words });
@@ -111,22 +115,32 @@ export default function ManageEmployees({
     { name: 'avatar', title: words.color },
   ]);
 
-  const {
-    employees,
-    addEmployee,
-    editEmployee,
-    removeEmployee,
-    refreshemployee,
-  } = useEmployeesUp();
+  const { addEmployee, editEmployee, removeEmployee, refreshemployee } =
+    useEmployeesUp();
+
+  const [getemps, empData]: any = useLazyQuery(getEmployees, {
+    fetchPolicy: 'cache-and-network',
+  });
+
+  useEffect(() => {
+    getemps({ isRTL, resType: 1 });
+  }, []);
+
+  useEffect(() => {
+    if (empData?.data?.getEmployees?.data) {
+      const { data } = empData.data.getEmployees;
+      setRows(data);
+    }
+  }, [empData]);
 
   useEffect(() => {
     if (openItem) {
-      if (employees && employees.length > 0) {
-        const opened = employees.filter((ts: any) => ts._id === item._id)?.[0];
+      if (rows && rows.length > 0) {
+        const opened = rows.filter((ts: any) => ts._id === item._id)?.[0];
         setItem(opened);
       }
     }
-  }, [employees]);
+  }, [rows]);
 
   const commitChanges = async ({ deleted }) => {
     if (deleted) {
@@ -172,7 +186,7 @@ export default function ManageEmployees({
           }}
         >
           <Grid
-            rows={employees.filter((em: any) => em.resType === 1)}
+            rows={rows}
             columns={roles.isEditor() ? columns : columnsViewer}
             getRowId={getRowId}
           >

@@ -136,7 +136,9 @@ const PopupAppointment = ({
     store: { user },
   }: GContextTypes = useContext(GlobalContext);
 
-  const [getItems, itemsData]: any = useLazyQuery(getOperationItems);
+  const [getItems, itemsData]: any = useLazyQuery(getOperationItems, {
+    fetchPolicy: 'cache-and-network',
+  });
   const [loadActions, actionsData]: any = useLazyQuery(getActions);
 
   const isemployee = user?.isEmployee && user?.employeeId;

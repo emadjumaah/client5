@@ -25,15 +25,7 @@ import ItemsTable from '../Shared/ItemsTable';
 import { PriceTotal } from '../Shared/TotalPrice';
 import { operationTypes } from '../constants';
 import { useLazyQuery, useMutation } from '@apollo/client';
-import {
-  createInvoice,
-  getDepartments,
-  getEmployees,
-  getInvoices,
-  getOperationItems,
-  getProjects,
-  getResourses,
-} from '../graphql';
+import { createInvoice, getInvoices, getOperationItems } from '../graphql';
 import { accountCode } from '../constants/kaid';
 import PaymentSelect from '../pages/options/PaymentSelect';
 import PopupLayout from '../pages/main/PopupLayout';
@@ -45,7 +37,7 @@ import { useReactToPrint } from 'react-to-print';
 import { InvoicePrint } from '../print';
 import { getInvDays } from '../common/helpers';
 import getGereralCalculation from '../graphql/query/getGereralCalculation';
-import { getCustomers, getTasks } from '../graphql/query';
+import { getTasks } from '../graphql/query';
 import { sleep } from '../Shared/helpers';
 
 export const indexTheList = (list: any) => {
@@ -127,15 +119,12 @@ const PopupTaskInvoice = ({
           end: mend ? new Date(mend).setHours(23, 59, 59, 999) : undefined,
         },
       },
-      { query: getDepartments, variables: { isRTL, depType: 1 } },
-      { query: getEmployees, variables: { isRTL, resType: 1 } },
-      { query: getResourses, variables: { isRTL, resType: 1 } },
-      { query: getProjects },
       { query: getTasks },
-      { query: getCustomers },
     ],
   };
-  const [getItems, itemsData]: any = useLazyQuery(getOperationItems);
+  const [getItems, itemsData]: any = useLazyQuery(getOperationItems, {
+    fetchPolicy: 'cache-and-network',
+  });
 
   const [addInvoice] = useMutation(createInvoice, refresQuery);
 

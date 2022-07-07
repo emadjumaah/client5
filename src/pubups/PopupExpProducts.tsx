@@ -109,7 +109,9 @@ const PopupExpProducts = ({
 
   const isemployee = user?.isEmployee && user?.employeeId;
 
-  const [getItems, itemsData]: any = useLazyQuery(getOperationItems);
+  const [getItems, itemsData]: any = useLazyQuery(getOperationItems, {
+    fetchPolicy: 'cache-and-network',
+  });
 
   const openDepartment = () => {
     setOpenDep(true);

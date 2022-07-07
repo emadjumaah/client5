@@ -23,11 +23,7 @@ import { useLazyQuery, useMutation } from '@apollo/client';
 import {
   createExpenses,
   deleteExpenses,
-  getCustomers,
-  getDepartments,
-  getEmployees,
   getExpenses,
-  getResourses,
   updateExpenses,
 } from '../../graphql';
 import {
@@ -97,10 +93,6 @@ export default function Expenses({ isRTL, words, menuitem, theme, company }) {
           opType: 60,
         },
       },
-      { query: getDepartments, variables: { isRTL, depType: 1 } },
-      { query: getEmployees, variables: { isRTL, resType: 1 } },
-      { query: getResourses, variables: { isRTL, resType: 1 } },
-      { query: getCustomers },
     ],
   };
 

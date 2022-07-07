@@ -46,6 +46,8 @@ import { Box, Paper, Typography } from '@material-ui/core';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
 import { TableComponent } from '../../Shared/TableComponent';
 import { ResourseContext } from '../../contexts/managment';
+import { useLazyQuery } from '@apollo/client';
+import { getResourses } from '../../graphql';
 
 export default function ManageResourses({
   isRTL,
@@ -56,6 +58,7 @@ export default function ManageResourses({
 }: any) {
   const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
   const [pageSizes] = useState([5, 10, 20, 50, 0]);
+  const [rows, setRows] = useState([]);
   const [item, setItem] = useState(null);
   const [openItem, setOpenItem] = useState(false);
   const col = getColumns({ isRTL, words });
@@ -102,23 +105,33 @@ export default function ManageResourses({
     { name: isRTL ? 'nameAr' : 'name', title: words.name },
     { name: 'avatar', title: words.color },
   ]);
-
-  const {
-    resourses,
-    addResourse,
-    editResourse,
-    removeResourse,
-    refreshresourse,
-  } = useResoursesUp();
   const { width, height } = useWindowDimensions();
+
+  const { addResourse, editResourse, removeResourse, refreshresourse } =
+    useResoursesUp();
+  const [getemps, empData]: any = useLazyQuery(getResourses, {
+    fetchPolicy: 'cache-and-network',
+  });
+
+  useEffect(() => {
+    getemps({ isRTL, resType: 1 });
+  }, []);
+
+  useEffect(() => {
+    if (empData?.data?.getResourses?.data) {
+      const { data } = empData.data.getResourses;
+      setRows(data);
+    }
+  }, [empData]);
+
   useEffect(() => {
     if (openItem) {
-      if (resourses && resourses.length > 0) {
-        const opened = resourses.filter((ts: any) => ts._id === item._id)?.[0];
+      if (rows && rows.length > 0) {
+        const opened = rows.filter((ts: any) => ts._id === item._id)?.[0];
         setItem(opened);
       }
     }
-  }, [resourses]);
+  }, [rows]);
   const commitChanges = async ({ deleted }) => {
     if (deleted) {
       const _id = deleted[0];
@@ -164,7 +177,7 @@ export default function ManageResourses({
           }}
         >
           <Grid
-            rows={resourses}
+            rows={rows}
             columns={roles.isEditor() ? columns : columnsViewer}
             getRowId={getRowId}
           >

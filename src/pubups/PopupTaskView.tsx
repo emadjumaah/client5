@@ -20,16 +20,7 @@ import { taskManamentTabs } from '../constants/rrule';
 import EventsCustomer from '../Shared/EventsCustomer';
 import InvoicesCustomer from '../Shared/InvoicesCustomer';
 import ReceiptCustomer from '../Shared/ReceiptCustomer';
-import {
-  createExpenses,
-  createFinance,
-  getCustomers,
-  getDepartments,
-  getEmployees,
-  getExpenses,
-  getProjects,
-  getResourses,
-} from '../graphql';
+import { createExpenses, createFinance, getExpenses } from '../graphql';
 import getTasks from '../graphql/query/getTasks';
 import { getTaskTimeAmountData } from '../common/helpers';
 import { ContractPrint } from '../print';
@@ -175,11 +166,6 @@ const PopupTaskView = ({
         },
       },
       { query: getTasks },
-      { query: getDepartments, variables: { isRTL, depType: 1 } },
-      { query: getEmployees, variables: { isRTL, resType: 1 } },
-      { query: getResourses, variables: { isRTL, resType: 1 } },
-      { query: getProjects },
-      { query: getCustomers },
     ],
   };
   const refresExpensesQuery = {
@@ -211,11 +197,6 @@ const PopupTaskView = ({
       },
 
       { query: getTasks },
-      { query: getDepartments, variables: { isRTL, depType: 1 } },
-      { query: getEmployees, variables: { isRTL, resType: 1 } },
-      { query: getResourses, variables: { isRTL, resType: 1 } },
-      { query: getProjects },
-      { query: getCustomers },
     ],
   };
 

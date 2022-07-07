@@ -25,10 +25,7 @@ import { useLazyQuery, useMutation } from '@apollo/client';
 import {
   createFinance,
   deleteFinance,
-  getDepartments,
-  getEmployees,
   getFinances,
-  getResourses,
   updateFinance,
 } from '../../graphql';
 import {
@@ -92,9 +89,6 @@ export default function Finance({ isRTL, words, menuitem, theme }) {
           end: end ? end.setHours(23, 59, 59, 999) : undefined,
         },
       },
-      { query: getDepartments, variables: { isRTL, depType: 1 } },
-      { query: getEmployees, variables: { isRTL, resType: 1 } },
-      { query: getResourses, variables: { isRTL, resType: 1 } },
     ],
   };
 

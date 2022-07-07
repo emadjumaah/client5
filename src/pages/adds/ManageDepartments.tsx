@@ -48,6 +48,8 @@ import useWindowDimensions from '../../hooks/useWindowDimensions';
 import { TableComponent } from '../../Shared/TableComponent';
 import { roles } from '../../common';
 import { DepartmentContext } from '../../contexts/managment';
+import { getDepartments } from '../../graphql';
+import { useLazyQuery } from '@apollo/client';
 
 export default function ManageDepartments({
   isRTL,
@@ -57,6 +59,7 @@ export default function ManageDepartments({
   company,
 }: any) {
   const [pageSizes] = useState([5, 6, 10, 20, 50, 0]);
+  const [rows, setRows] = useState([]);
 
   const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
   const [item, setItem] = useState(null);
@@ -102,24 +105,32 @@ export default function ManageDepartments({
     { name: 'avatar', title: words.color },
   ]);
 
-  const {
-    departments,
-    addDepartment,
-    editDepartment,
-    removeDepartment,
-    refreshdepartment,
-  } = useDepartmentsUp();
+  const { addDepartment, editDepartment, removeDepartment, refreshdepartment } =
+    useDepartmentsUp();
+
+  const [getemps, empData]: any = useLazyQuery(getDepartments, {
+    fetchPolicy: 'cache-and-network',
+  });
+
+  useEffect(() => {
+    getemps({ isRTL, resType: 1 });
+  }, []);
+
+  useEffect(() => {
+    if (empData?.data?.getDepartments?.data) {
+      const { data } = empData.data.getDepartments;
+      setRows(data);
+    }
+  }, [empData]);
 
   useEffect(() => {
     if (openItem) {
-      if (departments && departments.length > 0) {
-        const opened = departments.filter(
-          (ts: any) => ts._id === item._id
-        )?.[0];
+      if (rows && rows.length > 0) {
+        const opened = rows.filter((ts: any) => ts._id === item._id)?.[0];
         setItem(opened);
       }
     }
-  }, [departments]);
+  }, [rows]);
 
   const commitChanges = async ({ deleted }) => {
     if (deleted) {
@@ -167,7 +178,7 @@ export default function ManageDepartments({
           }}
         >
           <Grid
-            rows={departments}
+            rows={rows}
             columns={roles.isEditor() ? columns : columnsViewer}
             getRowId={getRowId}
           >

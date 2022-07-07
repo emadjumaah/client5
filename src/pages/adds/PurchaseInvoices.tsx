@@ -32,10 +32,6 @@ import {
   createPurchaseInvoice,
   updatePurchaseInvoice,
   deletePurchaseInvoice,
-  getDepartments,
-  getEmployees,
-  getResourses,
-  getSuppliers,
 } from '../../graphql';
 import { useLazyQuery, useMutation } from '@apollo/client';
 import {
@@ -151,10 +147,6 @@ export default function PurchaseInvoices({
           end: end ? end.setHours(23, 59, 59, 999) : undefined,
         },
       },
-      { query: getDepartments, variables: { isRTL, depType: 1 } },
-      { query: getEmployees, variables: { isRTL, resType: 1 } },
-      { query: getResourses, variables: { isRTL, resType: 1 } },
-      { query: getSuppliers },
     ],
   };
 

@@ -13,15 +13,7 @@ import ItemsTable from '../Shared/ItemsTable';
 import { PriceTotal } from '../Shared/TotalPrice';
 import { operationTypes } from '../constants';
 import { useMutation } from '@apollo/client';
-import {
-  createInvoice,
-  getCustomers,
-  getDepartments,
-  getEmployees,
-  getInvoices,
-  getProducts,
-  getResourses,
-} from '../graphql';
+import { createInvoice, getInvoices, getProducts } from '../graphql';
 import { accountCode } from '../constants/kaid';
 import PaymentSelect from '../pages/options/PaymentSelect';
 import PopupLayout from '../pages/main/PopupLayout';
@@ -116,10 +108,6 @@ const PopupAppointInvoice = ({
           end: new Date().setHours(23, 59, 59, 999),
         },
       },
-      { query: getDepartments, variables: { isRTL, depType: 1 } },
-      { query: getEmployees, variables: { isRTL, resType: 1 } },
-      { query: getResourses, variables: { isRTL, resType: 1 } },
-      { query: getCustomers },
       { query: getProducts },
     ],
   };
