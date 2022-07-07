@@ -2741,7 +2741,6 @@ export const purchaseFormatter = ({
     </Box>
   );
 };
-
 export const salesMainFormatter = ({
   row,
   isRTL,

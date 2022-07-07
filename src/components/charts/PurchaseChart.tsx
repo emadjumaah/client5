@@ -33,9 +33,23 @@ export default function PurchaseChart({
           bottom: 10,
         }}
       >
-        <Bar dataKey="totalPurchaseInvoiced" fill={scolor} />
-        <Bar dataKey="totalPurchasePaid" stackId="a" fill={pcolor} />
-        <Bar dataKey="totalPurchaseDiscount" stackId="a" fill={dcolor} />
+        <Bar
+          isAnimationActive={false}
+          dataKey="totalPurchaseInvoiced"
+          fill={scolor}
+        />
+        <Bar
+          isAnimationActive={false}
+          dataKey="totalPurchasePaid"
+          stackId="a"
+          fill={pcolor}
+        />
+        <Bar
+          isAnimationActive={false}
+          dataKey="totalPurchaseDiscount"
+          stackId="a"
+          fill={dcolor}
+        />
       </BarChart>
     </ResponsiveContainer>
   );

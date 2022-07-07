@@ -24,8 +24,18 @@ export default function ExpensesChart({ row, pcolor, ecolor, height }: any) {
           bottom: 10,
         }}
       >
-        <Bar dataKey="toatlExpenses" stackId="a" fill={ecolor} />
-        <Bar dataKey="toatlProdExpenses" stackId="a" fill={pcolor} />
+        <Bar
+          isAnimationActive={false}
+          dataKey="toatlExpenses"
+          stackId="a"
+          fill={ecolor}
+        />
+        <Bar
+          isAnimationActive={false}
+          dataKey="toatlProdExpenses"
+          stackId="a"
+          fill={pcolor}
+        />
       </BarChart>
     </ResponsiveContainer>
   );

@@ -29,8 +29,8 @@ export default function IncomeChart({ row, scolor, ecolor, height }: any) {
           bottom: 10,
         }}
       >
-        <Bar dataKey="invoiced" fill={scolor} />
-        <Bar dataKey="expenses" fill={ecolor} />
+        <Bar isAnimationActive={false} dataKey="invoiced" fill={scolor} />
+        <Bar isAnimationActive={false} dataKey="expenses" fill={ecolor} />
       </BarChart>
     </ResponsiveContainer>
   );

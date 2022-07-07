@@ -24,8 +24,16 @@ export default function KaidsChart({ row, ccolor, dcolor, height }: any) {
           bottom: 10,
         }}
       >
-        <Bar dataKey="totalKaidscredit" fill={ccolor} />
-        <Bar dataKey="totalkaidsdebit" fill={dcolor} />
+        <Bar
+          isAnimationActive={false}
+          dataKey="totalKaidscredit"
+          fill={ccolor}
+        />
+        <Bar
+          isAnimationActive={false}
+          dataKey="totalkaidsdebit"
+          fill={dcolor}
+        />
       </BarChart>
     </ResponsiveContainer>
   );
