@@ -16,7 +16,7 @@ export default () => {
   const lang = store?.lang;
   const isRTL = lang === 'ar' ? true : false;
   const [getDeparts, depData]: any = useLazyQuery(getProjects, {
-    variables: { isRTL, depType: 2 },
+    variables: { isRTL },
   });
 
   const [addProject] = useMutation(createProject, {

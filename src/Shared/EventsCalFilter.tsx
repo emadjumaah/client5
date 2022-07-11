@@ -43,7 +43,7 @@ export default function EventsCalFilter({
       )}
       <Grid item xs={2}>
         <FilterSelect
-          options={departments}
+          options={departments.filter((d: any) => d.depType === 1)}
           value={departvalue}
           setValue={setDepartvalue}
           words={words}

@@ -215,19 +215,6 @@ const PopupPurchaseInvoice = ({
   }, [taskvalue]);
 
   useEffect(() => {
-    if (isNew) {
-      if (emplvalue) {
-        if (emplvalue?.departmentId && name !== 'departmentId') {
-          const dept = departments.filter(
-            (dep: any) => dep._id === emplvalue?.departmentId
-          )?.[0];
-          setDepartvalue(dept);
-        }
-      }
-    }
-  }, [emplvalue]);
-
-  useEffect(() => {
     const items = itemsData?.data?.['getOperationItems']?.data || [];
 
     if (items && items.length > 0) {
@@ -805,7 +792,7 @@ const PopupPurchaseInvoice = ({
             name="department"
             title={tempwords?.department}
             words={words}
-            options={departments}
+            options={departments.filter((d: any) => d.depType === 1)}
             value={departvalue}
             setSelectValue={setDepartvalue}
             setSelectError={setDepartError}

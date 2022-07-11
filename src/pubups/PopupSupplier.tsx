@@ -49,6 +49,7 @@ const PopupSupplier = ({
   const onSubmit = async (data: any) => {
     setSaving(true);
     const name = data.name.trim();
+    const nameAr = !isNew ? data.nameAr.trim() : name;
     const { phone, email, address } = data;
     let logo: any;
 
@@ -59,7 +60,7 @@ const PopupSupplier = ({
     const variables: any = {
       _id: row && row._id ? row._id : undefined, // is it new or edit
       name,
-      nameAr: name,
+      nameAr,
       phone,
       email,
       address,
@@ -156,6 +157,20 @@ const PopupSupplier = ({
                     mb={0}
                   />
                 </Grid>
+                {!isNew && (
+                  <Grid item xs={12}>
+                    <TextFieldLocal
+                      required
+                      name="nameAr"
+                      label={words.nameAr}
+                      register={register}
+                      errors={errors}
+                      row={row}
+                      fullWidth
+                      mb={0}
+                    />
+                  </Grid>
+                )}
               </Grid>
             </Grid>
             <Grid item xs={4}>

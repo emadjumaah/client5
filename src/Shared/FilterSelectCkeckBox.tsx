@@ -72,7 +72,7 @@ export default function FilterSelect({
           rowsMax={1}
           id={name}
           name={name}
-          label={words[name]}
+          label={words?.[name]}
           variant="outlined"
           style={{
             width,

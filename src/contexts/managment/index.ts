@@ -29,6 +29,7 @@ import {
   initSupplierContext,
   supplierReducer,
 } from './supplier';
+import { KaidContext, initKaidContext, kaidReducer } from './kaid';
 
 export {
   ContractContext,
@@ -52,4 +53,7 @@ export {
   SupplierContext,
   initSupplierContext,
   supplierReducer,
+  KaidContext,
+  initKaidContext,
+  kaidReducer,
 };

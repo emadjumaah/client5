@@ -10,7 +10,7 @@ const GenLanguage = ({ lang, setLang, isRTL }) => {
     setLang(e.target.value);
   };
   return (
-    <Paper style={{ height: 300, marginTop: 10 }}>
+    <Paper style={{ height: 350, marginTop: 10 }}>
       <Box padding={3}>
         <Typography variant="h6">
           {isRTL ? 'تغيير اللغة' : 'Change Language'}

@@ -42,13 +42,14 @@ const PopupExpenseItem = ({
   const onSubmit = async (data: any) => {
     setSaving(true);
     const name = data.name.trim();
+    const nameAr = !isNew ? data.nameAr.trim() : name;
     const { price, unit, desc } = data;
 
     const variables: any = {
       _id: row && row._id ? row._id : undefined,
       itemType: 10,
       name,
-      nameAr: name,
+      nameAr,
       price: Number(price),
       unit,
       desc,
@@ -126,6 +127,20 @@ const PopupExpenseItem = ({
                 mb={0}
               />
             </Grid>
+            {!isNew && (
+              <Grid item xs={12}>
+                <TextFieldLocal
+                  required
+                  name="nameAr"
+                  label={words.nameAr}
+                  register={register}
+                  errors={errors}
+                  row={row}
+                  fullWidth
+                  mb={0}
+                />
+              </Grid>
+            )}
             <Grid item xs={6}>
               <TextFieldLocal
                 name="price"

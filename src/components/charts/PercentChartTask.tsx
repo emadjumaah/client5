@@ -34,8 +34,7 @@ const PercentChartTask = ({ height, progress, pricolor, seccolor }) => {
           fill={pricolor}
           dataKey="value"
           labelLine={false}
-          animationBegin={0}
-          animationDuration={1000}
+          isAnimationActive={false}
         >
           <Label
             position="center"

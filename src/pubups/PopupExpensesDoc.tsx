@@ -15,7 +15,6 @@ import LoadingInline from '../Shared/LoadingInline';
 import PopupLayout from '../pages/main/PopupLayout';
 import { Grid } from '@material-ui/core';
 import AutoFieldLocal from '../components/fields/AutoFieldLocal';
-import { getAppStartEndPeriod } from '../common/time';
 import { CalenderLocal, TextFieldLocal } from '../components';
 import { weekdaysNNo } from '../constants/datatypes';
 import useTasks from '../hooks/useTasks';
@@ -164,19 +163,6 @@ const PopupExpensesDoc = ({
       setEmplvalue(emp);
     }
   }, [user, employees]);
-
-  useEffect(() => {
-    if (isNew) {
-      if (resovalue) {
-        if (resovalue?.departmentId && name !== 'departmentId') {
-          const dept = departments.filter(
-            (dep: any) => dep._id === resovalue?.departmentId
-          )?.[0];
-          setDepartvalue(dept);
-        }
-      }
-    }
-  }, [resovalue]);
 
   useEffect(() => {
     const items = itemsData?.data?.['getOperationItems']?.data || [];
@@ -426,14 +412,6 @@ const PopupExpensesDoc = ({
   };
 
   const onSubmit = async (data: any) => {
-    const { startPeriod, endPeriod } = getAppStartEndPeriod();
-    if (selectedDate < startPeriod || selectedDate > endPeriod) {
-      await messageAlert(
-        setAlrt,
-        isRTL ? 'يجب تعديل التاريخ' : 'Date should be change'
-      );
-      return;
-    }
     if (selectedDate > new Date()) {
       await messageAlert(
         setAlrt,
@@ -450,10 +428,17 @@ const PopupExpensesDoc = ({
       );
       return;
     }
-    if (debitAcc === creditAcc) {
+    if (!creditAcc) {
       await messageAlert(
         setAlrt,
-        isRTL ? 'الحسابات يجب ان تكون مختلفة' : 'The accounts must be deferent'
+        isRTL ? 'يجب تحديد الحساب' : 'You have to select Account'
+      );
+      return;
+    }
+    if (creditAcc && creditAcc.code === 1070 && !emplvalue) {
+      await messageAlert(
+        setAlrt,
+        isRTL ? 'يجب تحديد الموظف' : 'You have to select Employee'
       );
       return;
     }
@@ -831,7 +816,7 @@ const PopupExpensesDoc = ({
         <Grid item xs={1}></Grid>
         <Grid item xs={9}>
           <TextFieldLocal
-            name="title"
+            name="desc"
             label={words.description}
             register={register}
             multiline

@@ -343,7 +343,7 @@ const PopupNSProduct = ({
             name="department"
             title={words.department}
             words={words}
-            options={departments}
+            options={departments.filter((d: any) => d.depType === 1)}
             value={departvalue}
             setSelectValue={setDepartvalue}
             setSelectError={setDepartError}
@@ -362,6 +362,7 @@ const PopupNSProduct = ({
             row={null}
             addAction={addDepartment}
             editAction={editDepartment}
+            depType={1}
           ></PopupDeprtment>
           <PopupBrand
             open={openBrnd}

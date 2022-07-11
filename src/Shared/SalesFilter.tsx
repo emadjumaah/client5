@@ -1,14 +1,14 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import React from "react";
-import { Box, Typography } from "@material-ui/core";
+import React from 'react';
+import { Box, Typography } from '@material-ui/core';
 import {
   KeyboardDatePicker,
   MuiPickersUtilsProvider,
-} from "@material-ui/pickers";
-import DateFnsUtils from "@date-io/date-fns";
-import { moneyFormat } from "./colorFormat";
-import FilterSelect from "./FilterSelect";
-import { periods } from "../constants/datatypes";
+} from '@material-ui/pickers';
+import DateFnsUtils from '@date-io/date-fns';
+import { moneyFormat } from './colorFormat';
+import FilterSelect from './FilterSelect';
+import { periods } from '../constants/datatypes';
 
 export default function SalesFilter({
   employees,
@@ -40,19 +40,19 @@ export default function SalesFilter({
     <Box>
       <Box
         display="flex"
-        style={{ alignItems: "center", justifyContent: "space-between" }}
+        style={{ alignItems: 'center', justifyContent: 'space-between' }}
       >
         <Box
           display="flex"
           border={1}
           borderColor="#ddd"
           style={{
-            position: "absolute",
+            position: 'absolute',
             left: isRTL ? 20 : undefined,
             right: isRTL ? undefined : 20,
             top: 30,
             borderRadius: 10,
-            backgroundColor: "#f8f8f8",
+            backgroundColor: '#f8f8f8',
           }}
         >
           <MuiPickersUtilsProvider utils={DateFnsUtils}>
@@ -67,7 +67,7 @@ export default function SalesFilter({
               value={start}
               onChange={setStart}
               KeyboardButtonProps={{
-                "aria-label": "change date",
+                'aria-label': 'change date',
               }}
               style={{ width: 150, marginLeft: 20, marginRight: 20 }}
             />
@@ -82,7 +82,7 @@ export default function SalesFilter({
               value={end}
               onChange={setEnd}
               KeyboardButtonProps={{
-                "aria-label": "change date",
+                'aria-label': 'change date',
               }}
               style={{ width: 150 }}
             />
@@ -101,7 +101,7 @@ export default function SalesFilter({
       </Box>
       <Box
         display="flex"
-        style={{ position: "absolute", marginTop: 10, zIndex: 111 }}
+        style={{ position: 'absolute', marginTop: 10, zIndex: 111 }}
       >
         <FilterSelect
           options={employees}
@@ -112,7 +112,7 @@ export default function SalesFilter({
           name="employee"
         ></FilterSelect>
         <FilterSelect
-          options={departments}
+          options={departments.filter((d: any) => d.depType === 1)}
           value={departvalue}
           setValue={setDepartvalue}
           words={words}
@@ -149,8 +149,8 @@ export default function SalesFilter({
             display="flex"
             style={{
               flex: 1,
-              alignItems: "center",
-              justifyContent: "flex-end",
+              alignItems: 'center',
+              justifyContent: 'flex-end',
             }}
           >
             <Box style={{ marginRight: 20, marginLeft: 20 }}>

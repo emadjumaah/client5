@@ -423,32 +423,11 @@ const PopupTask = ({
 
   useEffect(() => {
     if (isNew) {
-      if (emplvalue && name !== 'departmentId') {
-        if (emplvalue?.departmentId) {
-          const dept = departments.filter(
-            (dep: any) => dep._id === emplvalue?.departmentId
-          )?.[0];
-          setDepartvalue(dept);
-        }
-      }
-    }
-  }, [emplvalue]);
-
-  useEffect(() => {
-    if (isNew) {
       const start = new Date();
       start.setHours(8, 0, 0);
       setStart(start);
       setStatus(taskStatus.filter((es: any) => es.id === 1)?.[0]);
       setEvList([]);
-      if (name === 'employeeId') {
-        if (value?.departmentId) {
-          const dept = departments.filter(
-            (dep: any) => dep._id === value?.departmentId
-          )?.[0];
-          setDepartvalue(dept);
-        }
-      }
     }
   }, [open]);
   const getOverallTotal = () => {
@@ -928,7 +907,7 @@ const PopupTask = ({
                   name="department"
                   title={tempwords?.department}
                   words={words}
-                  options={departments}
+                  options={departments.filter((d: any) => d.depType === 1)}
                   value={departvalue}
                   setSelectValue={setDepartvalue}
                   setSelectError={setDepartError}

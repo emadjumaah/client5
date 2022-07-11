@@ -104,4 +104,17 @@ export const palettes = [
       },
     },
   },
+  {
+    palette: {
+      primary: {
+        main: '#197278',
+      },
+      secondary: {
+        main: '#edddd4',
+      },
+      background: {
+        default: '#F3F4F8',
+      },
+    },
+  },
 ];

@@ -218,13 +218,6 @@ export const ReminderForm = (props: any) => {
     }
     onNewFieldChange(newValue, 'employee');
     setEmplvalue(newValue);
-    if (newValue?.departmentId) {
-      const dept = departments.filter(
-        (dep: any) => dep._id === newValue?.departmentId
-      )?.[0];
-      onNewFieldChange(dept, 'department');
-      setDepartvalue(dept);
-    }
   };
   const selectResourse = (value: any) => {
     let newValue = value;
@@ -242,40 +235,7 @@ export const ReminderForm = (props: any) => {
     }
     onNewFieldChange(newValue, 'resourse');
     setResovalue(newValue);
-    if (newValue?.departmentId) {
-      const dept = departments.filter(
-        (dep: any) => dep._id === newValue?.departmentId
-      )?.[0];
-      onNewFieldChange(dept, 'department');
-      setDepartvalue(dept);
-    }
   };
-
-  useEffect(() => {
-    if (!row._id) {
-      if (emplvalue) {
-        if (emplvalue?.departmentId) {
-          const dept = departments.filter(
-            (dep: any) => dep._id === emplvalue?.departmentId
-          )?.[0];
-          onNewFieldChange(dept, 'department');
-        }
-      }
-    }
-  }, [emplvalue]);
-
-  useEffect(() => {
-    if (!row._id) {
-      if (resovalue) {
-        if (resovalue?.departmentId) {
-          const dept = departments.filter(
-            (dep: any) => dep._id === resovalue?.departmentId
-          )?.[0];
-          onNewFieldChange(dept, 'department');
-        }
-      }
-    }
-  }, [resovalue]);
 
   useEffect(() => {
     onFieldChange({ actions: JSON.stringify(actionslist) });
@@ -404,7 +364,7 @@ export const ReminderForm = (props: any) => {
                 name="department"
                 title={tempwords?.department}
                 words={words}
-                options={departments}
+                options={departments.filter((d: any) => d.depType === 1)}
                 value={departvalue}
                 setSelectValue={selectDepartment}
                 openAdd={openDepartment}

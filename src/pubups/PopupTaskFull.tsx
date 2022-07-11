@@ -333,6 +333,13 @@ const PopupTaskFull = ({
       setInfo(taskExtra);
     }
   }, [taskExtra]);
+  useEffect(() => {
+    if (emplvalue && resovalue && !tasktitle) {
+      const emp = isRTL ? emplvalue.nameAr : emplvalue.name;
+      const res = isRTL ? resovalue.nameAr : resovalue.name;
+      setTasktitle(`${res} - ${emp}`);
+    }
+  }, [emplvalue, resovalue]);
 
   useEffect(() => {
     if (weekdays && weekdays.length > 0) {
@@ -359,6 +366,11 @@ const PopupTaskFull = ({
     if (start && end) {
       const days = getInvDays(start, end);
       setInvdays(days);
+    } else {
+      if (!isEvents) {
+        setEvList([]);
+      }
+      setInvdays(0);
     }
   }, [start, end]);
 
@@ -374,11 +386,11 @@ const PopupTaskFull = ({
         count,
         isCustom,
       });
-      if (isNew || isEvents) {
-        const d = rdata.all[rdata.all.length - 1];
-        d.setHours(9, 0, 0);
-        setEnd(d);
-      }
+      // if (isEvents) {
+      //   const d = rdata.all[rdata.all.length - 1];
+      //   d.setHours(9, 0, 0);
+      //   setEnd(d);
+      // }
       setRrule(rdata);
     }
   }, [
@@ -391,14 +403,15 @@ const PopupTaskFull = ({
     monthdays,
     bymonthday,
     isCustom,
+    isEvents,
   ]);
 
   useEffect(() => {
-    if (start && end && isEvents) {
+    if (start && isEvents) {
       const event = {
         title: tasktitle,
         startDate: start,
-        endDate: end,
+        endDate: start,
         amount: total,
         customer,
         department,
@@ -561,31 +574,10 @@ const PopupTaskFull = ({
 
   useEffect(() => {
     if (isNew) {
-      if (emplvalue && name !== 'departmentId') {
-        if (emplvalue?.departmentId) {
-          const dept = departments.filter(
-            (dep: any) => dep._id === emplvalue?.departmentId
-          )?.[0];
-          setDepartvalue(dept);
-        }
-      }
-    }
-  }, [emplvalue]);
-
-  useEffect(() => {
-    if (isNew) {
       const start = new Date();
       start.setHours(8, 0, 0);
       setStart(start);
       setEvList([]);
-      if (name === 'employeeId') {
-        if (value?.departmentId) {
-          const dept = departments.filter(
-            (dep: any) => dep._id === value?.departmentId
-          )?.[0];
-          setDepartvalue(dept);
-        }
-      }
     }
   }, [open]);
 
@@ -771,10 +763,17 @@ const PopupTaskFull = ({
   };
 
   const onSubmit = async () => {
-    if (start > end) {
+    if (!start) {
       await messageAlert(
         setAlrt,
         isRTL ? 'يجب تعديل التاريخ' : 'Date should be change'
+      );
+      return;
+    }
+    if (!end && !dayCost) {
+      await messageAlert(
+        setAlrt,
+        isRTL ? 'قيمة اليوم مطلوبة' : 'Day cost required'
       );
       return;
     }
@@ -925,20 +924,24 @@ const PopupTaskFull = ({
                   value={end}
                   label={words.end}
                   onChange={(d: any) => {
-                    d.setHours(9, 0, 0);
-                    setEnd(d);
-                    if (isCustom) {
-                      const rdata = getRruleData({
-                        freq: 1,
-                        byweekday: null,
-                        dtstart: start,
-                        until: d,
-                        interval: 1,
-                        bymonthday: null,
-                        count: 1,
-                        isCustom,
-                      });
-                      setRrule(rdata);
+                    if (d) {
+                      d.setHours(9, 0, 0);
+                      setEnd(d);
+                      if (isCustom) {
+                        const rdata = getRruleData({
+                          freq: 1,
+                          byweekday: null,
+                          dtstart: start,
+                          until: d,
+                          interval: 1,
+                          bymonthday: null,
+                          count: 1,
+                          isCustom,
+                        });
+                        setRrule(rdata);
+                      }
+                    } else {
+                      setEnd(null);
                     }
                   }}
                   format="dd/MM/yyyy"
@@ -950,9 +953,11 @@ const PopupTaskFull = ({
                 ></CalenderLocal>
               </Grid>
               <Grid item xs={2}>
-                <Typography
-                  style={{ marginTop: 20, marginLeft: 10, marginRight: 10 }}
-                >{`( ${invdays} ${isRTL ? 'يوم' : 'Day'} )`}</Typography>
+                {invdays > 0 && (
+                  <Typography
+                    style={{ marginTop: 20, marginLeft: 10, marginRight: 10 }}
+                  >{`( ${invdays} ${isRTL ? 'يوم' : 'Day'} )`}</Typography>
+                )}
               </Grid>
               <Grid item xs={4} style={{ marginTop: 15 }}>
                 <FormControlLabel
@@ -1219,7 +1224,7 @@ const PopupTaskFull = ({
                   name="department"
                   title={tempwords?.department}
                   words={words}
-                  options={departments}
+                  options={departments.filter((d: any) => d.depType === 1)}
                   value={departvalue}
                   setSelectValue={setDepartvalue}
                   setSelectError={setDepartError}

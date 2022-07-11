@@ -34,6 +34,7 @@ import { operationTypes } from '../constants';
 import { getTaskName } from '../constants/branch';
 import {
   carstatuss,
+  departmentTypes,
   eventColors,
   eventStatus,
   operationNames,
@@ -605,7 +606,7 @@ export const eventStatusFormatter = ({ value }: any) => {
   }
 };
 
-const renderTag = ({ value, color, bgcolor, fontSize = 12 }) => {
+const renderTag = ({ value, color, bgcolor, fontSize = 12, width = 75 }) => {
   if (!value) return <></>;
   return (
     <Box
@@ -614,7 +615,7 @@ const renderTag = ({ value, color, bgcolor, fontSize = 12 }) => {
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
-        width: 75,
+        width,
         height: 24,
         backgroundColor: bgcolor,
         borderRadius: 5,
@@ -690,7 +691,9 @@ export const taskTitleNameFormatter = ({
         <Typography variant="caption">{simpleDateFormatter2(start)}</Typography>
       </Grid>
       <Grid item xs={4}>
-        <Typography variant="caption">{simpleDateFormatter2(end)}</Typography>
+        {end && (
+          <Typography variant="caption">{simpleDateFormatter2(end)}</Typography>
+        )}
       </Grid>
     </Grid>
   );
@@ -783,7 +786,6 @@ export const taskdataFormatter = ({ row, isRTL }: any) => {
 export const daysdataFormatter = ({
   row,
   isRTL,
-  theme,
   height = 100,
   bc = '#ddd',
 }: any) => {
@@ -1427,6 +1429,19 @@ export const nameLinkFormat = ({ row, value, setItem, setOpenItem }: any) => {
   );
 };
 
+export const departmentTypeFormat = ({ row, isRTL }: any) => {
+  const { depType } = row;
+  const dep = departmentTypes.filter((de: any) => de.id === depType);
+  if (dep && dep.length > 0) {
+    return (
+      <Typography style={{ fontSize: 13 }}>
+        {isRTL ? dep[0].nameAr : dep[0].name}
+      </Typography>
+    );
+  } else {
+    return <div></div>;
+  }
+};
 export const nameManageLinkFormat = ({
   row,
   value,
@@ -1434,6 +1449,7 @@ export const nameManageLinkFormat = ({
   setOpenItem,
   isRTL,
 }: any) => {
+  const { departmentId, departmentNameAr, departmentName } = row;
   if (!value || value === '') return <div></div>;
   return (
     <Box>
@@ -1457,15 +1473,28 @@ export const nameManageLinkFormat = ({
       >
         <Typography style={{ fontSize: 14 }}>{value}</Typography>
       </Button>
-      {row?.carstatus && carstatusFormatter({ value: row.carstatus, isRTL })}
-
       <Box
         style={{
-          paddingLeft: 10,
-          paddingRight: 10,
+          paddingLeft: 5,
+          paddingRight: 5,
         }}
       >
         <Grid container spacing={0}>
+          {row?.carstatus && (
+            <Grid item xs={6}>
+              {carstatusFormatter({ value: row.carstatus, isRTL })}
+            </Grid>
+          )}
+          {departmentId && (
+            <Grid item xs={6}>
+              {renderTag({
+                value: isRTL ? departmentNameAr : departmentName,
+                color: '#333',
+                bgcolor: colors.blueGrey[50],
+                width: 100,
+              })}
+            </Grid>
+          )}
           {row?.phone && (
             <Grid item xs={12}>
               <Typography
@@ -1495,14 +1524,14 @@ export const nameManageLinkFormat = ({
             <Grid item xs={6}>
               <Typography
                 style={{
-                  fontSize: 12,
-                  fontWeight: 'bold',
+                  fontSize: 14,
+                  // fontWeight: 'bold',
                   marginRight: 5,
                   marginLeft: 5,
                 }}
-                variant="caption"
+                // variant="caption"
               >
-                {row.plate}
+                {isRTL ? 'رقم : ' : 'No : '} {row.plate}
               </Typography>
             </Grid>
           )}
@@ -3216,13 +3245,13 @@ export const itemTotalFormatter = ({ row }: any) => {
 export const accountFormatter = (props: any, accounts: any, isRTL: any) => {
   const account = accounts.filter((acc: any) => acc.code === props.value);
   return (
-    <div style={{ fontSize: 14 }}>
+    <Typography style={{ fontSize: 14 }}>
       {account && account.length > 0
         ? isRTL
           ? account[0].nameAr
           : account[0].name
         : ''}
-    </div>
+    </Typography>
   );
 };
 export const groupFormatter = (props: any, groups: any, isRTL: any) => {
@@ -3263,6 +3292,7 @@ export const customerAccountFormatter = (
     );
   }
 };
+
 
 export const employeeColorStyle = {
   // backgroundImage:

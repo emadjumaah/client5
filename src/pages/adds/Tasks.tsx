@@ -442,7 +442,6 @@ export default function Tasks({ isRTL, words, menuitem, theme, company }) {
                 return <SearchTable isRTL={isRTL} {...props}></SearchTable>;
               }}
             />
-
             <PopupEditing addAction={addTask} editAction={editTask}>
               <PopupTaskFull
                 resourses={resourses}

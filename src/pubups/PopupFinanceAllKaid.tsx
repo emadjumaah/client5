@@ -430,7 +430,7 @@ const PopupFinanceAllKaid = ({
                     name="department"
                     title={tempwords?.department}
                     words={words}
-                    options={departments}
+                    options={departments.filter((d: any) => d.depType === 1)}
                     value={departvalue}
                     setSelectValue={setDepartvalue}
                     isRTL={isRTL}

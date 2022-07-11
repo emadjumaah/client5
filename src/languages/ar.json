@@ -15,6 +15,7 @@
     "addDepartment": "اضافة قسم جديد",
     "departmentName": "اسم القسم",
     "departmentNameAr": "اسم القسم بالعربي",
+    "depType": "نوع القسم",
     "employee": "الموظف",
     "addEmployee": "اضافة موظف جديد",
     "employeeName": "اسم الموظف",

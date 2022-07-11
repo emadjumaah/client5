@@ -15,8 +15,10 @@ import { Grid, TextField } from '@material-ui/core';
 import PopupLayout from '../pages/main/PopupLayout';
 import { TextFieldLocal } from '../components';
 import { getPopupTitle } from '../constants/menu';
+import { departmentTypes } from '../constants/datatypes';
+import FilterSelectSingle from '../Shared/FilterSelectSingle';
 
-const PopupDeprtment = ({
+const PopupResourseType = ({
   open,
   onClose,
   row,
@@ -24,11 +26,10 @@ const PopupDeprtment = ({
   setNewValue,
   addAction,
   editAction,
-  newtext,
   theme,
-  depType,
 }: any) => {
   const [saving, setSaving] = useState(false);
+  const [depart, setDepart] = useState(departmentTypes[1]);
   const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
   const { register, handleSubmit, errors, reset } = useForm(yup.departResolver);
   const {
@@ -40,6 +41,12 @@ const PopupDeprtment = ({
   useEffect(() => {
     if (row && row._id) {
       setColor(row.color);
+      if (row?.depType) {
+        const dep = departmentTypes.filter((de: any) => de.id === row?.depType);
+        if (dep && dep.length > 0) {
+          setDepart(dep[0]);
+        }
+      }
     }
   }, [row]);
 
@@ -52,7 +59,8 @@ const PopupDeprtment = ({
       _id: row && row._id ? row._id : undefined, // is it new or edit
       name,
       nameAr,
-      depType: depType ? depType : 1,
+      // depType: 1,
+      depType: depart ? depart.id : undefined,
       desc,
       color,
       branch: user.branch,
@@ -92,7 +100,7 @@ const PopupDeprtment = ({
     reset();
     setColor('#AAAAAA');
     setSaving(false);
-    // setDepart(departmentTypes[0]);
+    setDepart(departmentTypes[1]);
   };
 
   const onHandleSubmit = () => {
@@ -144,6 +152,16 @@ const PopupDeprtment = ({
             )}
           </Grid>
           <Grid item xs={12}>
+            <FilterSelectSingle
+              options={departmentTypes.filter((dt: any) => dt.id > 1)}
+              value={depart}
+              setValue={setDepart}
+              words={words}
+              isRTL={isRTL}
+              name="depType"
+            ></FilterSelectSingle>
+          </Grid>
+          <Grid item xs={12}>
             <TextFieldLocal
               name="desc"
               label={words.description}
@@ -186,4 +204,4 @@ const PopupDeprtment = ({
   );
 };
 
-export default PopupDeprtment;
+export default PopupResourseType;

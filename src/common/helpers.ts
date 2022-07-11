@@ -595,16 +595,31 @@ export const getReadyCloseEventData = (
 export const getTaskTimeAmountData = (task: any, time = new Date()) => {
   if (!task) return null;
 
-  const { start, end, amount } = task;
+  const { start, end, amount, dayCost } = task;
 
   const startms = new Date(start).getTime();
   const endms = new Date(end).getTime();
   const now = time.getTime();
 
-  const days = Math.ceil((endms - startms) / (1000 * 60 * 60 * 24));
-
   const daysnow = Math.ceil((now - startms) / (1000 * 60 * 60 * 24));
-  const dayamount = Math.round(amount / days);
+  const days = end
+    ? Math.ceil((endms - startms) / (1000 * 60 * 60 * 24))
+    : daysnow;
+  const progress = Math.round((daysnow / days) * 100) / 100;
+  const dayamount = dayCost ? dayCost : Math.round(amount / days);
+
+  if (!end) {
+    const amountnow = Number(dayCost) * daysnow;
+    return {
+      progress,
+      days,
+      daysnow,
+      amountnow,
+      remaining: amount - amountnow,
+      amount,
+      dayamount,
+    };
+  }
 
   if (now < startms) {
     return {
@@ -632,8 +647,6 @@ export const getTaskTimeAmountData = (task: any, time = new Date()) => {
 
   const amountnow = Math.round(dayamount * daysnow);
   const remaining = Math.round(amount - amountnow);
-
-  const progress = Math.round((daysnow / days) * 100) / 100;
 
   return {
     progress,
@@ -684,7 +697,7 @@ export const getTaskStatus = (tasks: any, isRTL: any) => {
           type,
         };
       }
-      if (now > endms) {
+      if (end && now > endms) {
         return {
           ...task,
           status: isRTL ? 'غير مقفل' : 'Not Closed',

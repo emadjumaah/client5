@@ -20,7 +20,7 @@ export const getRefresQuery = ({
 }: any) => {
   const qlist = [];
   if (department && department?.departmentId)
-    qlist.push({ query: getDepartments, variables: { isRTL, depType: 1 } });
+    qlist.push({ query: getDepartments, variables: { isRTL } });
   if (employee && employee?.employeeId)
     qlist.push({ query: getEmployees, variables: { isRTL, resType: 1 } });
   if (resourse && resourse?.resourseId)
@@ -33,7 +33,7 @@ export const getRefresQuery = ({
 };
 
 export const rQueriesCustomer = (isRTL: any) => [
-  { query: getDepartments, variables: { isRTL, depType: 1 } },
+  { query: getDepartments, variables: { isRTL } },
   { query: getEmployees, variables: { isRTL, resType: 1 } },
   { query: getResourses, variables: { isRTL, resType: 1 } },
   { query: getProjects },
@@ -41,7 +41,7 @@ export const rQueriesCustomer = (isRTL: any) => [
   { query: getCustomers },
 ];
 export const rQueriesSupplier = (isRTL: any) => [
-  { query: getDepartments, variables: { isRTL, depType: 1 } },
+  { query: getDepartments, variables: { isRTL } },
   { query: getEmployees, variables: { isRTL, resType: 1 } },
   { query: getResourses, variables: { isRTL, resType: 1 } },
   { query: getProjects },

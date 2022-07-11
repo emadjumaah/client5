@@ -1,8 +1,12 @@
 import { gql } from '@apollo/client';
 
 export default gql`
-  query getResourses($isRTL: Boolean, $resType: Int) {
-    getResourses(isRTL: $isRTL, resType: $resType) {
+  query getResourses($isRTL: Boolean, $resType: Int, $departmentId: String) {
+    getResourses(
+      isRTL: $isRTL
+      resType: $resType
+      departmentId: $departmentId
+    ) {
       ok
       error
       data {

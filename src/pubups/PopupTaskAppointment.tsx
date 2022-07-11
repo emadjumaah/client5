@@ -201,32 +201,6 @@ const PopupTaskAppointment = ({
   }, [open]);
 
   useEffect(() => {
-    if (isNew) {
-      if (emplvalue) {
-        if (emplvalue?.departmentId) {
-          const dept = departments.filter(
-            (dep: any) => dep._id === emplvalue?.departmentId
-          )?.[0];
-          setDepartvalue(dept);
-        }
-      }
-    }
-  }, [emplvalue]);
-
-  useEffect(() => {
-    if (isNew) {
-      if (resovalue) {
-        if (resovalue?.departmentId) {
-          const dept = departments.filter(
-            (dep: any) => dep._id === resovalue?.departmentId
-          )?.[0];
-          setDepartvalue(dept);
-        }
-      }
-    }
-  }, [resovalue]);
-
-  useEffect(() => {
     getOverallTotal();
   }, [itemsList]);
   useEffect(() => {
@@ -602,7 +576,7 @@ const PopupTaskAppointment = ({
                       name="department"
                       title={tempwords?.department}
                       words={words}
-                      options={departments}
+                      options={departments.filter((d: any) => d.depType === 1)}
                       value={departvalue}
                       setSelectValue={setDepartvalue}
                       setSelectError={setDepartError}

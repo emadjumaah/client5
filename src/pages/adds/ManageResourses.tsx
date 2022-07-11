@@ -48,6 +48,8 @@ import { TableComponent } from '../../Shared/TableComponent';
 import { ResourseContext } from '../../contexts/managment';
 import { useLazyQuery } from '@apollo/client';
 import { getResourses } from '../../graphql';
+import AutoFieldLocal from '../../components/fields/AutoFieldLocal';
+import useDepartmentsUp from '../../hooks/useDepartmentsUp';
 
 export default function ManageResourses({
   isRTL,
@@ -59,9 +61,13 @@ export default function ManageResourses({
   const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
   const [pageSizes] = useState([5, 10, 20, 50, 0]);
   const [rows, setRows] = useState([]);
+  const [departvalue, setDepartvalue] = useState<any>(null);
+
   const [item, setItem] = useState(null);
   const [openItem, setOpenItem] = useState(false);
   const col = getColumns({ isRTL, words });
+
+  const { departments } = useDepartmentsUp();
 
   const onCloseItem = () => {
     setOpenItem(false);
@@ -114,8 +120,13 @@ export default function ManageResourses({
   });
 
   useEffect(() => {
-    getemps({ isRTL, resType: 1 });
-  }, []);
+    getemps({
+      variables: {
+        isRTL,
+        departmentId: departvalue ? departvalue._id : undefined,
+      },
+    });
+  }, [departvalue]);
 
   useEffect(() => {
     if (empData?.data?.getResourses?.data) {
@@ -164,6 +175,31 @@ export default function ManageResourses({
           backgroundColor: bgcolor,
         }}
       >
+        <Box
+          display="flex"
+          style={{
+            position: 'absolute',
+            zIndex: 111,
+            flexDirection: 'row',
+            alignItems: 'center',
+            marginTop: 7,
+            left: isRTL ? undefined : 470,
+            right: isRTL ? 470 : undefined,
+            width: 220,
+          }}
+        >
+          <AutoFieldLocal
+            name="department"
+            title={words?.type}
+            words={words}
+            options={departments.filter((d: any) => d.depType === 3)}
+            value={departvalue}
+            setSelectValue={setDepartvalue}
+            isRTL={isRTL}
+            fullWidth
+            mb={0}
+          ></AutoFieldLocal>
+        </Box>
         <Paper
           elevation={5}
           style={{
@@ -301,7 +337,11 @@ export default function ManageResourses({
               addAction={addResourse}
               editAction={editResourse}
             >
-              <PopupResourses resKind={2} resType={1}></PopupResourses>
+              <PopupResourses
+                departments={departments}
+                resKind={2}
+                resType={1}
+              ></PopupResourses>
             </PopupEditing>
           </Grid>
         </Paper>

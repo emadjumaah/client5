@@ -17,7 +17,7 @@ import PopupLayout from '../pages/main/PopupLayout';
 import { Grid } from '@material-ui/core';
 import { TextFieldLocal } from '../components';
 import AutoFieldLocal from '../components/fields/AutoFieldLocal';
-import { useDepartments, useTemplate } from '../hooks';
+import { useTemplate } from '../hooks';
 import { getPopupTitle } from '../constants/menu';
 import PopupDeprtment from './PopupDeprtment';
 import useDepartmentsUp from '../hooks/useDepartmentsUp';
@@ -34,6 +34,7 @@ const PopupResourses = ({
   newtext,
   theme,
   resType,
+  departments,
 }: any) => {
   const [saving, setSaving] = useState(false);
   const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
@@ -55,7 +56,6 @@ const PopupResourses = ({
     translate: { words, isRTL },
     store: { user },
   }: GContextTypes = useContext(GlobalContext);
-  const { departments } = useDepartments();
 
   const openDepartment = () => {
     setOpenDep(true);
@@ -88,6 +88,7 @@ const PopupResourses = ({
   const onSubmit = async (data: any) => {
     setSaving(true);
     const name = data.name.trim();
+    const nameAr = !isNew ? data.nameAr.trim() : name;
     const { info, brand, plate, cost, model, purtime, insurance } = data;
     const department = departvalue
       ? {
@@ -105,7 +106,7 @@ const PopupResourses = ({
     const variables: any = {
       _id: row && row._id ? row._id : undefined, // is it new or edit
       name,
-      nameAr: name,
+      nameAr,
       resType,
       color,
       brand,
@@ -196,7 +197,20 @@ const PopupResourses = ({
                 mb={0}
               />
             </Grid>
-
+            {!isNew && (
+              <Grid item xs={12}>
+                <TextFieldLocal
+                  required
+                  name="nameAr"
+                  label={words.nameAr}
+                  register={register}
+                  errors={errors}
+                  row={row}
+                  fullWidth
+                  mb={0}
+                />
+              </Grid>
+            )}
             <Grid item xs={4}>
               <TextFieldLocal
                 name="plate"
@@ -275,7 +289,7 @@ const PopupResourses = ({
                 name="department"
                 title={tempwords?.department}
                 words={words}
-                options={departments}
+                options={departments.filter((dep: any) => dep.depType === 3)}
                 value={departvalue}
                 setSelectValue={setDepartvalue}
                 setSelectError={setDepError}
@@ -347,7 +361,7 @@ const PopupResourses = ({
           row={null}
           addAction={addDepartment}
           editAction={editDepartment}
-          depType={1}
+          depType={3}
         ></PopupDeprtment>
       </Grid>
     </PopupLayout>

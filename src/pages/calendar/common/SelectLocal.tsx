@@ -24,7 +24,7 @@ export const SelectLocal = ({
           height: 38,
           width: fullWidth ? undefined : width,
           alignSelf: 'flex-end',
-          fontSize: 12,
+          fontSize: 14,
           fontWeight: 'bold',
           color: disabled ? '#bbb' : '#555',
         }}

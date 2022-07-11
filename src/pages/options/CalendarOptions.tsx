@@ -35,7 +35,7 @@ const CalendarOptions = ({ words, calendar, setCalendar, isRTL }) => {
   };
 
   return (
-    <Paper style={{ height: 300, marginTop: 10 }}>
+    <Paper style={{ height: 350, marginTop: 10 }}>
       <Box padding={3}>
         <Typography variant="h6">
           {isRTL ? 'تعديل التقويم' : 'Edit Calendar'}

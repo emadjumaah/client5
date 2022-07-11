@@ -53,6 +53,7 @@ const PopupProduct = ({
   const onSubmit = async (data: any) => {
     setSaving(true);
     const name = data.name.trim();
+    const nameAr = !isNew ? data.nameAr.trim() : name;
     const { cost, price, unit, desc } = data;
     let photo: any;
 
@@ -64,7 +65,7 @@ const PopupProduct = ({
       _id: row && row._id ? row._id : undefined,
       itemType: 1,
       name,
-      nameAr: name,
+      nameAr,
       price: Number(price),
       cost: Number(cost),
       unit,
@@ -159,6 +160,20 @@ const PopupProduct = ({
                     mb={0}
                   />
                 </Grid>
+                {!isNew && (
+                  <Grid item xs={12}>
+                    <TextFieldLocal
+                      required
+                      name="nameAr"
+                      label={words.nameAr}
+                      register={register}
+                      errors={errors}
+                      row={row}
+                      fullWidth
+                      mb={0}
+                    />
+                  </Grid>
+                )}
                 <Grid item xs={8}>
                   <TextFieldLocal
                     required

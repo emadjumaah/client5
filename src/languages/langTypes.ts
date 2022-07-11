@@ -48,6 +48,7 @@ export interface LanguageType {
     addDepartment: string;
     departmentName: string;
     departmentNameAr: string;
+    depType: string;
     employee: string;
     addEmployee: string;
     employeeName: string;

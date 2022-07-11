@@ -92,12 +92,6 @@ export const AppointForm2 = ({ onFieldChange, appointmentData }: any) => {
       )[0];
       onNewFieldChange(itememp, 'employee');
     }
-    if (nextValue?.departmentId) {
-      const itemdep = departments.filter(
-        (dep: any) => dep._id === nextValue.departmentId
-      )[0];
-      onNewFieldChange(itemdep, 'department');
-    }
   };
 
   const { startDate, endDate } = appointmentData;
@@ -216,6 +210,7 @@ export const AppointForm2 = ({ onFieldChange, appointmentData }: any) => {
         row={null}
         addAction={addDepartment}
         editAction={editDepartment}
+        depType={1}
       ></PopupDeprtment>
       <PopupEmployee
         newtext={newtext}

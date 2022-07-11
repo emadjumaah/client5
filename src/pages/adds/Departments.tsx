@@ -124,7 +124,7 @@ export default function Departments({ isRTL, words, theme, menuitem }: any) {
             addAction={addDepartment}
             editAction={editDepartment}
           >
-            <PopupDeprtment depType={2}></PopupDeprtment>
+            <PopupDeprtment depType={1}></PopupDeprtment>
           </PopupEditing>
         </Grid>
         {alrt.show && (

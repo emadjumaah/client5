@@ -32,7 +32,7 @@ const GenTheme = ({ themeId, setThemeId, isRTL }) => {
   };
 
   return (
-    <Paper style={{ height: 300, marginTop: 10 }}>
+    <Paper style={{ height: 350, marginTop: 10 }}>
       <Box padding={3}>
         <Typography variant="h6">{isRTL ? 'الثيمة' : 'Themes'}</Typography>
 

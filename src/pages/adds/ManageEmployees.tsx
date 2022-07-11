@@ -51,6 +51,7 @@ import { roles } from '../../common';
 import { EmployeeContext } from '../../contexts/managment';
 import { useLazyQuery } from '@apollo/client';
 import { getEmployees } from '../../graphql';
+import AutoFieldLocal from '../../components/fields/AutoFieldLocal';
 
 export default function ManageEmployees({
   isRTL,
@@ -62,6 +63,7 @@ export default function ManageEmployees({
   const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
   const [pageSizes] = useState([5, 6, 10, 20, 50, 0]);
   const [rows, setRows] = useState([]);
+  const [departvalue, setDepartvalue] = useState<any>(null);
 
   const [item, setItem] = useState(null);
   const [openItem, setOpenItem] = useState(false);
@@ -123,8 +125,13 @@ export default function ManageEmployees({
   });
 
   useEffect(() => {
-    getemps({ isRTL, resType: 1 });
-  }, []);
+    getemps({
+      variables: {
+        isRTL,
+        departmentId: departvalue ? departvalue._id : undefined,
+      },
+    });
+  }, [departvalue]);
 
   useEffect(() => {
     if (empData?.data?.getEmployees?.data) {
@@ -173,6 +180,31 @@ export default function ManageEmployees({
           backgroundColor: bgcolor,
         }}
       >
+        <Box
+          display="flex"
+          style={{
+            position: 'absolute',
+            zIndex: 111,
+            flexDirection: 'row',
+            alignItems: 'center',
+            marginTop: 7,
+            left: isRTL ? undefined : 470,
+            right: isRTL ? 470 : undefined,
+            width: 220,
+          }}
+        >
+          <AutoFieldLocal
+            name="department"
+            title={words?.department}
+            words={words}
+            options={departments.filter((d: any) => d.depType === 2)}
+            value={departvalue}
+            setSelectValue={setDepartvalue}
+            isRTL={isRTL}
+            fullWidth
+            mb={0}
+          ></AutoFieldLocal>
+        </Box>
         <Paper
           elevation={5}
           style={{

@@ -78,10 +78,10 @@ const PopupEmployee = ({
     if (row && row._id) {
       const _id = row.departmentId;
       const depart = departments.filter((dep: any) => dep._id === _id)[0];
+      setDepartvalue(depart);
       if (row.daysoff) {
         setDaysoff(JSON.parse(row.daysoff));
       }
-      setDepartvalue(depart);
       setColor(row.color);
     }
   }, [row]);
@@ -89,6 +89,7 @@ const PopupEmployee = ({
   const onSubmit = async (data: any) => {
     setSaving(true);
     const name = data.name.trim();
+    const nameAr = !isNew ? data.nameAr.trim() : name;
     const phone = data.phone;
     const email = data.email;
     const info = data.info;
@@ -108,7 +109,7 @@ const PopupEmployee = ({
     const variables: any = {
       _id: row && row._id ? row._id : undefined, // is it new or edit
       name,
-      nameAr: name,
+      nameAr,
       resType,
       email,
       color,
@@ -165,7 +166,6 @@ const PopupEmployee = ({
   };
 
   const title = getPopupTitle('employee', isNew);
-
   return (
     <PopupLayout
       isRTL={isRTL}
@@ -196,6 +196,20 @@ const PopupEmployee = ({
                 mb={0}
               />
             </Grid>
+            {!isNew && (
+              <Grid item xs={12}>
+                <TextFieldLocal
+                  required
+                  name="nameAr"
+                  label={words.nameAr}
+                  register={register}
+                  errors={errors}
+                  row={row}
+                  fullWidth
+                  mb={0}
+                />
+              </Grid>
+            )}
             <Grid item xs={12}>
               <TextFieldLocal
                 name="phone"
@@ -225,7 +239,7 @@ const PopupEmployee = ({
                 name="department"
                 title={tempwords?.department}
                 words={words}
-                options={departments}
+                options={departments.filter((d: any) => d.depType === 2)}
                 value={departvalue}
                 setSelectValue={setDepartvalue}
                 setSelectError={setDepError}
@@ -281,7 +295,6 @@ const PopupEmployee = ({
           </Grid>
         </Grid>
         <Grid item xs={1}></Grid>
-
         <PopupDeprtment
           newtext={newtext2}
           open={openDep}
@@ -291,7 +304,7 @@ const PopupEmployee = ({
           row={null}
           addAction={addDepartment}
           editAction={editDepartment}
-          depType={1}
+          depType={2}
         ></PopupDeprtment>
       </Grid>
     </PopupLayout>

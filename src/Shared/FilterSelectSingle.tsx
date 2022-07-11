@@ -35,11 +35,11 @@ export default function FilterSelectSingle({
           label={words[name]}
           variant="outlined"
           style={{
-            width: width ? width : 180,
-            marginRight: 10,
-            marginLeft: 10,
-            backgroundColor: value ? '#FFF5D6' : undefined,
-            fontSize: 10,
+            width: width ? width : undefined,
+            // marginRight: 10,
+            // marginLeft: 10,
+            // backgroundColor: value ? '#FFF5D6' : undefined,
+            // fontSize: 10,
           }}
         ></TextField>
       )}

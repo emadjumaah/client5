@@ -232,6 +232,20 @@ export const itemTypes = [
   { id: 10, name: 'Expenses', nameAr: 'مصاريف' },
 ];
 
+export const departmentTypes = [
+  { id: 1, name: 'General', nameAr: 'عام' },
+  { id: 2, name: 'Employees', nameAr: 'موظفين' },
+  { id: 3, name: 'Resourses', nameAr: 'موارد' },
+];
+export const recTypes = [
+  { id: 1, name: 'Customer', nameAr: 'عميل', value: 1 },
+  { id: 2, name: 'Employee', nameAr: 'موظف', value: 2 },
+];
+export const payTypes = [
+  { id: 1, name: 'Supplier', nameAr: 'مورد', value: 1 },
+  { id: 2, name: 'Employee', nameAr: 'موظف', value: 2 },
+];
+
 export const statusTypes = {
   Scheduled: 1,
   Confirmed: 2,

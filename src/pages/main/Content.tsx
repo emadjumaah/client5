@@ -162,7 +162,12 @@ import {
   SupplierContext,
   initSupplierContext,
   supplierReducer,
+  kaidReducer,
+  initKaidContext,
+  KaidContext,
 } from '../../contexts/managment';
+import KaidsReport from '../reports/KaidsReport';
+import ResourseTypes from '../adds/ResourseTypes';
 
 const Content = () => {
   const classes = layoutClasses();
@@ -286,6 +291,7 @@ const Content = () => {
     supplierReducer,
     initSupplierContext
   );
+  const [kaidStore, kaidDispatch] = useReducer(kaidReducer, initKaidContext);
 
   const accs = user.isSuperAdmin
     ? accounts
@@ -802,6 +808,17 @@ const Content = () => {
             }
           />
           <Route
+            path="/resoursetypes"
+            element={
+              <ResourseTypes
+                menuitem={menuitem}
+                isRTL={isRTL}
+                words={words}
+                theme={theme}
+              ></ResourseTypes>
+            }
+          />
+          <Route
             path="/manageprojects"
             element={
               <ProjectContext.Provider
@@ -1069,6 +1086,28 @@ const Content = () => {
                   accounts={filteredAccounts}
                 ></FinanceReport>
               </FinanceContext.Provider>
+            }
+          />
+          <Route
+            path="/kaidreport"
+            element={
+              <KaidContext.Provider
+                value={{
+                  state: kaidStore,
+                  dispatch: kaidDispatch,
+                }}
+              >
+                <KaidsReport
+                  isRTL={isRTL}
+                  words={words}
+                  menuitem={menuitem}
+                  theme={theme}
+                  categories={[]}
+                  company={company}
+                  mainaccounts={mainaccountsnames}
+                  accounts={filteredAccounts}
+                ></KaidsReport>
+              </KaidContext.Provider>
             }
           />
           <Route

@@ -45,6 +45,10 @@ export default gql`
         customerNameAr
         customerPhone
 
+        supplierId
+        supplierName
+        supplierNameAr
+
         employeeId
         employeeName
         employeeNameAr

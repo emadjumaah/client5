@@ -120,7 +120,7 @@ export default function EventsFilter({
           name="employee"
         ></FilterSelect>
         <FilterSelect
-          options={departments}
+          options={departments.filter((d: any) => d.depType === 1)}
           value={departvalue}
           setValue={setDepartvalue}
           words={words}

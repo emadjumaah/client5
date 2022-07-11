@@ -31,9 +31,11 @@ import { getColumns } from '../../common/columns';
 import useResoursesDown from '../../hooks/useResoursesDown';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
 import { Typography } from '@material-ui/core';
+import useDepartmentsUp from '../../hooks/useDepartmentsUp';
 
 export default function Resourses({ isRTL, words, theme, menuitem }: any) {
   const col = getColumns({ isRTL, words });
+  const { departments } = useDepartmentsUp();
 
   const [loading, setLoading] = useState(false);
   const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
@@ -132,7 +134,10 @@ export default function Resourses({ isRTL, words, theme, menuitem }: any) {
             addAction={addResourse}
             editAction={editResourse}
           >
-            <PopupResourses resType={2}></PopupResourses>
+            <PopupResourses
+              departments={departments}
+              resType={2}
+            ></PopupResourses>
           </PopupEditing>
         </Grid>
         {alrt.show && (

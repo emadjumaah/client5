@@ -16,23 +16,17 @@ export default () => {
   const lang = store?.lang;
   const isRTL = lang === 'ar' ? true : false;
   const [getDeparts, depData]: any = useLazyQuery(getDepartments, {
-    variables: { isRTL, depType: 1 },
+    variables: { isRTL },
   });
 
   const [addDepartment] = useMutation(createDepartment, {
-    refetchQueries: [
-      { query: getDepartments, variables: { isRTL, depType: 1 } },
-    ],
+    refetchQueries: [{ query: getDepartments, variables: { isRTL } }],
   });
   const [editDepartment] = useMutation(updateDepartment, {
-    refetchQueries: [
-      { query: getDepartments, variables: { isRTL, depType: 1 } },
-    ],
+    refetchQueries: [{ query: getDepartments, variables: { isRTL } }],
   });
   const [removeDepartment] = useMutation(deleteDepartment, {
-    refetchQueries: [
-      { query: getDepartments, variables: { isRTL, depType: 1 } },
-    ],
+    refetchQueries: [{ query: getDepartments, variables: { isRTL } }],
   });
 
   useEffect(() => {

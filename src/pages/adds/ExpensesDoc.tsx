@@ -76,8 +76,10 @@ export default function ExpensesDoc({
           col.docNo,
           { name: 'debitAcc', title: isRTL ? 'حساب المصروف' : 'Expenses Acc' },
           { name: 'creditAcc', title: isRTL ? 'حساب الدفع' : 'Payment Acc' },
-          col.department,
           col.employee,
+          col.supplier,
+          col.department,
+          col.resourse,
           { name: 'desc', title: words.description },
           { name: 'amount', title: words.amount },
         ]
@@ -86,9 +88,11 @@ export default function ExpensesDoc({
           col.docNo,
           { name: 'debitAcc', title: isRTL ? 'حساب المصروف' : 'Expenses Acc' },
           { name: 'creditAcc', title: isRTL ? 'حساب الدفع' : 'Payment Acc' },
-          col.department,
           col.employee,
+          col.supplier,
           col.contract,
+          col.department,
+          col.resourse,
           { name: 'desc', title: words.description },
           { name: 'amount', title: words.amount },
         ]
@@ -99,10 +103,12 @@ export default function ExpensesDoc({
     { columnName: col.docNo.name, width: 120 },
     { columnName: 'debitAcc', width: 150 },
     { columnName: 'creditAcc', width: 150 },
-    { columnName: col.department.name, width: 180 },
     { columnName: col.employee.name, width: 180 },
+    { columnName: col.supplier.name, width: 180 },
     { columnName: col.contract.name, width: 180 },
-    { columnName: 'desc', width: 200 },
+    { columnName: col.department.name, width: 180 },
+    { columnName: col.resourse.name, width: 180 },
+    { columnName: 'desc', width: 250 },
     { columnName: 'amount', width: 120 },
   ]);
 
@@ -161,6 +167,7 @@ export default function ExpensesDoc({
     const variables = {
       start: start ? start.setHours(0, 0, 0, 0) : undefined,
       end: end ? end.setHours(23, 59, 59, 999) : undefined,
+      opType: 60,
     };
     loadExpenses({
       variables,
@@ -286,9 +293,11 @@ export default function ExpensesDoc({
                 'docNo',
                 'debitAcc',
                 'creditAcc',
-                col.department.name,
                 col.employee.name,
+                col.supplier.name,
                 col.contract.name,
+                col.department.name,
+                col.resourse.name,
                 'desc',
                 'amount',
               ]}
@@ -306,7 +315,11 @@ export default function ExpensesDoc({
             />
             <TableColumnVisibility
               columnExtensions={tableColumnVisibilityColumnExtensions}
-              defaultHiddenColumnNames={[]}
+              defaultHiddenColumnNames={[
+                col.department.name,
+                col.contract.name,
+                col.resourse.name,
+              ]}
             />
             <DataTypeProvider
               for={['time']}

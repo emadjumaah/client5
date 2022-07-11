@@ -12,7 +12,6 @@ import PopupLayout from '../pages/main/PopupLayout';
 import { Box, Grid } from '@material-ui/core';
 import { useReactToPrint } from 'react-to-print';
 import { CalenderLocal, TextFieldLocal } from '../components';
-import { getAppStartEndPeriod } from '../common/time';
 import AutoFieldLocal from '../components/fields/AutoFieldLocal';
 import { useCustomers, useTemplate } from '../hooks';
 import { useLazyQuery } from '@apollo/client';
@@ -20,6 +19,11 @@ import getInvoicesList from '../graphql/query/getInvoicesList';
 import PopupCustomer from './PopupCustomer';
 import { ReceiptPrint } from '../print';
 import { sleep, successAlert } from '../Shared/helpers';
+import { SelectLocal } from '../pages/calendar/common/SelectLocal';
+import { recTypes } from '../constants/datatypes';
+import useEmployeesUp from '../hooks/useEmployeesUp';
+import PopupEmployee from './PopupEmployee';
+import useDepartmentsUp from '../hooks/useDepartmentsUp';
 const PopupReceipt = ({
   open,
   onClose,
@@ -36,7 +40,7 @@ const PopupReceipt = ({
   const [saving, setSaving] = useState(false);
   const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
   const [selectedDate, setSelectedDate] = React.useState(new Date());
-  const [ptype, setPtype] = React.useState('deposit');
+  const [ptype, setPtype] = React.useState(1);
   const [debaccounts, setDebaccounts] = React.useState([]);
 
   const [debitAcc, setDebitAcc]: any = React.useState(null);
@@ -47,11 +51,17 @@ const PopupReceipt = ({
   );
   const [custError, setCustError] = useState<any>(false);
 
+  const [emplvalue, setEmplvalue] = useState<any>(
+    name === 'employeeId' ? value : null
+  );
+  const [emplError, setEmplError] = useState<any>(false);
+
   const [invoices, setInvoices] = useState<any>([]);
   const [invoicevalue, setInvoicevalue] = useState<any>(null);
 
   const [newtext, setNewtext] = useState('');
   const [openCust, setOpenCust] = useState(false);
+  const [openEmp, setOpenEmp] = useState(false);
 
   const { register, handleSubmit, errors, reset } = useForm(
     yup.depositResolver
@@ -63,6 +73,8 @@ const PopupReceipt = ({
 
   const { accounts } = useAccounts();
   const { customers, addCustomer, editCustomer } = useCustomers();
+  const { employees, addEmployee, editEmployee } = useEmployeesUp();
+  const { departments } = useDepartmentsUp();
   const { tempwords } = useTemplate();
 
   const [loadInvoices, invoicesData]: any = useLazyQuery(getInvoicesList, {
@@ -72,12 +84,22 @@ const PopupReceipt = ({
   const openCustomer = () => {
     setOpenCust(true);
   };
+  const openEmployee = () => {
+    setOpenEmp(true);
+  };
+  const onCloseEmploee = () => {
+    setOpenEmp(false);
+    setNewtext('');
+  };
   const onCloseCustomer = () => {
     setOpenCust(false);
     setNewtext('');
   };
   const onNewCustChange = (nextValue: any) => {
     setCustvalue(nextValue);
+  };
+  const onNewEmplChange = (nextValue: any) => {
+    setEmplvalue(nextValue);
   };
 
   useEffect(() => {
@@ -145,6 +167,11 @@ const PopupReceipt = ({
       if (ca) {
         const credit = accounts.filter((acc: any) => acc.code === ca)[0];
         setCreditAcc(credit);
+        if (credit.code === 1350) {
+          setPtype(2);
+        } else {
+          setPtype(1);
+        }
       }
       if (da) {
         const debit = accounts.filter((acc: any) => acc.code === da)[0];
@@ -155,11 +182,19 @@ const PopupReceipt = ({
         const cust = customers.filter((it: any) => it._id === customerId)[0];
         setCustvalue(cust);
       }
+      const employeeId = row?.employeeId;
+      if (employeeId) {
+        const emp = employees.filter((it: any) => it._id === employeeId)[0];
+        setEmplvalue(emp);
+      }
       handleDateChange(row.time);
     } else {
-      const filtereddebits = accounts.filter(
-        (acc: any) => acc.parentcode === parents.ACCOUNTS_RECEIVABLE
-      );
+      const filtereddebits =
+        ptype === 1
+          ? accounts.filter(
+              (acc: any) => acc.parentcode === parents.ACCOUNTS_RECEIVABLE
+            )
+          : accounts.filter((acc: any) => acc.code === 1350);
       const filteredcredit = accounts.filter(
         (acc: any) => acc.parentcode === parents.CASH
       );
@@ -168,7 +203,6 @@ const PopupReceipt = ({
       setCreditAcc(filtereddebits?.[0]);
     }
   }, [row, ptype, open]);
-
   const componentRef: any = useRef();
   const handleReactPrint = useReactToPrint({
     content: () => componentRef.current,
@@ -192,14 +226,6 @@ const PopupReceipt = ({
     invoice: invoicevalue,
   };
   const onSubmit = async (data: any) => {
-    const { startPeriod, endPeriod } = getAppStartEndPeriod();
-    if (selectedDate < startPeriod || selectedDate > endPeriod) {
-      await messageAlert(
-        setAlrt,
-        isRTL ? 'يجب تعديل التاريخ' : 'Date should be change'
-      );
-      return;
-    }
     if (selectedDate > new Date()) {
       await messageAlert(
         setAlrt,
@@ -208,10 +234,24 @@ const PopupReceipt = ({
       return;
     }
     const { amount, title, desc, chequeBank, chequeNo, chequeDate } = data;
-    if (!debitAcc || !creditAcc || !custvalue) {
+    if (!debitAcc) {
       await messageAlert(
         setAlrt,
-        isRTL ? 'يجب تحديد كلا الحسابين' : 'You have to select both accounts'
+        isRTL ? 'يجب تحديد الحساب' : 'You have to select Account'
+      );
+      return;
+    }
+    if (ptype === 2 && !emplvalue) {
+      await messageAlert(
+        setAlrt,
+        isRTL ? 'يجب تحديد الموظف' : 'You have to select Employee'
+      );
+      return;
+    }
+    if (ptype === 1 && !custvalue) {
+      await messageAlert(
+        setAlrt,
+        isRTL ? 'يجب تحديد العميل' : 'You have to select Customer'
       );
       return;
     }
@@ -229,6 +269,19 @@ const PopupReceipt = ({
           customerNameAr: undefined,
           customerPhone: undefined,
         };
+    const employee = emplvalue
+      ? {
+          employeeId: emplvalue._id,
+          employeeName: emplvalue.name,
+          employeeNameAr: emplvalue.nameAr,
+          employeeColor: emplvalue.color,
+        }
+      : {
+          employeeId: undefined,
+          employeeName: undefined,
+          employeeNameAr: undefined,
+          employeeColor: undefined,
+        };
     const department = invoicevalue
       ? {
           departmentId: invoicevalue.departmentId,
@@ -241,19 +294,6 @@ const PopupReceipt = ({
           departmentName: undefined,
           departmentNameAr: undefined,
           departmentColor: undefined,
-        };
-    const employee = invoicevalue
-      ? {
-          employeeId: invoicevalue.employeeId,
-          employeeName: invoicevalue.employeeName,
-          employeeNameAr: invoicevalue.employeeNameAr,
-          employeeColor: invoicevalue.employeeColor,
-        }
-      : {
-          employeeId: undefined,
-          employeeName: undefined,
-          employeeNameAr: undefined,
-          employeeColor: undefined,
         };
     const resourse = invoicevalue
       ? {
@@ -296,8 +336,8 @@ const PopupReceipt = ({
       creditAcc: creditAcc.code,
       refNo: invoicevalue ? invoicevalue.docNo : undefined,
       customer,
-      department,
       employee,
+      department,
       resourse,
       contract,
       amount,
@@ -338,12 +378,13 @@ const PopupReceipt = ({
 
   const resetAll = () => {
     reset();
-    setPtype('deposit');
+    setPtype(1);
     setCreditAcc(null);
     setDebitAcc(null);
     setDebaccounts([]);
     setInvoices([]);
     setCustvalue(name === 'customerId' ? value : null);
+    setEmplvalue(name === 'employeeId' ? value : null);
     setInvoicevalue(null);
     setCustError(false);
     setSaving(false);
@@ -377,7 +418,7 @@ const PopupReceipt = ({
         <Grid item xs={1}></Grid>
         <Grid item xs={10}>
           <Grid container spacing={1}>
-            <Grid item xs={12}>
+            <Grid item xs={5}>
               <CalenderLocal
                 isRTL={isRTL}
                 label={words.time}
@@ -385,38 +426,76 @@ const PopupReceipt = ({
                 onChange={handleDateChange}
               ></CalenderLocal>
             </Grid>
-            <Grid item xs={12}>
-              <AutoFieldLocal
-                name="customer"
-                title={tempwords?.customer}
-                words={words}
-                options={customers}
-                value={custvalue}
-                setSelectValue={setCustvalue}
-                setSelectError={setCustError}
-                selectError={custError}
-                isRTL={isRTL}
-                fullwidth
-                openAdd={openCustomer}
-                disabled={name === 'customerId' || name === 'contractId'}
-                mb={0}
-              ></AutoFieldLocal>
+            <Grid item xs={7}>
+              <Box style={{ marginTop: 20 }}>
+                <SelectLocal
+                  options={recTypes}
+                  value={ptype}
+                  onChange={(e: any) => {
+                    setPtype(e.target.value);
+                    setEmplvalue(null);
+                    setCustvalue(null);
+                  }}
+                  isRTL={isRTL}
+                  width={230}
+                ></SelectLocal>
+              </Box>
             </Grid>
-            <Grid item xs={6}>
-              <AutoFieldLocal
-                name="invoice"
-                title={isRTL ? 'الفواتير' : 'Invoices'}
-                words={words}
-                options={invoices}
-                value={invoicevalue}
-                setSelectValue={setInvoicevalue}
-                register={register}
-                isRTL={isRTL}
-                disabled={!custvalue}
-                fullWidth
-                mb={0}
-              ></AutoFieldLocal>
-            </Grid>
+            {ptype === 1 && (
+              <Grid item xs={12}>
+                <AutoFieldLocal
+                  name="customer"
+                  title={tempwords?.customer}
+                  words={words}
+                  options={customers}
+                  value={custvalue}
+                  setSelectValue={setCustvalue}
+                  setSelectError={setCustError}
+                  selectError={custError}
+                  isRTL={isRTL}
+                  fullwidth
+                  openAdd={openCustomer}
+                  disabled={name === 'customerId' || name === 'contractId'}
+                  mb={0}
+                ></AutoFieldLocal>
+              </Grid>
+            )}
+            {ptype === 2 && (
+              <Grid item xs={12}>
+                <AutoFieldLocal
+                  name="employee"
+                  title={tempwords?.employee}
+                  words={words}
+                  options={employees}
+                  value={emplvalue}
+                  setSelectValue={setEmplvalue}
+                  setSelectError={setEmplError}
+                  selectError={emplError}
+                  isRTL={isRTL}
+                  fullwidth
+                  openAdd={openEmployee}
+                  disabled={name === 'emploueeId' || name === 'contractId'}
+                  mb={0}
+                ></AutoFieldLocal>
+              </Grid>
+            )}
+            {ptype === 1 && (
+              <Grid item xs={6}>
+                <AutoFieldLocal
+                  name="invoice"
+                  title={isRTL ? 'الفواتير' : 'Invoices'}
+                  words={words}
+                  options={invoices}
+                  value={invoicevalue}
+                  setSelectValue={setInvoicevalue}
+                  register={register}
+                  isRTL={isRTL}
+                  disabled={!custvalue}
+                  fullWidth
+                  mb={0}
+                ></AutoFieldLocal>
+              </Grid>
+            )}
             <Grid item xs={6}>
               <TextFieldLocal
                 required
@@ -445,59 +524,54 @@ const PopupReceipt = ({
                 mb={0}
               ></AutoFieldLocal>
             </Grid>
-            <Grid item xs={4}>
-              <TextFieldLocal
-                name="chequeBank"
-                label={words.chequeBank}
-                register={register}
-                errors={errors}
-                row={row}
-                fullWidth
-                mb={0}
-              />
-            </Grid>
-            <Grid item xs={4}>
-              <TextFieldLocal
-                name="chequeNo"
-                label={words.chequeNo}
-                register={register}
-                errors={errors}
-                row={row}
-                fullWidth
-                mb={0}
-              />
-            </Grid>
-            <Grid item xs={4}>
-              <TextFieldLocal
-                name="chequeDate"
-                label={words.chequeDate}
-                register={register}
-                errors={errors}
-                row={row}
-                fullWidth
-                mb={0}
-              />
-            </Grid>
+            {ptype === 1 && (
+              <Grid item xs={4}>
+                <TextFieldLocal
+                  name="chequeBank"
+                  label={words.chequeBank}
+                  register={register}
+                  errors={errors}
+                  row={row}
+                  fullWidth
+                  mb={0}
+                />
+              </Grid>
+            )}
+            {ptype === 1 && (
+              <Grid item xs={4}>
+                <TextFieldLocal
+                  name="chequeNo"
+                  label={words.chequeNo}
+                  register={register}
+                  errors={errors}
+                  row={row}
+                  fullWidth
+                  mb={0}
+                />
+              </Grid>
+            )}
+            {ptype === 1 && (
+              <Grid item xs={4}>
+                <TextFieldLocal
+                  name="chequeDate"
+                  label={words.chequeDate}
+                  register={register}
+                  errors={errors}
+                  row={row}
+                  fullWidth
+                  mb={0}
+                />
+              </Grid>
+            )}
             <Grid item xs={12}>
               <TextFieldLocal
-                name="title"
+                name="desc"
+                rows={4}
                 label={words.for}
                 register={register}
                 errors={errors}
                 row={row}
-                fullWidth
-                mb={0}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextFieldLocal
-                name="desc"
                 multiline
-                rows={4}
-                label={words.description}
-                register={register}
-                errors={errors}
-                row={row}
                 fullWidth
                 mb={0}
               />
@@ -515,6 +589,18 @@ const PopupReceipt = ({
           addAction={addCustomer}
           editAction={editCustomer}
         ></PopupCustomer>
+        <PopupEmployee
+          newtext={newtext}
+          departments={departments}
+          open={openEmp}
+          onClose={onCloseEmploee}
+          isNew={true}
+          setNewValue={onNewEmplChange}
+          row={null}
+          resType={1}
+          addAction={addEmployee}
+          editAction={editEmployee}
+        ></PopupEmployee>
         <Box>
           <div style={{ display: 'none' }}>
             <ReceiptPrint

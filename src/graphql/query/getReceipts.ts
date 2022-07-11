@@ -50,6 +50,11 @@ export default gql`
         departmentNameAr
         departmentColor
 
+        employeeId
+        employeeName
+        employeeNameAr
+        employeeColor
+
         projectId
         projectName
         projectNameAr

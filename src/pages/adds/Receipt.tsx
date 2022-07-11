@@ -32,7 +32,6 @@ import { createFinance, deleteFinance, updateFinance } from '../../graphql';
 import {
   accountFormatter,
   currencyFormatter,
-  customerAccountFormatter,
   moneyFormat,
   samllFormatter,
   timeFormatter,
@@ -49,24 +48,31 @@ import { Box, Paper, Typography } from '@material-ui/core';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
 import { TableComponent } from '../../Shared/TableComponent';
 import _ from 'lodash';
+import { getColumns } from '../../common/columns';
 
 export default function Receipt({ isRTL, words, menuitem, theme, company }) {
+  const col = getColumns({ isRTL, words });
+
   const [columns] = useState([
     { name: 'time', title: words.time },
     { name: 'docNo', title: words.no },
-    { name: 'creditAcc', title: words.customer },
+    { name: 'creditAcc', title: isRTL ? 'حساب الدفع' : 'Credit Acc' },
     { name: 'debitAcc', title: isRTL ? 'حساب القبض' : 'Receipt Acc' },
+    col.customer,
+    col.employee,
     { name: 'desc', title: words.description },
     { name: 'amount', title: words.amount },
   ]);
 
   const [tableColumnExtensions]: any = useState([
-    { columnName: 'time', width: 150 },
-    { columnName: 'docNo', width: 150 },
-    { columnName: 'creditAcc', width: 250 },
-    { columnName: 'debitAcc', width: 250 },
-    { columnName: 'desc', width: 250 },
-    { columnName: 'amount', width: 150 },
+    { columnName: 'time', width: 120 },
+    { columnName: 'docNo', width: 120 },
+    { columnName: 'creditAcc', width: 200 },
+    { columnName: 'debitAcc', width: 200 },
+    { columnName: col.customer.name, width: 200 },
+    { columnName: col.employee.name, width: 200 },
+    { columnName: 'desc', width: 200 },
+    { columnName: 'amount', width: 120 },
   ]);
 
   const [tableColumnVisibilityColumnExtensions] = useState([
@@ -154,7 +160,6 @@ export default function Receipt({ isRTL, words, menuitem, theme, company }) {
   const refresh = () => {
     financeData?.refetch();
   };
-
   return (
     <PageLayout
       menuitem={menuitem}
@@ -244,6 +249,8 @@ export default function Receipt({ isRTL, words, menuitem, theme, company }) {
                 'docNo',
                 'creditAcc',
                 'debitAcc',
+                col.customer.name,
+                col.employee.name,
                 'desc',
                 'amount',
               ]}
@@ -279,7 +286,7 @@ export default function Receipt({ isRTL, words, menuitem, theme, company }) {
             <DataTypeProvider
               for={['creditAcc']}
               formatterComponent={(props) =>
-                customerAccountFormatter(props, accounts, isRTL)
+                accountFormatter(props, accounts, isRTL)
               }
             ></DataTypeProvider>
             <DataTypeProvider
