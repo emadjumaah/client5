@@ -7,7 +7,7 @@ import MonthsChart from '../../../components/charts/MonthsChart';
 import MonthsEmpChart from '../../../components/charts/MonthsEmpChart';
 import InfoBoxDark from '../../../components/charts/InfoBoxDark';
 import PageLayout from '../PageLayout';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import useEmployeesUp from '../../../hooks/useEmployeesUp';
 import useDepartmentsUp from '../../../hooks/useDepartmentsUp';
 import useWindowDimensions from '../../../hooks/useWindowDimensions';
@@ -136,7 +136,6 @@ export default function DeliveryLanding(props: any) {
             )}
             <Grid item xs={12} md={4}></Grid>
             <Grid item xs={12} md={4}></Grid>
-
             {salesMonth && roles.isFinanceAdmin() && (
               <Grid item xs={12} md={6}>
                 <MonthsEmpChart

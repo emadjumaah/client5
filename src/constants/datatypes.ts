@@ -29,6 +29,11 @@ export const operationTypes = {
   ownerDraw: 71, // سحب من الصندوق للشريك  // partenr debit <- cash credit
   ownerDeposit: 72, // اضافة من الشريك في الصندوق  // cash debit <- partenr credit
 
+  pettyCashPay: 73, // دفع عهدة
+  pettyCashRec: 74, // قبض عهدة
+  cashDraw: 75, // سحب
+  cashDeposet: 76, // ايداع
+
   event: 80,
   task: 81,
   project: 82,
@@ -157,6 +162,30 @@ export const opTypesNames = {
     ref: 'ownerDeposit',
     type: 1,
   },
+  73: {
+    name: 'Petty Cash Payment',
+    nameAr: 'دفع عهدة',
+    ref: 'pettyCashPay',
+    type: 1,
+  },
+  74: {
+    name: 'Petty Cash Receipt',
+    nameAr: 'قبض عهدة',
+    ref: 'pettyCashRec',
+    type: 1,
+  },
+  75: {
+    name: 'Cash Draw',
+    nameAr: 'سحب من البنك',
+    ref: 'cashDraw',
+    type: 1,
+  },
+  76: {
+    name: 'Cash Deposet',
+    nameAr: 'ايداع في البنك',
+    ref: 'cashDeposet',
+    type: 1,
+  },
   80: {
     name: 'Appointment',
     nameAr: 'موعد',
@@ -199,11 +228,14 @@ export const operationNames = {
   interDeliveryIn: 'Internal DeliveryIn',
   interDeliveryOut: 'Internal DeliveryOut',
   expenses: 'Expenses',
-
+  expproducts: 'expproducts',
   deposet: 'Deposet',
   ownerDraw: 'Owner Draw',
   ownerDeposit: 'Owner Deposit',
-
+  pettyCashPay: 'pettyCashPay',
+  pettyCashRec: 'pettyCashRec',
+  cashDraw: 'cashDraw',
+  cashDeposet: 'cashDeposet',
   event: 'Event',
   task: 'Task',
   project: 'Project',

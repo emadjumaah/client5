@@ -386,11 +386,11 @@ const PopupTaskFull = ({
         count,
         isCustom,
       });
-      // if (isEvents) {
-      //   const d = rdata.all[rdata.all.length - 1];
-      //   d.setHours(9, 0, 0);
-      //   setEnd(d);
-      // }
+      if (isEvents) {
+        const d = rdata.all[rdata.all.length - 1];
+        d.setHours(9, 0, 0);
+        setEnd(d);
+      }
       setRrule(rdata);
     }
   }, [

@@ -43,6 +43,7 @@ import useResoursesUp from '../../hooks/useResoursesUp';
 import { useTemplate } from '../../hooks';
 import getRemindersActions from '../../graphql/query/getRemindersActions';
 import { TableComponent } from '../../Shared/TableComponent';
+import useTasks from '../../hooks/useTasks';
 
 export default function ViewReminders(props: any) {
   const { isRTL, words, menuitem, theme } = props;
@@ -64,16 +65,18 @@ export default function ViewReminders(props: any) {
           col.resourse,
           col.employee,
           col.department,
+          col.contract,
           col.sent,
         ]
   );
 
   const [tableColumnExtensions]: any = useState([
-    { columnName: col.time.name, width: 200 },
+    { columnName: col.time.name, width: 150 },
     { columnName: col.title.name, width: 250 },
-    { columnName: col.resourse.name, width: 250 },
-    { columnName: col.employee.name, width: 250 },
-    { columnName: col.department.name, width: 250 },
+    { columnName: col.resourse.name, width: 200 },
+    { columnName: col.employee.name, width: 200 },
+    { columnName: col.department.name, width: 200 },
+    { columnName: col.contract.name, width: 200 },
     { columnName: col.sent.name, width: 120 },
   ]);
 
@@ -86,6 +89,7 @@ export default function ViewReminders(props: any) {
   const { employees } = useEmployeesUp();
   const { departments } = useDepartmentsUp();
   const { resourses } = useResoursesUp();
+  const { tasks } = useTasks();
 
   const {
     state: { currentDate, currentViewName, endDate },
@@ -149,6 +153,8 @@ export default function ViewReminders(props: any) {
         let departmentName: any;
         let employeeNameAr: any;
         let employeeName: any;
+        let contractNameAr: any;
+        let contractName: any;
         if (da?.resourseId) {
           const res = resourses.filter(
             (re: any) => re._id === da.resourseId
@@ -170,6 +176,11 @@ export default function ViewReminders(props: any) {
           employeeNameAr = res?.nameAr;
           employeeName = res?.name;
         }
+        if (da?.contractId) {
+          const res = tasks.filter((re: any) => re._id === da.contractId)?.[0];
+          contractNameAr = res?.nameAr;
+          contractName = res?.name;
+        }
 
         return {
           ...da,
@@ -179,6 +190,8 @@ export default function ViewReminders(props: any) {
           departmentName,
           employeeNameAr,
           employeeName,
+          contractNameAr,
+          contractName,
           time: da?.sendtime,
         };
       });
@@ -267,6 +280,7 @@ export default function ViewReminders(props: any) {
                 col.resourse.name,
                 col.employee.name,
                 col.department.name,
+                col.contract.name,
                 col.sent.name,
               ]}
             />

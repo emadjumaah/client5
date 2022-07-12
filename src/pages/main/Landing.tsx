@@ -5,7 +5,7 @@ export default function Landing(props: any) {
   const { words, isRTL, user, theme, menuitem } = props;
 
   const { templateId } = useTemplate();
-  console.log('templateId', templateId);
+
   if (templateId === 9) {
     return (
       <DeliveryLanding

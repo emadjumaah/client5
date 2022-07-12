@@ -33,6 +33,7 @@ import useEmployeesUp from '../../hooks/useEmployeesUp';
 import useDepartmentsUp from '../../hooks/useDepartmentsUp';
 import useResoursesUp from '../../hooks/useResoursesUp';
 import { getColumns } from '../../common/columns';
+import useTasks from '../../hooks/useTasks';
 
 export default function Actions({ isRTL, words, menuitem, theme }) {
   const col = getColumns({ isRTL, words });
@@ -61,6 +62,7 @@ export default function Actions({ isRTL, words, menuitem, theme }) {
   const { employees } = useEmployeesUp();
   const { departments } = useDepartmentsUp();
   const { resourses } = useResoursesUp();
+  const { tasks } = useTasks();
 
   const currentViewNameChange = (e: any) => {
     dispatch({ type: 'setCurrentViewName', payload: e.target.value });
@@ -98,6 +100,8 @@ export default function Actions({ isRTL, words, menuitem, theme }) {
         let departmentName: any;
         let employeeNameAr: any;
         let employeeName: any;
+        let contractNameAr: any;
+        let contractName: any;
         if (da?.resourseId) {
           const res = resourses.filter(
             (re: any) => re._id === da.resourseId
@@ -119,6 +123,11 @@ export default function Actions({ isRTL, words, menuitem, theme }) {
           employeeNameAr = res?.nameAr;
           employeeName = res?.name;
         }
+        if (da?.contractId) {
+          const res = tasks.filter((re: any) => re._id === da.contractId)?.[0];
+          contractNameAr = res?.nameAr;
+          contractName = res?.name;
+        }
         return {
           ...da,
           resourseName,
@@ -127,6 +136,8 @@ export default function Actions({ isRTL, words, menuitem, theme }) {
           departmentName,
           employeeNameAr,
           employeeName,
+          contractNameAr,
+          contractName,
         };
       });
       setRows(rdata);

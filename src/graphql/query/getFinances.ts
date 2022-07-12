@@ -25,6 +25,11 @@ export default gql`
         customerNameAr
         customerPhone
 
+        employeeId
+        employeeName
+        employeeNameAr
+        employeeColor
+
         refNo
         refType
 

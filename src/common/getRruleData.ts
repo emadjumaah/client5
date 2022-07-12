@@ -1,8 +1,5 @@
 import { RRule } from 'rrule';
 
-const start = new Date(Date.UTC(2012, 1, 1, 10, 30));
-const end = null;
-
 export default function getRruleData({
   freq = RRule.WEEKLY,
   dtstart,
@@ -36,25 +33,26 @@ export default function getRruleData({
 }
 
 export const getReminderRruleData = ({
-  freq = RRule.DAILY,
-  byweekday,
-  dtstart = start,
-  until = end,
+  freq = RRule.WEEKLY,
+  dtstart,
+  until,
   interval = 1,
+  byweekday,
+  bymonthday,
   count = 1,
-}) => {
+}: any) => {
   const rule = new RRule({
     freq,
-    interval,
-    byweekday,
     dtstart,
     until,
-    count: count,
+    interval,
+    byweekday,
+    bymonthday,
+    count,
   });
   const all = rule.all();
   const str = rule.toString();
   const txt = rule.toText();
-
   return { all, str, txt };
 };
 

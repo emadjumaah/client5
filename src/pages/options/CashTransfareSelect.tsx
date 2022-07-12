@@ -1,14 +1,14 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
+import React from 'react';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import { Box } from '@material-ui/core';
-import React from 'react';
 
-const CashTransfareSelect = ({ ptype, setPtype, setCustvalue, words }) => {
+const CashTransfareSelect = ({ ptype, setPtype, setEmplvalue, isRTL }) => {
   const onchange = (e: any) => {
     setPtype(e.target.value);
-    setCustvalue(null);
+    setEmplvalue(null);
   };
   return (
     <RadioGroup
@@ -18,34 +18,46 @@ const CashTransfareSelect = ({ ptype, setPtype, setCustvalue, words }) => {
       value={ptype}
       onChange={onchange}
     >
-      <Box display="flex" style={{ flexDirection: 'row' }}>
+      <Box
+        display="flex"
+        style={{ flexDirection: 'row', marginLeft: 20, marginRight: 20 }}
+      >
         <FormControlLabel
-          value="deposit"
+          value="cashDeposet"
           control={<Radio color="primary" />}
-          label={words.depositbank}
+          label={isRTL ? 'ايداع في البنك' : 'Cash Deposet'}
         />
       </Box>
-      <Box display="flex" style={{ flexDirection: 'row' }}>
+      <Box
+        display="flex"
+        style={{ flexDirection: 'row', marginLeft: 20, marginRight: 20 }}
+      >
         <FormControlLabel
-          value="partnerdraw"
+          value="cashDraw"
           control={<Radio color="primary" />}
-          label={words.drawpartner}
+          label={isRTL ? 'سحب من البنك' : 'Cash Draw'}
         />
       </Box>
-      <Box display="flex" style={{ flexDirection: 'row' }}>
+      <Box
+        display="flex"
+        style={{ flexDirection: 'row', marginLeft: 20, marginRight: 20 }}
+      >
         <FormControlLabel
-          value="partneradd"
+          value="pettyCashPay"
           control={<Radio color="primary" />}
-          label={words.addpartner}
+          label={isRTL ? 'دفع عهدة' : 'Petty Cash Payment'}
         />
       </Box>
-      {/* <Box display="flex" style={{ flexDirection: "row" }}>
+      <Box
+        display="flex"
+        style={{ flexDirection: 'row', marginLeft: 20, marginRight: 20 }}
+      >
         <FormControlLabel
-          value="customerpay"
+          value="pettyCashRec"
           control={<Radio color="primary" />}
-          label={words.customerpay}
+          label={isRTL ? 'قبض عهدة' : 'Petty Cash Receipt'}
         />
-      </Box> */}
+      </Box>
     </RadioGroup>
   );
 };

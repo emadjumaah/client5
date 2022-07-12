@@ -120,3 +120,13 @@ export const colorShade = (color: any, percent: any) => {
       .slice(1)
   );
 };
+
+export const getCashBankPetty = (accounts: any) => {
+  const fpetty = accounts.filter((acc: any) => acc.code === 1070);
+  const fcash = accounts.filter((acc: any) => acc.code === 1000);
+  const fbank = accounts.filter((acc: any) => acc.code === 1020);
+  const cash = fcash?.[0];
+  const bank = fbank?.[0];
+  const petty = fpetty?.[0];
+  return { cash, bank, petty };
+};

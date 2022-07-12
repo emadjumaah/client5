@@ -52,6 +52,7 @@ import useResoursesUp from '../../hooks/useResoursesUp';
 import { useExpenseItems, useTemplate } from '../../hooks';
 import getRemindersActions from '../../graphql/query/getRemindersActions';
 import { TableComponent } from '../../Shared/TableComponent';
+import useTasks from '../../hooks/useTasks';
 
 export default function Reminders(props: any) {
   const { isRTL, words, menuitem, theme } = props;
@@ -61,30 +62,37 @@ export default function Reminders(props: any) {
   const [loading, setLoading] = useState(false);
   const [start, setStart] = useState<any>(null);
   const [end, setEnd] = useState<any>(null);
-
+  const { tasks } = useTasks();
   const col = getColumns({ isRTL, words });
-  // const isMobile = useMediaQuery('(max-width:600px)');
 
   const { tempoptions } = useTemplate();
   const [columns] = useState(
     tempoptions?.noTsk
-      ? [col.time, col.title, col.employee, col.department, col.amount]
+      ? [
+          col.time,
+          { name: 'title', title: words?.description },
+          col.employee,
+          col.department,
+          col.amount,
+        ]
       : [
           col.time,
-          col.title,
+          { name: 'title', title: words?.description },
           col.resourse,
           col.employee,
           col.department,
+          col.contract,
           col.amount,
         ]
   );
 
   const [tableColumnExtensions]: any = useState([
-    { columnName: col.time.name, width: 120 },
+    { columnName: col.time.name, width: 150 },
     { columnName: col.title.name, width: 250 },
-    { columnName: col.resourse.name, width: 250 },
-    { columnName: col.employee.name, width: 250 },
-    { columnName: col.department.name, width: 250 },
+    { columnName: col.resourse.name, width: 200 },
+    { columnName: col.employee.name, width: 200 },
+    { columnName: col.department.name, width: 200 },
+    { columnName: col.contract.name, width: 200 },
     { columnName: col.amount.name, width: 120 },
   ]);
 
@@ -178,6 +186,8 @@ export default function Reminders(props: any) {
         let departmentName: any;
         let employeeNameAr: any;
         let employeeName: any;
+        let contractNameAr: any;
+        let contractName: any;
         if (da?.resourseId) {
           const res = resourses.filter(
             (re: any) => re._id === da.resourseId
@@ -198,6 +208,11 @@ export default function Reminders(props: any) {
           )?.[0];
           employeeNameAr = res?.nameAr;
           employeeName = res?.name;
+        }
+        if (da?.contractId) {
+          const res = tasks.filter((re: any) => re._id === da.contractId)?.[0];
+          contractNameAr = res?.nameAr;
+          contractName = res?.name;
         }
 
         const rr = JSON.parse(da?.rruledata);
@@ -221,6 +236,8 @@ export default function Reminders(props: any) {
           departmentName,
           employeeNameAr,
           employeeName,
+          contractNameAr,
+          contractName,
           time,
         };
       });
@@ -309,6 +326,7 @@ export default function Reminders(props: any) {
                 col.resourse.name,
                 col.employee.name,
                 col.department.name,
+                col.contract.name,
                 col.amount.name,
               ]}
             />
@@ -326,7 +344,7 @@ export default function Reminders(props: any) {
             />
             <TableColumnVisibility
               columnExtensions={tableColumnVisibilityColumnExtensions}
-              defaultHiddenColumnNames={[]}
+              defaultHiddenColumnNames={[col.amount.name]}
             />
             <DataTypeProvider
               for={['time']}
@@ -353,7 +371,10 @@ export default function Reminders(props: any) {
               addAction={addReminder}
               editAction={editReminder}
             >
-              <PopupReminder servicesproducts={expenseItems}></PopupReminder>
+              <PopupReminder
+                tasks={tasks}
+                servicesproducts={expenseItems}
+              ></PopupReminder>
             </PopupEditing>
           </Grid>
         </Paper>

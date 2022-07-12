@@ -37,6 +37,8 @@ export default gql`
         toatlExpenses
         totalkaidsdebit
         totalKaidscredit
+        totalPettyPay
+        totalPettyRec
         progress
         evQty
         evDone
