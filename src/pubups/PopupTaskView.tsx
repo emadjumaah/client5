@@ -461,6 +461,7 @@ const PopupTaskView = ({
                         words={words}
                         theme={theme}
                         name="contractId"
+                        value={row}
                         id={row?._id}
                         width={width}
                         height={height}

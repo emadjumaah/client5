@@ -2,7 +2,7 @@
 import { EventsContextTypes } from '../../types';
 
 export const initReminderContext = {
-  currentViewName: 'Month',
+  currentViewName: 'Week',
   currentDate: new Date(),
   endDate: new Date(),
   sort: [{ columnName: 'time', direction: 'desc' }],

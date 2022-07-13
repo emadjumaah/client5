@@ -17,6 +17,7 @@ import useResoursesUp from '../../../hooks/useResoursesUp';
 import Cars from '../../../components/charts/Cars';
 import { useTemplate } from '../../../hooks';
 import useLandingSales from '../../../hooks/useLandingSales';
+import RemindersOutBox from '../../../Shared/RemindersOutBox';
 
 export default function DeliveryLanding(props: any) {
   const [loading, setLoading] = useState(true);
@@ -134,8 +135,17 @@ export default function DeliveryLanding(props: any) {
                 ></Cars>
               </Grid>
             )}
-            <Grid item xs={12} md={4}></Grid>
-            <Grid item xs={12} md={4}></Grid>
+            <Grid item xs={4}></Grid>
+            <Grid item xs={4}></Grid>
+            <Grid item xs={12} md={6}>
+              <RemindersOutBox
+                isRTL={isRTL}
+                words={words}
+                height={400}
+                theme={theme}
+              ></RemindersOutBox>
+            </Grid>
+            {/* <Grid item xs={12} md={4}></Grid> */}
             {salesMonth && roles.isFinanceAdmin() && (
               <Grid item xs={12} md={6}>
                 <MonthsEmpChart

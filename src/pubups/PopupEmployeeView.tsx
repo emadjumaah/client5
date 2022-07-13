@@ -279,6 +279,7 @@ const PopupEmployeeView = ({ open, onClose, row, theme, company }: any) => {
                           words={words}
                           theme={theme}
                           name="employeeId"
+                          value={row}
                           id={row?._id}
                           width={width}
                           height={height}

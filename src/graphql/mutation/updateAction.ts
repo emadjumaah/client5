@@ -57,10 +57,47 @@ export default gql`
       qty: $qty
       address: $address
     ) {
-      ok
-      message
+      _id
+      branch
+      autoNo
+      indx
+      type
+      sendtime
+      phone
+      email
+      user
+      title
+      body
+      sent
+      active
+      smsqty
+
+      phones
+      emails
+      users
+      transres
+
+      reminderId
+      eventId
+
+      employeeId
+      departmentId
+      customerId
+      resourseId
+      projectId
+      contractId
+
       data
-      error
+      info
+
+      timeunit
+      timerelate
+      qty
+      address
+
+      userId
+      createdAt
+      updatedAt
     }
   }
 `;

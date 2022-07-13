@@ -659,45 +659,9 @@ export const mainmenu = [
   //     },
   //   ],
   // },
+
   {
     id: 7,
-    name: 'reminders',
-    uri: 'reminders',
-    titleAr: 'المفكرة',
-    titleEn: 'Reminders',
-    icon: 'belladd',
-    req: 'cal',
-    dep: 'pos',
-    role: menuRoles.editor,
-    subMenu: [
-      {
-        id: 71,
-        name: 'managereminders',
-        uri: 'managereminders',
-        titleAr: 'ادارة التذكيرات',
-        titleEn: 'Manage Reminders',
-        mainId: 5.66,
-        req: 'pos',
-        dep: null,
-        role: menuRoles.writer,
-      },
-
-      {
-        id: 72,
-        name: 'viewreminders',
-        uri: 'viewreminders',
-        titleAr: 'التذكيرات',
-        titleEn: 'Reminders',
-        mainId: 5.66,
-        req: null,
-        dep: null,
-        role: menuRoles.writer,
-      },
-    ],
-  },
-
-  {
-    id: 8,
     name: 'sms',
     uri: 'sms',
     titleAr: 'رسائل SMS',
@@ -708,7 +672,7 @@ export const mainmenu = [
     role: menuRoles.writer,
     subMenu: [
       {
-        id: 81,
+        id: 71,
         name: 'contacts',
         uri: 'contacts',
         titleAr: 'جهات الاتصال',
@@ -718,7 +682,7 @@ export const mainmenu = [
         dep: null,
       },
       {
-        id: 8,
+        id: 72,
         name: 'groups',
         uri: 'groups',
         titleAr: 'المجموعات',
@@ -728,7 +692,7 @@ export const mainmenu = [
         dep: null,
       },
       {
-        id: 83,
+        id: 73,
         name: 'messages',
         uri: 'messages',
         titleAr: 'الرسائل',
@@ -739,7 +703,7 @@ export const mainmenu = [
         role: menuRoles.editor,
       },
       {
-        id: 84,
+        id: 74,
         name: 'sendreqs',
         uri: 'sendreqs',
         titleAr: 'حملات الارسال',
@@ -751,7 +715,17 @@ export const mainmenu = [
       },
     ],
   },
-
+  {
+    id: 8,
+    name: 'managereminders',
+    uri: 'managereminders',
+    titleAr: 'المفكرة',
+    titleEn: 'Reminders',
+    icon: 'belladd',
+    req: 'cal',
+    dep: 'pos',
+    role: menuRoles.editor,
+  },
   {
     id: 9,
     name: 'users',

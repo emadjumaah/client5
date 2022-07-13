@@ -3,14 +3,14 @@ import { createContext } from 'react';
 export const KaidContext = createContext<any>({});
 
 export const initKaidContext = {
-  currentDate: new Date(),
   currentViewName: 'Month',
+  currentDate: new Date(),
   endDate: new Date(),
   optypevalue: [],
   itemtypevalue: [],
   itemvalue: [],
   projvalue: [],
-  contvalue: [],
+  taskvalue: [],
   departvalue: [],
   emplvalue: [],
   resovalue: [],
@@ -31,8 +31,6 @@ export const kaidReducer = (state: any, action: any) => {
       return { ...state, currentDate: action.payload };
     case 'setEndDate':
       return { ...state, endDate: action.payload };
-    case 'setSort':
-      return { ...state, sort: action.payload };
     case 'setOptypevalue':
       return { ...state, optypevalue: action.payload };
     case 'setItemtypevalue':
@@ -43,8 +41,6 @@ export const kaidReducer = (state: any, action: any) => {
       return { ...state, hiddenColumnNames: action.payload };
     case 'setProjvalue':
       return { ...state, projvalue: action.payload };
-    case 'setContvalue':
-      return { ...state, contvalue: action.payload };
     case 'setDepartvalue':
       return { ...state, departvalue: action.payload };
     case 'setEmplvalue':
@@ -55,12 +51,16 @@ export const kaidReducer = (state: any, action: any) => {
       return { ...state, custvalue: action.payload };
     case 'setSuppvalue':
       return { ...state, suppvalue: action.payload };
+    case 'setTaskvalue':
+      return { ...state, taskvalue: action.payload };
     case 'setAccvalue':
       return { ...state, accvalue: action.payload };
     case 'setAcodevalue':
       return { ...state, acodevalue: action.payload };
     case 'setPcodevalue':
       return { ...state, pcodevalue: action.payload };
+    case 'setSort':
+      return { ...state, sort: action.payload };
     default:
       throw new Error('Unexpected action');
   }

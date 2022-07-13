@@ -258,10 +258,10 @@ export const catTypes = [
 ];
 
 export const itemTypes = [
-  { id: 1, name: 'Product', nameAr: 'منتج' },
-  { id: 2, name: 'Service', nameAr: 'خدمة' },
+  { id: 1, name: 'Product', nameAr: 'منتج', value: 1 },
+  { id: 2, name: 'Service', nameAr: 'خدمة', value: 2 },
   // { id: 3, name: 'nostockproduct', nameAr: 'مصاريف' },
-  { id: 10, name: 'Expenses', nameAr: 'مصاريف' },
+  { id: 10, name: 'Expenses', nameAr: 'مصاريف', value: 10 },
 ];
 
 export const departmentTypes = [

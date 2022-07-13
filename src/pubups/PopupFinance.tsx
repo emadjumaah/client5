@@ -295,7 +295,7 @@ const PopupFinance = ({
                 value={creditAcc}
                 setSelectValue={setCreditAcc}
                 register={register}
-                disabled={ptype === 'pettyCashRec'}
+                disabled={ptype === 'pettyCashRec' || ptype === 'cashDeposet'}
                 isRTL={isRTL}
                 fullwidth
                 mb={0}
@@ -308,7 +308,7 @@ const PopupFinance = ({
                 words={words}
                 options={debaccounts}
                 value={debitAcc}
-                disabled={ptype === 'pettyCashPay'}
+                disabled={ptype === 'pettyCashPay' || ptype === 'cashDraw'}
                 setSelectValue={setDebitAcc}
                 register={register}
                 isRTL={isRTL}

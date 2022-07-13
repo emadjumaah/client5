@@ -5,13 +5,7 @@ import { useForm } from 'react-hook-form';
 import { dublicateAlert, errorAlert, messageAlert } from '../Shared';
 import { GContextTypes } from '../types';
 import { GlobalContext } from '../contexts';
-import {
-  Box,
-  Checkbox,
-  FormControlLabel,
-  Paper,
-  Typography,
-} from '@material-ui/core';
+import { Box, Paper, Typography } from '@material-ui/core';
 import PopupLayout from '../pages/main/PopupLayout';
 import { Grid } from '@material-ui/core';
 import AutoFieldLocal from '../components/fields/AutoFieldLocal';
@@ -22,7 +16,6 @@ import { useTemplate } from '../hooks';
 import useDepartmentsUp from '../hooks/useDepartmentsUp';
 import useEmployeesUp from '../hooks/useEmployeesUp';
 import useResoursesUp from '../hooks/useResoursesUp';
-import PopupAddrRule from './PopupAddrRule';
 import { SelectLocal } from '../pages/calendar/common/SelectLocal';
 import {
   byweekdayOptions,
@@ -31,13 +24,6 @@ import {
 } from '../constants/rrule';
 import RRule from 'rrule';
 import { getReminderRruleData } from '../common/getRruleData';
-import { useLazyQuery } from '@apollo/client';
-import getOperationItems from '../graphql/query/getOperationItems';
-import ExpensesItemForm from '../Shared/ExpensesItemForm';
-import ExpensesItemsTable from '../Shared/ExpensesItemsTable';
-import LoadingInline from '../Shared/LoadingInline';
-import { invoiceClasses } from '../themes';
-import { PriceTotal } from '../Shared/TotalPrice';
 import SelectMulti from '../Shared/SelectMulti';
 
 export const indexTheList = (list: any) => {
@@ -57,14 +43,10 @@ const PopupReminder = ({
   theme,
   addAction,
   editAction,
-  servicesproducts,
   value,
   name,
   tasks,
 }: any) => {
-  const classes = invoiceClasses();
-
-  const [isItems, setIsItems] = useState(false);
   const [saving, setSaving] = useState(false);
 
   const [runtime, setRuntime]: any = useState(new Date());
@@ -95,17 +77,9 @@ const PopupReminder = ({
   const resoRef: any = React.useRef();
 
   const [rrule, setRrule] = useState<any>(null);
-  const [openMulti, setOpenMulti] = useState(false);
-
-  const [itemsList, setItemsList] = useState<any>([]);
-
-  const [totals, setTotals] = useState<any>({});
 
   const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
-
-  const [actionslist, setActionslist] = useState([]);
   const [rtitle, setRtitle]: any = useState(null);
-  const [loading, setLoading] = useState(false);
 
   const [freq, setFreq] = useState(RRule.DAILY);
   const [count, setCount] = useState(1);
@@ -127,14 +101,7 @@ const PopupReminder = ({
   const { register, handleSubmit } = useForm({});
   const {
     translate: { words, isRTL },
-    store: { user },
   }: GContextTypes = useContext(GlobalContext);
-
-  const [getItems, itemsData]: any = useLazyQuery(getOperationItems, {
-    fetchPolicy: 'cache-and-network',
-  });
-
-  const isemployee = user?.isEmployee && user?.employeeId;
 
   const onChangeInterval = (e: any) => {
     const value = Number(e.target.value);
@@ -169,132 +136,6 @@ const PopupReminder = ({
   }, [freq]);
 
   useEffect(() => {
-    const items = itemsData?.data?.['getOperationItems']?.data || [];
-    if (items && items.length > 0) {
-      const ids = items.map((it: any) => it.itemId);
-      const servlist = servicesproducts.filter((ser: any) =>
-        ids.includes(ser._id)
-      );
-
-      const itemsWqtyprice = items.map((item: any, index: any) => {
-        const {
-          categoryId,
-          categoryName,
-          categoryNameAr,
-          departmentId,
-          departmentName,
-          departmentNameAr,
-          departmentColor,
-          employeeId,
-          employeeName,
-          employeeNameAr,
-          employeeColor,
-          resourseId,
-          resourseName,
-          resourseNameAr,
-          resourseColor,
-          note,
-        } = item;
-        const serv = servlist.filter((se: any) => se._id === item.itemId)[0];
-        return {
-          ...serv,
-          categoryId,
-          categoryName,
-          categoryNameAr,
-          departmentId,
-          departmentName,
-          departmentNameAr,
-          departmentColor,
-          employeeId,
-          employeeName,
-          employeeNameAr,
-          employeeColor,
-          resourseId,
-          resourseName,
-          resourseNameAr,
-          resourseColor,
-          index,
-          itemprice: item.itemPrice,
-          itemqty: item.qty,
-          itemtotal: item.total,
-          note,
-        };
-      });
-      itemsWqtyprice.sort((a: any, b: any) =>
-        a.indx > b.indx ? 1 : b.indx > a.indx ? -1 : 0
-      );
-      setItemsList(itemsWqtyprice);
-      setLoading(false);
-    }
-  }, [itemsData]);
-
-  useEffect(() => {
-    if (row && row._id) {
-      const depId = row.departmentId;
-      const empId = row.employeeId;
-      const resId = row.resourseId;
-
-      setRtitle(row?.title);
-      setRuntime(new Date(row?.runtime));
-      setStartDate(new Date(row?.startDate));
-      setEndDate(new Date(row?.endDate));
-      if (row.freq) {
-        setFreq(row.freq);
-      }
-      if (row.count) {
-        setCount(row.count);
-      }
-      if (row.interval) {
-        setInterval(row.interval);
-      }
-
-      setLoading(true);
-      const variables = { opId: row._id };
-      getItems({
-        variables,
-      });
-
-      if (depId) {
-        const depart = departments.filter((dep: any) => dep._id === depId)[0];
-        setDepartvalue(depart);
-      }
-      if (empId) {
-        const empl = employees.filter((emp: any) => emp._id === empId)[0];
-        setEmplvalue(empl);
-      }
-      if (resId) {
-        const res = resourses.filter((emp: any) => emp._id === resId)[0];
-        setResovalue(res);
-      }
-      if (row?.actions) {
-        setActionslist(JSON.parse(row?.actions));
-      }
-      if (row?.rruledata) {
-        setRrule(JSON.parse(row?.rruledata));
-      }
-    }
-  }, [row]);
-
-  const getOverallTotal = () => {
-    const totalsin = itemsList.map((litem: any) => litem.itemtotal);
-    const amount = totalsin.reduce((psum: any, a: any) => psum + a, 0);
-    setTotals({ amount });
-  };
-
-  useEffect(() => {
-    getOverallTotal();
-  }, [itemsList]);
-
-  useEffect(() => {
-    if (isemployee) {
-      const emp = employees.filter(
-        (em: any) => em._id === user.employeeId
-      )?.[0];
-      setEmplvalue(emp);
-    }
-  }, [user, employees]);
-
-  useEffect(() => {
     const rdata = getReminderRruleData({
       freq,
       dtstart: startDate,
@@ -323,11 +164,8 @@ const PopupReminder = ({
   const resetAllForms = () => {
     setRuntime(null);
     setRrule(null);
-    setActionslist([]);
     setRtitle(null);
-    setLoading(false);
     setSaving(false);
-    setItemsList([]);
     setCount(1);
     setInterval(1);
     setPeriodType(1);
@@ -340,50 +178,8 @@ const PopupReminder = ({
     setTaskvalue(name === 'contractId' ? value : null);
   };
 
-  const addItemToList = (item: any) => {
-    const isInList = itemsList?.filter((li: any) => li._id === item._id)?.[0];
-    if (isInList) {
-      const newityem = {
-        ...isInList,
-        itemqty: isInList.itemqty + item.itemqty,
-        itemtotal: isInList.itemtotal + item.itemtotal,
-        itemtotalcost: isInList.itemtotalcost + item.itemtotalcost,
-      };
-      const narray = itemsList.map((ilm: any) => {
-        if (ilm._id === newityem._id) {
-          return newityem;
-        } else {
-          return ilm;
-        }
-      });
-      setItemsList(narray);
-    } else {
-      const newArray = [...itemsList, { ...item, userId: user._id }];
-      const listwithindex = indexTheList(newArray);
-      setItemsList(listwithindex);
-    }
-  };
-  const editItemInList = (item: any) => {
-    const newArray = itemsList.map((it: any) => {
-      if (it._id === item._id) {
-        return item;
-      } else {
-        return it;
-      }
-    });
-    const listwithindex = indexTheList(newArray);
-    setItemsList(listwithindex);
-  };
-
-  const removeItemFromList = (index: any) => {
-    const newList = [...itemsList];
-    newList.splice(index, 1);
-    const listwithindex = indexTheList(newList);
-    setItemsList(listwithindex);
-  };
-
   const onSubmit = async () => {
-    if (!rtitle) {
+    if (!rtitle || rtitle.length < 3) {
       await messageAlert(
         setAlrt,
         isRTL ? 'يرجى اضافة البيان' : 'Please add title'
@@ -391,8 +187,6 @@ const PopupReminder = ({
       return;
     }
     setSaving(true);
-
-    const amount = totals?.amount;
 
     const variables: any = {
       _id: row && row._id ? row._id : undefined, // is it new or edit
@@ -402,13 +196,10 @@ const PopupReminder = ({
       runtime,
       rRule: rrule?.str,
       rruledata: rrule ? JSON.stringify(rrule) : undefined,
-      actions: actionslist ? JSON.stringify(actionslist) : undefined,
       departmentId: departvalue ? departvalue._id : undefined,
       employeeId: emplvalue ? emplvalue._id : undefined,
       resourseId: resovalue ? resovalue._id : undefined,
       contractId: taskvalue ? taskvalue._id : undefined,
-      items: itemsList ? JSON.stringify(itemsList) : undefined,
-      amount,
       freq,
       count,
       interval,
@@ -419,7 +210,7 @@ const PopupReminder = ({
 
   const apply = async (mutate: any, variables: any) => {
     try {
-      mutate({ variables });
+      await mutate({ variables });
       setSaving(false);
       onCloseForm();
     } catch (error) {
@@ -504,7 +295,8 @@ const PopupReminder = ({
       onSubmit={onHandleSubmit}
       theme={theme}
       alrt={alrt}
-      mt={10}
+      mt={0}
+      mb={20}
       maxWidth="md"
       saving={saving}
     >
@@ -533,6 +325,19 @@ const PopupReminder = ({
                       format="dd/MM/yyyy - hh:mm"
                       time
                     ></CalenderLocal>
+                  </Grid>
+                  <Grid item xs={12}>
+                    <TextFieldLocal
+                      name="rtitle"
+                      multiline
+                      rows={3}
+                      label={words.description}
+                      value={rtitle}
+                      onChange={(e: any) => setRtitle(e.target.value)}
+                      row={row}
+                      fullWidth
+                      mb={0}
+                    />
                   </Grid>
 
                   <Grid item xs={3}>
@@ -598,7 +403,6 @@ const PopupReminder = ({
                       mb={0}
                     />
                   </Grid>
-                  <Grid item xs={12} style={{ marginTop: 10 }}></Grid>
                   {!tempoptions?.noRes && (
                     <Grid item xs={6}>
                       <AutoFieldLocal
@@ -627,7 +431,7 @@ const PopupReminder = ({
                         title={tempwords?.employee}
                         words={words}
                         options={employees}
-                        disabled={isemployee || name === 'employeeId'}
+                        disabled={name === 'employeeId'}
                         value={emplvalue}
                         setSelectValue={setEmplvalue}
                         setSelectError={setEmplError}
@@ -682,8 +486,10 @@ const PopupReminder = ({
                   <Paper
                     elevation={2}
                     style={{
-                      height: 250,
+                      height: 300,
                       overflow: 'auto',
+                      padding: 10,
+                      marginTop: 20,
                     }}
                   >
                     <Box style={{ flexDirection: 'row' }}>
@@ -700,17 +506,16 @@ const PopupReminder = ({
                               flexDirection: 'row',
                               alignItems: 'center',
                               justifyContent: 'space-between',
-                              backgroundColor: '#f5f5f5',
+                              backgroundColor: '#f3f3f3',
                               margin: 5,
-                              padding: 5,
+                              marginBottom: 10,
+                              padding: 7,
                             }}
                           >
                             <Typography>
                               {getDateDayWeek(isLastday ? al2 : al, isRTL)}
                             </Typography>
-                            <Typography variant="caption">
-                              {index + 1}
-                            </Typography>
+                            <Typography>{index + 1}</Typography>
                           </Box>
                         );
                       })}
@@ -718,126 +523,7 @@ const PopupReminder = ({
                   </Paper>
                 )}
               </Grid>
-              <Grid item xs={12}>
-                <TextFieldLocal
-                  name="rtitle"
-                  multiline
-                  rows={3}
-                  label={words.description}
-                  value={rtitle}
-                  onChange={(e: any) => setRtitle(e.target.value)}
-                  row={row}
-                  fullWidth
-                  mb={0}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      checked={isItems}
-                      onChange={() => {
-                        setIsItems(!isItems);
-                      }}
-                      color="primary"
-                    />
-                  }
-                  label={
-                    <Typography
-                      style={{
-                        color: theme.palette.primary.main,
-                        fontSize: 12,
-                        fontWeight: 'bold',
-                      }}
-                      variant="subtitle1"
-                    >
-                      {isRTL ? 'تفعيل المصاريف' : 'Activate Expenses'}
-                    </Typography>
-                  }
-                />
-              </Grid>
-              {isItems && (
-                <Grid item xs={12}>
-                  <Box
-                    style={{
-                      backgroundColor: '#f3f3f3',
-                      padding: 10,
-                      borderRadius: 10,
-                    }}
-                  >
-                    <Box
-                      display="flex"
-                      style={{ paddingLeft: 10, paddingRight: 10 }}
-                    >
-                      <ExpensesItemForm
-                        items={servicesproducts}
-                        addItem={addItemToList}
-                        words={words}
-                        classes={classes}
-                        user={user}
-                        isRTL={isRTL}
-                        setAlrt={setAlrt}
-                      ></ExpensesItemForm>
-                    </Box>
-                    {!loading && (
-                      <Box style={{ marginBottom: 20 }}>
-                        <ExpensesItemsTable
-                          rows={itemsList}
-                          editItem={editItemInList}
-                          removeItem={removeItemFromList}
-                          isRTL={isRTL}
-                          words={words}
-                          user={user}
-                          products={servicesproducts}
-                        ></ExpensesItemsTable>
-                      </Box>
-                    )}
-                    {loading && <LoadingInline></LoadingInline>}
-                  </Box>
-                </Grid>
-              )}
-              {isItems && (
-                <Grid item xs={12}>
-                  <Box
-                    display="flex"
-                    style={{
-                      alignItems: 'center',
-                      justifyContent: 'space-between',
-                      marginRight: 10,
-                      marginLeft: 10,
-                    }}
-                  >
-                    <PriceTotal
-                      amount={totals?.amount ? totals?.amount : row?.amount}
-                      total={totals?.total}
-                      words={words}
-                      totalonly
-                    ></PriceTotal>
-                  </Box>
-                </Grid>
-              )}
             </Grid>
-          </Grid>
-
-          <Grid item xs={12} md={12}>
-            <Grid container spacing={2}></Grid>
-
-            <Grid container spacing={2}>
-              <Grid item xs={12}></Grid>
-
-              <Grid item xs={4}></Grid>
-            </Grid>
-            <PopupAddrRule
-              start={runtime}
-              open={openMulti}
-              onClose={() => setOpenMulti(false)}
-              onSubmit={setRrule}
-              theme={theme}
-              isRTL={isRTL}
-              words={words}
-              noStartView={true}
-              noEndView={true}
-            ></PopupAddrRule>
           </Grid>
         </Grid>
       </>

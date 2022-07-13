@@ -750,8 +750,8 @@ export const updateOpDocRefNumbers = (data: any) => {
     const numref = d?.refNo?.split('-')?.[1];
     return {
       ...d,
-      opDocNo: pre ? `${pre}-${String(num).padStart(7, '0')}` : '',
-      refNo: preref ? `${preref}-${String(numref).padStart(7, '0')}` : '',
+      opDocNo: pre ? `${pre}-${String(num).padStart(5, '0')}` : '',
+      refNo: preref ? `${preref}-${String(numref).padStart(5, '0')}` : '',
     };
   });
   return rdata;

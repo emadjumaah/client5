@@ -279,6 +279,7 @@ const PopupDepartmentView = ({ open, onClose, row, theme, company }: any) => {
                           words={words}
                           theme={theme}
                           name="departmentId"
+                          value={row}
                           id={row?._id}
                           width={width}
                           height={height}

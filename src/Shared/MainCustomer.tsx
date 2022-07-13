@@ -26,6 +26,7 @@ import {
 } from './colorFormat';
 import { useLazyQuery } from '@apollo/client';
 import getGereralCalculation from '../graphql/query/getGereralCalculation';
+import ReminderBox from './ReminderBox';
 
 export default function MainCustomer({
   open,
@@ -113,10 +114,21 @@ export default function MainCustomer({
                     </Box>
                   </Grid>
                 )}
-                {!isSupp && (
+                {!isSupp && !isCont && (
                   <Grid item xs={2}>
                     <Box style={{ backgroundColor: '#fff', height: 250 }}>
                       {expensesMainFormatter({ row: data, theme, isRTL })}
+                    </Box>
+                  </Grid>
+                )}
+                {isCont && (
+                  <Grid item xs={4}>
+                    <Box style={{ backgroundColor: '#fff', height: 250 }}>
+                      {daysdataMainFormatter({
+                        row,
+                        theme,
+                        isRTL,
+                      })}
                     </Box>
                   </Grid>
                 )}
@@ -125,18 +137,6 @@ export default function MainCustomer({
                     <Box style={{ backgroundColor: '#fff', height: 250 }}>
                       {incomeMainFormatter({
                         row: data,
-                        theme,
-                        isRTL,
-                      })}
-                    </Box>
-                  </Grid>
-                )}
-
-                {isCont && (
-                  <Grid item xs={4}>
-                    <Box style={{ backgroundColor: '#fff', height: 250 }}>
-                      {daysdataMainFormatter({
-                        row,
                         theme,
                         isRTL,
                       })}
@@ -171,11 +171,25 @@ export default function MainCustomer({
                     </Box>
                   </Grid>
                 )}
-
-                {!isSupp && (
+                {!isSupp && !isCont && (
                   <Grid item xs={2}>
                     <Box style={{ backgroundColor: '#fff', height: 250 }}>
                       {kaidsMainFormatter({ row: data, theme, isRTL })}
+                    </Box>
+                  </Grid>
+                )}
+                {!isSupp && !isCust && (
+                  <Grid item xs={4}>
+                    <Box style={{ backgroundColor: '#fff', height: 250 }}>
+                      <ReminderBox
+                        isRTL={isRTL}
+                        words={words}
+                        id={id}
+                        name={name}
+                        start={start}
+                        end={end}
+                        theme={theme}
+                      ></ReminderBox>
                     </Box>
                   </Grid>
                 )}

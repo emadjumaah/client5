@@ -27,7 +27,7 @@ import {
 } from '@devexpress/dx-react-grid-material-ui';
 import { Command, Loading, PopupEditing } from '../../Shared';
 import { getRowId } from '../../common';
-import { actionTimeFormatter } from '../../Shared/colorFormat';
+import { actionTimeFormatter, sentFormatter } from '../../Shared/colorFormat';
 
 import { AlertLocal, SearchTable } from '../../components';
 import { getColumns } from '../../common/columns';
@@ -38,18 +38,13 @@ import PageLayout from '../main/PageLayout';
 import { errorAlert, errorDeleteAlert } from '../../Shared/helpers';
 import PopupReminder from '../../pubups/PopupReminder';
 import { useLazyQuery, useMutation } from '@apollo/client';
-import {
-  createReminder,
-  deleteReminder,
-  getReminders,
-  updateReminder,
-} from '../../graphql';
+import { createReminder, deleteAction, updateAction } from '../../graphql';
 import DateNavigatorReports from '../../components/filters/DateNavigatorReports';
 import ReminderContext from '../../contexts/reminder';
 import useEmployeesUp from '../../hooks/useEmployeesUp';
 import useDepartmentsUp from '../../hooks/useDepartmentsUp';
 import useResoursesUp from '../../hooks/useResoursesUp';
-import { useExpenseItems, useTemplate } from '../../hooks';
+import { useTemplate } from '../../hooks';
 import getRemindersActions from '../../graphql/query/getRemindersActions';
 import { TableComponent } from '../../Shared/TableComponent';
 import useTasks from '../../hooks/useTasks';
@@ -69,43 +64,42 @@ export default function Reminders(props: any) {
   const [columns] = useState(
     tempoptions?.noTsk
       ? [
+          col.sent,
           col.time,
           { name: 'title', title: words?.description },
           col.employee,
           col.department,
-          col.amount,
         ]
       : [
+          col.sent,
           col.time,
           { name: 'title', title: words?.description },
           col.resourse,
           col.employee,
           col.department,
           col.contract,
-          col.amount,
         ]
   );
 
   const [tableColumnExtensions]: any = useState([
+    { columnName: col.sent.name, width: 120 },
     { columnName: col.time.name, width: 150 },
     { columnName: col.title.name, width: 250 },
     { columnName: col.resourse.name, width: 200 },
     { columnName: col.employee.name, width: 200 },
     { columnName: col.department.name, width: 200 },
     { columnName: col.contract.name, width: 200 },
-    { columnName: col.amount.name, width: 120 },
   ]);
 
   const [tableColumnVisibilityColumnExtensions] = useState([
     { columnName: 'time', togglingEnabled: false },
   ]);
-  const [pageSizes] = useState([5, 10, 20, 50, 0]);
+  const [pageSizes] = useState([5, 10, 15, 20, 50, 0]);
 
   const { width, height } = useWindowDimensions();
   const { employees } = useEmployeesUp();
   const { departments } = useDepartmentsUp();
   const { resourses } = useResoursesUp();
-  const { expenseItems } = useExpenseItems();
 
   const {
     state: { currentDate, currentViewName, endDate },
@@ -123,17 +117,10 @@ export default function Reminders(props: any) {
     dispatch({ type: 'setEndDate', payload: curDate });
   };
 
-  const [loadReminders, remindersData]: any = useLazyQuery(getReminders);
+  const [loadReminders, remindersData]: any = useLazyQuery(getRemindersActions);
 
   const refresQuery = {
     refetchQueries: [
-      {
-        query: getReminders,
-        variables: {
-          start: start ? start.setHours(0, 0, 0, 0) : undefined,
-          end: end ? end.setHours(23, 59, 59, 999) : undefined,
-        },
-      },
       {
         query: getRemindersActions,
         variables: {
@@ -155,15 +142,15 @@ export default function Reminders(props: any) {
   }, [start, end]);
 
   const [addReminder] = useMutation(createReminder, refresQuery);
-  const [editReminder] = useMutation(updateReminder, refresQuery);
-  const [removeReminder] = useMutation(deleteReminder, refresQuery);
+  const [editRAction] = useMutation(updateAction, refresQuery);
+  const [removeRAction] = useMutation(deleteAction, refresQuery);
 
   const commitChanges = async ({ deleted }) => {
     if (deleted) {
       const _id = deleted[0];
-      const res = await removeReminder({ variables: { _id } });
-      if (res?.data?.deleteReminder?.ok === false) {
-        if (res?.data?.deleteReminder?.error.includes('related')) {
+      const res = await removeRAction({ variables: { _id } });
+      if (res?.data?.deleteAction?.ok === false) {
+        if (res?.data?.deleteAction?.error.includes('related')) {
           await errorDeleteAlert(setAlrt, isRTL);
         } else {
           await errorAlert(setAlrt, isRTL);
@@ -176,10 +163,9 @@ export default function Reminders(props: any) {
     if (remindersData?.loading) {
       setLoading(true);
     }
-    if (remindersData?.data?.getReminders?.data) {
-      const { data } = remindersData.data.getReminders;
+    if (remindersData?.data?.getRemindersActions?.data) {
+      const { data } = remindersData.data.getRemindersActions;
       const rdata = data.map((da: any) => {
-        let time: any;
         let resourseNameAr: any;
         let resourseName: any;
         let departmentNameAr: any;
@@ -214,20 +200,6 @@ export default function Reminders(props: any) {
           contractNameAr = res?.nameAr;
           contractName = res?.name;
         }
-
-        const rr = JSON.parse(da?.rruledata);
-        if (rr) {
-          const { all } = rr;
-          const startms = start?.getTime();
-          const endms = end?.getTime();
-          all.map((tm: any) => {
-            const date = new Date(tm).getTime();
-            if (date > startms && date < endms) {
-              time = new Date(tm);
-            }
-            return tm;
-          });
-        }
         return {
           ...da,
           resourseName,
@@ -238,7 +210,7 @@ export default function Reminders(props: any) {
           employeeName,
           contractNameAr,
           contractName,
-          time,
+          time: da?.sendtime,
         };
       });
       setRows(rdata);
@@ -291,11 +263,11 @@ export default function Reminders(props: any) {
         <Paper
           elevation={5}
           style={{
-            margin: 40,
-            marginTop: 80,
+            marginLeft: 40,
+            marginRight: 40,
+            marginTop: 60,
             overflow: 'auto',
             width: width - 330,
-            // height: height - 200,
             borderRadius: 10,
           }}
         >
@@ -303,7 +275,7 @@ export default function Reminders(props: any) {
             <SortingState />
             <EditingState onCommitChanges={commitChanges} />
             <SearchState />
-            <PagingState defaultCurrentPage={0} defaultPageSize={10} />
+            <PagingState defaultCurrentPage={0} defaultPageSize={15} />
             <IntegratedSorting />
             <IntegratedFiltering />
             <IntegratedPaging />
@@ -314,20 +286,20 @@ export default function Reminders(props: any) {
               }}
               tableComponent={TableComponent}
               rowComponent={(props: any) => (
-                <Table.Row {...props} style={{ height: 60 }}></Table.Row>
+                <Table.Row {...props} style={{ height: 40 }}></Table.Row>
               )}
               columnExtensions={tableColumnExtensions}
             />
 
             <TableColumnReordering
               defaultOrder={[
+                col.sent.name,
                 col.time.name,
                 col.title.name,
                 col.resourse.name,
                 col.employee.name,
                 col.department.name,
                 col.contract.name,
-                col.amount.name,
               ]}
             />
             <TableColumnResizing defaultColumnWidths={tableColumnExtensions} />
@@ -350,8 +322,13 @@ export default function Reminders(props: any) {
               for={['time']}
               formatterComponent={actionTimeFormatter}
             ></DataTypeProvider>
+            <DataTypeProvider
+              for={['sent']}
+              formatterComponent={(props: any) =>
+                sentFormatter({ ...props, editRAction })
+              }
+            ></DataTypeProvider>
             <TableEditColumn
-              showEditCommand
               showDeleteCommand
               showAddCommand
               commandComponent={Command}
@@ -369,12 +346,9 @@ export default function Reminders(props: any) {
             <PopupEditing
               theme={theme}
               addAction={addReminder}
-              editAction={editReminder}
+              editAction={() => null}
             >
-              <PopupReminder
-                tasks={tasks}
-                servicesproducts={expenseItems}
-              ></PopupReminder>
+              <PopupReminder tasks={tasks}></PopupReminder>
             </PopupEditing>
           </Grid>
         </Paper>

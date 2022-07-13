@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import React from 'react';
-import { Box, Checkbox, TextField } from '@material-ui/core';
+import { Box, Checkbox, TextField, Typography } from '@material-ui/core';
 import { Autocomplete } from '@material-ui/lab';
 import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@material-ui/icons/CheckBox';
@@ -19,6 +19,7 @@ export default function FilterSelectMulti({
   name,
   width,
   nomulti = false,
+  label,
 }: any) {
   const { tempwords } = useTemplate();
   return (
@@ -35,21 +36,36 @@ export default function FilterSelectMulti({
       renderOption={(option, { selected }) => (
         <Box
           style={{
-            direction: isRTL ? 'rtl' : 'ltr',
             display: 'flex',
             flex: 1,
-            alignItems: 'center',
+            direction: isRTL ? 'rtl' : 'ltr',
+            textAlign: isRTL ? 'right' : 'left',
+            alignItems: 'flex-start',
+            justifyContent: 'space-between',
           }}
         >
-          {!nomulti && (
-            <Checkbox
-              icon={icon}
-              checkedIcon={checkedIcon}
-              style={{ marginRight: 8 }}
-              checked={selected}
-            />
+          <Box
+            style={{
+              display: 'flex',
+              flex: 1,
+              alignItems: 'center',
+            }}
+          >
+            {!nomulti && (
+              <Checkbox
+                icon={icon}
+                checkedIcon={checkedIcon}
+                style={{ marginRight: -8 }}
+                checked={selected}
+              />
+            )}
+            <Typography variant="body2">
+              {isRTL ? option.nameAr : option.name}
+            </Typography>
+          </Box>
+          {option.code && (
+            <Typography variant="body2">{option.code}</Typography>
           )}
-          {isRTL ? option.nameAr : option.name}
         </Box>
       )}
       value={value}
@@ -63,17 +79,24 @@ export default function FilterSelectMulti({
           rowsMax={1}
           id={name}
           name={name}
-          label={tempwords?.[name] ? tempwords?.[name] : words?.[name]}
+          label={
+            label
+              ? label
+              : tempwords?.[name]
+              ? tempwords?.[name]
+              : words?.[name]
+          }
           variant="outlined"
           style={{
             fontWeight: 'bold',
-            width: width ? width : 200,
+            width,
             marginRight: 5,
             marginLeft: 5,
             backgroundColor: value?.length > 0 ? '#FFF5D6' : undefined,
             fontSize: 10,
             margin: 0,
             padding: 0,
+            direction: isRTL ? 'rtl' : 'ltr',
           }}
         ></TextField>
       )}

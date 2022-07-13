@@ -122,6 +122,30 @@ export const documentTypes = [
   },
   {
     id: 9,
+    value: operationTypes.cashDeposet,
+    name: 'Cash Deposet',
+    nameAr: 'ايداع في البنك',
+  },
+  {
+    id: 10,
+    value: operationTypes.cashDraw,
+    name: 'Cash Draw',
+    nameAr: 'سحب من البنك',
+  },
+  {
+    id: 11,
+    value: operationTypes.pettyCashPay,
+    name: 'Petty Cash Payment',
+    nameAr: 'دفع عهدة',
+  },
+  {
+    id: 12,
+    value: operationTypes.pettyCashRec,
+    name: 'Petty Cash Receipt',
+    nameAr: 'قبض عهدة',
+  },
+  {
+    id: 13,
     value: operationTypes.kaid,
     name: 'Jornal Vaucher',
     nameAr: 'قيود اليومية',

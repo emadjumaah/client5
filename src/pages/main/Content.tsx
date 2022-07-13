@@ -126,7 +126,6 @@ import {
   reminderReducer,
 } from '../../contexts/reminder/salesReducer';
 import ReminderContext from '../../contexts/reminder';
-import ViewReminders from '../adds/ViewReminders';
 import ExpenseItems from '../adds/ExpenseItems';
 import Suppliers from '../adds/Suppliers';
 import PurchaseInvoices from '../adds/PurchaseInvoices';
@@ -643,21 +642,6 @@ const Content = () => {
                   theme={theme}
                   menuitem={menuitem}
                 ></Reminders>
-              </ReminderContext.Provider>
-            }
-          />
-          <Route
-            path="/viewreminders"
-            element={
-              <ReminderContext.Provider
-                value={{ state: reminderStore, dispatch: reminderDispatch }}
-              >
-                <ViewReminders
-                  isRTL={isRTL}
-                  words={words}
-                  theme={theme}
-                  menuitem={menuitem}
-                ></ViewReminders>
               </ReminderContext.Provider>
             }
           />
