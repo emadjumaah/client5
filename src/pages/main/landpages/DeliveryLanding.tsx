@@ -8,12 +8,12 @@ import MonthsEmpChart from '../../../components/charts/MonthsEmpChart';
 import InfoBoxDark from '../../../components/charts/InfoBoxDark';
 import PageLayout from '../PageLayout';
 import { useEffect, useState } from 'react';
-import useEmployeesUp from '../../../hooks/useEmployeesUp';
-import useDepartmentsUp from '../../../hooks/useDepartmentsUp';
+import useEmployees from '../../../hooks/useEmployees';
+import useDepartments from '../../../hooks/useDepartments';
 import useWindowDimensions from '../../../hooks/useWindowDimensions';
 import { Loading } from '../../../Shared';
 import { roles } from '../../../common';
-import useResoursesUp from '../../../hooks/useResoursesUp';
+import useResourses from '../../../hooks/useResourses';
 import Cars from '../../../components/charts/Cars';
 import { useTemplate } from '../../../hooks';
 import useLandingSales from '../../../hooks/useLandingSales';
@@ -24,9 +24,9 @@ export default function DeliveryLanding(props: any) {
 
   const { words, isRTL, user, theme, menuitem } = props;
 
-  const { resourses } = useResoursesUp();
-  const { departments } = useDepartmentsUp();
-  const { employees } = useEmployeesUp();
+  const { resourses } = useResourses();
+  const { departments } = useDepartments();
+  const { employees } = useEmployees();
   const { height } = useWindowDimensions();
   const { tempwords, templateId } = useTemplate();
 

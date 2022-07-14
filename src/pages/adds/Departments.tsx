@@ -24,7 +24,7 @@ import { avatarPatternFormatter } from '../../Shared/colorFormat';
 import { AlertLocal, SearchTable } from '../../components';
 import { errorDeleteAlert } from '../../Shared/helpers';
 import PageLayout from '../main/PageLayout';
-import useDepartmentsDown from '../../hooks/useDepartmentsDown';
+import useDepartments from '../../hooks/useDepartments';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
 import { Typography } from '@material-ui/core';
 
@@ -46,7 +46,7 @@ export default function Departments({ isRTL, words, theme, menuitem }: any) {
     editDepartment,
     removeDepartment,
     refreshdepartment,
-  } = useDepartmentsDown();
+  } = useDepartments();
 
   const commitChanges = async ({ deleted }) => {
     if (deleted) {
@@ -124,7 +124,7 @@ export default function Departments({ isRTL, words, theme, menuitem }: any) {
             addAction={addDepartment}
             editAction={editDepartment}
           >
-            <PopupDeprtment depType={1}></PopupDeprtment>
+            <PopupDeprtment></PopupDeprtment>
           </PopupEditing>
         </Grid>
         {alrt.show && (

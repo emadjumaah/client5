@@ -4,28 +4,21 @@ import { useLazyQuery, useMutation } from '@apollo/client';
 import { useEffect } from 'react';
 import { createItem, deleteItem, getServices, updateItem } from '../graphql';
 import createMultiItems from '../graphql/mutation/createMultiItems';
-import { getStoreItem } from '../store';
 
 export default () => {
-  const store = getStoreItem('store');
-  const lang = store?.lang;
-  const isRTL = lang === 'ar' ? true : false;
-  const [getsevs, itmData]: any = useLazyQuery(getServices, {
-    variables: { isRTL },
-    nextFetchPolicy: 'cache-and-network',
-  });
+  const [getsevs, itmData]: any = useLazyQuery(getServices);
 
   const [addService] = useMutation(createItem, {
-    refetchQueries: [{ query: getServices, variables: { isRTL } }],
+    refetchQueries: [{ query: getServices }],
   });
   const [addMultiServices] = useMutation(createMultiItems, {
-    refetchQueries: [{ query: getServices, variables: { isRTL } }],
+    refetchQueries: [{ query: getServices }],
   });
   const [editService] = useMutation(updateItem, {
-    refetchQueries: [{ query: getServices, variables: { isRTL } }],
+    refetchQueries: [{ query: getServices }],
   });
   const [removeService] = useMutation(deleteItem, {
-    refetchQueries: [{ query: getServices, variables: { isRTL } }],
+    refetchQueries: [{ query: getServices }],
   });
 
   useEffect(() => {

@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import {
   EditingState,
   SortingState,
@@ -31,22 +31,22 @@ import { AlertLocal, SearchTable } from '../../components';
 import { errorDeleteAlert } from '../../Shared/helpers';
 import PageLayout from '../main/PageLayout';
 import { getColumns } from '../../common/columns';
-import useDepartmentsUp from '../../hooks/useDepartmentsUp';
 import { Box, Paper, Typography } from '@material-ui/core';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
 import { TableComponent } from '../../Shared/TableComponent';
 import { roles } from '../../common';
-import { getDepartments } from '../../graphql';
-import { useLazyQuery } from '@apollo/client';
 import FilterSelectSingle from '../../Shared/FilterSelectSingle';
-import { departmentTypes } from '../../constants/datatypes';
+import { retypeTypes } from '../../constants/datatypes';
 import PopupResourseType from '../../pubups/PopupResourseType';
-import { departmentTypeFormat } from '../../Shared/colorFormat';
+import {
+  avatarColorFormatter,
+  departmentTypeFormat,
+} from '../../Shared/colorFormat';
+import useRetypes from '../../hooks/useRetypes';
 
 export default function ResourseTypes({ isRTL, words, theme, menuitem }: any) {
   const [pageSizes] = useState([5, 6, 10, 20, 50, 0]);
-  const [rows, setRows] = useState([]);
-  const [depart, setDepart] = useState(null);
+  const [retype, setRetype] = useState(null);
 
   const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
   const col = getColumns({ isRTL, words });
@@ -56,13 +56,13 @@ export default function ResourseTypes({ isRTL, words, theme, menuitem }: any) {
   const [columns] = useState([
     { name: 'avatar', title: ' ' },
     { name: isRTL ? 'nameAr' : 'name', title: words.name },
-    { name: 'depType', title: words.type },
+    { name: 'reType', title: words.type },
   ]);
 
   const [tableColumnExtensions]: any = useState([
     { columnName: 'avatar', width: 30 },
     { columnName: col.name.name, width: 250 },
-    { columnName: 'depType', width: 250 },
+    { columnName: 'reType', width: 250 },
   ]);
 
   const [tableColumnVisibilityColumnExtensions] = useState([
@@ -73,31 +73,18 @@ export default function ResourseTypes({ isRTL, words, theme, menuitem }: any) {
     { name: 'avatar', title: words.color },
   ]);
 
-  const { addDepartment, editDepartment, removeDepartment, refreshdepartment } =
-    useDepartmentsUp();
+  const { retypes, addRetype, editRetype, removeRetype, refreshretype } =
+    useRetypes();
 
-  const [getdepts, deptData]: any = useLazyQuery(getDepartments, {
-    fetchPolicy: 'cache-and-network',
-  });
-
-  useEffect(() => {
-    getdepts({ variables: { isRTL, depType: depart ? depart.id : undefined } });
-  }, [depart]);
-
-  useEffect(() => {
-    if (deptData?.data?.getDepartments?.data) {
-      const { data } = deptData.data.getDepartments;
-      const rdata = data.filter((d: any) => d.depType !== 1);
-      setRows(rdata);
-    }
-  }, [deptData]);
-
+  const rows = retype
+    ? retypes.filter((rt: any) => rt.reType === retype.id)
+    : retypes;
   const commitChanges = async ({ deleted }) => {
     if (deleted) {
       const _id = deleted[0];
-      const res = await removeDepartment({ variables: { _id } });
-      if (res?.data?.deleteDepartment?.ok === false) {
-        if (res?.data?.deleteDepartment?.error.includes('related')) {
+      const res = await removeRetype({ variables: { _id } });
+      if (res?.data?.deleteRetype?.ok === false) {
+        if (res?.data?.deleteRetype?.error.includes('related')) {
           await errorDeleteAlert(setAlrt, isRTL);
         } else {
           await errorAlert(setAlrt, isRTL);
@@ -115,7 +102,7 @@ export default function ResourseTypes({ isRTL, words, theme, menuitem }: any) {
       isRTL={isRTL}
       words={words}
       theme={theme}
-      refresh={refreshdepartment}
+      refresh={refreshretype}
       bgcolor={bgcolor}
     >
       <Box
@@ -138,12 +125,12 @@ export default function ResourseTypes({ isRTL, words, theme, menuitem }: any) {
           }}
         >
           <FilterSelectSingle
-            options={departmentTypes.filter((d: any) => d.id !== 1)}
-            value={depart}
-            setValue={setDepart}
+            options={retypeTypes}
+            value={retype}
+            setValue={setRetype}
             words={words}
             isRTL={isRTL}
-            name="depType"
+            name="retype"
             width={220}
           ></FilterSelectSingle>
         </Box>
@@ -184,10 +171,18 @@ export default function ResourseTypes({ isRTL, words, theme, menuitem }: any) {
               columnExtensions={tableColumnExtensions}
             />
             <TableColumnReordering
-              defaultOrder={['avatar', col.name.name, 'depType']}
+              defaultOrder={['avatar', col.name.name, 'reType']}
             />
             <TableColumnResizing defaultColumnWidths={tableColumnExtensions} />
-
+            <DataTypeProvider
+              for={['avatar']}
+              formatterComponent={(props: any) =>
+                avatarColorFormatter({
+                  ...props,
+                  height: 45,
+                })
+              }
+            ></DataTypeProvider>
             <TableHeaderRow
               showSortingControls
               titleComponent={({ children }) => {
@@ -203,7 +198,7 @@ export default function ResourseTypes({ isRTL, words, theme, menuitem }: any) {
               defaultHiddenColumnNames={[]}
             />
             <DataTypeProvider
-              for={['depType']}
+              for={['reType']}
               formatterComponent={(props: any) =>
                 departmentTypeFormat({ ...props, isRTL })
               }
@@ -227,8 +222,8 @@ export default function ResourseTypes({ isRTL, words, theme, menuitem }: any) {
 
             <PopupEditing
               theme={theme}
-              addAction={addDepartment}
-              editAction={editDepartment}
+              addAction={addRetype}
+              editAction={editRetype}
             >
               <PopupResourseType></PopupResourseType>
             </PopupEditing>

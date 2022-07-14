@@ -1,13 +1,13 @@
 import React from 'react';
-import useDepartmentsUp from '../../hooks/useDepartmentsUp';
-import useEmployeesUp from '../../hooks/useEmployeesUp';
-import useResoursesUp from '../../hooks/useResoursesUp';
+import useDepartments from '../../hooks/useDepartments';
+import useEmployees from '../../hooks/useEmployees';
+import useResourses from '../../hooks/useResourses';
 import MainEmpl from './MainEmpl';
 
 const MainCalendarEmpl = (props: any) => {
-  const { employees } = useEmployeesUp();
-  const { departments } = useDepartmentsUp();
-  const { resourses } = useResoursesUp();
+  const { employees } = useEmployees();
+  const { departments } = useDepartments();
+  const { resourses } = useResourses();
 
   return (
     <MainEmpl

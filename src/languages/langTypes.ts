@@ -53,6 +53,7 @@ export interface LanguageType {
     addEmployee: string;
     employeeName: string;
     employeeNameAr: string;
+    retype: string;
     service: string;
     product: string;
     item: string;
@@ -187,6 +188,9 @@ export interface LanguageType {
     info: string;
     main: string;
     expenses: string;
+    expiretime: string;
+    telHome: string;
+    workId: string;
     hresource: string;
     oresource: string;
     resourses: string;

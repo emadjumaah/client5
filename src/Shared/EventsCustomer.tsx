@@ -35,11 +35,11 @@ import { Getter } from '@devexpress/dx-react-core';
 import PopupEditing from './PopupEditing';
 import { Command } from './Command';
 import PopupAppointmentCustomer from '../pubups/PopupAppointmentCustomer';
-import useDepartmentsUp from '../hooks/useDepartmentsUp';
-import useEmployeesUp from '../hooks/useEmployeesUp';
-import useResoursesUp from '../hooks/useResoursesUp';
+import useDepartments from '../hooks/useDepartments';
+import useEmployees from '../hooks/useEmployees';
+import useResourses from '../hooks/useResourses';
 import getGereralCalculation from '../graphql/query/getGereralCalculation';
-import { getTasks } from '../graphql/query';
+import { getProjects, getTasks } from '../graphql/query';
 export const getRowId = (row: any) => row._id;
 
 const NumberTypeProvider = (props) => (
@@ -115,9 +115,9 @@ export default function EventsCustomer({
   const { tasks } = useTasks();
   const [rows, setRows] = useState([]);
 
-  const { departments } = useDepartmentsUp();
-  const { employees } = useEmployeesUp();
-  const { resourses } = useResoursesUp();
+  const { departments } = useDepartments();
+  const { employees } = useEmployees();
+  const { resourses } = useResourses();
   const { customers } = useCustomers();
   const { services } = useServices();
   const refresQuery = {
@@ -149,6 +149,7 @@ export default function EventsCustomer({
           }
         : undefined,
       name === 'contractId' ? { query: getTasks } : undefined,
+      name === 'projectId' ? { query: getProjects } : undefined,
     ],
   };
 

@@ -47,6 +47,7 @@ import {
   getContacts,
   getSendreqs,
   getCustMonthlyReport,
+  getRetypes,
 } from './query';
 import {
   createCategory,
@@ -130,6 +131,9 @@ import {
   sendVerificationCode,
   verifyEmail,
   createUserBranch,
+  createRetype,
+  deleteRetype,
+  updateRetype,
 } from './mutation';
 import { getRefresQuery, rQueriesCustomer, rQueriesSupplier } from './refetech';
 export {
@@ -181,6 +185,7 @@ export {
   getContacts,
   getSendreqs,
   getCustMonthlyReport,
+  getRetypes,
 };
 export {
   createCategory,
@@ -267,4 +272,7 @@ export {
   getRefresQuery,
   rQueriesCustomer,
   rQueriesSupplier,
+  createRetype,
+  deleteRetype,
+  updateRetype,
 };

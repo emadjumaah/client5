@@ -9,24 +9,18 @@ import {
   getEmployees,
   updateEmployee,
 } from '../graphql';
-import { getStoreItem } from '../store';
 
 export default () => {
-  const store = getStoreItem('store');
-  const lang = store?.lang;
-  const isRTL = lang === 'ar' ? true : false;
-  const [getemparts, empData]: any = useLazyQuery(getEmployees, {
-    variables: { isRTL },
-  });
+  const [getemparts, empData]: any = useLazyQuery(getEmployees);
 
   const [addEmployee] = useMutation(createEmployee, {
-    refetchQueries: [{ query: getEmployees, variables: { isRTL } }],
+    refetchQueries: [{ query: getEmployees }],
   });
   const [editEmployee] = useMutation(updateEmployee, {
-    refetchQueries: [{ query: getEmployees, variables: { isRTL } }],
+    refetchQueries: [{ query: getEmployees }],
   });
   const [removeEmployee] = useMutation(deleteEmployee, {
-    refetchQueries: [{ query: getEmployees, variables: { isRTL } }],
+    refetchQueries: [{ query: getEmployees }],
   });
 
   useEffect(() => {

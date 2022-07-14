@@ -27,7 +27,7 @@ import {
   PagingPanel,
 } from '@devexpress/dx-react-grid-material-ui';
 import { Command, Loading, PopupEditing } from '../../Shared';
-import { getResourses } from '../../graphql';
+import { getProjects, getResourses } from '../../graphql';
 import { useLazyQuery, useMutation } from '@apollo/client';
 import {
   appointTaskFormatter,
@@ -56,15 +56,18 @@ import { errorAlert, errorDeleteAlert } from '../../Shared/helpers';
 import { TableComponent } from '../../Shared/TableComponent';
 import DateNavigatorReports from '../../components/filters/DateNavigatorReports';
 import PopupTaskView from '../../pubups/PopupTaskView';
-import useDepartmentsUp from '../../hooks/useDepartmentsUp';
-import useEmployeesUp from '../../hooks/useEmployeesUp';
-import useResoursesUp from '../../hooks/useResoursesUp';
+import useDepartments from '../../hooks/useDepartments';
+import useEmployees from '../../hooks/useEmployees';
+import useResourses from '../../hooks/useResourses';
 import useProjects from '../../hooks/useProjects';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
 import { roles } from '../../common';
 import closeTask from '../../graphql/mutation/closeTask';
 import { getTaskStatus } from '../../common/helpers';
 import { ContractContext } from '../../contexts/managment';
+import PopupEmployeeView from '../../pubups/PopupEmployeeView';
+import PopupResoursesView from '../../pubups/PopupResoursesView';
+import PopupDepartmentView from '../../pubups/PopupDepartmentView';
 
 export const getRowId = (row: { _id: any }) => row._id;
 
@@ -138,10 +141,16 @@ export default function Tasks({ isRTL, words, menuitem, theme, company }) {
   const [periodvalue, setPeriodvalue] = useState<any>(null);
 
   const [item, setItem] = useState(null);
+  const [name, setName] = useState(null);
   const [openItem, setOpenItem] = useState(false);
-  const { departments } = useDepartmentsUp();
-  const { employees } = useEmployeesUp();
-  const { resourses } = useResoursesUp();
+
+  const [openEmployeeItem, setOpenEmployeeItem] = useState(false);
+  const [openResourseItem, setOpenResourseItem] = useState(false);
+  const [openDepartmentItem, setOpenDepartmentItem] = useState(false);
+
+  const { departments } = useDepartments();
+  const { employees } = useEmployees();
+  const { resourses } = useResourses();
   const { projects } = useProjects();
   const { height, width } = useWindowDimensions();
 
@@ -149,10 +158,74 @@ export default function Tasks({ isRTL, words, menuitem, theme, company }) {
     setOpenItem(false);
     setItem(null);
   };
+  const onCloseEmployeeItem = () => {
+    setOpenEmployeeItem(false);
+    setItem(null);
+    setName(null);
+  };
+  const onCloseResourseItem = () => {
+    setOpenResourseItem(false);
+    setItem(null);
+    setName(null);
+  };
+  const onCloseDepartmentItem = () => {
+    setOpenDepartmentItem(false);
+    setItem(null);
+    setName(null);
+  };
+
+  const setEmployeeItem = (data: any) => {
+    const empl = employees.filter((em: any) => em._id === data.employeeId)?.[0];
+    if (empl) {
+      setItem(empl);
+      setName('employee');
+    }
+  };
+
+  const setResourseItem = (data: any) => {
+    const empl = resourses.filter((em: any) => em._id === data.resourseId)?.[0];
+    if (empl) {
+      setItem(empl);
+      setName('resourse');
+    }
+  };
+  const setDepartmentItem = (data: any) => {
+    const empl = departments.filter(
+      (em: any) => em._id === data.departmentId
+    )?.[0];
+    if (empl) {
+      setItem(empl);
+      setName('department');
+    }
+  };
+
   const {
     state: { currentDate, currentViewName, endDate, hiddenColumnNames },
     dispatch,
   } = useContext(ContractContext);
+
+  useEffect(() => {
+    if (name === 'department') {
+      if (departments && departments.length > 0) {
+        const opened = departments.filter(
+          (ts: any) => ts._id === item._id
+        )?.[0];
+        setItem(opened);
+      }
+    }
+    if (name === 'employee') {
+      if (employees && employees.length > 0) {
+        const opened = employees.filter((ts: any) => ts._id === item._id)?.[0];
+        setItem(opened);
+      }
+    }
+    if (name === 'resourse') {
+      if (resourses && resourses.length > 0) {
+        const opened = resourses.filter((ts: any) => ts._id === item._id)?.[0];
+        setItem(opened);
+      }
+    }
+  }, [departments, resourses, employees, name]);
 
   const currentViewNameChange = (e: any) => {
     dispatch({ type: 'setCurrentViewName', payload: e.target.value });
@@ -181,6 +254,7 @@ export default function Tasks({ isRTL, words, menuitem, theme, company }) {
         },
       },
       { query: getTasks },
+      { query: getProjects },
       { query: getResourses, variables: { isRTL, resType: 1 } },
     ],
   };
@@ -383,7 +457,17 @@ export default function Tasks({ isRTL, words, menuitem, theme, company }) {
             <DataTypeProvider
               for={[col.taskdata.name]}
               formatterComponent={(props: any) =>
-                taskdataFormatter({ ...props, theme, isRTL })
+                taskdataFormatter({
+                  ...props,
+                  setEmployeeItem,
+                  setOpenEmployeeItem,
+                  setResourseItem,
+                  setOpenResourseItem,
+                  setDepartmentItem,
+                  setOpenDepartmentItem,
+                  theme,
+                  isRTL,
+                })
               }
             ></DataTypeProvider>
             <DataTypeProvider
@@ -482,6 +566,27 @@ export default function Tasks({ isRTL, words, menuitem, theme, company }) {
               mend={end}
             ></PopupTaskView>
           )}
+          <PopupEmployeeView
+            open={openEmployeeItem}
+            onClose={onCloseEmployeeItem}
+            row={item}
+            theme={theme}
+            company={company}
+          ></PopupEmployeeView>
+          <PopupResoursesView
+            open={openResourseItem}
+            onClose={onCloseResourseItem}
+            row={item}
+            theme={theme}
+            company={company}
+          ></PopupResoursesView>
+          <PopupDepartmentView
+            open={openDepartmentItem}
+            onClose={onCloseDepartmentItem}
+            row={item}
+            theme={theme}
+            company={company}
+          ></PopupDepartmentView>
         </Paper>
       </Box>
     </PageLayout>

@@ -15,7 +15,7 @@ import { Grid, TextField } from '@material-ui/core';
 import PopupLayout from '../pages/main/PopupLayout';
 import { TextFieldLocal } from '../components';
 import { getPopupTitle } from '../constants/menu';
-import { departmentTypes } from '../constants/datatypes';
+import { retypeTypes } from '../constants/datatypes';
 import FilterSelectSingle from '../Shared/FilterSelectSingle';
 
 const PopupResourseType = ({
@@ -27,9 +27,10 @@ const PopupResourseType = ({
   addAction,
   editAction,
   theme,
+  reType,
 }: any) => {
   const [saving, setSaving] = useState(false);
-  const [depart, setDepart] = useState(departmentTypes[1]);
+  const [retype, setRetype] = useState(retypeTypes[0]);
   const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
   const { register, handleSubmit, errors, reset } = useForm(yup.departResolver);
   const {
@@ -41,14 +42,20 @@ const PopupResourseType = ({
   useEffect(() => {
     if (row && row._id) {
       setColor(row.color);
-      if (row?.depType) {
-        const dep = departmentTypes.filter((de: any) => de.id === row?.depType);
+      if (row?.reType) {
+        const dep = retypeTypes.filter((de: any) => de.id === row?.reType);
         if (dep && dep.length > 0) {
-          setDepart(dep[0]);
+          setRetype(dep[0]);
         }
       }
     }
   }, [row]);
+  useEffect(() => {
+    if (isNew && reType) {
+      const ret = retypeTypes.filter((de: any) => de.id === reType)?.[0];
+      if (ret) setRetype(ret);
+    }
+  }, [reType]);
 
   const onSubmit = async (data: any) => {
     setSaving(true);
@@ -59,15 +66,14 @@ const PopupResourseType = ({
       _id: row && row._id ? row._id : undefined, // is it new or edit
       name,
       nameAr,
-      // depType: 1,
-      depType: depart ? depart.id : undefined,
+      reType: retype ? retype.id : undefined,
       desc,
       color,
       branch: user.branch,
       userId: user._id,
     };
     const mutate = isNew ? addAction : editAction;
-    const mutateName = isNew ? 'createDepartment' : 'updateDepartment';
+    const mutateName = isNew ? 'createRetype' : 'updateRetype';
     apply(mutate, mutateName, variables);
   };
 
@@ -75,7 +81,7 @@ const PopupResourseType = ({
     try {
       const res = await mutate({ variables });
       const nitem = getReturnItem(res, mutateName);
-      if (setNewValue && nitem) setNewValue(nitem, 'department');
+      if (setNewValue && nitem) setNewValue(nitem, 'retype');
       setSaving(false);
       await successAlert(setAlrt, isRTL);
       onCloseForm();
@@ -100,7 +106,7 @@ const PopupResourseType = ({
     reset();
     setColor('#AAAAAA');
     setSaving(false);
-    setDepart(departmentTypes[1]);
+    setRetype(retypeTypes[0]);
   };
 
   const onHandleSubmit = () => {
@@ -153,12 +159,13 @@ const PopupResourseType = ({
           </Grid>
           <Grid item xs={12}>
             <FilterSelectSingle
-              options={departmentTypes.filter((dt: any) => dt.id > 1)}
-              value={depart}
-              setValue={setDepart}
+              options={retypeTypes}
+              value={retype}
+              setValue={setRetype}
               words={words}
               isRTL={isRTL}
-              name="depType"
+              name="reType"
+              disabled={reType}
             ></FilterSelectSingle>
           </Grid>
           <Grid item xs={12}>

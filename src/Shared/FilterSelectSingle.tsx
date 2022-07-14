@@ -12,6 +12,7 @@ export default function FilterSelectSingle({
   isRTL,
   name,
   width,
+  disabled,
 }: any) {
   return (
     <Autocomplete
@@ -27,6 +28,7 @@ export default function FilterSelectSingle({
         setValue(newValue);
       }}
       style={{ direction: isRTL ? 'rtl' : 'ltr' }}
+      disabled={disabled}
       renderInput={(params) => (
         <TextField
           {...params}
@@ -36,10 +38,6 @@ export default function FilterSelectSingle({
           variant="outlined"
           style={{
             width: width ? width : undefined,
-            // marginRight: 10,
-            // marginLeft: 10,
-            // backgroundColor: value ? '#FFF5D6' : undefined,
-            // fontSize: 10,
           }}
         ></TextField>
       )}

@@ -61,7 +61,7 @@ import PopupTaskView from '../../pubups/PopupTaskView';
 import PopupCustomerView from '../../pubups/PopupCustomerView';
 import React from 'react';
 import getEmplEvents from '../../graphql/query/getEmplEvents';
-import useResoursesUp from '../../hooks/useResoursesUp';
+import useResourses from '../../hooks/useResourses';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
 
 export default function AppointmentsEmpl({
@@ -155,7 +155,7 @@ export default function AppointmentsEmpl({
   const { customers } = useCustomers();
   const { departments, addDepartment, editDepartment } = useDepartments();
   const { employees, addEmployee, editEmployee } = useEmployees();
-  const { resourses } = useResoursesUp();
+  const { resourses } = useResourses();
 
   const {
     state: { currentDate, currentViewName, endDate },

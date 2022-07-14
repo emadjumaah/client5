@@ -36,11 +36,11 @@ import { TableComponent } from '../pages/reports/SalesReport';
 import { Box, Typography } from '@material-ui/core';
 import { useProducts } from '../hooks';
 import PopupPurchaseInvoice from '../pubups/PopupPurchaseInvoice';
-import useResoursesUp from '../hooks/useResoursesUp';
-import useEmployeesUp from '../hooks/useEmployeesUp';
-import useDepartmentsUp from '../hooks/useDepartmentsUp';
+import useResourses from '../hooks/useResourses';
+import useEmployees from '../hooks/useEmployees';
+import useDepartments from '../hooks/useDepartments';
 import getGereralCalculation from '../graphql/query/getGereralCalculation';
-import { getProducts, getTasks } from '../graphql/query';
+import { getProducts, getProjects, getTasks } from '../graphql/query';
 
 export default function InvoicesSupplier({
   isRTL,
@@ -94,9 +94,9 @@ export default function InvoicesSupplier({
   const [loading, setLoading] = useState(false);
 
   const { tasks } = useTasks();
-  const { departments } = useDepartmentsUp();
-  const { employees } = useEmployeesUp();
-  const { resourses } = useResoursesUp();
+  const { departments } = useDepartments();
+  const { employees } = useEmployees();
+  const { resourses } = useResourses();
   const { products } = useProducts();
 
   const [loadInvoices, opData]: any = useLazyQuery(getPurchaseInvoices, {
@@ -132,6 +132,7 @@ export default function InvoicesSupplier({
           }
         : undefined,
       name === 'contractId' ? { query: getTasks } : undefined,
+      name === 'projectId' ? { query: getProjects } : undefined,
       { query: getProducts },
     ],
   };

@@ -117,7 +117,9 @@ export default function Finances({
     { columnName: col.credit.name, togglingEnabled: false },
   ]);
 
-  const [getFinances, financesData]: any = useLazyQuery(getFinanceReport);
+  const [getFinances, financesData]: any = useLazyQuery(getFinanceReport, {
+    fetchPolicy: 'cache-and-network',
+  });
   const { height } = useWindowDimensions();
 
   useEffect(() => {

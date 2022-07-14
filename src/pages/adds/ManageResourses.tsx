@@ -41,7 +41,7 @@ import PageLayout from '../main/PageLayout';
 import { getColumns } from '../../common/columns';
 import PopupResoursesView from '../../pubups/PopupResoursesView';
 import PopupResourses from '../../pubups/PopupResourses';
-import useResoursesUp from '../../hooks/useResoursesUp';
+import useResourses from '../../hooks/useResourses';
 import { Box, Paper, Typography } from '@material-ui/core';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
 import { TableComponent } from '../../Shared/TableComponent';
@@ -49,7 +49,7 @@ import { ResourseContext } from '../../contexts/managment';
 import { useLazyQuery } from '@apollo/client';
 import { getResourses } from '../../graphql';
 import AutoFieldLocal from '../../components/fields/AutoFieldLocal';
-import useDepartmentsUp from '../../hooks/useDepartmentsUp';
+import useRetypes from '../../hooks/useRetypes';
 
 export default function ManageResourses({
   isRTL,
@@ -61,13 +61,13 @@ export default function ManageResourses({
   const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
   const [pageSizes] = useState([5, 10, 20, 50, 0]);
   const [rows, setRows] = useState([]);
-  const [departvalue, setDepartvalue] = useState<any>(null);
+  const [rtypvalue, setRtypvalue] = useState<any>(null);
 
   const [item, setItem] = useState(null);
   const [openItem, setOpenItem] = useState(false);
   const col = getColumns({ isRTL, words });
 
-  const { departments } = useDepartmentsUp();
+  const { retypes } = useRetypes();
 
   const onCloseItem = () => {
     setOpenItem(false);
@@ -90,7 +90,7 @@ export default function ManageResourses({
     col.kaids,
     { name: 'plate', title: words.plate },
     col.carstatus,
-    col.department,
+    col.retype,
     { name: 'info', title: words.info },
   ]);
 
@@ -103,7 +103,7 @@ export default function ManageResourses({
     { columnName: col.kaids.name, width: 220 },
     { columnName: 'plate', width: 100 },
     { columnName: col.carstatus.name, width: 100 },
-    { columnName: col.department.name, width: 150 },
+    { columnName: col.retype.name, width: 150 },
     { columnName: 'info', width: 250 },
   ]);
 
@@ -114,26 +114,26 @@ export default function ManageResourses({
   const { width, height } = useWindowDimensions();
 
   const { addResourse, editResourse, removeResourse, refreshresourse } =
-    useResoursesUp();
+    useResourses();
   const [getemps, empData]: any = useLazyQuery(getResourses, {
     fetchPolicy: 'cache-and-network',
   });
 
   useEffect(() => {
-    getemps({
-      variables: {
-        isRTL,
-        departmentId: departvalue ? departvalue._id : undefined,
-      },
-    });
-  }, [departvalue]);
+    getemps({});
+  }, [rtypvalue]);
 
   useEffect(() => {
     if (empData?.data?.getResourses?.data) {
       const { data } = empData.data.getResourses;
-      setRows(data);
+      if (rtypvalue) {
+        const fdata = data.filter((da: any) => da.retypeId === rtypvalue._id);
+        setRows(fdata);
+      } else {
+        setRows(data);
+      }
     }
-  }, [empData]);
+  }, [empData, rtypvalue]);
 
   useEffect(() => {
     if (openItem) {
@@ -189,12 +189,12 @@ export default function ManageResourses({
           }}
         >
           <AutoFieldLocal
-            name="department"
+            name="retype"
             title={words?.type}
             words={words}
-            options={departments.filter((d: any) => d.depType === 3)}
-            value={departvalue}
-            setSelectValue={setDepartvalue}
+            options={retypes.filter((d: any) => d.reType === 2)}
+            value={rtypvalue}
+            setSelectValue={setRtypvalue}
             isRTL={isRTL}
             fullWidth
             mb={0}
@@ -247,7 +247,7 @@ export default function ManageResourses({
                 col.kaids.name,
                 'plate',
                 col.carstatus.name,
-                col.department.name,
+                col.retype.name,
                 'info',
               ]}
             />
@@ -337,11 +337,7 @@ export default function ManageResourses({
               addAction={addResourse}
               editAction={editResourse}
             >
-              <PopupResourses
-                departments={departments}
-                resKind={2}
-                resType={1}
-              ></PopupResourses>
+              <PopupResourses></PopupResourses>
             </PopupEditing>
           </Grid>
         </Paper>

@@ -23,6 +23,7 @@ import {
   customerDataView,
   incomeMainFormatter,
   incomeFormatter,
+  projectDataView,
 } from './colorFormat';
 import { useLazyQuery } from '@apollo/client';
 import getGereralCalculation from '../graphql/query/getGereralCalculation';
@@ -72,6 +73,7 @@ export default function MainCustomer({
   const isReso = name === 'resourseId';
   const isEmpl = name === 'employeeId';
   const isDepart = name === 'departmentId';
+  const isProj = name === 'projectId';
   return (
     <Box
       style={{
@@ -100,6 +102,7 @@ export default function MainCustomer({
                 <Grid item xs={4}>
                   <Box style={{ backgroundColor: '#fff', height: 250 }}>
                     {isCont && taskDataView({ row, words, isRTL })}
+                    {isProj && projectDataView({ row, words, isRTL })}
                     {isReso && resourseDataView({ row, words, isRTL })}
                     {(isEmpl || isDepart) &&
                       employeeDataView({ row, words, isRTL })}

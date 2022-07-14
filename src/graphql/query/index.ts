@@ -47,6 +47,7 @@ import getSendreqs from './getSendreqs';
 import getOoredooSMSlist from './getOoredooSMSlist';
 import getCustMonthlyReport from './getCustMonthlyReport';
 import getTasks from './getTasks';
+import getRetypes from './getRetypes';
 
 export {
   getResourses,
@@ -98,4 +99,5 @@ export {
   getOoredooSMSlist,
   getCustMonthlyReport,
   getTasks,
+  getRetypes,
 };

@@ -1,6 +1,4 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable import/no-anonymous-default-export */
-/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import { useLazyQuery, useMutation } from '@apollo/client';
 import { useEffect } from 'react';
 import {
@@ -9,24 +7,18 @@ import {
   deleteSupplier,
   updateSupplier,
 } from '../graphql';
-import { getStoreItem } from '../store';
 
 export default () => {
-  const store = getStoreItem('store');
-  const lang = store?.lang;
-  const isRTL = lang === 'ar' ? true : false;
-  const [getCusts, custData]: any = useLazyQuery(getSuppliers, {
-    variables: { isRTL },
-  });
+  const [getCusts, custData]: any = useLazyQuery(getSuppliers);
 
   const [addSupplier] = useMutation(createSupplier, {
-    refetchQueries: [{ query: getSuppliers, variables: { isRTL } }],
+    refetchQueries: [{ query: getSuppliers }],
   });
   const [editSupplier] = useMutation(updateSupplier, {
-    refetchQueries: [{ query: getSuppliers, variables: { isRTL } }],
+    refetchQueries: [{ query: getSuppliers }],
   });
   const [removeSupplier] = useMutation(deleteSupplier, {
-    refetchQueries: [{ query: getSuppliers, variables: { isRTL } }],
+    refetchQueries: [{ query: getSuppliers }],
   });
 
   useEffect(() => {

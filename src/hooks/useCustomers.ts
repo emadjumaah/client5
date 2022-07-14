@@ -10,27 +10,21 @@ import {
   updateCustomer,
 } from '../graphql';
 import createMultiCustomers from '../graphql/mutation/createMultiCustomers';
-import { getStoreItem } from '../store';
 
 export default () => {
-  const store = getStoreItem('store');
-  const lang = store?.lang;
-  const isRTL = lang === 'ar' ? true : false;
-  const [getCusts, custData]: any = useLazyQuery(getCustomers, {
-    variables: { isRTL },
-  });
+  const [getCusts, custData]: any = useLazyQuery(getCustomers);
 
   const [addCustomer] = useMutation(createCustomer, {
-    refetchQueries: [{ query: getCustomers, variables: { isRTL } }],
+    refetchQueries: [{ query: getCustomers }],
   });
   const [addMultiCustomers] = useMutation(createMultiCustomers, {
-    refetchQueries: [{ query: getCustomers, variables: { isRTL } }],
+    refetchQueries: [{ query: getCustomers }],
   });
   const [editCustomer] = useMutation(updateCustomer, {
-    refetchQueries: [{ query: getCustomers, variables: { isRTL } }],
+    refetchQueries: [{ query: getCustomers }],
   });
   const [removeCustomer] = useMutation(deleteCustomer, {
-    refetchQueries: [{ query: getCustomers, variables: { isRTL } }],
+    refetchQueries: [{ query: getCustomers }],
   });
 
   useEffect(() => {

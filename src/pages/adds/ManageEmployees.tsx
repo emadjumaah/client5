@@ -42,8 +42,7 @@ import { errorAlert, errorDeleteAlert } from '../../Shared/helpers';
 import PageLayout from '../main/PageLayout';
 import { getColumns } from '../../common/columns';
 import PopupEmployeeView from '../../pubups/PopupEmployeeView';
-import useEmployeesUp from '../../hooks/useEmployeesUp';
-import useDepartmentsUp from '../../hooks/useDepartmentsUp';
+import useEmployees from '../../hooks/useEmployees';
 import { Box, Paper, Typography } from '@material-ui/core';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
 import { TableComponent } from '../../Shared/TableComponent';
@@ -52,6 +51,7 @@ import { EmployeeContext } from '../../contexts/managment';
 import { useLazyQuery } from '@apollo/client';
 import { getEmployees } from '../../graphql';
 import AutoFieldLocal from '../../components/fields/AutoFieldLocal';
+import useRetypes from '../../hooks/useRetypes';
 
 export default function ManageEmployees({
   isRTL,
@@ -63,13 +63,13 @@ export default function ManageEmployees({
   const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
   const [pageSizes] = useState([5, 6, 10, 20, 50, 0]);
   const [rows, setRows] = useState([]);
-  const [departvalue, setDepartvalue] = useState<any>(null);
+  const [rtypvalue, setRtypvalue] = useState<any>(null);
 
   const [item, setItem] = useState(null);
   const [openItem, setOpenItem] = useState(false);
   const col = getColumns({ isRTL, words });
 
-  const { departments } = useDepartmentsUp();
+  const { retypes } = useRetypes();
   const { width, height } = useWindowDimensions();
   const onCloseItem = () => {
     setOpenItem(false);
@@ -94,7 +94,7 @@ export default function ManageEmployees({
     col.purchase,
     { name: 'phone', title: words.phoneNumber },
     { name: 'email', title: words.email },
-    col.department,
+    col.retype,
     { name: 'info', title: words.info },
   ]);
 
@@ -108,7 +108,7 @@ export default function ManageEmployees({
     { columnName: col.kaids.name, width: 200 },
     { columnName: 'phone', width: 100 },
     { columnName: 'email', width: 200 },
-    { columnName: col.department.name, width: 150 },
+    { columnName: col.retype.name, width: 150 },
     { columnName: 'info', width: 200 },
   ]);
 
@@ -118,27 +118,27 @@ export default function ManageEmployees({
   ]);
 
   const { addEmployee, editEmployee, removeEmployee, refreshemployee } =
-    useEmployeesUp();
+    useEmployees();
 
   const [getemps, empData]: any = useLazyQuery(getEmployees, {
     fetchPolicy: 'cache-and-network',
   });
 
   useEffect(() => {
-    getemps({
-      variables: {
-        isRTL,
-        departmentId: departvalue ? departvalue._id : undefined,
-      },
-    });
-  }, [departvalue]);
+    getemps({});
+  }, [rtypvalue]);
 
   useEffect(() => {
     if (empData?.data?.getEmployees?.data) {
       const { data } = empData.data.getEmployees;
-      setRows(data);
+      if (rtypvalue) {
+        const fdata = data.filter((da: any) => da.retypeId === rtypvalue._id);
+        setRows(fdata);
+      } else {
+        setRows(data);
+      }
     }
-  }, [empData]);
+  }, [empData, rtypvalue]);
 
   useEffect(() => {
     if (openItem) {
@@ -194,12 +194,12 @@ export default function ManageEmployees({
           }}
         >
           <AutoFieldLocal
-            name="department"
-            title={words?.department}
+            name="retype"
+            title={words?.retype}
             words={words}
-            options={departments.filter((d: any) => d.depType === 2)}
-            value={departvalue}
-            setSelectValue={setDepartvalue}
+            options={retypes.filter((d: any) => d.reType === 1)}
+            value={rtypvalue}
+            setSelectValue={setRtypvalue}
             isRTL={isRTL}
             fullWidth
             mb={0}
@@ -253,7 +253,7 @@ export default function ManageEmployees({
                 col.kaids.name,
                 'phone',
                 'email',
-                col.department.name,
+                col.retype.name,
                 'info',
               ]}
             />
@@ -350,10 +350,7 @@ export default function ManageEmployees({
               addAction={addEmployee}
               editAction={editEmployee}
             >
-              <PopupEmployee
-                departments={departments}
-                resType={1}
-              ></PopupEmployee>
+              <PopupEmployee></PopupEmployee>
             </PopupEditing>
           </Grid>
         </Paper>

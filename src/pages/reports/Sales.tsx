@@ -117,7 +117,9 @@ export default function Sales({
   ]);
   const { height } = useWindowDimensions();
 
-  const [getSales, salesData]: any = useLazyQuery(getSalesReport);
+  const [getSales, salesData]: any = useLazyQuery(getSalesReport, {
+    fetchPolicy: 'cache-and-network',
+  });
 
   useEffect(() => {
     const d = new Date();

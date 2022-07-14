@@ -39,9 +39,9 @@ import PopupCustomer from './PopupCustomer';
 import PopupDeprtment from './PopupDeprtment';
 import PopupEmployee from './PopupEmployee';
 import PopupResourses from './PopupResourses';
-import useDepartmentsUp from '../hooks/useDepartmentsUp';
-import useEmployeesUp from '../hooks/useEmployeesUp';
-import useResoursesUp from '../hooks/useResoursesUp';
+import useDepartments from '../hooks/useDepartments';
+import useEmployees from '../hooks/useEmployees';
+import useResourses from '../hooks/useResourses';
 import PopupProject from './PopupProject';
 import useProjects from '../hooks/useProjects';
 import ServiceItemForm from '../Shared/ServiceItemForm';
@@ -157,9 +157,9 @@ const PopupTask = ({
   const [selected, setSelected] = useState(null);
 
   const { addCustomer, editCustomer } = useCustomers();
-  const { addDepartment, editDepartment } = useDepartmentsUp();
-  const { addEmployee, editEmployee } = useEmployeesUp();
-  const { addResourse, editResourse } = useResoursesUp();
+  const { addDepartment, editDepartment } = useDepartments();
+  const { addEmployee, editEmployee } = useEmployees();
+  const { addResourse, editResourse } = useResourses();
   const { addProject, editProject } = useProjects();
   const { tempwords, tempoptions, taskExtra } = useTemplate();
   const { products } = useProducts();
@@ -1131,29 +1131,24 @@ const PopupTask = ({
           row={null}
           addAction={addDepartment}
           editAction={editDepartment}
-          depType={1}
         ></PopupDeprtment>
         <PopupEmployee
           newtext={newtext}
-          departments={departments}
           open={openEmp}
           onClose={onCloseEmploee}
           isNew={true}
           setNewValue={onNewEmplChange}
           row={null}
-          resType={1}
           addAction={addEmployee}
           editAction={editEmployee}
         ></PopupEmployee>
         <PopupResourses
           newtext={newtext}
-          departments={departments}
           open={openRes}
           onClose={onCloseResourse}
           isNew={true}
           setNewValue={onNewResoChange}
           row={null}
-          resType={1}
           addAction={addResourse}
           editAction={editResourse}
         ></PopupResourses>

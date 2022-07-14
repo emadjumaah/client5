@@ -40,7 +40,7 @@ import { AlertLocal, SearchTable } from '../../components';
 import PageLayout from '../main/PageLayout';
 import useCompany from '../../hooks/useCompany';
 import PopupUserEmail from '../../pubups/PopupUserEmail';
-import useEmployeesUp from '../../hooks/useEmployeesUp';
+import useEmployees from '../../hooks/useEmployees';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
 import { TableComponent } from '../../Shared/TableComponent';
 import { getColumns } from '../../common/columns';
@@ -91,7 +91,7 @@ export default function Users({ isRTL, words, theme, user, menuitem }: any) {
     refreshuser,
   } = useUsers();
   const { company } = useCompany();
-  const { employees } = useEmployeesUp();
+  const { employees } = useEmployees();
 
   const commitChanges = async ({ deleted }) => {
     if (deleted) {

@@ -119,7 +119,9 @@ export default function ExpensesReport({
     { columnName: col.amount.name, togglingEnabled: false },
   ]);
 
-  const [getSummary, summaryData]: any = useLazyQuery(getMonthlyReport);
+  const [getSummary, summaryData]: any = useLazyQuery(getMonthlyReport, {
+    fetchPolicy: 'cache-and-network',
+  });
 
   const {
     state: {

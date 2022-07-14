@@ -42,7 +42,7 @@ import { errorDeleteAlert } from '../../Shared/helpers';
 import PageLayout from '../main/PageLayout';
 import { getColumns } from '../../common/columns';
 import PopupDepartmentView from '../../pubups/PopupDepartmentView';
-import useDepartmentsUp from '../../hooks/useDepartmentsUp';
+import useDepartments from '../../hooks/useDepartments';
 import { Box, Paper, Typography } from '@material-ui/core';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
 import { TableComponent } from '../../Shared/TableComponent';
@@ -109,7 +109,7 @@ export default function ManageDepartments({
   ]);
 
   const { addDepartment, editDepartment, removeDepartment, refreshdepartment } =
-    useDepartmentsUp();
+    useDepartments();
 
   const [getdepts, deptData]: any = useLazyQuery(getDepartments, {
     fetchPolicy: 'cache-and-network',
@@ -313,7 +313,7 @@ export default function ManageDepartments({
               addAction={addDepartment}
               editAction={editDepartment}
             >
-              <PopupDeprtment depType={1}></PopupDeprtment>
+              <PopupDeprtment></PopupDeprtment>
             </PopupEditing>
           </Grid>
         </Paper>

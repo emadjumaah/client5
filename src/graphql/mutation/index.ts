@@ -13,6 +13,9 @@ import updateGroup from './updateGroup';
 import createDepartment from './createDepartment';
 import deleteDepartment from './deleteDepartment';
 import updateDepartment from './updateDepartment';
+import createRetype from './createRetype';
+import deleteRetype from './deleteRetype';
+import updateRetype from './updateRetype';
 import createEmployee from './createEmployee';
 import deleteEmployee from './deleteEmployee';
 import updateEmployee from './updateEmployee';
@@ -164,4 +167,7 @@ export {
   sendVerificationCode,
   verifyEmail,
   createUserBranch,
+  createRetype,
+  deleteRetype,
+  updateRetype,
 };

@@ -105,12 +105,7 @@ export default function Suppliers(props: any) {
   });
 
   const refresQuery = {
-    refetchQueries: [
-      {
-        query: getSuppliers,
-        variables: { isRTL },
-      },
-    ],
+    refetchQueries: [{ query: getSuppliers }],
   };
 
   useEffect(() => {

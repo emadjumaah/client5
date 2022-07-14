@@ -20,7 +20,12 @@ import { taskManamentTabs } from '../constants/rrule';
 import EventsCustomer from '../Shared/EventsCustomer';
 import InvoicesCustomer from '../Shared/InvoicesCustomer';
 import ReceiptCustomer from '../Shared/ReceiptCustomer';
-import { createExpenses, createFinance, getExpenses } from '../graphql';
+import {
+  createExpenses,
+  createFinance,
+  getExpenses,
+  getProjects,
+} from '../graphql';
 import getTasks from '../graphql/query/getTasks';
 import { getTaskTimeAmountData } from '../common/helpers';
 import { ContractPrint } from '../print';
@@ -34,9 +39,9 @@ import {
 } from '../hooks';
 import PopupCloseDate from './PopupCloseDate';
 import useWindowDimensions from '../hooks/useWindowDimensions';
-import useDepartmentsUp from '../hooks/useDepartmentsUp';
-import useEmployeesUp from '../hooks/useEmployeesUp';
-import useResoursesUp from '../hooks/useResoursesUp';
+import useDepartments from '../hooks/useDepartments';
+import useEmployees from '../hooks/useEmployees';
+import useResourses from '../hooks/useResourses';
 import { TabPanel, useStyles, a11yProps } from '../Shared/TabPanel';
 import ReminderCustomer from '../Shared/ReminderCustomer';
 import MainCustomer from '../Shared/MainCustomer';
@@ -93,9 +98,9 @@ const PopupTaskView = ({
     setEndDate(curDate);
   };
 
-  const { departments } = useDepartmentsUp();
-  const { employees } = useEmployeesUp();
-  const { resourses } = useResoursesUp();
+  const { departments } = useDepartments();
+  const { employees } = useEmployees();
+  const { resourses } = useResourses();
   const { services } = useServices();
   const { customers } = useCustomers();
   const { expenseItems } = useExpenseItems();
@@ -166,6 +171,7 @@ const PopupTaskView = ({
         },
       },
       { query: getTasks },
+      { query: getProjects },
     ],
   };
   const refresExpensesQuery = {
@@ -197,6 +203,7 @@ const PopupTaskView = ({
       },
 
       { query: getTasks },
+      { query: getProjects },
     ],
   };
 

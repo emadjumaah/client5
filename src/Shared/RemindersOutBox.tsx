@@ -25,8 +25,8 @@ import { Box, Paper, Typography } from '@material-ui/core';
 import { useLazyQuery, useMutation } from '@apollo/client';
 import { updateAction } from '../graphql';
 import DateNavigatorReports from '../components/filters/DateNavigatorReports';
-import useEmployeesUp from '../hooks/useEmployeesUp';
-import useResoursesUp from '../hooks/useResoursesUp';
+import useEmployees from '../hooks/useEmployees';
+import useResourses from '../hooks/useResourses';
 import { useTemplate } from '../hooks';
 import getRemindersActions from '../graphql/query/getRemindersActions';
 import { TableComponent } from '../Shared/TableComponent';
@@ -85,8 +85,8 @@ export default function RemindersOutBox(props: any) {
   const [tableColumnVisibilityColumnExtensions] = useState([
     { columnName: 'time', togglingEnabled: false },
   ]);
-  const { employees } = useEmployeesUp();
-  const { resourses } = useResoursesUp();
+  const { employees } = useEmployees();
+  const { resourses } = useResourses();
 
   const [loadReminders, remindersData]: any = useLazyQuery(getRemindersActions);
 
@@ -158,7 +158,8 @@ export default function RemindersOutBox(props: any) {
   }, [remindersData]);
 
   return (
-    <Box
+    <Paper
+      elevation={1}
       style={{
         height,
         width: '100%',
@@ -198,7 +199,6 @@ export default function RemindersOutBox(props: any) {
         </Box>
       </Box>
       <Paper
-        elevation={0}
         style={{
           overflow: 'auto',
           height: height - 50,
@@ -211,7 +211,7 @@ export default function RemindersOutBox(props: any) {
           <IntegratedSorting />
           <Table
             messages={{
-              noData: isRTL ? 'لا يوجد بيانات' : 'no data',
+              noData: isRTL ? 'لا يوجد تذكيرات' : 'no data',
             }}
             tableComponent={TableComponent}
             rowComponent={(props: any) => (
@@ -258,6 +258,6 @@ export default function RemindersOutBox(props: any) {
         </Grid>
       </Paper>
       {loading && <Loading isRTL={isRTL} />}
-    </Box>
+    </Paper>
   );
 }

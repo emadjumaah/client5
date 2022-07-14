@@ -14,23 +14,24 @@ import InfoBoxDark from '../../../components/charts/InfoBoxDark';
 import useLandingChart from '../../../hooks/useLandingChart';
 import PageLayout from '../PageLayout';
 import React, { useEffect, useState } from 'react';
-import useEmployeesUp from '../../../hooks/useEmployeesUp';
-import useDepartmentsUp from '../../../hooks/useDepartmentsUp';
+import useEmployees from '../../../hooks/useEmployees';
+import useDepartments from '../../../hooks/useDepartments';
 import useWindowDimensions from '../../../hooks/useWindowDimensions';
 import { Loading } from '../../../Shared';
 import { roles } from '../../../common';
-import useResoursesUp from '../../../hooks/useResoursesUp';
+import useResourses from '../../../hooks/useResourses';
 import Cars from '../../../components/charts/Cars';
 import { useTemplate } from '../../../hooks';
+import RemindersOutBox from '../../../Shared/RemindersOutBox';
 
 export default function GeneralLanding(props: any) {
   const [loading, setLoading] = useState(true);
 
   const { words, isRTL, user, theme, menuitem } = props;
 
-  const { resourses } = useResoursesUp();
-  const { departments } = useDepartmentsUp();
-  const { employees } = useEmployeesUp();
+  const { resourses } = useResourses();
+  const { departments } = useDepartments();
+  const { employees } = useEmployees();
   const { height } = useWindowDimensions();
   const { tempwords, templateId } = useTemplate();
 
@@ -183,30 +184,42 @@ export default function GeneralLanding(props: any) {
                 ></Cars>
               </Grid>
             )}
-            {todayEvents && roles.isEditor() && (
-              <Grid item xs={12} md={isRent ? 4 : 6}>
-                <PercentChart
-                  pricolor={salesColor}
-                  seccolor={eventColor}
-                  data={todayEvents}
-                  height={300}
-                  prim={prim}
-                  isRTL={isRTL}
-                />
+            <Grid item xs={12}>
+              <Grid container spacing={2}>
+                <Grid item xs={8}>
+                  <RemindersOutBox
+                    isRTL={isRTL}
+                    words={words}
+                    height={610}
+                    theme={theme}
+                  ></RemindersOutBox>
+                </Grid>
+                <Grid item xs={4}>
+                  {todayEvents && roles.isEditor() && (
+                    <PercentChart
+                      pricolor={salesColor}
+                      seccolor={eventColor}
+                      data={todayEvents}
+                      height={300}
+                      prim={prim}
+                      isRTL={isRTL}
+                    />
+                  )}
+                  <Box style={{ marginTop: 10 }}></Box>
+                  {nextEventDays && roles.isEditor() && (
+                    <DaysEvents
+                      dataKey="count"
+                      theme={theme}
+                      isRTL={isRTL}
+                      data={nextEventDays}
+                      height={300}
+                      prim={prim}
+                    ></DaysEvents>
+                  )}
+                </Grid>
               </Grid>
-            )}
-            {nextEventDays && roles.isEditor() && (
-              <Grid item xs={12} md={isRent ? 4 : 6}>
-                <DaysEvents
-                  dataKey="count"
-                  theme={theme}
-                  isRTL={isRTL}
-                  data={nextEventDays}
-                  height={300}
-                  prim={prim}
-                ></DaysEvents>
-              </Grid>
-            )}
+            </Grid>
+
             {salesDays && roles.isFinanceAdmin() && (
               <Grid item xs={12} md={6}>
                 <SalesDaysChart

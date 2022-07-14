@@ -34,11 +34,11 @@ import { operationTypes } from '../constants';
 import { getTaskName } from '../constants/branch';
 import {
   carstatuss,
-  departmentTypes,
   eventColors,
   eventStatus,
   operationNames,
   opTypesNames,
+  retypeTypes,
   weekdaysObj,
 } from '../constants/datatypes';
 import { actionType } from '../constants/kaid';
@@ -267,6 +267,21 @@ export const avataManageFormatter = ({
         {letter}
       </Typography>
     </Box>
+  );
+};
+export const avatarColorFormatter = ({ row, height = 100 }: any) => {
+  const { color } = row;
+  return (
+    <Box
+      flex
+      style={{
+        flex: 1,
+        width: 10,
+        height,
+        backgroundColor: fade(color, 0.8),
+        borderRadius: 5,
+      }}
+    ></Box>
   );
 };
 export const photoFormatter = ({ row }: any) => {
@@ -698,7 +713,16 @@ export const taskTitleNameFormatter = ({
     </Grid>
   );
 };
-export const taskdataFormatter = ({ row, isRTL }: any) => {
+export const taskdataFormatter = ({
+  row,
+  isRTL,
+  setEmployeeItem,
+  setOpenEmployeeItem,
+  setResourseItem,
+  setOpenResourseItem,
+  setDepartmentItem,
+  setOpenDepartmentItem,
+}: any) => {
   const {
     resourseName,
     resourseNameAr,
@@ -746,10 +770,15 @@ export const taskdataFormatter = ({ row, isRTL }: any) => {
       </Grid>
       <Grid item xs={12}>
         <Box
+          onClick={() => {
+            setResourseItem(row);
+            setOpenResourseItem(true);
+          }}
           style={{
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
+            cursor: 'pointer',
           }}
         >
           {renderTag({
@@ -764,20 +793,45 @@ export const taskdataFormatter = ({ row, isRTL }: any) => {
         <Box
           style={{
             display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
+            flex: 1,
           }}
         >
-          {renderTag({
-            value: isRTL ? departmentNameAr : departmentName,
-            color: '#333',
-            bgcolor: colors.blueGrey[50],
-          })}
-          {renderTag({
-            value: isRTL ? employeeNameAr : employeeName,
-            color: '#333',
-            bgcolor: colors.blueGrey[50],
-          })}
+          <Box
+            style={{
+              display: 'flex',
+              flex: 1,
+              cursor: 'pointer',
+            }}
+            onClick={() => {
+              setDepartmentItem(row);
+              setOpenDepartmentItem(true);
+            }}
+          >
+            {renderTag({
+              value: isRTL ? departmentNameAr : departmentName,
+              color: '#333',
+              bgcolor: colors.blueGrey[50],
+              width: 100,
+            })}
+          </Box>
+          <Box
+            style={{
+              display: 'flex',
+              flex: 1,
+              cursor: 'pointer',
+            }}
+            onClick={() => {
+              setEmployeeItem(row);
+              setOpenEmployeeItem(true);
+            }}
+          >
+            {renderTag({
+              value: isRTL ? employeeNameAr : employeeName,
+              color: '#333',
+              bgcolor: colors.blueGrey[50],
+              width: 100,
+            })}
+          </Box>
         </Box>
       </Grid>
     </Grid>
@@ -1430,8 +1484,8 @@ export const nameLinkFormat = ({ row, value, setItem, setOpenItem }: any) => {
 };
 
 export const departmentTypeFormat = ({ row, isRTL }: any) => {
-  const { depType } = row;
-  const dep = departmentTypes.filter((de: any) => de.id === depType);
+  const { reType } = row;
+  const dep = retypeTypes.filter((de: any) => de.id === reType);
   if (dep && dep.length > 0) {
     return (
       <Typography style={{ fontSize: 13 }}>
@@ -1449,7 +1503,7 @@ export const nameManageLinkFormat = ({
   setOpenItem,
   isRTL,
 }: any) => {
-  const { departmentId, departmentNameAr, departmentName } = row;
+  const { retypeId, retypeNameAr, retypeName } = row;
   if (!value || value === '') return <div></div>;
   return (
     <Box>
@@ -1485,10 +1539,10 @@ export const nameManageLinkFormat = ({
               {carstatusFormatter({ value: row.carstatus, isRTL })}
             </Grid>
           )}
-          {departmentId && (
+          {retypeId && (
             <Grid item xs={6}>
               {renderTag({
-                value: isRTL ? departmentNameAr : departmentName,
+                value: isRTL ? retypeNameAr : retypeName,
                 color: '#333',
                 bgcolor: colors.blueGrey[50],
                 width: 100,
@@ -1810,6 +1864,58 @@ export const customerDataView = ({ row, words, isRTL }) => {
             </Typography>
           </Grid>
         )}
+      </Grid>
+    </Box>
+  );
+};
+export const projectDataView = ({ row, words, isRTL }) => {
+  const {
+    name,
+    nameAr,
+    resourseNameAr,
+    resourseName,
+    customerNameAr,
+    customerName,
+    customerPhone,
+    employeeNameAr,
+    employeeName,
+    departmentNameAr,
+    departmentName,
+  } = row;
+
+  return (
+    <Box style={{ padding: 20 }}>
+      <Grid container spacing={1}>
+        <Grid item xs={12}>
+          <Typography variant="h6">{isRTL ? nameAr : name}</Typography>
+        </Grid>
+
+        <Grid item xs={12}>
+          <Typography style={{ fontSize: 16, fontWeight: 'bold' }}>
+            {isRTL ? resourseNameAr : resourseName}
+          </Typography>
+        </Grid>
+        <Grid item xs={2}>
+          <Typography>{words.customer}</Typography>
+        </Grid>
+        <Grid item xs={7}>
+          <Typography>{isRTL ? customerNameAr : customerName}</Typography>
+        </Grid>
+        <Grid item xs={3}>
+          <Typography>{customerPhone}</Typography>
+        </Grid>
+        <Grid item xs={2}>
+          <Typography>{words.employee}</Typography>
+        </Grid>
+        <Grid item xs={10}>
+          <Typography>{isRTL ? employeeNameAr : employeeName}</Typography>
+        </Grid>
+        <Grid item xs={2}>
+          <Typography>{words.department}</Typography>
+        </Grid>
+        <Grid item xs={10}>
+          <Typography>{isRTL ? departmentNameAr : departmentName}</Typography>
+        </Grid>
       </Grid>
     </Box>
   );
@@ -3292,7 +3398,6 @@ export const customerAccountFormatter = (
     );
   }
 };
-
 
 export const employeeColorStyle = {
   // backgroundImage:

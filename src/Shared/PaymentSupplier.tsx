@@ -32,7 +32,7 @@ import { Box, Typography } from '@material-ui/core';
 import PopupPayment from '../pubups/PopupPayment';
 import useTasks from '../hooks/useTasks';
 import getGereralCalculation from '../graphql/query/getGereralCalculation';
-import { getTasks } from '../graphql/query';
+import { getProjects, getTasks } from '../graphql/query';
 
 export default function PaymentSupplier({
   isRTL,
@@ -94,6 +94,7 @@ export default function PaymentSupplier({
           }
         : undefined,
       name === 'contractId' ? { query: getTasks } : undefined,
+      name === 'projectId' ? { query: getProjects } : undefined,
     ],
   };
 

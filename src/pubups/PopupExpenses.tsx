@@ -13,9 +13,9 @@ import { CalenderLocal, TextFieldLocal } from '../components';
 // import { getAppStartEndPeriod } from "../common/time";
 import AutoFieldLocal from '../components/fields/AutoFieldLocal';
 import { useCustomers, useTemplate } from '../hooks';
-import useEmployeesUp from '../hooks/useEmployeesUp';
-import useDepartmentsUp from '../hooks/useDepartmentsUp';
-import useResoursesUp from '../hooks/useResoursesUp';
+import useEmployees from '../hooks/useEmployees';
+import useDepartments from '../hooks/useDepartments';
+import useResourses from '../hooks/useResourses';
 import PopupDeprtment from './PopupDeprtment';
 import PopupTask from './PopupTask';
 import PopupEmployee from './PopupEmployee';
@@ -73,9 +73,9 @@ const PopupExpenses = ({
   const [openTsk, setOpenTsk] = useState(false);
 
   const { customers } = useCustomers();
-  const { employees, addEmployee, editEmployee } = useEmployeesUp();
-  const { departments, addDepartment, editDepartment } = useDepartmentsUp();
-  const { resourses, addResourse, editResourse } = useResoursesUp();
+  const { employees, addEmployee, editEmployee } = useEmployees();
+  const { departments, addDepartment, editDepartment } = useDepartments();
+  const { resourses, addResourse, editResourse } = useResourses();
   const { tempwords, tempoptions } = useTemplate();
   const { addTask, editTask } = useTasks();
   const { projects } = useProjects();
@@ -351,6 +351,17 @@ const PopupExpenses = ({
           contractName: undefined,
           contractNameAr: undefined,
         };
+    const project = taskvalue
+      ? {
+          projectId: taskvalue.projectId,
+          projectName: taskvalue.projectName,
+          projectNameAr: taskvalue.projectNameAr,
+        }
+      : {
+          projectId: undefined,
+          projectName: undefined,
+          projectNameAr: undefined,
+        };
 
     const variables: any = {
       _id: row && row._id ? row._id : undefined, // is it new or edit
@@ -363,6 +374,7 @@ const PopupExpenses = ({
       employee,
       resourse,
       contract,
+      project,
       title,
       desc,
       chequeBank,
@@ -630,7 +642,6 @@ const PopupExpenses = ({
           row={null}
           addAction={addDepartment}
           editAction={editDepartment}
-          depType={1}
         ></PopupDeprtment>
         <PopupTask
           newtext={newtext}
@@ -649,25 +660,21 @@ const PopupExpenses = ({
         ></PopupTask>
         <PopupEmployee
           newtext={newtext}
-          departments={departments}
           open={openEmp}
           onClose={onCloseEmploee}
           isNew={true}
           setNewValue={onNewEmplChange}
           row={null}
-          resType={1}
           addAction={addEmployee}
           editAction={editEmployee}
         ></PopupEmployee>
         <PopupResourses
           newtext={newtext}
-          departments={departments}
           open={openRes}
           onClose={onCloseResourse}
           isNew={true}
           setNewValue={onNewResoChange}
           row={null}
-          resType={1}
           addAction={addResourse}
           editAction={editResourse}
         ></PopupResourses>

@@ -13,9 +13,9 @@ import { CalenderLocal, TextFieldLocal } from '../components';
 import { weekdaysNNo } from '../constants/datatypes';
 import { getDateDayWeek } from '../Shared/colorFormat';
 import { useTemplate } from '../hooks';
-import useDepartmentsUp from '../hooks/useDepartmentsUp';
-import useEmployeesUp from '../hooks/useEmployeesUp';
-import useResoursesUp from '../hooks/useResoursesUp';
+import useDepartments from '../hooks/useDepartments';
+import useEmployees from '../hooks/useEmployees';
+import useResourses from '../hooks/useResourses';
 import { SelectLocal } from '../pages/calendar/common/SelectLocal';
 import {
   byweekdayOptions,
@@ -93,9 +93,9 @@ const PopupReminder = ({
   const [bymonthday, setBymonthday] = useState([]);
   const [isLastday, setIsLastday] = useState(false); // lastday of month
 
-  const { departments } = useDepartmentsUp();
-  const { employees } = useEmployeesUp();
-  const { resourses } = useResoursesUp();
+  const { departments } = useDepartments();
+  const { employees } = useEmployees();
+  const { resourses } = useResourses();
   const { tempwords, tempoptions } = useTemplate();
 
   const { register, handleSubmit } = useForm({});

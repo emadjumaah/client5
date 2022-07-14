@@ -81,6 +81,8 @@ export const templates = [
       },
     },
     taskExtra: [],
+    emplExtra: [],
+    resoExtra: [],
     sortOrder: [0, 0.5, 0.55, 0.56, 0.6, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
   },
   {
@@ -162,6 +164,8 @@ export const templates = [
       },
     },
     taskExtra: [],
+    emplExtra: [],
+    resoExtra: [],
     sortOrder: [0, 0.5, 0.55, 0.56, 0.6, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
   },
   {
@@ -240,6 +244,8 @@ export const templates = [
       },
     },
     taskExtra: [],
+    emplExtra: [],
+    resoExtra: [],
     sortOrder: [0, 0.5, 0.55, 0.56, 0.6, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
   },
   {
@@ -341,6 +347,8 @@ export const templates = [
         value: '',
       },
     ],
+    emplExtra: [],
+    resoExtra: [],
     sortOrder: [0, 0.5, 0.55, 0.56, 0.6, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
   },
   {
@@ -419,6 +427,8 @@ export const templates = [
       },
     },
     taskExtra: [],
+    emplExtra: [],
+    resoExtra: [],
     sortOrder: [0, 0.5, 0.55, 0.56, 0.6, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
   },
   {
@@ -495,6 +505,8 @@ export const templates = [
       },
     },
     taskExtra: [],
+    emplExtra: [],
+    resoExtra: [],
     sortOrder: [0, 0.5, 0.55, 0.56, 0.6, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
   },
   {
@@ -573,6 +585,8 @@ export const templates = [
       },
     },
     taskExtra: [],
+    emplExtra: [],
+    resoExtra: [],
     sortOrder: [0, 0.5, 0.55, 0.56, 0.6, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
   },
   {
@@ -652,6 +666,8 @@ export const templates = [
       },
     },
     taskExtra: [],
+    emplExtra: [],
+    resoExtra: [],
     sortOrder: [0, 0.5, 0.55, 0.56, 0.6, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
   },
   {
@@ -731,6 +747,8 @@ export const templates = [
       },
     },
     taskExtra: [],
+    emplExtra: [],
+    resoExtra: [],
     sortOrder: [0, 0.5, 0.55, 0.56, 0.6, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
   },
 ];

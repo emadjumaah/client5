@@ -38,9 +38,9 @@ import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
 import DeleteOutlinedIcon from '@material-ui/icons/DeleteOutlined';
 import PopupAction from '../../../pubups/PopupAction';
 import PopupResourses from '../../../pubups/PopupResourses';
-import useDepartmentsUp from '../../../hooks/useDepartmentsUp';
-import useEmployeesUp from '../../../hooks/useEmployeesUp';
-import useResoursesUp from '../../../hooks/useResoursesUp';
+import useDepartments from '../../../hooks/useDepartments';
+import useEmployees from '../../../hooks/useEmployees';
+import useResourses from '../../../hooks/useResourses';
 import useTasks from '../../../hooks/useTasks';
 import PopupMaps from '../../../pubups/PopupMaps';
 import { SelectLocal } from './SelectLocal';
@@ -95,9 +95,9 @@ export const AppointForm = (props: any) => {
 
   const { customers, addCustomer, editCustomer } = useCustomers();
   const { tempwords, tempoptions } = useTemplate();
-  const { departments, addDepartment, editDepartment } = useDepartmentsUp();
-  const { employees, addEmployee, editEmployee } = useEmployeesUp();
-  const { resourses, addResourse, editResourse } = useResoursesUp();
+  const { departments, addDepartment, editDepartment } = useDepartments();
+  const { employees, addEmployee, editEmployee } = useEmployees();
+  const { resourses, addResourse, editResourse } = useResourses();
   const { tasks } = useTasks();
   const { services } = useServices();
   const { products } = useProducts();
@@ -814,29 +814,24 @@ export const AppointForm = (props: any) => {
           row={null}
           addAction={addDepartment}
           editAction={editDepartment}
-          depType={1}
         ></PopupDeprtment>
         <PopupEmployee
           newtext={newtext}
-          departments={departments}
           open={openEmp}
           onClose={onCloseEmploee}
           isNew={true}
           setNewValue={selectEmployee}
           row={null}
-          resType={1}
           addAction={addEmployee}
           editAction={editEmployee}
         ></PopupEmployee>
         <PopupResourses
           newtext={newtext}
-          departments={departments}
           open={openRes}
           onClose={onCloseResourse}
           isNew={true}
           setNewValue={selectResourse}
           row={null}
-          resType={1}
           addAction={addResourse}
           editAction={editResourse}
         ></PopupResourses>

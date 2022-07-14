@@ -29,9 +29,9 @@ import { Box, Typography } from '@material-ui/core';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
 import { TableComponent } from '../../Shared/TableComponent';
 import { useUsers } from '../../hooks';
-import useEmployeesUp from '../../hooks/useEmployeesUp';
-import useDepartmentsUp from '../../hooks/useDepartmentsUp';
-import useResoursesUp from '../../hooks/useResoursesUp';
+import useEmployees from '../../hooks/useEmployees';
+import useDepartments from '../../hooks/useDepartments';
+import useResourses from '../../hooks/useResourses';
 import { getColumns } from '../../common/columns';
 
 export default function RemindersActions({ isRTL, words, menuitem, theme }) {
@@ -58,9 +58,9 @@ export default function RemindersActions({ isRTL, words, menuitem, theme }) {
     dispatch,
   } = useContext(EventsContext);
 
-  const { employees } = useEmployeesUp();
-  const { departments } = useDepartmentsUp();
-  const { resourses } = useResoursesUp();
+  const { employees } = useEmployees();
+  const { departments } = useDepartments();
+  const { resourses } = useResourses();
 
   const currentViewNameChange = (e: any) => {
     dispatch({ type: 'setCurrentViewName', payload: e.target.value });

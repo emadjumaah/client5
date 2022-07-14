@@ -1,6 +1,4 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable import/no-anonymous-default-export */
-/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import { useLazyQuery, useMutation } from '@apollo/client';
 import { useEffect } from 'react';
 import {
@@ -9,24 +7,18 @@ import {
   getProjects,
   updateProject,
 } from '../graphql';
-import { getStoreItem } from '../store';
 
 export default () => {
-  const store = getStoreItem('store');
-  const lang = store?.lang;
-  const isRTL = lang === 'ar' ? true : false;
-  const [getDeparts, depData]: any = useLazyQuery(getProjects, {
-    variables: { isRTL },
-  });
+  const [getDeparts, depData]: any = useLazyQuery(getProjects);
 
   const [addProject] = useMutation(createProject, {
-    refetchQueries: [{ query: getProjects, variables: { isRTL } }],
+    refetchQueries: [{ query: getProjects }],
   });
   const [editProject] = useMutation(updateProject, {
-    refetchQueries: [{ query: getProjects, variables: { isRTL } }],
+    refetchQueries: [{ query: getProjects }],
   });
   const [removeProject] = useMutation(deleteProject, {
-    refetchQueries: [{ query: getProjects, variables: { isRTL } }],
+    refetchQueries: [{ query: getProjects }],
   });
 
   useEffect(() => {

@@ -69,9 +69,9 @@ import { SearchTable } from '../../components';
 import { KaidContext } from '../../contexts/managment';
 import getKaidsReport from '../../graphql/query/getKaidsReport';
 import KaidReportFilter from '../../Shared/KaidReportFilter';
-import useDepartmentsUp from '../../hooks/useDepartmentsUp';
-import useEmployeesUp from '../../hooks/useEmployeesUp';
-import useResoursesUp from '../../hooks/useResoursesUp';
+import useDepartments from '../../hooks/useDepartments';
+import useEmployees from '../../hooks/useEmployees';
+import useResourses from '../../hooks/useResourses';
 import useProjects from '../../hooks/useProjects';
 import useTasks from '../../hooks/useTasks';
 
@@ -149,12 +149,14 @@ export default function KaidsReport({
     { columnName: col.opTime.name, togglingEnabled: false },
   ]);
 
-  const [getSummary, summaryData]: any = useLazyQuery(getKaidsReport);
+  const [getSummary, summaryData]: any = useLazyQuery(getKaidsReport, {
+    fetchPolicy: 'cache-and-network',
+  });
 
   const { customers } = useCustomers();
-  const { departments } = useDepartmentsUp();
-  const { employees } = useEmployeesUp();
-  const { resourses } = useResoursesUp();
+  const { departments } = useDepartments();
+  const { employees } = useEmployees();
+  const { resourses } = useResourses();
   const { projects } = useProjects();
   const { tasks } = useTasks();
   const { services } = useServices();
@@ -273,8 +275,7 @@ export default function KaidsReport({
 
   const getIds = (list: any) =>
     list && list?.length > 0 ? list.map((sv: any) => sv._id) : undefined;
-  const getPcode = (list: any) =>
-    list && list?.length > 0 ? list.map((sv: any) => sv.code) : undefined;
+
   const getValues = (list: any) =>
     list && list?.length > 0 ? list.map((sv: any) => sv.value) : undefined;
 
@@ -284,7 +285,7 @@ export default function KaidsReport({
       itemTypes: getValues(itemtypevalue),
       itemIds: getIds(itemvalue),
       accountIds: getIds(accvalue),
-      parentCodes: getPcode(pcodevalue),
+      parentCodes: getValues(pcodevalue),
       projectIds: getIds(projvalue),
       contractIds: getIds(taskvalue),
       departmentIds: getIds(departvalue),
@@ -552,6 +553,18 @@ export default function KaidsReport({
               setItemvalue={setItemvalueDispatch}
               setAccountvalue={setAccountvalueDispatch}
               setPcodevalue={setPcodevalueDispatch}
+              pcodevalue={pcodevalue}
+              accvalue={accvalue}
+              optypevalue={optypevalue}
+              itemtypevalue={itemtypevalue}
+              itemvalue={itemvalue}
+              emplvalue={emplvalue}
+              resovalue={resovalue}
+              departvalue={departvalue}
+              projvalue={projvalue}
+              taskvalue={taskvalue}
+              custvalue={custvalue}
+              suppvalue={suppvalue}
               words={words}
               isRTL={isRTL}
             ></KaidReportFilter>

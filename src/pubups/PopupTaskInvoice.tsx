@@ -37,7 +37,7 @@ import { useReactToPrint } from 'react-to-print';
 import { InvoicePrint } from '../print';
 import { getInvDays } from '../common/helpers';
 import getGereralCalculation from '../graphql/query/getGereralCalculation';
-import { getTasks } from '../graphql/query';
+import { getProjects, getTasks } from '../graphql/query';
 import { sleep } from '../Shared/helpers';
 
 export const indexTheList = (list: any) => {
@@ -120,6 +120,7 @@ const PopupTaskInvoice = ({
         },
       },
       { query: getTasks },
+      { query: getProjects },
     ],
   };
   const [getItems, itemsData]: any = useLazyQuery(getOperationItems, {

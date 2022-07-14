@@ -40,9 +40,9 @@ import PopupCustomer from './PopupCustomer';
 import PopupDeprtment from './PopupDeprtment';
 import PopupEmployee from './PopupEmployee';
 import PopupResourses from './PopupResourses';
-import useDepartmentsUp from '../hooks/useDepartmentsUp';
-import useEmployeesUp from '../hooks/useEmployeesUp';
-import useResoursesUp from '../hooks/useResoursesUp';
+import useDepartments from '../hooks/useDepartments';
+import useEmployees from '../hooks/useEmployees';
+import useResourses from '../hooks/useResourses';
 import PopupMaps from './PopupMaps';
 import { SelectLocal } from '../pages/calendar/common/SelectLocal';
 import { eventLengthOptions } from '../constants/rrule';
@@ -135,9 +135,9 @@ const PopupAppointmentCustomer = ({
   const [openRes, setOpenRes] = useState(false);
 
   const { addCustomer, editCustomer } = useCustomers();
-  const { addDepartment, editDepartment } = useDepartmentsUp();
-  const { addEmployee, editEmployee } = useEmployeesUp();
-  const { addResourse, editResourse } = useResoursesUp();
+  const { addDepartment, editDepartment } = useDepartments();
+  const { addEmployee, editEmployee } = useEmployees();
+  const { addResourse, editResourse } = useResourses();
   const { tempwords, tempoptions } = useTemplate();
   const { products } = useProducts();
 
@@ -1037,29 +1037,24 @@ const PopupAppointmentCustomer = ({
           row={null}
           addAction={addDepartment}
           editAction={editDepartment}
-          depType={1}
         ></PopupDeprtment>
         <PopupEmployee
           newtext={newtext}
-          departments={departments}
           open={openEmp}
           onClose={onCloseEmploee}
           isNew={true}
           setNewValue={onNewEmplChange}
           row={null}
-          resType={1}
           addAction={addEmployee}
           editAction={editEmployee}
         ></PopupEmployee>
         <PopupResourses
           newtext={newtext}
-          departments={departments}
           open={openRes}
           onClose={onCloseResourse}
           isNew={true}
           setNewValue={onNewResoChange}
           row={null}
-          resType={1}
           addAction={addResourse}
           editAction={editResourse}
         ></PopupResourses>

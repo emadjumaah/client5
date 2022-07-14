@@ -23,8 +23,8 @@ import { useLazyQuery } from '@apollo/client';
 import { getOperationItems } from '../../../graphql';
 import MyIcon from '../../../Shared/MyIcon';
 import useTasks from '../../../hooks/useTasks';
-import useEmployeesUp from '../../../hooks/useEmployeesUp';
-import useDepartmentsUp from '../../../hooks/useDepartmentsUp';
+import useEmployees from '../../../hooks/useEmployees';
+import useDepartments from '../../../hooks/useDepartments';
 import { useProducts, useServices } from '../../../hooks';
 
 export const RenderToolTip = ({
@@ -44,8 +44,8 @@ export const RenderToolTip = ({
 
   const classes = cardClasses();
   const { tasks } = useTasks();
-  const { employees } = useEmployeesUp();
-  const { departments } = useDepartmentsUp();
+  const { employees } = useEmployees();
+  const { departments } = useDepartments();
   const { services } = useServices();
   const { products } = useProducts();
 

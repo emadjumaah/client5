@@ -210,7 +210,6 @@ export const AppointForm2 = ({ onFieldChange, appointmentData }: any) => {
         row={null}
         addAction={addDepartment}
         editAction={editDepartment}
-        depType={1}
       ></PopupDeprtment>
       <PopupEmployee
         newtext={newtext}

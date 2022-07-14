@@ -29,8 +29,7 @@ import { AlertLocal, SearchTable } from '../../components';
 import { errorAlert, errorDeleteAlert } from '../../Shared/helpers';
 import PageLayout from '../main/PageLayout';
 import { getColumns } from '../../common/columns';
-import useEmployeesDown from '../../hooks/useEmployeesDown';
-import useDepartmentsDown from '../../hooks/useDepartmentsDown';
+import useEmployees from '../../hooks/useEmployees';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
 import { Typography } from '@material-ui/core';
 
@@ -56,8 +55,7 @@ export default function Employees({ isRTL, words, theme, menuitem }: any) {
     editEmployee,
     removeEmployee,
     refreshemployee,
-  } = useEmployeesDown();
-  const { departments } = useDepartmentsDown();
+  } = useEmployees();
   const { height } = useWindowDimensions();
   const commitChanges = async ({ deleted }) => {
     if (deleted) {
@@ -143,10 +141,7 @@ export default function Employees({ isRTL, words, theme, menuitem }: any) {
             addAction={addEmployee}
             editAction={editEmployee}
           >
-            <PopupEmployee
-              departments={departments}
-              resType={2}
-            ></PopupEmployee>
+            <PopupEmployee></PopupEmployee>
           </PopupEditing>
         </Grid>
         {alrt.show && (

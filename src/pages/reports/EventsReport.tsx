@@ -54,9 +54,9 @@ import FilterSelectCkeckBox from '../../Shared/FilterSelectCkeckBox';
 import { eventStatus } from '../../constants';
 import { useCustomers, useServices, useTemplate } from '../../hooks';
 import useTasks from '../../hooks/useTasks';
-import useDepartmentsUp from '../../hooks/useDepartmentsUp';
-import useEmployeesUp from '../../hooks/useEmployeesUp';
-import useResoursesUp from '../../hooks/useResoursesUp';
+import useDepartments from '../../hooks/useDepartments';
+import useEmployees from '../../hooks/useEmployees';
+import useResourses from '../../hooks/useResourses';
 import useProjects from '../../hooks/useProjects';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
 import { SearchTable } from '../../components';
@@ -119,11 +119,13 @@ export default function SalesReport({ isRTL, words, menuitem, theme }: any) {
     { columnName: col.opTime.name, togglingEnabled: false },
   ]);
 
-  const [getSummary, summaryData]: any = useLazyQuery(getReportEvents);
+  const [getSummary, summaryData]: any = useLazyQuery(getReportEvents, {
+    fetchPolicy: 'cache-and-network',
+  });
   const { customers } = useCustomers();
-  const { departments } = useDepartmentsUp();
-  const { employees } = useEmployeesUp();
-  const { resourses } = useResoursesUp();
+  const { departments } = useDepartments();
+  const { employees } = useEmployees();
+  const { resourses } = useResourses();
   const { services } = useServices();
 
   const {

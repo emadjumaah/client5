@@ -21,9 +21,8 @@ import { ReceiptPrint } from '../print';
 import { sleep, successAlert } from '../Shared/helpers';
 import { SelectLocal } from '../pages/calendar/common/SelectLocal';
 import { recTypes } from '../constants/datatypes';
-import useEmployeesUp from '../hooks/useEmployeesUp';
+import useEmployees from '../hooks/useEmployees';
 import PopupEmployee from './PopupEmployee';
-import useDepartmentsUp from '../hooks/useDepartmentsUp';
 const PopupReceipt = ({
   open,
   onClose,
@@ -73,8 +72,7 @@ const PopupReceipt = ({
 
   const { accounts } = useAccounts();
   const { customers, addCustomer, editCustomer } = useCustomers();
-  const { employees, addEmployee, editEmployee } = useEmployeesUp();
-  const { departments } = useDepartmentsUp();
+  const { employees, addEmployee, editEmployee } = useEmployees();
   const { tempwords } = useTemplate();
 
   const [loadInvoices, invoicesData]: any = useLazyQuery(getInvoicesList, {
@@ -591,13 +589,11 @@ const PopupReceipt = ({
         ></PopupCustomer>
         <PopupEmployee
           newtext={newtext}
-          departments={departments}
           open={openEmp}
           onClose={onCloseEmploee}
           isNew={true}
           setNewValue={onNewEmplChange}
           row={null}
-          resType={1}
           addAction={addEmployee}
           editAction={editEmployee}
         ></PopupEmployee>

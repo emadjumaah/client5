@@ -66,9 +66,9 @@ import { useServices, useTemplate } from '../../hooks';
 import useTasks from '../../hooks/useTasks';
 import getReportServices from '../../graphql/query/getReportServices';
 import ServicesReportContext from '../../contexts/servicesReport';
-import useDepartmentsUp from '../../hooks/useDepartmentsUp';
-import useEmployeesUp from '../../hooks/useEmployeesUp';
-import useResoursesUp from '../../hooks/useResoursesUp';
+import useDepartments from '../../hooks/useDepartments';
+import useEmployees from '../../hooks/useEmployees';
+import useResourses from '../../hooks/useResourses';
 import useProjects from '../../hooks/useProjects';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
 import { SearchTable } from '../../components';
@@ -160,10 +160,12 @@ export default function ServicesReport({
     // { columnName: col.amount.name, togglingEnabled: false },
   ]);
 
-  const [getSummary, summaryData]: any = useLazyQuery(getReportServices);
-  const { departments } = useDepartmentsUp();
-  const { employees } = useEmployeesUp();
-  const { resourses } = useResoursesUp();
+  const [getSummary, summaryData]: any = useLazyQuery(getReportServices, {
+    fetchPolicy: 'cache-and-network',
+  });
+  const { departments } = useDepartments();
+  const { employees } = useEmployees();
+  const { resourses } = useResourses();
   const { services } = useServices();
 
   const {

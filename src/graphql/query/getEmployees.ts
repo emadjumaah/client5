@@ -26,6 +26,17 @@ export default gql`
         resKind
         resType
 
+        pId
+        pIdDate
+        workId
+        telHome
+        licenseNo
+        licenseDate
+        national
+        nationalNo
+        nationalDate
+        photos
+
         amount
         totalinvoiced
         totalDiscount
@@ -50,6 +61,10 @@ export default gql`
         departmentName
         departmentNameAr
         departmentColor
+        retypeId
+        retypeName
+        retypeNameAr
+        retypeColor
         daysoff
         info
         userId

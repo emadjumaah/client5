@@ -33,9 +33,9 @@ import PopupCustomer from './PopupCustomer';
 import PopupDeprtment from './PopupDeprtment';
 import PopupEmployee from './PopupEmployee';
 import PopupResourses from './PopupResourses';
-import useDepartmentsUp from '../hooks/useDepartmentsUp';
-import useEmployeesUp from '../hooks/useEmployeesUp';
-import useResoursesUp from '../hooks/useResoursesUp';
+import useDepartments from '../hooks/useDepartments';
+import useEmployees from '../hooks/useEmployees';
+import useResourses from '../hooks/useResourses';
 import PopupProject from './PopupProject';
 import useProjects from '../hooks/useProjects';
 import ServiceItemForm from '../Shared/ServiceItemForm';
@@ -155,9 +155,9 @@ const PopupTaskFull = ({
   const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
 
   const { addCustomer, editCustomer } = useCustomers();
-  const { addDepartment, editDepartment } = useDepartmentsUp();
-  const { addEmployee, editEmployee } = useEmployeesUp();
-  const { addResourse, editResourse } = useResoursesUp();
+  const { addDepartment, editDepartment } = useDepartments();
+  const { addEmployee, editEmployee } = useEmployees();
+  const { addResourse, editResourse } = useResourses();
   const { addProject, editProject } = useProjects();
   const { tempwords, tempoptions, taskExtra } = useTemplate();
   const { products } = useProducts();
@@ -245,11 +245,11 @@ const PopupTaskFull = ({
       setIsCustom(true);
       const rdata = getRruleData({
         freq: 1,
-        byweekday: null,
+        byweekday: [],
         dtstart: start,
         until: end,
         interval: 1,
-        bymonthday: null,
+        bymonthday: [],
         count: 1,
         isCustom: true,
       });
@@ -261,6 +261,37 @@ const PopupTaskFull = ({
     const value = Number(e.target.value);
     setInterval(value > 1 ? value : 1);
   };
+
+  useEffect(() => {
+    if (isNew) {
+      if (projvalue) {
+        if (projvalue?.customerId && name !== 'customerId') {
+          const cust = customers.filter(
+            (dep: any) => dep._id === projvalue?.customerId
+          )?.[0];
+          setCustvalue(cust);
+        }
+        if (projvalue?.resourseId && name !== 'resourseId') {
+          const res = resourses.filter(
+            (dep: any) => dep._id === projvalue?.resourseId
+          )?.[0];
+          setResovalue(res);
+        }
+        if (projvalue?.employeeId && name !== 'employeeId') {
+          const emp = employees.filter(
+            (dep: any) => dep._id === projvalue?.employeeId
+          )?.[0];
+          setEmplvalue(emp);
+        }
+        if (projvalue?.departmentId && name !== 'departmentId') {
+          const dept = departments.filter(
+            (dep: any) => dep._id === projvalue?.departmentId
+          )?.[0];
+          setDepartvalue(dept);
+        }
+      }
+    }
+  }, [projvalue]);
 
   useEffect(() => {
     const items = itemsData?.data?.['getOperationItems']?.data || [];
@@ -600,7 +631,6 @@ const PopupTaskFull = ({
       } else {
         setInfo(taskExtra);
       }
-
       setStart(start);
       setEnd(end);
       setTasktitle(row?.title);
@@ -630,11 +660,11 @@ const PopupTaskFull = ({
       if (row?.periodType === 100) {
         const rdata = getRruleData({
           freq: 1,
-          byweekday: null,
+          byweekday: [],
           dtstart: start,
           until: end,
           interval: 1,
-          bymonthday: null,
+          bymonthday: [],
           count: 1,
           isCustom: true,
         });
@@ -930,11 +960,11 @@ const PopupTaskFull = ({
                       if (isCustom) {
                         const rdata = getRruleData({
                           freq: 1,
-                          byweekday: null,
+                          byweekday: [],
                           dtstart: start,
                           until: d,
                           interval: 1,
-                          bymonthday: null,
+                          bymonthday: [],
                           count: 1,
                           isCustom,
                         });
@@ -1157,6 +1187,27 @@ const PopupTaskFull = ({
                   mb={0}
                 />
               </Grid>
+              {!tempoptions?.noPro && (
+                <Grid item xs={12}>
+                  <AutoFieldLocal
+                    name="project"
+                    title={tempwords?.project}
+                    words={words}
+                    options={projects}
+                    value={projvalue}
+                    setSelectValue={setProjvalue}
+                    setSelectError={setProjError}
+                    selectError={projError}
+                    refernce={projRef}
+                    register={register}
+                    isRTL={isRTL}
+                    fullWidth
+                    openAdd={openProject}
+                    showphone
+                    disabled={name === 'projectId'}
+                  ></AutoFieldLocal>
+                </Grid>
+              )}
               <Grid item xs={6}>
                 <AutoFieldLocal
                   name="customer"
@@ -1176,6 +1227,7 @@ const PopupTaskFull = ({
                   disabled={name === 'customerId'}
                 ></AutoFieldLocal>
               </Grid>
+
               {!tempoptions?.noRes && (
                 <Grid item xs={6}>
                   <AutoFieldLocal
@@ -1197,24 +1249,24 @@ const PopupTaskFull = ({
                   ></AutoFieldLocal>
                 </Grid>
               )}
-              {!tempoptions?.noPro && (
+              {!tempoptions?.noEmp && (
                 <Grid item xs={6}>
                   <AutoFieldLocal
-                    name="project"
-                    title={tempwords?.project}
+                    name="employee"
+                    title={tempwords?.employee}
                     words={words}
-                    options={projects}
-                    value={projvalue}
-                    setSelectValue={setProjvalue}
-                    setSelectError={setProjError}
-                    selectError={projError}
-                    refernce={projRef}
+                    options={employees}
+                    disabled={isemployee || name === 'employeeId'}
+                    value={emplvalue}
+                    setSelectValue={setEmplvalue}
+                    setSelectError={setEmplError}
+                    selectError={emplError}
+                    refernce={emplRef}
                     register={register}
+                    openAdd={openEmployee}
                     isRTL={isRTL}
                     fullWidth
-                    openAdd={openProject}
-                    showphone
-                    disabled={name === 'projectId'}
+                    day={day}
                   ></AutoFieldLocal>
                 </Grid>
               )}
@@ -1237,27 +1289,6 @@ const PopupTaskFull = ({
                   disabled={name === 'departmentId'}
                 ></AutoFieldLocal>
               </Grid>
-              {!tempoptions?.noEmp && (
-                <Grid item xs={6}>
-                  <AutoFieldLocal
-                    name="employee"
-                    title={tempwords?.employee}
-                    words={words}
-                    options={employees}
-                    disabled={isemployee || name === 'employeeId'}
-                    value={emplvalue}
-                    setSelectValue={setEmplvalue}
-                    setSelectError={setEmplError}
-                    selectError={emplError}
-                    refernce={emplRef}
-                    register={register}
-                    openAdd={openEmployee}
-                    isRTL={isRTL}
-                    fullWidth
-                    day={day}
-                  ></AutoFieldLocal>
-                </Grid>
-              )}
             </Grid>
           </Grid>
           <Grid item xs={4} style={{ marginTop: 10 }}>
@@ -1367,29 +1398,24 @@ const PopupTaskFull = ({
           row={null}
           addAction={addDepartment}
           editAction={editDepartment}
-          depType={1}
         ></PopupDeprtment>
         <PopupEmployee
           newtext={newtext}
-          departments={departments}
           open={openEmp}
           onClose={onCloseEmploee}
           isNew={true}
           setNewValue={onNewEmplChange}
           row={null}
-          resType={1}
           addAction={addEmployee}
           editAction={editEmployee}
         ></PopupEmployee>
         <PopupResourses
           newtext={newtext}
-          departments={departments}
           open={openRes}
           onClose={onCloseResourse}
           isNew={true}
           setNewValue={onNewResoChange}
           row={null}
-          resType={1}
           addAction={addResourse}
           editAction={editResourse}
         ></PopupResourses>

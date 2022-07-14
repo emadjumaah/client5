@@ -17,11 +17,10 @@ import PopupLayout from '../pages/main/PopupLayout';
 import { Grid } from '@material-ui/core';
 import { TextFieldLocal } from '../components';
 import AutoFieldLocal from '../components/fields/AutoFieldLocal';
-import { useTemplate } from '../hooks';
 import { getPopupTitle } from '../constants/menu';
-import PopupDeprtment from './PopupDeprtment';
-import useDepartmentsUp from '../hooks/useDepartmentsUp';
 import { carstatuss } from '../constants';
+import useRetypes from '../hooks/useRetypes';
+import PopupResourseType from './PopupResourseType';
 
 const PopupResourses = ({
   open,
@@ -31,25 +30,21 @@ const PopupResourses = ({
   setNewValue,
   addAction,
   editAction,
-  newtext,
   theme,
-  resType,
-  departments,
 }: any) => {
   const [saving, setSaving] = useState(false);
   const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
-  const [departvalue, setDepartvalue] = useState<any>(null);
+  const [rtypevalue, setRtypevalue] = useState<any>(null);
   const [statusvalue, setStatusvalue] = useState<any>(null);
   const [depError, setDepError] = useState<any>(false);
   const [color, setColor] = useState<any>('#252B3B');
 
   const [newtext2, setNewtext2] = useState('');
-  const [openDep, setOpenDep] = useState(false);
+  const [openTyp, setOpenTyp] = useState(false);
 
   const emplRef: any = React.useRef();
 
-  const { tempwords } = useTemplate();
-  const { addDepartment, editDepartment } = useDepartmentsUp();
+  const { retypes, addRetype, editRetype } = useRetypes();
 
   const { register, handleSubmit, errors, reset } = useForm(yup.emppResolver);
   const {
@@ -57,23 +52,23 @@ const PopupResourses = ({
     store: { user },
   }: GContextTypes = useContext(GlobalContext);
 
-  const openDepartment = () => {
-    setOpenDep(true);
+  const openRetype = () => {
+    setOpenTyp(true);
   };
-  const onCloseDepartment = () => {
-    setOpenDep(false);
+  const onCloseRetype = () => {
+    setOpenTyp(false);
     setNewtext2('');
   };
-  const onNewDepartChange = (nextValue: any) => {
-    setDepartvalue(nextValue);
+  const onNewTypChange = (nextValue: any) => {
+    setRtypevalue(nextValue);
   };
 
   useEffect(() => {
     if (row && row._id) {
-      const _id = row.departmentId;
+      const _id = row.retypeId;
       if (_id) {
-        const depart = departments.filter((dep: any) => dep._id === _id)[0];
-        setDepartvalue(depart);
+        const depart = retypes.filter((dep: any) => dep._id === _id)[0];
+        setRtypevalue(depart);
       }
 
       const status = row?.carstatus;
@@ -89,25 +84,26 @@ const PopupResourses = ({
     setSaving(true);
     const name = data.name.trim();
     const nameAr = !isNew ? data.nameAr.trim() : name;
-    const { info, brand, plate, cost, model, purtime, insurance } = data;
-    const department = departvalue
+    const { info, brand, plate, cost, model, purtime, insurance, licenseDate } =
+      data;
+    const retype = rtypevalue
       ? {
-          departmentId: departvalue._id,
-          departmentName: departvalue.name,
-          departmentNameAr: departvalue.nameAr,
-          departmentColor: departvalue.color,
+          retypeId: rtypevalue._id,
+          retypeName: rtypevalue.name,
+          retypeNameAr: rtypevalue.nameAr,
+          retypeColor: rtypevalue.color,
         }
       : {
-          departmentId: undefined,
-          departmentName: undefined,
-          departmentNameAr: undefined,
-          departmentColor: undefined,
+          retypeId: undefined,
+          retypeName: undefined,
+          retypeNameAr: undefined,
+          retypeColor: undefined,
         };
     const variables: any = {
       _id: row && row._id ? row._id : undefined, // is it new or edit
       name,
       nameAr,
-      resType,
+      resType: 1,
       color,
       brand,
       plate,
@@ -116,7 +112,8 @@ const PopupResourses = ({
       info,
       purtime,
       insurance,
-      department,
+      licenseDate,
+      retype,
       carstatus: statusvalue?.id,
       branch: user.branch,
       userId: user._id,
@@ -152,14 +149,14 @@ const PopupResourses = ({
 
   const resetAll = () => {
     reset();
-    setDepartvalue(null);
+    setRtypevalue(null);
     setColor('#000000');
     setStatusvalue(carstatuss[0]);
+    setSaving(false);
   };
   const closeModal = () => {
-    onClose();
     resetAll();
-    setSaving(false);
+    onClose();
   };
 
   const onHandleSubmit = () => {
@@ -219,7 +216,6 @@ const PopupResourses = ({
                 errors={errors}
                 row={row}
                 fullWidth
-                newtext={newtext}
                 mb={0}
               />
             </Grid>
@@ -231,7 +227,6 @@ const PopupResourses = ({
                 errors={errors}
                 row={row}
                 fullWidth
-                newtext={newtext}
                 mb={0}
               />
             </Grid>
@@ -243,11 +238,10 @@ const PopupResourses = ({
                 errors={errors}
                 row={row}
                 fullWidth
-                newtext={newtext}
                 mb={0}
               />
             </Grid>
-            <Grid item xs={4}>
+            <Grid item xs={6}>
               <TextFieldLocal
                 name="cost"
                 label={words.cost}
@@ -256,11 +250,10 @@ const PopupResourses = ({
                 row={row}
                 type="number"
                 fullWidth
-                newtext={newtext}
                 mb={0}
               />
             </Grid>
-            <Grid item xs={4}>
+            <Grid item xs={6}>
               <TextFieldLocal
                 name="purtime"
                 label={words.purtime}
@@ -268,11 +261,10 @@ const PopupResourses = ({
                 errors={errors}
                 row={row}
                 fullWidth
-                newtext={newtext}
                 mb={0}
               />
             </Grid>
-            <Grid item xs={4}>
+            <Grid item xs={6}>
               <TextFieldLocal
                 name="insurance"
                 label={words.insurance}
@@ -280,23 +272,33 @@ const PopupResourses = ({
                 errors={errors}
                 row={row}
                 fullWidth
-                newtext={newtext}
+                mb={0}
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <TextFieldLocal
+                name="licenseDate"
+                label={words.expiretime}
+                register={register}
+                errors={errors}
+                row={row}
+                fullWidth
                 mb={0}
               />
             </Grid>
             <Grid item xs={12}>
               <AutoFieldLocal
-                name="department"
-                title={tempwords?.department}
+                name="retype"
+                title={words?.retype}
                 words={words}
-                options={departments.filter((dep: any) => dep.depType === 3)}
-                value={departvalue}
-                setSelectValue={setDepartvalue}
+                options={retypes.filter((dep: any) => dep.reType === 2)}
+                value={rtypevalue}
+                setSelectValue={setRtypevalue}
                 setSelectError={setDepError}
                 selectError={depError}
                 refernce={emplRef}
                 register={register}
-                openAdd={openDepartment}
+                openAdd={openRetype}
                 isRTL={isRTL}
                 fullWidth
                 mb={0}
@@ -352,17 +354,17 @@ const PopupResourses = ({
           </React.Fragment>
         </Grid>
         <Grid item xs={1}></Grid>
-        <PopupDeprtment
+        <PopupResourseType
           newtext={newtext2}
-          open={openDep}
-          onClose={onCloseDepartment}
+          open={openTyp}
+          onClose={onCloseRetype}
           isNew={true}
-          setNewValue={onNewDepartChange}
+          setNewValue={onNewTypChange}
           row={null}
-          addAction={addDepartment}
-          editAction={editDepartment}
-          depType={3}
-        ></PopupDeprtment>
+          addAction={addRetype}
+          editAction={editRetype}
+          reType={2}
+        ></PopupResourseType>
       </Grid>
     </PopupLayout>
   );

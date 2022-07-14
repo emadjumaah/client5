@@ -32,7 +32,7 @@ import useTasks from '../hooks/useTasks';
 import PopupReceipt from '../pubups/PopupReceipt';
 import { getColumns } from '../common/columns';
 import getGereralCalculation from '../graphql/query/getGereralCalculation';
-import { getTasks } from '../graphql/query';
+import { getProjects, getTasks } from '../graphql/query';
 
 export default function ReceiptCustomer({
   isRTL,
@@ -99,6 +99,7 @@ export default function ReceiptCustomer({
           }
         : undefined,
       name === 'contractId' ? { query: getTasks } : undefined,
+      name === 'projectId' ? { query: getProjects } : undefined,
     ],
   };
 

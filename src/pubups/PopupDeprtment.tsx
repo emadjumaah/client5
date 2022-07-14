@@ -26,7 +26,6 @@ const PopupDeprtment = ({
   editAction,
   newtext,
   theme,
-  depType,
 }: any) => {
   const [saving, setSaving] = useState(false);
   const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
@@ -52,7 +51,7 @@ const PopupDeprtment = ({
       _id: row && row._id ? row._id : undefined, // is it new or edit
       name,
       nameAr,
-      depType: depType ? depType : 1,
+      depType: 1,
       desc,
       color,
       branch: user.branch,

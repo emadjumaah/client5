@@ -9,10 +9,14 @@ export default gql`
     $color: String
     $resType: Int
     $department: DepartmentInput
+    $retype: RetypeInput
     $info: String
     $documentNo: String
     $startDate: Date
     $endDate: Date
+    $workId: String
+    $licenseDate: String
+    $photos: String
     $brand: String
     $plate: String
     $cost: Float
@@ -31,10 +35,14 @@ export default gql`
       color: $color
       resType: $resType
       department: $department
+      retype: $retype
       info: $info
       documentNo: $documentNo
       startDate: $startDate
       endDate: $endDate
+      workId: $workId
+      licenseDate: $licenseDate
+      photos: $photos
       brand: $brand
       plate: $plate
       cost: $cost

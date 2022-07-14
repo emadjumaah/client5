@@ -32,36 +32,36 @@ export default function KaidReportFilter({
   setItemvalue,
   setAccountvalue,
   setPcodevalue,
+  pcodevalue,
+  accvalue,
+  optypevalue,
+  itemtypevalue,
+  itemvalue,
+  emplvalue,
+  resovalue,
+  departvalue,
+  projvalue,
+  taskvalue,
+  custvalue,
+  suppvalue,
   words,
   isRTL,
 }: any) {
   const [items, setItems] = React.useState(services);
   const [faccounts, setFAccounts] = React.useState(accounts);
-  const [resovalueLocal, setResovalueLocal] = React.useState([]);
-  const [emplvalueLocal, setEmplvalueLocal] = React.useState([]);
-  const [departvalueLocal, setDepartvalueLocal] = React.useState([]);
-  const [projvalueLocal, setProjvalueLocal] = React.useState([]);
-  const [custvalueLocal, setCustvalueLocal] = React.useState([]);
-  const [suppvalueLocal, setSuppvalueLocal] = React.useState([]);
-  const [taskvalueLocal, setTaskvalueLocal] = React.useState([]);
-  const [optypevalueLocal, setOptypevalueLocal] = React.useState([]);
-  const [itemtypevalueLocal, setItemtypevalueLocal] = React.useState([]);
-  const [itemvalueLocal, setItemvalueLocal] = React.useState([]);
-  const [accountvalueLocal, setAccountvalueLocal] = React.useState([]);
-  const [pcodevalueLocal, setPcodevalueLocal] = React.useState([]);
 
   const { tempoptions } = useTemplate();
 
   useEffect(() => {
     let itms = [];
-    const itty = itemtypevalueLocal.map((a: any) => a.value);
+    const itty = itemtypevalue.map((a: any) => a.value);
     if (itty && itty.length > 0) {
       if (itty.includes(1)) itms = [...itms, ...products];
       if (itty.includes(2)) itms = [...itms, ...services];
       if (itty.includes(10)) itms = [...itms, ...expenseItems];
     }
     setItems(itms);
-  }, [itemtypevalueLocal]);
+  }, [itemtypevalue]);
 
   useEffect(() => {
     const pcodes = mainaccounts.map((a: any) => a.code);
@@ -73,25 +73,9 @@ export default function KaidReportFilter({
     } else {
       setFAccounts(accounts);
     }
-  }, [pcodevalueLocal]);
-
-  const reset = () => {
-    setResovalueLocal([]);
-    setEmplvalueLocal([]);
-    setDepartvalueLocal([]);
-    setProjvalueLocal([]);
-    setCustvalueLocal([]);
-    setSuppvalueLocal([]);
-    setTaskvalueLocal([]);
-    setOptypevalueLocal([]);
-    setItemtypevalueLocal([]);
-    setItemvalueLocal([]);
-    setAccountvalueLocal([]);
-    setPcodevalueLocal([]);
-  };
+  }, [pcodevalue]);
 
   const handleResetAll = () => {
-    reset();
     setProjvalue([]);
     setTaskvalue([]);
     setEmplvalue([]);
@@ -106,38 +90,23 @@ export default function KaidReportFilter({
     setPcodevalue([]);
   };
 
-  const onSubmit = () => {
-    setProjvalue(projvalueLocal);
-    setTaskvalue(taskvalueLocal);
-    setEmplvalue(emplvalueLocal);
-    setResovalue(resovalueLocal);
-    setDepartvalue(departvalueLocal);
-    setCustvalue(custvalueLocal);
-    setSuppvalue(suppvalueLocal);
-    setOptypevalue(optypevalueLocal);
-    setItemtypevalue(itemtypevalueLocal);
-    setItemvalue(itemvalueLocal);
-    setAccountvalue(accountvalueLocal);
-    setPcodevalue(pcodevalueLocal);
-  };
-
   return (
     <Paper elevation={3} style={{ margin: 10, marginTop: 20 }}>
       <Box>
         <FilterSelectMulti
           options={mainaccounts}
-          value={pcodevalueLocal}
-          setValue={setPcodevalueLocal}
+          value={pcodevalue}
+          setValue={setPcodevalue}
           words={words}
           isRTL={isRTL}
-          name="account"
+          name="mainaccounts"
           label={isRTL ? 'الحسابات الرئيسية' : 'Main Accounts'}
           fullwidth
         ></FilterSelectMulti>
         <FilterSelectMulti
           options={faccounts}
-          value={accountvalueLocal}
-          setValue={setAccountvalueLocal}
+          value={accvalue}
+          setValue={setAccountvalue}
           words={words}
           isRTL={isRTL}
           name="account"
@@ -149,28 +118,28 @@ export default function KaidReportFilter({
         ></Box>
         <FilterSelectMulti
           options={documentTypes.filter((dt: any) => dt.id > 2)}
-          value={optypevalueLocal}
-          setValue={setOptypevalueLocal}
+          value={optypevalue}
+          setValue={setOptypevalue}
           words={words}
           isRTL={isRTL}
-          name="type"
+          name="documenttype"
           label={isRTL ? 'نوع المستند' : 'Document Types'}
           fullwidth
         ></FilterSelectMulti>
         <FilterSelectMulti
           options={itemTypes}
-          value={itemtypevalueLocal}
-          setValue={setItemtypevalueLocal}
+          value={itemtypevalue}
+          setValue={setItemtypevalue}
           words={words}
           isRTL={isRTL}
-          name="type"
+          name="itemtype"
           label={isRTL ? 'نوع البند' : 'Item Type'}
           fullwidth
         ></FilterSelectMulti>
         <FilterSelectMulti
           options={items}
-          value={itemvalueLocal}
-          setValue={setItemvalueLocal}
+          value={itemvalue}
+          setValue={setItemvalue}
           words={words}
           isRTL={isRTL}
           name="product"
@@ -182,8 +151,8 @@ export default function KaidReportFilter({
         ></Box>
         <FilterSelectMulti
           options={employees}
-          value={emplvalueLocal}
-          setValue={setEmplvalueLocal}
+          value={emplvalue}
+          setValue={setEmplvalue}
           words={words}
           isRTL={isRTL}
           name="employee"
@@ -192,8 +161,8 @@ export default function KaidReportFilter({
         {!tempoptions?.noRes && resourses && resourses.length > 0 && (
           <FilterSelectMulti
             options={resourses}
-            value={resovalueLocal}
-            setValue={setResovalueLocal}
+            value={resovalue}
+            setValue={setResovalue}
             words={words}
             isRTL={isRTL}
             name="resourse"
@@ -202,8 +171,8 @@ export default function KaidReportFilter({
         )}
         <FilterSelectMulti
           options={departments}
-          value={departvalueLocal}
-          setValue={setDepartvalueLocal}
+          value={departvalue}
+          setValue={setDepartvalue}
           words={words}
           isRTL={isRTL}
           name="department"
@@ -212,8 +181,8 @@ export default function KaidReportFilter({
         {!tempoptions?.noPro && projects && projects.length > 0 && (
           <FilterSelectMulti
             options={projects}
-            value={projvalueLocal}
-            setValue={setProjvalueLocal}
+            value={projvalue}
+            setValue={setProjvalue}
             words={words}
             isRTL={isRTL}
             name="project"
@@ -223,8 +192,8 @@ export default function KaidReportFilter({
         {!tempoptions?.noTsk && tasks && tasks.length > 0 && (
           <FilterSelectMulti
             options={tasks}
-            value={taskvalueLocal}
-            setValue={setTaskvalueLocal}
+            value={taskvalue}
+            setValue={setTaskvalue}
             words={words}
             isRTL={isRTL}
             name="task"
@@ -236,8 +205,8 @@ export default function KaidReportFilter({
         ></Box>
         <FilterSelectMulti
           options={customers}
-          value={custvalueLocal}
-          setValue={setCustvalueLocal}
+          value={custvalue}
+          setValue={setCustvalue}
           words={words}
           isRTL={isRTL}
           name="customer"
@@ -245,8 +214,8 @@ export default function KaidReportFilter({
         ></FilterSelectMulti>
         <FilterSelectMulti
           options={suppliers}
-          value={suppvalueLocal}
-          setValue={setSuppvalueLocal}
+          value={suppvalue}
+          setValue={setSuppvalue}
           words={words}
           isRTL={isRTL}
           name="supplier"
@@ -263,21 +232,10 @@ export default function KaidReportFilter({
           padding: 15,
         }}
       >
-        <Button
-          style={{ width: 80, height: 36 }}
-          variant="contained"
-          onClick={onSubmit}
-          color="primary"
-        >
-          <Typography>{isRTL ? 'تطبيق' : 'Submit'}</Typography>
-        </Button>
-        <Button
-          style={{ width: 80, height: 36 }}
-          variant="contained"
-          onClick={handleResetAll}
-          color="primary"
-        >
-          <Typography>{isRTL ? 'الغاء' : 'Cancel'}</Typography>
+        <Button variant="outlined" onClick={handleResetAll} color="primary">
+          <Typography style={{ fontSize: 13, fontWeight: 'bold' }}>
+            {isRTL ? 'مسح الفلاتر' : 'Reset Filters'}
+          </Typography>
         </Button>
       </Box>
     </Paper>

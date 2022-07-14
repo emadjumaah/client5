@@ -4,24 +4,18 @@
 import { useLazyQuery, useMutation } from '@apollo/client';
 import { useEffect } from 'react';
 import { createBrand, deleteBrand, getBrands, updateBrand } from '../graphql';
-import { getStoreItem } from '../store';
 
 export default () => {
-  const store = getStoreItem('store');
-  const lang = store?.lang;
-  const isRTL = lang === 'ar' ? true : false;
-  const [getDeparts, catpData]: any = useLazyQuery(getBrands, {
-    variables: { isRTL },
-  });
+  const [getDeparts, catpData]: any = useLazyQuery(getBrands);
 
   const [addBrand] = useMutation(createBrand, {
-    refetchQueries: [{ query: getBrands, variables: { isRTL } }],
+    refetchQueries: [{ query: getBrands }],
   });
   const [editBrand] = useMutation(updateBrand, {
-    refetchQueries: [{ query: getBrands, variables: { isRTL } }],
+    refetchQueries: [{ query: getBrands }],
   });
   const [removeBrand] = useMutation(deleteBrand, {
-    refetchQueries: [{ query: getBrands, variables: { isRTL } }],
+    refetchQueries: [{ query: getBrands }],
   });
 
   useEffect(() => {

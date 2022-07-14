@@ -19,8 +19,7 @@ import getInvoicesList from '../graphql/query/getInvoicesList';
 import { ReceiptPrint } from '../print';
 import PopupSupplier from './PopupSupplier';
 import { sleep, successAlert } from '../Shared/helpers';
-import useEmployeesUp from '../hooks/useEmployeesUp';
-import useDepartmentsUp from '../hooks/useDepartmentsUp';
+import useEmployees from '../hooks/useEmployees';
 import { SelectLocal } from '../pages/calendar/common/SelectLocal';
 import { payTypes } from '../constants/datatypes';
 import PopupEmployee from './PopupEmployee';
@@ -73,8 +72,7 @@ const PopupPayment = ({
 
   const { accounts } = useAccounts();
   const { suppliers, addSupplier, editSupplier } = useSuppliers();
-  const { employees, addEmployee, editEmployee } = useEmployeesUp();
-  const { departments } = useDepartmentsUp();
+  const { employees, addEmployee, editEmployee } = useEmployees();
   const { tempwords } = useTemplate();
 
   const [loadInvoices, invoicesData]: any = useLazyQuery(getInvoicesList, {
@@ -577,13 +575,11 @@ const PopupPayment = ({
         ></PopupSupplier>
         <PopupEmployee
           newtext={newtext}
-          departments={departments}
           open={openEmp}
           onClose={onCloseEmploee}
           isNew={true}
           setNewValue={onNewEmplChange}
           row={null}
-          resType={1}
           addAction={addEmployee}
           editAction={editEmployee}
         ></PopupEmployee>

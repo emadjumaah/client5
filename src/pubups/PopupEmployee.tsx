@@ -19,10 +19,9 @@ import PopupLayout from '../pages/main/PopupLayout';
 import { Grid } from '@material-ui/core';
 import { TextFieldLocal } from '../components';
 import AutoFieldLocal from '../components/fields/AutoFieldLocal';
-import { useTemplate } from '../hooks';
 import { getPopupTitle } from '../constants/menu';
-import PopupDeprtment from './PopupDeprtment';
-import useDepartmentsUp from '../hooks/useDepartmentsUp';
+import PopupResourseType from './PopupResourseType';
+import useRetypes from '../hooks/useRetypes';
 
 const PopupEmployee = ({
   open,
@@ -32,24 +31,20 @@ const PopupEmployee = ({
   setNewValue,
   addAction,
   editAction,
-  newtext,
   theme,
-  resType,
-  departments,
 }: any) => {
   const [saving, setSaving] = useState(false);
   const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
-  const [departvalue, setDepartvalue] = useState<any>(null);
+  const [rtypevalue, setRtypevalue] = useState<any>(null);
   const [depError, setDepError] = useState<any>(false);
   const [color, setColor] = useState<any>('#252B3B');
   const [daysoff, setDaysoff] = React.useState(weekdays);
 
   const [newtext2, setNewtext2] = useState('');
 
-  const [openDep, setOpenDep] = useState(false);
+  const [openTyp, setOpenTyp] = useState(false);
 
-  const { tempwords } = useTemplate();
-  const { addDepartment, editDepartment } = useDepartmentsUp();
+  const { retypes, addRetype, editRetype } = useRetypes();
 
   const daysoffChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setDaysoff({ ...daysoff, [event.target.name]: event.target.checked });
@@ -63,22 +58,23 @@ const PopupEmployee = ({
     store: { user },
   }: GContextTypes = useContext(GlobalContext);
 
-  const openDepartment = () => {
-    setOpenDep(true);
+  const openRetype = () => {
+    setOpenTyp(true);
   };
-  const onCloseDepartment = () => {
-    setOpenDep(false);
+  const onCloseRetype = () => {
+    setOpenTyp(false);
     setNewtext2('');
   };
-  const onNewDepartChange = (nextValue: any) => {
-    setDepartvalue(nextValue);
+  const onNewTypChange = (nextValue: any) => {
+    setRtypevalue(nextValue);
   };
-
   useEffect(() => {
     if (row && row._id) {
-      const _id = row.departmentId;
-      const depart = departments.filter((dep: any) => dep._id === _id)[0];
-      setDepartvalue(depart);
+      const _id = row.retypeId;
+      if (_id) {
+        const depart = retypes.filter((dep: any) => dep._id === _id)[0];
+        setRtypevalue(depart);
+      }
       if (row.daysoff) {
         setDaysoff(JSON.parse(row.daysoff));
       }
@@ -93,30 +89,47 @@ const PopupEmployee = ({
     const phone = data.phone;
     const email = data.email;
     const info = data.info;
-    const department = departvalue
+    const {
+      telHome,
+      workId,
+      national,
+      nationalNo,
+      nationalDate,
+      licenseNo,
+      licenseDate,
+    } = data;
+
+    const retype = rtypevalue
       ? {
-          departmentId: departvalue._id,
-          departmentName: departvalue.name,
-          departmentNameAr: departvalue.nameAr,
-          departmentColor: departvalue.color,
+          retypeId: rtypevalue._id,
+          retypeName: rtypevalue.name,
+          retypeNameAr: rtypevalue.nameAr,
+          retypeColor: rtypevalue.color,
         }
       : {
-          departmentId: undefined,
-          departmentName: undefined,
-          departmentNameAr: undefined,
-          departmentColor: undefined,
+          retypeId: undefined,
+          retypeName: undefined,
+          retypeNameAr: undefined,
+          retypeColor: undefined,
         };
     const variables: any = {
       _id: row && row._id ? row._id : undefined, // is it new or edit
       name,
       nameAr,
-      resType,
+      resType: 1,
       email,
       color,
       info,
       daysoff: JSON.stringify(daysoff),
       phone,
-      department,
+      telHome,
+      workId,
+      national,
+      nationalNo,
+      nationalDate,
+      licenseNo,
+      licenseDate,
+      retype,
       branch: user.branch,
       userId: user._id,
     };
@@ -151,14 +164,14 @@ const PopupEmployee = ({
 
   const resetAll = () => {
     reset();
-    setDepartvalue(null);
+    setRtypevalue(null);
     setColor('#000000');
     setDaysoff(weekdays);
     setSaving(false);
   };
   const closeModal = () => {
-    onClose();
     resetAll();
+    onClose();
   };
 
   const onHandleSubmit = () => {
@@ -210,7 +223,7 @@ const PopupEmployee = ({
                 />
               </Grid>
             )}
-            <Grid item xs={12}>
+            <Grid item xs={6}>
               <TextFieldLocal
                 name="phone"
                 label={words.phoneNumber}
@@ -219,6 +232,84 @@ const PopupEmployee = ({
                 row={row}
                 fullWidth
                 margin={20}
+                mb={0}
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <TextFieldLocal
+                name="telHome"
+                label={words.telHome}
+                register={register}
+                errors={errors}
+                row={row}
+                fullWidth
+                margin={20}
+                mb={0}
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <TextFieldLocal
+                name="workId"
+                label={words.workId}
+                register={register}
+                errors={errors}
+                row={row}
+                fullWidth
+                mb={0}
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <TextFieldLocal
+                name="national"
+                label={words.national}
+                register={register}
+                errors={errors}
+                row={row}
+                fullWidth
+                mb={0}
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <TextFieldLocal
+                name="nationalNo"
+                label={words.nationalNo}
+                register={register}
+                errors={errors}
+                row={row}
+                fullWidth
+                mb={0}
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <TextFieldLocal
+                name="nationalDate"
+                label={words.nationalDate}
+                register={register}
+                errors={errors}
+                row={row}
+                fullWidth
+                mb={0}
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <TextFieldLocal
+                name="licenseNo"
+                label={words.licenseNo}
+                register={register}
+                errors={errors}
+                row={row}
+                fullWidth
+                mb={0}
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <TextFieldLocal
+                name="licenseDate"
+                label={words.licenseDate}
+                register={register}
+                errors={errors}
+                row={row}
+                fullWidth
                 mb={0}
               />
             </Grid>
@@ -236,17 +327,17 @@ const PopupEmployee = ({
             </Grid>
             <Grid item xs={12}>
               <AutoFieldLocal
-                name="department"
-                title={tempwords?.department}
+                name="retype"
+                title={words?.retype}
                 words={words}
-                options={departments.filter((d: any) => d.depType === 2)}
-                value={departvalue}
-                setSelectValue={setDepartvalue}
+                options={retypes.filter((dep: any) => dep.reType === 1)}
+                value={rtypevalue}
+                setSelectValue={setRtypevalue}
                 setSelectError={setDepError}
                 selectError={depError}
                 refernce={emplRef}
                 register={register}
-                openAdd={openDepartment}
+                openAdd={openRetype}
                 isRTL={isRTL}
                 fullWidth
                 mb={0}
@@ -295,17 +386,17 @@ const PopupEmployee = ({
           </Grid>
         </Grid>
         <Grid item xs={1}></Grid>
-        <PopupDeprtment
+        <PopupResourseType
           newtext={newtext2}
-          open={openDep}
-          onClose={onCloseDepartment}
+          open={openTyp}
+          onClose={onCloseRetype}
           isNew={true}
-          setNewValue={onNewDepartChange}
+          setNewValue={onNewTypChange}
           row={null}
-          addAction={addDepartment}
-          editAction={editDepartment}
-          depType={2}
-        ></PopupDeprtment>
+          addAction={addRetype}
+          editAction={editRetype}
+          reType={1}
+        ></PopupResourseType>
       </Grid>
     </PopupLayout>
   );

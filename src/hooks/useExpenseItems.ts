@@ -10,27 +10,20 @@ import {
   updateItem,
 } from '../graphql';
 import createMultiItems from '../graphql/mutation/createMultiItems';
-import { getStoreItem } from '../store';
-
 export default () => {
-  const store = getStoreItem('store');
-  const lang = store?.lang;
-  const isRTL = lang === 'ar' ? true : false;
-  const [getsevs, itmData]: any = useLazyQuery(getExpenseItems, {
-    variables: { isRTL },
-  });
+  const [getsevs, itmData]: any = useLazyQuery(getExpenseItems);
 
   const [addExpenseItem] = useMutation(createItem, {
-    refetchQueries: [{ query: getExpenseItems, variables: { isRTL } }],
+    refetchQueries: [{ query: getExpenseItems }],
   });
   const [addMultiExpenseItems] = useMutation(createMultiItems, {
-    refetchQueries: [{ query: getExpenseItems, variables: { isRTL } }],
+    refetchQueries: [{ query: getExpenseItems }],
   });
   const [editExpenseItem] = useMutation(updateItem, {
-    refetchQueries: [{ query: getExpenseItems, variables: { isRTL } }],
+    refetchQueries: [{ query: getExpenseItems }],
   });
   const [removeExpenseItem] = useMutation(deleteItem, {
-    refetchQueries: [{ query: getExpenseItems, variables: { isRTL } }],
+    refetchQueries: [{ query: getExpenseItems }],
   });
 
   useEffect(() => {

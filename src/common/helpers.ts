@@ -78,6 +78,7 @@ export const getparentAccountsNames = () => {
       name: pl.parent,
       nameAr: pl.parentAr,
       type: pl.accType,
+      value: pl.parentcode,
     };
   });
   return numberlist;

@@ -65,9 +65,9 @@ import PopupDepartmentView from '../../pubups/PopupDepartmentView';
 import PopupEmployeeView from '../../pubups/PopupEmployeeView';
 import PopupTaskView from '../../pubups/PopupTaskView';
 import PopupCustomerView from '../../pubups/PopupCustomerView';
-import useResoursesUp from '../../hooks/useResoursesUp';
-import useEmployeesUp from '../../hooks/useEmployeesUp';
-import useDepartmentsUp from '../../hooks/useDepartmentsUp';
+import useResourses from '../../hooks/useResourses';
+import useEmployees from '../../hooks/useEmployees';
+import useDepartments from '../../hooks/useDepartments';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
 import PopupResoursesView from '../../pubups/PopupResoursesView';
 
@@ -153,9 +153,9 @@ export default function Appointments({
 
   const { tasks } = useTasks();
   const { customers } = useCustomers();
-  const { departments } = useDepartmentsUp();
-  const { employees } = useEmployeesUp();
-  const { resourses } = useResoursesUp();
+  const { departments } = useDepartments();
+  const { employees } = useEmployees();
+  const { resourses } = useResourses();
   const { services } = useServices();
 
   const onCloseTaskItem = () => {

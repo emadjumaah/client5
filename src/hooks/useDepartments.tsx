@@ -1,6 +1,4 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable import/no-anonymous-default-export */
-/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import { useLazyQuery, useMutation } from '@apollo/client';
 import { useEffect } from 'react';
 import {
@@ -9,33 +7,18 @@ import {
   getDepartments,
   updateDepartment,
 } from '../graphql';
-import { getStoreItem } from '../store';
 
 export default () => {
-  const store = getStoreItem('store');
-  const lang = store?.lang;
-  const isRTL = lang === 'ar' ? true : false;
-  const [getDeparts, depData]: any = useLazyQuery(getDepartments, {
-    variables: { isRTL },
-  });
+  const [getDeparts, depData]: any = useLazyQuery(getDepartments);
 
   const [addDepartment] = useMutation(createDepartment, {
-    refetchQueries: [
-      { query: getDepartments, variables: { isRTL } },
-      { query: getDepartments, variables: { isRTL } },
-    ],
+    refetchQueries: [{ query: getDepartments }],
   });
   const [editDepartment] = useMutation(updateDepartment, {
-    refetchQueries: [
-      { query: getDepartments, variables: { isRTL } },
-      { query: getDepartments, variables: { isRTL } },
-    ],
+    refetchQueries: [{ query: getDepartments }],
   });
   const [removeDepartment] = useMutation(deleteDepartment, {
-    refetchQueries: [
-      { query: getDepartments, variables: { isRTL } },
-      { query: getDepartments, variables: { isRTL } },
-    ],
+    refetchQueries: [{ query: getDepartments }],
   });
 
   useEffect(() => {

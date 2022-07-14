@@ -139,7 +139,7 @@ export default function ReminderBox({
           <IntegratedSorting />
           <Table
             messages={{
-              noData: isRTL ? 'لا يوجد بيانات' : 'no data',
+              noData: isRTL ? 'لا يوجد تذكيرات' : 'no data',
             }}
             tableComponent={TableComponent}
             rowComponent={(props: any) => (

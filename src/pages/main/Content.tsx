@@ -82,7 +82,6 @@ import {
 } from '../../common/helpers';
 import PurchaseReport from '../reports/PurchaseReport';
 import ExpensesReport from '../reports/ExpensesReport';
-import Resourses from '../adds/Resourses';
 import Receipt from '../adds/Receipt';
 // import FinanceAll from '../adds/FinanceAll';
 import Tasks from '../adds/Tasks';
@@ -843,18 +842,6 @@ const Content = () => {
                   company={company}
                 ></ManageEmployees>
               </EmployeeContext.Provider>
-            }
-          />
-
-          <Route
-            path="/resourses"
-            element={
-              <Resourses
-                menuitem={menuitem}
-                isRTL={isRTL}
-                words={words}
-                theme={theme}
-              ></Resourses>
             }
           />
           <Route

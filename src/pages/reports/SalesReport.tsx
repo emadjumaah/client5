@@ -63,9 +63,9 @@ import { groupList } from '../../constants/reports';
 import { groupSumCount } from '../../common/reports';
 import { useCustomers, useServices, useTemplate } from '../../hooks';
 import useTasks from '../../hooks/useTasks';
-import useDepartmentsUp from '../../hooks/useDepartmentsUp';
-import useEmployeesUp from '../../hooks/useEmployeesUp';
-import useResoursesUp from '../../hooks/useResoursesUp';
+import useDepartments from '../../hooks/useDepartments';
+import useEmployees from '../../hooks/useEmployees';
+import useResourses from '../../hooks/useResourses';
 import useProjects from '../../hooks/useProjects';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
 import { SearchTable } from '../../components';
@@ -151,11 +151,13 @@ export default function SalesReport({
     { columnName: col.amount.name, togglingEnabled: false },
   ]);
 
-  const [getSummary, summaryData]: any = useLazyQuery(getMonthlyReport);
+  const [getSummary, summaryData]: any = useLazyQuery(getMonthlyReport, {
+    fetchPolicy: 'cache-and-network',
+  });
   const { customers } = useCustomers();
-  const { departments } = useDepartmentsUp();
-  const { employees } = useEmployeesUp();
-  const { resourses } = useResoursesUp();
+  const { departments } = useDepartments();
+  const { employees } = useEmployees();
+  const { resourses } = useResourses();
   const { projects } = useProjects();
   const { tasks } = useTasks();
   const { services } = useServices();

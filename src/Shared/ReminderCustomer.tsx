@@ -31,9 +31,9 @@ import { actionTimeFormatter, sentFormatter } from './colorFormat';
 import { useLazyQuery, useMutation } from '@apollo/client';
 
 import getRemindersActions from '../graphql/query/getRemindersActions';
-import useDepartmentsUp from '../hooks/useDepartmentsUp';
-import useEmployeesUp from '../hooks/useEmployeesUp';
-import useResoursesUp from '../hooks/useResoursesUp';
+import useDepartments from '../hooks/useDepartments';
+import useEmployees from '../hooks/useEmployees';
+import useResourses from '../hooks/useResourses';
 import { createReminder, deleteAction, updateAction } from '../graphql';
 import { errorAlert, errorDeleteAlert } from './helpers';
 import useTasks from '../hooks/useTasks';
@@ -114,9 +114,9 @@ export default function ReminderCustomer({
 
   const [rows, setRows] = useState([]);
 
-  const { employees } = useEmployeesUp();
-  const { resourses } = useResoursesUp();
-  const { departments } = useDepartmentsUp();
+  const { employees } = useEmployees();
+  const { resourses } = useResourses();
+  const { departments } = useDepartments();
   const { tasks } = useTasks();
 
   const [loadReminders, remindersData]: any = useLazyQuery(getRemindersActions);

@@ -49,9 +49,9 @@ import { errorAlert, errorDeleteAlert } from '../../Shared/helpers';
 import { TableComponent } from '../../Shared/TableComponent';
 import DateNavigatorReports from '../../components/filters/DateNavigatorReports';
 import PopupTaskView from '../../pubups/PopupTaskView';
-import useDepartmentsUp from '../../hooks/useDepartmentsUp';
-import useEmployeesUp from '../../hooks/useEmployeesUp';
-import useResoursesUp from '../../hooks/useResoursesUp';
+import useDepartments from '../../hooks/useDepartments';
+import useEmployees from '../../hooks/useEmployees';
+import useResourses from '../../hooks/useResourses';
 import useProjects from '../../hooks/useProjects';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
 
@@ -107,9 +107,9 @@ export default function TasksEmpl({
 
   const [item, setItem] = useState(null);
   const [openItem, setOpenItem] = useState(false);
-  const { departments } = useDepartmentsUp();
-  const { employees } = useEmployeesUp();
-  const { resourses } = useResoursesUp();
+  const { departments } = useDepartments();
+  const { employees } = useEmployees();
+  const { resourses } = useResourses();
   const { projects } = useProjects();
   const { products } = useProducts();
   const { height } = useWindowDimensions();

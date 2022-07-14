@@ -33,13 +33,13 @@ import useAccounts from '../hooks/useAccounts';
 import useTasks from '../hooks/useTasks';
 import { Box, Typography } from '@material-ui/core';
 import { useExpenseItems } from '../hooks';
-import useDepartmentsUp from '../hooks/useDepartmentsUp';
-import useEmployeesUp from '../hooks/useEmployeesUp';
-import useResoursesUp from '../hooks/useResoursesUp';
+import useDepartments from '../hooks/useDepartments';
+import useEmployees from '../hooks/useEmployees';
+import useResourses from '../hooks/useResourses';
 import PopupExpensesDoc from '../pubups/PopupExpensesDoc';
 import { getColumns } from '../common/columns';
 import getGereralCalculation from '../graphql/query/getGereralCalculation';
-import { getTasks } from '../graphql/query';
+import { getProjects, getTasks } from '../graphql/query';
 
 export default function ExpensesCustomer({
   isRTL,
@@ -107,9 +107,9 @@ export default function ExpensesCustomer({
   const { accounts } = useAccounts();
 
   const { expenseItems } = useExpenseItems();
-  const { departments } = useDepartmentsUp();
-  const { employees } = useEmployeesUp();
-  const { resourses } = useResoursesUp();
+  const { departments } = useDepartments();
+  const { employees } = useEmployees();
+  const { resourses } = useResourses();
 
   const [loadExpenses, expensesData]: any = useLazyQuery(getExpenses, {
     nextFetchPolicy: 'cache-and-network',
@@ -144,6 +144,7 @@ export default function ExpensesCustomer({
           }
         : undefined,
       name === 'contractId' ? { query: getTasks } : undefined,
+      name === 'projectId' ? { query: getProjects } : undefined,
     ],
   };
 

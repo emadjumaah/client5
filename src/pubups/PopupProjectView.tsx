@@ -57,7 +57,7 @@ const PopupProjectView = ({ open, onClose, row, theme, company }: any) => {
     onClose();
   };
 
-  const title = `${words.department} : ${isRTL ? row?.nameAr : row?.name}`;
+  const title = `${tempwords.project} : ${isRTL ? row?.nameAr : row?.name}`;
 
   return (
     <PopupLayout

@@ -41,16 +41,18 @@ import { AlertLocal, SearchTable } from '../../components';
 import { errorDeleteAlert } from '../../Shared/helpers';
 import PageLayout from '../main/PageLayout';
 import { getColumns } from '../../common/columns';
-import useEmployeesUp from '../../hooks/useEmployeesUp';
-import useResoursesUp from '../../hooks/useResoursesUp';
+import useEmployees from '../../hooks/useEmployees';
+import useResourses from '../../hooks/useResourses';
 import useProjects from '../../hooks/useProjects';
 import PopupProjectView from '../../pubups/PopupProjectView';
-import useDepartmentsUp from '../../hooks/useDepartmentsUp';
+import useDepartments from '../../hooks/useDepartments';
 import PopupProject from '../../pubups/PopupProject';
 import { Box, Paper, Typography } from '@material-ui/core';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
 import { TableComponent } from '../../Shared/TableComponent';
 import { ProjectContext } from '../../contexts/managment';
+import { getProjects } from '../../graphql';
+import { useLazyQuery } from '@apollo/client';
 
 export default function ManageProjects({
   isRTL,
@@ -62,13 +64,14 @@ export default function ManageProjects({
   const [pageSizes] = useState([5, 6, 10, 20, 50, 0]);
   const [loading, setLoading] = useState(false);
   const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
+  const [rows, setRows] = useState([]);
   const [item, setItem] = useState(null);
   const [openItem, setOpenItem] = useState(false);
   const col = getColumns({ isRTL, words });
 
-  const { employees } = useEmployeesUp();
-  const { departments } = useDepartmentsUp();
-  const { resourses } = useResoursesUp();
+  const { employees } = useEmployees();
+  const { departments } = useDepartments();
+  const { resourses } = useResourses();
   const { customers } = useCustomers();
   const { height, width } = useWindowDimensions();
   const onCloseItem = () => {
@@ -109,17 +112,32 @@ export default function ManageProjects({
     { name: 'avatar', title: words.color },
   ]);
 
-  const { projects, refreshproject, addProject, editProject, removeProject } =
+  const { refreshproject, addProject, editProject, removeProject } =
     useProjects();
+
+  const [getemps, empData]: any = useLazyQuery(getProjects, {
+    fetchPolicy: 'cache-and-network',
+  });
+
+  useEffect(() => {
+    getemps({});
+  }, []);
+
+  useEffect(() => {
+    if (empData?.data?.getProjects?.data) {
+      const { data } = empData.data.getProjects;
+      setRows(data);
+    }
+  }, [empData]);
 
   useEffect(() => {
     if (openItem) {
-      if (projects && projects.length > 0) {
-        const opened = projects.filter((ts: any) => ts._id === item._id)?.[0];
+      if (rows && rows.length > 0) {
+        const opened = rows.filter((ts: any) => ts._id === item._id)?.[0];
         setItem(opened);
       }
     }
-  }, [projects]);
+  }, [rows]);
 
   const commitChanges = async ({ deleted }) => {
     if (deleted) {
@@ -166,7 +184,7 @@ export default function ManageProjects({
           }}
         >
           <Grid
-            rows={projects}
+            rows={rows}
             columns={roles.isEditor() ? columns : columnsViewer}
             getRowId={getRowId}
           >

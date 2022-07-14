@@ -51,9 +51,9 @@ import { Box, Paper, Typography } from '@material-ui/core';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
 import { TableComponent } from '../../Shared/TableComponent';
 import PopupExpensesDoc from '../../pubups/PopupExpensesDoc';
-import useDepartmentsUp from '../../hooks/useDepartmentsUp';
-import useEmployeesUp from '../../hooks/useEmployeesUp';
-import useResoursesUp from '../../hooks/useResoursesUp';
+import useDepartments from '../../hooks/useDepartments';
+import useEmployees from '../../hooks/useEmployees';
+import useResourses from '../../hooks/useResourses';
 import { useExpenseItems, useTemplate } from '../../hooks';
 import _ from 'lodash';
 
@@ -125,9 +125,9 @@ export default function ExpensesDoc({
   const [start, setStart] = useState<any>(null);
   const [end, setEnd] = useState<any>(null);
   const { tasks } = useTasks();
-  const { departments } = useDepartmentsUp();
-  const { employees } = useEmployeesUp();
-  const { resourses } = useResoursesUp();
+  const { departments } = useDepartments();
+  const { employees } = useEmployees();
+  const { resourses } = useResourses();
   const { expenseItems } = useExpenseItems();
 
   const { height, width } = useWindowDimensions();

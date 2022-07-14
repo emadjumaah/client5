@@ -41,9 +41,9 @@ import { useLazyQuery, useMutation } from '@apollo/client';
 import { createReminder, deleteAction, updateAction } from '../../graphql';
 import DateNavigatorReports from '../../components/filters/DateNavigatorReports';
 import ReminderContext from '../../contexts/reminder';
-import useEmployeesUp from '../../hooks/useEmployeesUp';
-import useDepartmentsUp from '../../hooks/useDepartmentsUp';
-import useResoursesUp from '../../hooks/useResoursesUp';
+import useEmployees from '../../hooks/useEmployees';
+import useDepartments from '../../hooks/useDepartments';
+import useResourses from '../../hooks/useResourses';
 import { useTemplate } from '../../hooks';
 import getRemindersActions from '../../graphql/query/getRemindersActions';
 import { TableComponent } from '../../Shared/TableComponent';
@@ -97,9 +97,9 @@ export default function Reminders(props: any) {
   const [pageSizes] = useState([5, 10, 15, 20, 50, 0]);
 
   const { width, height } = useWindowDimensions();
-  const { employees } = useEmployeesUp();
-  const { departments } = useDepartmentsUp();
-  const { resourses } = useResoursesUp();
+  const { employees } = useEmployees();
+  const { departments } = useDepartments();
+  const { resourses } = useResourses();
 
   const {
     state: { currentDate, currentViewName, endDate },
@@ -282,7 +282,7 @@ export default function Reminders(props: any) {
             <DragDropProvider />
             <Table
               messages={{
-                noData: isRTL ? 'لا يوجد بيانات' : 'no data',
+                noData: isRTL ? 'لا يوجد تذكيرات' : 'no data',
               }}
               tableComponent={TableComponent}
               rowComponent={(props: any) => (

@@ -50,9 +50,9 @@ import { getColumns } from '../../common/columns';
 import useTasks from '../../hooks/useTasks';
 import { TableComponent } from '../reports/SalesReport';
 import { Box, Paper, Typography } from '@material-ui/core';
-import useResoursesUp from '../../hooks/useResoursesUp';
-import useDepartmentsUp from '../../hooks/useDepartmentsUp';
-import useEmployeesUp from '../../hooks/useEmployeesUp';
+import useResourses from '../../hooks/useResourses';
+import useDepartments from '../../hooks/useDepartments';
+import useEmployees from '../../hooks/useEmployees';
 import { useServices, useTemplate } from '../../hooks';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
 import _ from 'lodash';
@@ -112,9 +112,9 @@ export default function Invoices({ isRTL, words, menuitem, theme, company }) {
   const { width, height } = useWindowDimensions();
 
   const { tasks } = useTasks();
-  const { departments } = useDepartmentsUp();
-  const { employees } = useEmployeesUp();
-  const { resourses } = useResoursesUp();
+  const { departments } = useDepartments();
+  const { employees } = useEmployees();
+  const { resourses } = useResourses();
   const { services } = useServices();
 
   const {

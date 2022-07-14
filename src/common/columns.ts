@@ -118,6 +118,12 @@ export const getColumns = ({ isRTL, words }: any) => {
       name: 'opType',
       title: isRTL ? 'العملية' : 'Document',
     },
+    retype: {
+      id: 19.5,
+      ref: 'retype',
+      name: isRTL ? 'retypeNameAr' : 'retypeName',
+      title: isRTL ? 'النوع' : 'Type',
+    },
     refNo: {
       id: 20,
       ref: 'refNo',

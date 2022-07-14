@@ -269,6 +269,10 @@ export const departmentTypes = [
   { id: 2, name: 'Employees', nameAr: 'موظفين' },
   { id: 3, name: 'Resourses', nameAr: 'موارد' },
 ];
+export const retypeTypes = [
+  { id: 1, name: 'Employees', nameAr: 'موظفين' },
+  { id: 2, name: 'Resourses', nameAr: 'موارد' },
+];
 export const recTypes = [
   { id: 1, name: 'Customer', nameAr: 'عميل', value: 1 },
   { id: 2, name: 'Employee', nameAr: 'موظف', value: 2 },

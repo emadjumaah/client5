@@ -67,9 +67,9 @@ import {
 import useTasks from '../../hooks/useTasks';
 import getReportDocuments from '../../graphql/query/getReportDocuments';
 import DocumentsReportContext from '../../contexts/documentsReport';
-import useDepartmentsUp from '../../hooks/useDepartmentsUp';
-import useEmployeesUp from '../../hooks/useEmployeesUp';
-import useResoursesUp from '../../hooks/useResoursesUp';
+import useDepartments from '../../hooks/useDepartments';
+import useEmployees from '../../hooks/useEmployees';
+import useResourses from '../../hooks/useResourses';
 import useProjects from '../../hooks/useProjects';
 import { ReportPrintComponent } from '../../common/ReportPrintComponent';
 import { useReactToPrint } from 'react-to-print';
@@ -145,11 +145,13 @@ export default function DocumentsReport({
     // { columnName: col.amount.name, togglingEnabled: false },
   ]);
 
-  const [getSummary, summaryData]: any = useLazyQuery(getReportDocuments);
+  const [getSummary, summaryData]: any = useLazyQuery(getReportDocuments, {
+    fetchPolicy: 'cache-and-network',
+  });
   const { customers } = useCustomers();
-  const { departments } = useDepartmentsUp();
-  const { employees } = useEmployeesUp();
-  const { resourses } = useResoursesUp();
+  const { departments } = useDepartments();
+  const { employees } = useEmployees();
+  const { resourses } = useResourses();
   const { projects } = useProjects();
   const { tasks } = useTasks();
   const { services } = useServices();

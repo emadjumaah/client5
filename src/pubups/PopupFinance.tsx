@@ -21,11 +21,10 @@ import { Grid } from '@material-ui/core';
 import { CalenderLocal, TextFieldLocal } from '../components';
 import AutoFieldLocal from '../components/fields/AutoFieldLocal';
 import { sleep, getCashBankPetty } from '../Shared/helpers';
-import useEmployeesUp from '../hooks/useEmployeesUp';
+import useEmployees from '../hooks/useEmployees';
 import { useTemplate } from '../hooks';
 import PopupEmployee from './PopupEmployee';
 import { weekdaysNNo } from '../constants/datatypes';
-import useDepartmentsUp from '../hooks/useDepartmentsUp';
 
 const PopupFinance = ({
   open,
@@ -61,8 +60,7 @@ const PopupFinance = ({
   const { tempwords } = useTemplate();
 
   const { accounts } = useAccounts();
-  const { employees, addEmployee, editEmployee } = useEmployeesUp();
-  const { departments } = useDepartmentsUp();
+  const { employees, addEmployee, editEmployee } = useEmployees();
   const openEmployee = () => {
     setOpenEmp(true);
   };
@@ -366,13 +364,11 @@ const PopupFinance = ({
         <Grid item xs={1}></Grid>
         <PopupEmployee
           newtext={newtext}
-          departments={departments}
           open={openEmp}
           onClose={onCloseEmploee}
           isNew={true}
           setNewValue={onNewEmplChange}
           row={null}
-          resType={1}
           addAction={addEmployee}
           editAction={editEmployee}
         ></PopupEmployee>

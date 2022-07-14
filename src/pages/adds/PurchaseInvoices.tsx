@@ -47,10 +47,10 @@ import DateNavigatorReports from '../../components/filters/DateNavigatorReports'
 import { SearchTable } from '../../components';
 import PopupPurchaseInvoice from '../../pubups/PopupPurchaseInvoice';
 import { useProducts, useTemplate } from '../../hooks';
-import useDepartmentsUp from '../../hooks/useDepartmentsUp';
-import useEmployeesUp from '../../hooks/useEmployeesUp';
+import useDepartments from '../../hooks/useDepartments';
+import useEmployees from '../../hooks/useEmployees';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
-import useResoursesUp from '../../hooks/useResoursesUp';
+import useResourses from '../../hooks/useResourses';
 import useTasks from '../../hooks/useTasks';
 import { Box, Paper, Typography } from '@material-ui/core';
 import { TableComponent } from '../../Shared/ItemsTable';
@@ -116,9 +116,9 @@ export default function PurchaseInvoices({
   const { height, width } = useWindowDimensions();
 
   const { products } = useProducts();
-  const { departments } = useDepartmentsUp();
-  const { employees } = useEmployeesUp();
-  const { resourses } = useResoursesUp();
+  const { departments } = useDepartments();
+  const { employees } = useEmployees();
+  const { resourses } = useResourses();
 
   const {
     state: { currentDate, currentViewName, endDate },

@@ -362,7 +362,6 @@ const PopupNSProduct = ({
             row={null}
             addAction={addDepartment}
             editAction={editDepartment}
-            depType={1}
           ></PopupDeprtment>
           <PopupBrand
             open={openBrnd}

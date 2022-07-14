@@ -25,7 +25,6 @@ import { Typography } from '@material-ui/core';
 export default function StockItems({ isRTL, words }: any) {
   const [columns] = useState([
     { name: isRTL ? 'nameAr' : 'name', title: words.name },
-    // { name: isRTL ? "name" : "nameAr", title: words.name },
     { name: isRTL ? 'categoryNameAr' : 'categoryName', title: words.category },
     { name: isRTL ? 'brandNameAr' : 'brandName', title: words.brand },
     { name: 'qty', title: words.qty },

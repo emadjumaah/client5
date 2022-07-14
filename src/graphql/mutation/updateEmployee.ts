@@ -1,4 +1,4 @@
-import { gql } from "@apollo/client";
+import { gql } from '@apollo/client';
 
 export default gql`
   mutation updateEmployee(
@@ -10,10 +10,21 @@ export default gql`
     $resKind: Int
     $resType: Int
     $department: DepartmentInput
+    $retype: RetypeInput
     $comPercent: Float
     $phone: String
     $email: String
     $daysoff: String
+    $pId: String
+    $pIdDate: String
+    $workId: String
+    $telHome: String
+    $licenseNo: String
+    $licenseDate: String
+    $national: String
+    $nationalNo: String
+    $nationalDate: String
+    $photos: String
     $info: String
     $documentNo: String
     $startDate: Date
@@ -31,10 +42,21 @@ export default gql`
       resKind: $resKind
       resType: $resType
       department: $department
+      retype: $retype
       comPercent: $comPercent
       phone: $phone
       email: $email
       daysoff: $daysoff
+      pId: $pId
+      pIdDate: $pIdDate
+      workId: $workId
+      telHome: $telHome
+      licenseNo: $licenseNo
+      licenseDate: $licenseDate
+      national: $national
+      nationalNo: $nationalNo
+      nationalDate: $nationalDate
+      photos: $photos
       info: $info
       documentNo: $documentNo
       startDate: $startDate

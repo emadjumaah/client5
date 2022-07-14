@@ -112,12 +112,7 @@ export default function Customers(props: any) {
   });
 
   const refresQuery = {
-    refetchQueries: [
-      {
-        query: getCustomers,
-        variables: { isRTL },
-      },
-    ],
+    refetchQueries: [{ query: getCustomers }],
   };
   useEffect(() => {
     if (openItem) {
