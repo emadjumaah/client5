@@ -9,13 +9,13 @@ const ExpensesTypeSelect = ({
   ptype,
   setPtype,
   setEmplvalue,
-  setCustvalue,
+  setSuppvalue,
   isRTL,
 }) => {
   const onchange = (e: any) => {
     setPtype(e.target.value);
     setEmplvalue(null);
-    setCustvalue(null);
+    setSuppvalue(null);
   };
   return (
     <RadioGroup
@@ -27,32 +27,32 @@ const ExpensesTypeSelect = ({
     >
       <Box
         display="flex"
-        style={{ flexDirection: 'row', marginLeft: 20, marginRight: 20 }}
+        style={{ flexDirection: 'row', marginLeft: 15, marginRight: 15 }}
       >
         <FormControlLabel
           value="expenses"
           control={<Radio color="primary" />}
-          label={isRTL ? 'مصروفات عامة' : 'General Expenses'}
+          label={isRTL ? 'عام' : 'General'}
         />
       </Box>
       <Box
         display="flex"
-        style={{ flexDirection: 'row', marginLeft: 20, marginRight: 20 }}
+        style={{ flexDirection: 'row', marginLeft: 15, marginRight: 15 }}
       >
         <FormControlLabel
-          value="payable"
+          value="exppettycash"
+          control={<Radio color="primary" />}
+          label={isRTL ? 'عهدة نثر' : 'Petty Cash'}
+        />
+      </Box>
+      <Box
+        display="flex"
+        style={{ flexDirection: 'row', marginLeft: 15, marginRight: 15 }}
+      >
+        <FormControlLabel
+          value="exppayable"
           control={<Radio color="primary" />}
           label={isRTL ? 'الدائنون' : 'Account Payable'}
-        />
-      </Box>
-      <Box
-        display="flex"
-        style={{ flexDirection: 'row', marginLeft: 20, marginRight: 20 }}
-      >
-        <FormControlLabel
-          value="employee"
-          control={<Radio color="primary" />}
-          label={isRTL ? 'عهدة نثر' : 'Petty Cash Payment'}
         />
       </Box>
     </RadioGroup>

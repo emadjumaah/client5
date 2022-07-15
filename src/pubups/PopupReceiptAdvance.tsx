@@ -75,7 +75,7 @@ const PopupReceiptAdvance = ({
       const da = row.debitAcc;
 
       const filteredcredit = accounts.filter(
-        (acc: any) => acc.parentcode === parents.CASH
+        (acc: any) => acc.parentcode === parents.CASH && acc.code !== 1070
       );
       setDebaccounts(filteredcredit);
 
@@ -96,7 +96,7 @@ const PopupReceiptAdvance = ({
     } else {
       const filtereddebits = accounts.filter((acc: any) => acc.code === 1350);
       const filteredcredit = accounts.filter(
-        (acc: any) => acc.parentcode === parents.CASH
+        (acc: any) => acc.parentcode === parents.CASH && acc.code !== 1070
       );
       setDebaccounts(filteredcredit);
       setDebitAcc(filteredcredit?.[0]);

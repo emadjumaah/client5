@@ -16,7 +16,7 @@ import PopupLayout from '../pages/main/PopupLayout';
 import { Grid } from '@material-ui/core';
 import AutoFieldLocal from '../components/fields/AutoFieldLocal';
 import { CalenderLocal, TextFieldLocal } from '../components';
-import { weekdaysNNo } from '../constants/datatypes';
+import { operationTypes, weekdaysNNo } from '../constants/datatypes';
 import useTasks from '../hooks/useTasks';
 import useCompany from '../hooks/useCompany';
 import PopupDeprtment from './PopupDeprtment';
@@ -32,6 +32,8 @@ import useAccounts from '../hooks/useAccounts';
 import { useReactToPrint } from 'react-to-print';
 import { VoucherPrint } from '../print';
 import { sleep, successAlert } from '../Shared/helpers';
+import ExpensesTypeSelect from '../pages/options/ExpensesTypeSelect';
+import PopupSupplier from './PopupSupplier';
 
 export const indexTheList = (list: any) => {
   return list.map((item: any, index: any) => {
@@ -65,6 +67,7 @@ const PopupExpensesDoc = ({
   const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
   const [selectedDate, setSelectedDate] = React.useState(new Date());
   const [cridaccounts, setCridaccounts] = React.useState([]);
+  const [ptype, setPtype] = React.useState('expenses');
 
   const [debitAcc, setDebitAcc]: any = React.useState(null);
   const [creditAcc, setCreditAcc]: any = React.useState(null);
@@ -102,12 +105,14 @@ const PopupExpensesDoc = ({
   );
 
   const [newtext, setNewtext] = useState('');
+  const [openSupp, setOpenSupp] = useState(false);
   const [openDep, setOpenDep] = useState(false);
   const [openEmp, setOpenEmp] = useState(false);
   const [openRes, setOpenRes] = useState(false);
   const { addDepartment, editDepartment } = useDepartments();
   const { addEmployee, editEmployee } = useEmployees();
   const { addResourse, editResourse } = useResourses();
+  const { addSupplier, editSupplier } = useSuppliers();
   const { tempwords, tempoptions } = useTemplate();
   const { accounts } = useAccounts();
 
@@ -130,6 +135,13 @@ const PopupExpensesDoc = ({
     setOpenDep(false);
     setNewtext('');
   };
+  const openSupplier = () => {
+    setOpenSupp(true);
+  };
+  const onCloseSupplier = () => {
+    setOpenSupp(false);
+    setNewtext('');
+  };
   const openEmployee = () => {
     setOpenEmp(true);
   };
@@ -148,21 +160,15 @@ const PopupExpensesDoc = ({
   const onNewDepartChange = (nextValue: any) => {
     setDepartvalue(nextValue);
   };
+  const onNewSuppChange = (nextValue: any) => {
+    setSuppvalue(nextValue);
+  };
   const onNewEmplChange = (nextValue: any) => {
     setEmplvalue(nextValue);
   };
   const onNewResoChange = (nextValue: any) => {
     setResovalue(nextValue);
   };
-
-  useEffect(() => {
-    if (isemployee) {
-      const emp = employees.filter(
-        (em: any) => em._id === user.employeeId
-      )?.[0];
-      setEmplvalue(emp);
-    }
-  }, [user, employees]);
 
   useEffect(() => {
     const items = itemsData?.data?.['getOperationItems']?.data || [];
@@ -239,6 +245,7 @@ const PopupExpensesDoc = ({
     setResovalue(name === 'resourseId' ? value : null);
     setTaskvalue(name === 'contractId' ? value : null);
     setSaving(false);
+    setPtype('expenses');
   };
 
   const addItemToList = (item: any) => {
@@ -297,19 +304,13 @@ const PopupExpensesDoc = ({
     }
   }, [name, value, open]);
   useEffect(() => {
-    if (isNew && !isemployee) {
+    if (isNew) {
       if (taskvalue) {
         if (taskvalue?.departmentId && name !== 'departmentId') {
           const dept = departments.filter(
             (dep: any) => dep._id === taskvalue?.departmentId
           )?.[0];
           setDepartvalue(dept);
-        }
-        if (taskvalue?.employeeId && name !== 'employeeId') {
-          const emp = employees.filter(
-            (dep: any) => dep._id === taskvalue?.employeeId
-          )?.[0];
-          setEmplvalue(emp);
         }
         if (taskvalue?.resourseId && name !== 'resourseId') {
           const res = resourses.filter(
@@ -325,7 +326,7 @@ const PopupExpensesDoc = ({
     if (row && row._id) {
       const ca = row.creditAcc;
       const da = row.debitAcc;
-      setLoading(true);
+      const ot = row.opType;
       const variables = { opId: row._id };
       getItems({
         variables,
@@ -355,11 +356,20 @@ const PopupExpensesDoc = ({
         const tsk = tasks.filter((ts: any) => ts._id === row.contractId)[0];
         setTaskvalue(tsk);
       }
-      const filteredcredit = accounts.filter(
-        (acc: any) =>
-          acc.parentcode === parents.CASH ||
-          acc.parentcode === parents.ACCOUNTS_PAYABLE
-      );
+
+      if (ot === 60) setPtype('expenses');
+      if (ot === 62) setPtype('exppettycash');
+      if (ot === 63) setPtype('exppayable');
+      const filteredcredit =
+        ot === 63
+          ? accounts.filter(
+              (acc: any) => acc.parentcode === parents.ACCOUNTS_PAYABLE
+            )
+          : ot === 62
+          ? accounts.filter((acc: any) => acc.code === 1070)
+          : accounts.filter(
+              (acc: any) => acc.parentcode === parents.CASH && acc.code !== 1070
+            );
       setCridaccounts(filteredcredit);
 
       if (ca) {
@@ -375,16 +385,32 @@ const PopupExpensesDoc = ({
       const filtereddebits = accounts.filter(
         (acc: any) => acc.parentcode === parents.EXPENCES
       );
-      const filteredcredit = accounts.filter(
-        (acc: any) =>
-          acc.parentcode === parents.CASH ||
-          acc.parentcode === parents.ACCOUNTS_PAYABLE
-      );
+      const filteredcredit =
+        ptype === 'exppayable'
+          ? accounts.filter(
+              (acc: any) => acc.parentcode === parents.ACCOUNTS_PAYABLE
+            )
+          : ptype === 'exppettycash'
+          ? accounts.filter((acc: any) => acc.code === 1070)
+          : accounts.filter(
+              (acc: any) => acc.parentcode === parents.CASH && acc.code !== 1070
+            );
       setCridaccounts(filteredcredit);
       setCreditAcc(filteredcredit?.[0]);
       setDebitAcc(filtereddebits?.[0]);
     }
-  }, [row, open]);
+  }, [row, open, ptype]);
+
+  const getActionType = () => {
+    if (ptype === 'expenses') {
+      return operationTypes.expenses;
+    } else if (ptype === 'exppettycash') {
+      return operationTypes.exppettycash;
+    } else if (ptype === 'exppayable') {
+      return operationTypes.exppayable;
+    }
+    return null;
+  };
 
   const getOverallTotal = () => {
     const totalsin = itemsList.map((litem: any) => litem.itemtotal);
@@ -410,7 +436,6 @@ const PopupExpensesDoc = ({
     chequeDate: row?.chequeDate,
     task: taskvalue,
   };
-
   const onSubmit = async (data: any) => {
     if (selectedDate > new Date()) {
       await messageAlert(
@@ -435,10 +460,17 @@ const PopupExpensesDoc = ({
       );
       return;
     }
-    if (creditAcc && creditAcc.code === 1070 && !emplvalue) {
+    if (ptype === 'exppettycash' && !emplvalue) {
       await messageAlert(
         setAlrt,
         isRTL ? 'يجب تحديد الموظف' : 'You have to select Employee'
+      );
+      return;
+    }
+    if (ptype === 'exppayable' && !suppvalue) {
+      await messageAlert(
+        setAlrt,
+        isRTL ? 'يجب تحديد المورد' : 'You have to select Supplier'
       );
       return;
     }
@@ -449,7 +481,7 @@ const PopupExpensesDoc = ({
     const { amount } = totals;
     const variables: any = {
       _id: row && row._id ? row._id : undefined, // is it new or edit
-      opType: 60,
+      opType: getActionType(),
       time: selectedDate,
       debitAcc: debitAcc.code,
       creditAcc: creditAcc.code,
@@ -612,7 +644,16 @@ const PopupExpensesDoc = ({
       mb={20}
     >
       <Grid container spacing={1}>
-        <Grid item xs={3}>
+        <Grid item xs={12} style={{ marginTop: 15 }}>
+          <ExpensesTypeSelect
+            ptype={ptype}
+            setPtype={setPtype}
+            setEmplvalue={setEmplvalue}
+            setSuppvalue={setSuppvalue}
+            isRTL={isRTL}
+          ></ExpensesTypeSelect>
+        </Grid>
+        <Grid item xs={4} style={{ marginTop: -15 }}>
           <CalenderLocal
             isRTL={isRTL}
             label={words.time}
@@ -620,87 +661,24 @@ const PopupExpensesDoc = ({
             onChange={handleDateChange}
           ></CalenderLocal>
         </Grid>
-        <Grid item xs={9}>
-          <Grid container spacing={2} style={{ marginTop: 10 }}>
-            <Grid item xs={5}>
-              <AutoFieldLocal
-                name="creditAcc"
-                title={isRTL ? 'حساب الدفع' : 'Payment Acc'}
-                words={words}
-                options={cridaccounts}
-                value={creditAcc}
-                setSelectValue={(value: any) => {
-                  setCreditAcc(value);
-                  setSuppvalue(null);
-                }}
-                register={register}
-                isRTL={isRTL}
-                fullwidtth
-                mb={0}
-                nosort
-              ></AutoFieldLocal>
-            </Grid>
-
-            {creditAcc?.code === 2000 && (
-              <Grid item xs={5}>
-                <AutoFieldLocal
-                  name="supplier"
-                  title={words?.supplier}
-                  words={words}
-                  options={suppliers}
-                  value={suppvalue}
-                  setSelectValue={setSuppvalue}
-                  setSelectError={setSuppError}
-                  selectError={suppError}
-                  refernce={suppRef}
-                  isRTL={isRTL}
-                  fullWidth
-                  disabled={name === 'suppmentId'}
-                  mb={0}
-                ></AutoFieldLocal>
-              </Grid>
-            )}
-          </Grid>
+        <Grid item xs={4}>
+          <AutoFieldLocal
+            name="creditAcc"
+            title={isRTL ? 'حساب الدفع' : 'Payment Acc'}
+            words={words}
+            options={cridaccounts}
+            value={creditAcc}
+            setSelectValue={setCreditAcc}
+            register={register}
+            isRTL={isRTL}
+            fullwidtth
+            mb={0}
+            nosort
+          ></AutoFieldLocal>
         </Grid>
-        {!tempoptions?.noTsk && (
-          <Grid item xs={6}>
-            <AutoFieldLocal
-              name="task"
-              title={tempwords?.task}
-              words={words}
-              options={tasks}
-              value={taskvalue}
-              setSelectValue={setTaskvalue}
-              isRTL={isRTL}
-              fullWidth
-              disabled={name === 'contractId'}
-              mb={0}
-            ></AutoFieldLocal>
-          </Grid>
-        )}
-        {!tempoptions?.noRes && (
-          <Grid item xs={6}>
-            <AutoFieldLocal
-              name="resourse"
-              title={tempwords?.resourse}
-              words={words}
-              options={resourses}
-              value={resovalue}
-              disabled={name === 'resourseId' || name === 'contractId'}
-              setSelectValue={setResovalue}
-              setSelectError={setResoError}
-              selectError={resoError}
-              refernce={resoRef}
-              openAdd={openResourse}
-              isRTL={isRTL}
-              fullWidth
-              day={day}
-              mb={0}
-            ></AutoFieldLocal>
-          </Grid>
-        )}
-        {!tempoptions?.noEmp && (
-          <Grid item xs={6}>
+        {ptype === 'expenses' && <Grid item xs={4}></Grid>}
+        {ptype === 'exppettycash' && (
+          <Grid item xs={4}>
             <AutoFieldLocal
               name="employee"
               title={tempwords?.employee}
@@ -722,7 +700,64 @@ const PopupExpensesDoc = ({
             ></AutoFieldLocal>
           </Grid>
         )}
-        <Grid item xs={6}>
+        {ptype === 'exppayable' && (
+          <Grid item xs={4}>
+            <AutoFieldLocal
+              name="supplier"
+              title={words?.supplier}
+              words={words}
+              options={suppliers}
+              value={suppvalue}
+              setSelectValue={setSuppvalue}
+              setSelectError={setSuppError}
+              selectError={suppError}
+              refernce={suppRef}
+              openAdd={openSupplier}
+              isRTL={isRTL}
+              fullWidth
+              disabled={name === 'suppmentId'}
+              mb={0}
+            ></AutoFieldLocal>
+          </Grid>
+        )}
+        {!tempoptions?.noTsk && (
+          <Grid item xs={4}>
+            <AutoFieldLocal
+              name="task"
+              title={tempwords?.task}
+              words={words}
+              options={tasks}
+              value={taskvalue}
+              setSelectValue={setTaskvalue}
+              isRTL={isRTL}
+              fullWidth
+              disabled={name === 'contractId'}
+              mb={0}
+            ></AutoFieldLocal>
+          </Grid>
+        )}
+        {!tempoptions?.noRes && (
+          <Grid item xs={4}>
+            <AutoFieldLocal
+              name="resourse"
+              title={tempwords?.resourse}
+              words={words}
+              options={resourses}
+              value={resovalue}
+              disabled={name === 'resourseId' || name === 'contractId'}
+              setSelectValue={setResovalue}
+              setSelectError={setResoError}
+              selectError={resoError}
+              refernce={resoRef}
+              openAdd={openResourse}
+              isRTL={isRTL}
+              fullWidth
+              day={day}
+              mb={0}
+            ></AutoFieldLocal>
+          </Grid>
+        )}
+        <Grid item xs={4}>
           <AutoFieldLocal
             name="department"
             title={tempwords?.department}
@@ -740,7 +775,6 @@ const PopupExpensesDoc = ({
             mb={0}
           ></AutoFieldLocal>
         </Grid>
-
         <Grid item xs={12}>
           <Box
             style={{
@@ -866,6 +900,16 @@ const PopupExpensesDoc = ({
           addAction={addEmployee}
           editAction={editEmployee}
         ></PopupEmployee>
+        <PopupSupplier
+          newtext={newtext}
+          open={openSupp}
+          onClose={onCloseSupplier}
+          isNew={true}
+          setNewValue={onNewSuppChange}
+          row={null}
+          addAction={addSupplier}
+          editAction={editSupplier}
+        ></PopupSupplier>
         <PopupResourses
           newtext={newtext}
           open={openRes}

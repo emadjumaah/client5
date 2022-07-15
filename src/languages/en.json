@@ -16,6 +16,8 @@
     "departmentName": "Department Name",
     "departmentNameAr": "Name in Arabic",
     "depType": "Department Type",
+    "emptype": "Employee Type",
+    "restype": "Resourse Type",
     "employee": "Employee",
     "addEmployee": "Add Employee",
     "employeeName": "Employee Name",

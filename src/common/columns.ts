@@ -70,6 +70,18 @@ export const getColumns = ({ isRTL, words }: any) => {
       name: isRTL ? 'categoryNameAr' : 'categoryName',
       title: words?.category,
     },
+    emptype: {
+      id: 9.2,
+      ref: 'emptype',
+      name: isRTL ? 'emptypeNameAr' : 'emptypeName',
+      title: isRTL ? 'طبيعة الموظف' : 'Employee Type',
+    },
+    restype: {
+      id: 9.4,
+      ref: 'restype',
+      name: isRTL ? 'restypeNameAr' : 'restypeName',
+      title: isRTL ? 'نوع المعدة' : 'Resourse Type',
+    },
     customer: {
       id: 10,
       ref: 'customer',

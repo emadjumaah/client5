@@ -339,6 +339,7 @@ export const mainmenu = [
       },
     ],
   },
+
   {
     id: 5,
     name: 'financeexpenses',
@@ -351,11 +352,11 @@ export const mainmenu = [
     role: menuRoles.financeWriter,
     subMenu: [
       {
-        id: 22,
-        name: 'receipts',
-        uri: 'receipts',
-        titleAr: 'المقبوضات',
-        titleEn: 'Receipts',
+        id: 51,
+        name: 'receiptsadvance',
+        uri: 'receiptsadvance',
+        titleAr: 'مقبوضات سلفة',
+        titleEn: 'Advanced Receipts',
         icon: 'finance',
         mainId: 7,
         req: null,
@@ -363,11 +364,11 @@ export const mainmenu = [
         role: menuRoles.writer,
       },
       {
-        id: 32,
-        name: 'payments',
-        uri: 'payments',
-        titleAr: 'المدفوعات',
-        titleEn: 'Payments',
+        id: 52,
+        name: 'paymentsadvance',
+        uri: 'paymentsadvance',
+        titleAr: 'مدفوعات سلفة',
+        titleEn: 'Advance Payments',
         icon: 'finance',
         mainId: 7,
         req: null,
@@ -375,7 +376,7 @@ export const mainmenu = [
         role: menuRoles.writer,
       },
       {
-        id: 41,
+        id: 53,
         name: 'expenses',
         uri: 'expenses',
         titleAr: 'المصروفات',
@@ -387,7 +388,7 @@ export const mainmenu = [
         role: menuRoles.financeWriter,
       },
       {
-        id: 51.5,
+        id: 54,
         name: 'cash',
         uri: 'cash',
         titleAr: 'حركة مالية',
@@ -399,7 +400,7 @@ export const mainmenu = [
         role: menuRoles.financeWriter,
       },
       {
-        id: 51,
+        id: 55,
         name: 'financeall',
         uri: 'financeall',
         titleAr: 'قيد اليومية',
@@ -411,7 +412,7 @@ export const mainmenu = [
         role: menuRoles.financeWriter,
       },
       {
-        id: 52,
+        id: 56,
         name: 'financereport',
         uri: 'financereport',
         titleAr: 'تقرير الحسابات',
@@ -422,7 +423,7 @@ export const mainmenu = [
         dep: null,
       },
       {
-        id: 52.5,
+        id: 57,
         name: 'kaidreport',
         uri: 'kaidreport',
         titleAr: 'تقرير شامل',
@@ -433,7 +434,7 @@ export const mainmenu = [
         dep: null,
       },
       {
-        id: 53,
+        id: 58,
         name: 'budgetreport',
         uri: 'budgetreport',
         titleAr: 'الحسابات الختامية',
@@ -444,7 +445,7 @@ export const mainmenu = [
         dep: null,
       },
       {
-        id: 54,
+        id: 59,
         name: 'accounts',
         uri: 'accounts',
         titleAr: 'قائمة الحسابات',

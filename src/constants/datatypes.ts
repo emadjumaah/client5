@@ -22,6 +22,8 @@ export const operationTypes = {
 
   expenses: 60,
   expproducts: 61,
+  exppettycash: 62,
+  exppayable: 63,
 
   // حركة مالية
   // transfare cash - bank - card - partners - branchs
@@ -35,7 +37,6 @@ export const operationTypes = {
   cashDeposet: 76, // ايداع
   advanceReceipt: 77, // قبض سلفة من موظف
   advancePayemnt: 78, // دفع لموظف سلفة
-  pettyCashExp: 79, // مصروف على العهدة
 
   event: 80,
   task: 81,
@@ -147,6 +148,18 @@ export const opTypesNames = {
     ref: 'expproducts',
     type: accountType.DEBIT,
   },
+  62: {
+    name: 'Petty Cash Expenses',
+    nameAr: 'مصروف عهدة',
+    ref: 'exppettycash',
+    type: accountType.DEBIT,
+  },
+  63: {
+    name: 'Payable Expenses',
+    nameAr: 'مصروف موردين',
+    ref: 'exppayable',
+    type: accountType.DEBIT,
+  },
   70: {
     name: 'Deposet',
     nameAr: 'ايداع',
@@ -201,12 +214,7 @@ export const opTypesNames = {
     ref: 'advancePayemnt',
     type: 1,
   },
-  79: {
-    name: 'Petty Cash Expenses',
-    nameAr: 'مصروف عهدة',
-    ref: 'pettyCashExp',
-    type: 1,
-  },
+
   80: {
     name: 'Appointment',
     nameAr: 'موعد',
@@ -250,6 +258,8 @@ export const operationNames = {
   interDeliveryOut: 'Internal DeliveryOut',
   expenses: 'Expenses',
   expproducts: 'expproducts',
+  exppettycash: 'exppettycash',
+  exppayable: 'exppayable',
   deposet: 'Deposet',
   ownerDraw: 'Owner Draw',
   ownerDeposit: 'Owner Deposit',
@@ -259,7 +269,6 @@ export const operationNames = {
   cashDeposet: 'cashDeposet',
   advanceReceipt: 'advanceReceipt',
   advancePayemnt: 'advancePayemnt',
-  pettyCashExp: 'pettyCashExp',
   event: 'Event',
   task: 'Task',
   project: 'Project',

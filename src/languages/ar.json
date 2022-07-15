@@ -16,6 +16,8 @@
     "departmentName": "اسم القسم",
     "departmentNameAr": "اسم القسم بالعربي",
     "depType": "نوع القسم",
+    "emptype": "نوع الموظف",
+    "restype": "نوع المعدة",
     "employee": "الموظف",
     "addEmployee": "اضافة موظف جديد",
     "employeeName": "اسم الموظف",

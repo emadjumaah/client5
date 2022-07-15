@@ -757,6 +757,38 @@ export const updateOpDocRefNumbers = (data: any) => {
   });
   return rdata;
 };
+export const getEmployeeResourseTypes = ({
+  item,
+  employees,
+  resourses,
+}: any) => {
+  if (!item) return;
+  const { employeeId, resourseId } = item;
+  let restype = {};
+  let emptype = {};
+  if (employeeId) {
+    const emp = employees.filter((em: any) => em._id === employeeId)?.[0];
+    if (emp && emp.retypeId) {
+      emptype = {
+        emptypeId: emp.retypeId,
+        emptypeName: emp.retypeName,
+        emptypeNameAr: emp.retypeNameAr,
+      };
+    }
+  }
+  if (resourseId) {
+    const res = resourses.filter((em: any) => em._id === resourseId)?.[0];
+    if (res && res.retypeId) {
+      restype = {
+        restypeId: res.retypeId,
+        restypeName: res.retypeName,
+        restypeNameAr: res.retypeNameAr,
+      };
+    }
+  }
+
+  return { restype, emptype };
+};
 
 var th = ['', 'thousand', 'million', 'billion', 'trillion'];
 

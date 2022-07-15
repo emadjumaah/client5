@@ -46,9 +46,12 @@ export default function KaidReportFilter({
   suppvalue,
   words,
   isRTL,
+  retypes,
 }: any) {
   const [items, setItems] = React.useState(services);
   const [faccounts, setFAccounts] = React.useState(accounts);
+  const [emptype, setEmptype] = React.useState([]);
+  const [restype, setRestype] = React.useState([]);
 
   const { tempoptions } = useTemplate();
 
@@ -62,6 +65,26 @@ export default function KaidReportFilter({
     }
     setItems(itms);
   }, [itemtypevalue]);
+
+  useEffect(() => {
+    if (emptype && emptype.length > 0) {
+      const ids = emptype.map((e: any) => e._id);
+      const emps = employees.filter((em: any) => ids.includes(em.retypeId));
+      setEmplvalue(emps);
+    } else {
+      setEmplvalue([]);
+    }
+  }, [emptype]);
+
+  useEffect(() => {
+    if (restype && restype.length > 0) {
+      const ids = restype.map((e: any) => e._id);
+      const ress = resourses.filter((em: any) => ids.includes(em.retypeId));
+      setResovalue(ress);
+    } else {
+      setResovalue([]);
+    }
+  }, [restype]);
 
   useEffect(() => {
     const pcodes = mainaccounts.map((a: any) => a.code);
@@ -150,6 +173,15 @@ export default function KaidReportFilter({
           style={{ height: 20, width: '100%', backgroundColor: '#eee' }}
         ></Box>
         <FilterSelectMulti
+          options={retypes.filter((rt: any) => rt.reType === 1)}
+          value={emptype}
+          setValue={setEmptype}
+          words={words}
+          isRTL={isRTL}
+          name="emptype"
+          fullwidth
+        ></FilterSelectMulti>
+        <FilterSelectMulti
           options={employees}
           value={emplvalue}
           setValue={setEmplvalue}
@@ -159,15 +191,26 @@ export default function KaidReportFilter({
           fullwidth
         ></FilterSelectMulti>
         {!tempoptions?.noRes && resourses && resourses.length > 0 && (
-          <FilterSelectMulti
-            options={resourses}
-            value={resovalue}
-            setValue={setResovalue}
-            words={words}
-            isRTL={isRTL}
-            name="resourse"
-            fullwidth
-          ></FilterSelectMulti>
+          <>
+            <FilterSelectMulti
+              options={retypes.filter((rt: any) => rt.reType === 2)}
+              value={restype}
+              setValue={setRestype}
+              words={words}
+              isRTL={isRTL}
+              name="restype"
+              fullwidth
+            ></FilterSelectMulti>
+            <FilterSelectMulti
+              options={resourses}
+              value={resovalue}
+              setValue={setResovalue}
+              words={words}
+              isRTL={isRTL}
+              name="resourse"
+              fullwidth
+            ></FilterSelectMulti>
+          </>
         )}
         <FilterSelectMulti
           options={departments}

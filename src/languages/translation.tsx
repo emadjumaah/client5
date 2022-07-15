@@ -18,6 +18,8 @@ export const translation = (lang: LanguageType) => {
     departmentName: lang.words.departmentName,
     departmentNameAr: lang.words.departmentNameAr,
     depType: lang.words.depType,
+    emptype: lang.words.emptype,
+    restype: lang.words.restype,
     employee: lang.words.employee,
     addEmployee: lang.words.addEmployee,
     employeeName: lang.words.employeeName,

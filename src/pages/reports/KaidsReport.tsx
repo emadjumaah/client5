@@ -74,7 +74,9 @@ import useEmployees from '../../hooks/useEmployees';
 import useResourses from '../../hooks/useResourses';
 import useProjects from '../../hooks/useProjects';
 import useTasks from '../../hooks/useTasks';
-import _ from 'lodash';
+import { getEmployeeResourseTypes } from '../../common/helpers';
+import useRetypes from '../../hooks/useRetypes';
+// import _ from 'lodash';
 
 const styles = (theme: any) => ({
   tableStriped: {
@@ -121,6 +123,8 @@ export default function KaidsReport({
           col.department,
           col.customer,
           col.supplier,
+          col.emptype,
+          col.restype,
           col.amount,
           col.amountdebit,
           col.amountcredit,
@@ -139,6 +143,8 @@ export default function KaidsReport({
           col.contract,
           col.customer,
           col.supplier,
+          col.emptype,
+          col.restype,
           col.amount,
           col.amountdebit,
           col.amountcredit,
@@ -164,6 +170,7 @@ export default function KaidsReport({
   const { products } = useProducts();
   const { expenseItems } = useExpenseItems();
   const { suppliers } = useSuppliers();
+  const { retypes } = useRetypes();
 
   const {
     state: {
@@ -248,8 +255,8 @@ export default function KaidsReport({
           _id: Date.now(),
           opTime: start,
           opType: 94,
-          debit: am > 0 ? am : 0,
-          credit: am < 0 ? am : 0,
+          debit,
+          credit,
           amount: am,
         });
       }
@@ -259,12 +266,19 @@ export default function KaidsReport({
     const updatedRows2 =
       updatedRows?.length > 0
         ? updatedRows.map((item: any) => {
+            const { emptype, restype } = getEmployeeResourseTypes({
+              item,
+              employees,
+              resourses,
+            });
             const rowRased = item.debit ? item.debit : -item.credit;
             rased = rased + rowRased;
             return {
               ...item,
               amount: calculateAmount(item),
               rased,
+              ...emptype,
+              ...restype,
             };
           })
         : [];
@@ -576,6 +590,7 @@ export default function KaidsReport({
               suppvalue={suppvalue}
               words={words}
               isRTL={isRTL}
+              retypes={retypes}
             ></KaidReportFilter>
           </MGrid>
         </MGrid>

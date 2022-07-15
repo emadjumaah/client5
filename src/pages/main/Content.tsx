@@ -166,6 +166,8 @@ import {
 } from '../../contexts/managment';
 import KaidsReport from '../reports/KaidsReport';
 import ResourseTypes from '../adds/ResourseTypes';
+import ReceiptAdvance from '../adds/ReceiptAdvance';
+import PaymentAdvance from '../adds/PaymentAdvance';
 
 const Content = () => {
   const classes = layoutClasses();
@@ -511,22 +513,38 @@ const Content = () => {
               </ReceiptContext.Provider>
             }
           />
-          {/* <Route
-            path="/expenses"
+          <Route
+            path="/receiptsadvance"
             element={
-              <ExpensesContext.Provider
-                value={{ state: expensesStore, dispatch: expensesDispatch }}
+              <ReceiptContext.Provider
+                value={{ state: receiptStore, dispatch: receiptDispatch }}
               >
-                <Expenses
+                <ReceiptAdvance
                   menuitem={menuitem}
                   isRTL={isRTL}
                   words={words}
                   theme={theme}
                   company={company}
-                ></Expenses>
-              </ExpensesContext.Provider>
+                ></ReceiptAdvance>
+              </ReceiptContext.Provider>
             }
-          /> */}
+          />
+          <Route
+            path="/paymentsadvance"
+            element={
+              <ReceiptContext.Provider
+                value={{ state: receiptStore, dispatch: receiptDispatch }}
+              >
+                <PaymentAdvance
+                  menuitem={menuitem}
+                  isRTL={isRTL}
+                  words={words}
+                  theme={theme}
+                  company={company}
+                ></PaymentAdvance>
+              </ReceiptContext.Provider>
+            }
+          />
           <Route
             path="/expenses"
             element={

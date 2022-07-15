@@ -37,6 +37,7 @@ import {
   accountFormatter,
   currencyFormatter,
   moneyFormat,
+  opTypeFormatter,
   samllFormatter,
   timeFormatter,
 } from '../../Shared/colorFormat';
@@ -74,6 +75,7 @@ export default function ExpensesDoc({
           { name: 'time', title: words.time },
           col.docNo,
           { name: 'debitAcc', title: isRTL ? 'حساب المصروف' : 'Expenses Acc' },
+          { name: 'opType', title: words.type },
           { name: 'creditAcc', title: isRTL ? 'حساب الدفع' : 'Payment Acc' },
           col.employee,
           col.supplier,
@@ -86,6 +88,7 @@ export default function ExpensesDoc({
           { name: 'time', title: words.time },
           col.docNo,
           { name: 'debitAcc', title: isRTL ? 'حساب المصروف' : 'Expenses Acc' },
+          { name: 'opType', title: words.type },
           { name: 'creditAcc', title: isRTL ? 'حساب الدفع' : 'Payment Acc' },
           col.employee,
           col.supplier,
@@ -101,6 +104,7 @@ export default function ExpensesDoc({
     { columnName: 'time', width: 100 },
     { columnName: col.docNo.name, width: 120 },
     { columnName: 'debitAcc', width: 150 },
+    { columnName: 'opType', width: 150 },
     { columnName: 'creditAcc', width: 150 },
     { columnName: col.employee.name, width: 180 },
     { columnName: col.supplier.name, width: 180 },
@@ -113,8 +117,8 @@ export default function ExpensesDoc({
 
   const [tableColumnVisibilityColumnExtensions] = useState([
     { columnName: 'time', togglingEnabled: false },
+    { columnName: 'opType', togglingEnabled: false },
     { columnName: 'creditAcc', togglingEnabled: false },
-    { columnName: 'debitAcc', togglingEnabled: false },
   ]);
   const [pageSizes] = useState([5, 10, 20, 50, 0]);
 
@@ -156,7 +160,6 @@ export default function ExpensesDoc({
         variables: {
           start: start ? start.setHours(0, 0, 0, 0) : undefined,
           end: end ? end.setHours(23, 59, 59, 999) : undefined,
-          opType: 60,
         },
       },
     ],
@@ -166,7 +169,6 @@ export default function ExpensesDoc({
     const variables = {
       start: start ? start.setHours(0, 0, 0, 0) : undefined,
       end: end ? end.setHours(23, 59, 59, 999) : undefined,
-      opType: 60,
     };
     loadExpenses({
       variables,
@@ -291,6 +293,7 @@ export default function ExpensesDoc({
                 'time',
                 'docNo',
                 'debitAcc',
+                'opType',
                 'creditAcc',
                 col.employee.name,
                 col.supplier.name,
@@ -315,6 +318,7 @@ export default function ExpensesDoc({
             <TableColumnVisibility
               columnExtensions={tableColumnVisibilityColumnExtensions}
               defaultHiddenColumnNames={[
+                'debitAcc',
                 col.department.name,
                 col.contract.name,
                 col.resourse.name,
@@ -331,6 +335,10 @@ export default function ExpensesDoc({
             <DataTypeProvider
               for={['docNo', 'refNo']}
               formatterComponent={samllFormatter}
+            ></DataTypeProvider>
+            <DataTypeProvider
+              for={['opType']}
+              formatterComponent={opTypeFormatter}
             ></DataTypeProvider>
             <DataTypeProvider
               for={['creditAcc']}
