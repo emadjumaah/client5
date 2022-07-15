@@ -14,7 +14,6 @@ import { GlobalContext } from '../contexts';
 import { Grid, TextField } from '@material-ui/core';
 import PopupLayout from '../pages/main/PopupLayout';
 import { TextFieldLocal } from '../components';
-import { getPopupTitle } from '../constants/menu';
 import { retypeTypes } from '../constants/datatypes';
 import FilterSelectSingle from '../Shared/FilterSelectSingle';
 
@@ -112,7 +111,7 @@ const PopupResourseType = ({
   const onHandleSubmit = () => {
     handleSubmit(onSubmit)();
   };
-  const title = getPopupTitle('department', isNew);
+  const title = isRTL ? 'نوع' : 'Type';
 
   return (
     <PopupLayout

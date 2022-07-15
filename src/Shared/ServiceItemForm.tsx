@@ -90,7 +90,7 @@ export default function ServiceItemForm({
     if (itemvalue.itemType === 1 && itemvalue.quantity < itemqty) {
       await messageAlert(
         setAlrt,
-        isRTL ? 'لا يوجد كمية في المخزم' : 'No stock avaliable'
+        isRTL ? 'لا يوجد كمية في المخزن' : 'No stock avaliable'
       );
       return;
     }

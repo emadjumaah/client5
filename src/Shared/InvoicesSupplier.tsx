@@ -134,7 +134,7 @@ export default function InvoicesSupplier({
       name === 'contractId' ? { query: getTasks } : undefined,
       name === 'projectId' ? { query: getProjects } : undefined,
       { query: getProducts },
-    ],
+    ].filter((x: any) => x),
   };
 
   useEffect(() => {

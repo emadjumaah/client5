@@ -32,6 +32,7 @@ import {
   createPurchaseInvoice,
   updatePurchaseInvoice,
   deletePurchaseInvoice,
+  getProducts,
 } from '../../graphql';
 import { useLazyQuery, useMutation } from '@apollo/client';
 import {
@@ -147,6 +148,7 @@ export default function PurchaseInvoices({
           end: end ? end.setHours(23, 59, 59, 999) : undefined,
         },
       },
+      { query: getProducts },
     ],
   };
 

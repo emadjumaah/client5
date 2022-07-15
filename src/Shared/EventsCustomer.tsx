@@ -150,7 +150,7 @@ export default function EventsCustomer({
         : undefined,
       name === 'contractId' ? { query: getTasks } : undefined,
       name === 'projectId' ? { query: getProjects } : undefined,
-    ],
+    ].filter((x: any) => x),
   };
 
   const [getEvents, eventsData]: any = useLazyQuery(getObjectEvents, {

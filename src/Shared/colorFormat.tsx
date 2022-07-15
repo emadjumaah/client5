@@ -1703,9 +1703,11 @@ export const taskDataView = ({ row, words, isRTL }) => {
         <Grid item xs={3} style={{ paddingLeft: 10, paddingRight: 10 }}>
           <Typography>{simpleDateFormatter2(start)}</Typography>
         </Grid>
-        <Grid item xs={3}>
-          <Typography>{simpleDateFormatter2(end)}</Typography>
-        </Grid>
+        {end && (
+          <Grid item xs={3}>
+            <Typography>{simpleDateFormatter2(end)}</Typography>
+          </Grid>
+        )}
         <Grid item xs={4}></Grid>
         <Grid item xs={4}>
           <Typography>

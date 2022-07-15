@@ -95,7 +95,7 @@ export default function PaymentSupplier({
         : undefined,
       name === 'contractId' ? { query: getTasks } : undefined,
       name === 'projectId' ? { query: getProjects } : undefined,
-    ],
+    ].filter((x: any) => x),
   };
 
   useEffect(() => {
