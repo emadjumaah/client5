@@ -41,16 +41,21 @@ import PageLayout from '../main/PageLayout';
 import { SearchTable } from '../../components';
 import { ReceiptContext } from '../../contexts';
 import DateNavigatorReports from '../../components/filters/DateNavigatorReports';
-import getReceipts from '../../graphql/query/getReceipts';
-import PopupReceipt from '../../pubups/PopupReceipt';
-import useTasks from '../../hooks/useTasks';
+import getReceiptsAdvance from '../../graphql/query/getReceiptsAdvance';
+import PopupReceiptAdvance from '../../pubups/PopupReceiptAdvance';
 import { Box, Paper, Typography } from '@material-ui/core';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
 import { TableComponent } from '../../Shared/TableComponent';
 import _ from 'lodash';
 import { getColumns } from '../../common/columns';
 
-export default function Receipt({ isRTL, words, menuitem, theme, company }) {
+export default function ReceiptAdvance({
+  isRTL,
+  words,
+  menuitem,
+  theme,
+  company,
+}) {
   const col = getColumns({ isRTL, words });
 
   const [columns] = useState([
@@ -58,7 +63,7 @@ export default function Receipt({ isRTL, words, menuitem, theme, company }) {
     { name: 'docNo', title: words.no },
     { name: 'creditAcc', title: isRTL ? 'حساب الدفع' : 'Credit Acc' },
     { name: 'debitAcc', title: isRTL ? 'حساب القبض' : 'Receipt Acc' },
-    col.customer,
+    col.employee,
     { name: 'desc', title: words.description },
     { name: 'amount', title: words.amount },
   ]);
@@ -68,7 +73,7 @@ export default function Receipt({ isRTL, words, menuitem, theme, company }) {
     { columnName: 'docNo', width: 120 },
     { columnName: 'creditAcc', width: 200 },
     { columnName: 'debitAcc', width: 200 },
-    { columnName: col.customer.name, width: 200 },
+    { columnName: col.employee.name, width: 200 },
     { columnName: 'desc', width: 200 },
     { columnName: 'amount', width: 120 },
   ]);
@@ -87,7 +92,6 @@ export default function Receipt({ isRTL, words, menuitem, theme, company }) {
   const [start, setStart] = useState<any>(null);
   const [end, setEnd] = useState<any>(null);
 
-  const { tasks } = useTasks();
   const { height, width } = useWindowDimensions();
   const {
     state: { currentDate, currentViewName, endDate },
@@ -105,12 +109,12 @@ export default function Receipt({ isRTL, words, menuitem, theme, company }) {
     dispatch({ type: 'setEndDate', payload: curDate });
   };
 
-  const [loadFinances, financeData]: any = useLazyQuery(getReceipts);
+  const [loadFinances, financeData]: any = useLazyQuery(getReceiptsAdvance);
   const { accounts } = useAccounts();
   const refresQuery = {
     refetchQueries: [
       {
-        query: getReceipts,
+        query: getReceiptsAdvance,
         variables: {
           start: start ? start.setHours(0, 0, 0, 0) : undefined,
           end: end ? end.setHours(23, 59, 59, 999) : undefined,
@@ -145,8 +149,8 @@ export default function Receipt({ isRTL, words, menuitem, theme, company }) {
     if (financeData?.loading) {
       setLoading(true);
     }
-    if (financeData?.data?.getReceipts?.data) {
-      const { data } = financeData.data.getReceipts;
+    if (financeData?.data?.getReceiptsAdvance?.data) {
+      const { data } = financeData.data.getReceiptsAdvance;
       const rdata = updateDocNumbers(data);
       const samount = _.sumBy(rdata, 'amount');
       setSum(samount);
@@ -247,7 +251,7 @@ export default function Receipt({ isRTL, words, menuitem, theme, company }) {
                 'docNo',
                 'creditAcc',
                 'debitAcc',
-                col.customer.name,
+                col.employee.name,
                 'desc',
                 'amount',
               ]}
@@ -312,7 +316,7 @@ export default function Receipt({ isRTL, words, menuitem, theme, company }) {
               addAction={addFinance}
               editAction={editFinance}
             >
-              <PopupReceipt company={company} tasks={tasks}></PopupReceipt>
+              <PopupReceiptAdvance company={company}></PopupReceiptAdvance>
             </PopupEditing>
           </Grid>
         </Paper>

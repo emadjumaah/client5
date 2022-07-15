@@ -33,6 +33,9 @@ export const operationTypes = {
   pettyCashRec: 74, // قبض عهدة
   cashDraw: 75, // سحب
   cashDeposet: 76, // ايداع
+  advanceReceipt: 77, // قبض سلفة من موظف
+  advancePayemnt: 78, // دفع لموظف سلفة
+  pettyCashExp: 79, // مصروف على العهدة
 
   event: 80,
   task: 81,
@@ -186,6 +189,24 @@ export const opTypesNames = {
     ref: 'cashDeposet',
     type: 1,
   },
+  77: {
+    name: 'Advance Receipt',
+    nameAr: 'سند قبض سلفة',
+    ref: 'advanceReceipt',
+    type: 1,
+  },
+  78: {
+    name: 'Advance Payemnt',
+    nameAr: 'سند دفع سلفة',
+    ref: 'advancePayemnt',
+    type: 1,
+  },
+  79: {
+    name: 'Petty Cash Expenses',
+    nameAr: 'مصروف عهدة',
+    ref: 'pettyCashExp',
+    type: 1,
+  },
   80: {
     name: 'Appointment',
     nameAr: 'موعد',
@@ -236,6 +257,9 @@ export const operationNames = {
   pettyCashRec: 'pettyCashRec',
   cashDraw: 'cashDraw',
   cashDeposet: 'cashDeposet',
+  advanceReceipt: 'advanceReceipt',
+  advancePayemnt: 'advancePayemnt',
+  pettyCashExp: 'pettyCashExp',
   event: 'Event',
   task: 'Task',
   project: 'Project',

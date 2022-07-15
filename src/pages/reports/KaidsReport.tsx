@@ -74,6 +74,7 @@ import useEmployees from '../../hooks/useEmployees';
 import useResourses from '../../hooks/useResourses';
 import useProjects from '../../hooks/useProjects';
 import useTasks from '../../hooks/useTasks';
+import _ from 'lodash';
 
 const styles = (theme: any) => ({
   tableStriped: {
@@ -269,7 +270,15 @@ export default function KaidsReport({
         : [];
 
     const rdata = updateOpDocRefNumbers(updatedRows2);
-
+    // const grdata = _(rdata)
+    //   .groupBy('opDocNo')
+    //   .map((array) => ({
+    //     ...array[0],
+    //     amount: _.sumBy(array, 'amount'),
+    //     credit: _.sumBy(array, 'credit'),
+    //     debit: _.sumBy(array, 'debit'),
+    //   }))
+    //   .value();
     setRows(rdata);
   }, [summaryData, isRaseed]);
 

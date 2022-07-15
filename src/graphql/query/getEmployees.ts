@@ -50,6 +50,9 @@ export default gql`
         totalKaidscredit
         totalPettyPay
         totalPettyRec
+        totalAdvanceRec
+        totalAdvancePay
+        totalPettyExp
         progress
         evQty
         evDone

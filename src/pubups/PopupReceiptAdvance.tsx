@@ -13,17 +13,15 @@ import { Box, Grid } from '@material-ui/core';
 import { useReactToPrint } from 'react-to-print';
 import { CalenderLocal, TextFieldLocal } from '../components';
 import AutoFieldLocal from '../components/fields/AutoFieldLocal';
-import { useCustomers, useTemplate } from '../hooks';
-import { useLazyQuery } from '@apollo/client';
-import getInvoicesList from '../graphql/query/getInvoicesList';
-import PopupCustomer from './PopupCustomer';
+import { useTemplate } from '../hooks';
 import { ReceiptPrint } from '../print';
 import { sleep, successAlert } from '../Shared/helpers';
-const PopupReceipt = ({
+import useEmployees from '../hooks/useEmployees';
+import PopupEmployee from './PopupEmployee';
+const PopupReceiptAdvance = ({
   open,
   onClose,
   row,
-  task,
   isNew,
   addAction,
   editAction,
@@ -40,16 +38,13 @@ const PopupReceipt = ({
   const [debitAcc, setDebitAcc]: any = React.useState(null);
   const [creditAcc, setCreditAcc]: any = React.useState(null);
 
-  const [custvalue, setCustvalue] = useState<any>(
-    name === 'customerId' ? value : null
+  const [emplvalue, setEmplvalue] = useState<any>(
+    name === 'employeeId' ? value : null
   );
-  const [custError, setCustError] = useState<any>(false);
-
-  const [invoices, setInvoices] = useState<any>([]);
-  const [invoicevalue, setInvoicevalue] = useState<any>(null);
+  const [emplError, setEmplError] = useState<any>(false);
 
   const [newtext, setNewtext] = useState('');
-  const [openCust, setOpenCust] = useState(false);
+  const [openEmp, setOpenEmp] = useState(false);
 
   const { register, handleSubmit, errors, reset } = useForm(
     yup.depositResolver
@@ -60,75 +55,19 @@ const PopupReceipt = ({
   }: GContextTypes = useContext(GlobalContext);
 
   const { accounts } = useAccounts();
-  const { customers, addCustomer, editCustomer } = useCustomers();
+  const { employees, addEmployee, editEmployee } = useEmployees();
   const { tempwords } = useTemplate();
 
-  const [loadInvoices, invoicesData]: any = useLazyQuery(getInvoicesList, {
-    fetchPolicy: 'cache-and-network',
-  });
-
-  const openCustomer = () => {
-    setOpenCust(true);
+  const openEmployee = () => {
+    setOpenEmp(true);
   };
-  const onCloseCustomer = () => {
-    setOpenCust(false);
+  const onCloseEmploee = () => {
+    setOpenEmp(false);
     setNewtext('');
   };
-  const onNewCustChange = (nextValue: any) => {
-    setCustvalue(nextValue);
+  const onNewEmplChange = (nextValue: any) => {
+    setEmplvalue(nextValue);
   };
-
-  useEffect(() => {
-    if (custvalue) {
-      const variables = { customerId: custvalue._id };
-      loadInvoices({ variables });
-    }
-    if (isNew) {
-      if (name === 'contractId') {
-        if (value?.customerId) {
-          const dept = customers.filter(
-            (dep: any) => dep._id === value?.customerId
-          )?.[0];
-          setCustvalue(dept);
-        }
-      }
-    }
-  }, [custvalue, open]);
-
-  useEffect(() => {
-    if (name && value) {
-      if (name === 'customerId') {
-        setCustvalue(value);
-      }
-    }
-  }, [name, value, open]);
-
-  useEffect(() => {
-    if (invoicesData?.data?.getInvoicesList?.data) {
-      const { data } = invoicesData.data.getInvoicesList;
-      if (data?.length > 0) {
-        const ndata = data.map((d: any) => {
-          const ramount = d.amount - d.discount;
-          const title = `${d.docNo} - ${ramount}QR`;
-          return {
-            ...d,
-            name: title,
-            nameAr: title,
-          };
-        });
-        if (task) {
-          const tndata = ndata.filter((nd: any) => nd.contractId === task._id);
-          setInvoices(tndata);
-        } else {
-          setInvoices(ndata);
-        }
-        if (row?.refNo) {
-          const inv = ndata.filter((ts: any) => ts.docNo === row?.refNo)?.[0];
-          setInvoicevalue(inv);
-        }
-      }
-    }
-  }, [invoicesData]);
 
   useEffect(() => {
     if (row && row._id) {
@@ -148,16 +87,14 @@ const PopupReceipt = ({
         const debit = accounts.filter((acc: any) => acc.code === da)[0];
         setDebitAcc(debit);
       }
-      const customerId = row?.customerId;
-      if (customerId) {
-        const cust = customers.filter((it: any) => it._id === customerId)[0];
-        setCustvalue(cust);
+      const employeeId = row?.employeeId;
+      if (employeeId) {
+        const emp = employees.filter((it: any) => it._id === employeeId)[0];
+        setEmplvalue(emp);
       }
       handleDateChange(row.time);
     } else {
-      const filtereddebits = accounts.filter(
-        (acc: any) => acc.parentcode === parents.ACCOUNTS_RECEIVABLE
-      );
+      const filtereddebits = accounts.filter((acc: any) => acc.code === 1350);
       const filteredcredit = accounts.filter(
         (acc: any) => acc.parentcode === parents.CASH
       );
@@ -175,9 +112,6 @@ const PopupReceipt = ({
   const printData = {
     no: row?.docNo,
     time: selectedDate,
-    customerName: custvalue?.name,
-    customerNameAr: custvalue?.nameAr,
-    customerPhone: custvalue?.phone,
     refNo: row?.refNo,
     title: row?.title,
     desc: row?.desc,
@@ -186,7 +120,6 @@ const PopupReceipt = ({
     chequeBank: row?.chequeBank,
     chequeNo: row?.chequeNo,
     chequeDate: row?.chequeDate,
-    invoice: invoicevalue,
   };
   const onSubmit = async (data: any) => {
     if (selectedDate > new Date()) {
@@ -204,86 +137,35 @@ const PopupReceipt = ({
       );
       return;
     }
-
-    if (!custvalue) {
+    if (!emplvalue) {
       await messageAlert(
         setAlrt,
-        isRTL ? 'يجب تحديد العميل' : 'You have to select Customer'
+        isRTL ? 'يجب تحديد الموظف' : 'You have to select Employee'
       );
       return;
     }
     setSaving(true);
-    const customer = custvalue
+    const employee = emplvalue
       ? {
-          customerId: custvalue._id,
-          customerName: custvalue.name,
-          customerNameAr: custvalue.nameAr,
-          customerPhone: custvalue.color,
+          employeeId: emplvalue._id,
+          employeeName: emplvalue.name,
+          employeeNameAr: emplvalue.nameAr,
+          employeeColor: emplvalue.color,
         }
       : {
-          customerId: undefined,
-          customerName: undefined,
-          customerNameAr: undefined,
-          customerPhone: undefined,
-        };
-
-    const department = invoicevalue
-      ? {
-          departmentId: invoicevalue.departmentId,
-          departmentName: invoicevalue.departmentName,
-          departmentNameAr: invoicevalue.departmentNameAr,
-          departmentColor: invoicevalue.departmentColor,
-        }
-      : {
-          departmentId: undefined,
-          departmentName: undefined,
-          departmentNameAr: undefined,
-          departmentColor: undefined,
-        };
-    const resourse = invoicevalue
-      ? {
-          resourseId: invoicevalue.resourseId,
-          resourseName: invoicevalue.resourseName,
-          resourseNameAr: invoicevalue.resourseNameAr,
-          resourseColor: invoicevalue.resourseColor,
-        }
-      : {
-          resourseId: undefined,
-          resourseName: undefined,
-          resourseNameAr: undefined,
-          resourseColor: undefined,
-        };
-    const contract = task
-      ? {
-          contractId: task._id,
-          contractName: task.name,
-          contractNameAr: task.nameAr,
-        }
-      : invoicevalue
-      ? {
-          contractId: invoicevalue.contractId,
-          contractName: invoicevalue.contractName,
-          contractNameAr: invoicevalue.contractNameAr,
-          contractColor: invoicevalue.contractColor,
-        }
-      : {
-          contractId: undefined,
-          contractName: undefined,
-          contractNameAr: undefined,
-          contractColor: undefined,
+          employeeId: undefined,
+          employeeName: undefined,
+          employeeNameAr: undefined,
+          employeeColor: undefined,
         };
 
     const variables: any = {
       _id: row && row._id ? row._id : undefined, // is it new or edit
-      opType: operationTypes.customerReceipt,
+      opType: operationTypes.advanceReceipt,
       time: selectedDate,
       debitAcc: debitAcc.code,
       creditAcc: creditAcc.code,
-      refNo: invoicevalue ? invoicevalue.docNo : undefined,
-      customer,
-      department,
-      resourse,
-      contract,
+      employee,
       amount,
       chequeBank,
       chequeNo,
@@ -325,10 +207,7 @@ const PopupReceipt = ({
     setCreditAcc(null);
     setDebitAcc(null);
     setDebaccounts([]);
-    setInvoices([]);
-    setCustvalue(name === 'customerId' ? value : null);
-    setInvoicevalue(null);
-    setCustError(false);
+    setEmplvalue(name === 'employeeId' ? value : null);
     setSaving(false);
   };
   const closeModal = () => {
@@ -370,34 +249,18 @@ const PopupReceipt = ({
             </Grid>
             <Grid item xs={12}>
               <AutoFieldLocal
-                name="customer"
-                title={tempwords?.customer}
+                name="employee"
+                title={tempwords?.employee}
                 words={words}
-                options={customers}
-                value={custvalue}
-                setSelectValue={setCustvalue}
-                setSelectError={setCustError}
-                selectError={custError}
+                options={employees}
+                value={emplvalue}
+                setSelectValue={setEmplvalue}
+                setSelectError={setEmplError}
+                selectError={emplError}
                 isRTL={isRTL}
                 fullwidth
-                openAdd={openCustomer}
-                disabled={name === 'customerId' || name === 'contractId'}
-                mb={0}
-              ></AutoFieldLocal>
-            </Grid>
-
-            <Grid item xs={6}>
-              <AutoFieldLocal
-                name="invoice"
-                title={isRTL ? 'الفواتير' : 'Invoices'}
-                words={words}
-                options={invoices}
-                value={invoicevalue}
-                setSelectValue={setInvoicevalue}
-                register={register}
-                isRTL={isRTL}
-                disabled={!custvalue}
-                fullWidth
+                openAdd={openEmployee}
+                disabled={name === 'emploueeId' || name === 'contractId'}
                 mb={0}
               ></AutoFieldLocal>
             </Grid>
@@ -414,7 +277,6 @@ const PopupReceipt = ({
                 mb={0}
               />
             </Grid>
-
             <Grid item xs={12}>
               <AutoFieldLocal
                 name="debitAcc"
@@ -428,39 +290,6 @@ const PopupReceipt = ({
                 fullwidth
                 mb={0}
               ></AutoFieldLocal>
-            </Grid>
-            <Grid item xs={4}>
-              <TextFieldLocal
-                name="chequeBank"
-                label={words.chequeBank}
-                register={register}
-                errors={errors}
-                row={row}
-                fullWidth
-                mb={0}
-              />
-            </Grid>
-            <Grid item xs={4}>
-              <TextFieldLocal
-                name="chequeNo"
-                label={words.chequeNo}
-                register={register}
-                errors={errors}
-                row={row}
-                fullWidth
-                mb={0}
-              />
-            </Grid>
-            <Grid item xs={4}>
-              <TextFieldLocal
-                name="chequeDate"
-                label={words.chequeDate}
-                register={register}
-                errors={errors}
-                row={row}
-                fullWidth
-                mb={0}
-              />
             </Grid>
             <Grid item xs={12}>
               <TextFieldLocal
@@ -478,17 +307,16 @@ const PopupReceipt = ({
           </Grid>
         </Grid>
         <Grid item xs={1}></Grid>
-        <PopupCustomer
+        <PopupEmployee
           newtext={newtext}
-          open={openCust}
-          onClose={onCloseCustomer}
+          open={openEmp}
+          onClose={onCloseEmploee}
           isNew={true}
-          setNewValue={onNewCustChange}
+          setNewValue={onNewEmplChange}
           row={null}
-          addAction={addCustomer}
-          editAction={editCustomer}
-        ></PopupCustomer>
-
+          addAction={addEmployee}
+          editAction={editEmployee}
+        ></PopupEmployee>
         <Box>
           <div style={{ display: 'none' }}>
             <ReceiptPrint
@@ -504,4 +332,4 @@ const PopupReceipt = ({
   );
 };
 
-export default PopupReceipt;
+export default PopupReceiptAdvance;

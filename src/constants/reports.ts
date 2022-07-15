@@ -150,6 +150,24 @@ export const documentTypes = [
     name: 'Jornal Vaucher',
     nameAr: 'قيود اليومية',
   },
+  {
+    id: 14,
+    value: operationTypes.advanceReceipt,
+    name: 'Advance Receipt',
+    nameAr: 'سند قبض سلفة',
+  },
+  {
+    id: 15,
+    value: operationTypes.advancePayemnt,
+    name: 'Advance Payemnt',
+    nameAr: 'سند دفع سلفة',
+  },
+  {
+    id: 16,
+    value: operationTypes.pettyCashExp,
+    name: 'Petty Cash Expenses',
+    nameAr: 'مصروف عهدة',
+  },
 ];
 
 export const sectionTypes = [

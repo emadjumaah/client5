@@ -42,7 +42,6 @@ import { SearchTable } from '../../components';
 import { ReceiptContext } from '../../contexts';
 import DateNavigatorReports from '../../components/filters/DateNavigatorReports';
 import getPayments from '../../graphql/query/getPayments';
-import useTasks from '../../hooks/useTasks';
 import { Box, Paper, Typography } from '@material-ui/core';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
 import { TableComponent } from '../../Shared/TableComponent';
@@ -59,7 +58,6 @@ export default function Payment({ isRTL, words, menuitem, theme, company }) {
     { name: 'creditAcc', title: isRTL ? 'حساب الدفع' : 'Credit Acc' },
     { name: 'debitAcc', title: isRTL ? 'حساب القبض' : 'Receipt Acc' },
     col.supplier,
-    col.employee,
     { name: 'desc', title: words.description },
     { name: 'amount', title: words.amount },
   ]);
@@ -70,7 +68,6 @@ export default function Payment({ isRTL, words, menuitem, theme, company }) {
     { columnName: 'creditAcc', width: 200 },
     { columnName: 'debitAcc', width: 200 },
     { columnName: col.supplier.name, width: 200 },
-    { columnName: col.employee.name, width: 200 },
     { columnName: 'desc', width: 200 },
     { columnName: 'amount', width: 120 },
   ]);
@@ -89,7 +86,6 @@ export default function Payment({ isRTL, words, menuitem, theme, company }) {
   const [start, setStart] = useState<any>(null);
   const [end, setEnd] = useState<any>(null);
 
-  const { tasks } = useTasks();
   const { height, width } = useWindowDimensions();
   const {
     state: { currentDate, currentViewName, endDate },
@@ -251,7 +247,6 @@ export default function Payment({ isRTL, words, menuitem, theme, company }) {
                 'creditAcc',
                 'debitAcc',
                 col.supplier.name,
-                col.employee.name,
                 'desc',
                 'amount',
               ]}
@@ -316,7 +311,7 @@ export default function Payment({ isRTL, words, menuitem, theme, company }) {
               addAction={addFinance}
               editAction={editFinance}
             >
-              <PopupPayment company={company} tasks={tasks}></PopupPayment>
+              <PopupPayment company={company}></PopupPayment>
             </PopupEditing>
           </Grid>
         </Paper>
