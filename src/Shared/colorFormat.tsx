@@ -8,6 +8,7 @@ import {
   CircularProgress,
   colors,
   fade,
+  FormControlLabel,
   Grid,
   Typography,
 } from '@material-ui/core';
@@ -1619,6 +1620,36 @@ export const nameManageLinkFormat = ({
           </Grid>
         )}
       </Box>
+    </Box>
+  );
+};
+
+export const timeActivateView = ({ fullTime, setFullTime, isRTL }) => {
+  return (
+    <Box style={{ padding: 7 }}>
+      <FormControlLabel
+        control={
+          <Checkbox
+            style={{ padding: 7 }}
+            checked={fullTime}
+            onChange={() => {
+              setFullTime(!fullTime);
+            }}
+            color="primary"
+          />
+        }
+        label={
+          <Typography
+            color="primary"
+            style={{
+              fontWeight: 'bold',
+            }}
+          >
+            {isRTL ? 'كامل الفترة' : 'All Time'}
+          </Typography>
+        }
+        style={{ fontSize: 14 }}
+      />
     </Box>
   );
 };

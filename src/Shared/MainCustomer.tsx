@@ -24,13 +24,13 @@ import {
   incomeMainFormatter,
   incomeFormatter,
   projectDataView,
+  timeActivateView,
 } from './colorFormat';
 import { useLazyQuery } from '@apollo/client';
 import getGereralCalculation from '../graphql/query/getGereralCalculation';
 import ReminderBox from './ReminderBox';
 
 export default function MainCustomer({
-  open,
   isRTL,
   words,
   theme,
@@ -43,30 +43,7 @@ export default function MainCustomer({
   end,
 }: any) {
   const [data, setData] = useState<any>(null);
-
-  const [loadCalcss, calcsData]: any = useLazyQuery(getGereralCalculation, {
-    nextFetchPolicy: 'cache-and-network',
-  });
-
-  useEffect(() => {
-    const variables = {
-      [name]: id,
-      start: start ? new Date(start).setHours(0, 0, 0, 0) : undefined,
-      end: end ? new Date(end).setHours(23, 59, 59, 999) : undefined,
-    };
-    loadCalcss({
-      variables,
-    });
-  }, [id, start, end]);
-
-  useEffect(() => {
-    const res = calcsData?.data?.getGereralCalculation?.data;
-    if (res) {
-      const data = JSON.parse(res);
-      setData(data);
-    }
-  }, [calcsData, start, end]);
-
+  const [fullTime, setFullTime] = useState(false);
   const isCust = name === 'customerId';
   const isSupp = name === 'supplierId';
   const isCont = name === 'contractId';
@@ -74,6 +51,58 @@ export default function MainCustomer({
   const isEmpl = name === 'employeeId';
   const isDepart = name === 'departmentId';
   const isProj = name === 'projectId';
+
+  console.log('data', data);
+  const [loadCalcss, calcsData]: any = useLazyQuery(getGereralCalculation, {
+    nextFetchPolicy: 'cache-and-network',
+  });
+
+  useEffect(() => {
+    const variables = {
+      [name]: id,
+      start:
+        start && !fullTime ? new Date(start).setHours(0, 0, 0, 0) : undefined,
+      end:
+        end && !fullTime ? new Date(end).setHours(23, 59, 59, 999) : undefined,
+    };
+    console.log('variables', variables);
+    loadCalcss({
+      variables,
+    });
+  }, [id, start, end, fullTime]);
+
+  useEffect(() => {
+    const res = calcsData?.data?.getGereralCalculation?.data;
+    if (res) {
+      const data = JSON.parse(res);
+      if (isCont) {
+        data.coAmount = row.amount;
+      }
+      setData(data);
+    }
+  }, [calcsData, start, end]);
+
+  // evAmount,
+  // coAmount,
+  // evQty,
+  // evDone,
+  // totalkaidsdebit,
+  // totalKaidscredit,
+  // totalinvoiced,
+  // totalpaid,
+  // totalDiscount,
+  // totalPurchaseInvoiced,
+  // totalPurchasePaid,
+  // totalPurchaseDiscount,
+  // toatlExpenses,
+  // toatlExpPayable,
+  // totalExpPetty,
+  // toatlProdExpenses,
+  // totalPettyPay,
+  // totalPettyRec,
+  // totalAdvanceRec,
+  // totalAdvancePay,
+
   return (
     <Box
       style={{
@@ -101,6 +130,7 @@ export default function MainCustomer({
               <Grid container spacing={1}>
                 <Grid item xs={4}>
                   <Box style={{ backgroundColor: '#fff', height: 250 }}>
+                    {timeActivateView({ fullTime, setFullTime, isRTL })}
                     {isCont && taskDataView({ row, words, isRTL })}
                     {isProj && projectDataView({ row, words, isRTL })}
                     {isReso && resourseDataView({ row, words, isRTL })}
