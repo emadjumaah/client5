@@ -127,6 +127,9 @@ const PopupReceipt = ({
           setInvoicevalue(inv);
         }
       }
+    } else {
+      setInvoices([]);
+      setInvoicevalue(null);
     }
   }, [invoicesData]);
 
@@ -253,13 +256,20 @@ const PopupReceipt = ({
           resourseNameAr: undefined,
           resourseColor: undefined,
         };
-    const contract = task
+    const employee = invoicevalue
       ? {
-          contractId: task._id,
-          contractName: task.name,
-          contractNameAr: task.nameAr,
+          employeeId: invoicevalue.employeeId,
+          employeeName: invoicevalue.employeeName,
+          employeeNameAr: invoicevalue.employeeNameAr,
+          employeeColor: invoicevalue.employeeColor,
         }
-      : invoicevalue
+      : {
+          employeeId: undefined,
+          employeeName: undefined,
+          employeeNameAr: undefined,
+          employeeColor: undefined,
+        };
+    const contract = invoicevalue
       ? {
           contractId: invoicevalue.contractId,
           contractName: invoicevalue.contractName,
@@ -273,6 +283,18 @@ const PopupReceipt = ({
           contractColor: undefined,
         };
 
+    const project = invoicevalue
+      ? {
+          projectId: invoicevalue.projectId,
+          projectName: invoicevalue.projectName,
+          projectNameAr: invoicevalue.projectNameAr,
+        }
+      : {
+          projectId: undefined,
+          projectName: undefined,
+          projectNameAr: undefined,
+        };
+
     const variables: any = {
       _id: row && row._id ? row._id : undefined, // is it new or edit
       opType: operationTypes.customerReceipt,
@@ -282,6 +304,8 @@ const PopupReceipt = ({
       refNo: invoicevalue ? invoicevalue.docNo : undefined,
       customer,
       department,
+      employee,
+      project,
       resourse,
       contract,
       amount,
@@ -375,7 +399,10 @@ const PopupReceipt = ({
                 words={words}
                 options={customers}
                 value={custvalue}
-                setSelectValue={setCustvalue}
+                setSelectValue={(value: any) => {
+                  setCustvalue(value);
+                  setInvoicevalue(null);
+                }}
                 setSelectError={setCustError}
                 selectError={custError}
                 isRTL={isRTL}

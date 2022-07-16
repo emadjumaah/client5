@@ -677,29 +677,7 @@ const PopupExpensesDoc = ({
           ></AutoFieldLocal>
         </Grid>
         {ptype === 'expenses' && <Grid item xs={4}></Grid>}
-        {ptype === 'exppettycash' && (
-          <Grid item xs={4}>
-            <AutoFieldLocal
-              name="employee"
-              title={tempwords?.employee}
-              words={words}
-              options={employees}
-              value={emplvalue}
-              disabled={
-                isemployee || name === 'employeeId' || name === 'contractId'
-              }
-              setSelectValue={setEmplvalue}
-              setSelectError={setEmplError}
-              selectError={emplError}
-              refernce={emplRef}
-              openAdd={openEmployee}
-              isRTL={isRTL}
-              fullWidth
-              day={day}
-              mb={0}
-            ></AutoFieldLocal>
-          </Grid>
-        )}
+
         {ptype === 'exppayable' && (
           <Grid item xs={4}>
             <AutoFieldLocal
@@ -721,7 +699,7 @@ const PopupExpensesDoc = ({
           </Grid>
         )}
         {!tempoptions?.noTsk && (
-          <Grid item xs={4}>
+          <Grid item xs={6}>
             <AutoFieldLocal
               name="task"
               title={tempwords?.task}
@@ -736,8 +714,29 @@ const PopupExpensesDoc = ({
             ></AutoFieldLocal>
           </Grid>
         )}
+        <Grid item xs={6}>
+          <AutoFieldLocal
+            name="employee"
+            title={tempwords?.employee}
+            words={words}
+            options={employees}
+            value={emplvalue}
+            disabled={
+              isemployee || name === 'employeeId' || name === 'contractId'
+            }
+            setSelectValue={setEmplvalue}
+            setSelectError={setEmplError}
+            selectError={emplError}
+            refernce={emplRef}
+            openAdd={openEmployee}
+            isRTL={isRTL}
+            fullWidth
+            day={day}
+            mb={0}
+          ></AutoFieldLocal>
+        </Grid>
         {!tempoptions?.noRes && (
-          <Grid item xs={4}>
+          <Grid item xs={6}>
             <AutoFieldLocal
               name="resourse"
               title={tempwords?.resourse}
@@ -757,7 +756,7 @@ const PopupExpensesDoc = ({
             ></AutoFieldLocal>
           </Grid>
         )}
-        <Grid item xs={4}>
+        <Grid item xs={6}>
           <AutoFieldLocal
             name="department"
             title={tempwords?.department}

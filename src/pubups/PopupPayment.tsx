@@ -121,6 +121,9 @@ const PopupPayment = ({
           setInvoicevalue(inv);
         }
       }
+    } else {
+      setInvoices([]);
+      setInvoicevalue(null);
     }
   }, [invoicesData]);
 
@@ -232,7 +235,19 @@ const PopupPayment = ({
           departmentNameAr: undefined,
           departmentColor: undefined,
         };
-
+    const employee = invoicevalue
+      ? {
+          employeeId: invoicevalue.employeeId,
+          employeeName: invoicevalue.employeeName,
+          employeeNameAr: invoicevalue.employeeNameAr,
+          employeeColor: invoicevalue.employeeColor,
+        }
+      : {
+          employeeId: undefined,
+          employeeName: undefined,
+          employeeNameAr: undefined,
+          employeeColor: undefined,
+        };
     const resourse = invoicevalue
       ? {
           resourseId: invoicevalue.resourseId,
@@ -257,6 +272,17 @@ const PopupPayment = ({
           contractName: undefined,
           contractNameAr: undefined,
         };
+    const project = invoicevalue
+      ? {
+          projectId: invoicevalue.projectId,
+          projectName: invoicevalue.projectName,
+          projectNameAr: invoicevalue.projectNameAr,
+        }
+      : {
+          projectId: undefined,
+          projectName: undefined,
+          projectNameAr: undefined,
+        };
 
     const variables: any = {
       _id: row && row._id ? row._id : undefined, // is it new or edit
@@ -269,6 +295,8 @@ const PopupPayment = ({
       department,
       resourse,
       contract,
+      employee,
+      project,
       amount,
       chequeBank,
       chequeNo,
@@ -359,7 +387,10 @@ const PopupPayment = ({
                 words={words}
                 options={suppliers}
                 value={suppvalue}
-                setSelectValue={setSuppvalue}
+                setSelectValue={(value: any) => {
+                  setSuppvalue(value);
+                  setInvoicevalue(null);
+                }}
                 setSelectError={setSuppError}
                 selectError={suppError}
                 isRTL={isRTL}

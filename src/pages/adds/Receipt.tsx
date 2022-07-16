@@ -306,7 +306,6 @@ export default function Receipt({ isRTL, words, menuitem, theme, company }) {
                 return <SearchTable isRTL={isRTL} {...props}></SearchTable>;
               }}
             />
-
             <PopupEditing
               theme={theme}
               addAction={addFinance}
