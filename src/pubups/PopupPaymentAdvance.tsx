@@ -15,7 +15,7 @@ import { CalenderLocal, TextFieldLocal } from '../components';
 import AutoFieldLocal from '../components/fields/AutoFieldLocal';
 import { useTemplate } from '../hooks';
 import { ReceiptPrint } from '../print';
-import { sleep, successAlert } from '../Shared/helpers';
+import { successAlert } from '../Shared/helpers';
 import useEmployees from '../hooks/useEmployees';
 import PopupEmployee from './PopupEmployee';
 
@@ -185,8 +185,7 @@ const PopupPaymentAdvance = ({
 
   const apply = async (mutate: any, variables: any) => {
     try {
-      mutate({ variables });
-      await sleep(2);
+      await mutate({ variables });
       await successAlert(setAlrt, isRTL);
       setSaving(false);
       closeModal();

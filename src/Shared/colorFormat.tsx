@@ -14,7 +14,10 @@ import {
 } from '@material-ui/core';
 import React from 'react';
 import { nameToColor, roles } from '../common';
-import { getTaskTimeAmountData } from '../common/helpers';
+import {
+  getTaskTimeAmountData,
+  getTaskTimeAmountSimple,
+} from '../common/helpers';
 import {
   isSuperAdmin,
   isBranchAdmin,
@@ -279,7 +282,7 @@ export const avatarColorFormatter = ({ row, height = 100 }: any) => {
         flex: 1,
         width: 10,
         height,
-        backgroundColor: fade(color, 0.8),
+        backgroundColor: color ? fade(color, 0.8) : undefined,
         borderRadius: 5,
       }}
     ></Box>
@@ -657,21 +660,10 @@ export const taskTitleNameFormatter = ({
   setItem,
   setOpenItem,
 }: any) => {
-  const {
-    title,
-    start,
-    end,
-    docNo,
-    customerNameAr,
-    customerName,
-    customerPhone,
-  } = row;
+  const { title, customerNameAr, customerName, customerPhone } = row;
 
   return (
     <Grid container spacing={0}>
-      <Grid item xs={12} style={{ paddingLeft: 10, paddingRight: 10 }}>
-        <Typography style={{ fontSize: 10 }}> {docNo} </Typography>
-      </Grid>
       <Grid item xs={12} style={{ marginTop: 5 }}>
         <Button
           onClick={() => {
@@ -702,15 +694,6 @@ export const taskTitleNameFormatter = ({
           {customerPhone?.substring(3)} )
         </Typography>
       </Grid>
-
-      <Grid item xs={4} style={{ paddingLeft: 10, paddingRight: 10 }}>
-        <Typography variant="caption">{simpleDateFormatter2(start)}</Typography>
-      </Grid>
-      <Grid item xs={4}>
-        {end && (
-          <Typography variant="caption">{simpleDateFormatter2(end)}</Typography>
-        )}
-      </Grid>
     </Grid>
   );
 };
@@ -732,43 +715,8 @@ export const taskdataFormatter = ({
     employeeName,
     employeeNameAr,
   } = row;
-  const { status, type } = row;
-  let color;
-  let bgcolor;
-  if (status === 'مقفل' || status === 'Closed') {
-    color = colors.blue[500];
-    bgcolor = colors.blue[50];
-  }
-  if (status === 'لم يبدأ بعد' || status === 'Not Started') {
-    color = colors.deepPurple[500];
-    bgcolor = colors.deepPurple[50];
-  }
-  if (status === 'غير مقفل' || status === 'Not Closed') {
-    color = colors.orange[500];
-    bgcolor = colors.orange[50];
-  }
-  if (status === 'ساري' || status === 'In Progress') {
-    color = colors.green[500];
-    bgcolor = colors.green[50];
-  }
   return (
     <Grid container spacing={0}>
-      <Grid item xs={12} style={{ marginTop: 5 }}>
-        <Box
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-          }}
-        >
-          {renderTag({ value: status, color, bgcolor })}
-          {renderTag({
-            value: type,
-            color: '#333',
-            bgcolor: colors.blueGrey[50],
-          })}
-        </Box>
-      </Grid>
       <Grid item xs={12}>
         <Box
           onClick={() => {
@@ -838,109 +786,99 @@ export const taskdataFormatter = ({
     </Grid>
   );
 };
+export const tasksimpledataFormatter = ({ row }: any) => {
+  const { start, end } = row;
+  const { status, type } = row;
+  let color;
+  let bgcolor;
+  if (status === 'مقفل' || status === 'Closed') {
+    color = colors.blue[500];
+    bgcolor = colors.blue[50];
+  }
+  if (status === 'لم يبدأ بعد' || status === 'Not Started') {
+    color = colors.deepPurple[500];
+    bgcolor = colors.deepPurple[50];
+  }
+  if (status === 'غير مقفل' || status === 'Not Closed') {
+    color = colors.orange[500];
+    bgcolor = colors.orange[50];
+  }
+  if (status === 'ساري' || status === 'In Progress') {
+    color = colors.green[500];
+    bgcolor = colors.green[50];
+  }
+  return (
+    <Grid container spacing={0}>
+      <Grid item xs={6} style={{ paddingLeft: 10, paddingRight: 10 }}>
+        <Typography style={{ fontSize: 13, textAlign: 'center' }}>
+          {simpleDateFormatter2(start)}
+        </Typography>
+      </Grid>
+      <Grid item xs={6}>
+        {end && (
+          <Typography style={{ fontSize: 13, textAlign: 'center' }}>
+            {simpleDateFormatter2(end)}
+          </Typography>
+        )}
+      </Grid>
+      <Grid item xs={12} style={{ marginTop: 3 }}>
+        <Box
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+          }}
+        >
+          {renderTag({
+            value: type,
+            color: '#333',
+            bgcolor: colors.blueGrey[50],
+          })}
+          {renderTag({ value: status, color, bgcolor })}
+        </Box>
+      </Grid>
+    </Grid>
+  );
+};
 export const daysdataFormatter = ({
   row,
   isRTL,
-  height = 100,
+  height = 75,
   bc = '#ddd',
 }: any) => {
-  const daysData = getTaskTimeAmountData(row);
-  const marginTop = height > 100 ? 20 : 8;
+  const daysData = getTaskTimeAmountSimple(row);
+  const marginTop = 5;
   return (
-    <Box
-      display={'flex'}
-      border={0.2}
-      borderColor={bc}
-      borderRadius={15}
-      style={{ flex: 1, height }}
-    >
+    <Box display={'flex'} style={{ flex: 1, height }}>
       <Grid container spacing={0}>
         <Grid item xs={5}>
           <PercentChartTask
             pricolor={colors.deepPurple[500]}
             seccolor={colors.deepPurple[200]}
             progress={daysData?.progress}
-            height={height - 10}
+            height={height}
           />
         </Grid>
         <Grid item xs={7}>
           <Grid container spacing={0}>
+            <Grid item xs={6}>
+              <Typography style={{ fontSize: 13, fontWeight: 'bold' }}>
+                {isRTL ? 'قيمة العقد' : 'Amount'}
+              </Typography>
+            </Grid>
+            <Grid item xs={6}>
+              <Typography style={{ fontSize: 13, fontWeight: 'bold' }}>
+                {moneyFormat(daysData?.amount)}
+              </Typography>
+            </Grid>
             <Grid item xs={6} style={{ marginTop }}>
-              <Typography
-                variant="body2"
-                style={{ fontSize: 12, fontWeight: 'bold' }}
-              >
+              <Typography style={{ fontSize: 13, fontWeight: 'bold' }}>
                 {isRTL ? 'عدد الايام' : 'Days'}
               </Typography>
             </Grid>
             <Grid item xs={6} style={{ marginTop }}>
-              <Typography
-                variant="body2"
-                style={{ fontSize: 12, fontWeight: 'bold' }}
-              >
-                {daysData?.days}
-              </Typography>
-            </Grid>
-            {daysData?.daysnow && (
-              <>
-                <Grid item xs={6}>
-                  <Typography
-                    variant="body2"
-                    style={{ fontSize: 12, fontWeight: 'bold' }}
-                  >
-                    {isRTL ? 'أيام مضت' : 'Spent Days'}
-                  </Typography>
-                </Grid>
-                <Grid item xs={6}>
-                  <Typography
-                    variant="body2"
-                    style={{ fontSize: 12, fontWeight: 'bold' }}
-                  >
-                    {daysData?.daysnow}
-                  </Typography>
-                </Grid>
-              </>
-            )}
-            {daysData?.dayamount && (
-              <>
-                <Grid item xs={6}>
-                  <Typography
-                    variant="body2"
-                    style={{ fontSize: 12, fontWeight: 'bold' }}
-                  >
-                    {isRTL ? 'تكلفة اليوم' : 'Day cost'}
-                  </Typography>
-                </Grid>
-                <Grid item xs={6}>
-                  <Typography
-                    variant="body2"
-                    style={{ fontSize: 12, fontWeight: 'bold' }}
-                  >
-                    {moneyFormat(daysData?.dayamount)}
-                  </Typography>
-                </Grid>
-              </>
-            )}
-            <Grid item xs={6}>
-              {rCell(isRTL ? 'المستحق' : 'Due', '#333')}
-            </Grid>
-            <Grid item xs={6}>
-              {rCell(moneyFormat(daysData?.amountnow), '#333')}
-            </Grid>
-            <Grid item xs={6}>
-              <Typography
-                variant="body2"
-                style={{ fontSize: 12, fontWeight: 'bold' }}
-              >
-                {isRTL ? 'المتبقي' : 'Amount'}
-              </Typography>
-            </Grid>
-            <Grid item xs={6}>
-              <Typography
-                variant="body2"
-                style={{ fontSize: 12, fontWeight: 'bold' }}
-              >
-                {moneyFormat(daysData?.remaining)}
+              <Typography style={{ fontSize: 13, fontWeight: 'bold' }}>
+                {daysData?.days} / {daysData?.daysnow}
               </Typography>
             </Grid>
           </Grid>
@@ -1497,6 +1435,52 @@ export const departmentTypeFormat = ({ row, isRTL }: any) => {
     return <div></div>;
   }
 };
+export const nameManageLinkProject = ({
+  row,
+  value,
+  setItem,
+  setOpenItem,
+}: any) => {
+  if (!value || value === '') return <div></div>;
+  return (
+    <Box>
+      <Button
+        onClick={() => {
+          if (setItem) {
+            setItem(row);
+            setOpenItem(true);
+          }
+        }}
+        variant="contained"
+        color="primary"
+        fullWidth
+        style={{
+          height: 30,
+          alignItems: 'center',
+          justifyContent: 'flex-start',
+          marginBottom: 5,
+          marginTop: 5,
+        }}
+      >
+        <Typography style={{ fontSize: 14 }}>{value}</Typography>
+      </Button>
+      <Box
+        style={{
+          paddingLeft: 5,
+          paddingRight: 5,
+        }}
+      >
+        <Grid container spacing={0}>
+          <Grid item xs={12}>
+            <Typography variant="caption">
+              {simpleDateFormatter2(row?.createdAt)}
+            </Typography>
+          </Grid>
+        </Grid>
+      </Box>
+    </Box>
+  );
+};
 export const nameManageLinkFormat = ({
   row,
   value,
@@ -1620,6 +1604,292 @@ export const nameManageLinkFormat = ({
           </Grid>
         )}
       </Box>
+    </Box>
+  );
+};
+export const nameManageLinkCustomer = ({
+  row,
+  value,
+  setItem,
+  setOpenItem,
+  isRTL,
+}: any) => {
+  if (!value || value === '') return <div></div>;
+  return (
+    <Box>
+      <Button
+        onClick={() => {
+          if (setItem) {
+            setItem(row);
+            setOpenItem(true);
+          }
+        }}
+        variant="contained"
+        color="primary"
+        fullWidth
+        style={{
+          height: 30,
+          alignItems: 'center',
+          justifyContent: 'flex-start',
+          marginBottom: 5,
+          marginTop: 5,
+        }}
+      >
+        <Typography style={{ fontSize: 14 }}>{value}</Typography>
+      </Button>
+      <Box
+        style={{
+          paddingLeft: 5,
+          paddingRight: 5,
+        }}
+      >
+        <Grid container spacing={0}>
+          {row?.phone && (
+            <Grid item xs={12}>
+              <Typography
+                style={{
+                  fontSize: 12,
+                  fontWeight: 'bold',
+                }}
+                variant="caption"
+              >
+                {isRTL ? 'هاتف' : 'Phone'} {row?.phone?.substring(3)}
+              </Typography>
+            </Grid>
+          )}
+        </Grid>
+      </Box>
+    </Box>
+  );
+};
+export const nameManageEmployeeRest = ({ row, isRTL }: any) => {
+  return (
+    <Box>
+      <Box
+        style={{
+          paddingLeft: 5,
+          paddingRight: 5,
+        }}
+      >
+        <Grid container spacing={1}>
+          <Grid item xs={5}>
+            <Typography style={{ fontSize: 13 }}>
+              {isRTL ? 'رقم الهاتف' : 'Phone'}
+            </Typography>
+          </Grid>
+          <Grid item xs={7}>
+            {row?.phone && (
+              <Typography style={{ fontSize: 13 }}>
+                {row?.phone?.substring(3)}
+              </Typography>
+            )}
+          </Grid>
+          <Grid item xs={5}>
+            <Typography style={{ fontSize: 13 }}>
+              {isRTL ? 'يوم العطلة' : 'Day Off'}
+            </Typography>
+          </Grid>
+          <Grid item xs={7}>
+            <Typography style={{ fontSize: 13 }}>
+              {daysoffFormatter({ value: row.daysoff, isRTL })}
+            </Typography>
+          </Grid>
+        </Grid>
+      </Box>
+    </Box>
+  );
+};
+export const nameManageLinkEmployee = ({
+  row,
+  value,
+  setItem,
+  setOpenItem,
+  isRTL,
+}: any) => {
+  const { retypeId, retypeNameAr, retypeName } = row;
+  if (!value || value === '') return <div></div>;
+  return (
+    <Box>
+      <Button
+        onClick={() => {
+          if (setItem) {
+            setItem(row);
+            setOpenItem(true);
+          }
+        }}
+        variant="contained"
+        color="primary"
+        fullWidth
+        style={{
+          height: 30,
+          alignItems: 'center',
+          justifyContent: 'flex-start',
+          marginBottom: 5,
+          marginTop: 5,
+        }}
+      >
+        <Typography style={{ fontSize: 14 }}>{value}</Typography>
+      </Button>
+      <Box
+        style={{
+          paddingLeft: 5,
+          paddingRight: 5,
+        }}
+      >
+        <Grid container spacing={0}>
+          {retypeId && (
+            <Grid item xs={6}>
+              {renderTag({
+                value: isRTL ? retypeNameAr : retypeName,
+                color: '#333',
+                bgcolor: colors.blueGrey[50],
+                width: 100,
+              })}
+            </Grid>
+          )}
+        </Grid>
+      </Box>
+    </Box>
+  );
+};
+export const nameResourseRest = ({ row }: any) => {
+  return (
+    <Box>
+      <Box
+        style={{
+          paddingLeft: 5,
+          paddingRight: 5,
+        }}
+      >
+        <Grid container spacing={0}>
+          <Grid item xs={6}>
+            {row?.plate &&
+              renderTag({
+                value: row.plate,
+                color: '#333',
+                bgcolor: colors.blueGrey[50],
+                width: 120,
+              })}
+          </Grid>
+          <Grid item xs={6}>
+            {row?.insurance &&
+              renderTag({
+                value: row.insurance,
+                color: '#333',
+                bgcolor: colors.blueGrey[50],
+                width: 120,
+              })}
+          </Grid>
+          <Grid item xs={6}>
+            {row?.brand &&
+              renderTag({
+                value: row.brand,
+                color: '#333',
+                bgcolor: colors.blueGrey[50],
+                width: 120,
+              })}
+          </Grid>
+          <Grid item xs={6}>
+            {row?.model &&
+              renderTag({
+                value: row.model,
+                color: '#333',
+                bgcolor: colors.blueGrey[50],
+                width: 120,
+              })}
+          </Grid>
+        </Grid>
+      </Box>
+    </Box>
+  );
+};
+export const nameManageLinkSimpleRes = ({
+  row,
+  value,
+  setItem,
+  setOpenItem,
+  isRTL,
+}: any) => {
+  const { retypeId, retypeNameAr, retypeName, retypeColor } = row;
+  if (!value || value === '') return <div></div>;
+  return (
+    <Box>
+      <Button
+        onClick={() => {
+          if (setItem) {
+            setItem(row);
+            setOpenItem(true);
+          }
+        }}
+        variant="contained"
+        color="primary"
+        fullWidth
+        style={{
+          height: 30,
+          alignItems: 'center',
+          justifyContent: 'flex-start',
+          marginBottom: 5,
+          marginTop: 5,
+        }}
+      >
+        <Typography style={{ fontSize: 14 }}>{value}</Typography>
+      </Button>
+      <Box
+        style={{
+          paddingLeft: 5,
+          paddingRight: 5,
+        }}
+      >
+        <Grid container spacing={0}>
+          {row?.carstatus && (
+            <Grid item xs={6}>
+              {carstatusFormatter({ value: row.carstatus, isRTL })}
+            </Grid>
+          )}
+          {retypeId && (
+            <Grid item xs={6}>
+              {renderTag({
+                value: isRTL ? retypeNameAr : retypeName,
+                color: '#333',
+                bgcolor: fade(retypeColor, 0.1),
+                width: 100,
+              })}
+            </Grid>
+          )}
+        </Grid>
+      </Box>
+    </Box>
+  );
+};
+export const nameManageLinkSimple = ({
+  row,
+  value,
+  setItem,
+  setOpenItem,
+}: any) => {
+  if (!value || value === '') return <div></div>;
+  return (
+    <Box>
+      <Button
+        onClick={() => {
+          if (setItem) {
+            setItem(row);
+            setOpenItem(true);
+          }
+        }}
+        variant="contained"
+        color="primary"
+        fullWidth
+        style={{
+          height: 30,
+          alignItems: 'center',
+          justifyContent: 'flex-start',
+          marginBottom: 5,
+          marginTop: 5,
+        }}
+      >
+        <Typography style={{ fontSize: 14 }}>{value}</Typography>
+      </Button>
     </Box>
   );
 };
@@ -2682,7 +2952,7 @@ export const salesTaskMainFormatter = ({
               {rCellMain(isRTL ? 'قيمة العقد' : 'Contract Amount', '#333')}
             </Grid>
             <Grid item xs={6} style={{ marginTop }}>
-              {rCellMain(moneyFormat(row?.amount), '#333')}
+              {rCellMain(moneyFormat(row?.coAmount), '#333')}
             </Grid>
             <Grid item xs={6}>
               {rCellMain(isRTL ? 'الفواتير' : 'Invoices', scolor)}

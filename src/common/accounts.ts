@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import { accountCodes } from "../constants/kaid";
+import { accountCodes } from '../constants/kaid';
 
 export const getAccountCodeRange = (acc: any) => {
   const parentcode = acc.parentcode;
@@ -16,6 +16,11 @@ export const getAccountsNumbers = (parentvalue: any, accounts: any) => {
   const codes = filteredaccounts.map((fc: any) => fc.code);
   return codes;
 };
+export const getCashAccountsNumbers = (accounts: any) => {
+  const filteredaccounts = accounts.filter((acc: any) => acc.parentcode === 1);
+  const codes = filteredaccounts.map((fc: any) => fc.code);
+  return codes;
+};
 
 export const getValidCode = (codes: any[], range: any) => {
   const len = range.max + 1 - range.min;
@@ -26,6 +31,11 @@ export const getValidCode = (codes: any[], range: any) => {
 
 export const getNewCode = (parentvalue: any, accounts: any, range: any) => {
   const codes = getAccountsNumbers(parentvalue, accounts);
+  const newcode = getValidCode(codes, range);
+  return newcode;
+};
+export const getNewCashCode = (accounts: any, range: any) => {
+  const codes = getCashAccountsNumbers(accounts);
   const newcode = getValidCode(codes, range);
   return newcode;
 };

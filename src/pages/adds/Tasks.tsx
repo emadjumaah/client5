@@ -30,16 +30,12 @@ import { Command, Loading, PopupEditing } from '../../Shared';
 import { getProjects, getResourses } from '../../graphql';
 import { useLazyQuery, useMutation } from '@apollo/client';
 import {
-  appointTaskFormatter,
   createdAtFormatter,
   daysdataFormatter,
   dueAmountFormatter,
-  expensesFormatter,
-  kaidsFormatter,
-  purchaseFormatter,
   raseedFormatter,
-  salesTaskFormatter,
   taskdataFormatter,
+  tasksimpledataFormatter,
   taskTitleNameFormatter,
 } from '../../Shared/colorFormat';
 import PageLayout from '../main/PageLayout';
@@ -73,19 +69,16 @@ export const getRowId = (row: { _id: any }) => row._id;
 
 export default function Tasks({ isRTL, words, menuitem, theme, company }) {
   const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
-  const [pageSizes] = useState([5, 6, 10, 20, 50, 0]);
+  const [pageSizes] = useState([5, 8, 10, 20, 50, 0]);
 
   const col = getColumns({ isRTL, words });
 
   const [columns] = useState([
+    col.docNo,
     col.name,
-    col.taskdata,
+    col.data,
+    col.taskconnect,
     col.daysdata,
-    col.appointments,
-    col.sales,
-    col.purchase,
-    col.expenses,
-    col.kaids,
     col.title,
     col.createdAt,
     col.type,
@@ -101,14 +94,11 @@ export default function Tasks({ isRTL, words, menuitem, theme, company }) {
   ]);
 
   const [tableColumnExtensions]: any = useState([
+    { columnName: col.docNo.name, width: 100 },
     { columnName: col.name.name, width: 250 },
-    { columnName: col.taskdata.name, width: 250 },
+    { columnName: col.data.name, width: 250 },
+    { columnName: col.taskconnect.name, width: 250 },
     { columnName: col.daysdata.name, width: 280 },
-    { columnName: col.appointments.name, width: 280 },
-    { columnName: col.sales.name, width: 280 },
-    { columnName: col.purchase.name, width: 280 },
-    { columnName: col.expenses.name, width: 200 },
-    { columnName: col.kaids.name, width: 230 },
     { columnName: col.title.name, width: 200 },
     { columnName: col.createdAt.name, width: 150 },
     { columnName: col.type.name, width: 100 },
@@ -124,6 +114,7 @@ export default function Tasks({ isRTL, words, menuitem, theme, company }) {
   ]);
 
   const [columnsViewer] = useState([
+    col.docNo,
     col.title,
     col.start,
     col.project,
@@ -375,7 +366,7 @@ export default function Tasks({ isRTL, words, menuitem, theme, company }) {
             <SortingState />
             <EditingState onCommitChanges={commitChanges} />
             <SearchState />
-            <PagingState defaultCurrentPage={0} defaultPageSize={6} />
+            <PagingState defaultCurrentPage={0} defaultPageSize={8} />
 
             <IntegratedSorting />
             <IntegratedFiltering />
@@ -387,20 +378,17 @@ export default function Tasks({ isRTL, words, menuitem, theme, company }) {
               }}
               tableComponent={TableComponent}
               rowComponent={(props: any) => (
-                <Table.Row {...props} style={{ height: 120 }}></Table.Row>
+                <Table.Row {...props} style={{ height: 80 }}></Table.Row>
               )}
               columnExtensions={tableColumnExtensions}
             />
             <TableColumnReordering
               defaultOrder={[
+                col.docNo.name,
                 col.name.name,
-                col.taskdata.name,
+                col.data.name,
+                col.taskconnect.name,
                 col.daysdata.name,
-                col.appointments.name,
-                col.sales.name,
-                col.purchase.name,
-                col.expenses.name,
-                col.kaids.name,
                 col.title.name,
                 col.createdAt.name,
                 col.type.name,
@@ -455,7 +443,11 @@ export default function Tasks({ isRTL, words, menuitem, theme, company }) {
               ></DataTypeProvider>
             )}
             <DataTypeProvider
-              for={[col.taskdata.name]}
+              for={[col.data.name]}
+              formatterComponent={tasksimpledataFormatter}
+            ></DataTypeProvider>
+            <DataTypeProvider
+              for={[col.taskconnect.name]}
               formatterComponent={(props: any) =>
                 taskdataFormatter({
                   ...props,
@@ -474,36 +466,6 @@ export default function Tasks({ isRTL, words, menuitem, theme, company }) {
               for={[col.daysdata.name]}
               formatterComponent={(props: any) =>
                 daysdataFormatter({ ...props, theme, isRTL })
-              }
-            ></DataTypeProvider>
-            <DataTypeProvider
-              for={[col.appointments.name]}
-              formatterComponent={(props: any) =>
-                appointTaskFormatter({ ...props, theme, isRTL })
-              }
-            ></DataTypeProvider>
-            <DataTypeProvider
-              for={[col.sales.name]}
-              formatterComponent={(props: any) =>
-                salesTaskFormatter({ ...props, theme, isRTL })
-              }
-            ></DataTypeProvider>
-            <DataTypeProvider
-              for={[col.purchase.name]}
-              formatterComponent={(props: any) =>
-                purchaseFormatter({ ...props, theme, isRTL })
-              }
-            ></DataTypeProvider>
-            <DataTypeProvider
-              for={[col.expenses.name]}
-              formatterComponent={(props: any) =>
-                expensesFormatter({ ...props, theme, isRTL })
-              }
-            ></DataTypeProvider>
-            <DataTypeProvider
-              for={[col.kaids.name]}
-              formatterComponent={(props: any) =>
-                kaidsFormatter({ ...props, theme, isRTL })
               }
             ></DataTypeProvider>
             <DataTypeProvider

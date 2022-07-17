@@ -5,10 +5,7 @@ import { GContextTypes } from '../types';
 import { GlobalContext } from '../contexts';
 import { Box, Grid, Paper, Tab, Tabs, Typography } from '@material-ui/core';
 import PopupLayout from '../pages/main/PopupLayout';
-import EventsCustomer from '../Shared/EventsCustomer';
-import TasksCustomer from '../Shared/TasksCustomer';
 import { supplierManamentTabs } from '../constants/rrule';
-import ProjectsCustomer from '../Shared/ProjectsCustomer';
 import InvoicesSupplier from '../Shared/InvoicesSupplier';
 import PaymentSupplier from '../Shared/PaymentSupplier';
 import useWindowDimensions from '../hooks/useWindowDimensions';
@@ -116,48 +113,8 @@ const PopupSupplierView = ({ open, onClose, row, theme, company }: any) => {
                           end={end}
                         ></MainCustomer>
                       </TabPanel>
+
                       <TabPanel value={value} index={1}>
-                        <ProjectsCustomer
-                          isRTL={isRTL}
-                          words={words}
-                          name="supplierId"
-                          id={row?._id}
-                          width={width}
-                          height={height}
-                          start={start}
-                          end={end}
-                        ></ProjectsCustomer>
-                      </TabPanel>
-                      <TabPanel value={value} index={2}>
-                        <TasksCustomer
-                          isRTL={isRTL}
-                          words={words}
-                          theme={theme}
-                          name="supplierId"
-                          id={row?._id}
-                          width={width}
-                          height={height}
-                          start={start}
-                          end={end}
-                        ></TasksCustomer>
-                      </TabPanel>
-                      <TabPanel value={value} index={3}>
-                        <EventsCustomer
-                          isRTL={isRTL}
-                          words={words}
-                          theme={theme}
-                          id={row?._id}
-                          name="supplierId"
-                          width={width}
-                          height={height}
-                          start={start}
-                          end={end}
-                          value={row}
-                          company={company}
-                          tempoptions={tempoptions}
-                        ></EventsCustomer>
-                      </TabPanel>
-                      <TabPanel value={value} index={4}>
                         <InvoicesSupplier
                           isRTL={isRTL}
                           words={words}
@@ -173,7 +130,7 @@ const PopupSupplierView = ({ open, onClose, row, theme, company }: any) => {
                           tempoptions={tempoptions}
                         ></InvoicesSupplier>
                       </TabPanel>
-                      <TabPanel value={value} index={5}>
+                      <TabPanel value={value} index={2}>
                         <PaymentSupplier
                           isRTL={isRTL}
                           words={words}

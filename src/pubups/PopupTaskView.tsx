@@ -303,23 +303,27 @@ const PopupTaskView = ({
                     elevation={0}
                     style={{ marginBottom: 10, backgroundColor: '#f5f5f5' }}
                   >
-                    <TabPanel value={value} index={0}>
-                      <MainCustomer
-                        isRTL={isRTL}
-                        words={words}
-                        theme={theme}
-                        name="contractId"
-                        value={row}
-                        id={row?._id}
-                        width={width}
-                        height={height}
-                        start={start}
-                        end={end}
-                        closeloading={closeloading}
-                        setOpenCloseDate={setOpenCloseDate}
-                        daysData={daysData}
-                      ></MainCustomer>
-                    </TabPanel>
+                    {value === 0 && (
+                      <TabPanel value={value} index={0}>
+                        {start && (
+                          <MainCustomer
+                            isRTL={isRTL}
+                            words={words}
+                            theme={theme}
+                            name="contractId"
+                            value={row}
+                            id={row?._id}
+                            width={width}
+                            height={height}
+                            start={start}
+                            end={end}
+                            closeloading={closeloading}
+                            setOpenCloseDate={setOpenCloseDate}
+                            daysData={daysData}
+                          ></MainCustomer>
+                        )}
+                      </TabPanel>
+                    )}
                     <TabPanel value={value} index={1}>
                       <EventsCustomer
                         isRTL={isRTL}

@@ -34,11 +34,8 @@ import { errorAlert, errorDeleteAlert } from '../../Shared/helpers';
 import PageLayout from '../main/PageLayout';
 import { getColumns } from '../../common/columns';
 import {
-  appointmentsFormatter,
   avataManageFormatter,
-  nameManageLinkFormat,
-  raseedFormatter,
-  salesFormatter,
+  nameManageLinkCustomer,
 } from '../../Shared/colorFormat';
 import PopupCustomerView from '../../pubups/PopupCustomerView';
 import {
@@ -59,7 +56,7 @@ import { CustomerContext } from '../../contexts/managment';
 export default function Customers(props: any) {
   const { isRTL, words, menuitem, theme, company } = props;
   const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
-  const [pageSizes] = useState([5, 10, 20, 50, 0]);
+  const [pageSizes] = useState([5, 8, 10, 20, 50, 0]);
   const [rows, setRows] = useState([]);
   const [item, setItem] = useState(null);
   const [openImport, setOpenImport] = useState(false);
@@ -83,9 +80,6 @@ export default function Customers(props: any) {
   const [columns] = useState([
     { name: 'avatar', title: ' ' },
     col.name,
-    col.appointments,
-    col.sales,
-    col.raseed,
     { name: 'phone', title: words.phoneNumber },
     { name: 'email', title: words.email },
     { name: 'address', title: words.address },
@@ -94,9 +88,6 @@ export default function Customers(props: any) {
   const [tableColumnExtensions]: any = useState([
     { columnName: 'avatar', width: 150 },
     { columnName: col.name.name, width: 300 },
-    { columnName: col.appointments.name, width: 300 },
-    { columnName: col.sales.name, width: 300 },
-    { columnName: col.raseed.name, width: 200 },
     { columnName: 'phone', width: 150 },
     { columnName: 'email', width: 200 },
     { columnName: 'address', width: 200 },
@@ -203,7 +194,7 @@ export default function Customers(props: any) {
             <SortingState />
             <EditingState onCommitChanges={commitChanges} />
             <SearchState />
-            <PagingState defaultCurrentPage={0} defaultPageSize={5} />
+            <PagingState defaultCurrentPage={0} defaultPageSize={8} />
 
             <IntegratedSorting />
             <IntegratedFiltering />
@@ -216,7 +207,7 @@ export default function Customers(props: any) {
               }}
               tableComponent={TableComponent}
               rowComponent={(props: any) => (
-                <Table.Row {...props} style={{ height: 130 }}></Table.Row>
+                <Table.Row {...props} style={{ height: 80 }}></Table.Row>
               )}
               columnExtensions={tableColumnExtensions}
             />
@@ -224,9 +215,6 @@ export default function Customers(props: any) {
               defaultOrder={[
                 'avatar',
                 col.name.name,
-                col.appointments.name,
-                col.sales.name,
-                col.raseed.name,
                 'phone',
                 'email',
                 'address',
@@ -257,7 +245,7 @@ export default function Customers(props: any) {
                   setItem,
                   setOpenItem,
                   isRTL,
-                  height: 110,
+                  height: 70,
                 })
               }
             ></DataTypeProvider>
@@ -265,7 +253,7 @@ export default function Customers(props: any) {
               <DataTypeProvider
                 for={[col.name.name]}
                 formatterComponent={(props: any) =>
-                  nameManageLinkFormat({
+                  nameManageLinkCustomer({
                     ...props,
                     setItem,
                     setOpenItem,
@@ -274,22 +262,7 @@ export default function Customers(props: any) {
                 }
               ></DataTypeProvider>
             )}
-            <DataTypeProvider
-              for={[col.appointments.name]}
-              formatterComponent={(props: any) =>
-                appointmentsFormatter({ ...props, theme, isRTL, height: 110 })
-              }
-            ></DataTypeProvider>
-            <DataTypeProvider
-              for={[col.sales.name]}
-              formatterComponent={(props: any) =>
-                salesFormatter({ ...props, theme, isRTL, height: 110 })
-              }
-            ></DataTypeProvider>
-            <DataTypeProvider
-              for={[col.raseed.name]}
-              formatterComponent={raseedFormatter}
-            ></DataTypeProvider>
+
             <TableEditColumn
               showEditCommand
               showDeleteCommand

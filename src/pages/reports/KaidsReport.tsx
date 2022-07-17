@@ -119,6 +119,8 @@ export default function KaidsReport({
           col.refNo,
           col.acc,
           col.opAcc,
+          col.item,
+          { name: 'qty', title: isRTL ? 'الكمية' : 'Quantity' },
           col.employee,
           col.department,
           col.customer,
@@ -137,6 +139,8 @@ export default function KaidsReport({
           col.refNo,
           col.acc,
           col.opAcc,
+          col.item,
+          { name: 'qty', title: isRTL ? 'الكمية' : 'Quantity' },
           col.employee,
           col.resourse,
           col.department,
@@ -258,6 +262,7 @@ export default function KaidsReport({
           debit,
           credit,
           amount: am,
+          qty: 0,
         });
       }
     }
@@ -374,6 +379,7 @@ export default function KaidsReport({
   const totalSummaryItems = [
     { columnName: 'credit', type: 'sum' },
     { columnName: 'debit', type: 'sum' },
+    { columnName: 'qty', type: 'sum' },
   ];
   const componentRef: any = useRef();
 
@@ -511,6 +517,8 @@ export default function KaidsReport({
                   defaultHiddenColumnNames={[
                     col.amount.name,
                     col.rased.name,
+                    col.item.name,
+                    'qty',
                     col.contract.name,
                     col.customer.name,
                     col.supplier.name,

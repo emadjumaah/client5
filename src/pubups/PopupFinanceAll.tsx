@@ -24,7 +24,7 @@ import { useLazyQuery } from '@apollo/client';
 import getOperationKaids from '../graphql/query/getOperationKaids';
 import LoadingInline from '../Shared/LoadingInline';
 import _ from 'lodash';
-import { sleep, successAlert } from '../Shared/helpers';
+import { successAlert } from '../Shared/helpers';
 // import { useDepartments, useEmployees, useTemplate } from '../hooks';
 
 export const indexTheList = (list: any) => {
@@ -213,8 +213,7 @@ const PopupFinanceAll = ({
 
   const apply = async (mutate: any, variables: any) => {
     try {
-      mutate({ variables });
-      await sleep(2);
+      await mutate({ variables });
       await successAlert(setAlrt, isRTL);
       setSaving(false);
       closeModal();

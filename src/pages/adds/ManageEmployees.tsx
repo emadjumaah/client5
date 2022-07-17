@@ -29,13 +29,9 @@ import { Command, PopupEditing } from '../../Shared';
 import { getRowId } from '../../common';
 import { PopupEmployee } from '../../pubups';
 import {
-  appointmentsFormatter,
-  avataManageFormatter,
-  expensesFormatter,
-  kaidsFormatter,
-  nameManageLinkFormat,
-  purchaseFormatter,
-  salesFormatter,
+  avatarColorFormatter,
+  nameManageEmployeeRest,
+  nameManageLinkEmployee,
 } from '../../Shared/colorFormat';
 import { AlertLocal, SearchTable } from '../../components';
 import { errorAlert, errorDeleteAlert } from '../../Shared/helpers';
@@ -61,7 +57,7 @@ export default function ManageEmployees({
   company,
 }: any) {
   const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
-  const [pageSizes] = useState([5, 6, 10, 20, 50, 0]);
+  const [pageSizes] = useState([5, 8, 10, 20, 50, 0]);
   const [rows, setRows] = useState([]);
   const [rtypvalue, setRtypvalue] = useState<any>(null);
 
@@ -87,29 +83,21 @@ export default function ManageEmployees({
   const [columns] = useState([
     { name: 'avatar', title: ' ' },
     col.name,
-    col.appointments,
-    col.sales,
-    col.expenses,
-    col.kaids,
-    col.purchase,
-    { name: 'phone', title: words.phoneNumber },
+    col.data,
     { name: 'email', title: words.email },
-    col.retype,
     { name: 'info', title: words.info },
+    { name: 'phone', title: words.phoneNumber },
+    col.retype,
   ]);
 
   const [tableColumnExtensions]: any = useState([
     { columnName: 'avatar', width: 30 },
-    { columnName: col.name.name, width: 250 },
-    { columnName: col.appointments.name, width: 250, align: 'center' },
-    { columnName: col.sales.name, width: 240 },
-    { columnName: col.purchase.name, width: 240 },
-    { columnName: col.expenses.name, width: 200 },
-    { columnName: col.kaids.name, width: 200 },
-    { columnName: 'phone', width: 100 },
+    { columnName: col.name.name, width: 300 },
+    { columnName: col.data.name, width: 300 },
     { columnName: 'email', width: 200 },
-    { columnName: col.retype.name, width: 150 },
     { columnName: 'info', width: 200 },
+    { columnName: 'phone', width: 100 },
+    { columnName: col.retype.name, width: 150 },
   ]);
 
   const [columnsViewer] = useState([
@@ -225,7 +213,7 @@ export default function ManageEmployees({
             <SortingState />
             <EditingState onCommitChanges={commitChanges} />
             <SearchState />
-            <PagingState defaultCurrentPage={0} defaultPageSize={6} />
+            <PagingState defaultCurrentPage={0} defaultPageSize={8} />
 
             <IntegratedSorting />
             <IntegratedFiltering />
@@ -238,7 +226,7 @@ export default function ManageEmployees({
               }}
               tableComponent={TableComponent}
               rowComponent={(props: any) => (
-                <Table.Row {...props} style={{ height: 120 }}></Table.Row>
+                <Table.Row {...props} style={{ height: 80 }}></Table.Row>
               )}
               columnExtensions={tableColumnExtensions}
             />
@@ -246,15 +234,11 @@ export default function ManageEmployees({
               defaultOrder={[
                 'avatar',
                 col.name.name,
-                col.appointments.name,
-                col.sales.name,
-                col.purchase.name,
-                col.expenses.name,
-                col.kaids.name,
-                'phone',
+                col.data.name,
                 'email',
-                col.retype.name,
                 'info',
+                'phone',
+                col.retype.name,
               ]}
             />
             <TableColumnResizing defaultColumnWidths={tableColumnExtensions} />
@@ -277,11 +261,9 @@ export default function ManageEmployees({
             <DataTypeProvider
               for={['avatar']}
               formatterComponent={(props: any) =>
-                avataManageFormatter({
+                avatarColorFormatter({
                   ...props,
-                  setItem,
-                  setOpenItem,
-                  isRTL,
+                  height: 70,
                 })
               }
             ></DataTypeProvider>
@@ -289,7 +271,7 @@ export default function ManageEmployees({
               <DataTypeProvider
                 for={[col.name.name]}
                 formatterComponent={(props: any) =>
-                  nameManageLinkFormat({
+                  nameManageLinkEmployee({
                     ...props,
                     setItem,
                     setOpenItem,
@@ -298,36 +280,17 @@ export default function ManageEmployees({
                 }
               ></DataTypeProvider>
             )}
-            <DataTypeProvider
-              for={[col.appointments.name]}
-              formatterComponent={(props: any) =>
-                appointmentsFormatter({ ...props, theme, isRTL })
-              }
-            ></DataTypeProvider>
-            <DataTypeProvider
-              for={[col.sales.name]}
-              formatterComponent={(props: any) =>
-                salesFormatter({ ...props, theme, isRTL })
-              }
-            ></DataTypeProvider>
-            <DataTypeProvider
-              for={[col.purchase.name]}
-              formatterComponent={(props: any) =>
-                purchaseFormatter({ ...props, theme, isRTL })
-              }
-            ></DataTypeProvider>
-            <DataTypeProvider
-              for={[col.expenses.name]}
-              formatterComponent={(props: any) =>
-                expensesFormatter({ ...props, theme, isRTL })
-              }
-            ></DataTypeProvider>
-            <DataTypeProvider
-              for={[col.kaids.name]}
-              formatterComponent={(props: any) =>
-                kaidsFormatter({ ...props, theme, isRTL })
-              }
-            ></DataTypeProvider>
+            {roles.isEditor() && (
+              <DataTypeProvider
+                for={[col.data.name]}
+                formatterComponent={(props: any) =>
+                  nameManageEmployeeRest({
+                    ...props,
+                    isRTL,
+                  })
+                }
+              ></DataTypeProvider>
+            )}
 
             <TableEditColumn
               showEditCommand

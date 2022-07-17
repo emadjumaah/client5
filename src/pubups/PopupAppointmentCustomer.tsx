@@ -48,7 +48,7 @@ import { SelectLocal } from '../pages/calendar/common/SelectLocal';
 import { eventLengthOptions } from '../constants/rrule';
 import { roles } from '../common';
 import ServiceItemForm from '../Shared/ServiceItemForm';
-import { sleep, successAlert } from '../Shared/helpers';
+import { successAlert } from '../Shared/helpers';
 
 export const indexTheList = (list: any) => {
   return list.map((item: any, index: any) => {
@@ -593,8 +593,7 @@ const PopupAppointmentCustomer = ({
 
   const apply = async (mutate: any, variables: any) => {
     try {
-      mutate({ variables });
-      await sleep(2);
+      await mutate({ variables });
       await successAlert(setAlrt, isRTL);
       setSaving(false);
       onCloseForm();

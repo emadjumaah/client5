@@ -1,19 +1,13 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import React, { useEffect } from 'react';
 import { useState } from 'react';
-import { Box, colors, Grid } from '@material-ui/core';
+import { Box, Grid } from '@material-ui/core';
 import {
   appointmentsMainFormatter,
   expensesMainFormatter,
   kaidsMainFormatter,
   salesMainFormatter,
   purchaseMainFormatter,
-  appointmentsFormatter,
-  salesFormatter,
-  purchaseFormatter,
-  expensesFormatter,
-  kaidsFormatter,
   taskDataView,
   appointTaskMainFormatter,
   salesTaskMainFormatter,
@@ -22,11 +16,10 @@ import {
   employeeDataView,
   customerDataView,
   incomeMainFormatter,
-  incomeFormatter,
   projectDataView,
   timeActivateView,
 } from './colorFormat';
-import { useLazyQuery } from '@apollo/client';
+import { useQuery } from '@apollo/client';
 import getGereralCalculation from '../graphql/query/getGereralCalculation';
 import ReminderBox from './ReminderBox';
 
@@ -42,7 +35,6 @@ export default function MainCustomer({
   start,
   end,
 }: any) {
-  const [data, setData] = useState<any>(null);
   const [fullTime, setFullTime] = useState(false);
   const isCust = name === 'customerId';
   const isSupp = name === 'supplierId';
@@ -52,35 +44,20 @@ export default function MainCustomer({
   const isDepart = name === 'departmentId';
   const isProj = name === 'projectId';
 
-  console.log('data', data);
-  const [loadCalcss, calcsData]: any = useLazyQuery(getGereralCalculation, {
-    nextFetchPolicy: 'cache-and-network',
+  const res = useQuery(getGereralCalculation, {
+    variables: {
+      [name]: id,
+      start: !fullTime ? new Date(start).setHours(0, 0, 0, 0) : undefined,
+      end: !fullTime ? new Date(end).setHours(23, 59, 59, 999) : undefined,
+    },
+    fetchPolicy: 'cache-and-network',
   });
 
-  useEffect(() => {
-    const variables = {
-      [name]: id,
-      start:
-        start && !fullTime ? new Date(start).setHours(0, 0, 0, 0) : undefined,
-      end:
-        end && !fullTime ? new Date(end).setHours(23, 59, 59, 999) : undefined,
-    };
-    console.log('variables', variables);
-    loadCalcss({
-      variables,
-    });
-  }, [id, start, end, fullTime]);
-
-  useEffect(() => {
-    const res = calcsData?.data?.getGereralCalculation?.data;
-    if (res) {
-      const data = JSON.parse(res);
-      if (isCont) {
-        data.coAmount = row.amount;
-      }
-      setData(data);
-    }
-  }, [calcsData, start, end]);
+  if (res.loading) return null;
+  const data = JSON.parse(res?.data?.getGereralCalculation?.data);
+  if (isCont) {
+    data.coAmount = row.amount;
+  }
 
   // evAmount,
   // coAmount,
@@ -130,7 +107,6 @@ export default function MainCustomer({
               <Grid container spacing={1}>
                 <Grid item xs={4}>
                   <Box style={{ backgroundColor: '#fff', height: 250 }}>
-                    {timeActivateView({ fullTime, setFullTime, isRTL })}
                     {isCont && taskDataView({ row, words, isRTL })}
                     {isProj && projectDataView({ row, words, isRTL })}
                     {isReso && resourseDataView({ row, words, isRTL })}
@@ -226,87 +202,10 @@ export default function MainCustomer({
                     </Box>
                   </Grid>
                 )}
+                <Grid item xs={4}>
+                  {timeActivateView({ fullTime, setFullTime, isRTL })}
+                </Grid>
               </Grid>
-            </Box>
-            <Box>
-              <Box
-                display="flex"
-                borderRadius={15}
-                style={{
-                  alignItems: 'center',
-                  backgroundColor: colors.indigo[50],
-                  height: 145,
-                  paddingLeft: 10,
-                  paddingRight: 10,
-                }}
-              >
-                {!isSupp && (
-                  <Box style={{ width: 250, marginLeft: 15 }}>
-                    {appointmentsFormatter({
-                      row,
-                      theme,
-                      isRTL,
-                      height: 120,
-                      bc: '#bbb',
-                    })}
-                  </Box>
-                )}
-                {!isSupp && (
-                  <Box style={{ width: 250, marginLeft: 15 }}>
-                    {salesFormatter({
-                      row,
-                      theme,
-                      isRTL,
-                      height: 120,
-                      bc: '#bbb',
-                    })}
-                  </Box>
-                )}
-                {!isCust && (
-                  <Box style={{ width: 250, marginLeft: 15 }}>
-                    {purchaseFormatter({
-                      row,
-                      theme,
-                      isRTL,
-                      height: 120,
-                      bc: '#bbb',
-                    })}
-                  </Box>
-                )}
-                {!isCust && !isSupp && (
-                  <Box style={{ width: 250, marginLeft: 15 }}>
-                    {expensesFormatter({
-                      row,
-                      theme,
-                      isRTL,
-                      height: 120,
-                      bc: '#bbb',
-                    })}
-                  </Box>
-                )}
-                {!isCust && !isSupp && (
-                  <Box style={{ width: 250, marginLeft: 15 }}>
-                    {kaidsFormatter({
-                      row,
-                      theme,
-                      isRTL,
-                      height: 120,
-                      bc: '#bbb',
-                    })}
-                  </Box>
-                )}
-                {!isSupp && (
-                  <Box style={{ width: 250, marginLeft: 15 }}>
-                    {incomeFormatter({
-                      row,
-                      theme,
-                      isRTL,
-                      height: 120,
-                      bc: '#bbb',
-                    })}
-                  </Box>
-                )}
-              </Box>
             </Box>
           </Box>
         )}

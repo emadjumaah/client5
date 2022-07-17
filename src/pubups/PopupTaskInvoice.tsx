@@ -38,7 +38,6 @@ import { InvoicePrint } from '../print';
 import { getInvDays } from '../common/helpers';
 import getGereralCalculation from '../graphql/query/getGereralCalculation';
 import { getProjects, getTasks } from '../graphql/query';
-import { sleep } from '../Shared/helpers';
 
 export const indexTheList = (list: any) => {
   return list.map((item: any, index: any) => {
@@ -498,8 +497,7 @@ const PopupTaskInvoice = ({
 
   const apply = async (mutate: any, variables: any) => {
     try {
-      mutate({ variables });
-      await sleep(2);
+      await mutate({ variables });
       await successAlert(setAlrt, isRTL);
       setSaving(false);
       onCloseForm();

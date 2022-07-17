@@ -9,7 +9,7 @@ const PercentChartTask = ({ height, progress, pricolor, seccolor }) => {
   const value = progress
     ? Math.round(progress * 100).toLocaleString() + '%'
     : '0%';
-
+  const fontSize = height > 100 ? 18 : 13;
   return (
     <ResponsiveContainer width="100%" height="100%">
       <PieChart height={height}>
@@ -39,7 +39,7 @@ const PercentChartTask = ({ height, progress, pricolor, seccolor }) => {
           <Label
             position="center"
             value={value}
-            style={{ fontSize: 18, fontWeight: 'bold' }}
+            style={{ fontSize, fontWeight: 'bold' }}
             fill={pricolor}
           />
         </Pie>

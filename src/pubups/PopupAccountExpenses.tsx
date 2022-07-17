@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import React, { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -15,11 +15,10 @@ import { parentsAccountsList } from '../constants/kaid';
 import PopupLayout from '../pages/main/PopupLayout';
 import { GContextTypes } from '../types';
 import { TextFieldLocal } from '../components';
-import AutoFieldLocal from '../components/fields/AutoFieldLocal';
 import { GlobalContext } from '../contexts';
 import { dublicateAlert, errorAlert } from '../Shared';
-import { getAccountCodeRange, getNewCode } from '../common/accounts';
-import { errorAlertMsg, successAlert } from '../Shared/helpers';
+import { errorAlertMsg, getReturnItem, successAlert } from '../Shared/helpers';
+import { getNewCashCode } from '../common/accounts';
 
 export const accountClasses = makeStyles((theme: Theme) =>
   createStyles({
@@ -45,34 +44,27 @@ export const accountClasses = makeStyles((theme: Theme) =>
 const accountSchema = yup.object().shape({
   name: yup.string().required().min(3).max(100),
 });
-const accountEditSchema = yup.object().shape({
-  name: yup.string().required().min(3).max(100),
-});
-export const accountResolver = { resolver: yupResolver(accountSchema) };
-export const accountEditResolver = { resolver: yupResolver(accountEditSchema) };
 
-const PopupAccount = ({
+export const accountResolver = { resolver: yupResolver(accountSchema) };
+
+const PopupAccountExpenses = ({
   open,
   onClose,
   row,
   isNew,
   addAction,
-  editAction,
   theme,
+  name,
+  setNewValue,
   accounts,
 }: any) => {
   const [saving, setSaving] = useState(false);
   const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
-  const [parentvalue, setParentvalue] = useState<any>(null);
-  const [parentError, setParentError] = useState<any>(false);
-  const parentRef: any = React.useRef();
-
   const [range, setRange] = useState<any>({});
   const [code, setCode] = useState(0);
 
-  const { register, handleSubmit, errors, reset } = useForm(
-    isNew ? accountResolver : accountEditResolver
-  );
+  const { register, handleSubmit, errors, reset } = useForm(accountResolver);
+  const parentvalue = parentsAccountsList[0];
 
   const {
     store: { user },
@@ -80,35 +72,15 @@ const PopupAccount = ({
   }: GContextTypes = useContext(GlobalContext);
 
   useEffect(() => {
-    if (parentvalue) {
-      const rng = getAccountCodeRange(parentvalue);
-      setRange(rng);
-      if (isNew) {
-        const newcode = getNewCode(parentvalue, accounts, rng);
-        setCode(newcode);
-      }
-    } else {
-      setCode(0);
+    const rng = { min: 10500, max: 10999 };
+    setRange(rng);
+    if (isNew) {
+      const newcode = getNewCashCode(accounts, rng);
+      setCode(newcode);
     }
-  }, [parentvalue]);
-
-  useEffect(() => {
-    if (row && row.parentcode) {
-      const { parentcode } = row;
-      const parent = parentsAccountsList.filter(
-        (par: any) => par.parentcode === parentcode
-      )[0];
-      setParentvalue(parent);
-      setCode(row.code);
-    }
-  }, [row]);
+  }, [open]);
 
   const onSubmit = async (data: any) => {
-    if (!parentvalue) {
-      setParentError(true);
-      parentRef.current.focus();
-      return;
-    }
     if (code > range.max || code < range.min) {
       await errorAlertMsg(
         setAlrt,
@@ -120,21 +92,23 @@ const PopupAccount = ({
     const name = data.name.trim();
     const branch = user.branch;
     const variables: any = {
-      _id: row?._id ? row?._id : undefined, // is it new or edit
       branch,
       code,
       name,
       nameAr: name,
-      canedit: row?._id ? undefined : true,
+      canedit: true,
       ...parentvalue,
     };
-    const mutate = isNew ? addAction : editAction;
-    apply(mutate, variables);
+    const mutate = addAction;
+    const mutateName = 'createAccount';
+    apply(mutate, mutateName, variables);
   };
 
-  const apply = async (mutate: any, variables: any) => {
+  const apply = async (mutate: any, mutateName: string, variables: any) => {
     try {
-      await mutate({ variables });
+      const res = await mutate({ variables });
+      const nitem = getReturnItem(res, mutateName);
+      if (setNewValue && nitem) setNewValue(nitem, name);
       await successAlert(setAlrt, isRTL);
       setSaving(false);
       closeForm();
@@ -153,8 +127,6 @@ const PopupAccount = ({
   };
 
   const resetAll = () => {
-    setParentvalue(null);
-    setParentError(false);
     setSaving(false);
     setRange({});
     setCode(0);
@@ -169,13 +141,7 @@ const PopupAccount = ({
   const onHandleSubmit = () => {
     handleSubmit(onSubmit)();
   };
-  const title = isRTL
-    ? isNew
-      ? 'اضافة حساب'
-      : 'تعديل بيانات حساب'
-    : isNew
-    ? 'New Account'
-    : 'Edit Account';
+  const title = isRTL ? 'اضافة حساب' : 'New Account';
 
   return (
     <PopupLayout
@@ -187,31 +153,21 @@ const PopupAccount = ({
       theme={theme}
       alrt={alrt}
       saving={saving}
+      mb={50}
     >
       <Grid container spacing={2}>
         <Grid item xs={1}></Grid>
         <Grid item xs={9}>
-          <AutoFieldLocal
-            name="parent"
-            nolabel
-            title={isRTL ? 'الحساب الرئيسي' : 'Main Account'}
-            basename="parent"
-            options={parentsAccountsList}
-            value={parentvalue}
-            setSelectValue={setParentvalue}
-            setSelectError={setParentError}
-            selectError={parentError}
-            refernce={parentRef}
+          <TextFieldLocal
+            required
+            autoFocus
+            name="name"
+            label={words.name}
             register={register}
-            disabled={row && row.parentcode ? true : false}
-            isRTL={isRTL}
+            errors={errors}
+            row={row}
             fullWidth
-          ></AutoFieldLocal>
-          {range && range?.min && isNew && (
-            <Typography>
-              {range.min} - {range.max}
-            </Typography>
-          )}
+          />
           <TextFieldLocal
             required
             name="code"
@@ -222,19 +178,13 @@ const PopupAccount = ({
             disabled={row && row.parentcode ? true : false}
             type="number"
             fullWidth
+            mb={5}
           />
-          <React.Fragment>
-            <TextFieldLocal
-              required
-              autoFocus
-              name="name"
-              label={words.name}
-              register={register}
-              errors={errors}
-              row={row}
-              fullWidth
-            />
-          </React.Fragment>
+          {range && range?.min && isNew && (
+            <Typography>
+              {range.min} - {range.max}
+            </Typography>
+          )}
         </Grid>
         <Grid item xs={2}></Grid>
       </Grid>
@@ -242,4 +192,4 @@ const PopupAccount = ({
   );
 };
 
-export default PopupAccount;
+export default PopupAccountExpenses;

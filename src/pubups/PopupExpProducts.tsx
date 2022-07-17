@@ -31,7 +31,7 @@ import ExpensesItemsTable from '../Shared/ExpensesItemsTable';
 import { accountCode } from '../constants/kaid';
 import { useReactToPrint } from 'react-to-print';
 import { VoucherPrint } from '../print';
-import { sleep, successAlert } from '../Shared/helpers';
+import { successAlert } from '../Shared/helpers';
 
 export const indexTheList = (list: any) => {
   return list.map((item: any, index: any) => {
@@ -489,13 +489,13 @@ const PopupExpProducts = ({
     };
     const mutate = isNew ? addAction : editAction;
     // return;
+    console.log('variables', variables);
     apply(mutate, variables);
   };
 
   const apply = async (mutate: any, variables: any) => {
     try {
-      mutate({ variables });
-      await sleep(2);
+      await mutate({ variables });
       await successAlert(setAlrt, isRTL);
       setSaving(false);
       onCloseForm();

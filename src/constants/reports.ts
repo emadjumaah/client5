@@ -130,7 +130,7 @@ export const documentTypes = [
     id: 10,
     value: operationTypes.exppayable,
     name: 'Payable Expenses',
-    nameAr: 'مصروف عملاء',
+    nameAr: 'مصروف موردين',
   },
   {
     id: 11,

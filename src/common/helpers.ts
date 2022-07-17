@@ -659,6 +659,55 @@ export const getTaskTimeAmountData = (task: any, time = new Date()) => {
     dayamount,
   };
 };
+export const getTaskTimeAmountSimple = (task: any, time = new Date()) => {
+  if (!task) return null;
+
+  const { start, end, amount } = task;
+
+  const startms = new Date(start).getTime();
+  const endms = new Date(end).getTime();
+  const now = time.getTime();
+
+  const daysnow = Math.ceil((now - startms) / (1000 * 60 * 60 * 24));
+  const days = end
+    ? Math.ceil((endms - startms) / (1000 * 60 * 60 * 24))
+    : daysnow;
+  const progress = Math.round((daysnow / days) * 100) / 100;
+
+  if (!end) {
+    return {
+      progress,
+      days,
+      daysnow,
+      amount,
+    };
+  }
+
+  if (now < startms) {
+    return {
+      progress: 0,
+      days,
+      daysnow: null,
+      amount,
+    };
+  }
+
+  if (now > endms) {
+    return {
+      progress: 1,
+      days,
+      daysnow: days,
+      amount,
+    };
+  }
+
+  return {
+    progress,
+    days,
+    daysnow,
+    amount,
+  };
+};
 export const getInvDays = (start, end) => {
   if (!start || !end) return 0;
 

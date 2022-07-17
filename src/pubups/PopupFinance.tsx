@@ -20,11 +20,12 @@ import PopupLayout from '../pages/main/PopupLayout';
 import { Grid } from '@material-ui/core';
 import { CalenderLocal, TextFieldLocal } from '../components';
 import AutoFieldLocal from '../components/fields/AutoFieldLocal';
-import { sleep, getCashBankPetty } from '../Shared/helpers';
+import { getCashBankPetty } from '../Shared/helpers';
 import useEmployees from '../hooks/useEmployees';
 import { useTemplate } from '../hooks';
 import PopupEmployee from './PopupEmployee';
 import { weekdaysNNo } from '../constants/datatypes';
+import PopupAccountExpenses from './PopupAccountExpenses';
 
 const PopupFinance = ({
   open,
@@ -48,6 +49,7 @@ const PopupFinance = ({
 
   const [emplvalue, setEmplvalue] = useState<any>(null);
   const [openEmp, setOpenEmp] = useState(false);
+  const [openAcc, setOpenAcc] = useState(false);
 
   const { register, handleSubmit, errors, reset } = useForm(
     yup.depositResolver
@@ -59,7 +61,8 @@ const PopupFinance = ({
   }: GContextTypes = useContext(GlobalContext);
   const { tempwords } = useTemplate();
 
-  const { accounts } = useAccounts();
+  const { accounts, addAccount, editAccount } = useAccounts();
+
   const { employees, addEmployee, editEmployee } = useEmployees();
   const openEmployee = () => {
     setOpenEmp(true);
@@ -68,20 +71,40 @@ const PopupFinance = ({
     setOpenEmp(false);
     setNewtext('');
   };
+  const openAccount = () => {
+    setOpenAcc(true);
+  };
+  const onCloseAccount = () => {
+    setOpenAcc(false);
+    setNewtext('');
+  };
   const onNewEmplChange = (nextValue: any) => {
     setEmplvalue(nextValue);
   };
+  const onNewAccChange = (nextValue: any) => {
+    setDebitAcc(nextValue);
+  };
 
   useEffect(() => {
+    const cashaccounts = accounts.filter(
+      (acc: any) => acc.parentcode === parents.CASH && acc.code < 10499
+    );
+    const pettyaccounts = accounts.filter(
+      (acc: any) => acc.parentcode === parents.CASH && acc.code > 10499
+    );
     if (row && row._id) {
       const ca = row.creditAcc;
       const da = row.debitAcc;
       const ot = row.opType;
-      const filtereddebits = accounts.filter(
-        (acc: any) => acc.parentcode === parents.CASH
-      );
-      setDebaccounts(filtereddebits);
-      setCridaccounts(filtereddebits);
+      if (ot === 73) setPtype('pettyCashPay');
+      if (ot === 74) setPtype('pettyCashRec');
+      if (ot === 75) setPtype('cashDraw');
+      if (ot === 76) setPtype('cashDeposet');
+
+      const craccs = ot === 74 ? pettyaccounts : cashaccounts;
+      const dbaccs = ot === 74 ? cashaccounts : pettyaccounts;
+      setDebaccounts(dbaccs);
+      setCridaccounts(craccs);
 
       if (ca) {
         const credit = accounts.filter((acc: any) => acc.code === ca)[0];
@@ -97,35 +120,40 @@ const PopupFinance = ({
         const cust = employees.filter((it: any) => it._id === employeeId)[0];
         setEmplvalue(cust);
       }
-      if (ot === 73) setPtype('pettyCashPay');
-      if (ot === 74) setPtype('pettyCashRec');
-      if (ot === 75) setPtype('cashDraw');
-      if (ot === 76) setPtype('cashDeposet');
     } else {
-      const filteredcash = accounts.filter(
-        (acc: any) => acc.parentcode === parents.CASH
-      );
-      setDebaccounts(filteredcash);
-      setCridaccounts(filteredcash);
-      const { cash, bank, petty } = getCashBankPetty(accounts);
+      const { cash, bank } = getCashBankPetty(accounts);
       if (ptype === 'cashDeposet') {
+        setDebaccounts(cashaccounts);
+        setCridaccounts(cashaccounts);
         setCreditAcc(cash);
         setDebitAcc(bank);
       }
       if (ptype === 'cashDraw') {
+        setDebaccounts(cashaccounts);
+        setCridaccounts(cashaccounts);
         setCreditAcc(bank);
         setDebitAcc(cash);
       }
       if (ptype === 'pettyCashPay') {
+        setDebaccounts(pettyaccounts);
+        setCridaccounts(cashaccounts);
         setCreditAcc(cash);
-        setDebitAcc(petty);
+        // setDebitAcc(null);
       }
       if (ptype === 'pettyCashRec') {
-        setCreditAcc(petty);
+        setDebaccounts(cashaccounts);
+        setCridaccounts(pettyaccounts);
+        setCreditAcc(null);
         setDebitAcc(cash);
       }
     }
-  }, [row, ptype, open]);
+  }, [row, ptype, open, accounts]);
+
+  useEffect(() => {
+    if (ptype === 'pettyCashPay') {
+      setDebitAcc(null);
+    }
+  }, [ptype]);
 
   const getActionType = () => {
     if (ptype === 'cashDeposet') {
@@ -205,8 +233,7 @@ const PopupFinance = ({
 
   const apply = async (mutate: any, variables: any) => {
     try {
-      mutate({ variables });
-      await sleep(2);
+      await mutate({ variables });
       await successAlert(setAlrt, isRTL);
       setSaving(false);
       closeModal();
@@ -293,7 +320,7 @@ const PopupFinance = ({
                 value={creditAcc}
                 setSelectValue={setCreditAcc}
                 register={register}
-                disabled={ptype === 'pettyCashRec' || ptype === 'cashDeposet'}
+                // disabled={ptype === 'pettyCashRec' || ptype === 'cashDeposet'}
                 isRTL={isRTL}
                 fullwidth
                 mb={0}
@@ -306,7 +333,8 @@ const PopupFinance = ({
                 words={words}
                 options={debaccounts}
                 value={debitAcc}
-                disabled={ptype === 'pettyCashPay' || ptype === 'cashDraw'}
+                openAdd={ptype === 'pettyCashPay' ? openAccount : undefined}
+                // disabled={ptype === 'pettyCashPay' || ptype === 'cashDraw'}
                 setSelectValue={setDebitAcc}
                 register={register}
                 isRTL={isRTL}
@@ -372,6 +400,18 @@ const PopupFinance = ({
           addAction={addEmployee}
           editAction={editEmployee}
         ></PopupEmployee>
+        <PopupAccountExpenses
+          open={openAcc}
+          onClose={onCloseAccount}
+          isNew={true}
+          setNewValue={onNewAccChange}
+          row={null}
+          addAction={addAccount}
+          editAction={editAccount}
+          accounts={accounts}
+          newtext={newtext}
+          name="debitAcc"
+        ></PopupAccountExpenses>
       </Grid>
     </PopupLayout>
   );

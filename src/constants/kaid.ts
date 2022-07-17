@@ -201,6 +201,7 @@ export const accountCode = {
   cash_on_hand: 1000,
   card: 1010, //
   bank: 1020, //
+  custody: 1070, //
   accounts_receivable: 1100,
   inventory: 1200,
   accounts_payable: 2000,
@@ -224,6 +225,7 @@ export const accountCode = {
   expenses_other: 6500, //
 
   other_current_assets: 1300,
+  employee_advances: 1350,
   fixed_assets: 1400,
   accumulated_depreciation: 1500,
   long_term_liabilities: 2900,

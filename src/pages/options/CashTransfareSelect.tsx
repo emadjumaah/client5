@@ -5,10 +5,9 @@ import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import { Box } from '@material-ui/core';
 
-const CashTransfareSelect = ({ ptype, setPtype, setEmplvalue, isRTL }) => {
+const CashTransfareSelect = ({ ptype, setPtype, isRTL }) => {
   const onchange = (e: any) => {
     setPtype(e.target.value);
-    setEmplvalue(null);
   };
   return (
     <RadioGroup

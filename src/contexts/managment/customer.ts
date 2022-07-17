@@ -4,7 +4,7 @@ export const CustomerContext = createContext<any>({});
 
 export const initCustomerContext = {
   sort: [{ columnName: 'time', direction: 'desc' }],
-  hiddenColumnNames: ['phone', 'email', 'address'],
+  hiddenColumnNames: [],
 };
 
 export const customerReducer = (state: any, action: any) => {

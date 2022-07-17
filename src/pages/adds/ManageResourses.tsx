@@ -28,12 +28,9 @@ import {
 import { Command, PopupEditing } from '../../Shared';
 import { getRowId, roles } from '../../common';
 import {
-  appointmentsFormatter,
-  avataManageFormatter,
-  expensesFormatter,
-  kaidsFormatter,
-  nameManageLinkFormat,
-  salesFormatter,
+  avatarColorFormatter,
+  nameManageLinkSimpleRes,
+  nameResourseRest,
 } from '../../Shared/colorFormat';
 import { AlertLocal, SearchTable } from '../../components';
 import { errorAlert, errorDeleteAlert } from '../../Shared/helpers';
@@ -59,7 +56,7 @@ export default function ManageResourses({
   company,
 }: any) {
   const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
-  const [pageSizes] = useState([5, 10, 20, 50, 0]);
+  const [pageSizes] = useState([5, 8, 10, 20, 50, 0]);
   const [rows, setRows] = useState([]);
   const [rtypvalue, setRtypvalue] = useState<any>(null);
 
@@ -84,27 +81,21 @@ export default function ManageResourses({
   const [columns] = useState([
     { name: 'avatar', title: ' ' },
     col.name,
-    col.appointments,
-    col.sales,
-    col.expenses,
-    col.kaids,
+    col.data,
+    { name: 'info', title: words.info },
     { name: 'plate', title: words.plate },
     col.carstatus,
     col.retype,
-    { name: 'info', title: words.info },
   ]);
 
   const [tableColumnExtensions]: any = useState([
     { columnName: 'avatar', width: 30 },
-    { columnName: col.name.name, width: 250 },
-    { columnName: col.appointments.name, width: 250, align: 'center' },
-    { columnName: col.sales.name, width: 240 },
-    { columnName: col.expenses.name, width: 220 },
-    { columnName: col.kaids.name, width: 220 },
+    { columnName: col.name.name, width: 300 },
+    { columnName: col.data.name, width: 300 },
+    { columnName: 'info', width: 300 },
     { columnName: 'plate', width: 100 },
     { columnName: col.carstatus.name, width: 100 },
     { columnName: col.retype.name, width: 150 },
-    { columnName: 'info', width: 250 },
   ]);
 
   const [columnsViewer] = useState([
@@ -220,7 +211,7 @@ export default function ManageResourses({
             <SortingState />
             <EditingState onCommitChanges={commitChanges} />
             <SearchState />
-            <PagingState defaultCurrentPage={0} defaultPageSize={6} />
+            <PagingState defaultCurrentPage={0} defaultPageSize={8} />
 
             <IntegratedSorting />
             <IntegratedFiltering />
@@ -233,7 +224,7 @@ export default function ManageResourses({
               }}
               tableComponent={TableComponent}
               rowComponent={(props: any) => (
-                <Table.Row {...props} style={{ height: 120 }}></Table.Row>
+                <Table.Row {...props} style={{ height: 80 }}></Table.Row>
               )}
               columnExtensions={tableColumnExtensions}
             />
@@ -241,14 +232,11 @@ export default function ManageResourses({
               defaultOrder={[
                 'avatar',
                 col.name.name,
-                col.appointments.name,
-                col.sales.name,
-                col.expenses.name,
-                col.kaids.name,
+                col.data.name,
+                'info',
                 'plate',
                 col.carstatus.name,
                 col.retype.name,
-                'info',
               ]}
             />
             <TableColumnResizing defaultColumnWidths={tableColumnExtensions} />
@@ -271,11 +259,9 @@ export default function ManageResourses({
             <DataTypeProvider
               for={['avatar']}
               formatterComponent={(props: any) =>
-                avataManageFormatter({
+                avatarColorFormatter({
                   ...props,
-                  setItem,
-                  setOpenItem,
-                  isRTL,
+                  height: 70,
                 })
               }
             ></DataTypeProvider>
@@ -283,7 +269,7 @@ export default function ManageResourses({
               <DataTypeProvider
                 for={[col.name.name]}
                 formatterComponent={(props: any) =>
-                  nameManageLinkFormat({
+                  nameManageLinkSimpleRes({
                     ...props,
                     setItem,
                     setOpenItem,
@@ -292,31 +278,12 @@ export default function ManageResourses({
                 }
               ></DataTypeProvider>
             )}
-
-            <DataTypeProvider
-              for={[col.appointments.name]}
-              formatterComponent={(props: any) =>
-                appointmentsFormatter({ ...props, theme, isRTL })
-              }
-            ></DataTypeProvider>
-            <DataTypeProvider
-              for={[col.sales.name]}
-              formatterComponent={(props: any) =>
-                salesFormatter({ ...props, theme, isRTL })
-              }
-            ></DataTypeProvider>
-            <DataTypeProvider
-              for={[col.expenses.name]}
-              formatterComponent={(props: any) =>
-                expensesFormatter({ ...props, theme, isRTL })
-              }
-            ></DataTypeProvider>
-            <DataTypeProvider
-              for={[col.kaids.name]}
-              formatterComponent={(props: any) =>
-                kaidsFormatter({ ...props, theme, isRTL })
-              }
-            ></DataTypeProvider>
+            {roles.isEditor() && (
+              <DataTypeProvider
+                for={[col.data.name]}
+                formatterComponent={nameResourseRest}
+              ></DataTypeProvider>
+            )}
 
             <TableEditColumn
               showEditCommand

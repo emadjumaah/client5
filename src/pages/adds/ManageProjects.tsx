@@ -29,8 +29,8 @@ import { Command, errorAlert, Loading, PopupEditing } from '../../Shared';
 import { useCustomers } from '../../hooks';
 import { getRowId, roles } from '../../common';
 import {
-  avataManageFormatter,
-  nameManageLinkFormat,
+  avatarColorFormatter,
+  nameManageLinkProject,
   appointmentsFormatter,
   salesFormatter,
   purchaseFormatter,
@@ -54,14 +54,8 @@ import { ProjectContext } from '../../contexts/managment';
 import { getProjects } from '../../graphql';
 import { useLazyQuery } from '@apollo/client';
 
-export default function ManageProjects({
-  isRTL,
-  words,
-  theme,
-  menuitem,
-  company,
-}: any) {
-  const [pageSizes] = useState([5, 6, 10, 20, 50, 0]);
+export default function ManageProjects({ isRTL, words, theme, menuitem }: any) {
+  const [pageSizes] = useState([5, 8, 10, 20, 50, 0]);
   const [loading, setLoading] = useState(false);
   const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
   const [rows, setRows] = useState([]);
@@ -90,21 +84,17 @@ export default function ManageProjects({
   const [columns] = useState([
     { name: 'avatar', title: ' ' },
     col.name,
-    col.appointments,
-    col.sales,
-    col.purchase,
-    col.expenses,
-    col.kaids,
+    col.customer,
+    col.employee,
+    col.department,
   ]);
 
   const [tableColumnExtensions]: any = useState([
     { columnName: 'avatar', width: 30 },
     { columnName: col.name.name, width: 250 },
-    { columnName: col.appointments.name, width: 250 },
-    { columnName: col.sales.name, width: 240 },
-    { columnName: col.purchase.name, width: 240 },
-    { columnName: col.expenses.name, width: 200 },
-    { columnName: col.kaids.name, width: 200 },
+    { columnName: col.customer.name, width: 200 },
+    { columnName: col.department.name, width: 200 },
+    { columnName: col.employee.name, width: 200 },
   ]);
 
   const [columnsViewer] = useState([
@@ -191,7 +181,7 @@ export default function ManageProjects({
             <SortingState />
             <EditingState onCommitChanges={commitChanges} />
             <SearchState />
-            <PagingState defaultCurrentPage={0} defaultPageSize={6} />
+            <PagingState defaultCurrentPage={0} defaultPageSize={8} />
             <IntegratedSorting />
             <IntegratedFiltering />
             <IntegratedPaging />
@@ -202,7 +192,7 @@ export default function ManageProjects({
               }}
               tableComponent={TableComponent}
               rowComponent={(props: any) => (
-                <Table.Row {...props} style={{ height: 120 }}></Table.Row>
+                <Table.Row {...props} style={{ height: 80 }}></Table.Row>
               )}
               columnExtensions={tableColumnExtensions}
             />
@@ -210,11 +200,9 @@ export default function ManageProjects({
               defaultOrder={[
                 'avatar',
                 col.name.name,
-                col.appointments.name,
-                col.sales.name,
-                col.purchase.name,
-                col.expenses.name,
-                col.kaids.name,
+                col.customer.name,
+                col.department.name,
+                col.employee.name,
               ]}
             />
             <TableColumnResizing defaultColumnWidths={tableColumnExtensions} />
@@ -232,23 +220,18 @@ export default function ManageProjects({
               defaultHiddenColumnNames={hiddenColumnNames}
               hiddenColumnNames={hiddenColumnNames}
               onHiddenColumnNamesChange={setHiddenColumnNames}
-            />{' '}
+            />
             <DataTypeProvider
               for={['avatar']}
               formatterComponent={(props: any) =>
-                avataManageFormatter({
-                  ...props,
-                  setItem,
-                  setOpenItem,
-                  isRTL,
-                })
+                avatarColorFormatter({ ...props, height: 70 })
               }
             ></DataTypeProvider>
             {roles.isEditor() && (
               <DataTypeProvider
                 for={[col.name.name]}
                 formatterComponent={(props: any) =>
-                  nameManageLinkFormat({
+                  nameManageLinkProject({
                     ...props,
                     setItem,
                     setOpenItem,

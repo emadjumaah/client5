@@ -45,7 +45,7 @@ import PageLayout from '../main/PageLayout';
 import { TableComponent } from '../../Shared/TableComponent';
 import {
   avataManageFormatter,
-  nameManageLinkFormat,
+  nameManageLinkCustomer,
   purchaseFormatter,
   raseedFormatter,
 } from '../../Shared/colorFormat';
@@ -55,7 +55,7 @@ import { SupplierContext } from '../../contexts/managment';
 export default function Suppliers(props: any) {
   const { isRTL, words, menuitem, theme, company } = props;
   const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
-  const [pageSizes] = useState([5, 10, 20, 50, 0]);
+  const [pageSizes] = useState([5, 8, 10, 20, 50, 0]);
   const [rows, setRows] = useState([]);
   const [item, setItem] = useState(null);
   const [openItem, setOpenItem] = useState(false);
@@ -78,8 +78,6 @@ export default function Suppliers(props: any) {
   const [columns] = useState([
     { name: 'avatar', title: ' ' },
     col.name,
-    col.purchase,
-    col.raseed,
     { name: 'phone', title: words.phoneNumber },
     { name: 'email', title: words.email },
     { name: 'address', title: words.address },
@@ -88,8 +86,6 @@ export default function Suppliers(props: any) {
   const [tableColumnExtensions]: any = useState([
     { columnName: 'avatar', width: 150 },
     { columnName: col.name.name, width: 300 },
-    { columnName: col.purchase.name, width: 300 },
-    { columnName: col.raseed.name, width: 200 },
     { columnName: 'phone', width: 150 },
     { columnName: 'email', width: 200 },
     { columnName: 'address', width: 200 },
@@ -195,7 +191,7 @@ export default function Suppliers(props: any) {
             <SortingState />
             <EditingState onCommitChanges={commitChanges} />
             <SearchState />
-            <PagingState defaultCurrentPage={0} defaultPageSize={5} />
+            <PagingState defaultCurrentPage={0} defaultPageSize={8} />
 
             <IntegratedSorting />
             <IntegratedFiltering />
@@ -208,7 +204,7 @@ export default function Suppliers(props: any) {
               }}
               tableComponent={TableComponent}
               rowComponent={(props: any) => (
-                <Table.Row {...props} style={{ height: 130 }}></Table.Row>
+                <Table.Row {...props} style={{ height: 80 }}></Table.Row>
               )}
               columnExtensions={tableColumnExtensions}
             />
@@ -216,8 +212,6 @@ export default function Suppliers(props: any) {
               defaultOrder={[
                 'avatar',
                 col.name.name,
-                col.purchase.name,
-                col.raseed.name,
                 'phone',
                 'email',
                 'address',
@@ -247,7 +241,7 @@ export default function Suppliers(props: any) {
                   setItem,
                   setOpenItem,
                   isRTL,
-                  height: 110,
+                  height: 70,
                 })
               }
             ></DataTypeProvider>
@@ -255,7 +249,7 @@ export default function Suppliers(props: any) {
               <DataTypeProvider
                 for={[col.name.name]}
                 formatterComponent={(props: any) =>
-                  nameManageLinkFormat({
+                  nameManageLinkCustomer({
                     ...props,
                     setItem,
                     setOpenItem,

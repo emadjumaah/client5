@@ -10,7 +10,12 @@ export const ResourseContext = createContext<any>({});
 
 export const initResourseContext = {
   sort: [{ columnName: 'time', direction: 'desc' }],
-  hiddenColumnNames: ['plate', col.carstatus.name, col.department.name, 'info'],
+  hiddenColumnNames: [
+    'plate',
+    col.carstatus.name,
+    col.department.name,
+    col.retype.name,
+  ],
 };
 
 export const resourseReducer = (state: any, action: any) => {

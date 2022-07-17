@@ -4,7 +4,7 @@ export const SupplierContext = createContext<any>({});
 
 export const initSupplierContext = {
   sort: [{ columnName: 'time', direction: 'desc' }],
-  hiddenColumnNames: ['phone', 'email', 'address'],
+  hiddenColumnNames: [],
 };
 
 export const supplierReducer = (state: any, action: any) => {

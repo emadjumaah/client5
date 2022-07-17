@@ -29,13 +29,8 @@ import { Command, errorAlert, PopupEditing } from '../../Shared';
 import { getRowId } from '../../common';
 import { PopupDeprtment } from '../../pubups';
 import {
-  avataManageFormatter,
-  purchaseFormatter,
-  expensesFormatter,
-  nameManageLinkFormat,
-  appointmentsFormatter,
-  salesFormatter,
-  kaidsFormatter,
+  avatarColorFormatter,
+  nameManageLinkSimple,
 } from '../../Shared/colorFormat';
 import { AlertLocal, SearchTable } from '../../components';
 import { errorDeleteAlert } from '../../Shared/helpers';
@@ -60,7 +55,7 @@ export default function ManageDepartments({
   menuitem,
   company,
 }: any) {
-  const [pageSizes] = useState([5, 6, 10, 20, 50, 0]);
+  const [pageSizes] = useState([5, 8, 10, 20, 50, 0]);
   const [rows, setRows] = useState([]);
   // const [depart, setDepart] = useState(null);
 
@@ -86,21 +81,13 @@ export default function ManageDepartments({
   const [columns] = useState([
     { name: 'avatar', title: ' ' },
     col.name,
-    col.appointments,
-    col.sales,
-    col.expenses,
-    col.kaids,
-    col.purchase,
+    col.desc,
   ]);
 
   const [tableColumnExtensions]: any = useState([
     { columnName: 'avatar', width: 30 },
-    { columnName: col.name.name, width: 250 },
-    { columnName: col.appointments.name, width: 250 },
-    { columnName: col.sales.name, width: 240 },
-    { columnName: col.purchase.name, width: 240 },
-    { columnName: col.expenses.name, width: 200 },
-    { columnName: col.kaids.name, width: 200 },
+    { columnName: col.name.name, width: 300 },
+    { columnName: col.desc.name, width: 350 },
   ]);
 
   const [columnsViewer] = useState([
@@ -118,9 +105,6 @@ export default function ManageDepartments({
   useEffect(() => {
     getdepts({ variables: { isRTL, depType: 1 } });
   }, []);
-  // useEffect(() => {
-  //   getdepts({ variables: { isRTL, depType: depart ? depart.id : undefined } });
-  // }, [depart]);
 
   useEffect(() => {
     if (deptData?.data?.getDepartments?.data) {
@@ -152,7 +136,6 @@ export default function ManageDepartments({
     }
   };
 
-  // const bgcolor = '#EFFAF1aa';
   const bgcolor = '#EFFAF100';
 
   return (
@@ -191,7 +174,7 @@ export default function ManageDepartments({
             <SortingState />
             <EditingState onCommitChanges={commitChanges} />
             <SearchState />
-            <PagingState defaultCurrentPage={0} defaultPageSize={6} />
+            <PagingState defaultCurrentPage={0} defaultPageSize={8} />
 
             <IntegratedSorting />
             <IntegratedFiltering />
@@ -203,20 +186,12 @@ export default function ManageDepartments({
               }}
               tableComponent={TableComponent}
               rowComponent={(props: any) => (
-                <Table.Row {...props} style={{ height: 120 }}></Table.Row>
+                <Table.Row {...props} style={{ height: 80 }}></Table.Row>
               )}
               columnExtensions={tableColumnExtensions}
             />
             <TableColumnReordering
-              defaultOrder={[
-                'avatar',
-                col.name.name,
-                col.appointments.name,
-                col.sales.name,
-                col.purchase.name,
-                col.expenses.name,
-                col.kaids.name,
-              ]}
+              defaultOrder={['avatar', col.name.name, col.desc.name]}
             />
             <TableColumnResizing defaultColumnWidths={tableColumnExtensions} />
 
@@ -238,19 +213,14 @@ export default function ManageDepartments({
             <DataTypeProvider
               for={['avatar']}
               formatterComponent={(props: any) =>
-                avataManageFormatter({
-                  ...props,
-                  setItem,
-                  setOpenItem,
-                  isRTL,
-                })
+                avatarColorFormatter({ ...props, height: 70 })
               }
             ></DataTypeProvider>
             {roles.isEditor() && (
               <DataTypeProvider
                 for={[col.name.name]}
                 formatterComponent={(props: any) =>
-                  nameManageLinkFormat({
+                  nameManageLinkSimple({
                     ...props,
                     setItem,
                     setOpenItem,
@@ -259,38 +229,6 @@ export default function ManageDepartments({
                 }
               ></DataTypeProvider>
             )}
-
-            <DataTypeProvider
-              for={[col.appointments.name]}
-              formatterComponent={(props: any) =>
-                appointmentsFormatter({ ...props, theme, isRTL })
-              }
-            ></DataTypeProvider>
-            <DataTypeProvider
-              for={[col.sales.name]}
-              formatterComponent={(props: any) =>
-                salesFormatter({ ...props, theme, isRTL })
-              }
-            ></DataTypeProvider>
-            <DataTypeProvider
-              for={[col.purchase.name]}
-              formatterComponent={(props: any) =>
-                purchaseFormatter({ ...props, theme, isRTL })
-              }
-            ></DataTypeProvider>
-            <DataTypeProvider
-              for={[col.expenses.name]}
-              formatterComponent={(props: any) =>
-                expensesFormatter({ ...props, theme, isRTL })
-              }
-            ></DataTypeProvider>
-            <DataTypeProvider
-              for={[col.kaids.name]}
-              formatterComponent={(props: any) =>
-                kaidsFormatter({ ...props, theme, isRTL })
-              }
-            ></DataTypeProvider>
-
             <TableEditColumn
               showEditCommand
               showDeleteCommand
