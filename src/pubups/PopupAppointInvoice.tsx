@@ -187,7 +187,6 @@ const PopupAppointInvoice = ({
   const handleDateChange = (date: any) => {
     setSelectedDate(date);
   };
-
   useEffect(() => {
     getOverallTotal();
   }, [itemsList, discount, ptype, isCash]);
@@ -227,7 +226,10 @@ const PopupAppointInvoice = ({
   const getOverallTotal = () => {
     const totalsin = itemsList.map((litem: any) => litem.itemtotal);
     const sum = totalsin.reduce((psum: any, a: any) => psum + a, 0);
-    const costtotals = itemsList.map((litem: any) => litem.itemtotalcost);
+
+    const costtotals = itemsList.map(
+      (litem: any) => litem.cost * litem.itemqty
+    );
     const costsum = costtotals.reduce((psum: any, a: any) => psum + a, 0);
     const amount = sum - discount;
     const profit = sum - discount - costsum;
@@ -269,7 +271,6 @@ const PopupAppointInvoice = ({
     ];
     setAccounts(accs);
   };
-
   const onSubmit = async () => {
     if (selectedDate > new Date()) {
       await messageAlert(

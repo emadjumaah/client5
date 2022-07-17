@@ -130,3 +130,22 @@ export const getCashBankPetty = (accounts: any) => {
   const petty = fpetty?.[0];
   return { cash, bank, petty };
 };
+
+export const getEndOfMonth = (d: any) => {
+  const date = d ? new Date(d) : new Date();
+  const year = date.getFullYear();
+  const month = date.getMonth();
+
+  const start = new Date(year, month, 1);
+  start.setMonth(start.getMonth() + 1);
+
+  start.setDate(start.getDate() - 1);
+  return start;
+};
+export const getStartOfMonth = (d: any) => {
+  const date = d ? new Date(d) : new Date();
+  const year = date.getFullYear();
+  const month = date.getMonth();
+  const start = new Date(year, month, 1);
+  return start;
+};

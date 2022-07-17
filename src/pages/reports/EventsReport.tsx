@@ -278,7 +278,7 @@ export default function SalesReport({ isRTL, words, menuitem, theme }: any) {
     } else {
       setGroupDispatch(true);
       setGroupbyDispatch(e.target.value);
-      setSumcolumnDispatch(col[e.target.value].name);
+      setSumcolumnDispatch(col?.[e.target.value]?.name);
     }
   };
 
@@ -337,23 +337,6 @@ export default function SalesReport({ isRTL, words, menuitem, theme }: any) {
           marginRight: 5,
         }}
       >
-        {/* <Box
-          style={{
-            position: 'absolute',
-              left: isRTL ? 340 : undefined,
-              right: isRTL ? undefined : 340,
-            top: 68,
-            zIndex: 100,
-          }}
-        >
-          <IconButton
-            onClick={group ? arrangeGroupParing : arrangeParing}
-            title="Print Report"
-            size="small"
-          >
-            <PrintIcon />
-          </IconButton>
-        </Box> */}
         <Box
           display="flex"
           style={{
@@ -422,11 +405,7 @@ export default function SalesReport({ isRTL, words, menuitem, theme }: any) {
               isRTL={isRTL}
             ></ReportGroupBySwitcher>
           </Box>
-          <Box
-            style={{
-              marginTop: -2,
-            }}
-          >
+          <Box style={{ marginTop: -2 }}>
             <FilterSelectCkeckBox
               options={eventStatus}
               value={status}

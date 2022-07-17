@@ -33,6 +33,7 @@ export default gql`
 
         periodfrom
         periodto
+        isMonthly
 
         customerId
         customerName

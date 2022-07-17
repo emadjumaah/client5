@@ -456,7 +456,6 @@ const PopupInvoice = ({
 
     setAccounts(accs);
   };
-
   const onSubmit = async () => {
     const { startPeriod, endPeriod } = getAppStartEndPeriod();
     if (selectedDate < startPeriod || selectedDate > endPeriod) {

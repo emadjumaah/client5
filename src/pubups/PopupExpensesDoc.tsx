@@ -64,7 +64,6 @@ const PopupExpensesDoc = ({
   const classes = invoiceClasses();
   const [saving, setSaving] = useState(false);
   const [loading, setLoading] = useState(false);
-  const { tasks } = useTasks();
   const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
   const [selectedDate, setSelectedDate] = React.useState(new Date());
   const [cridaccounts, setCridaccounts] = React.useState([]);
@@ -76,6 +75,7 @@ const PopupExpensesDoc = ({
 
   const [totals, setTotals] = useState<any>({});
 
+  const { tasks } = useTasks();
   const { company } = useCompany();
   const { accounts, addAccount, editAccount } = useAccounts();
 
@@ -183,82 +183,67 @@ const PopupExpensesDoc = ({
   };
 
   useEffect(() => {
-    const items = itemsData?.data?.['getOperationItems']?.data || [];
-    if (items && items.length > 0) {
-      const ids = items.map((it: any) => it.itemId);
-      const servlist = servicesproducts.filter((ser: any) =>
-        ids.includes(ser._id)
-      );
-      const itemsWqtyprice = items.map((item: any, index: any) => {
-        const {
-          categoryId,
-          categoryName,
-          categoryNameAr,
-          departmentId,
-          departmentName,
-          departmentNameAr,
-          departmentColor,
-          employeeId,
-          employeeName,
-          employeeNameAr,
-          employeeColor,
-          resourseId,
-          resourseName,
-          resourseNameAr,
-          resourseColor,
-          note,
-        } = item;
-        const serv = servlist.filter((se: any) => se._id === item.itemId)[0];
-        return {
-          ...serv,
-          categoryId,
-          categoryName,
-          categoryNameAr,
-          departmentId,
-          departmentName,
-          departmentNameAr,
-          departmentColor,
-          employeeId,
-          employeeName,
-          employeeNameAr,
-          employeeColor,
-          resourseId,
-          resourseName,
-          resourseNameAr,
-          resourseColor,
-          index,
-          itemprice: item.itemPrice,
-          itemqty: item.qty,
-          itemtotal: item.total,
-          note,
-        };
-      });
-      itemsWqtyprice.sort((a: any, b: any) =>
-        a.indx > b.indx ? 1 : b.indx > a.indx ? -1 : 0
-      );
-      setItemsList(itemsWqtyprice);
-      setLoading(false);
+    if (!isNew) {
+      const items = itemsData?.data?.['getOperationItems']?.data || [];
+      if (items && items.length > 0) {
+        const ids = items.map((it: any) => it.itemId);
+        const servlist = servicesproducts.filter((ser: any) =>
+          ids.includes(ser._id)
+        );
+        const itemsWqtyprice = items.map((item: any, index: any) => {
+          const {
+            categoryId,
+            categoryName,
+            categoryNameAr,
+            departmentId,
+            departmentName,
+            departmentNameAr,
+            departmentColor,
+            employeeId,
+            employeeName,
+            employeeNameAr,
+            employeeColor,
+            resourseId,
+            resourseName,
+            resourseNameAr,
+            resourseColor,
+            note,
+          } = item;
+          const serv = servlist.filter((se: any) => se._id === item.itemId)[0];
+          return {
+            ...serv,
+            categoryId,
+            categoryName,
+            categoryNameAr,
+            departmentId,
+            departmentName,
+            departmentNameAr,
+            departmentColor,
+            employeeId,
+            employeeName,
+            employeeNameAr,
+            employeeColor,
+            resourseId,
+            resourseName,
+            resourseNameAr,
+            resourseColor,
+            index,
+            itemprice: item.itemPrice,
+            itemqty: item.qty,
+            itemtotal: item.total,
+            note,
+          };
+        });
+        itemsWqtyprice.sort((a: any, b: any) =>
+          a.indx > b.indx ? 1 : b.indx > a.indx ? -1 : 0
+        );
+        setItemsList(itemsWqtyprice);
+        setLoading(false);
+      }
     }
   }, [itemsData]);
 
   const { handleSubmit, register, reset, errors } = useForm({});
-
-  const resetAllForms = () => {
-    reset();
-    setCreditAcc(null);
-    setDebitAcc(null);
-    setItemsList([]);
-    setTotals({});
-    setSelectedDate(new Date());
-    setSuppvalue(null);
-    setLoading(false);
-    setDepartvalue(name === 'departmentId' ? value : null);
-    setEmplvalue(name === 'employeeId' ? value : null);
-    setResovalue(name === 'resourseId' ? value : null);
-    setTaskvalue(name === 'contractId' ? value : null);
-    setSaving(false);
-    setPtype('expenses');
-  };
 
   const addItemToList = (item: any) => {
     const isInList = itemsList?.filter((li: any) => li._id === item._id)?.[0];
@@ -315,6 +300,7 @@ const PopupExpensesDoc = ({
       setTaskvalue(value);
     }
   }, [name, value, open]);
+
   useEffect(() => {
     if (isNew) {
       if (taskvalue) {
@@ -339,18 +325,20 @@ const PopupExpensesDoc = ({
       }
     }
   }, [taskvalue, open]);
-
+  const payableaccounts = accounts.filter(
+    (acc: any) => acc.parentcode === parents.ACCOUNTS_PAYABLE
+  );
+  const cashaccounts = accounts.filter(
+    (acc: any) => acc.parentcode === parents.CASH && acc.code < 10499
+  );
+  const pettyaccounts = accounts.filter(
+    (acc: any) => acc.parentcode === parents.CASH && acc.code > 10499
+  );
+  const filtereddebits = accounts.filter(
+    (acc: any) => acc.parentcode === parents.EXPENCES
+  );
   useEffect(() => {
-    const payableaccounts = accounts.filter(
-      (acc: any) => acc.parentcode === parents.ACCOUNTS_PAYABLE
-    );
-    const cashaccounts = accounts.filter(
-      (acc: any) => acc.parentcode === parents.CASH && acc.code < 10499
-    );
-    const pettyaccounts = accounts.filter(
-      (acc: any) => acc.parentcode === parents.CASH && acc.code > 10499
-    );
-    if (row && row._id) {
+    if (!isNew) {
       const ca = row.creditAcc;
       const da = row.debitAcc;
       const ot = row.opType;
@@ -400,23 +388,22 @@ const PopupExpensesDoc = ({
         setDebitAcc(debit);
       }
       handleDateChange(row.time);
-    } else {
-      const filtereddebits = accounts.filter(
-        (acc: any) => acc.parentcode === parents.EXPENCES
-      );
-      const filteredcredit =
-        ptype === 'exppayable'
-          ? payableaccounts
-          : ptype === 'exppettycash'
-          ? pettyaccounts
-          : cashaccounts;
-      setCridaccounts(filteredcredit);
-      if (ptype === 'exppayable' || ptype === 'expenses') {
-        setCreditAcc(filteredcredit?.[0]);
-      }
-      setDebitAcc(filtereddebits?.[0]);
     }
-  }, [row, open, ptype, accounts]);
+  }, [open, accounts]);
+
+  useEffect(() => {
+    const filteredcredit =
+      ptype === 'exppayable'
+        ? payableaccounts
+        : ptype === 'exppettycash'
+        ? pettyaccounts
+        : cashaccounts;
+    setCridaccounts(filteredcredit);
+    if (ptype === 'exppayable' || ptype === 'expenses') {
+      setCreditAcc(filteredcredit?.[0]);
+    }
+    setDebitAcc(filtereddebits?.[0]);
+  }, [ptype]);
 
   useEffect(() => {
     if (ptype === 'exppettycash') {
@@ -623,6 +610,23 @@ const PopupExpensesDoc = ({
       await errorAlert(setAlrt, isRTL);
       console.log(error);
     }
+  };
+
+  const resetAllForms = () => {
+    reset();
+    setCreditAcc(null);
+    setDebitAcc(null);
+    setItemsList([]);
+    setTotals({});
+    setSelectedDate(new Date());
+    setSuppvalue(null);
+    setLoading(false);
+    setDepartvalue(name === 'departmentId' ? value : null);
+    setEmplvalue(name === 'employeeId' ? value : null);
+    setResovalue(name === 'resourseId' ? value : null);
+    setTaskvalue(name === 'contractId' ? value : null);
+    setSaving(false);
+    setPtype('expenses');
   };
 
   const onCloseForm = () => {

@@ -76,7 +76,7 @@ import useProjects from '../../hooks/useProjects';
 import useTasks from '../../hooks/useTasks';
 import { getEmployeeResourseTypes } from '../../common/helpers';
 import useRetypes from '../../hooks/useRetypes';
-// import _ from 'lodash';
+import _ from 'lodash';
 
 const styles = (theme: any) => ({
   tableStriped: {
@@ -106,6 +106,7 @@ export default function KaidsReport({
   const [end, setEnd] = useState<any>(null);
   const [rows, setRows] = useState([]);
   const [isRaseed, setIsRaseed] = useState(true);
+  const [isGroup, setIsGroup] = useState(true);
 
   const col = getColumns({ isRTL, words });
 
@@ -289,16 +290,20 @@ export default function KaidsReport({
         : [];
 
     const rdata = updateOpDocRefNumbers(updatedRows2);
-    // const grdata = _(rdata)
-    //   .groupBy('opDocNo')
-    //   .map((array) => ({
-    //     ...array[0],
-    //     amount: _.sumBy(array, 'amount'),
-    //     credit: _.sumBy(array, 'credit'),
-    //     debit: _.sumBy(array, 'debit'),
-    //   }))
-    //   .value();
-    setRows(rdata);
+    if (isGroup) {
+      const grdata = _(rdata)
+        .groupBy('opDocNo')
+        .map((array) => ({
+          ...array[0],
+          amount: _.sumBy(array, 'amount'),
+          credit: _.sumBy(array, 'credit'),
+          debit: _.sumBy(array, 'debit'),
+        }))
+        .value();
+      setRows(grdata);
+    } else {
+      setRows(rdata);
+    }
   }, [summaryData, isRaseed]);
 
   const getIds = (list: any) =>
@@ -461,6 +466,25 @@ export default function KaidsReport({
                   variant="subtitle2"
                 >
                   {isRTL ? 'رصيد افتتاحي' : 'Opening Balance'}
+                </Typography>
+              }
+              style={{ fontSize: 14 }}
+            />
+            <FormControlLabel
+              control={
+                <Checkbox
+                  style={{ padding: 7 }}
+                  checked={isGroup}
+                  onChange={() => setIsGroup(!isGroup)}
+                  color="primary"
+                />
+              }
+              label={
+                <Typography
+                  style={{ color: theme.palette.primary.main }}
+                  variant="subtitle2"
+                >
+                  {isRTL ? 'تجميع بحسب المستند' : 'Group by document'}
                 </Typography>
               }
               style={{ fontSize: 14 }}

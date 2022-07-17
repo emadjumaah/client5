@@ -38,6 +38,7 @@ import { InvoicePrint } from '../print';
 import { getInvDays } from '../common/helpers';
 import getGereralCalculation from '../graphql/query/getGereralCalculation';
 import { getProjects, getTasks } from '../graphql/query';
+import { getEndOfMonth, getStartOfMonth } from '../Shared/helpers';
 
 export const indexTheList = (list: any) => {
   return list.map((item: any, index: any) => {
@@ -73,6 +74,7 @@ const PopupTaskInvoice = ({
   const [periodfrom, setPeriodfrom] = useState(null);
   const [periodto, setPeriodto] = useState(null);
   const [invdays, setInvdays] = useState(0);
+  const [isMonthly, setIsMonthly] = useState(false);
 
   const [itemsList, setItemsList] = useState<any>([]);
   const [accounts, setAccounts] = useState<any>([]);
@@ -196,10 +198,20 @@ const PopupTaskInvoice = ({
   useEffect(() => {
     if (isPeriod === true) {
       if (!periodfrom) {
-        setPeriodfrom(task?.periodfrom ? task?.periodfrom : task.start);
+        if (isMonthly) {
+          const som = getStartOfMonth(null);
+          setPeriodfrom(som);
+        } else {
+          setPeriodfrom(task?.periodfrom ? task?.periodfrom : task.start);
+        }
       }
       if (!periodto) {
-        setPeriodto(new Date());
+        if (isMonthly) {
+          const eom = getEndOfMonth(null);
+          setPeriodto(eom);
+        } else {
+          setPeriodto(new Date());
+        }
       }
       if (invdays) {
         const litems = itemsList.map((it: any) => {
@@ -212,7 +224,7 @@ const PopupTaskInvoice = ({
       setPeriodto(null);
       setInvdays(0);
     }
-  }, [isPeriod, invdays]);
+  }, [isPeriod, invdays, isMonthly]);
 
   useEffect(() => {
     if (periodfrom && periodto) {
@@ -476,7 +488,6 @@ const PopupTaskInvoice = ({
             projectName: undefined,
             projectNameAr: undefined,
           },
-
       items: JSON.stringify(itemsList),
       costAmount,
       total,
@@ -490,6 +501,7 @@ const PopupTaskInvoice = ({
       paymentType: ptype,
       periodfrom,
       periodto,
+      isMonthly,
       userId: user._id,
     };
     apply(addInvoice, variables);
@@ -568,9 +580,9 @@ const PopupTaskInvoice = ({
       // bgcolor={colors.green[500]}
     >
       <Grid container spacing={1}>
-        <Grid item xs={5}>
+        <Grid item xs={6}>
           <Grid container spacing={0}>
-            <Grid item xs={6}>
+            <Grid item xs={5}>
               <CalenderLocal
                 isRTL={isRTL}
                 label={words.time}
@@ -578,13 +590,16 @@ const PopupTaskInvoice = ({
                 onChange={handleDateChange}
               ></CalenderLocal>
             </Grid>
-            <Grid item xs={6}>
+            <Grid item xs={7}>
               <FormControlLabel
                 style={{ marginTop: 25, marginLeft: 10, marginRight: 10 }}
                 control={
                   <Checkbox
                     checked={isPeriod}
-                    onChange={() => setIsPeriod(!isPeriod)}
+                    onChange={() => {
+                      setIsPeriod(!isPeriod);
+                      setIsMonthly(false);
+                    }}
                     color="primary"
                   />
                 }
@@ -597,6 +612,26 @@ const PopupTaskInvoice = ({
                   </Typography>
                 }
               />
+              {isPeriod && (
+                <FormControlLabel
+                  style={{ marginTop: 25, marginLeft: 10, marginRight: 10 }}
+                  control={
+                    <Checkbox
+                      checked={isMonthly}
+                      onChange={() => setIsMonthly(!isMonthly)}
+                      color="primary"
+                    />
+                  }
+                  label={
+                    <Typography
+                      style={{ color: theme.palette.primary.main }}
+                      variant="body2"
+                    >
+                      {isRTL ? 'شهري' : 'Monthly'}
+                    </Typography>
+                  }
+                />
+              )}
             </Grid>
             {isPeriod && (
               <Grid item xs={5}>
@@ -604,7 +639,14 @@ const PopupTaskInvoice = ({
                   isRTL={isRTL}
                   label={words.start}
                   value={periodfrom}
-                  onChange={setPeriodfrom}
+                  onChange={(d: any) => {
+                    if (isMonthly) {
+                      const som = getStartOfMonth(d);
+                      setPeriodfrom(som);
+                    } else {
+                      setPeriodfrom(d);
+                    }
+                  }}
                 ></CalenderLocal>
               </Grid>
             )}
@@ -614,7 +656,14 @@ const PopupTaskInvoice = ({
                   isRTL={isRTL}
                   label={words.end}
                   value={periodto}
-                  onChange={setPeriodto}
+                  onChange={(d: any) => {
+                    if (isMonthly) {
+                      const eom = getEndOfMonth(d);
+                      setPeriodto(eom);
+                    } else {
+                      setPeriodto(d);
+                    }
+                  }}
                 ></CalenderLocal>
               </Grid>
             )}
@@ -627,7 +676,7 @@ const PopupTaskInvoice = ({
             )}
           </Grid>
         </Grid>
-        <Grid item xs={7}>
+        <Grid item xs={6}>
           <PaymentSelect
             words={words}
             ptype={ptype}

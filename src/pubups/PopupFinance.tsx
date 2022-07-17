@@ -21,10 +21,6 @@ import { Grid } from '@material-ui/core';
 import { CalenderLocal, TextFieldLocal } from '../components';
 import AutoFieldLocal from '../components/fields/AutoFieldLocal';
 import { getCashBankPetty } from '../Shared/helpers';
-import useEmployees from '../hooks/useEmployees';
-import { useTemplate } from '../hooks';
-import PopupEmployee from './PopupEmployee';
-import { weekdaysNNo } from '../constants/datatypes';
 import PopupAccountExpenses from './PopupAccountExpenses';
 
 const PopupFinance = ({
@@ -47,8 +43,6 @@ const PopupFinance = ({
   const [creditAcc, setCreditAcc]: any = React.useState(null);
   const [newtext, setNewtext] = useState('');
 
-  const [emplvalue, setEmplvalue] = useState<any>(null);
-  const [openEmp, setOpenEmp] = useState(false);
   const [openAcc, setOpenAcc] = useState(false);
 
   const { register, handleSubmit, errors, reset } = useForm(
@@ -59,27 +53,15 @@ const PopupFinance = ({
     translate: { words, isRTL },
     store: { user },
   }: GContextTypes = useContext(GlobalContext);
-  const { tempwords } = useTemplate();
 
   const { accounts, addAccount, editAccount } = useAccounts();
 
-  const { employees, addEmployee, editEmployee } = useEmployees();
-  const openEmployee = () => {
-    setOpenEmp(true);
-  };
-  const onCloseEmploee = () => {
-    setOpenEmp(false);
-    setNewtext('');
-  };
   const openAccount = () => {
     setOpenAcc(true);
   };
   const onCloseAccount = () => {
     setOpenAcc(false);
     setNewtext('');
-  };
-  const onNewEmplChange = (nextValue: any) => {
-    setEmplvalue(nextValue);
   };
   const onNewAccChange = (nextValue: any) => {
     setDebitAcc(nextValue);
@@ -113,12 +95,6 @@ const PopupFinance = ({
       if (da) {
         const debit = accounts.filter((acc: any) => acc.code === da)[0];
         setDebitAcc(debit);
-      }
-
-      const employeeId = row?.employeeId;
-      if (employeeId) {
-        const cust = employees.filter((it: any) => it._id === employeeId)[0];
-        setEmplvalue(cust);
       }
     } else {
       const { cash, bank } = getCashBankPetty(accounts);
@@ -167,8 +143,6 @@ const PopupFinance = ({
     }
     return null;
   };
-  const isPetty = ptype === 'pettyCashPay' || ptype === 'pettyCashRec';
-
   const onSubmit = async (data: any) => {
     if (selectedDate > new Date()) {
       await messageAlert(
@@ -199,21 +173,7 @@ const PopupFinance = ({
       );
       return;
     }
-    if (isPetty && !emplvalue) {
-      await messageAlert(
-        setAlrt,
-        isRTL ? 'يجب تحديد الموظف' : 'You have to select Employee'
-      );
-      return;
-    }
     setSaving(true);
-
-    const employee = {
-      employeeId: emplvalue?._id,
-      employeeName: emplvalue?.name,
-      employeeNameAr: emplvalue?.nameAr,
-      employeeColor: emplvalue?.color,
-    };
 
     const variables: any = {
       _id: row && row._id ? row._id : undefined, // is it new or edit
@@ -221,7 +181,6 @@ const PopupFinance = ({
       time: selectedDate,
       debitAcc: debitAcc.code,
       creditAcc: creditAcc.code,
-      employee: emplvalue ? employee : undefined,
       amount,
       desc,
       branch: user.branch,
@@ -273,14 +232,13 @@ const PopupFinance = ({
   const onHandleSubmit = () => {
     handleSubmit(onSubmit)();
   };
-  const date = row?.startDate ? new Date(row?.startDate) : new Date();
-  const day = weekdaysNNo?.[date.getDay()];
+  const title = isRTL ? 'حركة مالية' : 'Finance';
   return (
     <PopupLayout
       isRTL={isRTL}
       open={open}
       onClose={closeModal}
-      title={words.depdraw}
+      title={title}
       onSubmit={onHandleSubmit}
       theme={theme}
       alrt={alrt}
@@ -306,7 +264,6 @@ const PopupFinance = ({
               <CashTransfareSelect
                 ptype={ptype}
                 setPtype={setPtype}
-                setEmplvalue={setEmplvalue}
                 isRTL={isRTL}
               ></CashTransfareSelect>
               <Box style={{ marginBottom: 20 }}></Box>
@@ -357,24 +314,6 @@ const PopupFinance = ({
               />
             </Grid>
             <Grid item xs={6}></Grid>
-            {isPetty && (
-              <Grid item xs={6}>
-                <AutoFieldLocal
-                  name="employee"
-                  title={tempwords?.employee}
-                  words={words}
-                  options={employees}
-                  value={emplvalue}
-                  setSelectValue={setEmplvalue}
-                  openAdd={openEmployee}
-                  isRTL={isRTL}
-                  fullWidth
-                  day={day}
-                  mb={0}
-                ></AutoFieldLocal>
-              </Grid>
-            )}
-            {!isPetty && <Grid item xs={6} style={{ marginBottom: 46 }}></Grid>}
             <Grid item xs={12}>
               <TextFieldLocal
                 name="desc"
@@ -390,16 +329,6 @@ const PopupFinance = ({
           </Grid>
         </Grid>
         <Grid item xs={1}></Grid>
-        <PopupEmployee
-          newtext={newtext}
-          open={openEmp}
-          onClose={onCloseEmploee}
-          isNew={true}
-          setNewValue={onNewEmplChange}
-          row={null}
-          addAction={addEmployee}
-          editAction={editEmployee}
-        ></PopupEmployee>
         <PopupAccountExpenses
           open={openAcc}
           onClose={onCloseAccount}

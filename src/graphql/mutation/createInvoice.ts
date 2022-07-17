@@ -10,6 +10,7 @@ export default gql`
     $desc: String
     $periodfrom: Date
     $periodto: Date
+    $isMonthly: Boolean
     $customer: CustomerInput
     $department: DepartmentInput
     $employee: EmployeeInput
@@ -43,6 +44,7 @@ export default gql`
       desc: $desc
       periodfrom: $periodfrom
       periodto: $periodto
+      isMonthly: $isMonthly
       customer: $customer
       department: $department
       employee: $employee

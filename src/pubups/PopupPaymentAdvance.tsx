@@ -98,7 +98,7 @@ const PopupPaymentAdvance = ({
     } else {
       const filtereddebits = accounts.filter((acc: any) => acc.code === 1350);
       const filteredcredit = accounts.filter(
-        (acc: any) => acc.parentcode === parents.CASH
+        (acc: any) => acc.parentcode === parents.CASH && acc.code < 10499
       );
       setCredaccounts(filteredcredit);
       setDebitAcc(filtereddebits?.[0]);

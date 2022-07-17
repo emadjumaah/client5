@@ -787,7 +787,7 @@ export const updateDocNumbers = (data: any) => {
     const num = d?.docNo?.split('-')?.[1];
     return {
       ...d,
-      docNo: `${pre}-${String(num).padStart(7, '0')}`,
+      docNo: `${pre}-${String(num).padStart(5, '0')}`,
     };
   });
   return rdata;
