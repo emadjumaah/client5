@@ -55,7 +55,7 @@ const PopupEmployee = ({
   const { register, handleSubmit, errors, reset } = useForm(yup.emppResolver);
   const {
     translate: { words, isRTL },
-    store: { user },
+    store: { user, tempId },
   }: GContextTypes = useContext(GlobalContext);
 
   const openRetype = () => {
@@ -179,6 +179,9 @@ const PopupEmployee = ({
   };
 
   const title = getPopupTitle('employee', isNew);
+  const isCar = tempId === 9 || tempId === 4;
+  // const isRes = tempId === 7;
+  // const isSer = tempId === 2 || tempId === 5 || tempId === 8;
   return (
     <PopupLayout
       isRTL={isRTL}
@@ -291,28 +294,32 @@ const PopupEmployee = ({
                 mb={0}
               />
             </Grid>
-            <Grid item xs={6}>
-              <TextFieldLocal
-                name="licenseNo"
-                label={words.licenseNo}
-                register={register}
-                errors={errors}
-                row={row}
-                fullWidth
-                mb={0}
-              />
-            </Grid>
-            <Grid item xs={6}>
-              <TextFieldLocal
-                name="licenseDate"
-                label={words.licenseDate}
-                register={register}
-                errors={errors}
-                row={row}
-                fullWidth
-                mb={0}
-              />
-            </Grid>
+            {isCar && (
+              <Grid item xs={6}>
+                <TextFieldLocal
+                  name="licenseNo"
+                  label={words.licenseNo}
+                  register={register}
+                  errors={errors}
+                  row={row}
+                  fullWidth
+                  mb={0}
+                />
+              </Grid>
+            )}
+            {isCar && (
+              <Grid item xs={6}>
+                <TextFieldLocal
+                  name="licenseDate"
+                  label={words.licenseDate}
+                  register={register}
+                  errors={errors}
+                  row={row}
+                  fullWidth
+                  mb={0}
+                />
+              </Grid>
+            )}
             <Grid item xs={12}>
               <TextFieldLocal
                 name="email"

@@ -41,7 +41,7 @@ import { Command } from './Command';
 import { AlertLocal, SearchTable } from '../components';
 import PopupEditing from './PopupEditing';
 import PopupReminder from '../pubups/PopupReminder';
-import Loading from './Loading';
+import RefetchBox from './RefetchBox';
 export const getRowId = (row: any) => row._id;
 
 const styles = (theme) => ({
@@ -74,7 +74,6 @@ export default function ReminderCustomer({
   value,
 }: any) {
   const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
-  const [loading, setLoading] = useState(false);
 
   const col = getColumns({ isRTL, words });
   const [columns] = useState(
@@ -164,9 +163,6 @@ export default function ReminderCustomer({
   };
 
   useEffect(() => {
-    if (remindersData?.loading) {
-      setLoading(true);
-    }
     if (remindersData?.data?.getRemindersActions?.data) {
       const { data } = remindersData.data.getRemindersActions;
       const rdata = data.map((da: any) => {
@@ -218,10 +214,11 @@ export default function ReminderCustomer({
         };
       });
       setRows(rdata);
-      setLoading(false);
     }
   }, [remindersData]);
 
+  const refresh = () => remindersData?.refetch();
+  const loading = remindersData.loading;
   return (
     <Box
       style={{
@@ -230,6 +227,27 @@ export default function ReminderCustomer({
         margin: 10,
       }}
     >
+      <Box
+        style={{
+          position: 'absolute',
+          width: 50,
+          height: 50,
+          left: isRTL ? 220 : undefined,
+          right: isRTL ? undefined : 220,
+          zIndex: 111,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          top: 55,
+        }}
+      >
+        <RefetchBox
+          isRTL={isRTL}
+          theme={theme}
+          refresh={refresh}
+          loading={loading}
+        ></RefetchBox>
+      </Box>
       <Paper
         elevation={0}
         style={{
@@ -323,7 +341,6 @@ export default function ReminderCustomer({
           </PopupEditing>
         </Grid>
       </Paper>
-      {loading && <Loading isRTL={isRTL} />}
       {alrt.show && (
         <AlertLocal
           isRTL={isRTL}

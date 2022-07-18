@@ -19,7 +19,6 @@ const PercentChartTask = ({ height, progress, pricolor, seccolor }) => {
           outerRadius="90%"
           startAngle={startPosition}
           endAngle={startPosition - 360}
-          isAnimationActive={false}
           paddingAngle={0}
           fill={fade(seccolor, 0.3)}
           dataKey="value"
@@ -34,7 +33,6 @@ const PercentChartTask = ({ height, progress, pricolor, seccolor }) => {
           fill={pricolor}
           dataKey="value"
           labelLine={false}
-          isAnimationActive={false}
         >
           <Label
             position="center"

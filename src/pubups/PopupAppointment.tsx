@@ -82,7 +82,9 @@ const PopupAppointment = ({
 
   const [startDate, setStartDate]: any = useState(null);
   const [endDate, setEndDate]: any = useState(null);
-  const [eventLength, setEventLength]: any = useState(null);
+  const [eventLength, setEventLength]: any = useState(
+    eventLengthOptions[1].value
+  );
   const [departvalue, setDepartvalue] = useState<any>(null);
   const [departError, setDepartError] = useState<any>(false);
   const departRef: any = React.useRef();
@@ -213,12 +215,6 @@ const PopupAppointment = ({
       }
     }
   }, [taskvalue]);
-
-  useEffect(() => {
-    if (isNew) {
-      setEventLength(eventLengthOptions[1].value);
-    }
-  }, [isNew]);
 
   useEffect(() => {
     const items = itemsData?.data?.['getOperationItems']?.data || [];
@@ -469,7 +465,7 @@ const PopupAppointment = ({
     setSelected(null);
     setTasktitle(null);
     setLocation(null);
-    setEventLength(null);
+    setEventLength(eventLengthOptions[1].value);
   };
   const onSubmit = async () => {
     if (startDate > endDate) {

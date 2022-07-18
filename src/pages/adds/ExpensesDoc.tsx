@@ -78,9 +78,9 @@ export default function ExpensesDoc({
           { name: 'opType', title: words.type },
           { name: 'creditAcc', title: isRTL ? 'حساب الدفع' : 'Payment Acc' },
           col.employee,
-          col.supplier,
-          col.department,
           col.resourse,
+          col.department,
+          col.supplier,
           { name: 'desc', title: words.description },
           { name: 'amount', title: words.amount },
         ]
@@ -91,10 +91,10 @@ export default function ExpensesDoc({
           { name: 'opType', title: words.type },
           { name: 'creditAcc', title: isRTL ? 'حساب الدفع' : 'Payment Acc' },
           col.employee,
-          col.supplier,
+          col.resourse,
           col.contract,
           col.department,
-          col.resourse,
+          col.supplier,
           { name: 'desc', title: words.description },
           { name: 'amount', title: words.amount },
         ]
@@ -296,10 +296,10 @@ export default function ExpensesDoc({
                 'opType',
                 'creditAcc',
                 col.employee.name,
-                col.supplier.name,
+                col.resourse.name,
                 col.contract.name,
                 col.department.name,
-                col.resourse.name,
+                col.supplier.name,
                 'desc',
                 'amount',
               ]}
@@ -320,8 +320,7 @@ export default function ExpensesDoc({
               defaultHiddenColumnNames={[
                 'debitAcc',
                 col.department.name,
-                col.contract.name,
-                col.resourse.name,
+                col.supplier.name,
               ]}
             />
             <DataTypeProvider

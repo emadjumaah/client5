@@ -109,7 +109,7 @@ const PopupAccount = ({
       parentRef.current.focus();
       return;
     }
-    if (code > range.max || code < range.min) {
+    if (isNew && (code > range.max || code < range.min)) {
       await errorAlertMsg(
         setAlrt,
         isRTL ? 'رقم الحساب خارج النطاق' : 'Code range issue'
@@ -118,13 +118,14 @@ const PopupAccount = ({
     }
     setSaving(true);
     const name = data.name.trim();
+    const nameAr = !isNew ? data.nameAr.trim() : name;
     const branch = user.branch;
     const variables: any = {
       _id: row?._id ? row?._id : undefined, // is it new or edit
       branch,
       code,
       name,
-      nameAr: name,
+      nameAr,
       canedit: row?._id ? undefined : true,
       ...parentvalue,
     };
@@ -223,19 +224,31 @@ const PopupAccount = ({
             type="number"
             fullWidth
           />
-          <React.Fragment>
+          <TextFieldLocal
+            required
+            autoFocus
+            name="name"
+            label={words.name}
+            register={register}
+            errors={errors}
+            row={row}
+            fullWidth
+            mb={10}
+          />
+          {!isNew && (
             <TextFieldLocal
               required
-              autoFocus
-              name="name"
-              label={words.name}
+              name="nameAr"
+              label={words.nameAr}
               register={register}
               errors={errors}
               row={row}
               fullWidth
+              mb={0}
             />
-          </React.Fragment>
+          )}
         </Grid>
+
         <Grid item xs={2}></Grid>
       </Grid>
     </PopupLayout>

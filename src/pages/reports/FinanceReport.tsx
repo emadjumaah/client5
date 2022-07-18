@@ -80,7 +80,6 @@ export default function FinanceReport({
   isRTL,
   words,
   menuitem,
-  // mainaccounts,
   accounts,
   company,
   theme,

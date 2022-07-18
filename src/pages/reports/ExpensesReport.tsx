@@ -74,11 +74,10 @@ export default function ExpensesReport({
   isRTL,
   words,
   menuitem,
-  mainaccounts,
-  // company,
+  accounts,
   theme,
 }: any) {
-  const expensesAccounts = mainaccounts?.filter(
+  const expensesAccounts = accounts?.filter(
     (acc: any) => acc.parentcode === 15
   );
   const [start, setStart] = useState<any>(null);

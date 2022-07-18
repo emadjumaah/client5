@@ -1,6 +1,4 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import { useState } from 'react';
 import { Box, Grid } from '@material-ui/core';
 import {
   appointmentsMainFormatter,
@@ -9,19 +7,19 @@ import {
   salesMainFormatter,
   purchaseMainFormatter,
   taskDataView,
-  appointTaskMainFormatter,
-  salesTaskMainFormatter,
   daysdataMainFormatter,
   resourseDataView,
   employeeDataView,
   customerDataView,
   incomeMainFormatter,
   projectDataView,
-  timeActivateView,
+  employeeMainFormatter,
 } from './colorFormat';
-import { useQuery } from '@apollo/client';
 import getGereralCalculation from '../graphql/query/getGereralCalculation';
 import ReminderBox from './ReminderBox';
+import { useEffect, useState } from 'react';
+import { useLazyQuery } from '@apollo/client';
+import RefetchBox from './RefetchBox';
 
 export default function MainCustomer({
   isRTL,
@@ -35,7 +33,8 @@ export default function MainCustomer({
   start,
   end,
 }: any) {
-  const [fullTime, setFullTime] = useState(false);
+  const [data, setData] = useState<any>(null);
+
   const isCust = name === 'customerId';
   const isSupp = name === 'supplierId';
   const isCont = name === 'contractId';
@@ -44,42 +43,33 @@ export default function MainCustomer({
   const isDepart = name === 'departmentId';
   const isProj = name === 'projectId';
 
-  const res = useQuery(getGereralCalculation, {
-    variables: {
-      [name]: id,
-      start: !fullTime ? new Date(start).setHours(0, 0, 0, 0) : undefined,
-      end: !fullTime ? new Date(end).setHours(23, 59, 59, 999) : undefined,
-    },
-    fetchPolicy: 'cache-and-network',
+  const [loadCalcss, calcsData]: any = useLazyQuery(getGereralCalculation, {
+    nextFetchPolicy: 'cache-and-network',
   });
+  useEffect(() => {
+    const variables = {
+      [name]: id,
+      start: start ? new Date(start).setHours(0, 0, 0, 0) : undefined,
+      end: end ? new Date(end).setHours(23, 59, 59, 999) : undefined,
+    };
+    loadCalcss({
+      variables,
+    });
+  }, [id, start, end]);
 
-  if (res.loading) return null;
-  const data = JSON.parse(res?.data?.getGereralCalculation?.data);
-  if (isCont) {
-    data.coAmount = row.amount;
-  }
+  useEffect(() => {
+    const res = calcsData?.data?.getGereralCalculation?.data;
+    if (res) {
+      const data = JSON.parse(res);
+      if (isCont) {
+        data.coAmount = row.amount;
+      }
+      setData(data);
+    }
+  }, [calcsData, start, end]);
 
-  // evAmount,
-  // coAmount,
-  // evQty,
-  // evDone,
-  // totalkaidsdebit,
-  // totalKaidscredit,
-  // totalinvoiced,
-  // totalpaid,
-  // totalDiscount,
-  // totalPurchaseInvoiced,
-  // totalPurchasePaid,
-  // totalPurchaseDiscount,
-  // toatlExpenses,
-  // toatlExpPayable,
-  // totalExpPetty,
-  // toatlProdExpenses,
-  // totalPettyPay,
-  // totalPettyRec,
-  // totalAdvanceRec,
-  // totalAdvancePay,
-
+  const refresh = () => calcsData?.refetch();
+  const loading = calcsData.loading;
   return (
     <Box
       style={{
@@ -88,6 +78,27 @@ export default function MainCustomer({
         margin: 10,
       }}
     >
+      <Box
+        style={{
+          position: 'absolute',
+          width: 50,
+          height: 50,
+          left: isRTL ? 220 : undefined,
+          right: isRTL ? undefined : 220,
+          zIndex: 111,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          top: 55,
+        }}
+      >
+        <RefetchBox
+          isRTL={isRTL}
+          theme={theme}
+          refresh={refresh}
+          loading={loading}
+        ></RefetchBox>
+      </Box>
       <Box
         style={{
           height: height - 290,
@@ -116,20 +127,21 @@ export default function MainCustomer({
                       customerDataView({ row, words, isRTL })}
                   </Box>
                 </Grid>
-                {isCont && (
+                {!isSupp && (
                   <Grid item xs={4}>
                     <Box style={{ backgroundColor: '#fff', height: 250 }}>
-                      {appointTaskMainFormatter({ row: data, theme, isRTL })}
+                      {appointmentsMainFormatter({ row: data, theme, isRTL })}
                     </Box>
                   </Grid>
                 )}
-                {!isSupp && !isCont && (
-                  <Grid item xs={2}>
+                {isEmpl && (
+                  <Grid item xs={4}>
                     <Box style={{ backgroundColor: '#fff', height: 250 }}>
-                      {expensesMainFormatter({ row: data, theme, isRTL })}
+                      {employeeMainFormatter({ row: data, theme, isRTL })}
                     </Box>
                   </Grid>
                 )}
+
                 {isCont && (
                   <Grid item xs={4}>
                     <Box style={{ backgroundColor: '#fff', height: 250 }}>
@@ -142,8 +154,30 @@ export default function MainCustomer({
                   </Grid>
                 )}
                 {!isSupp && (
+                  <Grid item xs={4}>
+                    <Box style={{ backgroundColor: '#fff', height: 200 }}>
+                      {salesMainFormatter({ row: data, theme, isRTL })}
+                    </Box>
+                  </Grid>
+                )}
+
+                {!isCust && (
+                  <Grid item xs={3}>
+                    <Box style={{ backgroundColor: '#fff', height: 200 }}>
+                      {purchaseMainFormatter({ row: data, theme, isRTL })}
+                    </Box>
+                  </Grid>
+                )}
+                {!isSupp && (
+                  <Grid item xs={3}>
+                    <Box style={{ backgroundColor: '#fff', height: 200 }}>
+                      {expensesMainFormatter({ row: data, theme, isRTL })}
+                    </Box>
+                  </Grid>
+                )}
+                {!isSupp && (
                   <Grid item xs={2}>
-                    <Box style={{ backgroundColor: '#fff', height: 250 }}>
+                    <Box style={{ backgroundColor: '#fff', height: 200 }}>
                       {incomeMainFormatter({
                         row: data,
                         theme,
@@ -152,44 +186,17 @@ export default function MainCustomer({
                     </Box>
                   </Grid>
                 )}
-                {isCont && (
-                  <Grid item xs={3}>
-                    <Box style={{ backgroundColor: '#fff', height: 250 }}>
-                      {salesTaskMainFormatter({ row: data, theme, isRTL })}
-                    </Box>
-                  </Grid>
-                )}
-                {!isSupp && !isCont && (
-                  <Grid item xs={4}>
-                    <Box style={{ backgroundColor: '#fff', height: 250 }}>
-                      {appointmentsMainFormatter({ row: data, theme, isRTL })}
-                    </Box>
-                  </Grid>
-                )}
-                {!isSupp && !isCont && (
-                  <Grid item xs={3}>
-                    <Box style={{ backgroundColor: '#fff', height: 250 }}>
-                      {salesMainFormatter({ row: data, theme, isRTL })}
-                    </Box>
-                  </Grid>
-                )}
-                {!isCust && (
-                  <Grid item xs={3}>
-                    <Box style={{ backgroundColor: '#fff', height: 250 }}>
-                      {purchaseMainFormatter({ row: data, theme, isRTL })}
-                    </Box>
-                  </Grid>
-                )}
+
                 {!isSupp && !isCont && (
                   <Grid item xs={2}>
-                    <Box style={{ backgroundColor: '#fff', height: 250 }}>
+                    <Box style={{ backgroundColor: '#fff', height: 200 }}>
                       {kaidsMainFormatter({ row: data, theme, isRTL })}
                     </Box>
                   </Grid>
                 )}
                 {!isSupp && !isCust && (
                   <Grid item xs={4}>
-                    <Box style={{ backgroundColor: '#fff', height: 250 }}>
+                    <Box style={{ backgroundColor: '#fff', height: 200 }}>
                       <ReminderBox
                         isRTL={isRTL}
                         words={words}
@@ -198,13 +205,11 @@ export default function MainCustomer({
                         start={start}
                         end={end}
                         theme={theme}
+                        height={190}
                       ></ReminderBox>
                     </Box>
                   </Grid>
                 )}
-                <Grid item xs={4}>
-                  {timeActivateView({ fullTime, setFullTime, isRTL })}
-                </Grid>
               </Grid>
             </Box>
           </Box>

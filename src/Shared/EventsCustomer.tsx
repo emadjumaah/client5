@@ -40,6 +40,7 @@ import useEmployees from '../hooks/useEmployees';
 import useResourses from '../hooks/useResourses';
 import getGereralCalculation from '../graphql/query/getGereralCalculation';
 import { getProjects, getTasks } from '../graphql/query';
+import RefetchBox from './RefetchBox';
 export const getRowId = (row: any) => row._id;
 
 const NumberTypeProvider = (props) => (
@@ -184,6 +185,8 @@ export default function EventsCustomer({
       setRows(rows.filter((row: any) => row._id !== _id));
     }
   };
+  const refresh = () => eventsData?.refetch();
+  const loading = eventsData.loading;
   return (
     <Box
       style={{
@@ -192,6 +195,27 @@ export default function EventsCustomer({
         margin: 10,
       }}
     >
+      <Box
+        style={{
+          position: 'absolute',
+          width: 50,
+          height: 50,
+          left: isRTL ? 220 : undefined,
+          right: isRTL ? undefined : 220,
+          zIndex: 111,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          top: 55,
+        }}
+      >
+        <RefetchBox
+          isRTL={isRTL}
+          theme={theme}
+          refresh={refresh}
+          loading={loading}
+        ></RefetchBox>
+      </Box>
       <Paper
         style={{
           height: height - 290,

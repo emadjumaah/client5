@@ -6,7 +6,9 @@ import { GlobalContext } from '../contexts';
 import {
   Box,
   Button,
+  Checkbox,
   colors,
+  FormControlLabel,
   Paper,
   Tab,
   Tabs,
@@ -87,6 +89,8 @@ const PopupTaskView = ({
   const [currentViewName, setCurrentViewName] = useState('Month');
   const [currentDate, setCurrentDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
+  const [isTime, setIsTime] = useState(false);
+
   const currentViewNameChange = (e: any) => {
     setCurrentViewName(e.target.value);
   };
@@ -274,20 +278,52 @@ const PopupTaskView = ({
     >
       <Box>
         <Box display="flex" style={{ backgroundColor: '#fff', height: 50 }}>
-          <DateNavigatorReports
-            setStart={setStart}
-            setEnd={setEnd}
-            currentDate={currentDate}
-            currentDateChange={currentDateChange}
-            currentViewName={currentViewName}
-            currentViewNameChange={currentViewNameChange}
-            endDate={endDate}
-            endDateChange={endDateChange}
-            views={[1, 7, 30, 365, 1000]}
-            isRTL={isRTL}
-            words={words}
-            theme={theme}
-          ></DateNavigatorReports>
+          <Box display="flex" style={{ padding: 7 }}>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  style={{ padding: 7 }}
+                  checked={isTime}
+                  onChange={() => {
+                    setIsTime(!isTime);
+                  }}
+                  color="primary"
+                />
+              }
+              label={
+                <Typography
+                  style={{
+                    color: theme.palette.primary.main,
+                    fontWeight: 'bold',
+                  }}
+                >
+                  {isRTL ? 'تفعيل التاريخ' : 'Activate Date'}
+                </Typography>
+              }
+              style={{ fontSize: 14 }}
+            />
+          </Box>
+          <Box
+            style={{
+              opacity: !isTime ? 0.5 : undefined,
+              pointerEvents: !isTime ? 'none' : undefined,
+            }}
+          >
+            <DateNavigatorReports
+              setStart={setStart}
+              setEnd={setEnd}
+              currentDate={currentDate}
+              currentDateChange={currentDateChange}
+              currentViewName={currentViewName}
+              currentViewNameChange={currentViewNameChange}
+              endDate={endDate}
+              endDateChange={endDateChange}
+              views={[1, 7, 30, 365, 1000]}
+              isRTL={isRTL}
+              words={words}
+              theme={theme}
+            ></DateNavigatorReports>
+          </Box>
         </Box>
         <Box style={{ display: 'flex', marginTop: 0 }}>
           <Grid container spacing={0} style={{ width: width - 300 }}>
@@ -315,8 +351,8 @@ const PopupTaskView = ({
                             id={row?._id}
                             width={width}
                             height={height}
-                            start={start}
-                            end={end}
+                            start={isTime ? start : null}
+                            end={isTime ? end : null}
                             closeloading={closeloading}
                             setOpenCloseDate={setOpenCloseDate}
                             daysData={daysData}
@@ -333,8 +369,8 @@ const PopupTaskView = ({
                         name="contractId"
                         width={width}
                         height={height}
-                        start={start}
-                        end={end}
+                        start={isTime ? start : null}
+                        end={isTime ? end : null}
                         mstart={mstart}
                         mend={mend}
                         value={row}
@@ -351,8 +387,8 @@ const PopupTaskView = ({
                         id={row?._id}
                         width={width}
                         height={height}
-                        start={start}
-                        end={end}
+                        start={isTime ? start : null}
+                        end={isTime ? end : null}
                         mstart={mstart}
                         mend={mend}
                         value={row}
@@ -369,8 +405,8 @@ const PopupTaskView = ({
                         id={row?._id}
                         width={width}
                         height={height}
-                        start={start}
-                        end={end}
+                        start={isTime ? start : null}
+                        end={isTime ? end : null}
                         mstart={mstart}
                         mend={mend}
                         value={row}
@@ -386,8 +422,8 @@ const PopupTaskView = ({
                         id={row?._id}
                         width={width}
                         height={height}
-                        start={start}
-                        end={end}
+                        start={isTime ? start : null}
+                        end={isTime ? end : null}
                         mstart={mstart}
                         mend={mend}
                         value={row}
@@ -404,8 +440,8 @@ const PopupTaskView = ({
                         id={row?._id}
                         width={width}
                         height={height}
-                        start={start}
-                        end={end}
+                        start={isTime ? start : null}
+                        end={isTime ? end : null}
                         mstart={mstart}
                         mend={mend}
                         value={row}
@@ -421,8 +457,8 @@ const PopupTaskView = ({
                         id={row?._id}
                         width={width}
                         height={height}
-                        start={start}
-                        end={end}
+                        start={isTime ? start : null}
+                        end={isTime ? end : null}
                         mstart={mstart}
                         mend={mend}
                         value={row}
@@ -440,8 +476,8 @@ const PopupTaskView = ({
                         id={row?._id}
                         width={width}
                         height={height}
-                        start={start}
-                        end={end}
+                        start={isTime ? start : null}
+                        end={isTime ? end : null}
                         mstart={mstart}
                         mend={mend}
                         value={row}
@@ -459,8 +495,8 @@ const PopupTaskView = ({
                         id={row?._id}
                         width={width}
                         height={height}
-                        start={start}
-                        end={end}
+                        start={isTime ? start : null}
+                        end={isTime ? end : null}
                         mstart={mstart}
                         mend={mend}
                         tempoptions={tempoptions}
@@ -476,8 +512,8 @@ const PopupTaskView = ({
                         id={row?._id}
                         width={width}
                         height={height}
-                        start={start}
-                        end={end}
+                        start={isTime ? start : null}
+                        end={isTime ? end : null}
                         mstart={mstart}
                         mend={mend}
                         tempoptions={tempoptions}

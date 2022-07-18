@@ -30,7 +30,7 @@ import useDepartments from '../hooks/useDepartments';
 import useResourses from '../hooks/useResourses';
 import { InvoicePrint } from '../print';
 import ServiceItemForm from '../Shared/ServiceItemForm';
-import { successAlert } from '../Shared/helpers';
+import { sleep, successAlert } from '../Shared/helpers';
 
 export const indexTheList = (list: any) => {
   return list.map((item: any, index: any) => {
@@ -398,8 +398,9 @@ const PopupAppointInvoice = ({
 
   const apply = async (mutate: any, variables: any) => {
     try {
-      await mutate({ variables });
-      await editEvent({
+      mutate({ variables });
+      await sleep(2);
+      editEvent({
         variables: {
           id: appoint.id,
           status: 10,

@@ -75,11 +75,7 @@ import {
 } from '../../contexts/calendarReport/eventsReducer';
 import CalendarReportContext from '../../contexts/calendarReport';
 // import Expenses from '../adds/Expenses';
-import {
-  filterMenu,
-  getparentAccounts,
-  getparentAccountsNames,
-} from '../../common/helpers';
+import { filterMenu, getparentAccountsNames } from '../../common/helpers';
 import PurchaseReport from '../reports/PurchaseReport';
 import ExpensesReport from '../reports/ExpensesReport';
 import Receipt from '../adds/Receipt';
@@ -292,18 +288,7 @@ const Content = () => {
     initSupplierContext
   );
   const [kaidStore, kaidDispatch] = useReducer(kaidReducer, initKaidContext);
-
-  const accs = user.isSuperAdmin
-    ? accounts
-    : accounts.filter((acc: any) => acc.branch === user.branch);
-  const mainaccounts = getparentAccounts();
   const mainaccountsnames = getparentAccountsNames();
-  const filteredAccounts =
-    accs?.length > 0
-      ? accs.filter((acc: any) => mainaccounts.includes(acc.parentcode))
-      : [];
-  filteredAccounts.sort((a: any, b: any) => a.code - b.code);
-
   return (
     <Box
       className={classes.root}
@@ -742,7 +727,7 @@ const Content = () => {
                 theme={theme}
                 refresh={refreshAccount}
               >
-                <Accounts accounts={accs}></Accounts>
+                <Accounts accounts={accounts}></Accounts>
               </PageLayout>
             }
           />
@@ -1071,8 +1056,7 @@ const Content = () => {
                   theme={theme}
                   categories={[]}
                   company={company}
-                  mainaccounts={mainaccountsnames}
-                  accounts={filteredAccounts}
+                  accounts={accounts}
                 ></FinanceReport>
               </FinanceContext.Provider>
             }
@@ -1094,7 +1078,7 @@ const Content = () => {
                   categories={[]}
                   company={company}
                   mainaccounts={mainaccountsnames}
-                  accounts={filteredAccounts}
+                  accounts={accounts}
                 ></KaidsReport>
               </KaidContext.Provider>
             }
@@ -1115,7 +1099,6 @@ const Content = () => {
                   theme={theme}
                   categories={[]}
                   company={company}
-                  mainaccounts={filteredAccounts}
                 ></ProfitReport>
               </FinanceContext.Provider>
             }
@@ -1136,7 +1119,6 @@ const Content = () => {
                   theme={theme}
                   categories={[]}
                   company={company}
-                  mainaccounts={filteredAccounts}
                 ></BudgetReport>
               </FinanceContext.Provider>
             }
@@ -1157,7 +1139,7 @@ const Content = () => {
                   theme={theme}
                   categories={[]}
                   company={company}
-                  mainaccounts={filteredAccounts}
+                  accounts={accounts}
                 ></ExpensesReport>
               </ExpensesReportContext.Provider>
             }
@@ -1178,7 +1160,6 @@ const Content = () => {
                   theme={theme}
                   categories={[]}
                   company={company}
-                  mainaccounts={filteredAccounts}
                 ></CustomerReport>
               </CustomerReportContext.Provider>
             }
@@ -1199,7 +1180,6 @@ const Content = () => {
                   theme={theme}
                   categories={[]}
                   company={company}
-                  mainaccounts={filteredAccounts}
                 ></SupplierReport>
               </SupplierReportContext.Provider>
             }

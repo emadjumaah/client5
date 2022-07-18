@@ -21,7 +21,6 @@ import { Grid } from '@material-ui/core';
 import { CalenderLocal, TextFieldLocal } from '../components';
 import AutoFieldLocal from '../components/fields/AutoFieldLocal';
 import { getCashBankPetty } from '../Shared/helpers';
-import PopupAccountExpenses from './PopupAccountExpenses';
 
 const PopupFinance = ({
   open,
@@ -41,9 +40,6 @@ const PopupFinance = ({
 
   const [debitAcc, setDebitAcc]: any = React.useState(null);
   const [creditAcc, setCreditAcc]: any = React.useState(null);
-  const [newtext, setNewtext] = useState('');
-
-  const [openAcc, setOpenAcc] = useState(false);
 
   const { register, handleSubmit, errors, reset } = useForm(
     yup.depositResolver
@@ -54,18 +50,7 @@ const PopupFinance = ({
     store: { user },
   }: GContextTypes = useContext(GlobalContext);
 
-  const { accounts, addAccount, editAccount } = useAccounts();
-
-  const openAccount = () => {
-    setOpenAcc(true);
-  };
-  const onCloseAccount = () => {
-    setOpenAcc(false);
-    setNewtext('');
-  };
-  const onNewAccChange = (nextValue: any) => {
-    setDebitAcc(nextValue);
-  };
+  const { accounts } = useAccounts();
 
   useEffect(() => {
     const cashaccounts = accounts.filter(
@@ -290,7 +275,7 @@ const PopupFinance = ({
                 words={words}
                 options={debaccounts}
                 value={debitAcc}
-                openAdd={ptype === 'pettyCashPay' ? openAccount : undefined}
+                // openAdd={ptype === 'pettyCashPay' ? openAccount : undefined}
                 // disabled={ptype === 'pettyCashPay' || ptype === 'cashDraw'}
                 setSelectValue={setDebitAcc}
                 register={register}
@@ -329,18 +314,6 @@ const PopupFinance = ({
           </Grid>
         </Grid>
         <Grid item xs={1}></Grid>
-        <PopupAccountExpenses
-          open={openAcc}
-          onClose={onCloseAccount}
-          isNew={true}
-          setNewValue={onNewAccChange}
-          row={null}
-          addAction={addAccount}
-          editAction={editAccount}
-          accounts={accounts}
-          newtext={newtext}
-          name="debitAcc"
-        ></PopupAccountExpenses>
       </Grid>
     </PopupLayout>
   );

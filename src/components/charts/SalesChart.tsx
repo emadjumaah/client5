@@ -33,20 +33,10 @@ export default function SalesChart({
           bottom: 10,
         }}
       >
-        <Bar isAnimationActive={false} dataKey="amount" fill={acolor} />
-        <Bar isAnimationActive={false} dataKey="totalinvoiced" fill={scolor} />
-        <Bar
-          isAnimationActive={false}
-          dataKey="totalpaid"
-          stackId="a"
-          fill={pcolor}
-        />
-        <Bar
-          isAnimationActive={false}
-          dataKey="totalDiscount"
-          stackId="a"
-          fill={dcolor}
-        />
+        <Bar dataKey="amount" fill={acolor} />
+        <Bar dataKey="totalinvoiced" fill={scolor} />
+        <Bar dataKey="totalpaid" stackId="a" fill={pcolor} />
+        <Bar dataKey="totalDiscount" stackId="a" fill={dcolor} />
       </BarChart>
     </ResponsiveContainer>
   );

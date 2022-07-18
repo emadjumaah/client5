@@ -22,53 +22,37 @@ import {
   currencyFormatterEmpty,
   opTypeFormatter,
 } from './colorFormat';
-import getGereralKaids from '../graphql/query/getGereralKaids';
+import getEmployeeCustody from '../graphql/query/getEmployeeCustody';
 import { getColumns } from '../common/columns';
 import { Box, Typography } from '@material-ui/core';
 import RefetchBox from './RefetchBox';
 
-export default function KaidsCustomer({
+export default function EmployeeCustody({
   isRTL,
   words,
-  theme,
   name,
   id,
   width,
   height,
   start,
   end,
-  tempoptions,
+  theme,
 }: any) {
   const col = getColumns({ isRTL, words });
 
-  const [columns] = useState(
-    tempoptions?.noTsk
-      ? [
-          col.opTime,
-          col.opDocNo,
-          col.acc,
-          col.employee,
-          col.department,
-          col.amountdebit,
-          col.amountcredit,
-        ]
-      : [
-          col.opTime,
-          col.opDocNo,
-          col.acc,
-          col.contract,
-          col.customer,
-          col.resourse,
-          col.employee,
-          col.department,
-          col.amountdebit,
-          col.amountcredit,
-        ]
-  );
+  const [columns] = useState([
+    col.opTime,
+    col.opType,
+    col.opDocNo,
+    col.acc,
+    col.amountdebit,
+    col.amountcredit,
+    { name: 'desc', title: words.description },
+  ]);
 
   const [rows, setRows] = useState([]);
 
-  const [loadKaids, kaidsData]: any = useLazyQuery(getGereralKaids, {
+  const [loadKaids, kaidsData]: any = useLazyQuery(getEmployeeCustody, {
     nextFetchPolicy: 'cache-and-network',
   });
 
@@ -84,8 +68,8 @@ export default function KaidsCustomer({
   }, [id, start, end]);
 
   useEffect(() => {
-    if (kaidsData?.data?.getGereralKaids?.data) {
-      const { data } = kaidsData.data.getGereralKaids;
+    if (kaidsData?.data?.getEmployeeCustody?.data) {
+      const { data } = kaidsData.data.getEmployeeCustody;
       const rdata = updateOpDocRefNumbers(data);
       setRows(rdata);
     }
@@ -105,7 +89,6 @@ export default function KaidsCustomer({
         margin: 10,
       }}
     >
-      {' '}
       <Box
         style={{
           position: 'absolute',

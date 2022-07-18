@@ -49,7 +49,7 @@ const PopupResourses = ({
   const { register, handleSubmit, errors, reset } = useForm(yup.emppResolver);
   const {
     translate: { words, isRTL },
-    store: { user },
+    store: { user, tempId },
   }: GContextTypes = useContext(GlobalContext);
 
   const openRetype = () => {
@@ -84,8 +84,17 @@ const PopupResourses = ({
     setSaving(true);
     const name = data.name.trim();
     const nameAr = !isNew ? data.nameAr.trim() : name;
-    const { info, brand, plate, cost, model, purtime, insurance, licenseDate } =
-      data;
+    const {
+      info,
+      brand,
+      plate,
+      cost,
+      model,
+      purtime,
+      insurance,
+      licenseDate,
+      address,
+    } = data;
     const retype = rtypevalue
       ? {
           retypeId: rtypevalue._id,
@@ -114,6 +123,7 @@ const PopupResourses = ({
       insurance,
       licenseDate,
       retype,
+      address,
       carstatus: statusvalue?.id,
       branch: user.branch,
       userId: user._id,
@@ -164,7 +174,9 @@ const PopupResourses = ({
   };
 
   const title = getPopupTitle('resourse', isNew);
-
+  const isCar = tempId === 9 || tempId === 4;
+  const isRes = tempId === 7;
+  const isSer = tempId === 2 || tempId === 5 || tempId === 8;
   return (
     <PopupLayout
       isRTL={isRTL}
@@ -208,84 +220,111 @@ const PopupResourses = ({
                 />
               </Grid>
             )}
-            <Grid item xs={4}>
-              <TextFieldLocal
-                name="plate"
-                label={words.plate}
-                register={register}
-                errors={errors}
-                row={row}
-                fullWidth
-                mb={0}
-              />
-            </Grid>
-            <Grid item xs={4}>
-              <TextFieldLocal
-                name="brand"
-                label={words.brand}
-                register={register}
-                errors={errors}
-                row={row}
-                fullWidth
-                mb={0}
-              />
-            </Grid>
-            <Grid item xs={4}>
-              <TextFieldLocal
-                name="model"
-                label={words.model}
-                register={register}
-                errors={errors}
-                row={row}
-                fullWidth
-                mb={0}
-              />
-            </Grid>
-            <Grid item xs={6}>
-              <TextFieldLocal
-                name="cost"
-                label={words.cost}
-                register={register}
-                errors={errors}
-                row={row}
-                type="number"
-                fullWidth
-                mb={0}
-              />
-            </Grid>
-            <Grid item xs={6}>
-              <TextFieldLocal
-                name="purtime"
-                label={words.purtime}
-                register={register}
-                errors={errors}
-                row={row}
-                fullWidth
-                mb={0}
-              />
-            </Grid>
-            <Grid item xs={6}>
-              <TextFieldLocal
-                name="insurance"
-                label={words.insurance}
-                register={register}
-                errors={errors}
-                row={row}
-                fullWidth
-                mb={0}
-              />
-            </Grid>
-            <Grid item xs={6}>
-              <TextFieldLocal
-                name="licenseDate"
-                label={words.expiretime}
-                register={register}
-                errors={errors}
-                row={row}
-                fullWidth
-                mb={0}
-              />
-            </Grid>
+            {(isCar || isSer) && (
+              <Grid item xs={4}>
+                <TextFieldLocal
+                  name="plate"
+                  label={words.plate}
+                  register={register}
+                  errors={errors}
+                  row={row}
+                  fullWidth
+                  mb={0}
+                />
+              </Grid>
+            )}
+            {(isCar || isSer) && (
+              <Grid item xs={4}>
+                <TextFieldLocal
+                  name="brand"
+                  label={words.brand}
+                  register={register}
+                  errors={errors}
+                  row={row}
+                  fullWidth
+                  mb={0}
+                />
+              </Grid>
+            )}
+            {(isCar || isSer) && (
+              <Grid item xs={4}>
+                <TextFieldLocal
+                  name="model"
+                  label={words.model}
+                  register={register}
+                  errors={errors}
+                  row={row}
+                  fullWidth
+                  mb={0}
+                />
+              </Grid>
+            )}
+            {(isCar || isSer) && (
+              <Grid item xs={6}>
+                <TextFieldLocal
+                  name="cost"
+                  label={words.cost}
+                  register={register}
+                  errors={errors}
+                  row={row}
+                  type="number"
+                  fullWidth
+                  mb={0}
+                />
+              </Grid>
+            )}
+            {(isCar || isSer) && (
+              <Grid item xs={6}>
+                <TextFieldLocal
+                  name="purtime"
+                  label={words.purtime}
+                  register={register}
+                  errors={errors}
+                  row={row}
+                  fullWidth
+                  mb={0}
+                />
+              </Grid>
+            )}
+            {isCar && (
+              <Grid item xs={6}>
+                <TextFieldLocal
+                  name="insurance"
+                  label={words.insurance}
+                  register={register}
+                  errors={errors}
+                  row={row}
+                  fullWidth
+                  mb={0}
+                />
+              </Grid>
+            )}
+            {isCar && (
+              <Grid item xs={6}>
+                <TextFieldLocal
+                  name="licenseDate"
+                  label={words.expiretime}
+                  register={register}
+                  errors={errors}
+                  row={row}
+                  fullWidth
+                  mb={0}
+                />
+              </Grid>
+            )}
+            {isRes && (
+              <Grid item xs={12}>
+                <TextFieldLocal
+                  name="address"
+                  label={words.theaddress}
+                  register={register}
+                  errors={errors}
+                  row={row}
+                  fullWidth
+                  mb={0}
+                />
+              </Grid>
+            )}
             <Grid item xs={12}>
               <AutoFieldLocal
                 name="retype"
@@ -309,7 +348,9 @@ const PopupResourses = ({
                 name="carstatus"
                 title={words.status}
                 words={words}
-                options={carstatuss.filter((cs: any) => cs.id !== 10)}
+                options={carstatuss.filter((cs: any) =>
+                  isRes ? cs.id !== 10 && cs.id !== 3 : cs.id !== 10
+                )}
                 value={statusvalue}
                 setSelectValue={setStatusvalue}
                 register={register}

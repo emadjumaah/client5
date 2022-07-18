@@ -7,6 +7,7 @@ import {
   Checkbox,
   CircularProgress,
   colors,
+  Divider,
   fade,
   FormControlLabel,
   Grid,
@@ -28,6 +29,7 @@ import {
   isOperate,
   isAdmin,
 } from '../common/roles';
+import CustodyChart from '../components/charts/CustodyChart';
 import ExpensesChart from '../components/charts/ExpensesChart';
 import IncomeChart from '../components/charts/IncomeChart';
 import KaidsChart from '../components/charts/KaidsChart';
@@ -2684,19 +2686,39 @@ export const appointmentsMainFormatter = ({ row, theme, isRTL }: any) => {
         </Grid>
         <Grid item xs={6}>
           <Grid container spacing={1}>
-            <Grid item xs={7} style={{ marginTop: 50 }}>
+            <Grid item xs={7} style={{ marginTop: 35 }}>
               <Typography style={{ fontWeight: 'bold' }} variant="subtitle1">
-                {isRTL ? 'عدد المواعيد' : 'Appointments'}
+                {isRTL ? 'قيمة التعاقد' : 'Contarct Amount'}
               </Typography>
             </Grid>
-            <Grid item xs={5} style={{ marginTop: 50 }}>
+            <Grid item xs={5} style={{ marginTop: 35 }}>
+              <Typography style={{ fontWeight: 'bold' }} variant="subtitle1">
+                {moneyFormat(row?.coAmount)}
+              </Typography>
+            </Grid>
+            <Grid item xs={7}>
+              <Typography style={{ fontWeight: 'bold' }} variant="subtitle1">
+                {isRTL ? 'المواعيد' : 'Appointments'}
+              </Typography>
+            </Grid>
+            <Grid item xs={5}>
+              <Typography style={{ fontWeight: 'bold' }} variant="subtitle1">
+                {moneyFormat(row?.evAmount)}
+              </Typography>
+            </Grid>
+            <Grid item xs={7}>
+              <Typography style={{ fontWeight: 'bold' }} variant="subtitle1">
+                {isRTL ? 'العدد' : 'Quantity'}
+              </Typography>
+            </Grid>
+            <Grid item xs={5}>
               <Typography style={{ fontWeight: 'bold' }} variant="subtitle1">
                 {row?.evQty || 0}
               </Typography>
             </Grid>
             <Grid item xs={7}>
               <Typography style={{ fontWeight: 'bold' }} variant="subtitle1">
-                {isRTL ? 'المواعيد المنجزة' : 'Done Appointments'}
+                {isRTL ? 'المنجزة' : 'Done'}
               </Typography>
             </Grid>
             <Grid item xs={5}>
@@ -2704,22 +2726,81 @@ export const appointmentsMainFormatter = ({ row, theme, isRTL }: any) => {
                 {row?.evDone || 0}
               </Typography>
             </Grid>
-            <Grid item xs={7}>
-              <Typography
-                style={{ fontWeight: 'bold', fontSize: 18, marginTop: 30 }}
-              >
-                {isRTL ? 'الاجمالي' : 'Total'}
-              </Typography>
-            </Grid>
-            <Grid item xs={5}>
-              <Typography
-                style={{ fontWeight: 'bold', fontSize: 18, marginTop: 30 }}
-              >
-                {moneyFormat(row?.amount)}
-              </Typography>
-            </Grid>
           </Grid>
         </Grid>
+      </Grid>
+    </Box>
+  );
+};
+
+const renderColorTag = (title: any, color: any, value: any) => {
+  return (
+    <Box
+      style={{
+        display: 'flex',
+        height: 30,
+        alignItems: 'center',
+        marginLeft: 10,
+        marginRight: 10,
+        paddingLeft: 10,
+        paddingRight: 10,
+      }}
+    >
+      <Typography style={{ color, fontWeight: 'bold', width: 150 }}>
+        {title}
+      </Typography>
+      <Typography style={{ color, fontWeight: 'bold' }}>
+        {moneyFormat(value)}
+      </Typography>
+    </Box>
+  );
+};
+
+export const employeeMainFormatter = ({ row, theme, isRTL }: any) => {
+  const {
+    totalCustodyDebit,
+    totalCustodyCredit,
+    totalAdvancePay,
+    totalAdvanceRec,
+  } = row;
+  const dcolor = colors.blue[800];
+  const ccolor = colors.blue[400];
+  const pcolor = colors.purple[800];
+  const rcolor = colors.purple[400];
+  const dtitle = isRTL ? 'عهدة' : 'Custody Debit';
+  const ctitle = isRTL ? 'دفع من عهدة' : 'Custody Credit';
+  const ptitle = isRTL ? 'سلفة' : 'Advanced Debit';
+  const rtitle = isRTL ? 'دفع من سلفة' : 'Advanced Credit';
+  const artitle = isRTL ? 'الباقي' : 'Advanced Credit';
+  return (
+    <Box display={'flex'} style={{ flex: 1, paddingTop: 15, height: 240 }}>
+      <Grid container spacing={0}>
+        <Grid item xs={6}>
+          <CustodyChart
+            row={row}
+            height={100}
+            dcolor={dcolor}
+            ccolor={ccolor}
+            pcolor={pcolor}
+            rcolor={rcolor}
+          ></CustodyChart>
+        </Grid>
+        <Grid item xs={6} style={{ marginTop: 10 }}>
+          {renderColorTag(dtitle, dcolor, totalCustodyDebit)}
+          {renderColorTag(ctitle, ccolor, totalCustodyCredit)}
+          <Divider></Divider>
+          {renderColorTag(
+            artitle,
+            dcolor,
+            totalCustodyDebit - totalCustodyCredit
+          )}
+          <Box style={{ height: 15 }}></Box>
+          {renderColorTag(ptitle, pcolor, totalAdvancePay)}
+          {renderColorTag(rtitle, rcolor, totalAdvanceRec)}
+          <Divider></Divider>
+          {renderColorTag(artitle, pcolor, totalAdvancePay - totalAdvanceRec)}
+        </Grid>
+        <Grid item xs={12}></Grid>
       </Grid>
     </Box>
   );
@@ -2923,7 +3004,7 @@ export const salesTaskMainFormatter = ({
   row,
   isRTL,
   theme,
-  height = 250,
+  height = 200,
   bc = '#ddd',
 }: any) => {
   const acolor = colors.grey[700];
@@ -3183,7 +3264,7 @@ export const salesMainFormatter = ({
   row,
   isRTL,
   theme,
-  height = 250,
+  height = 200,
 }: any) => {
   const scolor = colors.blue[400];
   const acolor = colors.grey[700];
@@ -3207,15 +3288,9 @@ export const salesMainFormatter = ({
         <Grid item xs={7}>
           <Grid container spacing={1}>
             <Grid item xs={6} style={{ marginTop: 30 }}>
-              {rCellMain(isRTL ? 'القيمة' : 'Amount', acolor)}
-            </Grid>
-            <Grid item xs={6} style={{ marginTop: 30 }}>
-              {rCellMain(moneyFormat(row?.amount), acolor)}
-            </Grid>
-            <Grid item xs={6}>
               {rCellMain(isRTL ? 'الفواتير' : 'Invoices', scolor)}
             </Grid>
-            <Grid item xs={6}>
+            <Grid item xs={6} style={{ marginTop: 30 }}>
               {rCellMain(moneyFormat(row?.totalinvoiced), scolor)}
             </Grid>
             <Grid item xs={6}>
@@ -3231,12 +3306,12 @@ export const salesMainFormatter = ({
               {rCellMain(moneyFormat(row?.totalDiscount), dcolor)}
             </Grid>
             <Grid item xs={6}>
-              <Box style={{ marginTop: 30 }}>
+              <Box style={{ marginTop: 20 }}>
                 {rCellMain(isRTL ? 'الرصيد' : 'Balance', '#333')}
               </Box>
             </Grid>
             <Grid item xs={6}>
-              <Box style={{ marginTop: 30 }}>
+              <Box style={{ marginTop: 20 }}>
                 {rCellMain(
                   moneyFormat(
                     row?.totalinvoiced - row?.totalpaid - row?.totalDiscount
@@ -3317,7 +3392,7 @@ export const incomeMainFormatter = ({
   row,
   isRTL,
   theme,
-  height = 250,
+  height = 200,
 }: any) => {
   const scolor = colors.blue[400];
   const ecolor = colors.red[500];
@@ -3371,7 +3446,7 @@ export const purchaseMainFormatter = ({
   row,
   theme,
   isRTL,
-  height = 250,
+  height = 200,
 }: any) => {
   const scolor = colors.deepPurple[400];
   const pcolor = colors.green[400];
@@ -3391,10 +3466,10 @@ export const purchaseMainFormatter = ({
         </Grid>
         <Grid item xs={7}>
           <Grid container spacing={1}>
-            <Grid item xs={6} style={{ marginTop: 60 }}>
+            <Grid item xs={6} style={{ marginTop: 30 }}>
               {rCellMain(isRTL ? 'المشتريات' : 'Purchases', scolor)}
             </Grid>
-            <Grid item xs={6} style={{ marginTop: 60 }}>
+            <Grid item xs={6} style={{ marginTop: 30 }}>
               {rCellMain(moneyFormat(row?.totalPurchaseInvoiced), scolor)}
             </Grid>
             <Grid item xs={6}>
@@ -3410,12 +3485,12 @@ export const purchaseMainFormatter = ({
               {rCellMain(moneyFormat(row?.totalPurchaseDiscount), dcolor)}
             </Grid>
             <Grid item xs={6}>
-              <Box style={{ marginTop: 30 }}>
+              <Box style={{ marginTop: 20 }}>
                 {rCellMain(isRTL ? 'الرصيد' : 'Balance', '#333')}
               </Box>
             </Grid>
             <Grid item xs={6}>
-              <Box style={{ marginTop: 30 }}>
+              <Box style={{ marginTop: 20 }}>
                 {rCellMain(
                   moneyFormat(
                     row?.totalPurchaseInvoiced -
@@ -3436,10 +3511,18 @@ export const expensesMainFormatter = ({
   row,
   theme,
   isRTL,
-  height = 250,
+  height = 200,
 }: any) => {
-  const pcolor = colors.red[300];
-  const ecolor = colors.red[500];
+  const { toatlExpenses, totalExpPetty, toatlExpPayable, toatlProdExpenses } =
+    row;
+  const ecolor = colors.red[300];
+  const pcolor = colors.deepOrange[500];
+  const bcolor = colors.orange[500];
+  const dcolor = colors.amber[500];
+  const etitle = isRTL ? 'المصروفات' : 'Expenses';
+  const ptitle = isRTL ? 'مصروف عهدة' : 'Products';
+  const btitle = isRTL ? 'مصروف مورد' : 'Products';
+  const dtitle = isRTL ? 'الاستهلاك' : 'Products';
   return (
     <Box style={{ display: 'flex', flex: 1, height }}>
       <Grid container spacing={1}>
@@ -3447,39 +3530,18 @@ export const expensesMainFormatter = ({
           <ExpensesChart
             ecolor={ecolor}
             pcolor={pcolor}
+            bcolor={bcolor}
+            dcolor={dcolor}
             row={row}
             theme={theme}
             height={height}
           ></ExpensesChart>
         </Grid>
-        <Grid item xs={8}>
-          <Grid container spacing={1}>
-            <Grid item xs={7} style={{ marginTop: 50 }}>
-              {rCellMain(isRTL ? 'الاستهلاك' : 'Products', pcolor)}
-            </Grid>
-            <Grid item xs={5} style={{ marginTop: 50 }}>
-              {rCellMain(moneyFormat(row?.toatlProdExpenses), pcolor)}
-            </Grid>
-            <Grid item xs={7}>
-              {rCellMain(isRTL ? 'المصروفات' : 'Expenses', ecolor)}
-            </Grid>
-            <Grid item xs={5}>
-              {rCellMain(moneyFormat(row?.toatlExpenses), ecolor)}
-            </Grid>
-            <Grid item xs={7}>
-              <Box style={{ marginTop: 30 }}>
-                {rCellMain(isRTL ? 'المجموع' : 'Total', '#333')}
-              </Box>
-            </Grid>
-            <Grid item xs={5}>
-              <Box style={{ marginTop: 30 }}>
-                {rCellMain(
-                  moneyFormat(row?.toatlExpenses + row?.toatlProdExpenses),
-                  '#333'
-                )}
-              </Box>
-            </Grid>
-          </Grid>
+        <Grid item xs={8} style={{ marginTop: 30 }}>
+          {renderColorTag(etitle, ecolor, toatlExpenses)}
+          {renderColorTag(ptitle, pcolor, totalExpPetty)}
+          {renderColorTag(btitle, bcolor, toatlExpPayable)}
+          {renderColorTag(dtitle, dcolor, toatlProdExpenses)}
         </Grid>
       </Grid>
     </Box>
@@ -3489,50 +3551,39 @@ export const kaidsMainFormatter = ({
   row,
   theme,
   isRTL,
-  height = 250,
+  height = 200,
 }: any) => {
   const ccolor = colors.blueGrey[300];
   const dcolor = colors.brown[400];
   return (
-    <Box style={{ display: 'flex', flex: 1, height }}>
+    <Box
+      style={{
+        height,
+        paddingLeft: 30,
+        paddingRight: 30,
+      }}
+    >
       <Grid container spacing={1}>
-        <Grid item xs={5}>
-          <KaidsChart
-            ccolor={ccolor}
-            dcolor={dcolor}
-            row={row}
-            theme={theme}
-            height={height}
-          ></KaidsChart>
+        <Grid item xs={7} style={{ marginTop: 30 }}>
+          {rCellMain(isRTL ? 'القيود المدينة' : 'Debit', dcolor)}
+        </Grid>
+        <Grid item xs={5} style={{ marginTop: 30 }}>
+          {rCellMain(moneyFormat(row?.totalkaidsdebit), dcolor)}
         </Grid>
         <Grid item xs={7}>
-          <Grid container spacing={1}>
-            <Grid item xs={7} style={{ marginTop: 50 }}>
-              {rCellMain(isRTL ? 'القيود المدينة' : 'Debit', dcolor)}
-            </Grid>
-            <Grid item xs={5} style={{ marginTop: 50 }}>
-              {rCellMain(moneyFormat(row?.totalkaidsdebit), dcolor)}
-            </Grid>
-            <Grid item xs={7}>
-              {rCellMain(isRTL ? 'القيود الدائنة' : 'Credit', ccolor)}
-            </Grid>
-            <Grid item xs={5}>
-              {rCellMain(moneyFormat(row?.totalKaidscredit), ccolor)}
-            </Grid>
-            <Grid item xs={7}>
-              <Box style={{ marginTop: 30 }}>
-                {rCellMain(isRTL ? 'الرصيد' : 'Balance', '#333')}
-              </Box>
-            </Grid>
-            <Grid item xs={5}>
-              <Box style={{ marginTop: 30 }}>
-                {rCellMain(
-                  moneyFormat(row?.totalkaidsdebit - row?.totalKaidscredit),
-                  '#333'
-                )}
-              </Box>
-            </Grid>
-          </Grid>
+          {rCellMain(isRTL ? 'القيود الدائنة' : 'Credit', ccolor)}
+        </Grid>
+        <Grid item xs={5}>
+          {rCellMain(moneyFormat(row?.totalKaidscredit), ccolor)}
+        </Grid>
+        <Grid item xs={7} style={{ marginTop: 20 }}>
+          {rCellMain(isRTL ? 'الرصيد' : 'Balance', '#333')}
+        </Grid>
+        <Grid item xs={5} style={{ marginTop: 20 }}>
+          {rCellMain(
+            moneyFormat(row?.totalkaidsdebit - row?.totalKaidscredit),
+            '#333'
+          )}
         </Grid>
       </Grid>
     </Box>
@@ -3582,7 +3633,7 @@ export const opTypeFormatter = ({ value }: any) => {
   const lang = store?.lang;
   const name =
     lang === 'ar' ? opTypesNames?.[value]?.nameAr : opTypesNames?.[value]?.name;
-  return <span>{name}</span>;
+  return <Typography>{name}</Typography>;
 };
 export const actionTypeFormatter = ({ row }: any) => {
   const name =

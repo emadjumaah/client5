@@ -25,6 +25,7 @@ export default gql`
         color
         resKind
         resType
+        accountCode
 
         pId
         pIdDate

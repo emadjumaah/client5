@@ -15,7 +15,7 @@ import {
   TableHeaderRow,
   VirtualTable,
 } from '@devexpress/dx-react-grid-material-ui';
-import { Command, Loading, PopupEditing } from '.';
+import { Command, PopupEditing } from '.';
 import { getRowId, updateDocNumbers } from '../common';
 import {
   createInvoice,
@@ -41,6 +41,7 @@ import useEmployees from '../hooks/useEmployees';
 import useDepartments from '../hooks/useDepartments';
 import getGereralCalculation from '../graphql/query/getGereralCalculation';
 import { getProducts, getProjects, getTasks } from '../graphql/query';
+import RefetchBox from './RefetchBox';
 
 export default function InvoicesCustomer({
   isRTL,
@@ -93,7 +94,6 @@ export default function InvoicesCustomer({
   );
 
   const [rows, setRows] = useState([]);
-  const [loading, setLoading] = useState(false);
 
   const { tasks } = useTasks();
 
@@ -165,17 +165,14 @@ export default function InvoicesCustomer({
   };
 
   useEffect(() => {
-    if (opData?.loading) {
-      setLoading(true);
-    }
     if (opData?.data?.getInvoices?.data) {
       const { data } = opData.data.getInvoices;
       const rdata = updateDocNumbers(data);
       setRows(rdata);
-      setLoading(false);
     }
   }, [opData]);
-
+  const refresh = () => opData?.refetch();
+  const loading = opData.loading;
   return (
     <Box
       style={{
@@ -184,6 +181,27 @@ export default function InvoicesCustomer({
         margin: 10,
       }}
     >
+      <Box
+        style={{
+          position: 'absolute',
+          width: 50,
+          height: 50,
+          left: isRTL ? 220 : undefined,
+          right: isRTL ? undefined : 220,
+          zIndex: 111,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          top: 55,
+        }}
+      >
+        <RefetchBox
+          isRTL={isRTL}
+          theme={theme}
+          refresh={refresh}
+          loading={loading}
+        ></RefetchBox>
+      </Box>
       <Paper
         style={{
           height: height - 290,
@@ -247,7 +265,6 @@ export default function InvoicesCustomer({
             ></PopupInvoice>
           </PopupEditing>
         </Grid>
-        {loading && <Loading isRTL={isRTL} />}
       </Paper>
     </Box>
   );

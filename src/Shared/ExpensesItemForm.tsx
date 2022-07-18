@@ -36,7 +36,6 @@ export default function ExpensesItemForm({
 
   const itemRef: any = React.useRef();
   const { addExpenseItem, editExpenseItem } = useExpenseItems();
-
   const onOpenItem = () => {
     setOpenItem(true);
   };
@@ -118,7 +117,6 @@ export default function ExpensesItemForm({
                 <OptionProductData
                   isRTL={isRTL}
                   item={option}
-                  price={false}
                 ></OptionProductData>
               )}
               fullWidth

@@ -1,14 +1,7 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import {
-  fade,
-  Hidden,
-  IconButton,
-  Paper,
-  Tooltip,
-  Typography,
-} from '@material-ui/core';
+import { fade, Hidden, Paper, Typography } from '@material-ui/core';
 import React from 'react';
-import RefreshOutlinedIcon from '@material-ui/icons/RefreshOutlined';
+import RefetchBox from '../../Shared/RefetchBox';
 
 export default function PageLayout(props: any) {
   const {
@@ -45,20 +38,11 @@ export default function PageLayout(props: any) {
             {isRTL ? menuitem.titleAr : menuitem.titleEn}
           </Typography>
           {refresh && (
-            <Tooltip title={isRTL ? 'تحديث' : 'Refresh'}>
-              <IconButton
-                style={{
-                  backgroundColor: fade(theme.palette.primary.light, 0.5),
-                  padding: 7,
-                }}
-                onClick={refresh}
-              >
-                <RefreshOutlinedIcon
-                  style={{ fontSize: 24, color: '#f5f5f5' }}
-                  color="primary"
-                ></RefreshOutlinedIcon>
-              </IconButton>
-            </Tooltip>
+            <RefetchBox
+              isRTL={isRTL}
+              theme={theme}
+              refresh={refresh}
+            ></RefetchBox>
           )}
         </div>
         <div

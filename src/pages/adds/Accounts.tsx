@@ -32,6 +32,7 @@ export default function Accounts({ isRTL, accounts }: any) {
   const [loading, setLoading] = useState(false);
   const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
   const { height } = useWindowDimensions();
+  console.log('Accounts accounts', accounts);
 
   const [columns] = useState([
     { name: isRTL ? 'nameAr' : 'name', title: isRTL ? 'اسم الحساب' : 'Name' },
@@ -40,10 +41,13 @@ export default function Accounts({ isRTL, accounts }: any) {
       name: isRTL ? 'parentAr' : 'parent',
       title: isRTL ? 'الحساب الرئيسي' : 'Main Account',
     },
+    {
+      name: isRTL ? 'employeeNameAr' : 'employeeName',
+      title: isRTL ? 'الموظف' : 'Employee',
+    },
   ]);
   const { addAccount, editAccount, removeAccount } = useAccounts();
   const { branches } = useBranches();
-
   const commitChanges = async ({ deleted }) => {
     if (deleted) {
       const _id = deleted[0];

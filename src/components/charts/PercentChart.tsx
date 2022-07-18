@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import { fade, Paper } from "@material-ui/core";
-import React from "react";
-import { ResponsiveContainer, PieChart, Pie, Label } from "recharts";
-import ChartHeader from "./ChartHeader";
+import { fade, Paper } from '@material-ui/core';
+import React from 'react';
+import { ResponsiveContainer, PieChart, Pie, Label } from 'recharts';
+import ChartHeader from './ChartHeader';
 
 const PercentChart = ({ height, data, pricolor, seccolor, isRTL, prim }) => {
   let pctComplete: any;
@@ -17,10 +17,10 @@ const PercentChart = ({ height, data, pricolor, seccolor, isRTL, prim }) => {
   const startPosition = 90,
     endPosition = startPosition - 360 * pctComplete;
   const value = pctComplete
-    ? Math.round(pctComplete * 100).toLocaleString() + "%"
-    : "0%";
+    ? Math.round(pctComplete * 100).toLocaleString() + '%'
+    : '0%';
 
-  const title = isRTL ? "المواعيد المنجزة اليوم" : "Today Appointments";
+  const title = isRTL ? 'المواعيد المنجزة اليوم' : 'Today Appointments';
   return (
     <Paper style={{ height }}>
       <ChartHeader title={title} color={prim}></ChartHeader>
@@ -40,7 +40,6 @@ const PercentChart = ({ height, data, pricolor, seccolor, isRTL, prim }) => {
             outerRadius="100%"
             startAngle={startPosition}
             endAngle={startPosition - 360}
-            isAnimationActive={false}
             paddingAngle={0}
             fill={fade(seccolor, 0.3)}
             dataKey="value"
@@ -61,7 +60,7 @@ const PercentChart = ({ height, data, pricolor, seccolor, isRTL, prim }) => {
             <Label
               position="center"
               value={value}
-              style={{ fontSize: 25, fontWeight: "bold" }}
+              style={{ fontSize: 25, fontWeight: 'bold' }}
               fill={pricolor}
             />
           </Pie>

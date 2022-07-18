@@ -1,15 +1,26 @@
 import React from 'react';
 import { BarChart, Bar, ResponsiveContainer } from 'recharts';
 
-export default function ExpensesChart({ row, pcolor, ecolor, height }: any) {
-  const { toatlExpenses, toatlProdExpenses } = row;
+export default function ExpensesChart({
+  row,
+  ecolor,
+  pcolor,
+  bcolor,
+  dcolor,
+  height,
+}: any) {
+  const { toatlExpenses, totalExpPetty, toatlExpPayable, toatlProdExpenses } =
+    row;
   const data = [
     {
       name: 'Expenses',
       toatlExpenses: toatlExpenses ? toatlExpenses : 0,
+      totalExpPetty: totalExpPetty ? totalExpPetty : 0,
+      toatlExpPayable: toatlExpPayable ? toatlExpPayable : 0,
       toatlProdExpenses: toatlProdExpenses ? toatlProdExpenses : 0,
     },
   ];
+
   const h = height ? height : 100;
   return (
     <ResponsiveContainer width="100%" height="100%">
@@ -24,18 +35,10 @@ export default function ExpensesChart({ row, pcolor, ecolor, height }: any) {
           bottom: 10,
         }}
       >
-        <Bar
-          isAnimationActive={false}
-          dataKey="toatlExpenses"
-          stackId="a"
-          fill={ecolor}
-        />
-        <Bar
-          isAnimationActive={false}
-          dataKey="toatlProdExpenses"
-          stackId="a"
-          fill={pcolor}
-        />
+        <Bar dataKey="toatlExpenses" fill={ecolor} />
+        <Bar dataKey="totalExpPetty" fill={pcolor} />
+        <Bar dataKey="toatlExpPayable" fill={bcolor} />
+        <Bar dataKey="toatlProdExpenses" fill={dcolor} />
       </BarChart>
     </ResponsiveContainer>
   );

@@ -31,6 +31,7 @@ import getTasks from '../graphql/query/getTasks';
 import { TableComponent } from './TableComponent';
 
 import { Box, Typography } from '@material-ui/core';
+import RefetchBox from './RefetchBox';
 
 export const getRowId = (row: { _id: any }) => row._id;
 
@@ -114,7 +115,8 @@ export default function TasksCustomer({
       setRows(data);
     }
   }, [tasksData]);
-
+  const refresh = () => tasksData?.refetch();
+  const loading = tasksData.loading;
   return (
     <Box
       style={{
@@ -123,6 +125,27 @@ export default function TasksCustomer({
         margin: 10,
       }}
     >
+      <Box
+        style={{
+          position: 'absolute',
+          width: 50,
+          height: 50,
+          left: isRTL ? 220 : undefined,
+          right: isRTL ? undefined : 220,
+          zIndex: 111,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          top: 55,
+        }}
+      >
+        <RefetchBox
+          isRTL={isRTL}
+          theme={theme}
+          refresh={refresh}
+          loading={loading}
+        ></RefetchBox>
+      </Box>
       <Paper
         style={{
           height: height - 290,

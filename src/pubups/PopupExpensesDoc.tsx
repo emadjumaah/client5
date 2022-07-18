@@ -34,7 +34,6 @@ import { VoucherPrint } from '../print';
 import { successAlert } from '../Shared/helpers';
 import ExpensesTypeSelect from '../pages/options/ExpensesTypeSelect';
 import PopupSupplier from './PopupSupplier';
-import PopupAccountExpenses from './PopupAccountExpenses';
 
 export const indexTheList = (list: any) => {
   return list.map((item: any, index: any) => {
@@ -77,8 +76,7 @@ const PopupExpensesDoc = ({
 
   const { tasks } = useTasks();
   const { company } = useCompany();
-  const { accounts, addAccount, editAccount } = useAccounts();
-
+  const { accounts } = useAccounts();
   const [departvalue, setDepartvalue] = useState<any>(
     name === 'departmentId' ? value : null
   );
@@ -111,7 +109,6 @@ const PopupExpensesDoc = ({
   const [openDep, setOpenDep] = useState(false);
   const [openEmp, setOpenEmp] = useState(false);
   const [openRes, setOpenRes] = useState(false);
-  const [openAcc, setOpenAcc] = useState(false);
   const { addDepartment, editDepartment } = useDepartments();
   const { addEmployee, editEmployee } = useEmployees();
   const { addResourse, editResourse } = useResourses();
@@ -158,13 +155,6 @@ const PopupExpensesDoc = ({
     setOpenRes(false);
     setNewtext('');
   };
-  const openAccount = () => {
-    setOpenAcc(true);
-  };
-  const onCloseAccount = () => {
-    setOpenAcc(false);
-    setNewtext('');
-  };
 
   const onNewDepartChange = (nextValue: any) => {
     setDepartvalue(nextValue);
@@ -178,12 +168,9 @@ const PopupExpensesDoc = ({
   const onNewResoChange = (nextValue: any) => {
     setResovalue(nextValue);
   };
-  const onNewAccChange = (nextValue: any) => {
-    setCreditAcc(nextValue);
-  };
 
   useEffect(() => {
-    if (!isNew) {
+    if (row && row._id) {
       const items = itemsData?.data?.['getOperationItems']?.data || [];
       if (items && items.length > 0) {
         const ids = items.map((it: any) => it.itemId);
@@ -325,20 +312,18 @@ const PopupExpensesDoc = ({
       }
     }
   }, [taskvalue, open]);
-  const payableaccounts = accounts.filter(
-    (acc: any) => acc.parentcode === parents.ACCOUNTS_PAYABLE
-  );
-  const cashaccounts = accounts.filter(
-    (acc: any) => acc.parentcode === parents.CASH && acc.code < 10499
-  );
-  const pettyaccounts = accounts.filter(
-    (acc: any) => acc.parentcode === parents.CASH && acc.code > 10499
-  );
-  const filtereddebits = accounts.filter(
-    (acc: any) => acc.parentcode === parents.EXPENCES
-  );
+
   useEffect(() => {
-    if (!isNew) {
+    if (row && row._id) {
+      const payableaccounts = accounts.filter(
+        (acc: any) => acc.parentcode === parents.ACCOUNTS_PAYABLE
+      );
+      const cashaccounts = accounts.filter(
+        (acc: any) => acc.parentcode === parents.CASH && acc.code < 10499
+      );
+      const pettyaccounts = accounts.filter(
+        (acc: any) => acc.parentcode === parents.CASH && acc.code > 10499
+      );
       const ca = row.creditAcc;
       const da = row.debitAcc;
       const ot = row.opType;
@@ -392,6 +377,19 @@ const PopupExpensesDoc = ({
   }, [open, accounts]);
 
   useEffect(() => {
+    const payableaccounts = accounts.filter(
+      (acc: any) => acc.parentcode === parents.ACCOUNTS_PAYABLE
+    );
+    const cashaccounts = accounts.filter(
+      (acc: any) => acc.parentcode === parents.CASH && acc.code < 10499
+    );
+    const pettyaccounts = accounts.filter(
+      (acc: any) => acc.parentcode === parents.CASH && acc.code > 10499
+    );
+    const filtereddebits = accounts.filter(
+      (acc: any) => acc.parentcode === parents.EXPENCES
+    );
+
     const filteredcredit =
       ptype === 'exppayable'
         ? payableaccounts
@@ -403,7 +401,7 @@ const PopupExpensesDoc = ({
       setCreditAcc(filteredcredit?.[0]);
     }
     setDebitAcc(filtereddebits?.[0]);
-  }, [ptype]);
+  }, [open, ptype]);
 
   useEffect(() => {
     if (ptype === 'exppettycash') {
@@ -690,7 +688,6 @@ const PopupExpensesDoc = ({
             setSelectValue={setCreditAcc}
             register={register}
             isRTL={isRTL}
-            openAdd={ptype === 'exppettycash' ? openAccount : undefined}
             fullwidtth
             mb={0}
             nosort
@@ -939,18 +936,6 @@ const PopupExpensesDoc = ({
           addAction={addResourse}
           editAction={editResourse}
         ></PopupResourses>
-        <PopupAccountExpenses
-          open={openAcc}
-          onClose={onCloseAccount}
-          isNew={true}
-          setNewValue={onNewAccChange}
-          row={null}
-          addAction={addAccount}
-          editAction={editAccount}
-          accounts={accounts}
-          newtext={newtext}
-          name="creditAcc"
-        ></PopupAccountExpenses>
         <Box>
           <div style={{ display: 'none' }}>
             <VoucherPrint

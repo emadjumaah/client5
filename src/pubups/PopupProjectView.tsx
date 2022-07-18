@@ -3,7 +3,16 @@
 import React, { useContext, useState } from 'react';
 import { GContextTypes } from '../types';
 import { GlobalContext } from '../contexts';
-import { Box, Grid, Paper, Tab, Tabs, Typography } from '@material-ui/core';
+import {
+  Box,
+  Checkbox,
+  FormControlLabel,
+  Grid,
+  Paper,
+  Tab,
+  Tabs,
+  Typography,
+} from '@material-ui/core';
 import PopupLayout from '../pages/main/PopupLayout';
 import EventsCustomer from '../Shared/EventsCustomer';
 import InvoicesCustomer from '../Shared/InvoicesCustomer';
@@ -31,6 +40,8 @@ const PopupProjectView = ({ open, onClose, row, theme, company }: any) => {
   const [currentViewName, setCurrentViewName] = useState('Month');
   const [currentDate, setCurrentDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
+  const [isTime, setIsTime] = useState(false);
+
   const currentViewNameChange = (e: any) => {
     setCurrentViewName(e.target.value);
   };
@@ -76,20 +87,52 @@ const PopupProjectView = ({ open, onClose, row, theme, company }: any) => {
     >
       <Box>
         <Box display="flex" style={{ backgroundColor: '#fff', height: 50 }}>
-          <DateNavigatorReports
-            setStart={setStart}
-            setEnd={setEnd}
-            currentDate={currentDate}
-            currentDateChange={currentDateChange}
-            currentViewName={currentViewName}
-            currentViewNameChange={currentViewNameChange}
-            endDate={endDate}
-            endDateChange={endDateChange}
-            views={[1, 7, 30, 365, 1000]}
-            isRTL={isRTL}
-            words={words}
-            theme={theme}
-          ></DateNavigatorReports>
+          <Box display="flex" style={{ padding: 7 }}>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  style={{ padding: 7 }}
+                  checked={isTime}
+                  onChange={() => {
+                    setIsTime(!isTime);
+                  }}
+                  color="primary"
+                />
+              }
+              label={
+                <Typography
+                  style={{
+                    color: theme.palette.primary.main,
+                    fontWeight: 'bold',
+                  }}
+                >
+                  {isRTL ? 'تفعيل التاريخ' : 'Activate Date'}
+                </Typography>
+              }
+              style={{ fontSize: 14 }}
+            />
+          </Box>
+          <Box
+            style={{
+              opacity: !isTime ? 0.5 : undefined,
+              pointerEvents: !isTime ? 'none' : undefined,
+            }}
+          >
+            <DateNavigatorReports
+              setStart={setStart}
+              setEnd={setEnd}
+              currentDate={currentDate}
+              currentDateChange={currentDateChange}
+              currentViewName={currentViewName}
+              currentViewNameChange={currentViewNameChange}
+              endDate={endDate}
+              endDateChange={endDateChange}
+              views={[1, 7, 30, 365, 1000]}
+              isRTL={isRTL}
+              words={words}
+              theme={theme}
+            ></DateNavigatorReports>
+          </Box>
         </Box>
         <Box style={{ display: 'flex', marginTop: 0 }}>
           <Grid container spacing={0} style={{ width: width - 300 }}>
@@ -115,8 +158,8 @@ const PopupProjectView = ({ open, onClose, row, theme, company }: any) => {
                         id={row?._id}
                         width={width}
                         height={height}
-                        start={start}
-                        end={end}
+                        start={isTime ? start : null}
+                        end={isTime ? end : null}
                       ></MainCustomer>
                     </TabPanel>
                     <TabPanel value={value} index={1}>
@@ -128,8 +171,8 @@ const PopupProjectView = ({ open, onClose, row, theme, company }: any) => {
                         id={row?._id}
                         width={width}
                         height={height}
-                        start={null}
-                        end={null}
+                        start={isTime ? start : null}
+                        end={isTime ? end : null}
                       ></TasksCustomer>
                     </TabPanel>
                     <TabPanel value={value} index={2}>
@@ -141,8 +184,8 @@ const PopupProjectView = ({ open, onClose, row, theme, company }: any) => {
                         id={row?._id}
                         width={width}
                         height={height}
-                        start={null}
-                        end={null}
+                        start={isTime ? start : null}
+                        end={isTime ? end : null}
                         tempoptions={tempoptions}
                       ></EventsCustomer>
                     </TabPanel>
@@ -155,8 +198,8 @@ const PopupProjectView = ({ open, onClose, row, theme, company }: any) => {
                         id={row?._id}
                         width={width}
                         height={height}
-                        start={null}
-                        end={null}
+                        start={isTime ? start : null}
+                        end={isTime ? end : null}
                         tempoptions={tempoptions}
                       ></InvoicesCustomer>
                     </TabPanel>
@@ -169,8 +212,8 @@ const PopupProjectView = ({ open, onClose, row, theme, company }: any) => {
                         id={row?._id}
                         width={width}
                         height={height}
-                        start={null}
-                        end={null}
+                        start={isTime ? start : null}
+                        end={isTime ? end : null}
                       ></ReceiptCustomer>
                     </TabPanel>
                     <TabPanel value={value} index={5}>
@@ -182,8 +225,8 @@ const PopupProjectView = ({ open, onClose, row, theme, company }: any) => {
                         id={row?._id}
                         width={width}
                         height={height}
-                        start={start}
-                        end={end}
+                        start={isTime ? start : null}
+                        end={isTime ? end : null}
                         value={row}
                         company={company}
                         tempoptions={tempoptions}
@@ -198,8 +241,8 @@ const PopupProjectView = ({ open, onClose, row, theme, company }: any) => {
                         id={row?._id}
                         width={width}
                         height={height}
-                        start={start}
-                        end={end}
+                        start={isTime ? start : null}
+                        end={isTime ? end : null}
                         value={row}
                         company={company}
                       ></PaymentSupplier>
@@ -213,8 +256,8 @@ const PopupProjectView = ({ open, onClose, row, theme, company }: any) => {
                         id={row?._id}
                         width={width}
                         height={height}
-                        start={null}
-                        end={null}
+                        start={isTime ? start : null}
+                        end={isTime ? end : null}
                         tempoptions={tempoptions}
                         tempwords={tempwords}
                       ></ExpensesCustomer>
@@ -228,8 +271,8 @@ const PopupProjectView = ({ open, onClose, row, theme, company }: any) => {
                         id={row?._id}
                         width={width}
                         height={height}
-                        start={start}
-                        end={end}
+                        start={isTime ? start : null}
+                        end={isTime ? end : null}
                         value={row}
                         company={company}
                         tempoptions={tempoptions}
@@ -245,8 +288,8 @@ const PopupProjectView = ({ open, onClose, row, theme, company }: any) => {
                         id={row?._id}
                         width={width}
                         height={height}
-                        start={null}
-                        end={null}
+                        start={isTime ? start : null}
+                        end={isTime ? end : null}
                         tempoptions={tempoptions}
                       ></KaidsCustomer>
                     </TabPanel>
@@ -259,8 +302,8 @@ const PopupProjectView = ({ open, onClose, row, theme, company }: any) => {
                         id={row?._id}
                         width={width}
                         height={height}
-                        start={start}
-                        end={end}
+                        start={isTime ? start : null}
+                        end={isTime ? end : null}
                         tempoptions={tempoptions}
                       ></ReminderCustomer>
                     </TabPanel>

@@ -1,4 +1,4 @@
-import { gql } from "@apollo/client";
+import { gql } from '@apollo/client';
 
 export default gql`
   query getAccounts {
@@ -21,6 +21,9 @@ export default gql`
         closedAcc
         note
         userId
+        employeeId
+        employeeName
+        employeeNameAr
 
         createdAt
         updatedAt

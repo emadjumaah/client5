@@ -106,7 +106,7 @@ export default function KaidsReport({
   const [end, setEnd] = useState<any>(null);
   const [rows, setRows] = useState([]);
   const [isRaseed, setIsRaseed] = useState(true);
-  const [isGroup, setIsGroup] = useState(true);
+  const [isGroup, setIsGroup] = useState(false);
 
   const col = getColumns({ isRTL, words });
 
@@ -304,7 +304,7 @@ export default function KaidsReport({
     } else {
       setRows(rdata);
     }
-  }, [summaryData, isRaseed]);
+  }, [summaryData, isRaseed, isGroup]);
 
   const getIds = (list: any) =>
     list && list?.length > 0 ? list.map((sv: any) => sv._id) : undefined;

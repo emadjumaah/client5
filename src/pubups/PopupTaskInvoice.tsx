@@ -38,7 +38,7 @@ import { InvoicePrint } from '../print';
 import { getInvDays } from '../common/helpers';
 import getGereralCalculation from '../graphql/query/getGereralCalculation';
 import { getProjects, getTasks } from '../graphql/query';
-import { getEndOfMonth, getStartOfMonth } from '../Shared/helpers';
+import { getEndOfMonth, getStartOfMonth, sleep } from '../Shared/helpers';
 
 export const indexTheList = (list: any) => {
   return list.map((item: any, index: any) => {
@@ -238,61 +238,63 @@ const PopupTaskInvoice = ({
   }, [itemsList, discount, ptype, isCash]);
 
   useEffect(() => {
-    const items = itemsData?.data?.['getOperationItems']?.data || [];
+    if (task) {
+      const items = itemsData?.data?.['getOperationItems']?.data || [];
 
-    if (items && items.length > 0) {
-      const ids = items.map((it: any) => it.itemId);
-      const servlist = [...services, ...products].filter((ser: any) =>
-        ids.includes(ser._id)
-      );
-      const itemsWqtyprice = items.map((item: any, index: any) => {
-        const {
-          categoryId,
-          categoryName,
-          categoryNameAr,
-          departmentId,
-          departmentName,
-          departmentNameAr,
-          departmentColor,
-          employeeId,
-          employeeName,
-          employeeNameAr,
-          employeeColor,
-          resourseId,
-          resourseName,
-          resourseNameAr,
-          resourseColor,
-          note,
-        } = item;
-        const serv = servlist.filter((se: any) => se._id === item.itemId)[0];
-        return {
-          ...serv,
-          categoryId,
-          categoryName,
-          categoryNameAr,
-          departmentId,
-          departmentName,
-          departmentNameAr,
-          departmentColor,
-          employeeId,
-          employeeName,
-          employeeNameAr,
-          employeeColor,
-          resourseId,
-          resourseName,
-          resourseNameAr,
-          resourseColor,
-          index,
-          itemprice: item.itemPrice,
-          itemqty: item.qty,
-          itemtotal: item.total,
-          note,
-        };
-      });
-      itemsWqtyprice.sort((a: any, b: any) =>
-        a.indx > b.indx ? 1 : b.indx > a.indx ? -1 : 0
-      );
-      setItemsList(itemsWqtyprice);
+      if (items && items.length > 0) {
+        const ids = items.map((it: any) => it.itemId);
+        const servlist = [...services, ...products].filter((ser: any) =>
+          ids.includes(ser._id)
+        );
+        const itemsWqtyprice = items.map((item: any, index: any) => {
+          const {
+            categoryId,
+            categoryName,
+            categoryNameAr,
+            departmentId,
+            departmentName,
+            departmentNameAr,
+            departmentColor,
+            employeeId,
+            employeeName,
+            employeeNameAr,
+            employeeColor,
+            resourseId,
+            resourseName,
+            resourseNameAr,
+            resourseColor,
+            note,
+          } = item;
+          const serv = servlist.filter((se: any) => se._id === item.itemId)[0];
+          return {
+            ...serv,
+            categoryId,
+            categoryName,
+            categoryNameAr,
+            departmentId,
+            departmentName,
+            departmentNameAr,
+            departmentColor,
+            employeeId,
+            employeeName,
+            employeeNameAr,
+            employeeColor,
+            resourseId,
+            resourseName,
+            resourseNameAr,
+            resourseColor,
+            index,
+            itemprice: item.itemPrice,
+            itemqty: item.qty,
+            itemtotal: item.total,
+            note,
+          };
+        });
+        itemsWqtyprice.sort((a: any, b: any) =>
+          a.indx > b.indx ? 1 : b.indx > a.indx ? -1 : 0
+        );
+        setItemsList(itemsWqtyprice);
+      }
     }
   }, [itemsData]);
 
@@ -509,7 +511,8 @@ const PopupTaskInvoice = ({
 
   const apply = async (mutate: any, variables: any) => {
     try {
-      await mutate({ variables });
+      mutate({ variables });
+      await sleep(2);
       await successAlert(setAlrt, isRTL);
       setSaving(false);
       onCloseForm();

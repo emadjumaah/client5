@@ -322,7 +322,6 @@ export default function Appointments({
 
   const [tableColumnVisibilityColumnExtensions] = useState([
     { columnName: col.startDate.name, togglingEnabled: false },
-    { columnName: col.fromto.name, togglingEnabled: false },
     { columnName: col.amount.name, togglingEnabled: false },
   ]);
 

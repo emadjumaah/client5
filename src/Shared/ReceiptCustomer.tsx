@@ -14,7 +14,7 @@ import {
   TableHeaderRow,
   VirtualTable,
 } from '@devexpress/dx-react-grid-material-ui';
-import { Command, Loading, PopupEditing } from '.';
+import { Command, PopupEditing } from '.';
 import { getRowId, updateDocNumbers } from '../common';
 import { useLazyQuery, useMutation } from '@apollo/client';
 import { createFinance, deleteFinance, updateFinance } from '../graphql';
@@ -33,6 +33,7 @@ import PopupReceipt from '../pubups/PopupReceipt';
 import { getColumns } from '../common/columns';
 import getGereralCalculation from '../graphql/query/getGereralCalculation';
 import { getProjects, getTasks } from '../graphql/query';
+import RefetchBox from './RefetchBox';
 
 export default function ReceiptCustomer({
   isRTL,
@@ -63,7 +64,6 @@ export default function ReceiptCustomer({
   ]);
 
   const [rows, setRows] = useState([]);
-  const [loading, setLoading] = useState(false);
 
   const { tasks } = useTasks();
   const [loadFinances, financeData]: any = useLazyQuery(getReceipts, {
@@ -126,18 +126,16 @@ export default function ReceiptCustomer({
     }
   };
   useEffect(() => {
-    if (financeData?.loading) {
-      setLoading(true);
-    }
     if (financeData?.data?.getReceipts?.data) {
       const { data } = financeData.data.getReceipts;
       const rdata = updateDocNumbers(data);
       setRows(rdata);
-      setLoading(false);
     }
   }, [financeData]);
   const isEditable =
     name !== 'resourseId' && name !== 'departmentId' && name !== 'employeeId';
+  const refresh = () => financeData?.refetch();
+  const loading = financeData.loading;
   return (
     <Box
       style={{
@@ -146,6 +144,28 @@ export default function ReceiptCustomer({
         margin: 10,
       }}
     >
+      {' '}
+      <Box
+        style={{
+          position: 'absolute',
+          width: 50,
+          height: 50,
+          left: isRTL ? 220 : undefined,
+          right: isRTL ? undefined : 220,
+          zIndex: 111,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          top: 55,
+        }}
+      >
+        <RefetchBox
+          isRTL={isRTL}
+          theme={theme}
+          refresh={refresh}
+          loading={loading}
+        ></RefetchBox>
+      </Box>
       <Paper
         style={{
           height: height - 290,
@@ -217,7 +237,6 @@ export default function ReceiptCustomer({
             ></PopupReceipt>
           </PopupEditing>
         </Grid>
-        {loading && <Loading isRTL={isRTL} />}
       </Paper>
     </Box>
   );

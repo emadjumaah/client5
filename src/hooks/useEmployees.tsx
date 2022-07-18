@@ -6,6 +6,7 @@ import { useEffect } from 'react';
 import {
   createEmployee,
   deleteEmployee,
+  getAccounts,
   getEmployees,
   updateEmployee,
 } from '../graphql';
@@ -14,13 +15,13 @@ export default () => {
   const [getemparts, empData]: any = useLazyQuery(getEmployees);
 
   const [addEmployee] = useMutation(createEmployee, {
-    refetchQueries: [{ query: getEmployees }],
+    refetchQueries: [{ query: getEmployees }, { query: getAccounts }],
   });
   const [editEmployee] = useMutation(updateEmployee, {
-    refetchQueries: [{ query: getEmployees }],
+    refetchQueries: [{ query: getEmployees }, { query: getAccounts }],
   });
   const [removeEmployee] = useMutation(deleteEmployee, {
-    refetchQueries: [{ query: getEmployees }],
+    refetchQueries: [{ query: getEmployees }, { query: getAccounts }],
   });
 
   useEffect(() => {
