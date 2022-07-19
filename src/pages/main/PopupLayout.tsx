@@ -36,6 +36,7 @@ export default function PopupLayout(props: any) {
     onClose,
     title,
     onSubmit,
+    onSubmitStay,
     width,
     height,
     alrt,
@@ -182,6 +183,28 @@ export default function PopupLayout(props: any) {
               variant="subtitle2"
             >
               {savetitle}
+            </Typography>
+            {saving && <CircularProgress color="primary" size={16} />}
+          </Button>
+        )}
+        {onSubmitStay && roles.isEditor() && (
+          <Button
+            style={{
+              width: 100,
+              height: 36,
+              marginRight: 10,
+              marginLeft: 10,
+            }}
+            variant="contained"
+            onClick={onSubmitStay}
+            color="primary"
+            disabled={saving}
+          >
+            <Typography
+              style={{ marginLeft: 5, marginRight: 5 }}
+              variant="subtitle2"
+            >
+              {isRTL ? 'حفظ - جديد' : 'Save - New'}
             </Typography>
             {saving && <CircularProgress color="primary" size={16} />}
           </Button>

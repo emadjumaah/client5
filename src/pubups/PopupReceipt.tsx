@@ -19,6 +19,7 @@ import getInvoicesList from '../graphql/query/getInvoicesList';
 import PopupCustomer from './PopupCustomer';
 import { ReceiptPrint } from '../print';
 import { successAlert } from '../Shared/helpers';
+import getGereralCalculation from '../graphql/query/getGereralCalculation';
 const PopupReceipt = ({
   open,
   onClose,
@@ -47,6 +48,7 @@ const PopupReceipt = ({
 
   const [invoices, setInvoices] = useState<any>([]);
   const [invoicevalue, setInvoicevalue] = useState<any>(null);
+  const [balance, setBalance] = useState<any>(null);
 
   const [newtext, setNewtext] = useState('');
   const [openCust, setOpenCust] = useState(false);
@@ -67,6 +69,10 @@ const PopupReceipt = ({
     fetchPolicy: 'cache-and-network',
   });
 
+  const [loadBalance, balanceData]: any = useLazyQuery(getGereralCalculation, {
+    nextFetchPolicy: 'cache-and-network',
+  });
+
   const openCustomer = () => {
     setOpenCust(true);
   };
@@ -82,6 +88,7 @@ const PopupReceipt = ({
     if (custvalue) {
       const variables = { customerId: custvalue._id };
       loadInvoices({ variables });
+      loadBalance({ variables });
     }
     if (isNew) {
       if (name === 'contractId') {
@@ -132,6 +139,14 @@ const PopupReceipt = ({
       setInvoicevalue(null);
     }
   }, [invoicesData]);
+
+  useEffect(() => {
+    const res = balanceData?.data?.getGereralCalculation?.data;
+    if (res) {
+      const data = JSON.parse(res);
+      setBalance(data);
+    }
+  }, [balanceData]);
 
   useEffect(() => {
     if (row && row._id) {
@@ -190,6 +205,7 @@ const PopupReceipt = ({
     chequeNo: row?.chequeNo,
     chequeDate: row?.chequeDate,
     invoice: invoicevalue,
+    balance,
   };
   const onSubmit = async (data: any) => {
     if (selectedDate > new Date()) {

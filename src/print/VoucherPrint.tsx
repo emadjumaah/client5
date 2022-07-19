@@ -145,142 +145,163 @@ export class VoucherPrint extends React.PureComponent<any, any> {
     </Grid>
   );
 
-  renderRows = (data: any) => (
-    <Grid item xs={12}>
-      <Grid container spacing={2}>
-        <Grid item xs={2}>
-          <div style={{ fontSize: 14, fontWeight: 'bold' }}>Paid to Mr/Mrs</div>
-        </Grid>
-        <Grid item xs={8}>
-          <Box
-            style={{
-              display: 'flex',
-              height: 20,
-              alignItems: 'center',
-              justifyContent: data.isRTL ? 'flex-end' : undefined,
-            }}
-            border={1}
-            borderColor="grey.300"
-            borderRight={0}
-            borderLeft={0}
-            borderTop={0}
-          >
-            <Typography>{data?.title}</Typography>
-          </Box>
-        </Grid>
-        <Grid item xs={2}>
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'flex-end',
-              fontSize: 14,
-              fontWeight: 'bold',
-            }}
-          >
-            نصرف الى
-          </div>
-        </Grid>
-        <Grid item xs={2}>
-          <div style={{ fontSize: 14, fontWeight: 'bold' }}>Amounty of</div>
-        </Grid>
-        <Grid item xs={8}>
-          <Box
-            style={{
-              display: 'flex',
-              height: 20,
-              alignItems: 'center',
-              justifyContent: data.isRTL ? 'flex-end' : undefined,
-            }}
-            border={1}
-            borderColor="grey.300"
-            borderRight={0}
-            borderLeft={0}
-            borderTop={0}
-          >
-            <Typography>{tafkeet(data?.amount, data.isRTL)}</Typography>
-          </Box>
-        </Grid>
-        <Grid item xs={2}>
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'flex-end',
-              fontSize: 14,
-              fontWeight: 'bold',
-            }}
-          >
-            مبلغ وقدره
-          </div>
-        </Grid>
-        <Grid item xs={2}>
-          <div style={{ fontSize: 14, fontWeight: 'bold' }}>For</div>
-        </Grid>
-        <Grid item xs={8}>
-          <Box
-            style={{
-              display: 'flex',
-              height: 20,
-              alignItems: 'center',
-              justifyContent: data.isRTL ? 'flex-end' : undefined,
-            }}
-            border={1}
-            borderColor="grey.300"
-            borderRight={0}
-            borderLeft={0}
-            borderTop={0}
-          >
-            <Typography>{data.desc}</Typography>
-          </Box>
-        </Grid>
-        <Grid item xs={2}>
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'flex-end',
-              fontSize: 14,
-              fontWeight: 'bold',
-            }}
-          >
-            وذلك عن
-          </div>
-        </Grid>
-        <Grid item xs={2}></Grid>
-        <Grid item xs={8}>
-          <Box
-            style={{
-              display: 'flex',
-              height: 20,
-              alignItems: 'center',
-              justifyContent: data.isRTL ? 'flex-end' : undefined,
-            }}
-            border={1}
-            borderColor="grey.300"
-            borderRight={0}
-            borderLeft={0}
-            borderTop={0}
-          >
-            <Typography>
-              {data?.task ? `${data?.task?.id} :Contract No / عقد رقم` : ``}
-            </Typography>
-          </Box>
-        </Grid>
-        <Grid item xs={2}>
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'flex-end',
-              fontSize: 14,
-              height: 20,
-            }}
-          ></div>
+  renderRows = (data: any) => {
+    const { task, items, supplier, resourse, isRTL } = data;
+    return (
+      <Grid item xs={12}>
+        <Grid container spacing={2}>
+          <Grid item xs={2}>
+            <div style={{ fontSize: 14, fontWeight: 'bold' }}>
+              Paid to Mr/Mrs
+            </div>
+          </Grid>
+          <Grid item xs={8}>
+            <Box
+              style={{
+                display: 'flex',
+                height: 20,
+                alignItems: 'center',
+                justifyContent: data.isRTL ? 'flex-end' : undefined,
+              }}
+              border={1}
+              borderColor="grey.300"
+              borderRight={0}
+              borderLeft={0}
+              borderTop={0}
+            >
+              {supplier && (
+                <Typography>
+                  {isRTL ? supplier?.nameAr : supplier?.name}
+                </Typography>
+              )}
+            </Box>
+          </Grid>
+          <Grid item xs={2}>
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'flex-end',
+                fontSize: 14,
+                fontWeight: 'bold',
+              }}
+            >
+              نصرف الى
+            </div>
+          </Grid>
+          <Grid item xs={2}>
+            <div style={{ fontSize: 14, fontWeight: 'bold' }}>Amounty of</div>
+          </Grid>
+          <Grid item xs={8}>
+            <Box
+              style={{
+                display: 'flex',
+                height: 20,
+                alignItems: 'center',
+                justifyContent: data.isRTL ? 'flex-end' : undefined,
+              }}
+              border={1}
+              borderColor="grey.300"
+              borderRight={0}
+              borderLeft={0}
+              borderTop={0}
+            >
+              <Typography>{tafkeet(data?.amount, data.isRTL)}</Typography>
+            </Box>
+          </Grid>
+          <Grid item xs={2}>
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'flex-end',
+                fontSize: 14,
+                fontWeight: 'bold',
+              }}
+            >
+              مبلغ وقدره
+            </div>
+          </Grid>
+          <Grid item xs={2}>
+            <div style={{ fontSize: 14, fontWeight: 'bold' }}>For</div>
+          </Grid>
+          <Grid item xs={8}>
+            <Box
+              style={{
+                display: 'flex',
+                height: 20,
+                alignItems: 'center',
+                justifyContent: data.isRTL ? 'flex-end' : undefined,
+              }}
+              border={1}
+              borderColor="grey.300"
+              borderRight={0}
+              borderLeft={0}
+              borderTop={0}
+            >
+              {items && items.length > 0 && (
+                <Typography>
+                  {isRTL ? items[0]?.nameAr : items[0]?.name}
+                </Typography>
+              )}{' '}
+            </Box>
+          </Grid>
+          <Grid item xs={2}>
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'flex-end',
+                fontSize: 14,
+                fontWeight: 'bold',
+              }}
+            >
+              وذلك عن
+            </div>
+          </Grid>
+          <Grid item xs={2}></Grid>
+          <Grid item xs={8}>
+            <Box
+              style={{
+                display: 'flex',
+                height: 20,
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                // justifyContent: data.isRTL ? 'flex-end' : undefined,
+              }}
+              border={1}
+              borderColor="grey.300"
+              borderRight={0}
+              borderLeft={0}
+              borderTop={0}
+            >
+              {resourse && (
+                <Typography>
+                  {isRTL ? resourse?.nameAr : resourse?.name}
+                </Typography>
+              )}
+              {task && (
+                <Typography>
+                  {data?.task?.docNo} : Contract No / عقد رقم
+                </Typography>
+              )}
+            </Box>
+          </Grid>
+          <Grid item xs={2}>
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'flex-end',
+                fontSize: 14,
+                height: 20,
+              }}
+            ></div>
+          </Grid>
         </Grid>
       </Grid>
-    </Grid>
-  );
+    );
+  };
   renderFooter = (data: any) => (
     <Grid item xs={12} style={{ marginTop: 15 }}>
       <Grid container spacing={0}>

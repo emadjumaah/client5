@@ -62,19 +62,22 @@ export class ContractPrint extends React.PureComponent<any, any> {
       }}
     />
   );
-  renderPetrol = () => (
-    <img
-      src={
-        'https://res.cloudinary.com/jadwalio/image/upload/v1656146821/footerbig2_hgdooi.png'
-      }
-      alt={'car'}
-      height="auto"
-      width="100%"
-      style={{
-        objectFit: 'contain',
-      }}
-    />
-  );
+  renderPetrol = (isRTL: any) => {
+    const im = isRTL
+      ? 'https://res.cloudinary.com/jadwalio/image/upload/v1656146821/footerbig2_hgdooi.png'
+      : 'https://res.cloudinary.com/jadwalio/image/upload/v1658246515/footerbigen_i9vsww.png';
+    return (
+      <img
+        src={im}
+        alt={'car'}
+        height="auto"
+        width="100%"
+        style={{
+          objectFit: 'contain',
+        }}
+      />
+    );
+  };
 
   renderTitle = (data: any) => (
     <Grid container spacing={0}>
@@ -720,7 +723,7 @@ export class ContractPrint extends React.PureComponent<any, any> {
                 >
                   {this.renderNotes(data?.info, isRTL)}
                 </Box>
-                {this.renderPetrol()}
+                {this.renderPetrol(isRTL)}
               </Box>
             </Grid>
           </Grid>

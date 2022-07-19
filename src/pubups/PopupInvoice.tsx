@@ -289,6 +289,22 @@ const PopupInvoice = ({
     setResovalue(name === 'resourseId' ? value : null);
     setTaskvalue(name === 'contractId' ? value : null);
   };
+  const resetForNew = () => {
+    reset();
+    setItemsList([]);
+    setDiscount(0);
+    setTotals({});
+    setInvNo('');
+    setAccounts([]);
+    setPtype('cash');
+    setIsCash(false);
+    setSelectedDate(new Date());
+    setCustvalue(name === 'customerId' ? value : null);
+    setDepartvalue(name === 'departmentId' ? value : null);
+    setEmplvalue(name === 'employeeId' ? value : null);
+    setResovalue(name === 'resourseId' ? value : null);
+    setTaskvalue(name === 'contractId' ? value : null);
+  };
 
   const addItemToList = (item: any) => {
     const isInList = itemsList?.filter((li: any) => li._id === item._id)?.[0];
@@ -456,7 +472,7 @@ const PopupInvoice = ({
 
     setAccounts(accs);
   };
-  const onSubmit = async () => {
+  const onSubmit = async (stay: any) => {
     const { startPeriod, endPeriod } = getAppStartEndPeriod();
     if (selectedDate < startPeriod || selectedDate > endPeriod) {
       await messageAlert(
@@ -594,16 +610,20 @@ const PopupInvoice = ({
     };
     const mutate = isNew ? addAction : editAction;
 
-    apply(mutate, variables);
+    apply(mutate, variables, stay);
   };
 
-  const apply = async (mutate: any, variables: any) => {
+  const apply = async (mutate: any, variables: any, stay: any) => {
     try {
       mutate({ variables });
       await sleep(2);
       await successAlert(setAlrt, isRTL);
       setSaving(false);
-      onCloseForm();
+      if (stay) {
+        resetForNew();
+      } else {
+        onCloseForm();
+      }
     } catch (error) {
       onError(error);
       console.log(error);
@@ -626,6 +646,9 @@ const PopupInvoice = ({
 
   const onHandleSubmit = () => {
     handleSubmit(onSubmit)();
+  };
+  const onSubmitStay = () => {
+    onSubmit(true);
   };
 
   const componentRef: any = useRef();
@@ -653,6 +676,7 @@ const PopupInvoice = ({
       onClose={onCloseForm}
       title={title}
       onSubmit={onHandleSubmit}
+      onSubmitStay={onSubmitStay}
       theme={theme}
       alrt={alrt}
       print={!isNew ? handleReactPrint : undefined}

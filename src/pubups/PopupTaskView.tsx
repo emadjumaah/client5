@@ -341,23 +341,21 @@ const PopupTaskView = ({
                   >
                     {value === 0 && (
                       <TabPanel value={value} index={0}>
-                        {start && (
-                          <MainCustomer
-                            isRTL={isRTL}
-                            words={words}
-                            theme={theme}
-                            name="contractId"
-                            value={row}
-                            id={row?._id}
-                            width={width}
-                            height={height}
-                            start={isTime ? start : null}
-                            end={isTime ? end : null}
-                            closeloading={closeloading}
-                            setOpenCloseDate={setOpenCloseDate}
-                            daysData={daysData}
-                          ></MainCustomer>
-                        )}
+                        <MainCustomer
+                          isRTL={isRTL}
+                          words={words}
+                          theme={theme}
+                          name="contractId"
+                          value={row}
+                          id={row?._id}
+                          width={width}
+                          height={height}
+                          start={isTime ? start : null}
+                          end={isTime ? end : null}
+                          closeloading={closeloading}
+                          setOpenCloseDate={setOpenCloseDate}
+                          daysData={daysData}
+                        ></MainCustomer>
                       </TabPanel>
                     )}
                     <TabPanel value={value} index={1}>

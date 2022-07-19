@@ -1064,6 +1064,19 @@ export const simpleDateFormatterData = (time: any) => {
     year: 'numeric',
   });
 };
+export const simpleDateFormatterReceipt = (time: any, isMonthly: any) => {
+  if (isMonthly) {
+    return new Date(time).toLocaleString('en-GB', {
+      month: 'short',
+    });
+  } else {
+    return new Date(time).toLocaleString('en-GB', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+    });
+  }
+};
 
 export const simpleSpanDateFormatter = (time: any) => {
   return (
@@ -2746,10 +2759,10 @@ const renderColorTag = (title: any, color: any, value: any) => {
         paddingRight: 10,
       }}
     >
-      <Typography style={{ color, fontWeight: 'bold', width: 150 }}>
+      <Typography style={{ color, width: 150, fontSize: 14 }}>
         {title}
       </Typography>
-      <Typography style={{ color, fontWeight: 'bold' }}>
+      <Typography style={{ color, fontSize: 14 }}>
         {moneyFormat(value)}
       </Typography>
     </Box>
@@ -2771,7 +2784,7 @@ export const employeeMainFormatter = ({ row, theme, isRTL }: any) => {
   const ctitle = isRTL ? 'دفع من عهدة' : 'Custody Credit';
   const ptitle = isRTL ? 'سلفة' : 'Advanced Debit';
   const rtitle = isRTL ? 'دفع من سلفة' : 'Advanced Credit';
-  const artitle = isRTL ? 'الباقي' : 'Advanced Credit';
+  const artitle = isRTL ? 'الباقي' : 'Balance';
   return (
     <Box display={'flex'} style={{ flex: 1, paddingTop: 15, height: 240 }}>
       <Grid container spacing={0}>
@@ -3432,7 +3445,7 @@ export const incomeMainFormatter = ({
 
             <Grid item xs={6}>
               <Box style={{ marginTop: 30 }}>
-                {rCellMain(isRTL ? 'صافي الربح' : 'Balance', '#333')}
+                {rCellMain(isRTL ? 'صافي الربح' : 'Income', '#333')}
               </Box>
             </Grid>
             <Grid item xs={6}>
@@ -3581,7 +3594,7 @@ export const kaidsMainFormatter = ({
           {rCellMain(moneyFormat(row?.totalKaidscredit), ccolor)}
         </Grid>
         <Grid item xs={7} style={{ marginTop: 20 }}>
-          {rCellMain(isRTL ? 'الرصيد' : 'Balance', '#333')}
+          {rCellMain(isRTL ? 'رصيد القيود' : 'Entries Balance', '#333')}
         </Grid>
         <Grid item xs={5} style={{ marginTop: 20 }}>
           {rCellMain(
@@ -3589,6 +3602,70 @@ export const kaidsMainFormatter = ({
             '#333'
           )}
         </Grid>
+      </Grid>
+    </Box>
+  );
+};
+export const raseedMainFormatter = ({
+  row,
+  theme,
+  isRTL,
+  height = 200,
+}: any) => {
+  const scolor = colors.blue[400];
+  const gcolor = colors.green[500];
+  const ecolor = colors.red[500];
+  const totalinvoiced = row?.totalinvoiced || 0;
+  const totalDiscount = row?.totalDiscount || 0;
+  const totalpaid = row?.totalpaid || 0;
+  const toatlExpenses = row?.toatlExpenses || 0;
+  const toatlProdExpenses = row?.toatlProdExpenses || 0;
+  const totalExpPetty = row?.totalExpPetty || 0;
+  const toatlExpPayable = row?.toatlExpPayable || 0;
+
+  const sales = totalinvoiced - totalDiscount;
+  const paid = totalpaid;
+  const expenses =
+    toatlExpenses + toatlProdExpenses + totalExpPetty + toatlExpPayable;
+  const balance = sales - paid - expenses;
+  return (
+    <Box style={{ display: 'flex', flex: 1, height }}>
+      <Grid container spacing={0}>
+        <Grid item xs={1}></Grid>
+        <Grid item xs={10}>
+          <Grid container spacing={1}>
+            <Grid item xs={6} style={{ marginTop: 30 }}>
+              {rCellMain(isRTL ? 'المبيعات' : 'Net Sales', scolor)}
+            </Grid>
+            <Grid item xs={6} style={{ marginTop: 30 }}>
+              {rCellMain(moneyFormat(sales), scolor)}
+            </Grid>
+            <Grid item xs={6}>
+              {rCellMain(isRTL ? 'المدفوعات' : 'Paid', gcolor)}
+            </Grid>
+            <Grid item xs={6}>
+              {rCellMain(moneyFormat(paid), gcolor)}
+            </Grid>
+            <Grid item xs={6}>
+              {rCellMain(isRTL ? 'المصروفات' : 'Expenses', ecolor)}
+            </Grid>
+            <Grid item xs={6}>
+              {rCellMain(moneyFormat(expenses), ecolor)}
+            </Grid>
+            <Divider></Divider>
+            <Grid item xs={6}>
+              <Box style={{ marginTop: 20 }}>
+                {rCellMain(isRTL ? 'الرصيد' : 'Balance', '#333')}
+              </Box>
+            </Grid>
+            <Grid item xs={6}>
+              <Box style={{ marginTop: 20 }}>
+                {rCellMain(moneyFormat(balance), '#333')}
+              </Box>
+            </Grid>
+          </Grid>
+        </Grid>
+        <Grid item xs={1}></Grid>
       </Grid>
     </Box>
   );

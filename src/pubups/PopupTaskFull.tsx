@@ -294,66 +294,69 @@ const PopupTaskFull = ({
   }, [projvalue]);
 
   useEffect(() => {
-    const items = itemsData?.data?.['getOperationItems']?.data || [];
-    const devents = doneEventsData?.data?.['getTaskDoneEvents']?.data;
-    if (devents) {
-      setDoneEvents(JSON.parse(devents));
-    }
-    if (items && items.length > 0) {
-      const ids = items.map((it: any) => it.itemId);
-      const servlist = [...services, ...products].filter((ser: any) =>
-        ids.includes(ser._id)
-      );
-      const itemsWqtyprice = items.map((item: any, index: any) => {
-        const {
-          categoryId,
-          categoryName,
-          categoryNameAr,
-          departmentId,
-          departmentName,
-          departmentNameAr,
-          departmentColor,
-          employeeId,
-          employeeName,
-          employeeNameAr,
-          employeeColor,
-          resourseId,
-          resourseName,
-          resourseNameAr,
-          resourseColor,
-          note,
-        } = item;
-        const serv = servlist.filter((se: any) => se._id === item.itemId)[0];
-        return {
-          ...serv,
-          categoryId,
-          categoryName,
-          categoryNameAr,
-          departmentId,
-          departmentName,
-          departmentNameAr,
-          departmentColor,
-          employeeId,
-          employeeName,
-          employeeNameAr,
-          employeeColor,
-          resourseId,
-          resourseName,
-          resourseNameAr,
-          resourseColor,
-          index,
-          itemprice: item.itemPrice,
-          itemqty: item.qty,
-          itemtotal: item.total,
-          note,
-        };
-      });
-      itemsWqtyprice.sort((a: any, b: any) =>
-        a.indx > b.indx ? 1 : b.indx > a.indx ? -1 : 0
-      );
-      setItemsList(itemsWqtyprice);
+    if (row && row._id) {
+      const items = itemsData?.data?.['getOperationItems']?.data || [];
+      const devents = doneEventsData?.data?.['getTaskDoneEvents']?.data;
+      if (devents) {
+        setDoneEvents(JSON.parse(devents));
+      }
+      if (items && items.length > 0) {
+        const ids = items.map((it: any) => it.itemId);
+        const servlist = [...services, ...products].filter((ser: any) =>
+          ids.includes(ser._id)
+        );
+        const itemsWqtyprice = items.map((item: any, index: any) => {
+          const {
+            categoryId,
+            categoryName,
+            categoryNameAr,
+            departmentId,
+            departmentName,
+            departmentNameAr,
+            departmentColor,
+            employeeId,
+            employeeName,
+            employeeNameAr,
+            employeeColor,
+            resourseId,
+            resourseName,
+            resourseNameAr,
+            resourseColor,
+            note,
+          } = item;
+          const serv = servlist.filter((se: any) => se._id === item.itemId)[0];
+          return {
+            ...serv,
+            categoryId,
+            categoryName,
+            categoryNameAr,
+            departmentId,
+            departmentName,
+            departmentNameAr,
+            departmentColor,
+            employeeId,
+            employeeName,
+            employeeNameAr,
+            employeeColor,
+            resourseId,
+            resourseName,
+            resourseNameAr,
+            resourseColor,
+            index,
+            itemprice: item.itemPrice,
+            itemqty: item.qty,
+            itemtotal: item.total,
+            note,
+          };
+        });
+        itemsWqtyprice.sort((a: any, b: any) =>
+          a.indx > b.indx ? 1 : b.indx > a.indx ? -1 : 0
+        );
+        setItemsList(itemsWqtyprice);
+      }
     }
   }, [itemsData, doneEventsData]);
+
   useEffect(() => {
     const itemsTotal = _.sumBy(itemsList, 'itemtotal');
     setTotal(itemsTotal);
@@ -364,6 +367,7 @@ const PopupTaskFull = ({
       setInfo(taskExtra);
     }
   }, [taskExtra]);
+
   useEffect(() => {
     if (emplvalue && custvalue && !tasktitle) {
       const emp = isRTL ? emplvalue.nameAr : emplvalue.name;
@@ -647,8 +651,16 @@ const PopupTaskFull = ({
       );
       setCount(row?.count ? row?.count : row?.evQty || 1);
       setIsEvents(row?.tasktype !== 3 ? true : false);
-      setWeekdays(row?.weekdays ? JSON.parse(row?.weekdays) : []);
-      setMonthdays(row?.monthdays ? JSON.parse(row?.monthdays) : []);
+      const wd = row?.weekdays ? JSON.parse(row?.weekdays) : [];
+      const fwd =
+        wd.length > 0
+          ? wd.map((w: any) => ({ ...w, value: w.value.weekday }))
+          : [];
+      const md = row?.monthdays ? JSON.parse(row?.monthdays) : [];
+      console.log('wd', fwd);
+      console.log('md', md);
+      setWeekdays(fwd);
+      setMonthdays(md);
       setDayCost(row?.dayCost || 0);
       if (row?.periodType === 11 || row?.periodType === 33) {
         setMonthdays([{ id: 1, name: '1', nameAr: '1', value: 1 }]);
@@ -790,6 +802,7 @@ const PopupTaskFull = ({
     setDoneEvents(null);
     setDayCost(null);
     setInvdays(0);
+    setWeekdays([]);
   };
 
   const onSubmit = async () => {
@@ -889,7 +902,6 @@ const PopupTaskFull = ({
   const onHandleSubmit = () => {
     handleSubmit(onSubmit)();
   };
-
   const date = row?.start ? new Date(row?.start) : new Date();
   const day = weekdaysNNo?.[date.getDay()];
   const isCar = tempId === 9 || tempId === 4;

@@ -5,7 +5,7 @@ import { tafkeet } from '../common/helpers';
 import {
   moneyFormat,
   simpleSpanDateFormatter,
-  simpleDateFormatterData,
+  simpleDateFormatterReceipt,
 } from '../Shared/colorFormat';
 
 const printcolor = '#777';
@@ -149,167 +149,187 @@ export class ReceiptPrint extends React.PureComponent<any, any> {
     </Grid>
   );
 
-  renderRows = (data: any) => (
-    <Grid item xs={12}>
-      <Grid container spacing={2}>
-        <Grid item xs={2}>
-          <div style={{ fontSize: 14, fontWeight: 'bold' }}>Received From</div>
-        </Grid>
-        <Grid item xs={8}>
-          <Box
-            style={{
-              display: 'flex',
-              height: 20,
-              alignItems: 'center',
-              justifyContent: data.isRTL ? 'flex-end' : undefined,
-            }}
-            border={1}
-            borderColor="grey.300"
-            borderRight={0}
-            borderLeft={0}
-            borderTop={0}
-          >
-            <Typography>
-              {data?.isRTL ? data.customerNameAr : data.customerName}
-            </Typography>
-          </Box>
-        </Grid>
-        <Grid item xs={2}>
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'flex-end',
-              fontSize: 14,
-              fontWeight: 'bold',
-            }}
-          >
-            وصلني من
-          </div>
-        </Grid>
-        <Grid item xs={2}>
-          <div style={{ fontSize: 14, fontWeight: 'bold' }}>Amounty of</div>
-        </Grid>
-        <Grid item xs={8}>
-          <Box
-            style={{
-              display: 'flex',
-              height: 20,
-              alignItems: 'center',
-              justifyContent: data.isRTL ? 'flex-end' : undefined,
-            }}
-            border={1}
-            borderColor="grey.300"
-            borderRight={0}
-            borderLeft={0}
-            borderTop={0}
-          >
-            <Typography>{tafkeet(data?.amount, data.isRTL)}</Typography>
-          </Box>
-        </Grid>
-        <Grid item xs={2}>
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'flex-end',
-              fontSize: 14,
-              fontWeight: 'bold',
-            }}
-          >
-            مبلغ وقدره
-          </div>
-        </Grid>
-        <Grid item xs={2}>
-          <div style={{ fontSize: 14, fontWeight: 'bold' }}>For</div>
-        </Grid>
-        <Grid item xs={8}>
-          <Box
-            style={{
-              display: 'flex',
-              height: 20,
-              alignItems: 'center',
-              justifyContent: data.isRTL ? 'flex-end' : undefined,
-            }}
-            border={1}
-            borderColor="grey.300"
-            borderRight={0}
-            borderLeft={0}
-            borderTop={0}
-          >
-            <Typography>{data.title}</Typography>
-            <Typography style={{ marginRight: 20 }}>
-              {data?.invoice?.docNo
-                ? `Invoice No${data?.invoice?.docNo}, `
-                : ``}
-              {data?.invoice?.amount
-                ? `Amount: ${data?.invoice?.amount} QR`
-                : ``}
-            </Typography>
-          </Box>
-        </Grid>
-        <Grid item xs={2}>
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'flex-end',
-              fontSize: 14,
-              fontWeight: 'bold',
-            }}
-          >
-            وذلك عن
-          </div>
-        </Grid>
-        <Grid item xs={2}></Grid>
-        <Grid item xs={8}>
-          <Box
-            style={{
-              display: 'flex',
-              height: 20,
-              alignItems: 'center',
-              justifyContent: data.isRTL ? 'flex-end' : undefined,
-            }}
-            border={1}
-            borderColor="grey.300"
-            borderRight={0}
-            borderLeft={0}
-            borderTop={0}
-          >
-            {data?.invoice?.periodfrom && data?.invoice?.periodto && (
-              <Box>
-                <Typography>{`Contract: ${simpleDateFormatterData(
-                  data?.invoice?.periodfrom
-                )} - ${simpleDateFormatterData(
-                  data?.invoice?.periodto
-                )}`}</Typography>
-              </Box>
-            )}
-            {data?.invoice?.resourseName && (
-              <Box>
-                <Typography style={{ marginLeft: 10, marginRight: 10 }}>
-                  {data.isRTL
-                    ? data?.invoice?.resourseNameAr
-                    : data?.invoice?.resourseName}
+  renderRows = (data: any) => {
+    const {
+      customerNameAr,
+      customerName,
+      isRTL,
+      amount,
+      title,
+      invoice,
+      balance,
+    } = data;
+    const totalDiscount = balance?.totalDiscount || 0;
+    const totalinvoiced = balance?.totalinvoiced || 0;
+    const totalpaid = balance?.totalpaid || 0;
+    const blns = totalinvoiced - totalDiscount - totalpaid;
+    return (
+      <Grid item xs={12}>
+        <Grid container spacing={2}>
+          <Grid item xs={2}>
+            <div style={{ fontSize: 14, fontWeight: 'bold' }}>
+              Received From
+            </div>
+          </Grid>
+          <Grid item xs={8}>
+            <Box
+              style={{
+                display: 'flex',
+                height: 20,
+                alignItems: 'center',
+                justifyContent: data.isRTL ? 'flex-end' : undefined,
+              }}
+              border={1}
+              borderColor="grey.300"
+              borderRight={0}
+              borderLeft={0}
+              borderTop={0}
+            >
+              <Typography>{isRTL ? customerNameAr : customerName}</Typography>
+            </Box>
+          </Grid>
+          <Grid item xs={2}>
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'flex-end',
+                fontSize: 14,
+                fontWeight: 'bold',
+              }}
+            >
+              وصلني من
+            </div>
+          </Grid>
+          <Grid item xs={2}>
+            <div style={{ fontSize: 14, fontWeight: 'bold' }}>Amounty of</div>
+          </Grid>
+          <Grid item xs={8}>
+            <Box
+              style={{
+                display: 'flex',
+                height: 20,
+                alignItems: 'center',
+                justifyContent: isRTL ? 'flex-end' : undefined,
+              }}
+              border={1}
+              borderColor="grey.300"
+              borderRight={0}
+              borderLeft={0}
+              borderTop={0}
+            >
+              <Typography>{tafkeet(amount, isRTL)}</Typography>
+            </Box>
+          </Grid>
+          <Grid item xs={2}>
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'flex-end',
+                fontSize: 14,
+                fontWeight: 'bold',
+              }}
+            >
+              مبلغ وقدره
+            </div>
+          </Grid>
+          <Grid item xs={2}>
+            <div style={{ fontSize: 14, fontWeight: 'bold' }}>For</div>
+          </Grid>
+          <Grid item xs={8}>
+            <Box
+              style={{
+                display: 'flex',
+                height: 20,
+                alignItems: 'center',
+                justifyContent: 'space-between',
+              }}
+              border={1}
+              borderColor="grey.300"
+              borderRight={0}
+              borderLeft={0}
+              borderTop={0}
+            >
+              {title && <Typography>{title}</Typography>}
+              <Typography style={{ marginRight: 20 }}>
+                {invoice?.amount ? `Amount : ${invoice?.amount} QR` : ``}
+              </Typography>
+              <Typography style={{ marginRight: 20 }}>
+                {invoice?.docNo ? `Invoice No : ${invoice?.docNo}, ` : ``}
+              </Typography>
+            </Box>
+          </Grid>
+          <Grid item xs={2}>
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'flex-end',
+                fontSize: 14,
+                fontWeight: 'bold',
+              }}
+            >
+              وذلك عن
+            </div>
+          </Grid>
+          <Grid item xs={2}></Grid>
+          <Grid item xs={8}>
+            <Box
+              style={{
+                display: 'flex',
+                height: 20,
+                alignItems: 'center',
+                justifyContent: 'space-between',
+              }}
+              border={1}
+              borderColor="grey.300"
+              borderRight={0}
+              borderLeft={0}
+              borderTop={0}
+            >
+              {invoice?.resourseName && (
+                <Box>
+                  <Typography style={{ marginLeft: 10, marginRight: 10 }}>
+                    {isRTL ? invoice?.resourseNameAr : invoice?.resourseName}
+                  </Typography>
+                </Box>
+              )}
+              {blns && (
+                <Typography>
+                  ( {isRTL ? 'الرصيد' : 'Balance'} : {moneyFormat(blns)} )
                 </Typography>
-              </Box>
-            )}
-          </Box>
-        </Grid>
-        <Grid item xs={2}>
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'flex-end',
-              fontSize: 14,
-              height: 20,
-            }}
-          ></div>
+              )}
+              {invoice?.periodfrom && invoice?.periodto && (
+                <Box>
+                  <Typography>{`${
+                    isRTL ? ' عن فترة ' : ' Period '
+                  } ${simpleDateFormatterReceipt(
+                    invoice?.periodfrom,
+                    invoice?.isMonthly
+                  )} - ${simpleDateFormatterReceipt(
+                    invoice?.periodto,
+                    invoice?.isMonthly
+                  )}`}</Typography>
+                </Box>
+              )}
+            </Box>
+          </Grid>
+          <Grid item xs={2}>
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'flex-end',
+                fontSize: 14,
+                height: 20,
+              }}
+            ></div>
+          </Grid>
         </Grid>
       </Grid>
-    </Grid>
-  );
+    );
+  };
 
   renderFooter = (data: any) => (
     <Grid item xs={12} style={{ marginTop: 15 }}>

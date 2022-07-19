@@ -14,12 +14,14 @@ import {
   incomeMainFormatter,
   projectDataView,
   employeeMainFormatter,
+  raseedMainFormatter,
 } from './colorFormat';
 import getGereralCalculation from '../graphql/query/getGereralCalculation';
 import ReminderBox from './ReminderBox';
 import { useEffect, useState } from 'react';
 import { useLazyQuery } from '@apollo/client';
 import RefetchBox from './RefetchBox';
+// import { ImageView } from '../components/viewer';
 
 export default function MainCustomer({
   isRTL,
@@ -194,6 +196,13 @@ export default function MainCustomer({
                     </Box>
                   </Grid>
                 )}
+                {(isCust || isEmpl) && (
+                  <Grid item xs={2}>
+                    <Box style={{ backgroundColor: '#fff', height: 200 }}>
+                      {raseedMainFormatter({ row: data, theme, isRTL })}
+                    </Box>
+                  </Grid>
+                )}
                 {!isSupp && !isCust && (
                   <Grid item xs={4}>
                     <Box style={{ backgroundColor: '#fff', height: 200 }}>
@@ -210,6 +219,9 @@ export default function MainCustomer({
                     </Box>
                   </Grid>
                 )}
+                {/* <Grid item xs={4}>
+                  <ImageView></ImageView>
+                </Grid> */}
               </Grid>
             </Box>
           </Box>

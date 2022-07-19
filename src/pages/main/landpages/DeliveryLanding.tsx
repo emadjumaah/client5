@@ -108,7 +108,6 @@ export default function DeliveryLanding(props: any) {
                 ></InfoBoxDark>
               </Grid>
             )}
-
             {roles.isFinanceAdmin() && (
               <Grid item xs={6} md={4}>
                 <InfoBox
@@ -180,7 +179,6 @@ export default function DeliveryLanding(props: any) {
                 ></MonthsEmpChart>
               </Grid>
             )}
-
             {salesMonths && roles.isFinanceAdmin() && (
               <Grid item xs={12}>
                 <MonthsChart
