@@ -35,6 +35,7 @@ import PageLayout from '../main/PageLayout';
 import { getColumns } from '../../common/columns';
 import {
   avataManageFormatter,
+  locationFormatter,
   nameManageLinkCustomer,
 } from '../../Shared/colorFormat';
 import PopupCustomerView from '../../pubups/PopupCustomerView';
@@ -82,7 +83,10 @@ export default function Customers(props: any) {
     col.name,
     { name: 'phone', title: words.phoneNumber },
     { name: 'email', title: words.email },
-    { name: 'address', title: words.address },
+    { name: 'area', title: words.area },
+    { name: 'address', title: words.theaddress },
+    { name: 'grade', title: words.grade },
+    { name: 'location', title: words.location },
   ]);
 
   const [tableColumnExtensions]: any = useState([
@@ -90,7 +94,10 @@ export default function Customers(props: any) {
     { columnName: col.name.name, width: 300 },
     { columnName: 'phone', width: 150 },
     { columnName: 'email', width: 200 },
+    { columnName: 'area', width: 150 },
     { columnName: 'address', width: 200 },
+    { columnName: 'grade', width: 150 },
+    { columnName: 'location', width: 150 },
   ]);
 
   const [columnsViewer] = useState([
@@ -217,7 +224,10 @@ export default function Customers(props: any) {
                 col.name.name,
                 'phone',
                 'email',
+                'area',
                 'address',
+                'grade',
+                'location',
               ]}
             />
             <TableColumnResizing defaultColumnWidths={tableColumnExtensions} />
@@ -262,7 +272,10 @@ export default function Customers(props: any) {
                 }
               ></DataTypeProvider>
             )}
-
+            <DataTypeProvider
+              for={['location']}
+              formatterComponent={locationFormatter}
+            ></DataTypeProvider>
             <TableEditColumn
               showEditCommand
               showDeleteCommand

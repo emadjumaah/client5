@@ -3397,7 +3397,11 @@ export const incomeMainFormatter = ({
   const scolor = colors.blue[400];
   const ecolor = colors.red[500];
   const sales = row?.totalinvoiced - row?.totalDiscount;
-  const expenses = row?.toatlExpenses + row?.toatlProdExpenses;
+  const expenses =
+    row?.toatlExpenses +
+    row?.toatlProdExpenses +
+    row.totalExpPetty +
+    row.toatlExpPayable;
   const balance = sales - expenses;
   return (
     <Box style={{ display: 'flex', flex: 1, height }}>

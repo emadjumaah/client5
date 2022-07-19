@@ -250,28 +250,32 @@ const PopupEmployee = ({
                 mb={0}
               />
             </Grid>
-            <Grid item xs={6}>
-              <TextFieldLocal
-                name="workId"
-                label={words.workId}
-                register={register}
-                errors={errors}
-                row={row}
-                fullWidth
-                mb={0}
-              />
-            </Grid>
-            <Grid item xs={6}>
-              <TextFieldLocal
-                name="national"
-                label={words.national}
-                register={register}
-                errors={errors}
-                row={row}
-                fullWidth
-                mb={0}
-              />
-            </Grid>
+            {isCar && (
+              <Grid item xs={6}>
+                <TextFieldLocal
+                  name="workId"
+                  label={words.workId}
+                  register={register}
+                  errors={errors}
+                  row={row}
+                  fullWidth
+                  mb={0}
+                />
+              </Grid>
+            )}
+            {isCar && (
+              <Grid item xs={6}>
+                <TextFieldLocal
+                  name="national"
+                  label={words.national}
+                  register={register}
+                  errors={errors}
+                  row={row}
+                  fullWidth
+                  mb={0}
+                />
+              </Grid>
+            )}
             <Grid item xs={6}>
               <TextFieldLocal
                 name="nationalNo"
@@ -283,6 +287,7 @@ const PopupEmployee = ({
                 mb={0}
               />
             </Grid>
+
             <Grid item xs={6}>
               <TextFieldLocal
                 name="nationalDate"

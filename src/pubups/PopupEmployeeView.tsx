@@ -167,34 +167,8 @@ const PopupEmployeeView = ({ open, onClose, row, theme, company }: any) => {
                           end={isTime ? end : null}
                         ></MainCustomer>
                       </TabPanel>
+
                       <TabPanel value={value} index={1}>
-                        <EmployeeAdvance
-                          isRTL={isRTL}
-                          words={words}
-                          theme={theme}
-                          name="employeeId"
-                          value={row}
-                          id={row?._id}
-                          width={width}
-                          height={height}
-                          start={isTime ? start : null}
-                          end={isTime ? end : null}
-                        ></EmployeeAdvance>
-                      </TabPanel>
-                      <TabPanel value={value} index={2}>
-                        <EmployeeCustody
-                          isRTL={isRTL}
-                          words={words}
-                          theme={theme}
-                          name="employeeId"
-                          id={row?._id}
-                          width={width}
-                          height={height}
-                          start={isTime ? start : null}
-                          end={isTime ? end : null}
-                        ></EmployeeCustody>
-                      </TabPanel>
-                      <TabPanel value={value} index={3}>
                         <ProjectsCustomer
                           isRTL={isRTL}
                           words={words}
@@ -207,7 +181,7 @@ const PopupEmployeeView = ({ open, onClose, row, theme, company }: any) => {
                           end={isTime ? end : null}
                         ></ProjectsCustomer>
                       </TabPanel>
-                      <TabPanel value={value} index={4}>
+                      <TabPanel value={value} index={2}>
                         <TasksCustomer
                           isRTL={isRTL}
                           words={words}
@@ -220,7 +194,7 @@ const PopupEmployeeView = ({ open, onClose, row, theme, company }: any) => {
                           end={isTime ? end : null}
                         ></TasksCustomer>
                       </TabPanel>
-                      <TabPanel value={value} index={5}>
+                      <TabPanel value={value} index={3}>
                         <EventsCustomer
                           isRTL={isRTL}
                           words={words}
@@ -236,7 +210,7 @@ const PopupEmployeeView = ({ open, onClose, row, theme, company }: any) => {
                           tempoptions={tempoptions}
                         ></EventsCustomer>
                       </TabPanel>
-                      <TabPanel value={value} index={6}>
+                      <TabPanel value={value} index={4}>
                         <InvoicesCustomer
                           isRTL={isRTL}
                           words={words}
@@ -252,7 +226,7 @@ const PopupEmployeeView = ({ open, onClose, row, theme, company }: any) => {
                           tempoptions={tempoptions}
                         ></InvoicesCustomer>
                       </TabPanel>
-                      <TabPanel value={value} index={7}>
+                      <TabPanel value={value} index={5}>
                         <ReceiptCustomer
                           isRTL={isRTL}
                           words={words}
@@ -267,7 +241,7 @@ const PopupEmployeeView = ({ open, onClose, row, theme, company }: any) => {
                           company={company}
                         ></ReceiptCustomer>
                       </TabPanel>
-                      <TabPanel value={value} index={8}>
+                      <TabPanel value={value} index={6}>
                         <InvoicesSupplier
                           isRTL={isRTL}
                           words={words}
@@ -283,7 +257,7 @@ const PopupEmployeeView = ({ open, onClose, row, theme, company }: any) => {
                           tempoptions={tempoptions}
                         ></InvoicesSupplier>
                       </TabPanel>
-                      <TabPanel value={value} index={9}>
+                      <TabPanel value={value} index={7}>
                         <PaymentSupplier
                           isRTL={isRTL}
                           words={words}
@@ -298,7 +272,7 @@ const PopupEmployeeView = ({ open, onClose, row, theme, company }: any) => {
                           company={company}
                         ></PaymentSupplier>
                       </TabPanel>
-                      <TabPanel value={value} index={10}>
+                      <TabPanel value={value} index={8}>
                         <ExpensesCustomer
                           isRTL={isRTL}
                           words={words}
@@ -315,7 +289,7 @@ const PopupEmployeeView = ({ open, onClose, row, theme, company }: any) => {
                           tempwords={tempwords}
                         ></ExpensesCustomer>
                       </TabPanel>
-                      <TabPanel value={value} index={11}>
+                      <TabPanel value={value} index={9}>
                         <ExpensesProdCustomer
                           isRTL={isRTL}
                           words={words}
@@ -331,6 +305,33 @@ const PopupEmployeeView = ({ open, onClose, row, theme, company }: any) => {
                           tempoptions={tempoptions}
                           tempwords={tempwords}
                         ></ExpensesProdCustomer>
+                      </TabPanel>
+                      <TabPanel value={value} index={10}>
+                        <EmployeeAdvance
+                          isRTL={isRTL}
+                          words={words}
+                          theme={theme}
+                          name="employeeId"
+                          value={row}
+                          id={row?._id}
+                          width={width}
+                          height={height}
+                          start={isTime ? start : null}
+                          end={isTime ? end : null}
+                        ></EmployeeAdvance>
+                      </TabPanel>
+                      <TabPanel value={value} index={11}>
+                        <EmployeeCustody
+                          isRTL={isRTL}
+                          words={words}
+                          theme={theme}
+                          name="employeeId"
+                          id={row?._id}
+                          width={width}
+                          height={height}
+                          start={isTime ? start : null}
+                          end={isTime ? end : null}
+                        ></EmployeeCustody>
                       </TabPanel>
                       <TabPanel value={value} index={12}>
                         <KaidsCustomer

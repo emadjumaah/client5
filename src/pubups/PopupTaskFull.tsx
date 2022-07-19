@@ -165,7 +165,7 @@ const PopupTaskFull = ({
   const { register, handleSubmit, reset } = useForm({});
   const {
     translate: { words, isRTL },
-    store: { user },
+    store: { user, tempId },
   }: GContextTypes = useContext(GlobalContext);
 
   const [getItems, itemsData]: any = useLazyQuery(getOperationItems);
@@ -365,10 +365,10 @@ const PopupTaskFull = ({
     }
   }, [taskExtra]);
   useEffect(() => {
-    if (emplvalue && resovalue && !tasktitle) {
+    if (emplvalue && custvalue && !tasktitle) {
       const emp = isRTL ? emplvalue.nameAr : emplvalue.name;
-      const res = isRTL ? resovalue.nameAr : resovalue.name;
-      setTasktitle(`${res} - ${emp}`);
+      const cst = isRTL ? custvalue.nameAr : custvalue.name;
+      setTasktitle(`${cst} - ${emp}`);
     }
   }, [emplvalue, resovalue]);
 
@@ -800,14 +800,6 @@ const PopupTaskFull = ({
       );
       return;
     }
-    if (!end && !dayCost) {
-      await messageAlert(
-        setAlrt,
-        isRTL ? 'قيمة اليوم مطلوبة' : 'Day cost required'
-      );
-      return;
-    }
-
     if (!tasktitle) {
       await messageAlert(
         setAlrt,
@@ -815,20 +807,10 @@ const PopupTaskFull = ({
       );
       return;
     }
-
     if (!custvalue) {
       await messageAlert(
         setAlrt,
         isRTL ? 'يرجى اضافة عميل' : 'Please add Customer'
-      );
-      return;
-    }
-    if (!resovalue) {
-      await messageAlert(
-        setAlrt,
-        isRTL
-          ? `يرجى اضافة ${tempwords?.resourse}`
-          : `Please add ${tempwords?.resourse}`
       );
       return;
     }
@@ -910,6 +892,7 @@ const PopupTaskFull = ({
 
   const date = row?.start ? new Date(row?.start) : new Date();
   const day = weekdaysNNo?.[date.getDay()];
+  const isCar = tempId === 9 || tempId === 4;
 
   const title = getPopupTitle('task', isNew);
   return (
@@ -1295,18 +1278,20 @@ const PopupTaskFull = ({
             <Grid container spacing={1}>
               <Grid item xs={12}>
                 <Grid container spacing={1}>
-                  <Grid item xs={6}>
-                    <TextFieldLocal
-                      name="dayCost"
-                      label={words.dayCost}
-                      value={dayCost}
-                      onChange={onChangeDayCost}
-                      type="number"
-                      fullWidth
-                      mb={0}
-                    />
-                  </Grid>
-                  <Grid item xs={6}></Grid>
+                  {isCar && (
+                    <Grid item xs={6}>
+                      <TextFieldLocal
+                        name="dayCost"
+                        label={words.dayCost}
+                        value={dayCost}
+                        onChange={onChangeDayCost}
+                        type="number"
+                        fullWidth
+                        mb={0}
+                      />
+                    </Grid>
+                  )}
+                  {isCar && <Grid item xs={6}></Grid>}
                   {info?.map((extra: any) => (
                     <Grid item xs={extra.multiline ? 12 : 6}>
                       <TextFieldLocal

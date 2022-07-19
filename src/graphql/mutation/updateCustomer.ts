@@ -20,6 +20,11 @@ export default gql`
     $national: String
     $nationalNo: String
     $nationalDate: String
+    $area: String
+    $parentName: String
+    $parentPhone: String
+    $grade: String
+    $location: LocationInput
   ) {
     updateCustomer(
       _id: $_id
@@ -40,6 +45,11 @@ export default gql`
       national: $national
       nationalNo: $nationalNo
       nationalDate: $nationalDate
+      area: $area
+      parentName: $parentName
+      parentPhone: $parentPhone
+      grade: $grade
+      location: $location
     ) {
       ok
       message

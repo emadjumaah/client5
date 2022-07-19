@@ -11,12 +11,14 @@ import {
 } from '../Shared';
 import { GContextTypes } from '../types';
 import { GlobalContext } from '../contexts';
-import { Grid } from '@material-ui/core';
+import { Box, Button, Grid, Typography } from '@material-ui/core';
 import PopupLayout from '../pages/main/PopupLayout';
 import { TextFieldLocal } from '../components';
 import { getPopupTitle } from '../constants/menu';
 import { useTemplate } from '../hooks';
 import { ImageOnlineUpload, uploadPhotoOnline } from '../common/upload';
+import MyIcon from '../Shared/MyIcon';
+import PopupMaps from './PopupMaps';
 
 const PopupCustomer = ({
   open,
@@ -34,10 +36,13 @@ const PopupCustomer = ({
   const [logoimage, setLogoimage] = useState(null);
   const [logourl, setLogourl] = useState(null);
 
+  const [openMap, setOpenMap] = useState(false);
+  const [location, setLocation] = useState(null);
+
   const { register, handleSubmit, errors, reset } = useForm(yup.custResolver);
   const {
     translate: { words, isRTL },
-    store: { user },
+    store: { user, tempId },
   }: GContextTypes = useContext(GlobalContext);
   const { templateId } = useTemplate();
 
@@ -45,6 +50,9 @@ const PopupCustomer = ({
     if (row?._id) {
       if (row?.logo) {
         setLogourl(row?.logo);
+      }
+      if (row?.location) {
+        setLocation(row?.location);
       }
     }
   }, [row]);
@@ -64,6 +72,10 @@ const PopupCustomer = ({
       national,
       nationalNo,
       nationalDate,
+      area,
+      parentName,
+      parentPhone,
+      grade,
     } = data;
     let logo: any;
 
@@ -85,6 +97,11 @@ const PopupCustomer = ({
       national,
       nationalNo,
       nationalDate,
+      area,
+      parentName,
+      parentPhone,
+      grade,
+      location: location?.lat ? location : null,
       branch: user.branch,
       userId: user._id,
     };
@@ -122,6 +139,8 @@ const PopupCustomer = ({
     setSaving(false);
     setLogoimage(null);
     setLogourl(null);
+    setOpenMap(false);
+    setLocation(null);
   };
 
   const onHandleSubmit = () => {
@@ -129,6 +148,7 @@ const PopupCustomer = ({
   };
 
   const title = getPopupTitle('customer', isNew);
+  const isEdu = tempId === 3;
 
   return (
     <PopupLayout
@@ -205,6 +225,17 @@ const PopupCustomer = ({
               <TextFieldLocal
                 name="email"
                 label={words.email}
+                register={register}
+                errors={errors}
+                row={row}
+                fullWidth
+                mb={0}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextFieldLocal
+                name="area"
+                label={words.area}
                 register={register}
                 errors={errors}
                 row={row}
@@ -293,9 +324,79 @@ const PopupCustomer = ({
                 </Grid>
               </>
             )}
+
+            {isEdu && (
+              <>
+                <Grid item xs={12}>
+                  <TextFieldLocal
+                    name="parentName"
+                    label={words.parentName}
+                    register={register}
+                    errors={errors}
+                    row={row}
+                    fullWidth
+                    mb={0}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextFieldLocal
+                    name="parentPhone"
+                    label={words.parentPhone}
+                    register={register}
+                    errors={errors}
+                    row={row}
+                    fullWidth
+                    mb={0}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextFieldLocal
+                    name="grade"
+                    label={words.grade}
+                    register={register}
+                    errors={errors}
+                    row={row}
+                    fullWidth
+                    mb={0}
+                  />
+                </Grid>
+              </>
+            )}
           </Grid>
+          <Box
+            display="flex"
+            style={{ flex: 1, justifyContent: 'flex-end', marginTop: 20 }}
+          >
+            <Button
+              size="medium"
+              color="primary"
+              variant="contained"
+              onClick={() => setOpenMap(true)}
+            >
+              <Typography>{isRTL ? 'الموقع الجغرافي' : 'Location'}</Typography>
+            </Button>
+            {location?.lat && (
+              <>
+                <MyIcon size={32} color="#ff80ed" icon="location"></MyIcon>
+                <Box
+                  onClick={() => setLocation(null)}
+                  style={{ cursor: 'pointer', padding: 4 }}
+                >
+                  <MyIcon size={28} color="#777" icon="close"></MyIcon>
+                </Box>
+              </>
+            )}
+          </Box>
         </Grid>
         <Grid item xs={1}></Grid>
+        <PopupMaps
+          open={openMap}
+          onClose={() => setOpenMap(false)}
+          isRTL={isRTL}
+          theme={theme}
+          location={location}
+          setLocation={setLocation}
+        ></PopupMaps>
       </Grid>
     </PopupLayout>
   );

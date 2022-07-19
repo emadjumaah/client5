@@ -48,6 +48,15 @@ export default gql`
         nationalNo
         nationalDate
 
+        area
+        parentName
+        parentPhone
+        grade
+        location {
+          lat
+          lng
+        }
+
         userId
 
         createdAt

@@ -186,6 +186,10 @@ export interface LanguageType {
     paccount: string;
     address: string;
     theaddress: string;
+    area: string;
+    parentName: string;
+    parentPhone: string;
+    grade: string;
     unit: string;
     info: string;
     main: string;
