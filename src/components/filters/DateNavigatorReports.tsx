@@ -34,6 +34,7 @@ export default function DateNavigatorReports({
   views,
   color = theme.palette.primary.main,
   bgcolor = fade(theme.palette.secondary.light, 0.7),
+  bcolor = '#fff',
 }: any) {
   const [timeFormat, setTimeFormat] = useState('');
   const [timeFormatEnd, setTimeFormatEnd] = useState('');
@@ -201,7 +202,7 @@ export default function DateNavigatorReports({
           style={{
             position: 'relative',
             zIndex: 10,
-            backgroundColor: '#fff',
+            backgroundColor: bcolor,
             height: 40,
           }}
           onClick={() => setOpen(true)}
@@ -215,7 +216,7 @@ export default function DateNavigatorReports({
             style={{
               position: 'relative',
               zIndex: 10,
-              backgroundColor: '#fff',
+              backgroundColor: bcolor,
               height: 40,
               marginRight: 30,
             }}

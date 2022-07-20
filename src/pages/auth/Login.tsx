@@ -64,7 +64,7 @@ const Login = ({ dispatch, wrongTimes, startBlock, isRTL }: any): any => {
 
       dispatch({
         type: 'login',
-        payload: { user, token, template },
+        payload: { user, token, template, tempId },
       });
       dispatch({
         type: 'setThemeId',

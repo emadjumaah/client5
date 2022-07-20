@@ -299,11 +299,10 @@ const PopupInvoice = ({
     setPtype('cash');
     setIsCash(false);
     setSelectedDate(new Date());
-    setCustvalue(name === 'customerId' ? value : null);
-    setDepartvalue(name === 'departmentId' ? value : null);
-    setEmplvalue(name === 'employeeId' ? value : null);
-    setResovalue(name === 'resourseId' ? value : null);
     setTaskvalue(name === 'contractId' ? value : null);
+    setResovalue(name === 'resourseId' ? value : null);
+    setEmplvalue(name === 'employeeId' ? value : null);
+    setDepartvalue(name === 'departmentId' ? value : null);
   };
 
   const addItemToList = (item: any) => {
@@ -676,7 +675,7 @@ const PopupInvoice = ({
       onClose={onCloseForm}
       title={title}
       onSubmit={onHandleSubmit}
-      onSubmitStay={onSubmitStay}
+      onSubmitStay={isNew ? onSubmitStay : undefined}
       theme={theme}
       alrt={alrt}
       print={!isNew ? handleReactPrint : undefined}

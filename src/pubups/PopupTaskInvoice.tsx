@@ -229,7 +229,12 @@ const PopupTaskInvoice = ({
   useEffect(() => {
     if (periodfrom && periodto) {
       const days = getInvDays(periodfrom, periodto);
-      setInvdays(days);
+      if (isMonthly) {
+        const mdays = Math.floor(days / 28);
+        setInvdays(mdays);
+      } else {
+        setInvdays(days);
+      }
     }
   }, [periodfrom, periodto]);
 

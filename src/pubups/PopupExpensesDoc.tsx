@@ -446,6 +446,7 @@ const PopupExpensesDoc = ({
     items: itemsList,
     supplier: suppvalue,
     resourse: resovalue,
+    employee: emplvalue,
   };
   const onSubmit = async (data: any) => {
     if (selectedDate > new Date()) {

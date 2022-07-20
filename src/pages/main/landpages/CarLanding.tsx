@@ -7,7 +7,6 @@ import SalesDaysChart from '../../../components/charts/SalesDaysChart';
 import MonthsChart from '../../../components/charts/MonthsChart';
 
 import DaysEvents from '../../../components/charts/DaysEvents';
-import EventsDaysChart from '../../../components/charts/EventsDaysChart';
 import MonthsEmpChart from '../../../components/charts/MonthsEmpChart';
 import InfoBoxDark from '../../../components/charts/InfoBoxDark';
 import useLandingChart from '../../../hooks/useLandingChart';
@@ -22,6 +21,7 @@ import useResourses from '../../../hooks/useResourses';
 import Cars from '../../../components/charts/Cars';
 import { useTemplate } from '../../../hooks';
 import RemindersOutBox from '../../../Shared/RemindersOutBox';
+import AppointmentsOutBox from '../../../Shared/AppointmentsOutBox';
 
 export default function CarLanding(props: any) {
   const [loading, setLoading] = useState(true);
@@ -36,7 +36,6 @@ export default function CarLanding(props: any) {
 
   const {
     salesDays,
-    eventDays,
     nextEventDays,
     salesTodayTotal,
     eventsTodayCount,
@@ -65,7 +64,7 @@ export default function CarLanding(props: any) {
   const salesColor = theme.palette.primary.light;
   const eventColor = theme.palette.secondary.main;
   const prim = theme.palette.primary.light;
-  const isRent = [4, 7].includes(templateId);
+  const isRent = [4, 7, 9].includes(templateId);
   return (
     <PageLayout
       menuitem={menuitem}
@@ -166,48 +165,35 @@ export default function CarLanding(props: any) {
                 ></InfoBox>
               </Grid>
             )}
-            <Grid item xs={8}>
-              <RemindersOutBox
-                isRTL={isRTL}
-                words={words}
-                height={610}
-                theme={theme}
-              ></RemindersOutBox>
+            <Grid item xs={4}>
+              {roles.isEditor() && resourses && isRent && (
+                <Cars
+                  title={
+                    isRTL
+                      ? `انشغال ${tempwords?.resourses}`
+                      : `${tempwords?.resourses} Availability`
+                  }
+                  data={resourses}
+                  height={300}
+                  isRTL={isRTL}
+                  prim={prim}
+                ></Cars>
+              )}
             </Grid>
             <Grid item xs={4}>
-              <Grid container spacing={2}>
-                {roles.isEditor() && resourses && isRent && (
-                  <Grid item xs={12} md={12}>
-                    <Cars
-                      title={
-                        isRTL
-                          ? `انشغال ${tempwords?.resourses}`
-                          : `${tempwords?.resourses} Availability`
-                      }
-                      data={resourses}
-                      height={300}
-                      isRTL={isRTL}
-                      prim={prim}
-                    ></Cars>
-                  </Grid>
-                )}
-                <Grid item xs={12}>
-                  {nextEventDays && roles.isEditor() && (
-                    <DaysEvents
-                      dataKey="count"
-                      theme={theme}
-                      isRTL={isRTL}
-                      data={nextEventDays}
-                      height={300}
-                      prim={prim}
-                    ></DaysEvents>
-                  )}
-                </Grid>
-              </Grid>
+              {nextEventDays && roles.isEditor() && (
+                <DaysEvents
+                  dataKey="count"
+                  theme={theme}
+                  isRTL={isRTL}
+                  data={nextEventDays}
+                  height={300}
+                  prim={prim}
+                ></DaysEvents>
+              )}
             </Grid>
-
-            {salesDays && roles.isFinanceAdmin() && (
-              <Grid item xs={12} md={6}>
+            <Grid item xs={4}>
+              {salesDays && roles.isFinanceAdmin() && (
                 <SalesDaysChart
                   dataKey="total"
                   isRTL={isRTL}
@@ -216,23 +202,25 @@ export default function CarLanding(props: any) {
                   height={300}
                   prim={prim}
                 ></SalesDaysChart>
-              </Grid>
-            )}
+              )}
+            </Grid>
+            <Grid item xs={6}>
+              <RemindersOutBox
+                isRTL={isRTL}
+                words={words}
+                height={500}
+                theme={theme}
+              ></RemindersOutBox>
+            </Grid>
+            <Grid item xs={6}>
+              <AppointmentsOutBox
+                isRTL={isRTL}
+                words={words}
+                height={500}
+                theme={theme}
+              ></AppointmentsOutBox>
+            </Grid>
 
-            {eventDays && roles.isOperateAdmin() && (
-              <Grid item xs={12} md={6}>
-                <EventsDaysChart
-                  dataKey="count"
-                  isRTL={isRTL}
-                  data={eventDays}
-                  color={eventColor}
-                  pricolor={salesColor}
-                  seccolor={eventColor}
-                  height={300}
-                  prim={prim}
-                ></EventsDaysChart>
-              </Grid>
-            )}
             {salesMonth && roles.isFinanceAdmin() && (
               <Grid item xs={12} md={6}>
                 <MonthsEmpChart

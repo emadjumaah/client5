@@ -146,7 +146,7 @@ export class VoucherPrint extends React.PureComponent<any, any> {
   );
 
   renderRows = (data: any) => {
-    const { task, items, supplier, resourse, isRTL } = data;
+    const { task, items, supplier, resourse, isRTL, employee } = data;
     return (
       <Grid item xs={12}>
         <Grid container spacing={2}>
@@ -229,7 +229,7 @@ export class VoucherPrint extends React.PureComponent<any, any> {
             <Box
               style={{
                 display: 'flex',
-                height: 20,
+                height: 16,
                 alignItems: 'center',
                 justifyContent: data.isRTL ? 'flex-end' : undefined,
               }}
@@ -264,10 +264,31 @@ export class VoucherPrint extends React.PureComponent<any, any> {
             <Box
               style={{
                 display: 'flex',
-                height: 20,
+                height: 16,
                 alignItems: 'center',
                 justifyContent: 'space-between',
                 // justifyContent: data.isRTL ? 'flex-end' : undefined,
+              }}
+              border={1}
+              borderColor="grey.300"
+              borderRight={0}
+              borderLeft={0}
+              borderTop={0}
+            >
+              {task && <Typography>{task?.title}</Typography>}
+              {task && <Typography>{task?.docNo}</Typography>}
+            </Box>
+          </Grid>
+          <Grid item xs={2}></Grid>
+          <Grid item xs={2}></Grid>
+          <Grid item xs={8}>
+            <Box
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                fontSize: 14,
+                height: 16,
               }}
               border={1}
               borderColor="grey.300"
@@ -280,24 +301,14 @@ export class VoucherPrint extends React.PureComponent<any, any> {
                   {isRTL ? resourse?.nameAr : resourse?.name}
                 </Typography>
               )}
-              {task && (
+              {employee && (
                 <Typography>
-                  {data?.task?.docNo} : Contract No / عقد رقم
+                  {isRTL ? employee?.nameAr : employee?.name}
                 </Typography>
               )}
             </Box>
           </Grid>
-          <Grid item xs={2}>
-            <div
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'flex-end',
-                fontSize: 14,
-                height: 20,
-              }}
-            ></div>
-          </Grid>
+          <Grid item xs={2}></Grid>
         </Grid>
       </Grid>
     );
@@ -436,7 +447,7 @@ export class VoucherPrint extends React.PureComponent<any, any> {
             {this.renderHeader(company)}
             <Grid item xs={12}>
               <Box ml={6} mr={6}>
-                <Grid container spacing={2}>
+                <Grid container spacing={1}>
                   {this.renderTitle(data)}
                   {this.renderRows(data)}
                   {this.renderFooter(data)}
@@ -450,9 +461,8 @@ export class VoucherPrint extends React.PureComponent<any, any> {
             {this.renderHeader(company)}
             <Grid item xs={12}>
               <Box ml={6} mr={6}>
-                <Grid container spacing={2}>
+                <Grid container spacing={1}>
                   {this.renderTitle(data)}
-                  {this.renderDivider(1)}
                   {this.renderRows(data)}
                   {this.renderFooter(data)}
                 </Grid>

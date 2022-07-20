@@ -51,7 +51,6 @@ const PopupResourses = ({
     translate: { words, isRTL },
     store: { user, tempId },
   }: GContextTypes = useContext(GlobalContext);
-
   const openRetype = () => {
     setOpenTyp(true);
   };

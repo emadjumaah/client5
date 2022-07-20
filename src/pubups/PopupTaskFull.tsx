@@ -167,6 +167,7 @@ const PopupTaskFull = ({
     translate: { words, isRTL },
     store: { user, tempId },
   }: GContextTypes = useContext(GlobalContext);
+  const isCar = tempId === 9 || tempId === 4;
 
   const [getItems, itemsData]: any = useLazyQuery(getOperationItems);
   const [getDoneEvents, doneEventsData]: any = useLazyQuery(getTaskDoneEvents, {
@@ -369,12 +370,24 @@ const PopupTaskFull = ({
   }, [taskExtra]);
 
   useEffect(() => {
-    if (emplvalue && custvalue && !tasktitle) {
-      const emp = isRTL ? emplvalue.nameAr : emplvalue.name;
-      const cst = isRTL ? custvalue.nameAr : custvalue.name;
-      setTasktitle(`${cst} - ${emp}`);
+    if (custvalue && !tasktitle) {
+      const cst = isRTL ? custvalue?.nameAr : custvalue?.name;
+      const emp = emplvalue
+        ? isRTL
+          ? emplvalue?.nameAr
+          : emplvalue?.name
+        : undefined;
+      const res = resovalue
+        ? isRTL
+          ? resovalue?.nameAr
+          : resovalue?.name
+        : undefined;
+      const restitle = isCar ? res : emp;
+      if (restitle) {
+        setTasktitle(`${cst} - ${restitle}`);
+      }
     }
-  }, [emplvalue, resovalue]);
+  }, [emplvalue, resovalue, custvalue]);
 
   useEffect(() => {
     if (weekdays && weekdays.length > 0) {
@@ -827,6 +840,15 @@ const PopupTaskFull = ({
       );
       return;
     }
+    if (isCar && !resovalue) {
+      await messageAlert(
+        setAlrt,
+        isRTL
+          ? `يرجى اضافة ${tempwords?.resourse}`
+          : `Please add ${tempwords?.resourse}`
+      );
+      return;
+    }
     if (!itemsList || itemsList.length === 0) {
       await messageAlert(
         setAlrt,
@@ -904,9 +926,9 @@ const PopupTaskFull = ({
   };
   const date = row?.start ? new Date(row?.start) : new Date();
   const day = weekdaysNNo?.[date.getDay()];
-  const isCar = tempId === 9 || tempId === 4;
 
   const title = getPopupTitle('task', isNew);
+
   return (
     <PopupLayout
       isRTL={isRTL}

@@ -15,23 +15,20 @@ import {
   TableColumnResizing,
   TableColumnVisibility,
 } from '@devexpress/dx-react-grid-material-ui';
-import { Loading } from '../Shared';
+import { Loading } from '.';
 import { getRowId } from '../common';
-import { actionTimeFormatter, sentFormatter } from '../Shared/colorFormat';
+import { actionTimeFormatter, doneFormatter } from './colorFormat';
 
 import { getColumns } from '../common/columns';
 
 import { Box, Paper, Typography } from '@material-ui/core';
 import { useLazyQuery, useMutation } from '@apollo/client';
-import { updateAction } from '../graphql';
+import { getEvents, updateEvent } from '../graphql';
 import DateNavigatorReports from '../components/filters/DateNavigatorReports';
-import useEmployees from '../hooks/useEmployees';
-import useResourses from '../hooks/useResourses';
 import { useTemplate } from '../hooks';
-import getRemindersActions from '../graphql/query/getRemindersActions';
-import { TableComponent } from '../Shared/TableComponent';
+import { TableComponent } from './TableComponent';
 
-export default function RemindersOutBox(props: any) {
+export default function AppointmentsOutBox(props: any) {
   const { isRTL, words, height, theme } = props;
 
   const [rows, setRows] = useState([]);
@@ -60,40 +57,41 @@ export default function RemindersOutBox(props: any) {
   const [columns] = useState(
     tempoptions?.noTsk
       ? [
-          col.sent,
-          col.time,
-          { name: 'title', title: words?.description },
+          col.done,
+          col.startDate,
+          col.fromto,
+          col.customer,
           col.employee,
+          col.resourse,
         ]
       : [
-          col.sent,
-          col.time,
-          { name: 'title', title: words?.description },
-          col.resourse,
+          col.done,
+          col.startDate,
+          col.fromto,
+          col.customer,
           col.employee,
+          col.resourse,
         ]
   );
 
   const [tableColumnExtensions]: any = useState([
-    { columnName: col.sent.name, width: 80 },
-    { columnName: col.time.name, width: 130 },
-    { columnName: col.title.name, width: 220 },
-    { columnName: col.resourse.name, width: 150 },
-    { columnName: col.employee.name, width: 150 },
+    { columnName: col.done.name, width: 80 },
+    { columnName: col.startDate.name, width: 130 },
+    { columnName: col.fromto.name, width: 130 },
+    { columnName: col.customer.name, width: 130 },
+    { columnName: col.resourse.name, width: 130 },
+    { columnName: col.employee.name, width: 130 },
   ]);
 
   const [tableColumnVisibilityColumnExtensions] = useState([
     { columnName: 'time', togglingEnabled: false },
   ]);
-  const { employees } = useEmployees();
-  const { resourses } = useResourses();
-
-  const [loadReminders, remindersData]: any = useLazyQuery(getRemindersActions);
+  const [loadReminders, remindersData]: any = useLazyQuery(getEvents);
 
   const refresQuery = {
     refetchQueries: [
       {
-        query: getRemindersActions,
+        query: getEvents,
         variables: {
           start: start ? start.setHours(0, 0, 0, 0) : undefined,
           end: end ? end.setHours(23, 59, 59, 999) : undefined,
@@ -112,52 +110,19 @@ export default function RemindersOutBox(props: any) {
     });
   }, [start, end]);
 
-  const [editRAction] = useMutation(updateAction, refresQuery);
+  const [editEvent] = useMutation(updateEvent, refresQuery);
 
   useEffect(() => {
     if (remindersData?.loading) {
       setLoading(true);
     }
-    if (remindersData?.data?.getRemindersActions?.data) {
-      const { data } = remindersData.data.getRemindersActions;
-      const rdata = data.map((da: any) => {
-        let resourseNameAr: any;
-        let resourseName: any;
-
-        let employeeNameAr: any;
-        let employeeName: any;
-
-        if (da?.resourseId) {
-          const res = resourses.filter(
-            (re: any) => re._id === da.resourseId
-          )?.[0];
-          resourseNameAr = res?.nameAr;
-          resourseName = res?.name;
-        }
-
-        if (da?.employeeId) {
-          const res = employees.filter(
-            (re: any) => re._id === da.employeeId
-          )?.[0];
-          employeeNameAr = res?.nameAr;
-          employeeName = res?.name;
-        }
-
-        return {
-          ...da,
-          resourseName,
-          resourseNameAr,
-          employeeNameAr,
-          employeeName,
-          time: da?.sendtime,
-        };
-      });
-      setRows(rdata);
+    if (remindersData?.data?.getEvents?.data) {
+      const { data } = remindersData.data.getEvents;
+      setRows(data);
       setLoading(false);
     }
   }, [remindersData]);
-  const color = '#caf0f866';
-
+  const color = '#fefae066';
   return (
     <Paper
       elevation={1}
@@ -196,7 +161,7 @@ export default function RemindersOutBox(props: any) {
             color="primary"
             style={{ fontSize: 18, fontWeight: 'bold' }}
           >
-            {isRTL ? 'المفكرة' : 'Reminder'}
+            {isRTL ? 'المواعيد' : 'Appointments'}
           </Typography>
         </Box>
       </Box>
@@ -253,9 +218,9 @@ export default function RemindersOutBox(props: any) {
             formatterComponent={actionTimeFormatter}
           ></DataTypeProvider>
           <DataTypeProvider
-            for={['sent']}
+            for={['done']}
             formatterComponent={(props: any) =>
-              sentFormatter({ ...props, editRAction })
+              doneFormatter({ ...props, editEvent })
             }
           ></DataTypeProvider>
         </Grid>

@@ -270,6 +270,7 @@ const PopupExpenses = ({
     chequeNo: row?.chequeNo,
     chequeDate: row?.chequeDate,
     task: taskvalue,
+    employee: emplvalue,
   };
 
   const onSubmit = async (data: any) => {
