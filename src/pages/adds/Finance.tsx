@@ -103,7 +103,9 @@ export default function Finance({ isRTL, words, menuitem, theme }) {
     dispatch({ type: 'setEndDate', payload: curDate });
   };
 
-  const [loadFinances, financeData]: any = useLazyQuery(getFinances);
+  const [loadFinances, financeData]: any = useLazyQuery(getFinances, {
+    fetchPolicy: 'cache-and-network',
+  });
   const { accounts } = useAccounts();
   const refresQuery = {
     refetchQueries: [

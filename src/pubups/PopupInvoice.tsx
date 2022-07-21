@@ -1,7 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import React, { useContext, useEffect, useRef, useState } from 'react';
-import { useForm } from 'react-hook-form';
 import { invoiceClasses } from '../themes';
 import { useCustomers, useProducts, useTemplate } from '../hooks';
 import { dublicateAlert, errorAlert, messageAlert } from '../Shared';
@@ -271,17 +270,15 @@ const PopupInvoice = ({
       setLoading(false);
     }
   }, [itemsData]);
-  const { handleSubmit, reset } = useForm({});
 
   const resetAllForms = () => {
-    reset();
     setItemsList([]);
     setDiscount(0);
     setTotals({});
     setInvNo('');
     setAccounts([]);
     setPtype('cash');
-    setIsCash(false);
+    setIsCash(true);
     setSelectedDate(new Date());
     setCustvalue(name === 'customerId' ? value : null);
     setDepartvalue(name === 'departmentId' ? value : null);
@@ -289,15 +286,15 @@ const PopupInvoice = ({
     setResovalue(name === 'resourseId' ? value : null);
     setTaskvalue(name === 'contractId' ? value : null);
   };
+
   const resetForNew = () => {
-    reset();
     setItemsList([]);
     setDiscount(0);
     setTotals({});
     setInvNo('');
     setAccounts([]);
     setPtype('cash');
-    setIsCash(false);
+    setIsCash(true);
     setSelectedDate(new Date());
     setTaskvalue(name === 'contractId' ? value : null);
     setResovalue(name === 'resourseId' ? value : null);
@@ -644,7 +641,7 @@ const PopupInvoice = ({
   };
 
   const onHandleSubmit = () => {
-    handleSubmit(onSubmit)();
+    onSubmit(false);
   };
   const onSubmitStay = () => {
     onSubmit(true);

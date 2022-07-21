@@ -35,7 +35,8 @@ import NotificationsAdd from '@material-ui/icons/NotificationImportantOutlined';
 import ListAltIcon from '@material-ui/icons/ListAlt';
 import CampaignIcon from '@material-ui/icons/Telegram';
 import SyncIcon from '@material-ui/icons/Sync';
-
+import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
+import CallToActionIcon from '@material-ui/icons/CallToAction';
 export default function MyIcon({ icon, color, size }: any) {
   const style = { color, fontSize: size ? size : undefined };
   switch (icon) {
@@ -115,6 +116,12 @@ export default function MyIcon({ icon, color, size }: any) {
       return <CampaignIcon style={style}></CampaignIcon>;
     case 'sync':
       return <SyncIcon style={style}></SyncIcon>;
+    case 'balance':
+      return (
+        <AccountBalanceWalletIcon style={style}></AccountBalanceWalletIcon>
+      );
+    case 'callaction':
+      return <CallToActionIcon style={style}></CallToActionIcon>;
 
     default:
       return <div></div>;

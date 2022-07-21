@@ -109,7 +109,9 @@ export default function ReceiptAdvance({
     dispatch({ type: 'setEndDate', payload: curDate });
   };
 
-  const [loadFinances, financeData]: any = useLazyQuery(getReceiptsAdvance);
+  const [loadFinances, financeData]: any = useLazyQuery(getReceiptsAdvance, {
+    fetchPolicy: 'cache-and-network',
+  });
   const { accounts } = useAccounts();
   const refresQuery = {
     refetchQueries: [

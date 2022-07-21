@@ -3,9 +3,9 @@ import { GeneralLanding } from './landpages';
 import CarLanding from './landpages/CarLanding';
 
 export default function Landing(props: any) {
-  const { words, isRTL, user, theme, menuitem } = props;
+  const { words, isRTL, user, theme, menuitem, company } = props;
 
-  const { templateId } = useTemplate();
+  const { tempwords, templateId } = useTemplate();
 
   if (templateId === 9 || templateId === 4) {
     return (
@@ -15,6 +15,9 @@ export default function Landing(props: any) {
         words={words}
         user={user}
         theme={theme}
+        company={company}
+        templateId={templateId}
+        tempwords={tempwords}
       ></CarLanding>
     );
   } else {

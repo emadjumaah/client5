@@ -19,23 +19,62 @@ import { Loading } from '../../../Shared';
 import { roles } from '../../../common';
 import useResourses from '../../../hooks/useResourses';
 import Cars from '../../../components/charts/Cars';
-import { useTemplate } from '../../../hooks';
+import { useExpenseItems, useServices } from '../../../hooks';
 import RemindersOutBox from '../../../Shared/RemindersOutBox';
 import AppointmentsOutBox from '../../../Shared/AppointmentsOutBox';
+import EventsDaysChart from '../../../components/charts/EventsDaysChart';
+import useRetypes from '../../../hooks/useRetypes';
+import Empls from '../../../components/charts/Empls';
+import useTasks from '../../../hooks/useTasks';
+import Conts from '../../../components/charts/Conts';
+import Invcs from '../../../components/charts/Invcs';
+import { PopupInvoice } from '../../../pubups';
+import { useMutation } from '@apollo/client';
+import {
+  createExpenses,
+  createFinance,
+  createInvoice,
+  getLandingChartData,
+} from '../../../graphql';
+import PopupExpensesDoc from '../../../pubups/PopupExpensesDoc';
+import PopupReceipt from '../../../pubups/PopupReceipt';
+import PopupFinance from '../../../pubups/PopupFinance';
+import PopupPaymentAdvance from '../../../pubups/PopupPaymentAdvance';
+import PopupReceiptAdvance from '../../../pubups/PopupReceiptAdvance';
 
 export default function CarLanding(props: any) {
+  const {
+    words,
+    isRTL,
+    user,
+    theme,
+    menuitem,
+    company,
+    tempwords,
+    templateId,
+  } = props;
+
   const [loading, setLoading] = useState(true);
 
-  const { words, isRTL, user, theme, menuitem } = props;
+  const [openInv, setOpenInv] = useState(false);
+  const [openExpen, setOpenExpen] = useState(false);
+  const [openRece, setOpenRece] = useState(false);
+  const [openFins, setOpenFins] = useState(false);
+  const [openPayAd, setOpenPayAd] = useState(false);
+  const [openRecAd, setOpenRecAd] = useState(false);
 
   const { resourses } = useResourses();
   const { departments } = useDepartments();
   const { employees } = useEmployees();
-  const { height } = useWindowDimensions();
-  const { tempwords, templateId } = useTemplate();
+  const { services } = useServices();
+  const { expenseItems } = useExpenseItems();
+  const { retypes } = useRetypes();
+  const { tasks } = useTasks();
 
+  const { height } = useWindowDimensions();
   const {
     salesDays,
+    eventDays,
     nextEventDays,
     salesTodayTotal,
     eventsTodayCount,
@@ -48,6 +87,14 @@ export default function CarLanding(props: any) {
     raseeds,
     refreshChartData,
   } = useLandingChart();
+
+  const refresQuery = {
+    refetchQueries: [{ query: getLandingChartData }],
+  };
+
+  const [addInvoice] = useMutation(createInvoice, refresQuery);
+  const [addExpenses] = useMutation(createExpenses, refresQuery);
+  const [addFinance] = useMutation(createFinance, refresQuery);
 
   const refresh = () => {
     if (refreshChartData) {
@@ -168,18 +215,121 @@ export default function CarLanding(props: any) {
             <Grid item xs={4}>
               {roles.isEditor() && resourses && isRent && (
                 <Cars
-                  title={
-                    isRTL
-                      ? `انشغال ${tempwords?.resourses}`
-                      : `${tempwords?.resourses} Availability`
-                  }
+                  title={tempwords?.resourses}
                   data={resourses}
+                  retypes={retypes}
                   height={300}
                   isRTL={isRTL}
                   prim={prim}
+                  templateId={templateId}
                 ></Cars>
               )}
             </Grid>
+            <Grid item xs={4}>
+              {roles.isEditor() && resourses && isRent && (
+                <Empls
+                  title={tempwords?.employees}
+                  data={employees}
+                  retypes={retypes}
+                  height={300}
+                  isRTL={isRTL}
+                  prim={prim}
+                ></Empls>
+              )}
+            </Grid>
+            <Grid item xs={4}>
+              {roles.isEditor() && resourses && isRent && (
+                <Conts
+                  title={tempwords?.tasks}
+                  data={tasks}
+                  height={300}
+                  isRTL={isRTL}
+                  prim={prim}
+                  templateId={templateId}
+                ></Conts>
+              )}
+            </Grid>
+            <Grid item xs={2}>
+              <Invcs
+                icon="sales"
+                title={isRTL ? 'انشاء فاتورة' : 'Add Invoice'}
+                height={300}
+                onOpen={() => setOpenInv(true)}
+                prim={prim}
+              ></Invcs>
+            </Grid>
+            <Grid item xs={2}>
+              <Invcs
+                icon="expenses"
+                title={isRTL ? 'انشاء مصروف' : 'Add Expenses'}
+                height={300}
+                onOpen={() => setOpenExpen(true)}
+                prim={prim}
+              ></Invcs>
+            </Grid>
+            <Grid item xs={2}>
+              <Invcs
+                icon="finance"
+                title={isRTL ? 'انشاء سند قبض' : 'Add Receipt'}
+                height={300}
+                onOpen={() => setOpenRece(true)}
+                prim={prim}
+              ></Invcs>
+            </Grid>
+            <Grid item xs={2}>
+              <Invcs
+                icon="account"
+                title={isRTL ? 'انشاء حركة مالية' : 'Add Finance'}
+                height={300}
+                onOpen={() => setOpenFins(true)}
+                prim={prim}
+              ></Invcs>
+            </Grid>
+            <Grid item xs={2}>
+              <Invcs
+                icon="balance"
+                title={isRTL ? 'دفع سلفة' : 'Advanced Pay'}
+                height={300}
+                onOpen={() => setOpenPayAd(true)}
+                prim={prim}
+              ></Invcs>
+            </Grid>
+            <Grid item xs={2}>
+              <Invcs
+                icon="callaction"
+                title={isRTL ? 'قبض سلفة' : 'Advanced Receipt'}
+                height={300}
+                onOpen={() => setOpenRecAd(true)}
+                prim={prim}
+              ></Invcs>
+            </Grid>
+
+            <Grid item xs={6}>
+              <RemindersOutBox
+                isRTL={isRTL}
+                words={words}
+                height={500}
+                theme={theme}
+                resourses={resourses}
+                employees={employees}
+                tasks={tasks}
+              ></RemindersOutBox>
+            </Grid>
+            <Grid item xs={6}>
+              <AppointmentsOutBox
+                isRTL={isRTL}
+                words={words}
+                height={500}
+                theme={theme}
+                resourses={resourses}
+                employees={employees}
+                departments={departments}
+                company={company}
+                services={services}
+                tasks={tasks}
+              ></AppointmentsOutBox>
+            </Grid>
+
             <Grid item xs={4}>
               {nextEventDays && roles.isEditor() && (
                 <DaysEvents
@@ -193,6 +343,20 @@ export default function CarLanding(props: any) {
               )}
             </Grid>
             <Grid item xs={4}>
+              {eventDays && roles.isOperateAdmin() && (
+                <EventsDaysChart
+                  dataKey="count"
+                  isRTL={isRTL}
+                  data={eventDays}
+                  color={eventColor}
+                  pricolor={salesColor}
+                  seccolor={eventColor}
+                  height={300}
+                  prim={prim}
+                ></EventsDaysChart>
+              )}
+            </Grid>
+            <Grid item xs={4}>
               {salesDays && roles.isFinanceAdmin() && (
                 <SalesDaysChart
                   dataKey="total"
@@ -203,22 +367,6 @@ export default function CarLanding(props: any) {
                   prim={prim}
                 ></SalesDaysChart>
               )}
-            </Grid>
-            <Grid item xs={6}>
-              <RemindersOutBox
-                isRTL={isRTL}
-                words={words}
-                height={500}
-                theme={theme}
-              ></RemindersOutBox>
-            </Grid>
-            <Grid item xs={6}>
-              <AppointmentsOutBox
-                isRTL={isRTL}
-                words={words}
-                height={500}
-                theme={theme}
-              ></AppointmentsOutBox>
             </Grid>
 
             {salesMonth && roles.isFinanceAdmin() && (
@@ -331,6 +479,68 @@ export default function CarLanding(props: any) {
             </Box>
           </Grid>
         </Box>
+        <PopupInvoice
+          open={openInv}
+          onClose={() => setOpenInv(false)}
+          addAction={addInvoice}
+          editAction={() => null}
+          resourses={resourses}
+          employees={employees}
+          departments={departments}
+          company={company}
+          servicesproducts={services}
+          tasks={tasks}
+          isNew={true}
+          theme={theme}
+        ></PopupInvoice>
+        <PopupExpensesDoc
+          open={openExpen}
+          onClose={() => setOpenExpen(false)}
+          isNew={true}
+          addAction={addExpenses}
+          editAction={() => null}
+          resourses={resourses}
+          employees={employees}
+          departments={departments}
+          servicesproducts={expenseItems}
+          theme={theme}
+          company={company}
+        ></PopupExpensesDoc>
+        <PopupReceipt
+          open={openRece}
+          onClose={() => setOpenRece(false)}
+          isNew={true}
+          addAction={addFinance}
+          editAction={() => null}
+          theme={theme}
+          company={company}
+        ></PopupReceipt>
+        <PopupFinance
+          open={openFins}
+          onClose={() => setOpenFins(false)}
+          isNew={true}
+          addAction={addFinance}
+          editAction={() => null}
+          theme={theme}
+        ></PopupFinance>
+        <PopupPaymentAdvance
+          open={openPayAd}
+          onClose={() => setOpenPayAd(false)}
+          isNew={true}
+          addAction={addFinance}
+          editAction={() => null}
+          theme={theme}
+          company={company}
+        ></PopupPaymentAdvance>
+        <PopupReceiptAdvance
+          open={openRecAd}
+          onClose={() => setOpenRecAd(false)}
+          isNew={true}
+          addAction={addFinance}
+          editAction={() => null}
+          theme={theme}
+          company={company}
+        ></PopupReceiptAdvance>
       </Box>
     </PageLayout>
   );

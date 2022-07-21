@@ -109,7 +109,9 @@ export default function PaymentAdvance({
     dispatch({ type: 'setEndDate', payload: curDate });
   };
 
-  const [loadFinances, financeData]: any = useLazyQuery(getPaymentsAdvance);
+  const [loadFinances, financeData]: any = useLazyQuery(getPaymentsAdvance, {
+    fetchPolicy: 'cache-and-network',
+  });
   const { accounts } = useAccounts();
   const refresQuery = {
     refetchQueries: [

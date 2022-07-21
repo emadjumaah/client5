@@ -1,7 +1,7 @@
 /* eslint-disable array-callback-return */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import React from "react";
-import { Box, Divider, Typography } from "@material-ui/core";
+import React from 'react';
+import { Box, Divider, Typography } from '@material-ui/core';
 
 export const ChartHeader = (props: any) => {
   const { color, title } = props;
@@ -9,10 +9,12 @@ export const ChartHeader = (props: any) => {
     <Box>
       <Typography
         style={{
-          fontSize: 18,
-          fontWeight: "bold",
+          fontSize: 20,
+          fontWeight: 'bold',
           color: color,
           padding: 10,
+          marginLeft: 10,
+          marginRight: 10,
         }}
       >
         {title}

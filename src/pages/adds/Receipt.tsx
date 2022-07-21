@@ -105,7 +105,9 @@ export default function Receipt({ isRTL, words, menuitem, theme, company }) {
     dispatch({ type: 'setEndDate', payload: curDate });
   };
 
-  const [loadFinances, financeData]: any = useLazyQuery(getReceipts);
+  const [loadFinances, financeData]: any = useLazyQuery(getReceipts, {
+    fetchPolicy: 'cache-and-network',
+  });
   const { accounts } = useAccounts();
   const refresQuery = {
     refetchQueries: [

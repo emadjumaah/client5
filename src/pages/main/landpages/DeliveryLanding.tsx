@@ -18,6 +18,7 @@ import Cars from '../../../components/charts/Cars';
 import { useTemplate } from '../../../hooks';
 import useLandingSales from '../../../hooks/useLandingSales';
 import RemindersOutBox from '../../../Shared/RemindersOutBox';
+import useRetypes from '../../../hooks/useRetypes';
 
 export default function DeliveryLanding(props: any) {
   const [loading, setLoading] = useState(true);
@@ -29,6 +30,7 @@ export default function DeliveryLanding(props: any) {
   const { employees } = useEmployees();
   const { height } = useWindowDimensions();
   const { tempwords, templateId } = useTemplate();
+  const { retypes } = useRetypes();
 
   const {
     salesMonths,
@@ -128,9 +130,11 @@ export default function DeliveryLanding(props: any) {
                       : `${tempwords?.resourses} Availability`
                   }
                   data={resourses}
+                  retypes={retypes}
                   height={300}
                   isRTL={isRTL}
                   prim={prim}
+                  templateId={templateId}
                 ></Cars>
               </Grid>
             )}

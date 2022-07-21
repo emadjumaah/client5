@@ -15,26 +15,41 @@ import {
   TableColumnResizing,
   TableColumnVisibility,
 } from '@devexpress/dx-react-grid-material-ui';
-import { Loading } from '.';
 import { getRowId } from '../common';
-import { actionTimeFormatter, doneFormatter } from './colorFormat';
+import {
+  createdAtFormatter,
+  doneFormatter,
+  fromToFormatter,
+} from './colorFormat';
 
 import { getColumns } from '../common/columns';
 
-import { Box, Paper, Typography } from '@material-ui/core';
+import { Box, Button, Paper, Typography } from '@material-ui/core';
 import { useLazyQuery, useMutation } from '@apollo/client';
-import { getEvents, updateEvent } from '../graphql';
+import { createEvent, getEvents, updateEvent } from '../graphql';
 import DateNavigatorReports from '../components/filters/DateNavigatorReports';
 import { useTemplate } from '../hooks';
 import { TableComponent } from './TableComponent';
+import PopupAppointment from '../pubups/PopupAppointment';
 
 export default function AppointmentsOutBox(props: any) {
-  const { isRTL, words, height, theme } = props;
+  const {
+    isRTL,
+    words,
+    height,
+    theme,
+    resourses,
+    employees,
+    departments,
+    company,
+    services,
+    tasks,
+  } = props;
 
   const [rows, setRows] = useState([]);
-  const [loading, setLoading] = useState(false);
   const [start, setStart] = useState<any>(null);
   const [end, setEnd] = useState<any>(null);
+  const [open, setOpen] = useState(false);
 
   const [currentViewName, setCurrentViewName] = useState('Day');
   const [currentDate, setCurrentDate] = useState(new Date());
@@ -76,8 +91,8 @@ export default function AppointmentsOutBox(props: any) {
 
   const [tableColumnExtensions]: any = useState([
     { columnName: col.done.name, width: 80 },
-    { columnName: col.startDate.name, width: 130 },
-    { columnName: col.fromto.name, width: 130 },
+    { columnName: col.startDate.name, width: 120 },
+    { columnName: col.fromto.name, width: 100 },
     { columnName: col.customer.name, width: 130 },
     { columnName: col.resourse.name, width: 130 },
     { columnName: col.employee.name, width: 130 },
@@ -86,7 +101,9 @@ export default function AppointmentsOutBox(props: any) {
   const [tableColumnVisibilityColumnExtensions] = useState([
     { columnName: 'time', togglingEnabled: false },
   ]);
-  const [loadReminders, remindersData]: any = useLazyQuery(getEvents);
+  const [loadReminders, remindersData]: any = useLazyQuery(getEvents, {
+    fetchPolicy: 'cache-and-network',
+  });
 
   const refresQuery = {
     refetchQueries: [
@@ -110,19 +127,16 @@ export default function AppointmentsOutBox(props: any) {
     });
   }, [start, end]);
 
+  const [addEvent] = useMutation(createEvent, refresQuery);
   const [editEvent] = useMutation(updateEvent, refresQuery);
 
   useEffect(() => {
-    if (remindersData?.loading) {
-      setLoading(true);
-    }
     if (remindersData?.data?.getEvents?.data) {
       const { data } = remindersData.data.getEvents;
       setRows(data);
-      setLoading(false);
     }
   }, [remindersData]);
-  const color = '#fefae066';
+  const color = '#eff9fb';
   return (
     <Paper
       elevation={1}
@@ -166,9 +180,10 @@ export default function AppointmentsOutBox(props: any) {
         </Box>
       </Box>
       <Paper
+        elevation={0}
         style={{
           overflow: 'auto',
-          height: height - 50,
+          height: height - 110,
           width: '100%',
           backgroundColor: color,
         }}
@@ -214,8 +229,12 @@ export default function AppointmentsOutBox(props: any) {
             defaultHiddenColumnNames={[col.amount.name]}
           />
           <DataTypeProvider
-            for={['time']}
-            formatterComponent={actionTimeFormatter}
+            for={['fromto']}
+            formatterComponent={fromToFormatter}
+          ></DataTypeProvider>
+          <DataTypeProvider
+            for={['startDate', 'createdAt']}
+            formatterComponent={createdAtFormatter}
           ></DataTypeProvider>
           <DataTypeProvider
             for={['done']}
@@ -225,7 +244,34 @@ export default function AppointmentsOutBox(props: any) {
           ></DataTypeProvider>
         </Grid>
       </Paper>
-      {loading && <Loading isRTL={isRTL} />}
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={() => setOpen(true)}
+        style={{
+          minWidth: 130,
+          height: 36,
+          margin: 10,
+          marginTop: 15,
+        }}
+      >
+        <Typography>{isRTL ? 'انشاء موعد' : 'Add Appointment'}</Typography>
+      </Button>
+      <PopupAppointment
+        open={open}
+        onClose={() => setOpen(false)}
+        addAction={addEvent}
+        editAction={() => null}
+        resourses={resourses}
+        employees={employees}
+        departments={departments}
+        company={company}
+        servicesproducts={services}
+        tasks={tasks}
+        isNew={true}
+        row={null}
+        theme={theme}
+      ></PopupAppointment>
     </Paper>
   );
 }

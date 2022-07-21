@@ -15,29 +15,27 @@ import {
   TableColumnResizing,
   TableColumnVisibility,
 } from '@devexpress/dx-react-grid-material-ui';
-import { Loading } from '../Shared';
 import { getRowId } from '../common';
 import { actionTimeFormatter, sentFormatter } from '../Shared/colorFormat';
 
 import { getColumns } from '../common/columns';
 
-import { Box, Paper, Typography } from '@material-ui/core';
+import { Box, Button, Paper, Typography } from '@material-ui/core';
 import { useLazyQuery, useMutation } from '@apollo/client';
-import { updateAction } from '../graphql';
+import { createReminder, updateAction } from '../graphql';
 import DateNavigatorReports from '../components/filters/DateNavigatorReports';
-import useEmployees from '../hooks/useEmployees';
-import useResourses from '../hooks/useResourses';
 import { useTemplate } from '../hooks';
 import getRemindersActions from '../graphql/query/getRemindersActions';
 import { TableComponent } from '../Shared/TableComponent';
+import PopupReminder from '../pubups/PopupReminder';
 
 export default function RemindersOutBox(props: any) {
-  const { isRTL, words, height, theme } = props;
+  const { isRTL, words, height, theme, resourses, employees, tasks } = props;
 
   const [rows, setRows] = useState([]);
-  const [loading, setLoading] = useState(false);
   const [start, setStart] = useState<any>(null);
   const [end, setEnd] = useState<any>(null);
+  const [open, setOpen] = useState(false);
 
   const [currentViewName, setCurrentViewName] = useState('Day');
   const [currentDate, setCurrentDate] = useState(new Date());
@@ -85,10 +83,13 @@ export default function RemindersOutBox(props: any) {
   const [tableColumnVisibilityColumnExtensions] = useState([
     { columnName: 'time', togglingEnabled: false },
   ]);
-  const { employees } = useEmployees();
-  const { resourses } = useResourses();
 
-  const [loadReminders, remindersData]: any = useLazyQuery(getRemindersActions);
+  const [loadReminders, remindersData]: any = useLazyQuery(
+    getRemindersActions,
+    {
+      fetchPolicy: 'cache-and-network',
+    }
+  );
 
   const refresQuery = {
     refetchQueries: [
@@ -113,11 +114,9 @@ export default function RemindersOutBox(props: any) {
   }, [start, end]);
 
   const [editRAction] = useMutation(updateAction, refresQuery);
+  const [addReminder] = useMutation(createReminder, refresQuery);
 
   useEffect(() => {
-    if (remindersData?.loading) {
-      setLoading(true);
-    }
     if (remindersData?.data?.getRemindersActions?.data) {
       const { data } = remindersData.data.getRemindersActions;
       const rdata = data.map((da: any) => {
@@ -153,10 +152,9 @@ export default function RemindersOutBox(props: any) {
         };
       });
       setRows(rdata);
-      setLoading(false);
     }
   }, [remindersData]);
-  const color = '#caf0f866';
+  const color = '#fff';
 
   return (
     <Paper
@@ -201,9 +199,10 @@ export default function RemindersOutBox(props: any) {
         </Box>
       </Box>
       <Paper
+        elevation={0}
         style={{
           overflow: 'auto',
-          height: height - 50,
+          height: height - 110,
           width: '100%',
           backgroundColor: color,
         }}
@@ -260,7 +259,29 @@ export default function RemindersOutBox(props: any) {
           ></DataTypeProvider>
         </Grid>
       </Paper>
-      {loading && <Loading isRTL={isRTL} />}
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={() => setOpen(true)}
+        style={{
+          minWidth: 130,
+          height: 36,
+          margin: 10,
+          marginTop: 15,
+        }}
+      >
+        <Typography>{isRTL ? 'انشاء تذكير' : 'Add Reminder'}</Typography>
+      </Button>
+      <PopupReminder
+        open={open}
+        onClose={() => setOpen(false)}
+        row={null}
+        isNew={true}
+        theme={theme}
+        addAction={addReminder}
+        editAction={() => null}
+        tasks={tasks}
+      ></PopupReminder>
     </Paper>
   );
 }

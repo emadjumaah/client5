@@ -151,7 +151,9 @@ export default function ExpensesDoc({
     dispatch({ type: 'setEndDate', payload: curDate });
   };
 
-  const [loadExpenses, expensesData]: any = useLazyQuery(getExpenses);
+  const [loadExpenses, expensesData]: any = useLazyQuery(getExpenses, {
+    fetchPolicy: 'cache-and-network',
+  });
   const { accounts } = useAccounts();
   const refresQuery = {
     refetchQueries: [

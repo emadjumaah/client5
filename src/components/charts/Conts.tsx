@@ -1,89 +1,65 @@
 import React from 'react';
-import { Box, Divider, Grid, Paper, Typography } from '@material-ui/core';
+import {
+  Box,
+  colors,
+  Divider,
+  Grid,
+  Paper,
+  Typography,
+} from '@material-ui/core';
 import { useNavigate } from 'react-router-dom';
 import _ from 'lodash';
-
-import { carstatuss } from '../../constants';
 import ChartHeader from './ChartHeader';
+import { getTaskStatus } from '../../common/helpers';
 
-const getStatus = (items: any, isRTL: any) => {
-  if (items && items.length > 0) {
-    const status = _(items)
-      .groupBy('carstatus')
-      .map((array, key) => ({
-        name: key,
-        status: array[0].carstatus,
-        value: array.length,
-      }))
-      .value();
-    if (status && status.length > 0) {
-      const fdata = status.map((da: any) => {
-        const cstat = carstatuss.filter((cs: any) => cs.id === da.status)?.[0];
-        if (cstat) {
-          return {
-            name: isRTL ? cstat?.nameAr : cstat?.name,
-            value: da.value,
-            color: cstat.color,
-          };
-        } else {
-          return {
-            name: isRTL ? carstatuss?.[0]?.nameAr : carstatuss?.[0]?.name,
-            value: da.value,
-            color: carstatuss?.[0].color,
-          };
-        }
-      });
-      return fdata;
-    }
+const getColor = (status: any) => {
+  let color;
+  let bgcolor;
+  if (status === 'مقفل' || status === 'Closed') {
+    color = colors.blue[500];
+    bgcolor = colors.blue[50];
   }
+  if (status === 'لم يبدأ بعد' || status === 'Not Started') {
+    color = colors.deepPurple[500];
+    bgcolor = colors.deepPurple[50];
+  }
+  if (status === 'غير مقفل' || status === 'Not Closed') {
+    color = colors.orange[500];
+    bgcolor = colors.orange[50];
+  }
+  if (status === 'ساري' || status === 'In Progress') {
+    color = colors.green[500];
+    bgcolor = colors.green[50];
+  }
+  return { color, bgcolor };
 };
 
-const renderIte = (item: any) => {
-  const { name, value, color } = item;
-  return (
-    <>
-      <Grid item xs={8}>
-        <Typography style={{ color, fontWeight: 'bold' }}>{name}</Typography>
-      </Grid>
-      <Grid item xs={4}>
-        <Typography style={{ color, fontWeight: 'bold' }}>{value}</Typography>
-      </Grid>
-    </>
-  );
-};
-
-const Cars = ({ title, data, height, isRTL, prim, retypes, templateId }) => {
+const Conts = ({ title, data, height, isRTL, prim, templateId }) => {
   let data02: any;
-
   let navigate = useNavigate();
-
-  if (data && data.length > 0) {
-    const fdata = data.filter((d: any) => d.retypeId);
-    const types = _(fdata)
-      .groupBy('retypeId')
+  const rdata = getTaskStatus(data, isRTL);
+  if (rdata && rdata.length > 0) {
+    const types = _(rdata)
+      .groupBy('status')
       .map((array, key) => ({
         name: key,
         value: array.length,
-        items: data.filter((d: any) => d.retypeId === key),
       }))
       .value();
-
     const rda = types.map((ty: any) => {
-      const cstat = retypes.filter((cs: any) => cs._id === ty.name)?.[0];
-
-      const status = getStatus(ty.items, isRTL);
+      const { color, bgcolor } = getColor(ty?.name);
       return {
         ...ty,
-        status,
-        name: isRTL ? cstat?.nameAr : cstat?.name,
+        color,
+        bgcolor,
       };
     });
     data02 = rda;
   }
   const imgurl =
     templateId === 9
-      ? 'https://res.cloudinary.com/jadwalio/image/upload/v1658348315/moto_mbp8ua.png'
-      : 'https://res.cloudinary.com/jadwalio/image/upload/v1658365288/caricon_k2zcft.png';
+      ? 'https://res.cloudinary.com/jadwalio/image/upload/v1658365925/driver2_pu699i.png'
+      : 'https://res.cloudinary.com/jadwalio/image/upload/v1658365487/caseicon_gzt80l.png';
   return (
     <Paper style={{ height }}>
       <ChartHeader title={title} color={prim}></ChartHeader>
@@ -95,43 +71,35 @@ const Cars = ({ title, data, height, isRTL, prim, retypes, templateId }) => {
           width: '100%',
         }}
       >
-        <Grid container spacing={2}>
+        <Grid container spacing={0}>
           <Grid item xs={7}>
-            <Grid
-              container
-              spacing={0}
-              style={{ marginTop: 10, paddingRight: 10 }}
-            >
+            <Grid container spacing={0} style={{ marginTop: 10 }}>
               {(data02 || []).map((da: any) => {
                 return (
                   <>
-                    <Grid item xs={9}>
+                    <Grid item xs={8}>
                       <Typography
                         style={{
                           fontSize: 16,
                           fontWeight: 'bold',
                           color: da?.color,
+                          padding: 10,
                         }}
                       >
                         {da?.name}
                       </Typography>
                     </Grid>
-                    <Grid item xs={3}>
+                    <Grid item xs={4}>
                       <Typography
                         style={{
                           fontSize: 16,
                           fontWeight: 'bold',
                           color: da?.color,
+                          padding: 10,
                         }}
                       >
                         {da?.value}
                       </Typography>
-                    </Grid>
-                    <Grid item xs={2}></Grid>
-                    <Grid item xs={8}>
-                      <Grid container spacing={1}>
-                        {da?.status?.map((item: any) => renderIte(item))}
-                      </Grid>
                     </Grid>
                     <Grid item xs={12} style={{ marginTop: 5 }}>
                       <Divider></Divider>
@@ -169,9 +137,9 @@ const Cars = ({ title, data, height, isRTL, prim, retypes, templateId }) => {
             >
               <img
                 src={imgurl}
-                onClick={() => navigate('/manageresourses')}
-                width={130}
-                height={130}
+                onClick={() => navigate('/tasks')}
+                width={140}
+                height={140}
                 alt=""
               />
             </Box>
@@ -182,4 +150,4 @@ const Cars = ({ title, data, height, isRTL, prim, retypes, templateId }) => {
   );
 };
 
-export default Cars;
+export default Conts;

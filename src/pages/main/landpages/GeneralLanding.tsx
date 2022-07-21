@@ -23,6 +23,7 @@ import useResourses from '../../../hooks/useResourses';
 import Cars from '../../../components/charts/Cars';
 import { useTemplate } from '../../../hooks';
 import RemindersOutBox from '../../../Shared/RemindersOutBox';
+import useRetypes from '../../../hooks/useRetypes';
 
 export default function GeneralLanding(props: any) {
   const [loading, setLoading] = useState(true);
@@ -34,6 +35,7 @@ export default function GeneralLanding(props: any) {
   const { employees } = useEmployees();
   const { height } = useWindowDimensions();
   const { tempwords, templateId } = useTemplate();
+  const { retypes } = useRetypes();
 
   const {
     salesDays,
@@ -178,9 +180,11 @@ export default function GeneralLanding(props: any) {
                       : `${tempwords?.resourses} Availability`
                   }
                   data={resourses}
+                  retypes={retypes}
                   height={300}
                   isRTL={isRTL}
                   prim={prim}
+                  templateId={templateId}
                 ></Cars>
               </Grid>
             )}

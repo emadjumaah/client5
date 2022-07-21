@@ -297,15 +297,15 @@ const PopupAppointment = ({
     getOverallTotal();
   }, [itemsList]);
   useEffect(() => {
-    if (row && row._id) {
-      getItems({ variables: { opId: row._id } });
-      loadActions({ variables: { eventId: row.id } });
-      const depId = row.departmentId;
-      const empId = row.employeeId;
-      const resId = row.resourseId;
-      const custId = row.customerId;
-      const statNo = row.status;
-      const contractId = row.contractId;
+    if (row && row?._id) {
+      getItems({ variables: { opId: row?._id } });
+      loadActions({ variables: { eventId: row?.id } });
+      const depId = row?.departmentId;
+      const empId = row?.employeeId;
+      const resId = row?.resourseId;
+      const custId = row?.customerId;
+      const statNo = row?.status;
+      const contractId = row?.contractId;
       setTasktitle(row?.title);
       setStartDate(new Date(row?.startDate));
       setEndDate(new Date(row?.endDate));
@@ -334,7 +334,7 @@ const PopupAppointment = ({
         const stat = eventStatus.filter((es: any) => es.id === statNo)[0];
         setStatus(stat);
       }
-      if (row.location) {
+      if (row?.location) {
         setLocation({ lat: row?.location?.lat, lng: row?.location?.lng });
       }
     }
@@ -493,7 +493,7 @@ const PopupAppointment = ({
       : itemsList?.[0]?.name;
 
     const variables: any = {
-      id: row && row.id ? row.id : undefined, // is it new or edit
+      id: row && row?.id ? row?.id : undefined, // is it new or edit
       title,
       startDate,
       endDate,
@@ -634,7 +634,7 @@ const PopupAppointment = ({
   const day = weekdaysNNo?.[date.getDay()];
   const title = getPopupTitle('appointment', isNew);
 
-  const desabledSave = row.status === 10 || !roles.isEditor();
+  const desabledSave = row?.status === 10 || !roles.isEditor();
   return (
     <PopupLayout
       isRTL={isRTL}
@@ -847,30 +847,6 @@ const PopupAppointment = ({
                     {isRTL ? 'اضافة تنبيه' : 'Add Reminder'}
                   </Typography>
                 </Button>
-                {/* <Button
-                  variant="outlined"
-                  style={{
-                    marginBottom: 10,
-                    minWidth: 80,
-                    marginRight: 10,
-                    marginLeft: 10,
-                    height: 34,
-                  }}
-                  onClick={() => {
-                    setSelected(null);
-                    setType(1);
-                    setOpenAction(true);
-                  }}
-                >
-                  <Typography
-                    style={{
-                      fontSize: 13,
-                      fontWeight: 'bold',
-                    }}
-                  >
-                    {isRTL ? 'اضافة رسالة' : 'Add SMS'}
-                  </Typography>
-                </Button> */}
                 <Paper style={{ height: '83%', overflow: 'auto' }}>
                   {actionslist.map((act: any) => {
                     return (
@@ -986,17 +962,19 @@ const PopupAppointment = ({
             </Grid>
           </Grid>
         </Grid>
-        <PopupAppointInvoice
-          open={openInvoice}
-          onClose={() => setOpenInvoice(false)}
-          onCloseAppoint={onCloseForm}
-          appoint={row}
-          services={servicesproducts}
-          editEvent={editAction}
-          company={company}
-          theme={theme}
-          items={itemsList}
-        ></PopupAppointInvoice>
+        {row && (
+          <PopupAppointInvoice
+            open={openInvoice}
+            onClose={() => setOpenInvoice(false)}
+            onCloseAppoint={onCloseForm}
+            appoint={row}
+            services={servicesproducts}
+            editEvent={editAction}
+            company={company}
+            theme={theme}
+            items={itemsList}
+          ></PopupAppointInvoice>
+        )}
         <PopupCustomer
           newtext={newtext}
           open={openCust}

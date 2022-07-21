@@ -329,6 +329,7 @@ const Content = () => {
                 words={words}
                 user={user}
                 theme={theme}
+                company={company}
               ></Landing>
             }
           />

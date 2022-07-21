@@ -133,7 +133,9 @@ export default function Invoices({ isRTL, words, menuitem, theme, company }) {
     dispatch({ type: 'setEndDate', payload: curDate });
   };
 
-  const [loadInvoices, opData]: any = useLazyQuery(getInvoices);
+  const [loadInvoices, opData]: any = useLazyQuery(getInvoices, {
+    fetchPolicy: 'cache-and-network',
+  });
 
   const refresQuery = {
     refetchQueries: [

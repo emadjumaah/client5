@@ -176,6 +176,9 @@ const PopupReminder = ({
     setEmplvalue(name === 'employeeId' ? value : null);
     setResovalue(name === 'resourseId' ? value : null);
     setTaskvalue(name === 'contractId' ? value : null);
+    setRuntime(new Date());
+    setStartDate(new Date());
+    setEndDate(new Date());
   };
 
   const onSubmit = async () => {
