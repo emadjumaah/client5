@@ -10,7 +10,16 @@ export const EmployeeContext = createContext<any>({});
 
 export const initEmployeeContext = {
   sort: [{ columnName: 'time', direction: 'desc' }],
-  hiddenColumnNames: ['phone', col.retype.name],
+  hiddenColumnNames: [
+    'phone',
+    'email',
+    col.retype.name,
+    col.nationalDate.name,
+    col.workId.name,
+    col.telHome.name,
+    col.data.name,
+    'info',
+  ],
 };
 
 export const employeeReducer = (state: any, action: any) => {

@@ -20,6 +20,7 @@ import PopupCustomer from './PopupCustomer';
 import { ReceiptPrint } from '../print';
 import { successAlert } from '../Shared/helpers';
 import getGereralCalculation from '../graphql/query/getGereralCalculation';
+import { updateDocNumbers } from '../common';
 const PopupReceipt = ({
   open,
   onClose,
@@ -109,7 +110,6 @@ const PopupReceipt = ({
       }
     }
   }, [name, value, open]);
-
   useEffect(() => {
     if (invoicesData?.data?.getInvoicesList?.data) {
       const { data } = invoicesData.data.getInvoicesList;
@@ -123,14 +123,19 @@ const PopupReceipt = ({
             nameAr: title,
           };
         });
+        const refdatar = updateDocNumbers(ndata);
         if (task) {
-          const tndata = ndata.filter((nd: any) => nd.contractId === task._id);
+          const tndata = refdatar.filter(
+            (nd: any) => nd.contractId === task._id
+          );
           setInvoices(tndata);
         } else {
-          setInvoices(ndata);
+          setInvoices(refdatar);
         }
         if (row?.refNo) {
-          const inv = ndata.filter((ts: any) => ts.docNo === row?.refNo)?.[0];
+          const inv = refdatar.filter(
+            (ts: any) => ts.docNo === row?.refNo
+          )?.[0];
           setInvoicevalue(inv);
         }
       }
@@ -317,7 +322,7 @@ const PopupReceipt = ({
       time: selectedDate,
       debitAcc: debitAcc.code,
       creditAcc: creditAcc.code,
-      refNo: invoicevalue ? invoicevalue.docNo : undefined,
+      refNo: invoicevalue ? invoicevalue.docNo : null,
       customer,
       department,
       employee,

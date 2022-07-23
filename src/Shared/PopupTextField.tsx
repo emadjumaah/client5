@@ -15,12 +15,13 @@ export default function PopupTextField({
   newtext,
   margin,
   ltr,
+  autoComplete = 'off',
   ...res
 }: any) {
   return (
     <TextField
       autoFocus={autoFocus}
-      autoComplete="off"
+      autoComplete={autoComplete}
       required={required}
       name={name}
       fullWidth

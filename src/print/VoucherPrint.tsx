@@ -146,7 +146,7 @@ export class VoucherPrint extends React.PureComponent<any, any> {
   );
 
   renderRows = (data: any) => {
-    const { task, items, supplier, resourse, isRTL, employee } = data;
+    const { task, items, supplier, resourse, isRTL, employee, desc } = data;
     return (
       <Grid item xs={12}>
         <Grid container spacing={2}>
@@ -174,6 +174,7 @@ export class VoucherPrint extends React.PureComponent<any, any> {
                   {isRTL ? supplier?.nameAr : supplier?.name}
                 </Typography>
               )}
+              {desc && <Typography>{desc}</Typography>}
             </Box>
           </Grid>
           <Grid item xs={2}>
@@ -239,11 +240,15 @@ export class VoucherPrint extends React.PureComponent<any, any> {
               borderLeft={0}
               borderTop={0}
             >
-              {items && items.length > 0 && (
-                <Typography>
-                  {isRTL ? items[0]?.nameAr : items[0]?.name}
-                </Typography>
-              )}{' '}
+              {items &&
+                items.length > 0 &&
+                items.map((item: any) => {
+                  return (
+                    <Typography style={{ marginLeft: 10 }}>
+                      {isRTL ? item?.nameAr : item?.name}
+                    </Typography>
+                  );
+                })}
             </Box>
           </Grid>
           <Grid item xs={2}>

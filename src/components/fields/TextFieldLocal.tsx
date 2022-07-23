@@ -19,6 +19,7 @@ export default function TextFieldLocal({
   mb = 20,
   ltr,
   maxLength,
+  autoComplete = 'off',
   style = {},
   ...res
 }: any) {
@@ -26,7 +27,7 @@ export default function TextFieldLocal({
     <TextField
       autoFocus={autoFocus}
       fullWidth={fullWidth}
-      autoComplete="off"
+      autoComplete={autoComplete}
       required={required}
       name={name}
       // onChange={_.debounce((e: any) => console.log(e.target.value), 300)}

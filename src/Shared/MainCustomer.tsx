@@ -21,7 +21,7 @@ import ReminderBox from './ReminderBox';
 import { useEffect, useState } from 'react';
 import { useLazyQuery } from '@apollo/client';
 import RefetchBox from './RefetchBox';
-// import { ImageView } from '../components/viewer';
+import { ImageView } from '../components/viewer';
 
 export default function MainCustomer({
   isRTL,
@@ -69,7 +69,6 @@ export default function MainCustomer({
       setData(data);
     }
   }, [calcsData, start, end]);
-
   const refresh = () => calcsData?.refetch();
   const loading = calcsData.loading;
   return (
@@ -219,9 +218,14 @@ export default function MainCustomer({
                     </Box>
                   </Grid>
                 )}
-                {/* <Grid item xs={4}>
-                  <ImageView></ImageView>
-                </Grid> */}
+                <Grid item xs={4}>
+                  <ImageView
+                    images={row?.photos ? JSON.parse(row?.photos) : []}
+                    height={200}
+                    width={400}
+                    big
+                  ></ImageView>
+                </Grid>
               </Grid>
             </Box>
           </Box>

@@ -11,6 +11,7 @@ import { useNavigate } from 'react-router-dom';
 import _ from 'lodash';
 import ChartHeader from './ChartHeader';
 import { getTaskStatus } from '../../common/helpers';
+import { useHoverStyles } from './Cars';
 
 const getColor = (status: any) => {
   let color;
@@ -35,6 +36,8 @@ const getColor = (status: any) => {
 };
 
 const Conts = ({ title, data, height, isRTL, prim, templateId }) => {
+  const classes = useHoverStyles();
+
   let data02: any;
   let navigate = useNavigate();
   const rdata = getTaskStatus(data, isRTL);
@@ -63,17 +66,20 @@ const Conts = ({ title, data, height, isRTL, prim, templateId }) => {
   return (
     <Paper style={{ height }}>
       <ChartHeader title={title} color={prim}></ChartHeader>
-      <Box
-        display={'flex'}
+      <Paper
         style={{
           flex: 1,
           height: height - 50,
-          width: '100%',
+          overflow: 'auto',
         }}
       >
         <Grid container spacing={0}>
           <Grid item xs={7}>
-            <Grid container spacing={0} style={{ marginTop: 10 }}>
+            <Grid
+              container
+              spacing={0}
+              style={{ marginTop: 15, paddingRight: 15 }}
+            >
               {(data02 || []).map((da: any) => {
                 return (
                   <>
@@ -121,12 +127,13 @@ const Conts = ({ title, data, height, isRTL, prim, templateId }) => {
             }}
           >
             <Box
+              className={classes.button}
               style={{
+                marginTop: 40,
                 padding: 5,
                 overflow: 'hidden',
                 objectFit: 'cover',
                 cursor: 'pointer',
-                backgroundColor: '#eee',
                 borderRadius: 20,
                 display: 'flex',
                 alignItems: 'center',
@@ -140,12 +147,13 @@ const Conts = ({ title, data, height, isRTL, prim, templateId }) => {
                 onClick={() => navigate('/tasks')}
                 width={140}
                 height={140}
+                style={{ opacity: 0.7 }}
                 alt=""
               />
             </Box>
           </Grid>
         </Grid>
-      </Box>
+      </Paper>
     </Paper>
   );
 };

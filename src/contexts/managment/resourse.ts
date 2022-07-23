@@ -12,6 +12,8 @@ export const initResourseContext = {
   sort: [{ columnName: 'time', direction: 'desc' }],
   hiddenColumnNames: [
     'plate',
+    'purtime',
+    'cost',
     col.carstatus.name,
     col.department.name,
     col.retype.name,

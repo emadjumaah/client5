@@ -305,17 +305,6 @@ export default function CarLanding(props: any) {
             </Grid>
 
             <Grid item xs={6}>
-              <RemindersOutBox
-                isRTL={isRTL}
-                words={words}
-                height={500}
-                theme={theme}
-                resourses={resourses}
-                employees={employees}
-                tasks={tasks}
-              ></RemindersOutBox>
-            </Grid>
-            <Grid item xs={6}>
               <AppointmentsOutBox
                 isRTL={isRTL}
                 words={words}
@@ -329,7 +318,17 @@ export default function CarLanding(props: any) {
                 tasks={tasks}
               ></AppointmentsOutBox>
             </Grid>
-
+            <Grid item xs={6}>
+              <RemindersOutBox
+                isRTL={isRTL}
+                words={words}
+                height={500}
+                theme={theme}
+                resourses={resourses}
+                employees={employees}
+                tasks={tasks}
+              ></RemindersOutBox>
+            </Grid>
             <Grid item xs={4}>
               {nextEventDays && roles.isEditor() && (
                 <DaysEvents

@@ -56,6 +56,7 @@ export default function Receipt({ isRTL, words, menuitem, theme, company }) {
   const [columns] = useState([
     { name: 'time', title: words.time },
     { name: 'docNo', title: words.no },
+    { name: 'refNo', title: words.ref },
     { name: 'creditAcc', title: isRTL ? 'حساب الدفع' : 'Credit Acc' },
     { name: 'debitAcc', title: isRTL ? 'حساب القبض' : 'Receipt Acc' },
     col.customer,
@@ -66,6 +67,7 @@ export default function Receipt({ isRTL, words, menuitem, theme, company }) {
   const [tableColumnExtensions]: any = useState([
     { columnName: 'time', width: 120 },
     { columnName: 'docNo', width: 120 },
+    { columnName: 'refNo', width: 120 },
     { columnName: 'creditAcc', width: 200 },
     { columnName: 'debitAcc', width: 200 },
     { columnName: col.customer.name, width: 200 },
@@ -247,6 +249,7 @@ export default function Receipt({ isRTL, words, menuitem, theme, company }) {
               defaultOrder={[
                 'time',
                 'docNo',
+                'refNo',
                 'creditAcc',
                 'debitAcc',
                 col.customer.name,

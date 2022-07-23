@@ -74,7 +74,7 @@ export default function RemindersOutBox(props: any) {
 
   const [tableColumnExtensions]: any = useState([
     { columnName: col.sent.name, width: 80 },
-    { columnName: col.time.name, width: 130 },
+    { columnName: col.time.name, width: 150 },
     { columnName: col.title.name, width: 220 },
     { columnName: col.resourse.name, width: 150 },
     { columnName: col.employee.name, width: 150 },
@@ -154,11 +154,11 @@ export default function RemindersOutBox(props: any) {
       setRows(rdata);
     }
   }, [remindersData]);
-  const color = '#fff';
+  const color = '#eff7fb';
 
   return (
     <Paper
-      elevation={1}
+      elevation={2}
       style={{
         height,
         width: '100%',
@@ -192,7 +192,7 @@ export default function RemindersOutBox(props: any) {
         <Box style={{ marginLeft: 20, marginRight: 20 }}>
           <Typography
             color="primary"
-            style={{ fontSize: 18, fontWeight: 'bold' }}
+            style={{ fontSize: 24, fontWeight: 'bold', color: '#555' }}
           >
             {isRTL ? 'المفكرة' : 'Reminder'}
           </Typography>

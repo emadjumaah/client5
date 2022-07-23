@@ -12,7 +12,7 @@ import {
 } from '../Shared';
 import { GContextTypes } from '../types';
 import { GlobalContext } from '../contexts';
-import { TextField } from '@material-ui/core';
+import { Box, Divider, TextField } from '@material-ui/core';
 import DaysOffView from '../Shared/DaysOffView';
 import { weekdays } from '../constants/datatypes';
 import PopupLayout from '../pages/main/PopupLayout';
@@ -22,6 +22,13 @@ import AutoFieldLocal from '../components/fields/AutoFieldLocal';
 import { getPopupTitle } from '../constants/menu';
 import PopupResourseType from './PopupResourseType';
 import useRetypes from '../hooks/useRetypes';
+import {
+  AvatarUpload,
+  uploadMultiPhotoOnline,
+  uploadPhotoOnline,
+} from '../common/AvatarUpload';
+import { ImageView } from '../components/viewer';
+import { UploadPhotos } from '../common/UploadPhotos';
 
 const PopupEmployee = ({
   open,
@@ -39,10 +46,15 @@ const PopupEmployee = ({
   const [depError, setDepError] = useState<any>(false);
   const [color, setColor] = useState<any>('#252B3B');
   const [daysoff, setDaysoff] = React.useState(weekdays);
-
   const [newtext2, setNewtext2] = useState('');
-
   const [openTyp, setOpenTyp] = useState(false);
+
+  const [logoimage, setLogoimage] = useState(null);
+  const [logourl, setLogourl] = useState(null);
+
+  const [urls, setUrls] = useState([]);
+  const [photosimages, setPhotosimages] = useState([]);
+  const [photosurls, setPhotosurls] = useState([]);
 
   const { retypes, addRetype, editRetype } = useRetypes();
 
@@ -57,6 +69,14 @@ const PopupEmployee = ({
     translate: { words, isRTL },
     store: { user, tempId },
   }: GContextTypes = useContext(GlobalContext);
+
+  useEffect(() => {
+    if (row?._id) {
+      if (row?.avatar) {
+        setLogourl(row?.avatar);
+      }
+    }
+  }, [row]);
 
   const openRetype = () => {
     setOpenTyp(true);
@@ -78,9 +98,60 @@ const PopupEmployee = ({
       if (row.daysoff) {
         setDaysoff(JSON.parse(row.daysoff));
       }
+      if (row.photos) {
+        const phs = JSON.parse(row.photos);
+        if (phs && phs.length > 0) {
+          setPhotosurls(phs);
+        }
+      }
       setColor(row.color);
     }
   }, [row]);
+
+  useEffect(() => {
+    let locals = [];
+    let online = [];
+    if (photosimages && photosimages.length > 0) {
+      for (const img of photosimages) {
+        const localimage = URL.createObjectURL(img);
+        locals.push(localimage);
+      }
+    } else {
+      locals = [];
+    }
+    if (photosurls && photosurls.length > 0) {
+      online = photosurls;
+    } else {
+      online = [];
+    }
+    setUrls([...online, ...locals]);
+  }, [photosimages, photosurls]);
+
+  const addToPhotos = (photos: any) => {
+    const lphotos = [...photosimages];
+    const li = photosimages.length;
+    const oi = photosurls.length;
+    const n = 10 - (oi + li);
+    if (n < 1 || !photos || photos.length === 0) {
+      return;
+    } else {
+      const newphotos = [...lphotos, ...photos];
+      const fnewphotos = newphotos.slice(0, n);
+      setPhotosimages(fnewphotos);
+    }
+  };
+  const removePhoto = (src: any, index: any) => {
+    if (src.startsWith('http')) {
+      const newphotosurls = [...photosurls];
+      const newlist = newphotosurls.filter((nu: any) => nu !== src);
+      setPhotosurls(newlist);
+    } else {
+      const newList = [...photosimages];
+      const newindex = index - photosurls.length;
+      newList.splice(newindex, 1);
+      setPhotosimages(newList);
+    }
+  };
 
   const onSubmit = async (data: any) => {
     setSaving(true);
@@ -98,6 +169,26 @@ const PopupEmployee = ({
       licenseNo,
       licenseDate,
     } = data;
+
+    let logo: any;
+    let localphotos = [];
+
+    if (logoimage) {
+      logo = await uploadPhotoOnline(logoimage);
+      logo = logo.replace('http://', 'https://');
+    }
+    if (photosimages) {
+      const photosurl = await uploadMultiPhotoOnline(photosimages);
+      if (photosurl && photosurl.length > 0) {
+        const rphotos = photosurl.map((photo: any) =>
+          photo.replace('http://', 'https://')
+        );
+        localphotos = rphotos;
+      }
+    }
+
+    const fphotos = [...photosurls, ...localphotos];
+    const photos = JSON.stringify(fphotos);
 
     const retype = rtypevalue
       ? {
@@ -119,6 +210,8 @@ const PopupEmployee = ({
       resType: 1,
       email,
       color,
+      avatar: logo,
+      photos: fphotos && fphotos.length > 0 ? photos : null,
       info,
       daysoff: JSON.stringify(daysoff),
       phone,
@@ -133,7 +226,6 @@ const PopupEmployee = ({
       branch: user.branch,
       userId: user._id,
     };
-
     const mutate = isNew ? addAction : editAction;
     const mutateName = isNew ? 'createEmployee' : 'updateEmployee';
     apply(mutate, mutateName, variables);
@@ -168,6 +260,11 @@ const PopupEmployee = ({
     setColor('#000000');
     setDaysoff(weekdays);
     setSaving(false);
+    setLogoimage(null);
+    setLogourl(null);
+    setPhotosimages([]);
+    setUrls([]);
+    setPhotosurls([]);
   };
   const closeModal = () => {
     resetAll();
@@ -192,11 +289,12 @@ const PopupEmployee = ({
       theme={theme}
       alrt={alrt}
       mb={50}
+      maxWidth="md"
       saving={saving}
     >
       <Grid container spacing={1}>
         <Grid item xs={1}></Grid>
-        <Grid item xs={10}>
+        <Grid item xs={6}>
           <Grid container spacing={1}>
             <Grid item xs={12}>
               <TextFieldLocal
@@ -271,6 +369,7 @@ const PopupEmployee = ({
                   register={register}
                   errors={errors}
                   row={row}
+                  autoComplete="on"
                   fullWidth
                   mb={0}
                 />
@@ -370,8 +469,74 @@ const PopupEmployee = ({
               />
             </Grid>
           </Grid>
+        </Grid>
+        <Grid item xs={4}>
+          <Grid container spacing={1}>
+            <Grid item xs={5} style={{ marginRight: 10, paddingRight: 10 }}>
+              <Box
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  width: 125,
+                  height: 125,
+                  marginTop: 5,
+                  padding: 5,
+                }}
+              >
+                <AvatarUpload
+                  url={logourl}
+                  setUrl={setLogourl}
+                  image={logoimage}
+                  setImage={setLogoimage}
+                  width={125}
+                  height={125}
+                  size="Avatar"
+                ></AvatarUpload>
+              </Box>
+            </Grid>
+            <Grid item xs={6} style={{ marginRight: 15 }}>
+              <Box
+                style={{
+                  height: 300,
+                  width: 200,
+                  margin: 5,
+                }}
+              >
+                <ImageView
+                  images={urls}
+                  removePhoto={removePhoto}
+                  width={200}
+                  height={300}
+                ></ImageView>
+              </Box>
+              <Box
+                style={{
+                  display: 'flex',
+                  flex: 1,
+                  height: 40,
+                  width: 200,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  marginTop: 5,
+                }}
+              >
+                <UploadPhotos
+                  setImages={addToPhotos}
+                  isRTL={isRTL}
+                ></UploadPhotos>
+              </Box>
+            </Grid>
+          </Grid>
+          <Grid
+            container
+            spacing={2}
+            style={{ paddingLeft: 20, paddingRight: 20 }}
+          >
+            <Grid item xs={12} style={{ marginTop: 10 }}>
+              <Divider></Divider>
+            </Grid>
 
-          <Grid container spacing={2} style={{ padding: 20 }}>
             <Grid item xs={6}>
               <DaysOffView
                 isRTL={isRTL}
@@ -388,7 +553,7 @@ const PopupEmployee = ({
                 style={{
                   width: 200,
                   backgroundColor: color,
-                  marginTop: 20,
+                  marginTop: 10,
                 }}
                 InputProps={{ style: { borderRadius: 5, color: '#fff' } }}
                 margin="dense"

@@ -1,21 +1,9 @@
-import { Paper } from '@material-ui/core';
-import React, { useCallback, useState } from 'react';
+import { Box, Paper } from '@material-ui/core';
+import { useCallback, useState } from 'react';
 import ImageViewer from 'react-simple-image-viewer';
+import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 
-const imageslist = [
-  'http://placeimg.com/1200/800/nature',
-  'http://placeimg.com/800/1200/nature',
-  'http://placeimg.com/1920/1080/nature',
-  'http://placeimg.com/1500/500/nature',
-  'http://placeimg.com/1200/800/nature',
-  'http://placeimg.com/800/1200/nature',
-  'http://placeimg.com/1920/1080/nature',
-  'http://placeimg.com/1500/500/nature',
-  'http://placeimg.com/1200/800/nature',
-  'http://placeimg.com/800/1200/nature',
-];
-
-function ImageView({ images = imageslist }) {
+function ImageView({ images, height, width, removePhoto, big }: any) {
   const [currentImage, setCurrentImage] = useState(0);
   const [isViewerOpen, setIsViewerOpen] = useState(false);
 
@@ -28,31 +16,52 @@ function ImageView({ images = imageslist }) {
     setCurrentImage(0);
     setIsViewerOpen(false);
   };
-
+  if (!images || images.length === 0) {
+    return <Paper style={{ height, width, overflow: 'auto' }}></Paper>;
+  }
   return (
-    <Paper style={{ height: 200, overflow: 'auto' }}>
+    <Paper style={{ height, width, overflow: 'auto' }}>
       <div
         style={{
           display: 'flex',
           flexWrap: 'wrap',
-          marginRight: 10,
-          marginLeft: 10,
+          marginRight: big ? 8 : 3,
+          // paddingTop: big ? 5 : undefined,
         }}
       >
-        {images.map((src, index) => (
-          <img
-            src={src}
-            onClick={() => openImageViewer(index)}
-            width={100}
-            height={100}
-            key={index}
-            style={{
-              padding: 5,
-              overflow: 'hidden',
-              objectFit: 'cover',
-            }}
-            alt=""
-          />
+        {images.map((src: any, index: any) => (
+          <Box>
+            {removePhoto && (
+              <div
+                onClick={() => removePhoto(src, index)}
+                style={{
+                  position: 'relative',
+                  marginBottom: -30,
+                  marginRight: 10,
+                  zIndex: 116,
+                  cursor: 'pointer',
+                }}
+              >
+                <HighlightOffIcon
+                  style={{ color: '#ff9d2d' }}
+                ></HighlightOffIcon>
+              </div>
+            )}
+            <img
+              src={src}
+              onClick={() => openImageViewer(index)}
+              width={width / 2 - 10}
+              height={width / 2 - 10}
+              key={index}
+              style={{
+                padding: big ? 10 : 5,
+                overflow: 'hidden',
+                objectFit: 'cover',
+                cursor: 'pointer',
+              }}
+              alt=""
+            />
+          </Box>
         ))}
 
         {isViewerOpen && (

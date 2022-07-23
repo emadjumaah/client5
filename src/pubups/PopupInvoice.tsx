@@ -11,7 +11,7 @@ import ServiceItemForm from '../Shared/ServiceItemForm';
 import ItemsTable from '../Shared/ItemsTable';
 import { PriceTotal } from '../Shared/TotalPrice';
 import { operationTypes } from '../constants';
-import { accountCode } from '../constants/kaid';
+import { accountCode, parents } from '../constants/kaid';
 import PaymentSelect from '../pages/options/PaymentSelect';
 import PopupCustomer from './PopupCustomer';
 import { useLazyQuery } from '@apollo/client';
@@ -34,6 +34,7 @@ import useEmployees from '../hooks/useEmployees';
 import useResourses from '../hooks/useResourses';
 import { InvoicePrint } from '../print';
 import { sleep, successAlert } from '../Shared/helpers';
+import useAccounts from '../hooks/useAccounts';
 
 export const indexTheList = (list: any) => {
   return list.map((item: any, index: any) => {
@@ -70,11 +71,10 @@ const PopupInvoice = ({
 
   const [itemsList, setItemsList] = useState<any>([]);
   const [accounts, setAccounts] = useState<any>([]);
-  const [ptype, setPtype] = useState<any>('cash');
 
   const [discount, setDiscount] = useState(0);
   const [totals, setTotals] = useState<any>({});
-
+  const { accounts: mainAccounts } = useAccounts();
   const { company } = useCompany();
 
   const [departvalue, setDepartvalue] = useState<any>(
@@ -102,7 +102,9 @@ const PopupInvoice = ({
     name === 'contractId' ? value : null
   );
 
-  const [isCash, setIsCash] = useState(true);
+  const [isCash, setIsCash] = useState(false);
+  const [paid, setPaid] = useState<any>(0);
+  const [debitAcc, setDebitAcc]: any = React.useState(null);
 
   const [newtext, setNewtext] = useState('');
 
@@ -128,7 +130,6 @@ const PopupInvoice = ({
   const [getItems, itemsData]: any = useLazyQuery(getOperationItems, {
     fetchPolicy: 'cache-and-network',
   });
-
   const openDepartment = () => {
     setOpenDep(true);
   };
@@ -212,64 +213,75 @@ const PopupInvoice = ({
   }, [taskvalue]);
 
   useEffect(() => {
-    const items = itemsData?.data?.['getOperationItems']?.data || [];
-    if (items && items.length > 0) {
-      const ids = items.map((it: any) => it.itemId);
-      const servlist = [...servicesproducts, ...products].filter((ser: any) =>
-        ids.includes(ser._id)
-      );
-      const itemsWqtyprice = items.map((item: any, index: any) => {
-        const {
-          categoryId,
-          categoryName,
-          categoryNameAr,
-          departmentId,
-          departmentName,
-          departmentNameAr,
-          departmentColor,
-          employeeId,
-          employeeName,
-          employeeNameAr,
-          employeeColor,
-          resourseId,
-          resourseName,
-          resourseNameAr,
-          resourseColor,
-          note,
-        } = item;
-        const serv = servlist.filter((se: any) => se._id === item.itemId)[0];
-        return {
-          ...serv,
-          categoryId,
-          categoryName,
-          categoryNameAr,
-          departmentId,
-          departmentName,
-          departmentNameAr,
-          departmentColor,
-          employeeId,
-          employeeName,
-          employeeNameAr,
-          employeeColor,
-          resourseId,
-          resourseName,
-          resourseNameAr,
-          resourseColor,
-          index,
-          itemprice: item.itemPrice,
-          itemqty: item.qty,
-          itemtotal: item.total,
-          itemtotalcost: item.totalCost,
-          note,
-        };
-      });
-      itemsWqtyprice.sort((a: any, b: any) =>
-        a.indx > b.indx ? 1 : b.indx > a.indx ? -1 : 0
-      );
-      setItemsList(itemsWqtyprice);
-      setLoading(false);
+    if (row && row._id) {
+      const items = itemsData?.data?.['getOperationItems']?.data || [];
+      if (items && items.length > 0) {
+        const ids = items.map((it: any) => it.itemId);
+        const servlist = [...servicesproducts, ...products].filter((ser: any) =>
+          ids.includes(ser._id)
+        );
+        const itemsWqtyprice = items.map((item: any, index: any) => {
+          const {
+            categoryId,
+            categoryName,
+            categoryNameAr,
+            departmentId,
+            departmentName,
+            departmentNameAr,
+            departmentColor,
+            employeeId,
+            employeeName,
+            employeeNameAr,
+            employeeColor,
+            resourseId,
+            resourseName,
+            resourseNameAr,
+            resourseColor,
+            note,
+          } = item;
+          const serv = servlist.filter((se: any) => se._id === item.itemId)[0];
+          return {
+            ...serv,
+            categoryId,
+            categoryName,
+            categoryNameAr,
+            departmentId,
+            departmentName,
+            departmentNameAr,
+            departmentColor,
+            employeeId,
+            employeeName,
+            employeeNameAr,
+            employeeColor,
+            resourseId,
+            resourseName,
+            resourseNameAr,
+            resourseColor,
+            index,
+            itemprice: item.itemPrice,
+            itemqty: item.qty,
+            itemtotal: item.total,
+            itemtotalcost: item.totalCost,
+            note,
+          };
+        });
+        itemsWqtyprice.sort((a: any, b: any) =>
+          a.indx > b.indx ? 1 : b.indx > a.indx ? -1 : 0
+        );
+        setItemsList(itemsWqtyprice);
+        setLoading(false);
+      }
     }
   }, [itemsData]);
+
+  const cashaccounts = mainAccounts.filter(
+    (acc: any) => acc.parentcode === parents.CASH && acc.code < 10499
+  );
+  useEffect(() => {
+    if (isCash) {
+      setDebitAcc(cashaccounts?.[0]);
+    }
+  }, [open, isCash]);
 
   const resetAllForms = () => {
     setItemsList([]);
@@ -277,14 +289,14 @@ const PopupInvoice = ({
     setTotals({});
     setInvNo('');
     setAccounts([]);
-    setPtype('cash');
-    setIsCash(true);
+    setIsCash(false);
     setSelectedDate(new Date());
     setCustvalue(name === 'customerId' ? value : null);
     setDepartvalue(name === 'departmentId' ? value : null);
     setEmplvalue(name === 'employeeId' ? value : null);
     setResovalue(name === 'resourseId' ? value : null);
     setTaskvalue(name === 'contractId' ? value : null);
+    setPaid(0);
   };
 
   const resetForNew = () => {
@@ -293,13 +305,13 @@ const PopupInvoice = ({
     setTotals({});
     setInvNo('');
     setAccounts([]);
-    setPtype('cash');
-    setIsCash(true);
+    setIsCash(false);
     setSelectedDate(new Date());
     setTaskvalue(name === 'contractId' ? value : null);
     setResovalue(name === 'resourseId' ? value : null);
     setEmplvalue(name === 'employeeId' ? value : null);
     setDepartvalue(name === 'departmentId' ? value : null);
+    setPaid(0);
   };
 
   const addItemToList = (item: any) => {
@@ -381,7 +393,7 @@ const PopupInvoice = ({
 
   useEffect(() => {
     getOverallTotal();
-  }, [itemsList, discount, ptype, isCash]);
+  }, [itemsList, discount, isCash, paid, debitAcc]);
 
   useEffect(() => {
     if (row && row._id) {
@@ -396,6 +408,8 @@ const PopupInvoice = ({
       const depId = row.departmentId;
       const empId = row.employeeId;
       const resId = row.resourseId;
+      const da = row.debitAcc;
+
       if (depId) {
         const depart = departments.filter((dep: any) => dep._id === depId)[0];
         setDepartvalue(depart);
@@ -413,12 +427,15 @@ const PopupInvoice = ({
         const tsk = tasks.filter((ts: any) => ts._id === row.contractId)[0];
         setTaskvalue(tsk);
       }
+      if (da) {
+        const debit = mainAccounts.filter((acc: any) => acc.code === da)[0];
+        setDebitAcc(debit);
+      }
       setCustvalue(cust);
       setIsCash(row.isCash);
       setDiscount(row.discount);
       setInvNo(row.docNo);
       handleDateChange(row.time);
-      setPtype(row.paymentType ? row.paymentType : '');
     }
   }, [row]);
 
@@ -438,6 +455,9 @@ const PopupInvoice = ({
       profit,
     };
     setTotals(tots);
+    if (paid === 0) {
+      setPaid(amount);
+    }
     const accs = [
       {
         debitAcc: accountCode.accounts_receivable,
@@ -452,10 +472,9 @@ const PopupInvoice = ({
         type: operationTypes.customerDiscount,
       },
       {
-        debitAcc:
-          ptype === 'cash' ? accountCode.cash_on_hand : accountCode.card,
+        debitAcc: debitAcc?.code,
         creditAcc: accountCode.accounts_receivable,
-        amount: isCash ? sum - discount : 0,
+        amount: isCash ? paid : 0,
         type: operationTypes.customerReceipt,
       },
       {
@@ -599,9 +618,8 @@ const PopupInvoice = ({
       profit,
       isPaid: isCash,
       isCash,
-      amountPaid: isCash ? amount : 0,
+      amountPaid: isCash ? paid : 0,
       accounts,
-      paymentType: ptype,
       userId: user._id,
     };
     const mutate = isNew ? addAction : editAction;
@@ -680,7 +698,6 @@ const PopupInvoice = ({
       saving={saving}
       mt={0}
       mb={40}
-      // bgcolor={colors.green[500]}
     >
       <Grid container spacing={0}>
         <Grid item xs={4}>
@@ -722,13 +739,19 @@ const PopupInvoice = ({
           )}
         </Grid>
         <Grid item xs={8}>
-          <PaymentSelect
-            words={words}
-            ptype={ptype}
-            isCash={isCash}
-            setIsCash={setIsCash}
-            setPtype={setPtype}
-          ></PaymentSelect>
+          {isNew && (
+            <PaymentSelect
+              words={words}
+              isCash={isCash}
+              setIsCash={setIsCash}
+              paid={paid}
+              setPaid={setPaid}
+              isRTL={isRTL}
+              debitaccounts={cashaccounts}
+              debitAcc={debitAcc}
+              setDebitAcc={setDebitAcc}
+            ></PaymentSelect>
+          )}
         </Grid>
 
         <Grid item xs={8}>

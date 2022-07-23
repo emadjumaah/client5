@@ -785,9 +785,12 @@ export const updateDocNumbers = (data: any) => {
   const rdata = data.map((d: any) => {
     const pre = d?.docNo?.split('-')?.[0];
     const num = d?.docNo?.split('-')?.[1];
+    const preref = d?.refNo?.split('-')?.[0];
+    const numref = d?.refNo?.split('-')?.[1];
     return {
       ...d,
-      docNo: `${pre}-${String(num).padStart(5, '0')}`,
+      docNo: pre ? `${pre}-${String(num).padStart(5, '0')}` : '',
+      refNo: preref ? `${preref}-${String(numref).padStart(5, '0')}` : '',
     };
   });
   return rdata;

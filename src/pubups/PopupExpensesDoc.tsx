@@ -289,26 +289,24 @@ const PopupExpensesDoc = ({
   }, [name, value, open]);
 
   useEffect(() => {
-    if (isNew) {
-      if (taskvalue) {
-        if (taskvalue?.departmentId && name !== 'departmentId') {
-          const dept = departments.filter(
-            (dep: any) => dep._id === taskvalue?.departmentId
-          )?.[0];
-          setDepartvalue(dept);
-        }
-        if (taskvalue?.employeeId && name !== 'employeeId') {
-          const emp = employees.filter(
-            (dep: any) => dep._id === taskvalue?.employeeId
-          )?.[0];
-          setEmplvalue(emp);
-        }
-        if (taskvalue?.resourseId && name !== 'resourseId') {
-          const res = resourses.filter(
-            (dep: any) => dep._id === taskvalue?.resourseId
-          )?.[0];
-          setResovalue(res);
-        }
+    if (taskvalue) {
+      if (taskvalue?.departmentId && name !== 'departmentId') {
+        const dept = departments.filter(
+          (dep: any) => dep._id === taskvalue?.departmentId
+        )?.[0];
+        setDepartvalue(dept);
+      }
+      if (taskvalue?.employeeId && name !== 'employeeId') {
+        const emp = employees.filter(
+          (dep: any) => dep._id === taskvalue?.employeeId
+        )?.[0];
+        setEmplvalue(emp);
+      }
+      if (taskvalue?.resourseId && name !== 'resourseId') {
+        const res = resourses.filter(
+          (dep: any) => dep._id === taskvalue?.resourseId
+        )?.[0];
+        setResovalue(res);
       }
     }
   }, [taskvalue, open]);

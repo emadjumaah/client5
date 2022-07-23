@@ -4,20 +4,23 @@ import { useNavigate } from 'react-router-dom';
 import _ from 'lodash';
 
 import ChartHeader from './ChartHeader';
+import { useHoverStyles } from './Cars';
 
 const Empls = ({ title, data, height, isRTL, prim, retypes }) => {
-  let data02: any;
-
+  const classes = useHoverStyles();
   let navigate = useNavigate();
 
+  let data02: any;
   if (data && data.length > 0) {
-    const fdata = data.filter((d: any) => d.retypeId);
-    const types = _(fdata)
+    const types = _(data)
       .groupBy('retypeId')
       .map((array, key) => ({
         name: key,
         value: array.length,
-        items: data.filter((d: any) => d.retypeId === key),
+        items:
+          key === 'null'
+            ? data.filter((d: any) => !d.retypeId)
+            : data.filter((d: any) => d.retypeId === key),
       }))
       .value();
 
@@ -25,7 +28,7 @@ const Empls = ({ title, data, height, isRTL, prim, retypes }) => {
       const cstat = retypes.filter((cs: any) => cs._id === ty.name)?.[0];
       return {
         ...ty,
-        name: isRTL ? cstat?.nameAr : cstat?.name,
+        name: cstat ? (isRTL ? cstat?.nameAr : cstat?.name) : title,
       };
     });
     data02 = rda;
@@ -33,17 +36,20 @@ const Empls = ({ title, data, height, isRTL, prim, retypes }) => {
   return (
     <Paper style={{ height }}>
       <ChartHeader title={title} color={prim}></ChartHeader>
-      <Box
-        display={'flex'}
+      <Paper
         style={{
           flex: 1,
           height: height - 50,
-          width: '100%',
+          overflow: 'auto',
         }}
       >
-        <Grid container spacing={2}>
+        <Grid container spacing={0}>
           <Grid item xs={7}>
-            <Grid container spacing={0} style={{ marginTop: 10 }}>
+            <Grid
+              container
+              spacing={0}
+              style={{ marginTop: 15, paddingRight: 15 }}
+            >
               {(data02 || []).map((da: any) => {
                 return (
                   <>
@@ -91,12 +97,13 @@ const Empls = ({ title, data, height, isRTL, prim, retypes }) => {
             }}
           >
             <Box
+              className={classes.button}
               style={{
+                marginTop: 40,
                 padding: 5,
                 overflow: 'hidden',
                 objectFit: 'cover',
                 cursor: 'pointer',
-                backgroundColor: '#eee',
                 borderRadius: 20,
                 display: 'flex',
                 alignItems: 'center',
@@ -112,12 +119,13 @@ const Empls = ({ title, data, height, isRTL, prim, retypes }) => {
                 onClick={() => navigate('/manageemployees')}
                 width={110}
                 height={110}
+                style={{ opacity: 0.7 }}
                 alt=""
               />
             </Box>
           </Grid>
         </Grid>
-      </Box>
+      </Paper>
     </Paper>
   );
 };

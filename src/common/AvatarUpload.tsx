@@ -3,7 +3,7 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import axios from 'axios';
 import { useEffect, useRef, useState } from 'react';
-import { Box, Typography } from '@material-ui/core';
+import { Box, Paper, Typography } from '@material-ui/core';
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 import imageCompression from 'browser-image-compression';
 import {
@@ -93,7 +93,7 @@ export const ImageUpload = ({ setLogo, disabled }) => {
   );
 };
 
-export const ImageOnlineUpload = ({
+export const AvatarUpload = ({
   url,
   setUrl,
   image,
@@ -147,27 +147,31 @@ export const ImageOnlineUpload = ({
             onClick={() => removeImage()}
             style={{
               position: 'relative',
-              marginTop: 15,
               marginBottom: -30,
-              zIndex: 115,
-              marginLeft: 10,
+              marginRight: 10,
+              zIndex: 116,
               cursor: 'pointer',
             }}
           >
             <HighlightOffIcon style={{ color: '#ff9d2d' }}></HighlightOffIcon>
           </div>
-          <img
-            onClick={() => fileInput.current.click()}
-            style={{
-              overflow: 'hidden',
-              borderRadius: 5,
-              cursor: 'pointer',
-              objectFit: 'cover',
-            }}
-            width={width}
-            height={height}
-            src={localimage}
-          />
+          <Paper
+            elevation={2}
+            style={{ width, height, borderRadius: width / 2 }}
+          >
+            <img
+              onClick={() => fileInput.current.click()}
+              style={{
+                overflow: 'hidden',
+                borderRadius: width / 2,
+                cursor: 'pointer',
+                objectFit: 'cover',
+              }}
+              width={width}
+              height={height}
+              src={localimage}
+            />
+          </Paper>
         </Box>
       )}
       {url && !localimage && (
@@ -176,46 +180,51 @@ export const ImageOnlineUpload = ({
             onClick={() => removeImage()}
             style={{
               position: 'relative',
-              marginTop: 15,
               marginBottom: -30,
-              zIndex: 115,
-              marginLeft: 10,
+              marginRight: 10,
+              zIndex: 116,
               cursor: 'pointer',
             }}
           >
             <HighlightOffIcon style={{ color: '#ff9d2d' }}></HighlightOffIcon>
           </div>
-          <img
-            onClick={() => fileInput.current.click()}
-            style={{
-              overflow: 'hidden',
-              borderRadius: 5,
-              cursor: 'pointer',
-              objectFit: 'cover',
-            }}
-            width={width}
-            height={height}
-            src={url}
-          />
+          <Paper
+            elevation={2}
+            style={{ width, height, borderRadius: width / 2 }}
+          >
+            <img
+              onClick={() => fileInput.current.click()}
+              style={{
+                overflow: 'hidden',
+                borderRadius: width / 2,
+                cursor: 'pointer',
+                objectFit: 'cover',
+              }}
+              width={width}
+              height={height}
+              src={url}
+            />
+          </Paper>
         </Box>
       )}
       {!localimage && !url && (
         <Box
           display="flex"
           style={{
-            marginTop: 10,
-            borderRadius: 10,
+            borderRadius: width / 2,
             overflow: 'hidden',
             width: width,
             height: height,
             cursor: 'pointer',
-            backgroundColor: '#f5f5f5',
+            backgroundColor: '#ddd',
             alignItems: 'center',
             justifyContent: 'center',
           }}
           onClick={() => fileInput.current.click()}
         >
-          <Typography style={{ color: '#bbb', fontSize: 14 }}>
+          <Typography
+            style={{ color: '#fff', fontSize: 18, fontWeight: 'bold' }}
+          >
             {size}
           </Typography>
         </Box>
@@ -243,5 +252,33 @@ export const uploadPhotoOnline = async (image: any) => {
     return json.url;
   } catch (error) {
     return undefined;
+  }
+};
+export const uploadMultiPhotoOnline = async (images: any) => {
+  if (!images || images.length === 0) return null;
+  const urls = [];
+  try {
+    for (const image of images) {
+      const compressedImage = await imageCompression(image, imageUploadOptions);
+      const d = new FormData();
+      d.append('file', compressedImage);
+      d.append('upload_preset', UPLOAD_PRESET);
+      d.append('cloud_name', CLOUD_NAME);
+
+      const res = await fetch(
+        'https://api.cloudinary.com/v1_1/jadwalio/image/upload',
+        {
+          method: 'post',
+          body: d,
+        }
+      );
+      const json = await res.json();
+      urls.push(json.url);
+    }
+
+    return urls;
+  } catch (error) {
+    console.log('error', error);
+    return null;
   }
 };

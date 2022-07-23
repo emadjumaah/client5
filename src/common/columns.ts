@@ -328,6 +328,48 @@ export const getColumns = ({ isRTL, words }: any) => {
       name: 'daysdata',
       title: isRTL ? 'القيمة' : 'Amount',
     },
+    telHome: {
+      id: 39,
+      ref: 'telHome',
+      name: 'telHome',
+      title: words.telHome,
+    },
+    workId: {
+      id: 40,
+      ref: 'workId',
+      name: 'workId',
+      title: words.workId,
+    },
+    national: {
+      id: 41,
+      ref: 'national',
+      name: 'national',
+      title: words.national,
+    },
+    nationalNo: {
+      id: 42,
+      ref: 'nationalNo',
+      name: 'nationalNo',
+      title: words.nationalNo,
+    },
+    nationalDate: {
+      id: 43,
+      ref: 'nationalDate',
+      name: 'nationalDate',
+      title: words.nationalDate,
+    },
+    licenseNo: {
+      id: 44,
+      ref: 'licenseNo',
+      name: 'licenseNo',
+      title: words.licenseNo,
+    },
+    licenseDate: {
+      id: 45,
+      ref: 'licenseDate',
+      name: 'licenseDate',
+      title: words.licenseDate,
+    },
   };
 };
 

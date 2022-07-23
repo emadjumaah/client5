@@ -56,6 +56,7 @@ import useEmployees from '../../hooks/useEmployees';
 import { useServices, useTemplate } from '../../hooks';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
 import _ from 'lodash';
+import { getTasks } from '../../graphql/query';
 
 export default function Invoices({ isRTL, words, menuitem, theme, company }) {
   const col = getColumns({ isRTL, words });
@@ -147,6 +148,7 @@ export default function Invoices({ isRTL, words, menuitem, theme, company }) {
         },
       },
       { query: getProducts },
+      { query: getTasks },
     ],
   };
 

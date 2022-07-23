@@ -11,7 +11,8 @@ export default function OptionItem({
 }: any) {
   const isbusy = item?.busy || item?.carstatus > 1;
 
-  const { color, daysoff } = item;
+  const { color, daysoff, retypeName, retypeNameAr } = item;
+  const type = isRTL ? retypeNameAr : retypeName;
   const days = daysoff ? JSON.parse(daysoff) : null;
   const isred = days && day ? days[day] : isbusy ? isbusy : false;
 
@@ -86,6 +87,18 @@ export default function OptionItem({
           }}
         >
           {code}
+        </Typography>
+      )}
+      {type && (
+        <Typography
+          style={{
+            fontSize: 11,
+            color: '#999',
+            paddingLeft: 10,
+            paddingRight: 10,
+          }}
+        >
+          {type}
         </Typography>
       )}
     </Box>

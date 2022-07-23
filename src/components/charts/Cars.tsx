@@ -1,10 +1,29 @@
 import React from 'react';
-import { Box, Divider, Grid, Paper, Typography } from '@material-ui/core';
+import {
+  Box,
+  Divider,
+  Grid,
+  makeStyles,
+  Paper,
+  Typography,
+} from '@material-ui/core';
 import { useNavigate } from 'react-router-dom';
 import _ from 'lodash';
 
 import { carstatuss } from '../../constants';
 import ChartHeader from './ChartHeader';
+
+export const useHoverStyles = makeStyles({
+  flexGrow: {
+    flex: '1',
+  },
+  button: {
+    backgroundColor: '#eee',
+    '&:hover': {
+      backgroundColor: '#ddd',
+    },
+  },
+});
 
 const getStatus = (items: any, isRTL: any) => {
   if (items && items.length > 0) {
@@ -42,10 +61,10 @@ const renderIte = (item: any) => {
   const { name, value, color } = item;
   return (
     <>
-      <Grid item xs={8}>
+      <Grid item xs={10}>
         <Typography style={{ color, fontWeight: 'bold' }}>{name}</Typography>
       </Grid>
-      <Grid item xs={4}>
+      <Grid item xs={2}>
         <Typography style={{ color, fontWeight: 'bold' }}>{value}</Typography>
       </Grid>
     </>
@@ -53,21 +72,23 @@ const renderIte = (item: any) => {
 };
 
 const Cars = ({ title, data, height, isRTL, prim, retypes, templateId }) => {
-  let data02: any;
-
+  const classes = useHoverStyles();
   let navigate = useNavigate();
 
+  let data02: any;
+
   if (data && data.length > 0) {
-    const fdata = data.filter((d: any) => d.retypeId);
-    const types = _(fdata)
+    const types = _(data)
       .groupBy('retypeId')
       .map((array, key) => ({
         name: key,
         value: array.length,
-        items: data.filter((d: any) => d.retypeId === key),
+        items:
+          key === 'null'
+            ? data.filter((d: any) => !d.retypeId)
+            : data.filter((d: any) => d.retypeId === key),
       }))
       .value();
-
     const rda = types.map((ty: any) => {
       const cstat = retypes.filter((cs: any) => cs._id === ty.name)?.[0];
 
@@ -75,7 +96,7 @@ const Cars = ({ title, data, height, isRTL, prim, retypes, templateId }) => {
       return {
         ...ty,
         status,
-        name: isRTL ? cstat?.nameAr : cstat?.name,
+        name: cstat ? (isRTL ? cstat?.nameAr : cstat?.name) : title,
       };
     });
     data02 = rda;
@@ -87,25 +108,24 @@ const Cars = ({ title, data, height, isRTL, prim, retypes, templateId }) => {
   return (
     <Paper style={{ height }}>
       <ChartHeader title={title} color={prim}></ChartHeader>
-      <Box
-        display={'flex'}
+      <Paper
         style={{
           flex: 1,
           height: height - 50,
-          width: '100%',
+          overflow: 'auto',
         }}
       >
-        <Grid container spacing={2}>
+        <Grid container spacing={0}>
           <Grid item xs={7}>
             <Grid
               container
               spacing={0}
-              style={{ marginTop: 10, paddingRight: 10 }}
+              style={{ marginTop: 15, paddingRight: 15 }}
             >
               {(data02 || []).map((da: any) => {
                 return (
                   <>
-                    <Grid item xs={9}>
+                    <Grid item xs={10}>
                       <Typography
                         style={{
                           fontSize: 16,
@@ -116,7 +136,7 @@ const Cars = ({ title, data, height, isRTL, prim, retypes, templateId }) => {
                         {da?.name}
                       </Typography>
                     </Grid>
-                    <Grid item xs={3}>
+                    <Grid item xs={2}>
                       <Typography
                         style={{
                           fontSize: 16,
@@ -129,10 +149,11 @@ const Cars = ({ title, data, height, isRTL, prim, retypes, templateId }) => {
                     </Grid>
                     <Grid item xs={2}></Grid>
                     <Grid item xs={8}>
-                      <Grid container spacing={1}>
+                      <Grid container spacing={0}>
                         {da?.status?.map((item: any) => renderIte(item))}
                       </Grid>
                     </Grid>
+                    <Grid item xs={2}></Grid>
                     <Grid item xs={12} style={{ marginTop: 5 }}>
                       <Divider></Divider>
                     </Grid>
@@ -153,12 +174,13 @@ const Cars = ({ title, data, height, isRTL, prim, retypes, templateId }) => {
             }}
           >
             <Box
+              className={classes.button}
               style={{
+                marginTop: 20,
                 padding: 5,
                 overflow: 'hidden',
                 objectFit: 'cover',
                 cursor: 'pointer',
-                backgroundColor: '#eee',
                 borderRadius: 20,
                 display: 'flex',
                 alignItems: 'center',
@@ -172,12 +194,13 @@ const Cars = ({ title, data, height, isRTL, prim, retypes, templateId }) => {
                 onClick={() => navigate('/manageresourses')}
                 width={130}
                 height={130}
+                style={{ opacity: 0.7 }}
                 alt=""
               />
             </Box>
           </Grid>
         </Grid>
-      </Box>
+      </Paper>
     </Paper>
   );
 };

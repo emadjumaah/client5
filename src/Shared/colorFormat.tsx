@@ -11,6 +11,7 @@ import {
   fade,
   FormControlLabel,
   Grid,
+  Paper,
   Typography,
 } from '@material-ui/core';
 import React from 'react';
@@ -205,30 +206,18 @@ export const avataManageFormatter = ({
   setOpenItem,
   height = 100,
 }: any) => {
-  const { color, logo, name } = row;
+  const { logo, avatar, name } = row;
   const bgcolor = name ? nameToColor(`${name}Jadwal2!@`) : '';
   const letter = name?.substring(0, 1)?.toUpperCase() || '';
-  if (color) {
+
+  if (logo || avatar) {
     return (
-      <Box
-        flex
-        style={{
-          flex: 1,
-          width: 10,
-          height,
-          backgroundColor: fade(color, 0.8),
-          borderRadius: 5,
-        }}
-      ></Box>
-    );
-  }
-  if (logo) {
-    return (
-      <div
+      <Paper
+        elevation={2}
         style={{
           overflow: 'hidden',
-          borderRadius: 5,
-          backgroundColor: '#ddd',
+          borderRadius: height / 2,
+          backgroundColor: '#fff',
           width: height,
           height,
           cursor: 'pointer',
@@ -241,21 +230,21 @@ export const avataManageFormatter = ({
         <img
           style={{
             overflow: 'hidden',
-            borderRadius: 5,
+            borderRadius: height / 2,
             objectFit: 'cover',
           }}
           width={height}
           height={height}
-          src={logo}
+          src={logo ? logo : avatar}
         />
-      </div>
+      </Paper>
     );
   }
   return (
     <Box
       style={{
         overflow: 'hidden',
-        borderRadius: 5,
+        borderRadius: height / 2,
         backgroundColor: bgcolor,
         width: height,
         height,
@@ -269,7 +258,7 @@ export const avataManageFormatter = ({
         setOpenItem(true);
       }}
     >
-      <Typography style={{ color: '#eee', fontWeight: 'bold' }} variant="h3">
+      <Typography style={{ color: '#eee', fontWeight: 'bold' }} variant="h4">
         {letter}
       </Typography>
     </Box>
@@ -1721,7 +1710,7 @@ export const nameManageLinkEmployee = ({
   setOpenItem,
   isRTL,
 }: any) => {
-  const { retypeId, retypeNameAr, retypeName } = row;
+  const { retypeId, retypeNameAr, retypeName, workId } = row;
   if (!value || value === '') return <div></div>;
   return (
     <Box>
@@ -1752,16 +1741,24 @@ export const nameManageLinkEmployee = ({
         }}
       >
         <Grid container spacing={0}>
-          {retypeId && (
-            <Grid item xs={6}>
-              {renderTag({
+          <Grid item xs={6}>
+            {workId &&
+              renderTag({
+                value: workId,
+                color: '#333',
+                bgcolor: colors.blueGrey[50],
+                width: 100,
+              })}
+          </Grid>
+          <Grid item xs={6}>
+            {retypeId &&
+              renderTag({
                 value: isRTL ? retypeNameAr : retypeName,
                 color: '#333',
                 bgcolor: colors.blueGrey[50],
                 width: 100,
               })}
-            </Grid>
-          )}
+          </Grid>
         </Grid>
       </Box>
     </Box>
@@ -1856,21 +1853,19 @@ export const nameManageLinkSimpleRes = ({
         }}
       >
         <Grid container spacing={0}>
-          {row?.carstatus && (
-            <Grid item xs={6}>
-              {carstatusFormatter({ value: row.carstatus, isRTL })}
-            </Grid>
-          )}
-          {retypeId && (
-            <Grid item xs={6}>
-              {renderTag({
+          <Grid item xs={6}>
+            {row?.carstatus &&
+              carstatusFormatter({ value: row.carstatus, isRTL })}
+          </Grid>
+          <Grid item xs={6}>
+            {retypeId &&
+              renderTag({
                 value: isRTL ? retypeNameAr : retypeName,
                 color: '#333',
                 bgcolor: fade(retypeColor, 0.1),
                 width: 100,
               })}
-            </Grid>
-          )}
+          </Grid>
         </Grid>
       </Box>
     </Box>
@@ -2106,30 +2101,163 @@ export const resourseDataView = ({ row, words, isRTL }) => {
   );
 };
 export const employeeDataView = ({ row, words, isRTL }) => {
-  const { name, nameAr, phone, email, daysoff } = row;
+  const {
+    name,
+    nameAr,
+    phone,
+    email,
+    daysoff,
+    retypeId,
+    retypeNameAr,
+    retypeName,
+    telHome,
+    licenseNo,
+    licenseDate,
+    national,
+    nationalNo,
+    nationalDate,
+    workId,
+    // info,
+    avatar,
+  } = row;
+  const bgcolor = name ? nameToColor(`${name}Jadwal2!@`) : '';
+  const letter = name?.substring(0, 1)?.toUpperCase() || '';
 
+  const height = 100;
   return (
     <Box style={{ padding: 20 }}>
       <Grid container spacing={1}>
-        <Grid item xs={12}>
-          <Typography variant="h6">{isRTL ? nameAr : name}</Typography>
+        <Grid item xs={3}>
+          {avatar && (
+            <Paper
+              elevation={2}
+              style={{
+                overflow: 'hidden',
+                borderRadius: 10,
+                backgroundColor: '#fff',
+                width: height,
+                height,
+              }}
+            >
+              <img
+                style={{
+                  overflow: 'hidden',
+                  borderRadius: 10,
+                  objectFit: 'cover',
+                }}
+                width={height}
+                height={height}
+                src={avatar}
+              />
+            </Paper>
+          )}
+          {!avatar && (
+            <Box
+              style={{
+                overflow: 'hidden',
+                borderRadius: 10,
+                backgroundColor: bgcolor,
+                width: height,
+                height,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              <Typography
+                style={{ color: '#eee', fontWeight: 'bold' }}
+                variant="h4"
+              >
+                {letter}
+              </Typography>
+            </Box>
+          )}
+        </Grid>
+        <Grid item xs={9}>
+          <Grid container spacing={1}>
+            <Grid item xs={12}>
+              <Typography variant="h6">{isRTL ? nameAr : name}</Typography>
+            </Grid>
+            {workId && (
+              <Grid item xs={6}>
+                {renderTag({
+                  value: workId,
+                  color: '#333',
+                  bgcolor: colors.blueGrey[50],
+                  width: 100,
+                })}
+              </Grid>
+            )}
+            {retypeId && (
+              <Grid item xs={6}>
+                {renderTag({
+                  value: isRTL ? retypeNameAr : retypeName,
+                  color: '#333',
+                  bgcolor: colors.blueGrey[50],
+                  width: 100,
+                })}
+              </Grid>
+            )}
+            {daysoff && (
+              <Grid item xs={12}>
+                <Typography variant="caption">
+                  <Typography variant="caption">
+                    {isRTL ? 'يوم العطلة' : 'Day Off'}:{' '}
+                    {daysoffFormatter({ value: row.daysoff, isRTL })}
+                  </Typography>
+                </Typography>
+              </Grid>
+            )}
+          </Grid>
         </Grid>
 
-        {daysoff && (
-          <Grid item xs={12}>
-            <Typography variant="caption">
-              <Typography variant="caption">
-                {isRTL ? 'يوم العطلة' : 'Day Off'}:{' '}
-                {daysoffFormatter({ value: row.daysoff, isRTL })}
-              </Typography>
+        {phone && (
+          <Grid item xs={6}>
+            <Typography style={{ fontSize: 12 }} variant="caption">
+              {isRTL ? 'الهاتف : ' : 'Phone : '} {phone}
+            </Typography>
+          </Grid>
+        )}
+        {telHome && (
+          <Grid item xs={6}>
+            <Typography style={{ fontSize: 12 }} variant="caption">
+              {isRTL ? 'هاتف دولي : ' : 'Interntional : '} {telHome}
+            </Typography>
+          </Grid>
+        )}
+        {licenseDate && (
+          <Grid item xs={6}>
+            <Typography style={{ fontSize: 12 }} variant="caption">
+              {licenseDate}
+            </Typography>
+          </Grid>
+        )}
+        {licenseNo && (
+          <Grid item xs={6}>
+            <Typography style={{ fontSize: 12 }} variant="caption">
+              {isRTL ? 'الرخصة : ' : 'License : '} {licenseNo}
             </Typography>
           </Grid>
         )}
 
-        {phone && (
-          <Grid item xs={12}>
+        {nationalNo && (
+          <Grid item xs={4}>
             <Typography style={{ fontSize: 12 }} variant="caption">
-              {isRTL ? 'الهاتف : ' : '؛Phone : '} {phone}
+              {nationalNo}
+            </Typography>
+          </Grid>
+        )}
+        {nationalDate && (
+          <Grid item xs={4}>
+            <Typography style={{ fontSize: 12 }} variant="caption">
+              {nationalDate}
+            </Typography>
+          </Grid>
+        )}
+        {national && (
+          <Grid item xs={4}>
+            <Typography style={{ fontSize: 12 }} variant="caption">
+              {isRTL ? 'الجنسية : ' : 'Nationality : '} {national}
             </Typography>
           </Grid>
         )}

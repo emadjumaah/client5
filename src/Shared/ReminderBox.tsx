@@ -73,8 +73,12 @@ export default function ReminderBox({
   ]);
   const [rows, setRows] = useState([]);
 
-  const [loadReminders, remindersData]: any = useLazyQuery(getRemindersActions);
-
+  const [loadReminders, remindersData]: any = useLazyQuery(
+    getRemindersActions,
+    {
+      fetchPolicy: 'cache-and-network',
+    }
+  );
   const refresQuery = {
     refetchQueries: [
       {

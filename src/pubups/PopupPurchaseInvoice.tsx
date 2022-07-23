@@ -12,7 +12,6 @@ import ItemsTable from '../Shared/ItemsTable';
 import { PriceTotal } from '../Shared/TotalPrice';
 import { operationTypes } from '../constants';
 import { accountCode } from '../constants/kaid';
-import PaymentSelect from '../pages/options/PaymentSelect';
 import { useLazyQuery } from '@apollo/client';
 import { getOperationItems } from '../graphql';
 import LoadingInline from '../Shared/LoadingInline';
@@ -67,7 +66,7 @@ const PopupPurchaseInvoice = ({
   const [saving, setSaving] = useState(false);
   const { tasks } = useTasks();
 
-  const [isCash, setIsCash] = useState(true);
+  const [isCash, setIsCash] = useState(false);
 
   const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
   const [selectedDate, setSelectedDate] = React.useState(new Date());
@@ -448,9 +447,8 @@ const PopupPurchaseInvoice = ({
       },
       {
         debitAcc: accountCode.accounts_payable,
-        creditAcc:
-          ptype === 'cash' ? accountCode.cash_on_hand : accountCode.card,
-        amount: isCash ? sum - discount : 0,
+        creditAcc: accountCode.cash_on_hand,
+        amount: 0,
         type: operationTypes.supplierPayemnt,
       },
       {
@@ -513,7 +511,7 @@ const PopupPurchaseInvoice = ({
     }
     setSaving(true);
     const { amount, total, costAmount } = totals;
-    const isCash = true;
+    const isCash = false;
     const variables: any = {
       _id: row && row._id ? row._id : undefined, // is it new or edit
       time: selectedDate,
@@ -707,13 +705,13 @@ const PopupPurchaseInvoice = ({
           )}
         </Grid>
         <Grid item xs={8}>
-          <PaymentSelect
+          {/* <PaymentSelect
             words={words}
             ptype={ptype}
             isCash={isCash}
             setIsCash={setIsCash}
             setPtype={setPtype}
-          ></PaymentSelect>
+          ></PaymentSelect> */}
         </Grid>
         <Grid item xs={8}>
           <AutoFieldLocal

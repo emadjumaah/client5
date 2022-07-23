@@ -182,7 +182,7 @@ const Content = () => {
   const { accounts, refreshAccount } = useAccounts();
 
   const {
-    store: { user, calendar, network, packIssue, packIssueMsg, notify },
+    store: { user, calendar, network, packIssue, packIssueMsg, notify, tempId },
     dispatch,
     translate: { words, isRTL },
   }: GContextTypes = useContext(GlobalContext);
@@ -844,6 +844,7 @@ const Content = () => {
                   words={words}
                   theme={theme}
                   company={company}
+                  tempId={tempId}
                 ></ManageEmployees>
               </EmployeeContext.Provider>
             }
@@ -860,6 +861,7 @@ const Content = () => {
                   words={words}
                   theme={theme}
                   company={company}
+                  tempId={tempId}
                 ></ManageResourses>
               </ResourseContext.Provider>
             }

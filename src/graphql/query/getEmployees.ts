@@ -36,6 +36,7 @@ export default gql`
         national
         nationalNo
         nationalDate
+        avatar
         photos
 
         amount

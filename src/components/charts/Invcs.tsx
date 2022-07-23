@@ -1,8 +1,11 @@
 import React from 'react';
 import { Box, Paper, Typography } from '@material-ui/core';
 import MyIcon from '../../Shared/MyIcon';
+import { useHoverStyles } from './Cars';
 
 const Invcs = ({ title, icon, height, prim, onOpen }) => {
+  const classes = useHoverStyles();
+
   return (
     <Paper elevation={2} style={{ height }}>
       <Box
@@ -16,12 +19,12 @@ const Invcs = ({ title, icon, height, prim, onOpen }) => {
       >
         <Box
           onClick={onOpen}
+          className={classes.button}
           style={{
             padding: 5,
             overflow: 'hidden',
             objectFit: 'cover',
             cursor: 'pointer',
-            backgroundColor: '#eee',
             borderRadius: 20,
             display: 'flex',
             alignItems: 'center',

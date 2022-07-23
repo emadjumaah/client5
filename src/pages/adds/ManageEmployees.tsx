@@ -29,7 +29,7 @@ import { Command, PopupEditing } from '../../Shared';
 import { getRowId } from '../../common';
 import { PopupEmployee } from '../../pubups';
 import {
-  avatarColorFormatter,
+  avataManageFormatter,
   nameManageEmployeeRest,
   nameManageLinkEmployee,
 } from '../../Shared/colorFormat';
@@ -55,6 +55,7 @@ export default function ManageEmployees({
   theme,
   menuitem,
   company,
+  tempId,
 }: any) {
   const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
   const [pageSizes] = useState([5, 8, 10, 20, 50, 0]);
@@ -80,23 +81,51 @@ export default function ManageEmployees({
     dispatch({ type: 'setHiddenColumnNames', payload: hiddenColumns });
   };
 
-  const [columns] = useState([
-    { name: 'avatar', title: ' ' },
-    col.name,
-    col.data,
-    { name: 'email', title: words.email },
-    { name: 'info', title: words.info },
-    { name: 'phone', title: words.phoneNumber },
-    col.retype,
-  ]);
+  const isCar = tempId === 9 || tempId === 4;
+
+  const [columns] = useState(
+    isCar
+      ? [
+          { name: 'avatar', title: ' ' },
+          col.name,
+          col.data,
+          { name: 'phone', title: words.phoneNumber },
+          { name: 'email', title: words.email },
+          col.telHome,
+          col.licenseNo,
+          col.licenseDate,
+          col.national,
+          col.nationalNo,
+          col.nationalDate,
+          col.workId,
+          { name: 'info', title: words.info },
+          col.retype,
+        ]
+      : [
+          { name: 'avatar', title: ' ' },
+          col.name,
+          col.data,
+          { name: 'email', title: words.email },
+          { name: 'info', title: words.info },
+          { name: 'phone', title: words.phoneNumber },
+          col.retype,
+        ]
+  );
 
   const [tableColumnExtensions]: any = useState([
-    { columnName: 'avatar', width: 30 },
+    { columnName: 'avatar', width: 100 },
     { columnName: col.name.name, width: 300 },
     { columnName: col.data.name, width: 300 },
-    { columnName: 'email', width: 200 },
-    { columnName: 'info', width: 200 },
     { columnName: 'phone', width: 100 },
+    { columnName: 'email', width: 200 },
+    { columnName: col.telHome.name, width: 150 },
+    { columnName: col.licenseNo.name, width: 150 },
+    { columnName: col.licenseDate.name, width: 150 },
+    { columnName: col.national.name, width: 150 },
+    { columnName: col.nationalNo.name, width: 150 },
+    { columnName: col.nationalDate.name, width: 150 },
+    { columnName: col.workId.name, width: 150 },
+    { columnName: 'info', width: 200 },
     { columnName: col.retype.name, width: 150 },
   ]);
 
@@ -235,9 +264,16 @@ export default function ManageEmployees({
                 'avatar',
                 col.name.name,
                 col.data.name,
-                'email',
-                'info',
                 'phone',
+                'email',
+                col.telHome.name,
+                col.nationalNo.name,
+                col.nationalDate.name,
+                col.national.name,
+                col.licenseNo.name,
+                col.licenseDate.name,
+                col.workId.name,
+                'info',
                 col.retype.name,
               ]}
             />
@@ -258,11 +294,15 @@ export default function ManageEmployees({
               hiddenColumnNames={hiddenColumnNames}
               onHiddenColumnNamesChange={setHiddenColumnNames}
             />
+
             <DataTypeProvider
               for={['avatar']}
               formatterComponent={(props: any) =>
-                avatarColorFormatter({
+                avataManageFormatter({
                   ...props,
+                  setItem,
+                  setOpenItem,
+                  isRTL,
                   height: 70,
                 })
               }

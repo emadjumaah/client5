@@ -32,8 +32,6 @@ export default function Accounts({ isRTL, accounts }: any) {
   const [loading, setLoading] = useState(false);
   const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
   const { height } = useWindowDimensions();
-  console.log('Accounts accounts', accounts);
-
   const [columns] = useState([
     { name: isRTL ? 'nameAr' : 'name', title: isRTL ? 'اسم الحساب' : 'Name' },
     { name: 'code', title: isRTL ? 'رقم الحساب' : 'Code' },

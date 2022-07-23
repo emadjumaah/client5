@@ -26,7 +26,7 @@ import { PriceTotal } from '../Shared/TotalPrice';
 import { operationTypes } from '../constants';
 import { useLazyQuery, useMutation } from '@apollo/client';
 import { createInvoice, getInvoices, getOperationItems } from '../graphql';
-import { accountCode } from '../constants/kaid';
+import { accountCode, parents } from '../constants/kaid';
 import PaymentSelect from '../pages/options/PaymentSelect';
 import PopupLayout from '../pages/main/PopupLayout';
 import { Grid } from '@material-ui/core';
@@ -39,6 +39,7 @@ import { getInvDays } from '../common/helpers';
 import getGereralCalculation from '../graphql/query/getGereralCalculation';
 import { getProjects, getTasks } from '../graphql/query';
 import { getEndOfMonth, getStartOfMonth, sleep } from '../Shared/helpers';
+import useAccounts from '../hooks/useAccounts';
 
 export const indexTheList = (list: any) => {
   return list.map((item: any, index: any) => {
@@ -78,7 +79,6 @@ const PopupTaskInvoice = ({
 
   const [itemsList, setItemsList] = useState<any>([]);
   const [accounts, setAccounts] = useState<any>([]);
-  const [ptype, setPtype] = useState<any>('cash');
 
   const [discount, setDiscount] = useState(0);
   const [totals, setTotals] = useState<any>({});
@@ -99,9 +99,12 @@ const PopupTaskInvoice = ({
   const [resoError, setResoError] = useState<any>(false);
   const resoRef: any = useRef();
 
-  const [isCash, setIsCash] = useState(true);
-  const { tempwords, tempoptions } = useTemplate();
+  const [isCash, setIsCash] = useState(false);
+  const [paid, setPaid] = useState<any>(0);
+  const [debitAcc, setDebitAcc]: any = React.useState(null);
 
+  const { accounts: mainAccounts } = useAccounts();
+  const { tempwords, tempoptions } = useTemplate();
   const { products } = useProducts();
 
   const { handleSubmit, reset } = useForm({});
@@ -130,6 +133,15 @@ const PopupTaskInvoice = ({
 
   const [addInvoice] = useMutation(createInvoice, refresQuery);
 
+  const cashaccounts = mainAccounts.filter(
+    (acc: any) => acc.parentcode === parents.CASH && acc.code < 10499
+  );
+  useEffect(() => {
+    if (isCash) {
+      setDebitAcc(cashaccounts?.[0]);
+    }
+  }, [open, isCash]);
+
   const resetAllForms = () => {
     setItemsList([]);
     setDiscount(0);
@@ -137,7 +149,6 @@ const PopupTaskInvoice = ({
     setCustvalue(null);
     setInvNo('');
     setAccounts([]);
-    setPtype('cash');
     setSaving(false);
     setSelectedDate(new Date());
     setDepartvalue(null);
@@ -147,6 +158,8 @@ const PopupTaskInvoice = ({
     setPeriodfrom(null);
     setPeriodto(null);
     setInvdays(0);
+    setIsCash(false);
+    setPaid(0);
   };
 
   const addItemToList = (item: any) => {
@@ -240,7 +253,7 @@ const PopupTaskInvoice = ({
 
   useEffect(() => {
     getOverallTotal();
-  }, [itemsList, discount, ptype, isCash]);
+  }, [itemsList, discount, isCash, paid, debitAcc]);
 
   useEffect(() => {
     if (task) {
@@ -344,6 +357,9 @@ const PopupTaskInvoice = ({
       profit,
     };
     setTotals(tots);
+    if (paid === 0) {
+      setPaid(amount);
+    }
     const accs = [
       {
         debitAcc: accountCode.accounts_receivable,
@@ -358,10 +374,9 @@ const PopupTaskInvoice = ({
         type: operationTypes.customerDiscount,
       },
       {
-        debitAcc:
-          ptype === 'cash' ? accountCode.cash_on_hand : accountCode.card,
+        debitAcc: debitAcc?.code,
         creditAcc: accountCode.accounts_receivable,
-        amount: isCash ? sum - discount : 0,
+        amount: isCash ? paid : 0,
         type: operationTypes.customerReceipt,
       },
       {
@@ -503,9 +518,8 @@ const PopupTaskInvoice = ({
       profit,
       isPaid: isCash,
       isCash,
-      amountPaid: isCash ? amount : 0,
+      amountPaid: isCash ? paid : 0,
       accounts,
-      paymentType: ptype,
       periodfrom,
       periodto,
       isMonthly,
@@ -582,7 +596,7 @@ const PopupTaskInvoice = ({
       alrt={alrt}
       saving={saving}
       print={handleReactPrint}
-      maxWidth="md"
+      maxWidth="lg"
       mt={0}
       mb={50}
       // bgcolor={colors.green[500]}
@@ -687,10 +701,14 @@ const PopupTaskInvoice = ({
         <Grid item xs={6}>
           <PaymentSelect
             words={words}
-            ptype={ptype}
             isCash={isCash}
             setIsCash={setIsCash}
-            setPtype={setPtype}
+            paid={paid}
+            setPaid={setPaid}
+            isRTL={isRTL}
+            debitaccounts={cashaccounts}
+            debitAcc={debitAcc}
+            setDebitAcc={setDebitAcc}
           ></PaymentSelect>
         </Grid>
         <Grid item xs={7}>

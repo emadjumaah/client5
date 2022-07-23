@@ -151,8 +151,8 @@ export class ReceiptPrint extends React.PureComponent<any, any> {
 
   renderRows = (data: any) => {
     const {
-      customerNameAr,
       customerName,
+      customerNameAr,
       isRTL,
       amount,
       title,
@@ -292,6 +292,13 @@ export class ReceiptPrint extends React.PureComponent<any, any> {
                 <Box>
                   <Typography style={{ marginLeft: 10, marginRight: 10 }}>
                     {isRTL ? invoice?.resourseNameAr : invoice?.resourseName}
+                  </Typography>
+                </Box>
+              )}
+              {invoice?.employeeName && (
+                <Box>
+                  <Typography style={{ marginLeft: 10, marginRight: 10 }}>
+                    {isRTL ? invoice?.employeeNameAr : invoice?.employeeName}
                   </Typography>
                 </Box>
               )}

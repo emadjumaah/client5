@@ -12,7 +12,7 @@ import {
 } from '../Shared';
 import { GContextTypes } from '../types';
 import { GlobalContext } from '../contexts';
-import { TextField } from '@material-ui/core';
+import { Box, Divider, TextField } from '@material-ui/core';
 import PopupLayout from '../pages/main/PopupLayout';
 import { Grid } from '@material-ui/core';
 import { TextFieldLocal } from '../components';
@@ -21,6 +21,9 @@ import { getPopupTitle } from '../constants/menu';
 import { carstatuss } from '../constants';
 import useRetypes from '../hooks/useRetypes';
 import PopupResourseType from './PopupResourseType';
+import { uploadMultiPhotoOnline } from '../common/AvatarUpload';
+import { ImageView } from '../components/viewer';
+import { UploadPhotos } from '../common/UploadPhotos';
 
 const PopupResourses = ({
   open,
@@ -41,6 +44,10 @@ const PopupResourses = ({
 
   const [newtext2, setNewtext2] = useState('');
   const [openTyp, setOpenTyp] = useState(false);
+
+  const [urls, setUrls] = useState([]);
+  const [photosimages, setPhotosimages] = useState([]);
+  const [photosurls, setPhotosurls] = useState([]);
 
   const emplRef: any = React.useRef();
 
@@ -75,9 +82,60 @@ const PopupResourses = ({
         const sts = carstatuss.filter((dep: any) => dep.id === status)?.[0];
         setStatusvalue(sts);
       }
+      if (row.photos) {
+        const phs = JSON.parse(row.photos);
+        if (phs && phs.length > 0) {
+          setPhotosurls(phs);
+        }
+      }
       setColor(row.color);
     }
   }, [row]);
+
+  useEffect(() => {
+    let locals = [];
+    let online = [];
+    if (photosimages && photosimages.length > 0) {
+      for (const img of photosimages) {
+        const localimage = URL.createObjectURL(img);
+        locals.push(localimage);
+      }
+    } else {
+      locals = [];
+    }
+    if (photosurls && photosurls.length > 0) {
+      online = photosurls;
+    } else {
+      online = [];
+    }
+    setUrls([...online, ...locals]);
+  }, [photosimages, photosurls]);
+
+  const addToPhotos = (photos: any) => {
+    const lphotos = [...photosimages];
+    const li = photosimages.length;
+    const oi = photosurls.length;
+    const n = 10 - (oi + li);
+    if (n < 1 || !photos || photos.length === 0) {
+      return;
+    } else {
+      const newphotos = [...lphotos, ...photos];
+      const fnewphotos = newphotos.slice(0, n);
+      setPhotosimages(fnewphotos);
+    }
+  };
+  const removePhoto = (src: any, index: any) => {
+    if (src.startsWith('http')) {
+      const newphotosurls = [...photosurls];
+      const newlist = newphotosurls.filter((nu: any) => nu !== src);
+      setPhotosurls(newlist);
+    } else {
+      const newList = [...photosimages];
+      const newindex = index - photosurls.length;
+      newList.splice(newindex, 1);
+      setPhotosimages(newList);
+    }
+  };
 
   const onSubmit = async (data: any) => {
     setSaving(true);
@@ -94,6 +152,22 @@ const PopupResourses = ({
       licenseDate,
       address,
     } = data;
+
+    let localphotos = [];
+
+    if (photosimages) {
+      const photosurl = await uploadMultiPhotoOnline(photosimages);
+      if (photosurl && photosurl.length > 0) {
+        const rphotos = photosurl.map((photo: any) =>
+          photo.replace('http://', 'https://')
+        );
+        localphotos = rphotos;
+      }
+    }
+
+    const fphotos = [...photosurls, ...localphotos];
+    const photos = JSON.stringify(fphotos);
+
     const retype = rtypevalue
       ? {
           retypeId: rtypevalue._id,
@@ -113,6 +187,7 @@ const PopupResourses = ({
       nameAr,
       resType: 1,
       color,
+      photos: fphotos && fphotos.length > 0 ? photos : null,
       brand,
       plate,
       cost: Number(cost),
@@ -162,6 +237,9 @@ const PopupResourses = ({
     setColor('#000000');
     setStatusvalue(carstatuss[0]);
     setSaving(false);
+    setPhotosimages([]);
+    setUrls([]);
+    setPhotosurls([]);
   };
   const closeModal = () => {
     resetAll();
@@ -186,11 +264,12 @@ const PopupResourses = ({
       theme={theme}
       alrt={alrt}
       mb={50}
+      maxWidth="md"
       saving={saving}
     >
       <Grid container spacing={2}>
         <Grid item xs={1}></Grid>
-        <Grid item xs={10}>
+        <Grid item xs={6}>
           <Grid container spacing={1}>
             <Grid item xs={12}>
               <TextFieldLocal
@@ -375,23 +454,68 @@ const PopupResourses = ({
               />
             </Grid>
           </Grid>
-
-          <React.Fragment>
-            <Grid container spacing={0}>
-              <Grid item xs={6}>
-                <TextField
-                  disabled
-                  name="color"
-                  value={row?.color ? row.color : color}
-                  variant="outlined"
-                  style={{ width: 200, backgroundColor: color }}
-                  InputProps={{ style: { borderRadius: 5, color: '#fff' } }}
-                  margin="dense"
-                />
-                <ColorPicker setColor={setColor} color={color}></ColorPicker>
-              </Grid>
+        </Grid>
+        <Grid item xs={4}>
+          <Grid container spacing={1}>
+            <Grid item xs={8} style={{ marginRight: 15 }}>
+              <Box
+                style={{
+                  height: 300,
+                  width: 200,
+                  margin: 5,
+                }}
+              >
+                <ImageView
+                  images={urls}
+                  removePhoto={removePhoto}
+                  width={200}
+                  height={300}
+                ></ImageView>
+              </Box>
+              <Box
+                style={{
+                  display: 'flex',
+                  flex: 1,
+                  height: 40,
+                  width: 200,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  marginTop: 5,
+                }}
+              >
+                <UploadPhotos
+                  setImages={addToPhotos}
+                  isRTL={isRTL}
+                ></UploadPhotos>
+              </Box>
             </Grid>
-          </React.Fragment>
+          </Grid>
+          <Grid
+            container
+            spacing={2}
+            style={{ paddingLeft: 20, paddingRight: 20 }}
+          >
+            <Grid item xs={12} style={{ marginTop: 10 }}>
+              <Divider></Divider>
+            </Grid>
+
+            <Grid item xs={6}>
+              <TextField
+                disabled
+                name="color"
+                value={row?.color ? row.color : color}
+                variant="outlined"
+                style={{
+                  width: 200,
+                  backgroundColor: color,
+                  marginTop: 10,
+                }}
+                InputProps={{ style: { borderRadius: 5, color: '#fff' } }}
+                margin="dense"
+              />
+              <ColorPicker setColor={setColor} color={color}></ColorPicker>
+            </Grid>
+          </Grid>
         </Grid>
         <Grid item xs={1}></Grid>
         <PopupResourseType

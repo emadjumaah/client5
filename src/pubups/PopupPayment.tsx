@@ -19,6 +19,7 @@ import getInvoicesList from '../graphql/query/getInvoicesList';
 import { ReceiptPrint } from '../print';
 import PopupSupplier from './PopupSupplier';
 import { successAlert } from '../Shared/helpers';
+import { updateDocNumbers } from '../common';
 
 const PopupPayment = ({
   open,
@@ -115,9 +116,11 @@ const PopupPayment = ({
             nameAr: title,
           };
         });
-        setInvoices(ndata);
+        const refdatar = updateDocNumbers(ndata);
+
+        setInvoices(refdatar);
         if (row.refNo) {
-          const inv = ndata.filter((ts: any) => ts.docNo === row.refNo)?.[0];
+          const inv = refdatar.filter((ts: any) => ts.docNo === row.refNo)?.[0];
           setInvoicevalue(inv);
         }
       }
@@ -173,9 +176,9 @@ const PopupPayment = ({
   const printData = {
     no: row?.docNo,
     time: selectedDate,
-    supplierName: suppvalue?.name,
-    supplierNameAr: suppvalue?.nameAr,
-    supplierPhone: suppvalue?.phone,
+    customerName: suppvalue?.name,
+    customerNameAr: suppvalue?.nameAr,
+    customerPhone: suppvalue?.phone,
     refNo: row?.refNo,
     title: row?.title,
     desc: row?.desc,
@@ -290,7 +293,7 @@ const PopupPayment = ({
       time: selectedDate,
       debitAcc: debitAcc.code,
       creditAcc: creditAcc.code,
-      refNo: invoicevalue ? invoicevalue.docNo : undefined,
+      refNo: invoicevalue ? invoicevalue.docNo : null,
       supplier,
       department,
       resourse,

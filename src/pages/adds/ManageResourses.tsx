@@ -54,6 +54,7 @@ export default function ManageResourses({
   theme,
   menuitem,
   company,
+  tempId,
 }: any) {
   const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
   const [pageSizes] = useState([5, 8, 10, 20, 50, 0]);
@@ -78,22 +79,49 @@ export default function ManageResourses({
   const setHiddenColumnNames = (hiddenColumns: any) => {
     dispatch({ type: 'setHiddenColumnNames', payload: hiddenColumns });
   };
-  const [columns] = useState([
-    { name: 'avatar', title: ' ' },
-    col.name,
-    col.data,
-    { name: 'info', title: words.info },
-    { name: 'plate', title: words.plate },
-    col.carstatus,
-    col.retype,
-  ]);
+
+  const isCar = tempId === 9 || tempId === 4;
+
+  const [columns] = useState(
+    isCar
+      ? [
+          { name: 'avatar', title: ' ' },
+          col.name,
+          col.data,
+          { name: 'plate', title: words.plate },
+          { name: 'brand', title: words.brand },
+          { name: 'model', title: words.model },
+          col.licenseDate,
+          { name: 'info', title: words.info },
+          { name: 'purtime', title: words.purtime },
+          { name: 'cost', title: words.cost },
+          { name: 'insurance', title: words.insurance },
+          col.carstatus,
+          col.retype,
+        ]
+      : [
+          { name: 'avatar', title: ' ' },
+          col.name,
+          col.data,
+          { name: 'info', title: words.info },
+          { name: 'plate', title: words.plate },
+          col.carstatus,
+          col.retype,
+        ]
+  );
 
   const [tableColumnExtensions]: any = useState([
     { columnName: 'avatar', width: 30 },
     { columnName: col.name.name, width: 300 },
     { columnName: col.data.name, width: 300 },
-    { columnName: 'info', width: 300 },
     { columnName: 'plate', width: 100 },
+    { columnName: 'brand', width: 100 },
+    { columnName: 'model', width: 100 },
+    { columnName: col.licenseDate.name, width: 150 },
+    { columnName: 'info', width: 250 },
+    { columnName: 'purtime', width: 100 },
+    { columnName: 'cost', width: 100 },
+    { columnName: 'insurance', width: 100 },
     { columnName: col.carstatus.name, width: 100 },
     { columnName: col.retype.name, width: 150 },
   ]);
@@ -233,14 +261,19 @@ export default function ManageResourses({
                 'avatar',
                 col.name.name,
                 col.data.name,
-                'info',
                 'plate',
+                'brand',
+                'model',
+                col.licenseDate.name,
+                'purtime',
+                'cost',
+                'insurance',
                 col.carstatus.name,
                 col.retype.name,
+                'info',
               ]}
             />
             <TableColumnResizing defaultColumnWidths={tableColumnExtensions} />
-
             <TableHeaderRow
               showSortingControls
               titleComponent={({ children }) => {

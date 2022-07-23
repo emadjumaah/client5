@@ -16,11 +16,7 @@ import {
   TableColumnVisibility,
 } from '@devexpress/dx-react-grid-material-ui';
 import { getRowId } from '../common';
-import {
-  createdAtFormatter,
-  doneFormatter,
-  fromToFormatter,
-} from './colorFormat';
+import { actionTimeFormatter, doneFormatter } from './colorFormat';
 
 import { getColumns } from '../common/columns';
 
@@ -71,31 +67,16 @@ export default function AppointmentsOutBox(props: any) {
   const { tempoptions } = useTemplate();
   const [columns] = useState(
     tempoptions?.noTsk
-      ? [
-          col.done,
-          col.startDate,
-          col.fromto,
-          col.customer,
-          col.employee,
-          col.resourse,
-        ]
-      : [
-          col.done,
-          col.startDate,
-          col.fromto,
-          col.customer,
-          col.employee,
-          col.resourse,
-        ]
+      ? [col.done, col.startDate, col.customer, col.employee, col.resourse]
+      : [col.done, col.startDate, col.customer, col.employee, col.resourse]
   );
 
   const [tableColumnExtensions]: any = useState([
     { columnName: col.done.name, width: 80 },
-    { columnName: col.startDate.name, width: 120 },
-    { columnName: col.fromto.name, width: 100 },
-    { columnName: col.customer.name, width: 130 },
-    { columnName: col.resourse.name, width: 130 },
-    { columnName: col.employee.name, width: 130 },
+    { columnName: col.startDate.name, width: 150 },
+    { columnName: col.customer.name, width: 150 },
+    { columnName: col.resourse.name, width: 150 },
+    { columnName: col.employee.name, width: 150 },
   ]);
 
   const [tableColumnVisibilityColumnExtensions] = useState([
@@ -136,10 +117,10 @@ export default function AppointmentsOutBox(props: any) {
       setRows(data);
     }
   }, [remindersData]);
-  const color = '#eff9fb';
+  const color = '#fff';
   return (
     <Paper
-      elevation={1}
+      elevation={2}
       style={{
         height,
         width: '100%',
@@ -173,7 +154,7 @@ export default function AppointmentsOutBox(props: any) {
         <Box style={{ marginLeft: 20, marginRight: 20 }}>
           <Typography
             color="primary"
-            style={{ fontSize: 18, fontWeight: 'bold' }}
+            style={{ fontSize: 24, fontWeight: 'bold', color: '#555' }}
           >
             {isRTL ? 'المواعيد' : 'Appointments'}
           </Typography>
@@ -228,13 +209,10 @@ export default function AppointmentsOutBox(props: any) {
             columnExtensions={tableColumnVisibilityColumnExtensions}
             defaultHiddenColumnNames={[col.amount.name]}
           />
+
           <DataTypeProvider
-            for={['fromto']}
-            formatterComponent={fromToFormatter}
-          ></DataTypeProvider>
-          <DataTypeProvider
-            for={['startDate', 'createdAt']}
-            formatterComponent={createdAtFormatter}
+            for={['startDate']}
+            formatterComponent={actionTimeFormatter}
           ></DataTypeProvider>
           <DataTypeProvider
             for={['done']}

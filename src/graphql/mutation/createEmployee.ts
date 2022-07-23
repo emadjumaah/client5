@@ -24,6 +24,7 @@ export default gql`
     $nationalNo: String
     $nationalDate: String
     $photos: String
+    $avatar: String
     $info: String
     $documentNo: String
     $startDate: Date
@@ -54,6 +55,7 @@ export default gql`
       national: $national
       nationalNo: $nationalNo
       nationalDate: $nationalDate
+      avatar: $avatar
       photos: $photos
       info: $info
       documentNo: $documentNo

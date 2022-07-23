@@ -15,7 +15,7 @@ import { operationTypes } from '../constants';
 import { useMutation } from '@apollo/client';
 import { createInvoice, getInvoices, getProducts } from '../graphql';
 import { accountCode } from '../constants/kaid';
-import PaymentSelect from '../pages/options/PaymentSelect';
+// import PaymentSelect from '../pages/options/PaymentSelect';
 import PopupLayout from '../pages/main/PopupLayout';
 import { Grid } from '@material-ui/core';
 import AutoFieldLocal from '../components/fields/AutoFieldLocal';
@@ -134,7 +134,7 @@ const PopupAppointInvoice = ({
     setInvNo('');
     setAccounts([]);
     setPtype('');
-    setIsCash(false);
+    setIsCash(true);
     setSaving(false);
     setSelectedDate(new Date());
     setDepartvalue(null);
@@ -256,8 +256,7 @@ const PopupAppointInvoice = ({
         type: operationTypes.customerDiscount,
       },
       {
-        debitAcc:
-          ptype === 'cash' ? accountCode.cash_on_hand : accountCode.card,
+        debitAcc: accountCode.cash_on_hand,
         creditAcc: accountCode.accounts_receivable,
         amount: isCash ? sum - discount : 0,
         type: operationTypes.customerReceipt,
@@ -522,13 +521,13 @@ const PopupAppointInvoice = ({
           )}
         </Grid>
         <Grid item xs={8}>
-          <PaymentSelect
+          {/* <PaymentSelect
             words={words}
             ptype={ptype}
             isCash={isCash}
             setIsCash={setIsCash}
             setPtype={setPtype}
-          ></PaymentSelect>
+          ></PaymentSelect> */}
         </Grid>
         <Grid item xs={8}>
           <AutoFieldLocal

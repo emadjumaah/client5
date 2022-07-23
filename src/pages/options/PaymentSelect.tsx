@@ -4,19 +4,26 @@ import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import { Box, Grid } from '@material-ui/core';
+import { TextFieldLocal } from '../../components';
+import AutoFieldLocal from '../../components/fields/AutoFieldLocal';
 
-const PaymentSelect = ({ ptype, setPtype, isCash, setIsCash, words }) => {
-  const onchange = (e: any) => {
-    setPtype(e.target.value);
-  };
+const PaymentSelect = ({
+  debitaccounts,
+  debitAcc,
+  setDebitAcc,
+  isCash,
+  setIsCash,
+  words,
+  paid,
+  setPaid,
+  isRTL,
+}: any) => {
   const onMainChange = (e: any) => {
     const { value } = e.target;
     if (value === 'paid') {
       setIsCash(true);
-      setPtype('cash');
     } else {
       setIsCash(false);
-      setPtype('');
     }
   };
   return (
@@ -64,38 +71,35 @@ const PaymentSelect = ({ ptype, setPtype, isCash, setIsCash, words }) => {
             </Box>
           </RadioGroup>
         </Grid>
-        <Grid item xs={7}>
+        <Grid item xs={4}>
           {isCash && (
-            <RadioGroup
-              aria-label="Views"
-              name="views"
-              row
-              value={ptype}
-              onChange={onchange}
-            >
-              <Box
-                display="flex"
-                style={{ flexDirection: 'row', marginTop: 5 }}
-              >
-                <FormControlLabel
-                  value="cash"
-                  control={<Radio color="primary" />}
-                  label={words.cash}
-                />
-              </Box>
-              <Box
-                display="flex"
-                style={{ flexDirection: 'row', marginTop: 5 }}
-              >
-                <FormControlLabel
-                  value="card"
-                  control={<Radio color="primary" />}
-                  label={words.card}
-                />
-              </Box>
-            </RadioGroup>
+            <AutoFieldLocal
+              name="creditAcc"
+              title={isRTL ? 'حساب القبض' : 'Receipt Acc'}
+              words={words}
+              options={debitaccounts}
+              value={debitAcc}
+              setSelectValue={setDebitAcc}
+              isRTL={isRTL}
+              fullwidtth
+              mb={0}
+              nosort
+            ></AutoFieldLocal>
           )}
         </Grid>
+        {isCash && setPaid && (
+          <Grid item xs={3}>
+            <TextFieldLocal
+              name="price"
+              label={isRTL ? 'قيمة الدفعة' : 'Amount Paid'}
+              value={paid}
+              onChange={(e: any) => setPaid(Number(e.target.value))}
+              type="number"
+              fullWidth
+              mb={0}
+            />
+          </Grid>
+        )}
       </Grid>
     </Box>
   );

@@ -20,7 +20,6 @@ const ColorPicker = ({ setColor, color }: any) => {
       style={{
         paddingLeft: 20,
         paddingTop: 5,
-        marginBottom: 20,
         alignItems: 'center',
         justifyContent: 'center',
         flexDirection: 'column',
