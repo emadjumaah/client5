@@ -12,6 +12,7 @@ import { useLazyQuery } from '@apollo/client';
 import RefetchBox from './RefetchBox';
 import { ImageView } from '../components/viewer';
 import SalaryBox from './SalaryBox';
+import getSalaryCalculation from '../graphql/query/getSalaryCalculation';
 
 export default function MainCustomer({
   isRTL,
@@ -26,8 +27,13 @@ export default function MainCustomer({
   end,
 }: any) {
   const [data, setData] = useState<any>(null);
-
+  const [sdata, setSdata] = useState<any>(null);
+  const [sStart, setSStart] = useState<any>(new Date());
+  const [sEnd, setSEnd] = useState<any>(new Date());
   const [loadCalcss, calcsData]: any = useLazyQuery(getGereralCalculation, {
+    nextFetchPolicy: 'cache-and-network',
+  });
+  const [loadSladata, calcsSaldata]: any = useLazyQuery(getSalaryCalculation, {
     nextFetchPolicy: 'cache-and-network',
   });
   useEffect(() => {
@@ -40,6 +46,16 @@ export default function MainCustomer({
       variables,
     });
   }, [id, start, end]);
+  useEffect(() => {
+    const variables = {
+      [name]: id,
+      start: sStart ? new Date(sStart).setHours(0, 0, 0, 0) : undefined,
+      end: sEnd ? new Date(sEnd).setHours(23, 59, 59, 999) : undefined,
+    };
+    loadSladata({
+      variables,
+    });
+  }, [id, sStart, sEnd]);
 
   useEffect(() => {
     const res = calcsData?.data?.getGereralCalculation?.data;
@@ -47,8 +63,18 @@ export default function MainCustomer({
       const data = JSON.parse(res);
       setData(data);
     }
-  }, [calcsData, start, end]);
-  const refresh = () => calcsData?.refetch();
+  }, [calcsData, calcsSaldata, start, end]);
+  useEffect(() => {
+    const res = calcsSaldata?.data?.getSalaryCalculation?.data;
+    if (res) {
+      const data = JSON.parse(res);
+      setSdata(data);
+    }
+  }, [calcsData, calcsSaldata, sStart, sEnd]);
+
+  // eslint-disable-next-line no-sequences
+  const refresh = () => (calcsData?.refetch(), calcsSaldata?.refetch());
+
   const loading = calcsData.loading;
   return (
     <Box
@@ -85,7 +111,7 @@ export default function MainCustomer({
           width: width - 320,
         }}
       >
-        {data && (
+        {data && sdata && (
           <Box mt={1}>
             <Box
               style={{
@@ -143,9 +169,14 @@ export default function MainCustomer({
                 </Grid>
                 <Grid item xs={4}>
                   <SalaryBox
-                    data={data}
+                    data={sdata}
                     isRTL={isRTL}
                     height={height - 290}
+                    start={sStart}
+                    setStart={setSStart}
+                    end={sEnd}
+                    setEnd={setSEnd}
+                    words={words}
                   ></SalaryBox>
                 </Grid>
               </Grid>

@@ -158,6 +158,7 @@ export class ReceiptPrint extends React.PureComponent<any, any> {
       title,
       invoice,
       balance,
+      desc,
     } = data;
     const totalDiscount = balance?.totalDiscount || 0;
     const totalinvoiced = balance?.totalinvoiced || 0;
@@ -185,7 +186,12 @@ export class ReceiptPrint extends React.PureComponent<any, any> {
               borderLeft={0}
               borderTop={0}
             >
-              <Typography>{isRTL ? customerNameAr : customerName}</Typography>
+              {desc && <Typography>{desc}</Typography>}
+              {customerName && (
+                <Typography>
+                  ( {isRTL ? customerNameAr : customerName} )
+                </Typography>
+              )}
             </Box>
           </Grid>
           <Grid item xs={2}>

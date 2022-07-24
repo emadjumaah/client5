@@ -69,6 +69,8 @@ export default function Invoices({ isRTL, words, menuitem, theme, company }) {
           { name: 'docNo', title: words.no },
           col.eventNo,
           col.customer,
+          col.employee,
+          col.resourse,
           { name: 'customerPhone', title: words.phoneNumber },
           { name: 'total', title: words.total },
           { name: 'discount', title: words.discount },
@@ -80,6 +82,8 @@ export default function Invoices({ isRTL, words, menuitem, theme, company }) {
           col.eventNo,
           col.contract,
           col.customer,
+          col.employee,
+          col.resourse,
           { name: 'customerPhone', title: words.phoneNumber },
           { name: 'total', title: words.total },
           { name: 'discount', title: words.discount },
@@ -93,6 +97,8 @@ export default function Invoices({ isRTL, words, menuitem, theme, company }) {
     { columnName: col.eventNo.name, width: 120 },
     { columnName: col.contract.name, width: 250 },
     { columnName: col.customer.name, width: 250 },
+    { columnName: col.employee.name, width: 200 },
+    { columnName: col.resourse.name, width: 150 },
     { columnName: 'customerPhone', width: 150 },
     { columnName: 'total', width: 120 },
     { columnName: 'discount', width: 120 },
@@ -280,8 +286,10 @@ export default function Invoices({ isRTL, words, menuitem, theme, company }) {
                 'time',
                 'docNo',
                 col.eventNo.name,
-                col.contract.name,
                 col.customer.name,
+                col.employee.name,
+                col.resourse.name,
+                col.contract.name,
                 'customerPhone',
                 'total',
                 'discount',
@@ -302,7 +310,12 @@ export default function Invoices({ isRTL, words, menuitem, theme, company }) {
             />
             <TableColumnVisibility
               columnExtensions={tableColumnVisibilityColumnExtensions}
-              defaultHiddenColumnNames={[]}
+              defaultHiddenColumnNames={[
+                'customerPhone',
+                'total',
+                'discount',
+                'eventNo',
+              ]}
             />
             <DataTypeProvider
               for={['time']}

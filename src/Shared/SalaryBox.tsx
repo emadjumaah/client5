@@ -1,5 +1,13 @@
-import { Box, Divider, Grid, Paper, Typography } from '@material-ui/core';
+import {
+  Box,
+  colors,
+  Divider,
+  Grid,
+  Paper,
+  Typography,
+} from '@material-ui/core';
 import _ from 'lodash';
+import { CalenderLocal } from '../components';
 import { moneyFormat } from './colorFormat';
 
 const renderBalance = ({
@@ -68,7 +76,11 @@ const renderIncomeItems = ({ income, isRTL, title }: any) => {
     <Grid container spacing={2}>
       <Grid item xs={1}></Grid>
       <Grid item xs={5}>
-        <Typography style={{ fontWeight: 'bold' }}>{title}</Typography>
+        <Typography
+          style={{ fontWeight: 'bold', fontSize: 18, color: colors.blue[500] }}
+        >
+          {title}
+        </Typography>
       </Grid>
       <Grid item xs={2}>
         <Typography style={{ fontWeight: 'bold' }}>
@@ -127,31 +139,22 @@ const renderIncomeItems = ({ income, isRTL, title }: any) => {
     </Grid>
   );
 };
-const renderExpensesItems = ({
-  expense,
-  isRTL,
-  title,
-  totalAdvancePayTime,
-  totalAdvanceRecTime,
-  totalCustodyCreditTime,
-  totalCustodyDebitTime,
-}: any) => {
-  const expcredit = _.sumBy(expense, 'credit');
-  const expdebit = _.sumBy(expense, 'debit');
-  const advbalance = totalAdvanceRecTime - totalAdvancePayTime;
-  const custbalance = totalCustodyDebitTime - totalCustodyCreditTime;
-  const expbalance = expdebit - expcredit;
-  console.log('expbalance', expbalance);
-  console.log('advbalance', advbalance);
-  console.log('custbalance', custbalance);
-  const total = advbalance + custbalance + expbalance;
+const renderExpensesItems = ({ expense, isRTL, title }: any) => {
   const arrow = isRTL ? ' ←' : '→ ';
-
+  let total = 0;
   return (
     <Grid container spacing={2}>
       <Grid item xs={1}></Grid>
       <Grid item xs={5}>
-        <Typography style={{ fontWeight: 'bold' }}>{title}</Typography>
+        <Typography
+          style={{
+            fontWeight: 'bold',
+            fontSize: 18,
+            color: colors.orange[500],
+          }}
+        >
+          {title}
+        </Typography>
       </Grid>
       <Grid item xs={2}>
         <Typography style={{ fontWeight: 'bold' }}>
@@ -167,7 +170,7 @@ const renderExpensesItems = ({
       {expense.map((item: any) => {
         const amount = item.debit - item.credit;
         const name = isRTL ? item.itemNameAr : item.itemName;
-
+        total = total + amount;
         return (
           <>
             <Grid item xs={1}></Grid>
@@ -187,63 +190,33 @@ const renderExpensesItems = ({
           </>
         );
       })}
-      <Grid item xs={4}>
-        <Typography>
-          {arrow} {isRTL ? 'العهدة' : 'Custody'}
-        </Typography>
-      </Grid>
-      <Grid item xs={2}></Grid>
-      <Grid item xs={2}>
-        {totalCustodyDebitTime > 0 && (
-          <Typography>{moneyFormat(totalCustodyDebitTime)}</Typography>
-        )}
-      </Grid>
-      <Grid item xs={2}>
-        {totalCustodyCreditTime > 0 && (
-          <Typography>{moneyFormat(totalCustodyCreditTime)}</Typography>
-        )}
-      </Grid>
-      <Grid item xs={2}>
-        {<Typography>{moneyFormat(custbalance)}</Typography>}
-      </Grid>
-      <Grid item xs={4}>
-        <Typography>
-          {arrow} {isRTL ? 'السلفة' : 'Advanced'}
-        </Typography>
-      </Grid>
-      <Grid item xs={2}></Grid>
-      <Grid item xs={2}>
-        {totalAdvanceRecTime > 0 && (
-          <Typography>{moneyFormat(totalAdvanceRecTime)}</Typography>
-        )}
-      </Grid>
-      <Grid item xs={2}>
-        {totalAdvancePayTime > 0 && (
-          <Typography>{moneyFormat(totalAdvancePayTime)}</Typography>
-        )}
-      </Grid>
-      <Grid item xs={2}>
-        {<Typography>{moneyFormat(advbalance)}</Typography>}
-      </Grid>
-      <Grid item xs={4}>
+      <Grid item xs={1}></Grid>
+      <Grid item xs={5}>
         <Typography style={{ fontWeight: 'bold' }}>
           {isRTL ? 'المجموع' : 'Total'}
         </Typography>
       </Grid>
-      <Grid item xs={6}></Grid>
-      <Grid item xs={2}>
+      <Grid item xs={2}></Grid>
+      <Grid item xs={3}>
         <Typography style={{ fontWeight: 'bold' }}>
           {moneyFormat(total)}
         </Typography>
       </Grid>
+      <Grid item xs={1}></Grid>
     </Grid>
   );
 };
 
-// credit دائن
-
-function SalaryBox({ data, isRTL, height }) {
-  console.log('data', data);
+function SalaryBox({
+  data,
+  isRTL,
+  words,
+  height,
+  start,
+  setStart,
+  end,
+  setEnd,
+}) {
   const {
     totalAdvancePay,
     totalAdvancePayTime,
@@ -256,12 +229,6 @@ function SalaryBox({ data, isRTL, height }) {
     expense,
     income,
   } = data;
-
-  const totalIncCredit = _.sumBy(income, 'credit');
-  const totalIncDebit = _.sumBy(income, 'debit');
-  const totalExpCredit = _.sumBy(expense, 'credit');
-  const totalExpDebit = _.sumBy(expense, 'debit');
-
   return (
     <Paper
       style={{
@@ -283,21 +250,44 @@ function SalaryBox({ data, isRTL, height }) {
         isRTL,
       })}
       <Divider style={{ margin: 20 }}></Divider>
-      {renderIncomeItems({
-        income,
-        isRTL,
-        title: isRTL ? 'المبيعات' : 'Sales',
-      })}
-      <Divider style={{ margin: 20 }}></Divider>
-      {renderExpensesItems({
-        expense,
-        isRTL,
-        title: isRTL ? 'المبيعات' : 'Sales',
-        totalAdvancePayTime,
-        totalAdvanceRecTime,
-        totalCustodyCreditTime,
-        totalCustodyDebitTime,
-      })}
+      <Paper elevation={5} style={{ margin: 20, paddingBottom: 30 }}>
+        <Grid container spacing={2}>
+          <Grid item xs={1}></Grid>
+          <Grid item xs={5}>
+            <CalenderLocal
+              isRTL={isRTL}
+              label={words.start}
+              value={start}
+              onChange={(value: any) => setStart(value)}
+            ></CalenderLocal>
+          </Grid>
+          <Grid item xs={5}>
+            <CalenderLocal
+              isRTL={isRTL}
+              label={words.end}
+              value={end}
+              onChange={(value: any) => setEnd(value)}
+            ></CalenderLocal>
+          </Grid>
+          <Grid item xs={1}></Grid>
+        </Grid>
+        <Divider style={{ margin: 20 }}></Divider>
+        {renderIncomeItems({
+          income,
+          isRTL,
+          title: isRTL ? 'المبيعات' : 'Sales',
+        })}
+        <Divider style={{ margin: 20 }}></Divider>
+        {renderExpensesItems({
+          expense,
+          isRTL,
+          title: isRTL ? 'المصروفات' : 'Expenses',
+          totalAdvancePayTime,
+          totalAdvanceRecTime,
+          totalCustodyCreditTime,
+          totalCustodyDebitTime,
+        })}
+      </Paper>
     </Paper>
   );
 }

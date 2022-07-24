@@ -711,8 +711,8 @@ export const taskdataFormatter = ({
       <Grid item xs={12}>
         <Box
           onClick={() => {
-            setResourseItem(row);
-            setOpenResourseItem(true);
+            setEmployeeItem(row);
+            setOpenEmployeeItem(true);
           }}
           style={{
             display: 'flex',
@@ -722,14 +722,34 @@ export const taskdataFormatter = ({
           }}
         >
           {renderTag({
-            value: isRTL ? resourseNameAr : resourseName,
+            value: isRTL ? employeeNameAr : employeeName,
             color: '#333',
             bgcolor: colors.blueGrey[50],
             fontSize: 14,
           })}
         </Box>
       </Grid>
-      <Grid item xs={12}>
+      <Grid item xs={6}>
+        <Box
+          style={{
+            display: 'flex',
+            flex: 1,
+            cursor: 'pointer',
+          }}
+          onClick={() => {
+            setResourseItem(row);
+            setOpenResourseItem(true);
+          }}
+        >
+          {renderTag({
+            value: isRTL ? resourseNameAr : resourseName,
+            color: '#333',
+            bgcolor: colors.blueGrey[50],
+            width: 100,
+          })}
+        </Box>
+      </Grid>
+      <Grid item xs={6}>
         <Box
           style={{
             display: 'flex',
@@ -749,24 +769,6 @@ export const taskdataFormatter = ({
           >
             {renderTag({
               value: isRTL ? departmentNameAr : departmentName,
-              color: '#333',
-              bgcolor: colors.blueGrey[50],
-              width: 100,
-            })}
-          </Box>
-          <Box
-            style={{
-              display: 'flex',
-              flex: 1,
-              cursor: 'pointer',
-            }}
-            onClick={() => {
-              setEmployeeItem(row);
-              setOpenEmployeeItem(true);
-            }}
-          >
-            {renderTag({
-              value: isRTL ? employeeNameAr : employeeName,
               color: '#333',
               bgcolor: colors.blueGrey[50],
               width: 100,

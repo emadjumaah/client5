@@ -10,25 +10,27 @@ export default function getRruleData({
   count = 1,
   isCustom,
 }: any) {
-  if (isCustom) {
-    const all = [dtstart, until];
-    const str = `${dtstart}, ${until}`;
-    const txt = `Custom ${dtstart}, ${until}`;
-    return { all, str, txt };
-  } else {
-    const rule = new RRule({
-      freq,
-      interval,
-      byweekday,
-      bymonthday,
-      dtstart,
-      until,
-      count: byweekday?.[0] || bymonthday?.[0] ? count : count + 1,
-    });
-    const all = rule.all();
-    const str = rule.toString();
-    const txt = rule.toText();
-    return { all, str, txt };
+  if (!isNaN(dtstart?.getTime())) {
+    if (isCustom) {
+      const all = [dtstart, until];
+      const str = `${dtstart}, ${until}`;
+      const txt = `Custom ${dtstart}, ${until}`;
+      return { all, str, txt };
+    } else {
+      const rule = new RRule({
+        freq,
+        interval,
+        byweekday,
+        bymonthday,
+        dtstart,
+        until,
+        count: byweekday?.[0] || bymonthday?.[0] ? count : count + 1,
+      });
+      const all = rule.all();
+      const str = rule.toString();
+      const txt = rule.toText();
+      return { all, str, txt };
+    }
   }
 }
 
