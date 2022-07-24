@@ -16,6 +16,7 @@ function ImageView({ images, height, width, removePhoto, big }: any) {
     setCurrentImage(0);
     setIsViewerOpen(false);
   };
+  const refsize = big ? (height * 3) / 4 + 10 : width / 2 - 10;
   if (!images || images.length === 0) {
     return <Paper style={{ height, width, overflow: 'auto' }}></Paper>;
   }
@@ -26,7 +27,6 @@ function ImageView({ images, height, width, removePhoto, big }: any) {
           display: 'flex',
           flexWrap: 'wrap',
           marginRight: big ? 8 : 3,
-          // paddingTop: big ? 5 : undefined,
         }}
       >
         {images.map((src: any, index: any) => (
@@ -50,8 +50,8 @@ function ImageView({ images, height, width, removePhoto, big }: any) {
             <img
               src={src}
               onClick={() => openImageViewer(index)}
-              width={width / 2 - 10}
-              height={width / 2 - 10}
+              width={refsize}
+              height={refsize}
               key={index}
               style={{
                 padding: big ? 10 : 5,

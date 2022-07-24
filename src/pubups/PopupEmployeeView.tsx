@@ -27,7 +27,7 @@ import ExpensesProdCustomer from '../Shared/ExpensesProdCustomer';
 import InvoicesSupplier from '../Shared/InvoicesSupplier';
 import PaymentSupplier from '../Shared/PaymentSupplier';
 import useWindowDimensions from '../hooks/useWindowDimensions';
-import MainCustomer from '../Shared/MainCustomer';
+import MainEmployee from '../Shared/MainEmployee';
 import { TabPanel, useStyles, a11yProps } from '../Shared/TabPanel';
 import DateNavigatorReports from '../components/filters/DateNavigatorReports';
 import { useTemplate } from '../hooks';
@@ -154,7 +154,7 @@ const PopupEmployeeView = ({ open, onClose, row, theme, company }: any) => {
                       style={{ marginBottom: 10, backgroundColor: '#f5f5f5' }}
                     >
                       <TabPanel value={value} index={0}>
-                        <MainCustomer
+                        <MainEmployee
                           isRTL={isRTL}
                           words={words}
                           theme={theme}
@@ -165,7 +165,7 @@ const PopupEmployeeView = ({ open, onClose, row, theme, company }: any) => {
                           height={height}
                           start={isTime ? start : null}
                           end={isTime ? end : null}
-                        ></MainCustomer>
+                        ></MainEmployee>
                       </TabPanel>
 
                       <TabPanel value={value} index={1}>
