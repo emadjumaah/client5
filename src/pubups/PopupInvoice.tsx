@@ -679,6 +679,7 @@ const PopupInvoice = ({
     total: totals.total,
     amount: totals.amount,
     items: itemsList,
+    discount,
   };
   const date = row?.startDate ? new Date(row?.startDate) : new Date();
   const day = weekdaysNNo?.[date.getDay()];

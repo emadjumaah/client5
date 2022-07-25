@@ -67,7 +67,7 @@ export default function ReceiptCustomer({
 
   const { tasks } = useTasks();
   const [loadFinances, financeData]: any = useLazyQuery(getReceipts, {
-    nextFetchPolicy: 'cache-and-network',
+    fetchPolicy: 'cache-and-network',
   });
   const { accounts } = useAccounts();
   const refresQuery = {

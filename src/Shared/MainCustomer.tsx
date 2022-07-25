@@ -46,7 +46,7 @@ export default function MainCustomer({
   const isProj = name === 'projectId';
 
   const [loadCalcss, calcsData]: any = useLazyQuery(getGereralCalculation, {
-    nextFetchPolicy: 'cache-and-network',
+    fetchPolicy: 'cache-and-network',
   });
   useEffect(() => {
     const variables = {

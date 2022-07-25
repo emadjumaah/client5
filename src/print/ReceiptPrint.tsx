@@ -259,7 +259,9 @@ export class ReceiptPrint extends React.PureComponent<any, any> {
             >
               {title && <Typography>{title}</Typography>}
               <Typography style={{ marginRight: 20 }}>
-                {invoice?.amount ? `Amount : ${invoice?.amount} QR` : ``}
+                {invoice?.amount
+                  ? `Amount : ${invoice?.amount - invoice?.discount} QR`
+                  : ``}
               </Typography>
               <Typography style={{ marginRight: 20 }}>
                 {invoice?.docNo ? `Invoice No : ${invoice?.docNo}, ` : ``}

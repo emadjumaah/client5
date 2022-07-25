@@ -44,6 +44,7 @@ import { invoiceClasses } from '../themes';
 import { SelectLocal } from '../pages/calendar/common/SelectLocal';
 import {
   byweekdayOptions,
+  getDaysList,
   intervalOptions,
   monthdaysOptions,
 } from '../constants/rrule';
@@ -388,11 +389,10 @@ const PopupTaskFull = ({
       }
     }
   }, [emplvalue, resovalue, custvalue]);
-
   useEffect(() => {
     if (weekdays && weekdays.length > 0) {
-      const bwd = weekdays.map((wd: any) => wd.value);
-      setByweekday(bwd);
+      const vals = getDaysList(weekdays);
+      setByweekday(vals);
     }
   }, [weekdays]);
 
@@ -421,16 +421,15 @@ const PopupTaskFull = ({
       setInvdays(0);
     }
   }, [start, end]);
-
   useEffect(() => {
     if (!isCustom) {
       const rdata = getRruleData({
         freq,
-        byweekday: weekdays?.length > 0 ? byweekday : undefined,
+        byweekday: byweekday?.length > 0 ? byweekday : undefined,
         dtstart: start,
         until: undefined,
         interval,
-        bymonthday: monthdays?.length > 0 ? bymonthday : undefined,
+        bymonthday: bymonthday?.length > 0 ? bymonthday : undefined,
         count,
         isCustom,
       });
@@ -667,14 +666,12 @@ const PopupTaskFull = ({
       setCount(row?.count ? row?.count : row?.evQty || 1);
       setIsEvents(row?.tasktype !== 3 ? true : false);
       const wd = row?.weekdays ? JSON.parse(row?.weekdays) : [];
-      const fwd =
-        wd.length > 0
-          ? wd.map((w: any) => ({ ...w, value: w.value.weekday }))
-          : [];
+      const awd = wd.map(
+        (d: any) => byweekdayOptions.filter((a: any) => a.id === d.id)?.[0]
+      );
+      awd.filter((x: any) => x);
+      setWeekdays(awd);
       const md = row?.monthdays ? JSON.parse(row?.monthdays) : [];
-      console.log('wd', fwd);
-      console.log('md', md);
-      setWeekdays(fwd);
       setMonthdays(md);
       setDayCost(row?.dayCost || 0);
       if (row?.periodType === 11 || row?.periodType === 33) {

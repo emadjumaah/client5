@@ -101,7 +101,7 @@ export default function InvoicesSupplier({
   const { products } = useProducts();
 
   const [loadInvoices, opData]: any = useLazyQuery(getPurchaseInvoices, {
-    nextFetchPolicy: 'cache-and-network',
+    fetchPolicy: 'cache-and-network',
   });
 
   const refresQuery = {

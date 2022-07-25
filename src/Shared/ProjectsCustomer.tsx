@@ -82,7 +82,7 @@ export default function ProjectsCustomer({
   const [openItem, setOpenItem] = useState(false);
 
   const [loadTasks, tasksData]: any = useLazyQuery(getObjectProjects, {
-    nextFetchPolicy: 'cache-and-network',
+    fetchPolicy: 'cache-and-network',
   });
 
   useEffect(() => {

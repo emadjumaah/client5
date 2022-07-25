@@ -117,6 +117,25 @@ export const monthdaysOptions = [
   { id: 28, name: '28', nameAr: '28', value: 28 },
 ];
 
+export const getDaysList = (nums: any) => {
+  if (!nums || nums.length === 0) {
+    return nums;
+  }
+  const nlist = [];
+  for (const num of nums) {
+    // if (num.id) nlist.push(num.value);
+    if (num?.value?.weekday === 0) nlist.push(RRule.MO);
+    if (num?.value?.weekday === 1) nlist.push(RRule.TU);
+    if (num?.value?.weekday === 2) nlist.push(RRule.WE);
+    if (num?.value?.weekday === 3) nlist.push(RRule.TH);
+    if (num?.value?.weekday === 4) nlist.push(RRule.FR);
+    if (num?.value?.weekday === 5) nlist.push(RRule.SA);
+    if (num?.value?.weekday === 6) nlist.push(RRule.SU);
+  }
+  nlist.filter((x: any) => x);
+  return nlist;
+};
+
 export const byweekdayOptions = [
   {
     id: 1,

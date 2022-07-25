@@ -103,7 +103,7 @@ export default function InvoicesCustomer({
   const { services } = useServices();
 
   const [loadInvoices, opData]: any = useLazyQuery(getInvoices, {
-    nextFetchPolicy: 'cache-and-network',
+    fetchPolicy: 'cache-and-network',
   });
 
   const refresQuery = {

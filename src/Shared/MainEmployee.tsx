@@ -4,6 +4,7 @@ import {
   appointmentsMainFormatter,
   kaidsMainFormatter,
   employeeDataView,
+  salesMainFormatter,
 } from './colorFormat';
 import getGereralCalculation from '../graphql/query/getGereralCalculation';
 import ReminderBox from './ReminderBox';
@@ -13,6 +14,7 @@ import RefetchBox from './RefetchBox';
 import { ImageView } from '../components/viewer';
 import SalaryBox from './SalaryBox';
 import getSalaryCalculation from '../graphql/query/getSalaryCalculation';
+import { getEndOfMonth, getStartOfMonth } from './helpers';
 
 export default function MainCustomer({
   isRTL,
@@ -25,16 +27,22 @@ export default function MainCustomer({
   height,
   start,
   end,
+  sStart,
+  setSStart,
+  sEnd,
+  setSEnd,
+  company,
+  user,
 }: any) {
   const [data, setData] = useState<any>(null);
   const [sdata, setSdata] = useState<any>(null);
-  const [sStart, setSStart] = useState<any>(new Date());
-  const [sEnd, setSEnd] = useState<any>(new Date());
+  const [salary, setSalary] = useState<any>(0);
+
   const [loadCalcss, calcsData]: any = useLazyQuery(getGereralCalculation, {
-    nextFetchPolicy: 'cache-and-network',
+    fetchPolicy: 'cache-and-network',
   });
   const [loadSladata, calcsSaldata]: any = useLazyQuery(getSalaryCalculation, {
-    nextFetchPolicy: 'cache-and-network',
+    fetchPolicy: 'cache-and-network',
   });
   useEffect(() => {
     const variables = {
@@ -46,6 +54,18 @@ export default function MainCustomer({
       variables,
     });
   }, [id, start, end]);
+
+  useEffect(() => {
+    if (!sStart) {
+      const somn = getStartOfMonth(null);
+      setSStart(somn);
+    }
+    if (!sEnd) {
+      const eom = getEndOfMonth(null);
+      setSEnd(eom);
+    }
+  }, []);
+
   useEffect(() => {
     const variables = {
       [name]: id,
@@ -55,7 +75,7 @@ export default function MainCustomer({
     loadSladata({
       variables,
     });
-  }, [id, sStart, sEnd]);
+  }, [sStart, sEnd]);
 
   useEffect(() => {
     const res = calcsData?.data?.getGereralCalculation?.data;
@@ -64,6 +84,7 @@ export default function MainCustomer({
       setData(data);
     }
   }, [calcsData, calcsSaldata, start, end]);
+
   useEffect(() => {
     const res = calcsSaldata?.data?.getSalaryCalculation?.data;
     if (res) {
@@ -146,17 +167,34 @@ export default function MainCustomer({
                   </Box>
                 </Grid>
                 <Grid item xs={4}>
-                  <Box style={{ backgroundColor: '#fff', height: 250 }}>
-                    {appointmentsMainFormatter({ row: data, theme, isRTL })}
-                  </Box>
                   <Box
                     style={{
                       backgroundColor: '#fff',
-                      height: 200,
-                      marginTop: 15,
+                      height: 250,
                     }}
                   >
-                    {kaidsMainFormatter({ row: data, theme, isRTL })}
+                    {appointmentsMainFormatter({ row: data, theme, isRTL })}
+                  </Box>
+                  <Box display={'flex'}>
+                    <Box
+                      style={{
+                        backgroundColor: '#fff',
+                        height: 200,
+                        marginTop: 10,
+                        marginLeft: 10,
+                      }}
+                    >
+                      {salesMainFormatter({ row: data, theme, isRTL })}
+                    </Box>
+                    <Box
+                      style={{
+                        backgroundColor: '#fff',
+                        height: 200,
+                        marginTop: 10,
+                      }}
+                    >
+                      {kaidsMainFormatter({ row: data, theme, isRTL })}
+                    </Box>
                   </Box>
                   <Box style={{ marginTop: 10 }}>
                     <ImageView
@@ -177,6 +215,11 @@ export default function MainCustomer({
                     end={sEnd}
                     setEnd={setSEnd}
                     words={words}
+                    salary={salary}
+                    setSalary={setSalary}
+                    company={company}
+                    user={user}
+                    row={row}
                   ></SalaryBox>
                 </Grid>
               </Grid>

@@ -53,7 +53,7 @@ export default function EmployeeCustody({
   const [rows, setRows] = useState([]);
 
   const [loadKaids, kaidsData]: any = useLazyQuery(getEmployeeCustody, {
-    nextFetchPolicy: 'cache-and-network',
+    fetchPolicy: 'cache-and-network',
   });
 
   useEffect(() => {

@@ -36,15 +36,15 @@ import EmployeeCustody from '../Shared/EmployeeCustody';
 
 const PopupEmployeeView = ({ open, onClose, row, theme, company }: any) => {
   const classes = useStyles();
-
   const [value, setValue] = useState(0);
   const [start, setStart] = useState<any>(null);
   const [end, setEnd] = useState<any>(null);
+  const [sStart, setSStart] = useState<any>(null);
+  const [sEnd, setSEnd] = useState<any>(null);
   const [currentViewName, setCurrentViewName] = useState('Month');
   const [currentDate, setCurrentDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
   const [isTime, setIsTime] = useState(false);
-
   const currentViewNameChange = (e: any) => {
     setCurrentViewName(e.target.value);
   };
@@ -65,6 +65,7 @@ const PopupEmployeeView = ({ open, onClose, row, theme, company }: any) => {
 
   const {
     translate: { words, isRTL },
+    store: { user },
   }: GContextTypes = useContext(GlobalContext);
 
   const onCloseView = () => {
@@ -165,6 +166,12 @@ const PopupEmployeeView = ({ open, onClose, row, theme, company }: any) => {
                           height={height}
                           start={isTime ? start : null}
                           end={isTime ? end : null}
+                          sStart={sStart}
+                          setSStart={setSStart}
+                          sEnd={sEnd}
+                          setSEnd={setSEnd}
+                          company={company}
+                          user={user}
                         ></MainEmployee>
                       </TabPanel>
 

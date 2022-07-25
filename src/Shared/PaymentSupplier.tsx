@@ -62,7 +62,7 @@ export default function PaymentSupplier({
 
   const { tasks } = useTasks();
   const [loadFinances, financeData]: any = useLazyQuery(getPayments, {
-    nextFetchPolicy: 'cache-and-network',
+    fetchPolicy: 'cache-and-network',
   });
   const { accounts } = useAccounts();
   const refresQuery = {

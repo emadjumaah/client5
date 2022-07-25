@@ -155,7 +155,7 @@ export default function EventsCustomer({
   };
 
   const [getEvents, eventsData]: any = useLazyQuery(getObjectEvents, {
-    nextFetchPolicy: 'cache-and-network',
+    fetchPolicy: 'cache-and-network',
   });
 
   useEffect(() => {

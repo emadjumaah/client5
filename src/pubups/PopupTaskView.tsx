@@ -76,7 +76,7 @@ const PopupTaskView = ({
 
   const [custvalue, setCustvalue] = useState(null);
   const [resovalue, setResovalue] = useState(null);
-  const [info, setInfo] = useState<any>(null);
+  // const [info, setInfo] = useState<any>(null);
   const [closeloading, setCloseloading] = useState<any>(null);
 
   const [openCloseDate, setOpenCloseDate] = useState<any>(false);
@@ -128,9 +128,10 @@ const PopupTaskView = ({
     if (row && row._id) {
       const custId = row.customerId;
       const resId = row.resourseId;
-      if (row?.info) {
-        setInfo(JSON.parse(row?.info));
-      }
+      // if (row?.info) {
+      //   console.log('row?.info', row?.info);
+      //   setInfo(JSON.parse(row?.info));
+      // }
       // setStart(row?.start);
       // setEnd(row?.end);
       if (resId) {
@@ -235,7 +236,7 @@ const PopupTaskView = ({
     end,
     resovalue,
     custvalue,
-    info,
+    // info,
     isRTL: isRTL,
   };
 

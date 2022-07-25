@@ -114,9 +114,50 @@ export class InvoicePrint extends React.PureComponent<any, any> {
     );
   };
   renderGrandTotal = () => {
+    const netamount =
+      this.props.printData?.total - this.props.printData?.discount;
     return (
       <Grid container spacing={0}>
         {this.renderDivider(3)}
+        <Grid item xs={7}></Grid>
+        <Grid item xs={3}>
+          <Box
+            border={1}
+            borderColor="grey.300"
+            style={{
+              padding: 6,
+              fontSize: 14,
+              fontWeight: 'bold',
+              height: 40,
+              backgroundColor: '#f5f5f5',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            <div>Discount</div>
+            <div>الحسم</div>
+          </Box>
+        </Grid>
+        <Grid item xs={2}>
+          <Box
+            border={1}
+            borderColor="grey.300"
+            style={{
+              padding: 6,
+              fontSize: 16,
+              fontWeight: 'bold',
+              height: 40,
+              backgroundColor: '#f5f5f5',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'flex-end',
+            }}
+          >
+            {moneyFormat(this.props.printData?.discount)}
+          </Box>
+        </Grid>
         <Grid item xs={7}></Grid>
         <Grid item xs={3}>
           <Box
@@ -153,7 +194,7 @@ export class InvoicePrint extends React.PureComponent<any, any> {
               justifyContent: 'flex-end',
             }}
           >
-            {moneyFormat(this.props.printData?.total)}
+            {moneyFormat(netamount)}
           </Box>
         </Grid>
       </Grid>

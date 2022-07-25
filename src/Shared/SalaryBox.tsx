@@ -1,5 +1,6 @@
 import {
   Box,
+  Button,
   colors,
   Divider,
   Grid,
@@ -7,7 +8,10 @@ import {
   Typography,
 } from '@material-ui/core';
 import _ from 'lodash';
-import { CalenderLocal } from '../components';
+import { useRef } from 'react';
+import { useReactToPrint } from 'react-to-print';
+import { CalenderLocal, TextFieldLocal } from '../components';
+import { SalaryPrint } from '../print/SalaryPrint';
 import { moneyFormat } from './colorFormat';
 
 const renderBalance = ({
@@ -216,6 +220,11 @@ function SalaryBox({
   setStart,
   end,
   setEnd,
+  salary,
+  setSalary,
+  company,
+  user,
+  row,
 }) {
   const {
     totalAdvancePay,
@@ -229,6 +238,25 @@ function SalaryBox({
     expense,
     income,
   } = data;
+
+  const incomeqty = _.sumBy(income, 'qty');
+  const exptotal = _.sumBy(expense, 'debit');
+  const componentRef: any = useRef();
+  const handleReactPrint = useReactToPrint({
+    content: () => componentRef.current,
+    documentTitle: `Salary - ${isRTL ? row?.nameAr : row?.name}`,
+    removeAfterPrint: true,
+  });
+  const printData = {
+    row,
+    income,
+    expense,
+    isRTL,
+    incomeqty,
+    salary,
+    exptotal,
+  };
+
   return (
     <Paper
       style={{
@@ -249,7 +277,7 @@ function SalaryBox({
         addebit: totalAdvanceRec,
         isRTL,
       })}
-      <Divider style={{ margin: 20 }}></Divider>
+      <Divider style={{ margin: 10 }}></Divider>
       <Paper elevation={5} style={{ margin: 20, paddingBottom: 30 }}>
         <Grid container spacing={2}>
           <Grid item xs={1}></Grid>
@@ -288,6 +316,42 @@ function SalaryBox({
           totalCustodyDebitTime,
         })}
       </Paper>
+      {company?.tempId === 9 && (
+        <Grid container spacing={2} style={{ marginBottom: 15 }}>
+          <Grid item xs={2}></Grid>
+          <Grid item xs={4}>
+            <TextFieldLocal
+              name="salary"
+              label={isRTL ? 'الراتب' : 'Salary'}
+              value={salary}
+              onChange={(e: any) => setSalary(Number(e.target.value))}
+              type="number"
+              fullWidth
+              mb={0}
+            />
+          </Grid>
+          <Grid item xs={4}>
+            <Button
+              fullWidth
+              variant="contained"
+              color="primary"
+              style={{ marginTop: 9, height: 38 }}
+              onClick={handleReactPrint}
+            >
+              <Typography>{isRTL ? 'طباعة الراتب' : 'Print Salary'}</Typography>
+            </Button>
+          </Grid>
+          <Grid item xs={2}></Grid>
+        </Grid>
+      )}
+      <div style={{ display: 'none' }}>
+        <SalaryPrint
+          company={company}
+          user={user}
+          printData={printData}
+          ref={componentRef}
+        />
+      </div>
     </Paper>
   );
 }

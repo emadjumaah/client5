@@ -71,7 +71,7 @@ const PopupReceipt = ({
   });
 
   const [loadBalance, balanceData]: any = useLazyQuery(getGereralCalculation, {
-    nextFetchPolicy: 'cache-and-network',
+    fetchPolicy: 'cache-and-network',
   });
 
   const openCustomer = () => {
@@ -84,7 +84,6 @@ const PopupReceipt = ({
   const onNewCustChange = (nextValue: any) => {
     setCustvalue(nextValue);
   };
-
   useEffect(() => {
     if (custvalue) {
       const variables = { customerId: custvalue._id };
@@ -151,7 +150,7 @@ const PopupReceipt = ({
       const data = JSON.parse(res);
       setBalance(data);
     }
-  }, [balanceData]);
+  }, [balanceData, open]);
 
   useEffect(() => {
     if (row && row._id) {
