@@ -58,6 +58,8 @@ import { useLazyQuery } from '@apollo/client';
 import { getOperationItems } from '../graphql';
 import getTaskDoneEvents from '../graphql/query/getTaskDoneEvents';
 import { sleep } from '../Shared/helpers';
+import { SVContractPrint } from '../print/SVContractPrint';
+import getGereralCalculation from '../graphql/query/getGereralCalculation';
 
 export const indexTheList = (list: any) => {
   return list.map((item: any, index: any) => {
@@ -152,6 +154,7 @@ const PopupTaskFull = ({
 
   const [total, setTotal] = useState<any>(0);
   const [info, setInfo] = useState<any>(null);
+  const [calcs, setCalcs] = useState<any>(null);
 
   const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
 
@@ -170,8 +173,13 @@ const PopupTaskFull = ({
   }: GContextTypes = useContext(GlobalContext);
   const isCar = tempId === 9 || tempId === 4;
 
-  const [getItems, itemsData]: any = useLazyQuery(getOperationItems);
+  const [getItems, itemsData]: any = useLazyQuery(getOperationItems, {
+    fetchPolicy: 'cache-and-network',
+  });
   const [getDoneEvents, doneEventsData]: any = useLazyQuery(getTaskDoneEvents, {
+    fetchPolicy: 'cache-and-network',
+  });
+  const [loadCalcs, calcsData]: any = useLazyQuery(getGereralCalculation, {
     fetchPolicy: 'cache-and-network',
   });
 
@@ -299,6 +307,12 @@ const PopupTaskFull = ({
     if (row && row._id) {
       const items = itemsData?.data?.['getOperationItems']?.data || [];
       const devents = doneEventsData?.data?.['getTaskDoneEvents']?.data;
+      const calcs = calcsData?.data?.['getGereralCalculation']?.data;
+
+      if (calcs) {
+        const data = JSON.parse(calcs);
+        setCalcs(data);
+      }
       if (devents) {
         setDoneEvents(JSON.parse(devents));
       }
@@ -550,6 +564,7 @@ const PopupTaskFull = ({
   });
   const printData = {
     ...row,
+    calcs,
     no: row?.docNo,
     start,
     end,
@@ -634,6 +649,7 @@ const PopupTaskFull = ({
     if (row && row._id) {
       getItems({ variables: { opId: row._id } });
       getDoneEvents({ variables: { contractId: row._id } });
+      loadCalcs({ variables: { contractId: row._id } });
       const depId = row.departmentId;
       const empId = row.employeeId;
       const custId = row.customerId;
@@ -813,6 +829,7 @@ const PopupTaskFull = ({
     setMonthdays([]);
     setDoneEvents(null);
     setDayCost(null);
+    setCalcs(null);
     setInvdays(0);
     setWeekdays([]);
   };
@@ -927,7 +944,9 @@ const PopupTaskFull = ({
   const day = weekdaysNNo?.[date.getDay()];
 
   const title = getPopupTitle('task', isNew);
-
+  const isSmartVision =
+    company?.publicKey ===
+    'BJFzgQWBP8m5YThe_JwVoS6g5EEKypJWy-8ZkW5yI5b2rJQu1uJ5dBnio86IgoSRWq7AsVif2WGtYmaKvPB6QJ0';
   return (
     <PopupLayout
       isRTL={isRTL}
@@ -1453,12 +1472,21 @@ const PopupTaskFull = ({
         ></PopupProject>
         <Box>
           <div style={{ display: 'none' }}>
-            <ContractPrint
-              company={company}
-              user={user}
-              printData={printData}
-              ref={componentRef}
-            />
+            {isSmartVision ? (
+              <SVContractPrint
+                company={company}
+                user={user}
+                printData={printData}
+                ref={componentRef}
+              />
+            ) : (
+              <ContractPrint
+                company={company}
+                user={user}
+                printData={printData}
+                ref={componentRef}
+              />
+            )}
           </div>
         </Box>
       </Box>

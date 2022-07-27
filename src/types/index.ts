@@ -15,6 +15,7 @@ interface UserTypes {
   employeeId: boolean;
   isFinance: boolean;
   isOperate: boolean;
+  isPurchase: boolean;
   isEditor: boolean;
   isSdmin: boolean;
   isWriter: boolean;

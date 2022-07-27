@@ -164,6 +164,12 @@ export class ReceiptPrint extends React.PureComponent<any, any> {
     const totalinvoiced = balance?.totalinvoiced || 0;
     const totalpaid = balance?.totalpaid || 0;
     const blns = totalinvoiced - totalDiscount - totalpaid;
+    const isDiscount = invoice?.discount > 0;
+    const amt = isDiscount
+      ? `${invoice?.amount} - ${invoice?.discount} = ${
+          invoice?.amount - invoice?.discount
+        }`
+      : invoice?.amount;
     return (
       <Grid item xs={12}>
         <Grid container spacing={2}>
@@ -259,9 +265,7 @@ export class ReceiptPrint extends React.PureComponent<any, any> {
             >
               {title && <Typography>{title}</Typography>}
               <Typography style={{ marginRight: 20 }}>
-                {invoice?.amount
-                  ? `Amount : ${invoice?.amount - invoice?.discount} QR`
-                  : ``}
+                {invoice?.amount ? `Amount : ${amt} QR` : ``}{' '}
               </Typography>
               <Typography style={{ marginRight: 20 }}>
                 {invoice?.docNo ? `Invoice No : ${invoice?.docNo}, ` : ``}

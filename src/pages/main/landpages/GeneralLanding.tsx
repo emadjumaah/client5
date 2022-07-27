@@ -196,6 +196,8 @@ export default function GeneralLanding(props: any) {
                     words={words}
                     height={610}
                     theme={theme}
+                    resourses={resourses}
+                    employees={employees}
                   ></RemindersOutBox>
                 </Grid>
                 <Grid item xs={4}>

@@ -510,7 +510,7 @@ export class ContractPrint extends React.PureComponent<any, any> {
   };
 
   renderPeriod = (data: any) => {
-    const { amount, totalpaid } = data;
+    const { calcs, amount } = data;
     return (
       <Grid container spacing={0}>
         <Grid item xs={1}>
@@ -543,7 +543,7 @@ export class ContractPrint extends React.PureComponent<any, any> {
               height: 30,
             }}
           >
-            {moneyFormatEmpty(totalpaid)}
+            {moneyFormatEmpty(calcs?.totalpaid)}
           </Box>
         </Grid>
         <Grid item xs={4}>
@@ -649,7 +649,7 @@ export class ContractPrint extends React.PureComponent<any, any> {
               height: 30,
             }}
           >
-            {moneyFormatEmpty(amount - totalpaid)}
+            {moneyFormatEmpty(amount - calcs?.totalpaid)}
           </Box>
         </Grid>
         <Grid item xs={4}>

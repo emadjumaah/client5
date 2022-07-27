@@ -16,6 +16,7 @@ export default gql`
     $isEmployee: Boolean
     $isFinance: Boolean
     $isOperate: Boolean
+    $isPurchase: Boolean
     $isEditor: Boolean
     $isAdmin: Boolean
     $isWriter: Boolean
@@ -36,6 +37,7 @@ export default gql`
       isEmployee: $isEmployee
       isFinance: $isFinance
       isOperate: $isOperate
+      isPurchase: $isPurchase
       isAdmin: $isAdmin
       isEditor: $isEditor
       isWriter: $isWriter
