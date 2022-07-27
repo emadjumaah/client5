@@ -20,6 +20,7 @@ export default gql`
         price
         unit
         photo
+        isSalary
 
         categoryId
         categoryName

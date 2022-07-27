@@ -918,7 +918,7 @@ const Content = () => {
                 theme={theme}
                 refresh={() => null}
               >
-                <ExpenseItems></ExpenseItems>
+                <ExpenseItems tempId={tempId}></ExpenseItems>
               </PageLayout>
             }
           />

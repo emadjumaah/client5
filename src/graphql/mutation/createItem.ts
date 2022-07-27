@@ -12,6 +12,7 @@ export default gql`
     $cost: Float
     $price: Float
     $unit: String
+    $isSalary: Boolean
     $category: CategoryInput
     $brand: BrandInput
     $employee: EmployeeInput
@@ -31,6 +32,7 @@ export default gql`
       unit: $unit
       category: $category
       brand: $brand
+      isSalary: $isSalary
       employee: $employee
       resourse: $resourse
       department: $department

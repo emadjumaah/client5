@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import {
   successAlert,
@@ -12,8 +12,14 @@ import {
 import { GContextTypes } from '../types';
 import { GlobalContext } from '../contexts';
 import PopupLayout from '../pages/main/PopupLayout';
-import { Grid } from '@material-ui/core';
+import {
+  Checkbox,
+  FormControlLabel,
+  Grid,
+  Typography,
+} from '@material-ui/core';
 import { TextFieldLocal } from '../components';
+import { useTemplate } from '../hooks';
 
 const PopupExpenseItem = ({
   open,
@@ -27,8 +33,9 @@ const PopupExpenseItem = ({
   theme,
 }: any) => {
   const [saving, setSaving] = useState(false);
+  const [isSalary, setIsSalary] = useState(false);
   const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
-
+  const { templateId } = useTemplate();
   const { register, handleSubmit, errors, reset } = useForm(yup.expitmResolver);
   const {
     translate: { words, isRTL },
@@ -38,6 +45,12 @@ const PopupExpenseItem = ({
   const resetAll = () => {
     reset();
   };
+
+  useEffect(() => {
+    if (row?._id) {
+      setIsSalary(row?.isSalary);
+    }
+  }, [row]);
 
   const onSubmit = async (data: any) => {
     setSaving(true);
@@ -52,6 +65,7 @@ const PopupExpenseItem = ({
       nameAr,
       price: Number(price),
       unit,
+      isSalary,
       desc,
       branch: user.branch,
       userId: user._id,
@@ -87,11 +101,14 @@ const PopupExpenseItem = ({
     onClose();
     resetAll();
     setSaving(false);
+    setIsSalary(false);
   };
 
   const onHandleSubmit = () => {
     handleSubmit(onSubmit)();
   };
+
+  const isDel = templateId === 9;
   const title = isRTL
     ? isNew
       ? 'مصروف جديدة'
@@ -178,6 +195,33 @@ const PopupExpenseItem = ({
                 rows={4}
               />
             </Grid>
+            {isDel && (
+              <Grid item xs={12}>
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      style={{ padding: 7 }}
+                      checked={isSalary}
+                      onChange={() => {
+                        setIsSalary(!isSalary);
+                      }}
+                      color="primary"
+                    />
+                  }
+                  label={
+                    <Typography
+                      color="primary"
+                      style={{
+                        fontWeight: 'bold',
+                      }}
+                    >
+                      {isRTL ? 'مستقطع الراتب' : 'Salary Deduction'}
+                    </Typography>
+                  }
+                  style={{ fontSize: 14 }}
+                />
+              </Grid>
+            )}
           </Grid>
         </Grid>
         <Grid item xs={1}></Grid>

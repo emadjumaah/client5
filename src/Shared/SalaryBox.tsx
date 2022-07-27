@@ -45,10 +45,10 @@ const renderBalance = ({
         </Typography>
       </Grid>
       <Grid item xs={3}>
-        {cucredit > 0 && <Typography>{moneyFormat(cucredit)}</Typography>}
+        {cudebit > 0 && <Typography>{moneyFormat(cudebit)}</Typography>}
       </Grid>
       <Grid item xs={3}>
-        {cudebit > 0 && <Typography>{moneyFormat(cudebit)}</Typography>}
+        {cucredit > 0 && <Typography>{moneyFormat(cucredit)}</Typography>}
       </Grid>
       <Grid item xs={3}>
         <Typography>{moneyFormat(cudebit - cucredit)}</Typography>
@@ -65,7 +65,7 @@ const renderBalance = ({
         {addebit > 0 && <Typography>{moneyFormat(addebit)}</Typography>}
       </Grid>
       <Grid item xs={3}>
-        <Typography>{moneyFormat(addebit - adcredit)}</Typography>
+        <Typography>{moneyFormat(adcredit - addebit)}</Typography>
       </Grid>
     </Grid>
   );
@@ -77,7 +77,7 @@ const renderIncomeItems = ({ income, isRTL, title }: any) => {
   const arrow = isRTL ? ' ←' : '→ ';
 
   return (
-    <Grid container spacing={2}>
+    <Grid container spacing={1}>
       <Grid item xs={1}></Grid>
       <Grid item xs={5}>
         <Typography
@@ -147,7 +147,7 @@ const renderExpensesItems = ({ expense, isRTL, title }: any) => {
   const arrow = isRTL ? ' ←' : '→ ';
   let total = 0;
   return (
-    <Grid container spacing={2}>
+    <Grid container spacing={1}>
       <Grid item xs={1}></Grid>
       <Grid item xs={5}>
         <Typography
@@ -222,19 +222,19 @@ function SalaryBox({
   setEnd,
   salary,
   setSalary,
+  custody,
+  setCustody,
+  advanced,
+  setAdvanced,
   company,
   user,
   row,
 }) {
   const {
     totalAdvancePay,
-    totalAdvancePayTime,
     totalAdvanceRec,
-    totalAdvanceRecTime,
     totalCustodyCredit,
-    totalCustodyCreditTime,
     totalCustodyDebit,
-    totalCustodyDebitTime,
     expense,
     income,
   } = data;
@@ -254,9 +254,11 @@ function SalaryBox({
     isRTL,
     incomeqty,
     salary,
+    custody,
+    advanced,
     exptotal,
   };
-
+  const isDel = company?.tempId === 9;
   return (
     <Paper
       style={{
@@ -266,7 +268,8 @@ function SalaryBox({
         backgroundColor: '#fff',
         height,
         overflow: 'auto',
-        padding: 10,
+        paddingLeft: 10,
+        paddingRight: 10,
       }}
     >
       <Box style={{ marginTop: 20 }}></Box>
@@ -278,7 +281,7 @@ function SalaryBox({
         isRTL,
       })}
       <Divider style={{ margin: 10 }}></Divider>
-      <Paper elevation={5} style={{ margin: 20, paddingBottom: 30 }}>
+      <Paper elevation={5} style={{ margin: 10, paddingBottom: 20 }}>
         <Grid container spacing={2}>
           <Grid item xs={1}></Grid>
           <Grid item xs={5}>
@@ -299,26 +302,23 @@ function SalaryBox({
           </Grid>
           <Grid item xs={1}></Grid>
         </Grid>
-        <Divider style={{ margin: 20 }}></Divider>
+        <Divider style={{ margin: 10 }}></Divider>
         {renderIncomeItems({
           income,
           isRTL,
           title: isRTL ? 'المبيعات' : 'Sales',
         })}
-        <Divider style={{ margin: 20 }}></Divider>
-        {renderExpensesItems({
-          expense,
-          isRTL,
-          title: isRTL ? 'المصروفات' : 'Expenses',
-          totalAdvancePayTime,
-          totalAdvanceRecTime,
-          totalCustodyCreditTime,
-          totalCustodyDebitTime,
-        })}
+        <Divider style={{ margin: 10 }}></Divider>
+        {isDel &&
+          renderExpensesItems({
+            expense,
+            isRTL,
+            title: isRTL ? 'المصروفات' : 'Expenses',
+          })}
       </Paper>
-      {company?.tempId === 9 && (
-        <Grid container spacing={2} style={{ marginBottom: 15 }}>
-          <Grid item xs={2}></Grid>
+      {isDel && (
+        <Grid container spacing={2} style={{ marginBottom: 15, marginTop: 5 }}>
+          <Grid item xs={1}></Grid>
           <Grid item xs={4}>
             <TextFieldLocal
               name="salary"
@@ -330,6 +330,30 @@ function SalaryBox({
               mb={0}
             />
           </Grid>
+          <Grid item xs={3}>
+            <TextFieldLocal
+              name="salary"
+              label={isRTL ? 'خصم سلفة' : 'Advanced Ded.'}
+              value={advanced}
+              onChange={(e: any) => setAdvanced(Number(e.target.value))}
+              type="number"
+              fullWidth
+              mb={0}
+            />
+          </Grid>
+          <Grid item xs={3}>
+            <TextFieldLocal
+              name="salary"
+              label={isRTL ? 'خصم عهدة' : 'Custody Ded.'}
+              value={custody}
+              onChange={(e: any) => setCustody(Number(e.target.value))}
+              type="number"
+              fullWidth
+              mb={0}
+            />
+          </Grid>
+          <Grid item xs={1}></Grid>
+          <Grid item xs={1}></Grid>
           <Grid item xs={4}>
             <Button
               fullWidth
@@ -341,7 +365,6 @@ function SalaryBox({
               <Typography>{isRTL ? 'طباعة الراتب' : 'Print Salary'}</Typography>
             </Button>
           </Grid>
-          <Grid item xs={2}></Grid>
         </Grid>
       )}
       <div style={{ display: 'none' }}>

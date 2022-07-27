@@ -5,6 +5,7 @@ import {
   kaidsMainFormatter,
   employeeDataView,
   salesMainFormatter,
+  incomeMainFormatter,
 } from './colorFormat';
 import getGereralCalculation from '../graphql/query/getGereralCalculation';
 import ReminderBox from './ReminderBox';
@@ -36,7 +37,10 @@ export default function MainCustomer({
 }: any) {
   const [data, setData] = useState<any>(null);
   const [sdata, setSdata] = useState<any>(null);
+
   const [salary, setSalary] = useState<any>(0);
+  const [custody, setCustody] = useState<any>(0);
+  const [advanced, setAdvanced] = useState<any>(0);
 
   const [loadCalcss, calcsData]: any = useLazyQuery(getGereralCalculation, {
     fetchPolicy: 'cache-and-network',
@@ -150,7 +154,20 @@ export default function MainCustomer({
                   <Box
                     style={{
                       backgroundColor: '#fff',
-                      height: 210,
+                      height: 200,
+                      marginTop: 10,
+                    }}
+                  >
+                    {incomeMainFormatter({
+                      row: data,
+                      theme,
+                      isRTL,
+                    })}
+                  </Box>
+                  <Box
+                    style={{
+                      backgroundColor: '#fff',
+                      height: 200,
                       marginTop: 10,
                     }}
                   >
@@ -162,7 +179,7 @@ export default function MainCustomer({
                       start={start}
                       end={end}
                       theme={theme}
-                      height={420}
+                      height={210}
                     ></ReminderBox>
                   </Box>
                 </Grid>
@@ -217,6 +234,10 @@ export default function MainCustomer({
                     words={words}
                     salary={salary}
                     setSalary={setSalary}
+                    custody={custody}
+                    setCustody={setCustody}
+                    advanced={advanced}
+                    setAdvanced={setAdvanced}
                     company={company}
                     user={user}
                     row={row}

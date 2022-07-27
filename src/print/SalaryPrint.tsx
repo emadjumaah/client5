@@ -88,10 +88,10 @@ export class SalaryPrint extends React.PureComponent<any, any> {
             {renderBox(row.name)}
           </Grid>
           <Grid item xs={3}>
-            {renderBox('TALABAT ID', true)}
+            {renderBox('TALABAT ID', false, true)}
           </Grid>
           <Grid item xs={9}>
-            {renderBox(row.workId, true)}
+            {renderBox(row.workId, false)}
           </Grid>
         </Grid>
       </Grid>
@@ -126,15 +126,15 @@ export class SalaryPrint extends React.PureComponent<any, any> {
     );
   };
   renderSalary = (data: any) => {
-    const { salary, expense, exptotal } = data;
-
-    const netsalary = salary - exptotal;
+    const { salary, custody, advanced, expense, exptotal } = data;
+    const alldud = exptotal + custody + advanced;
+    const netsalary = salary - alldud;
     const now = new Date();
     const date = now.toLocaleString('en-GB', {
       month: 'long',
       year: 'numeric',
     });
-    const h = (expense?.length + 2) * RH;
+    const h = (expense?.length + 4) * RH;
     return (
       <Grid item xs={12}>
         <Grid container spacing={0}>
@@ -168,6 +168,28 @@ export class SalaryPrint extends React.PureComponent<any, any> {
                     </>
                   );
                 })}
+              <>
+                <Grid item xs={6}>
+                  {renderBox('Advanced Deduction')}
+                </Grid>
+                <Grid item xs={3}>
+                  {renderBox(moneyFormat(advanced), true)}
+                </Grid>
+                <Grid item xs={3}>
+                  {renderBox('')}
+                </Grid>
+              </>
+              <>
+                <Grid item xs={6}>
+                  {renderBox('Custody Deduction')}
+                </Grid>
+                <Grid item xs={3}>
+                  {renderBox(moneyFormat(custody), true)}
+                </Grid>
+                <Grid item xs={3}>
+                  {renderBox('')}
+                </Grid>
+              </>
               <Grid item xs={6}>
                 {renderBox('Net Salary', false, true)}
               </Grid>

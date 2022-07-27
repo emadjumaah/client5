@@ -364,6 +364,7 @@ export class SVContractPrint extends React.PureComponent<any, any> {
     //     ? 'يومي'
     //     : 'Daily';
     const price = amount / evQty;
+    const fprice = dayCost > 0 ? dayCost : price;
     return (
       <Grid container spacing={0}>
         <Grid item xs={8}>
@@ -468,7 +469,7 @@ export class SVContractPrint extends React.PureComponent<any, any> {
                   height: 30,
                 }}
               >
-                {moneyFormatEmpty(dayCost > 0 ? dayCost : price)}
+                {isFinite(fprice) ? moneyFormatEmpty(fprice) : ''}
               </Box>
             </Grid>
           </Grid>

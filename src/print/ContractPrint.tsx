@@ -392,7 +392,7 @@ export class ContractPrint extends React.PureComponent<any, any> {
                   height: 30,
                 }}
               >
-                {moneyFormatEmpty(price)}
+                {isFinite(price) ? moneyFormatEmpty(price) : ''}
               </Box>
             </Grid>
             <Grid item xs={4}>

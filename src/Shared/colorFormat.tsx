@@ -1293,6 +1293,25 @@ export const sentFormatter = ({ row, value, editRAction }: any) => {
     </span>
   );
 };
+export const isSalaryFormatter = ({ row, value, editAction }: any) => {
+  const isSalary = !value;
+  const _id = row._id;
+  const variables = { _id, isSalary };
+  return (
+    <span>
+      <Checkbox
+        style={{ padding: 5 }}
+        checked={value}
+        onChange={async () => {
+          await editAction({
+            variables,
+          });
+        }}
+        color="primary"
+      />
+    </span>
+  );
+};
 export const sentShowFormatter = ({ value }: any) => {
   return (
     <span>

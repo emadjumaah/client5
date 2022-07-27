@@ -28,7 +28,7 @@ import { Command, Loading, PopupEditing } from '../../Shared';
 import { useExpenseItems } from '../../hooks';
 import { getRowId } from '../../common';
 import { PopupExpenseItem } from '../../pubups';
-import { currencyFormatter } from '../../Shared/colorFormat';
+import { currencyFormatter, isSalaryFormatter } from '../../Shared/colorFormat';
 import { AlertLocal, SearchTable } from '../../components';
 import { errorAlert, errorDeleteAlert } from '../../Shared/helpers';
 import { Box, Paper, Typography } from '@material-ui/core';
@@ -38,25 +38,39 @@ import ImportBtn from '../../common/ImportBtn';
 import PopupItemsImport from '../../pubups/PopupItemsImport';
 import { getColumns } from '../../common/columns';
 
-export default function ExpenseItems({ isRTL, words, theme }: any) {
+export default function ExpenseItems({ isRTL, words, theme, tempId }: any) {
   const [openImport, setOpenImport] = useState(false);
   const [loading, setLoading] = useState(false);
   const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
   const [pageSizes] = useState([5, 10, 15, 20, 50, 0]);
 
   const col = getColumns({ isRTL, words });
-
-  const [columns] = useState([
-    col.name,
-    { name: 'price', title: words.price },
-    { name: 'unit', title: words.unit },
-    { name: 'desc', title: words.description },
-  ]);
+  const isDel = tempId === 9;
+  const [columns] = useState(
+    isDel
+      ? [
+          col.name,
+          { name: 'price', title: words.price },
+          { name: 'unit', title: words.unit },
+          {
+            name: 'isSalary',
+            title: isRTL ? 'مستقطع الراتب' : 'Salary Deduction',
+          },
+          { name: 'desc', title: words.description },
+        ]
+      : [
+          col.name,
+          { name: 'price', title: words.price },
+          { name: 'unit', title: words.unit },
+          { name: 'desc', title: words.description },
+        ]
+  );
 
   const [tableColumnExtensions]: any = useState([
     { columnName: col.name.name, width: 250 },
     { columnName: 'price', width: 150 },
     { columnName: 'unit', width: 150 },
+    { columnName: 'isSalary', width: 150 },
     { columnName: 'desc', width: 250 },
   ]);
 
@@ -137,7 +151,14 @@ export default function ExpenseItems({ isRTL, words, theme }: any) {
             columnExtensions={tableColumnExtensions}
           />
           <TableColumnReordering
-            defaultOrder={['photo', 'nameAr', 'price', 'unit', 'desc']}
+            defaultOrder={[
+              'photo',
+              'nameAr',
+              'price',
+              'unit',
+              'isSalary',
+              'desc',
+            ]}
           />
           <TableColumnResizing defaultColumnWidths={tableColumnExtensions} />
           <TableHeaderRow
@@ -157,6 +178,12 @@ export default function ExpenseItems({ isRTL, words, theme }: any) {
           <DataTypeProvider
             for={['price']}
             formatterComponent={currencyFormatter}
+          ></DataTypeProvider>
+          <DataTypeProvider
+            for={['isSalary']}
+            formatterComponent={(props: any) =>
+              isSalaryFormatter({ ...props, editAction: editExpenseItem })
+            }
           ></DataTypeProvider>
 
           <TableEditColumn

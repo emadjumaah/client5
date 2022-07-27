@@ -670,6 +670,7 @@ const PopupExpensesDoc = ({
             setEmplvalue={setEmplvalue}
             setSuppvalue={setSuppvalue}
             isRTL={isRTL}
+            name={name}
           ></ExpensesTypeSelect>
         </Grid>
         <Grid item xs={4} style={{ marginTop: -15 }}>

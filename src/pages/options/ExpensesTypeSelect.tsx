@@ -11,11 +11,16 @@ const ExpensesTypeSelect = ({
   setEmplvalue,
   setSuppvalue,
   isRTL,
+  name,
 }) => {
   const onchange = (e: any) => {
     setPtype(e.target.value);
-    setEmplvalue(null);
-    setSuppvalue(null);
+    if (!name || name !== 'employeeId') {
+      setEmplvalue(null);
+    }
+    if (!name || name !== 'supplierId') {
+      setSuppvalue(null);
+    }
   };
   return (
     <RadioGroup
