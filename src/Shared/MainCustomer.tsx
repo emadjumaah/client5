@@ -34,6 +34,7 @@ export default function MainCustomer({
   height,
   start,
   end,
+  setCalcs,
 }: any) {
   const [data, setData] = useState<any>(null);
 
@@ -65,6 +66,9 @@ export default function MainCustomer({
       const data = JSON.parse(res);
       if (isCont) {
         data.coAmount = row.amount;
+      }
+      if (setCalcs) {
+        setCalcs(data);
       }
       setData(data);
     }

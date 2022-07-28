@@ -51,7 +51,7 @@ import {
 import RRule from 'rrule';
 import getRruleData from '../common/getRruleData';
 import { getEventsList, getInvDays } from '../common/helpers';
-import { ContractPrint } from '../print';
+// import { ContractPrint } from '../print';
 import { useReactToPrint } from 'react-to-print';
 import SelectMulti from '../Shared/SelectMulti';
 import { useLazyQuery } from '@apollo/client';
@@ -944,9 +944,9 @@ const PopupTaskFull = ({
   const day = weekdaysNNo?.[date.getDay()];
 
   const title = getPopupTitle('task', isNew);
-  const isSmartVision =
-    company?.publicKey ===
-    'BJFzgQWBP8m5YThe_JwVoS6g5EEKypJWy-8ZkW5yI5b2rJQu1uJ5dBnio86IgoSRWq7AsVif2WGtYmaKvPB6QJ0';
+  // const isSmartVision =
+  //   company?.publicKey ===
+  //   'BJFzgQWBP8m5YThe_JwVoS6g5EEKypJWy-8ZkW5yI5b2rJQu1uJ5dBnio86IgoSRWq7AsVif2WGtYmaKvPB6QJ0';
   return (
     <PopupLayout
       isRTL={isRTL}
@@ -1472,7 +1472,13 @@ const PopupTaskFull = ({
         ></PopupProject>
         <Box>
           <div style={{ display: 'none' }}>
-            {isSmartVision ? (
+            <SVContractPrint
+              company={company}
+              user={user}
+              printData={printData}
+              ref={componentRef}
+            />
+            {/* {isSmartVision ? (
               <SVContractPrint
                 company={company}
                 user={user}
@@ -1486,7 +1492,7 @@ const PopupTaskFull = ({
                 printData={printData}
                 ref={componentRef}
               />
-            )}
+            )} */}
           </div>
         </Box>
       </Box>

@@ -30,7 +30,7 @@ import {
 } from '../graphql';
 import getTasks from '../graphql/query/getTasks';
 import { getTaskTimeAmountData } from '../common/helpers';
-import { ContractPrint } from '../print';
+// import { ContractPrint } from '../print';
 import { useReactToPrint } from 'react-to-print';
 import KaidsCustomer from '../Shared/KaidsCustomer';
 import {
@@ -56,6 +56,7 @@ import InvoicesSupplier from '../Shared/InvoicesSupplier';
 import PaymentSupplier from '../Shared/PaymentSupplier';
 import ExpensesProdCustomer from '../Shared/ExpensesProdCustomer';
 import getGereralCalculation from '../graphql/query/getGereralCalculation';
+import { SVContractPrint } from '../print/SVContractPrint';
 
 const PopupTaskView = ({
   open,
@@ -83,7 +84,7 @@ const PopupTaskView = ({
   const [openInvoice, setOpenInvoice] = useState(false);
   const [openReceipt, setOpenReceipt] = useState(false);
   const [openExpenses, setOpenExpenses] = useState(false);
-
+  const [calcs, setCalcs] = useState<any>(null);
   const [start, setStart]: any = useState(null);
   const [end, setEnd]: any = useState(null);
   const [currentViewName, setCurrentViewName] = useState('Month');
@@ -231,6 +232,7 @@ const PopupTaskView = ({
 
   const printData = {
     ...row,
+    calcs,
     no: row?.docNo,
     start,
     end,
@@ -256,6 +258,9 @@ const PopupTaskView = ({
     onClose();
   };
   const title = `${tempwords?.task} : ${row?.title}`;
+  // const isSmartVision =
+  //   company?.publicKey ===
+  //   'BJFzgQWBP8m5YThe_JwVoS6g5EEKypJWy-8ZkW5yI5b2rJQu1uJ5dBnio86IgoSRWq7AsVif2WGtYmaKvPB6QJ0';
   return (
     <PopupLayout
       isRTL={isRTL}
@@ -343,6 +348,7 @@ const PopupTaskView = ({
                     {value === 0 && (
                       <TabPanel value={value} index={0}>
                         <MainCustomer
+                          setCalcs={setCalcs}
                           isRTL={isRTL}
                           words={words}
                           theme={theme}
@@ -685,12 +691,27 @@ const PopupTaskView = ({
           )}
           <Box>
             <div style={{ display: 'none' }}>
-              <ContractPrint
+              <SVContractPrint
                 company={company}
                 user={user}
                 printData={printData}
                 ref={componentRef}
               />
+              {/* {isSmartVision ? (
+                <SVContractPrint
+                  company={company}
+                  user={user}
+                  printData={printData}
+                  ref={componentRef}
+                />
+              ) : (
+                <ContractPrint
+                  company={company}
+                  user={user}
+                  printData={printData}
+                  ref={componentRef}
+                />
+              )} */}
             </div>
           </Box>
         </Box>
