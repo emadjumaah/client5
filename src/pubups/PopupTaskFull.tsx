@@ -944,9 +944,10 @@ const PopupTaskFull = ({
   const day = weekdaysNNo?.[date.getDay()];
 
   const title = getPopupTitle('task', isNew);
-  const isSmartVision =
-    company?.publicKey ===
-    'BJFzgQWBP8m5YThe_JwVoS6g5EEKypJWy-8ZkW5yI5b2rJQu1uJ5dBnio86IgoSRWq7AsVif2WGtYmaKvPB6QJ0';
+  const isSmartVision = true;
+  // const isSmartVision =
+  //   company?.publicKey ===
+  //   'BJFzgQWBP8m5YThe_JwVoS6g5EEKypJWy-8ZkW5yI5b2rJQu1uJ5dBnio86IgoSRWq7AsVif2WGtYmaKvPB6QJ0';
   return (
     <PopupLayout
       isRTL={isRTL}
