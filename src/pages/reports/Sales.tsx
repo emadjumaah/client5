@@ -283,6 +283,7 @@ export default function Sales({
       refresh={refresh}
       periodvalue={periodvalue}
       setPeriodvalue={setPeriodvalue}
+      loading={salesData?.loading}
     >
       <Paper>
         <Box

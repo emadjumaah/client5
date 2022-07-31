@@ -186,6 +186,7 @@ export default function ManageResourses({
       theme={theme}
       refresh={refreshresourse}
       bgcolor={bgcolor}
+      loading={empData?.loading}
     >
       <Box
         style={{

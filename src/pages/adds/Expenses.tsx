@@ -17,7 +17,7 @@ import {
   SearchPanel,
   Toolbar,
 } from '@devexpress/dx-react-grid-material-ui';
-import { Command, Loading, PopupEditing } from '../../Shared';
+import { Command, PopupEditing } from '../../Shared';
 import { getRowId, updateDocNumbers } from '../../common';
 import { useLazyQuery, useMutation } from '@apollo/client';
 import {
@@ -145,6 +145,7 @@ export default function Expenses({ isRTL, words, menuitem, theme, company }) {
       words={words}
       theme={theme}
       refresh={refresh}
+      loading={loading}
     >
       <Box
         style={{
@@ -251,7 +252,6 @@ export default function Expenses({ isRTL, words, menuitem, theme, company }) {
             <PopupExpenses company={company} tasks={tasks}></PopupExpenses>
           </PopupEditing>
         </Grid>
-        {loading && <Loading isRTL={isRTL} />}
       </Box>
     </PageLayout>
   );

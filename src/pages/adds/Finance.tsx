@@ -26,7 +26,7 @@ import {
   ColumnChooser,
   PagingPanel,
 } from '@devexpress/dx-react-grid-material-ui';
-import { Command, Loading, PopupEditing } from '../../Shared';
+import { Command, PopupEditing } from '../../Shared';
 import { getRowId, updateDocNumbers } from '../../common';
 import PopupFinance from '../../pubups/PopupFinance';
 import { useLazyQuery, useMutation } from '@apollo/client';
@@ -164,6 +164,7 @@ export default function Finance({ isRTL, words, menuitem, theme }) {
       words={words}
       theme={theme}
       refresh={refresh}
+      loading={loading}
     >
       <Box
         style={{
@@ -306,7 +307,6 @@ export default function Finance({ isRTL, words, menuitem, theme }) {
               <PopupFinance></PopupFinance>
             </PopupEditing>
           </Grid>
-          {loading && <Loading isRTL={isRTL} />}
         </Paper>
       </Box>
     </PageLayout>

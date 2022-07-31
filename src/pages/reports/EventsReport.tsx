@@ -327,6 +327,7 @@ export default function SalesReport({ isRTL, words, menuitem, theme }: any) {
       words={words}
       theme={theme}
       refresh={refresh}
+      loading={summaryData?.loading}
     >
       <Box
         style={{

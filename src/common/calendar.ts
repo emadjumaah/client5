@@ -22,14 +22,11 @@ export const commitAppointmentChanges = async ({
         employee,
         resourse,
         contract,
+        project,
+        retype,
         ...rest
       } = added;
       const { startPeriod, endPeriod } = getAppStartEndPeriod();
-      const itemslist = JSON.parse(items);
-      if (!(itemslist.length > 0)) {
-        window.alert(isRTL ? 'يجب اضافة خدمة' : 'Service should be added');
-        return;
-      }
       if (
         startDate < startPeriod ||
         startDate > endPeriod ||
@@ -89,6 +86,20 @@ export const commitAppointmentChanges = async ({
                 contractNameAr: contract.nameAr,
               }
             : undefined,
+          retype: retype
+            ? {
+                retypeId: retype._id,
+                retypeName: retype.name,
+                retypeNameAr: retype.nameAr,
+              }
+            : undefined,
+          project: project
+            ? {
+                projectId: project._id,
+                projectName: project.name,
+                projectNameAr: project.nameAr,
+              }
+            : undefined,
           ...rest,
         };
         await addEvent({ variables });
@@ -104,6 +115,8 @@ export const commitAppointmentChanges = async ({
         employee,
         resourse,
         contract,
+        project,
+        retype,
         ...rest
       } = data;
 
@@ -148,6 +161,20 @@ export const commitAppointmentChanges = async ({
               contractId: contract._id,
               contractName: contract.name,
               contractNameAr: contract.nameAr,
+            }
+          : undefined,
+        retype: retype
+          ? {
+              retypeId: retype._id,
+              retypeName: retype.name,
+              retypeNameAr: retype.nameAr,
+            }
+          : undefined,
+        project: project
+          ? {
+              projectId: project._id,
+              projectName: project.name,
+              projectNameAr: project.nameAr,
             }
           : undefined,
         ...rest,

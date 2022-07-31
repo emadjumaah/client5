@@ -163,6 +163,7 @@ export default function Suppliers(props: any) {
       words={words}
       theme={theme}
       refresh={refresh}
+      loading={supplsData?.loading}
     >
       <Box
         style={{

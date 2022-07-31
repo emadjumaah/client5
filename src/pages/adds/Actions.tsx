@@ -15,7 +15,6 @@ import {
   SearchPanel,
   Toolbar,
 } from '@devexpress/dx-react-grid-material-ui';
-import { Loading } from '../../Shared';
 import { getRowId } from '../../common';
 import { useLazyQuery } from '@apollo/client';
 import getNotificationsList from '../../graphql/query/getNotificationsList';
@@ -155,6 +154,7 @@ export default function Actions({ isRTL, words, menuitem, theme }) {
       words={words}
       theme={theme}
       refresh={refresh}
+      loading={loading}
     >
       <Box
         style={{
@@ -229,7 +229,6 @@ export default function Actions({ isRTL, words, menuitem, theme }) {
             }}
           />
         </Grid>
-        {loading && <Loading isRTL={isRTL} />}
       </Box>
     </PageLayout>
   );

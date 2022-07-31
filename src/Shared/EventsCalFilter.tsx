@@ -23,6 +23,7 @@ export default function EventsCalFilter({
   refresh,
   noEmpl = false,
   setResourseData,
+  loading,
 }: any) {
   const { employees } = useEmployees();
   const { departments } = useDepartments();
@@ -75,6 +76,7 @@ export default function EventsCalFilter({
           noEmpl={noEmpl}
           employees={employees}
           departments={departments}
+          loading={loading}
         ></DepartemplSelect>
       </Grid>
     </Grid>

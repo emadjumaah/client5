@@ -15,6 +15,8 @@ import { Grid, TextField } from '@material-ui/core';
 import PopupLayout from '../pages/main/PopupLayout';
 import { TextFieldLocal } from '../components';
 import { getPopupTitle } from '../constants/menu';
+import useRetypes from '../hooks/useRetypes';
+import AutoFieldLocal from '../components/fields/AutoFieldLocal';
 
 const PopupDeprtment = ({
   open,
@@ -28,17 +30,26 @@ const PopupDeprtment = ({
   theme,
 }: any) => {
   const [saving, setSaving] = useState(false);
+  const [rtypevalue, setRtypevalue] = useState<any>(null);
+
   const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
   const { register, handleSubmit, errors, reset } = useForm(yup.departResolver);
+
   const {
     translate: { words, isRTL },
     store: { user },
   }: GContextTypes = useContext(GlobalContext);
+  const { retypes } = useRetypes();
 
   const [color, setColor] = useState<any>('#AAAAAA');
+
   useEffect(() => {
     if (row && row._id) {
       setColor(row.color);
+    }
+    if (row?.retypeId) {
+      const depart = retypes.filter((dep: any) => dep._id === row.retypeId)[0];
+      setRtypevalue(depart);
     }
   }, [row]);
 
@@ -47,11 +58,25 @@ const PopupDeprtment = ({
     const name = data.name.trim();
     const nameAr = !isNew ? data.nameAr.trim() : name;
     const desc = data.desc;
+    const retype = rtypevalue
+      ? {
+          retypeId: rtypevalue._id,
+          retypeName: rtypevalue.name,
+          retypeNameAr: rtypevalue.nameAr,
+          retypeColor: rtypevalue.color,
+        }
+      : {
+          retypeId: undefined,
+          retypeName: undefined,
+          retypeNameAr: undefined,
+          retypeColor: undefined,
+        };
     const variables: any = {
       _id: row && row._id ? row._id : undefined, // is it new or edit
       name,
       nameAr,
       depType: 1,
+      retype,
       desc,
       color,
       branch: user.branch,
@@ -91,7 +116,7 @@ const PopupDeprtment = ({
     reset();
     setColor('#AAAAAA');
     setSaving(false);
-    // setDepart(departmentTypes[0]);
+    setRtypevalue(null);
   };
 
   const onHandleSubmit = () => {
@@ -141,6 +166,20 @@ const PopupDeprtment = ({
                 />
               </Grid>
             )}
+          </Grid>
+          <Grid item xs={12}>
+            <AutoFieldLocal
+              name="retype"
+              title={words?.retype}
+              words={words}
+              options={retypes.filter((dep: any) => dep.reType === 3)}
+              value={rtypevalue}
+              setSelectValue={setRtypevalue}
+              register={register}
+              isRTL={isRTL}
+              fullWidth
+              mb={0}
+            ></AutoFieldLocal>
           </Grid>
           <Grid item xs={12}>
             <TextFieldLocal

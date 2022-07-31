@@ -42,5 +42,6 @@ export default () => {
     editProduct,
     refreshproduct,
     removeProduct,
+    loading: itmData?.loading,
   };
 };

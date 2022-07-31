@@ -869,29 +869,23 @@ const Content = () => {
           <Route
             path="/services"
             element={
-              <PageLayout
+              <Services
                 menuitem={menuitem}
                 isRTL={isRTL}
                 words={words}
                 theme={theme}
-                refresh={() => null}
-              >
-                <Services></Services>
-              </PageLayout>
+              ></Services>
             }
           />
           <Route
             path="/products"
             element={
-              <PageLayout
+              <Products
                 menuitem={menuitem}
                 isRTL={isRTL}
                 words={words}
                 theme={theme}
-                refresh={() => null}
-              >
-                <Products></Products>
-              </PageLayout>
+              ></Products>
             }
           />
           <Route
@@ -911,15 +905,13 @@ const Content = () => {
           <Route
             path="/expenseitems"
             element={
-              <PageLayout
+              <ExpenseItems
                 menuitem={menuitem}
                 isRTL={isRTL}
                 words={words}
                 theme={theme}
-                refresh={() => null}
-              >
-                <ExpenseItems tempId={tempId}></ExpenseItems>
-              </PageLayout>
+                tempId={tempId}
+              ></ExpenseItems>
             }
           />
           <Route

@@ -70,6 +70,7 @@ export default gql`
         isEmployee
         isFinance
         isOperate
+        isPurchase
         isAdmin
         isEditor
         isWriter

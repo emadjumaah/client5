@@ -103,5 +103,6 @@ export default () => {
     salesMonthTotal,
     raseeds,
     refreshSalesData,
+    loading: chartData?.loading,
   };
 };

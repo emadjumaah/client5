@@ -333,6 +333,7 @@ export default function ExpensesReport({
       words={words}
       theme={theme}
       refresh={refresh}
+      loading={summaryData?.loading}
     >
       <Box
         style={{

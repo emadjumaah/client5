@@ -32,6 +32,7 @@ export default function AutoFieldLocal({
   width,
   showphone,
   nosort,
+  onNewFieldChange,
 }: any) {
   let sorted = options;
   if (!nosort) {
@@ -87,6 +88,9 @@ export default function AutoFieldLocal({
           disabled={disabled}
           onChange={(_, newValue: any) => {
             setSelectValue(newValue);
+            if (onNewFieldChange) {
+              onNewFieldChange(newValue?.id, name);
+            }
             if (setSelectError) {
               setSelectError(false);
             }

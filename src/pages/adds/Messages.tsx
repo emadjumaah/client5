@@ -142,6 +142,7 @@ export default function Messages({
       words={words}
       theme={theme}
       refresh={refresh}
+      loading={msgsData?.loading}
     >
       <Box
         style={{

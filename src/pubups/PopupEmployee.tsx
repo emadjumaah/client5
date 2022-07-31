@@ -20,7 +20,6 @@ import { Grid } from '@material-ui/core';
 import { TextFieldLocal } from '../components';
 import AutoFieldLocal from '../components/fields/AutoFieldLocal';
 import { getPopupTitle } from '../constants/menu';
-import PopupResourseType from './PopupResourseType';
 import useRetypes from '../hooks/useRetypes';
 import {
   AvatarUpload,
@@ -46,8 +45,6 @@ const PopupEmployee = ({
   const [depError, setDepError] = useState<any>(false);
   const [color, setColor] = useState<any>('#252B3B');
   const [daysoff, setDaysoff] = React.useState(weekdays);
-  const [newtext2, setNewtext2] = useState('');
-  const [openTyp, setOpenTyp] = useState(false);
 
   const [logoimage, setLogoimage] = useState(null);
   const [logourl, setLogourl] = useState(null);
@@ -56,7 +53,7 @@ const PopupEmployee = ({
   const [photosimages, setPhotosimages] = useState([]);
   const [photosurls, setPhotosurls] = useState([]);
 
-  const { retypes, addRetype, editRetype } = useRetypes();
+  const { retypes } = useRetypes();
 
   const daysoffChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setDaysoff({ ...daysoff, [event.target.name]: event.target.checked });
@@ -78,16 +75,6 @@ const PopupEmployee = ({
     }
   }, [row]);
 
-  const openRetype = () => {
-    setOpenTyp(true);
-  };
-  const onCloseRetype = () => {
-    setOpenTyp(false);
-    setNewtext2('');
-  };
-  const onNewTypChange = (nextValue: any) => {
-    setRtypevalue(nextValue);
-  };
   useEffect(() => {
     if (row && row._id) {
       const _id = row.retypeId;
@@ -448,7 +435,6 @@ const PopupEmployee = ({
                 selectError={depError}
                 refernce={emplRef}
                 register={register}
-                openAdd={openRetype}
                 isRTL={isRTL}
                 fullWidth
                 mb={0}
@@ -563,17 +549,6 @@ const PopupEmployee = ({
           </Grid>
         </Grid>
         <Grid item xs={1}></Grid>
-        <PopupResourseType
-          newtext={newtext2}
-          open={openTyp}
-          onClose={onCloseRetype}
-          isNew={true}
-          setNewValue={onNewTypChange}
-          row={null}
-          addAction={addRetype}
-          editAction={editRetype}
-          reType={1}
-        ></PopupResourseType>
       </Grid>
     </PopupLayout>
   );

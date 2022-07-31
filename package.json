@@ -1,6 +1,6 @@
 {
   "name": "jadwal-pwa",
-  "version": "4.4.1",
+  "version": "4.4.2",
   "private": true,
   "dependencies": {
     "@apollo/client": "^3.3.20",

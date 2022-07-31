@@ -31,7 +31,7 @@ export default () => {
   }, [getsevs]);
 
   const expenseItems = itmData?.data?.['getExpenseItems']?.data || [];
-  const refreshservice = () => itmData?.refetch();
+  const refreshexpitems = () => itmData?.refetch();
 
   return {
     expenseItems,
@@ -39,6 +39,7 @@ export default () => {
     addMultiExpenseItems,
     editExpenseItem,
     removeExpenseItem,
-    refreshservice,
+    refreshexpitems,
+    loading: itmData?.loading,
   };
 };

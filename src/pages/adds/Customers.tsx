@@ -168,6 +168,7 @@ export default function Customers(props: any) {
       words={words}
       theme={theme}
       refresh={refresh}
+      loading={custssData?.loading}
     >
       <Box
         style={{

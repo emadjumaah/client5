@@ -529,6 +529,7 @@ export default function ServicesReport({
       words={words}
       theme={theme}
       refresh={refresh}
+      loading={summaryData?.loading}
     >
       <Box
         style={{

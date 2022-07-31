@@ -16,7 +16,6 @@ import PaymentSelect from '../pages/options/PaymentSelect';
 import PopupCustomer from './PopupCustomer';
 import { useLazyQuery } from '@apollo/client';
 import { getOperationItems } from '../graphql';
-import LoadingInline from '../Shared/LoadingInline';
 import PopupLayout from '../pages/main/PopupLayout';
 import { Grid } from '@material-ui/core';
 import AutoFieldLocal from '../components/fields/AutoFieldLocal';
@@ -62,11 +61,10 @@ const PopupInvoice = ({
   name,
 }: any) => {
   const classes = invoiceClasses();
-  const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
   const { tasks } = useTasks();
   const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
-  const [selectedDate, setSelectedDate] = React.useState(new Date());
+  const [selectedDate, setSelectedDate] = React.useState(null);
   const [invNo, setInvNo] = useState<any>('');
 
   const [itemsList, setItemsList] = useState<any>([]);
@@ -269,7 +267,6 @@ const PopupInvoice = ({
           a.indx > b.indx ? 1 : b.indx > a.indx ? -1 : 0
         );
         setItemsList(itemsWqtyprice);
-        setLoading(false);
       }
     }
   }, [itemsData]);
@@ -357,7 +354,11 @@ const PopupInvoice = ({
   };
 
   const handleDateChange = (date: any) => {
-    setSelectedDate(date);
+    if (date) {
+      const d = new Date(date);
+      d?.setHours(8, 0, 0);
+      setSelectedDate(d);
+    }
   };
 
   useEffect(() => {
@@ -397,7 +398,6 @@ const PopupInvoice = ({
 
   useEffect(() => {
     if (row && row._id) {
-      setLoading(true);
       const variables = { opId: row._id };
       getItems({
         variables,
@@ -438,6 +438,14 @@ const PopupInvoice = ({
       handleDateChange(row.time);
     }
   }, [row]);
+
+  useEffect(() => {
+    if (isNew) {
+      const start = new Date();
+      start.setHours(8, 0, 0);
+      setSelectedDate(start);
+    }
+  }, [open]);
 
   const getOverallTotal = () => {
     const totalsin = itemsList.map((litem: any) => litem.itemtotal);
@@ -754,7 +762,6 @@ const PopupInvoice = ({
             ></PaymentSelect>
           )}
         </Grid>
-
         <Grid item xs={8}>
           <AutoFieldLocal
             name="customer"
@@ -844,7 +851,6 @@ const PopupInvoice = ({
             disabled={name === 'departmentId'}
           ></AutoFieldLocal>
         </Grid>
-
         <Grid item xs={12}>
           <Box
             style={{
@@ -880,7 +886,6 @@ const PopupInvoice = ({
                 ></ItemsTable>
               </Box>
             )}
-            {loading && <LoadingInline></LoadingInline>}
           </Box>
           <Box
             display="flex"
@@ -894,7 +899,7 @@ const PopupInvoice = ({
             <TextField
               name="discount"
               label={words.discount}
-              value={discount.toString()}
+              value={discount?.toString()}
               onChange={(e: any) => setDiscount(Number(e.target.value))}
               variant="outlined"
               style={{ width: 200 }}

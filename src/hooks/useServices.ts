@@ -37,5 +37,6 @@ export default () => {
     editService,
     removeService,
     refreshservice,
+    loading: itmData?.loading,
   };
 };

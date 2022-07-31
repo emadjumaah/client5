@@ -35,6 +35,7 @@ const PopupUserEmail = ({
   block,
   brch,
   employees,
+  emplnoaccount,
 }: any) => {
   const [saving, setSaving] = useState(false);
   const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
@@ -46,6 +47,7 @@ const PopupUserEmail = ({
   const [isEmployee, setisEmployee] = useState(false);
   const [isFinance, setisFinance] = useState(false);
   const [isOperate, setisOperate] = useState(false);
+  const [isPurchase, setisPurchase] = useState(false);
   const [isAdmin, setisAdmin] = useState(false);
   const [isEditor, setisEditor] = useState(false);
   const [isWriter, setisWriter] = useState(false);
@@ -89,6 +91,7 @@ const PopupUserEmail = ({
       setisEmployee(row.isEmployee);
       setisFinance(row.isFinance);
       setisOperate(row.isOperate);
+      setisPurchase(row.isPurchase);
       setisAdmin(row.isAdmin);
       setisEditor(row.isEditor);
       setisWriter(row.isWriter);
@@ -119,20 +122,22 @@ const PopupUserEmail = ({
       return;
     }
     setSaving(true);
-    const name = data.name.trim();
-    const phone = data.phone;
-    const password = data.password;
-
+    const name = data?.name;
+    const phone = data?.phone;
+    const password = data?.password;
+    const fname = emplvalue && isEmployee ? emplvalue?.name : name;
+    const fphone = emplvalue && isEmployee ? emplvalue?.phone : phone;
     const variables: any = {
       _id: row && row._id ? row._id : undefined, // is it new or edit
       username,
-      name,
-      phone,
+      name: fname,
+      phone: fphone,
       password: isNew ? password : undefined,
       isBranchAdmin,
       isEmployee,
       isFinance,
       isOperate,
+      isPurchase,
       isAdmin,
       isEditor,
       isWriter,
@@ -193,6 +198,7 @@ const PopupUserEmail = ({
     setisEmployee(false);
     setisFinance(false);
     setisOperate(false);
+    setisPurchase(false);
     setisAdmin(false);
     setisEditor(false);
     setisWriter(false);
@@ -269,21 +275,25 @@ const PopupUserEmail = ({
               />
             </Grid>
           )}
-          <PopupTextField
-            required
-            name="name"
-            label={words.name}
-            register={register}
-            errors={errors}
-            row={row}
-          />
-          <PopupTextField
-            name="phone"
-            label={words.phoneNumber}
-            register={register}
-            errors={errors}
-            row={row}
-          />
+          {!isEmployee && (
+            <PopupTextField
+              required
+              name="name"
+              label={words.name}
+              register={register}
+              errors={errors}
+              row={row}
+            />
+          )}
+          {!isEmployee && (
+            <PopupTextField
+              name="phone"
+              label={words.phoneNumber}
+              register={register}
+              errors={errors}
+              row={row}
+            />
+          )}
 
           {user && (
             <UserRolesEmail
@@ -294,6 +304,7 @@ const PopupUserEmail = ({
               isEmployee={isEmployee}
               isFinance={isFinance}
               isOperate={isOperate}
+              isPurchase={isPurchase}
               isAdmin={isAdmin}
               isEditor={isEditor}
               isWriter={isWriter}
@@ -303,12 +314,14 @@ const PopupUserEmail = ({
               setisEmployee={setisEmployee}
               setisFinance={setisFinance}
               setisOperate={setisOperate}
+              setisPurchase={setisPurchase}
               setisAdmin={setisAdmin}
               setisEditor={setisEditor}
               setisWriter={setisWriter}
               setisViewer={setisViewer}
               setEmplvalue={setEmplvalue}
-              employees={employees}
+              employees={emplnoaccount}
+              isNew={isNew}
             ></UserRolesEmail>
           )}
           <Box

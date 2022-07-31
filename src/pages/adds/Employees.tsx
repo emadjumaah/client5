@@ -17,7 +17,7 @@ import {
   Toolbar,
   SearchPanel,
 } from '@devexpress/dx-react-grid-material-ui';
-import { Command, Loading, PopupEditing } from '../../Shared';
+import { Command, PopupEditing } from '../../Shared';
 import { getRowId } from '../../common';
 import { PopupEmployee } from '../../pubups';
 import {
@@ -80,9 +80,9 @@ export default function Employees({ isRTL, words, theme, menuitem }: any) {
       words={words}
       theme={theme}
       refresh={refreshemployee}
+      loading={loading}
     >
       <Paper>
-        {loading && <Loading isRTL={isRTL}></Loading>}
         <Grid rows={employees} columns={columns} getRowId={getRowId}>
           <SortingState />
           <SearchState />

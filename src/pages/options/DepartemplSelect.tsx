@@ -4,10 +4,10 @@ import React, { useEffect } from 'react';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-import { Box, fade, Grid, IconButton, Typography } from '@material-ui/core';
-import RefreshOutlinedIcon from '@material-ui/icons/RefreshOutlined';
+import { Box, Grid, Typography } from '@material-ui/core';
 import { eventStatus } from '../../constants';
 import { getCalendarResourses } from '../../common/helpers';
+import RefetchBox from '../../Shared/RefetchBox';
 
 const DepartemplSelect = ({
   value,
@@ -20,6 +20,7 @@ const DepartemplSelect = ({
   employees,
   departments,
   setResourseData,
+  loading,
 }: any) => {
   const onchange = (e: any) => {
     const val = e.target.value;
@@ -111,18 +112,12 @@ const DepartemplSelect = ({
             }}
           >
             {refresh && (
-              <IconButton
-                style={{
-                  backgroundColor: fade(theme.palette.secondary.main, 0.5),
-                  padding: 7,
-                }}
-                onClick={refresh}
-              >
-                <RefreshOutlinedIcon
-                  style={{ fontSize: 24 }}
-                  color="primary"
-                ></RefreshOutlinedIcon>
-              </IconButton>
+              <RefetchBox
+                isRTL={isRTL}
+                theme={theme}
+                refresh={refresh}
+                loading={loading}
+              ></RefetchBox>
             )}
           </Box>
         </Grid>

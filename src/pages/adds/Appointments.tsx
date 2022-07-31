@@ -25,7 +25,7 @@ import {
   DragDropProvider,
   TableColumnReordering,
 } from '@devexpress/dx-react-grid-material-ui';
-import { Command, Loading, PopupEditing } from '../../Shared';
+import { Command, PopupEditing } from '../../Shared';
 import { updateDocNumbers, getRowId, roles } from '../../common';
 import {
   createEvent,
@@ -69,7 +69,9 @@ import useResourses from '../../hooks/useResourses';
 import useEmployees from '../../hooks/useEmployees';
 import useDepartments from '../../hooks/useDepartments';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
+import useRetypes from '../../hooks/useRetypes';
 import PopupResoursesView from '../../pubups/PopupResoursesView';
+import AutoFieldLocal from '../../components/fields/AutoFieldLocal';
 
 export default function Appointments({
   isRTL,
@@ -92,6 +94,8 @@ export default function Appointments({
           col.startDate,
           col.fromto,
           col.docNo,
+          col.retype,
+          col.title,
           col.customer,
           col.employee,
           col.department,
@@ -106,6 +110,8 @@ export default function Appointments({
           col.startDate,
           col.fromto,
           col.docNo,
+          col.retype,
+          col.title,
           col.customer,
           col.resourse,
           col.contract,
@@ -124,11 +130,13 @@ export default function Appointments({
     { columnName: 'startDate', width: 100 },
     { columnName: 'fromto', width: 70 },
     { columnName: 'docNo', width: 120 },
-    { columnName: col.customer.name, width: 200 },
-    { columnName: col.contract.name, width: 200 },
-    { columnName: col.resourse.name, width: 200 },
-    { columnName: col.employee.name, width: 200 },
-    { columnName: col.department.name, width: 200 },
+    { columnName: col.title.name, width: 180 },
+    { columnName: col.customer.name, width: 180 },
+    { columnName: col.contract.name, width: 180 },
+    { columnName: col.resourse.name, width: 180 },
+    { columnName: col.employee.name, width: 180 },
+    { columnName: col.department.name, width: 180 },
+    { columnName: col.retype.name, width: 180 },
     { columnName: 'status', width: 100 },
     { columnName: 'done', width: 100 },
     { columnName: 'amount', width: 120 },
@@ -142,6 +150,7 @@ export default function Appointments({
   const [start, setStart] = useState<any>(null);
   const [end, setEnd] = useState<any>(null);
   const [periodvalue, setPeriodvalue] = useState<any>(null);
+  const [rtypvalue, setRtypvalue] = useState<any>(null);
 
   const [item, setItem] = useState(null);
   const [name, setName] = useState(null);
@@ -150,6 +159,7 @@ export default function Appointments({
   const [openEmployeeItem, setOpenEmployeeItem] = useState(false);
   const [openResourseItem, setOpenResourseItem] = useState(false);
   const [openDepartmentItem, setOpenDepartmentItem] = useState(false);
+  const { retypes } = useRetypes();
 
   const { tasks } = useTasks();
   const { customers } = useCustomers();
@@ -238,7 +248,9 @@ export default function Appointments({
     dispatch({ type: 'setEndDate', payload: curDate });
   };
 
-  const [loadEvents, eventsData]: any = useLazyQuery(getEvents);
+  const [loadEvents, eventsData]: any = useLazyQuery(getEvents, {
+    fetchPolicy: 'cache-and-network',
+  });
   const refresQuery = {
     refetchQueries: [
       {
@@ -282,10 +294,15 @@ export default function Appointments({
     if (eventsData?.data?.getEvents?.data) {
       const { data } = eventsData.data.getEvents;
       const rdata = updateDocNumbers(data);
-      setRows(rdata);
+      if (rtypvalue) {
+        const fdata = rdata.filter((da: any) => da.retypeId === rtypvalue._id);
+        setRows(fdata);
+      } else {
+        setRows(rdata);
+      }
       setLoading(false);
     }
-  }, [eventsData]);
+  }, [eventsData, rtypvalue]);
 
   useEffect(() => {
     if (name === 'department') {
@@ -322,7 +339,6 @@ export default function Appointments({
 
   const [tableColumnVisibilityColumnExtensions] = useState([
     { columnName: col.startDate.name, togglingEnabled: false },
-    { columnName: col.amount.name, togglingEnabled: false },
   ]);
 
   return (
@@ -334,6 +350,7 @@ export default function Appointments({
       refresh={refresh}
       periodvalue={periodvalue}
       setPeriodvalue={setPeriodvalue}
+      loading={loading}
     >
       <Box
         style={{
@@ -377,6 +394,30 @@ export default function Appointments({
               words={words}
               theme={theme}
             ></DateNavigatorReports>
+          </Box>
+          <Box
+            display="flex"
+            style={{
+              position: 'absolute',
+              zIndex: 111,
+              flexDirection: 'row',
+              alignItems: 'center',
+              right: isRTL ? undefined : 470,
+              left: isRTL ? 470 : undefined,
+              width: 220,
+            }}
+          >
+            <AutoFieldLocal
+              name="retype"
+              title={words?.retype}
+              options={retypes.filter((d: any) => d.reType === 4)}
+              words={words}
+              value={rtypvalue}
+              setSelectValue={setRtypvalue}
+              isRTL={isRTL}
+              fullWidth
+              mb={0}
+            ></AutoFieldLocal>
           </Box>
           <Box
             style={{
@@ -448,6 +489,8 @@ export default function Appointments({
                 col.startDate.name,
                 col.fromto.name,
                 col.docNo.name,
+                col.retype.name,
+                col.title.name,
                 col.customer.name,
                 col.contract.name,
                 col.resourse.name,
@@ -479,6 +522,8 @@ export default function Appointments({
                 col.fromto.name,
                 col.location.name,
                 col.nots.name,
+                col.department.name,
+                col.amount.name,
               ]}
             />
 
@@ -615,7 +660,6 @@ export default function Appointments({
             />
           </Grid>
         </Paper>
-        {loading && <Loading isRTL={isRTL} />}
         <PopupDepartmentView
           open={openDepartmentItem}
           onClose={onCloseDepartmentItem}

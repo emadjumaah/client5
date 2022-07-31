@@ -357,7 +357,7 @@ export const templates = [
     name: 'Cleaning Template',
     nameAr: 'نموذج شركة نظافة',
     options: {
-      noPro: false,
+      noPro: true,
       noTsk: false,
       noRes: false,
       noEmp: false,
@@ -437,7 +437,7 @@ export const templates = [
     name: 'Contracting',
     nameAr: 'نموذج شركة مقاولات',
     options: {
-      noPro: false,
+      noPro: true,
       noTsk: false,
       noRes: false,
       noEmp: false,
@@ -451,10 +451,10 @@ export const templates = [
     words: {
       ar: {
         main: 'الرئيسية',
-        appointment: 'النشاط',
-        appointments: 'الأنشطة',
-        task: 'المرحلة',
-        tasks: 'المراحل',
+        appointment: 'الموعد',
+        appointments: 'المواعيد',
+        task: 'العقد',
+        tasks: 'العقود',
         department: 'القسم',
         departments: 'الأقسام',
         customer: 'العميل',

@@ -61,5 +61,6 @@ export default () => {
     removeGfromContact,
     syncCust,
     syncEmpl,
+    loading: custData?.loading,
   };
 };

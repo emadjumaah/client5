@@ -25,7 +25,7 @@ import {
   ColumnChooser,
   PagingPanel,
 } from '@devexpress/dx-react-grid-material-ui';
-import { Command, Loading, PopupEditing } from '../../Shared';
+import { Command, PopupEditing } from '../../Shared';
 import { getRowId, updateDocNumbers } from '../../common';
 import { useLazyQuery, useMutation } from '@apollo/client';
 import { createFinance, deleteFinance, updateFinance } from '../../graphql';
@@ -87,7 +87,6 @@ export default function PaymentAdvance({
 
   const [rows, setRows] = useState([]);
   const [sum, setSum] = useState(0);
-  const [loading, setLoading] = useState(false);
 
   const [start, setStart] = useState<any>(null);
   const [end, setEnd] = useState<any>(null);
@@ -148,16 +147,12 @@ export default function PaymentAdvance({
   };
 
   useEffect(() => {
-    if (financeData?.loading) {
-      setLoading(true);
-    }
     if (financeData?.data?.getPaymentsAdvance?.data) {
       const { data } = financeData.data.getPaymentsAdvance;
       const rdata = updateDocNumbers(data);
       const samount = _.sumBy(rdata, 'amount');
       setSum(samount);
       setRows(rdata);
-      setLoading(false);
     }
   }, [financeData]);
 
@@ -172,6 +167,7 @@ export default function PaymentAdvance({
       words={words}
       theme={theme}
       refresh={refresh}
+      loading={financeData?.loading}
     >
       <Box
         style={{
@@ -324,7 +320,6 @@ export default function PaymentAdvance({
             </PopupEditing>
           </Grid>
         </Paper>
-        {loading && <Loading isRTL={isRTL} />}
       </Box>
     </PageLayout>
   );

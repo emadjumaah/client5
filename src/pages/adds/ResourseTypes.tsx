@@ -56,7 +56,7 @@ export default function ResourseTypes({ isRTL, words, theme, menuitem }: any) {
   const [columns] = useState([
     { name: 'avatar', title: ' ' },
     { name: isRTL ? 'nameAr' : 'name', title: words.name },
-    { name: 'reType', title: words.type },
+    { name: 'reType', title: isRTL ? 'الفئة' : 'Category' },
   ]);
 
   const [tableColumnExtensions]: any = useState([
@@ -73,8 +73,14 @@ export default function ResourseTypes({ isRTL, words, theme, menuitem }: any) {
     { name: 'avatar', title: words.color },
   ]);
 
-  const { retypes, addRetype, editRetype, removeRetype, refreshretype } =
-    useRetypes();
+  const {
+    retypes,
+    addRetype,
+    editRetype,
+    removeRetype,
+    refreshretype,
+    loading,
+  } = useRetypes();
 
   const rows = retype
     ? retypes.filter((rt: any) => rt.reType === retype.id)
@@ -104,6 +110,7 @@ export default function ResourseTypes({ isRTL, words, theme, menuitem }: any) {
       theme={theme}
       refresh={refreshretype}
       bgcolor={bgcolor}
+      loading={loading}
     >
       <Box
         style={{

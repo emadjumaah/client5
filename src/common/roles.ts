@@ -127,6 +127,9 @@ export const isFinance = (user: any) => {
 export const isOperate = (user: any) => {
   return user?.isOperate;
 };
+export const isPurchase = (user: any) => {
+  return user?.isPurchase;
+};
 export const isAdmin = (user: any) => {
   return user?.isSuperAdmin || user?.isBranchAdmin || user?.isAdmin;
 };
@@ -183,6 +186,35 @@ export const isOperateAdmin = (user: any) => {
     (user?.isOperate && user?.isAdmin)
   );
 };
+export const isPurchaseViewer = (user: any) => {
+  return (
+    user?.isSuperAdmin ||
+    user?.isBranchAdmin ||
+    (user?.isPurchase &&
+      (user?.isAdmin || user?.isEditor || user?.isWriter || user?.isViewer))
+  );
+};
+export const isPurchaseWriter = (user: any) => {
+  return (
+    user?.isSuperAdmin ||
+    user?.isBranchAdmin ||
+    (user?.isPurchase && (user?.isAdmin || user?.isEditor || user?.isWriter))
+  );
+};
+export const isPurchaseEditor = (user: any) => {
+  return (
+    user?.isSuperAdmin ||
+    user?.isBranchAdmin ||
+    (user?.isPurchase && (user?.isAdmin || user?.isEditor))
+  );
+};
+export const isPurchaseAdmin = (user: any) => {
+  return (
+    user?.isSuperAdmin ||
+    user?.isBranchAdmin ||
+    (user?.isPurchase && user?.isAdmin)
+  );
+};
 export const isFinanceViewer = (user: any) => {
   return (
     user?.isSuperAdmin ||
@@ -212,38 +244,6 @@ export const isFinanceAdmin = (user: any) => {
     (user?.isFinance && user?.isAdmin)
   );
 };
-export const isFinanceOperateViewer = (user: any) => {
-  return (
-    user?.isSuperAdmin ||
-    user?.isBranchAdmin ||
-    (user?.isFinance &&
-      user?.isOperate &&
-      (user?.isAdmin || user?.isEditor || user?.isWriter || user?.isViewer))
-  );
-};
-export const isFinanceOperateWriter = (user: any) => {
-  return (
-    user?.isSuperAdmin ||
-    user?.isBranchAdmin ||
-    (user?.isFinance &&
-      user?.isOperate &&
-      (user?.isAdmin || user?.isEditor || user?.isWriter))
-  );
-};
-export const isFinanceOperateEditor = (user: any) => {
-  return (
-    user?.isSuperAdmin ||
-    user?.isBranchAdmin ||
-    (user?.isFinance && user?.isOperate && (user?.isAdmin || user?.isEditor))
-  );
-};
-export const isFinanceOperateAdmin = (user: any) => {
-  return (
-    user?.isSuperAdmin ||
-    user?.isBranchAdmin ||
-    (user?.isFinance && user?.isOperate && user?.isAdmin)
-  );
-};
 
 export const menuRoles = {
   superAdmin: 'superAdmin',
@@ -252,14 +252,15 @@ export const menuRoles = {
   finance: 'finance',
   financeAdmin: 'financeAdmin',
   financeEditor: 'financeEditor',
-  financeOperateAdmin: 'financeOperateAdmin',
-  financeOperateEditor: 'financeOperateEditor',
-  financeOperateWriter: 'financeOperateWriter',
   financeWriter: 'financeWriter',
   operate: 'operate',
   operateAdmin: 'operateAdmin',
   operateEditor: 'operateEditor',
   operateWriter: 'operateWriter',
+  purchase: 'purchase',
+  purchaseAdmin: 'purchaseAdmin',
+  purchaseEditor: 'purchaseEditor',
+  purchaseWriter: 'purchaseWriter',
   admin: 'admin',
   editor: 'editor',
   writer: 'writer',
@@ -290,12 +291,14 @@ export const applyRole = (role: string, user: any) => {
       return isOperateEditor(user);
     case menuRoles.operateWriter:
       return isOperateWriter(user);
-    case menuRoles.financeOperateAdmin:
-      return isFinanceOperateAdmin(user);
-    case menuRoles.financeOperateEditor:
-      return isFinanceOperateEditor(user);
-    case menuRoles.financeOperateWriter:
-      return isFinanceOperateWriter(user);
+    case menuRoles.purchase:
+      return isPurchase(user);
+    case menuRoles.purchaseAdmin:
+      return isPurchaseAdmin(user);
+    case menuRoles.purchaseEditor:
+      return isPurchaseEditor(user);
+    case menuRoles.purchaseWriter:
+      return isPurchaseWriter(user);
     case menuRoles.editor:
       return isEditor(user);
     case menuRoles.admin:

@@ -326,7 +326,7 @@ export const RenderToolTip = ({
         </Box>
       </CardContent>
       <CardActions>
-        {!viewonly && (
+        {!viewonly && itemsList?.length > 0 && (
           <Box
             m={1}
             display="flex"
@@ -339,7 +339,9 @@ export const RenderToolTip = ({
               onClick={handleNewInvoice}
               disabled={desabledSave}
             >
-              {words.addInvoice}
+              <Typography style={{ fontSize: 12, fontWeight: 'bold' }}>
+                {words.addInvoice}
+              </Typography>
             </Button>
           </Box>
         )}

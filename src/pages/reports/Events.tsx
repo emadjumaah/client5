@@ -289,6 +289,7 @@ export default function Events({
       refresh={refresh}
       periodvalue={periodvalue}
       setPeriodvalue={setPeriodvalue}
+      loading={evnData?.loading}
     >
       <Paper>
         <Box

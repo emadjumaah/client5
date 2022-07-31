@@ -29,8 +29,6 @@ import {
   getProjects,
 } from '../graphql';
 import getTasks from '../graphql/query/getTasks';
-import { getTaskTimeAmountData } from '../common/helpers';
-// import { ContractPrint } from '../print';
 import { useReactToPrint } from 'react-to-print';
 import KaidsCustomer from '../Shared/KaidsCustomer';
 import {
@@ -57,6 +55,7 @@ import PaymentSupplier from '../Shared/PaymentSupplier';
 import ExpensesProdCustomer from '../Shared/ExpensesProdCustomer';
 import getGereralCalculation from '../graphql/query/getGereralCalculation';
 import { SVContractPrint } from '../print/SVContractPrint';
+import { ContractPrint } from '../print';
 
 const PopupTaskView = ({
   open,
@@ -77,7 +76,6 @@ const PopupTaskView = ({
 
   const [custvalue, setCustvalue] = useState(null);
   const [resovalue, setResovalue] = useState(null);
-  // const [info, setInfo] = useState<any>(null);
   const [closeloading, setCloseloading] = useState<any>(null);
 
   const [openCloseDate, setOpenCloseDate] = useState<any>(false);
@@ -112,8 +110,6 @@ const PopupTaskView = ({
 
   const { width, height } = useWindowDimensions();
   const { tempoptions, tempwords } = useTemplate();
-
-  const daysData = getTaskTimeAmountData(row);
 
   const handleChange = (_, newValue) => {
     setValue(newValue);
@@ -258,9 +254,9 @@ const PopupTaskView = ({
     onClose();
   };
   const title = `${tempwords?.task} : ${row?.title}`;
-  // const isSmartVision =
-  //   company?.publicKey ===
-  //   'BJFzgQWBP8m5YThe_JwVoS6g5EEKypJWy-8ZkW5yI5b2rJQu1uJ5dBnio86IgoSRWq7AsVif2WGtYmaKvPB6QJ0';
+  const isSmartVision =
+    company?.publicKey ===
+    'BJFzgQWBP8m5YThe_JwVoS6g5EEKypJWy-8ZkW5yI5b2rJQu1uJ5dBnio86IgoSRWq7AsVif2WGtYmaKvPB6QJ0';
   return (
     <PopupLayout
       isRTL={isRTL}
@@ -348,7 +344,6 @@ const PopupTaskView = ({
                     {value === 0 && (
                       <TabPanel value={value} index={0}>
                         <MainCustomer
-                          setCalcs={setCalcs}
                           isRTL={isRTL}
                           words={words}
                           theme={theme}
@@ -359,9 +354,7 @@ const PopupTaskView = ({
                           height={height}
                           start={isTime ? start : null}
                           end={isTime ? end : null}
-                          closeloading={closeloading}
-                          setOpenCloseDate={setOpenCloseDate}
-                          daysData={daysData}
+                          setCalcs={setCalcs}
                         ></MainCustomer>
                       </TabPanel>
                     )}
@@ -691,13 +684,7 @@ const PopupTaskView = ({
           )}
           <Box>
             <div style={{ display: 'none' }}>
-              <SVContractPrint
-                company={company}
-                user={user}
-                printData={printData}
-                ref={componentRef}
-              />
-              {/* {isSmartVision ? (
+              {isSmartVision ? (
                 <SVContractPrint
                   company={company}
                   user={user}
@@ -711,7 +698,7 @@ const PopupTaskView = ({
                   printData={printData}
                   ref={componentRef}
                 />
-              )} */}
+              )}
             </div>
           </Box>
         </Box>

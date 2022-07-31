@@ -15,7 +15,6 @@ import {
   SearchPanel,
   Toolbar,
 } from '@devexpress/dx-react-grid-material-ui';
-import { Loading } from '../../Shared';
 import { getRowId } from '../../common';
 import { useLazyQuery } from '@apollo/client';
 import getRemindersActions from '../../graphql/query/getRemindersActions';
@@ -48,7 +47,6 @@ export default function RemindersActions({ isRTL, words, menuitem, theme }) {
   ]);
 
   const [rows, setRows] = useState([]);
-  const [loading, setLoading] = useState(false);
   const { users } = useUsers();
   const [start, setStart] = useState<any>(null);
   const [end, setEnd] = useState<any>(null);
@@ -86,9 +84,6 @@ export default function RemindersActions({ isRTL, words, menuitem, theme }) {
   }, [start, end]);
 
   useEffect(() => {
-    if (actionsData?.loading) {
-      setLoading(true);
-    }
     if (actionsData?.data?.getRemindersActions?.data) {
       const { data } = actionsData.data.getRemindersActions;
       const rdata = data.map((da: any) => {
@@ -130,7 +125,6 @@ export default function RemindersActions({ isRTL, words, menuitem, theme }) {
         };
       });
       setRows(rdata);
-      setLoading(false);
     }
   }, [actionsData]);
 
@@ -144,6 +138,7 @@ export default function RemindersActions({ isRTL, words, menuitem, theme }) {
       words={words}
       theme={theme}
       refresh={refresh}
+      loading={actionsData?.loading}
     >
       <Box
         style={{
@@ -218,7 +213,6 @@ export default function RemindersActions({ isRTL, words, menuitem, theme }) {
             }}
           />
         </Grid>
-        {loading && <Loading isRTL={isRTL} />}
       </Box>
     </PageLayout>
   );

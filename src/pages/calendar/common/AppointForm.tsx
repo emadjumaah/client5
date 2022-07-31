@@ -4,39 +4,29 @@ import React, { useContext, useEffect, useState } from 'react';
 import {
   Box,
   Button,
-  IconButton,
-  ListItem,
-  ListItemText,
-  Paper,
+  Checkbox,
+  FormControlLabel,
   Typography,
 } from '@material-ui/core';
 import { PopupCustomer, PopupDeprtment, PopupEmployee } from '../../../pubups';
 import { GContextTypes } from '../../../types';
 import { GlobalContext } from '../../../contexts';
-import { StatusSelect } from './StatusSelect';
 import { Grid } from '@material-ui/core';
 import { AlertLocal, CalenderLocal, TextFieldLocal } from '../../../components';
 import AutoFieldLocal from '../../../components/fields/AutoFieldLocal';
-import { weekdaysNNo } from '../../../constants/datatypes';
+import { eventStatus, weekdaysNNo } from '../../../constants/datatypes';
 import { setRowFromAppointment } from '../../../common/calendar';
 import { useLazyQuery } from '@apollo/client';
-import { getActions, getOperationItems } from '../../../graphql';
+import { getOperationItems } from '../../../graphql';
 import ItemsTable from '../../../Shared/ItemsTable';
 import { invoiceClasses } from '../../../themes';
-import {
-  actionTypeFormatter,
-  getDateDayTimeFormat,
-  moneyFormat,
-} from '../../../Shared/colorFormat';
+import { moneyFormat } from '../../../Shared/colorFormat';
 import {
   useCustomers,
   useProducts,
   useServices,
   useTemplate,
 } from '../../../hooks';
-import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
-import DeleteOutlinedIcon from '@material-ui/icons/DeleteOutlined';
-import PopupAction from '../../../pubups/PopupAction';
 import PopupResourses from '../../../pubups/PopupResourses';
 import useDepartments from '../../../hooks/useDepartments';
 import useEmployees from '../../../hooks/useEmployees';
@@ -46,6 +36,9 @@ import PopupMaps from '../../../pubups/PopupMaps';
 import { SelectLocal } from './SelectLocal';
 import { eventLengthOptions } from '../../../constants/rrule';
 import ServiceItemForm from '../../../Shared/ServiceItemForm';
+import useRetypes from '../../../hooks/useRetypes';
+import MyIcon from '../../../Shared/MyIcon';
+import useProjects from '../../../hooks/useProjects';
 
 export const indexTheList = (list: any) => {
   return list.map((item: any, index: any) => {
@@ -63,14 +56,19 @@ export const AppointForm = (props: any) => {
   const classes = invoiceClasses();
   const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
 
+  const [rtypevalue, setRtypevalue] = useState<any>(null);
+
   const [startDate, setStartDate]: any = useState(row?.startDate);
   const [endDate, setEndDate]: any = useState(row?.endDate);
-  const [eventLength, setEventLength]: any = useState(null);
+  const [eventLength, setEventLength]: any = useState(
+    eventLengthOptions[1].value
+  );
 
-  const [status, setStatus] = useState(row?.status || 2);
+  const [status, setStatus] = useState(null);
 
   const [totals, setTotals] = useState<any>({});
   const [itemsList, setItemsList] = useState<any>([]);
+  const [isItems, setIsItems] = useState(false);
 
   const [custvalue, setCustvalue] = useState<any>(null);
   const [taskvalue, setTaskvalue] = useState<any>(null);
@@ -78,9 +76,6 @@ export const AppointForm = (props: any) => {
   const [departvalue, setDepartvalue] = useState<any>(null);
   const [resovalue, setResovalue] = useState<any>(null);
 
-  const [openAction, setOpenAction] = useState(false);
-  const [actionslist, setActionslist] = useState([]);
-  const [selected, setSelected] = useState(null);
   const [tasktitle, setTasktitle]: any = useState();
 
   const [openMap, setOpenMap] = useState(false);
@@ -93,11 +88,13 @@ export const AppointForm = (props: any) => {
   const [openEmp, setOpenEmp] = useState(false);
   const [openRes, setOpenRes] = useState(false);
 
+  const { retypes } = useRetypes();
   const { customers, addCustomer, editCustomer } = useCustomers();
   const { tempwords, tempoptions } = useTemplate();
   const { departments, addDepartment, editDepartment } = useDepartments();
   const { employees, addEmployee, editEmployee } = useEmployees();
   const { resourses, addResourse, editResourse } = useResourses();
+  const { projects } = useProjects();
   const { tasks } = useTasks();
   const { services } = useServices();
   const { products } = useProducts();
@@ -111,7 +108,6 @@ export const AppointForm = (props: any) => {
     fetchPolicy: 'cache-and-network',
   });
 
-  const [loadActions, actionsData]: any = useLazyQuery(getActions);
   const isemployee = user?.isEmployee && user?.employeeId;
 
   const openDepartment = () => {
@@ -153,69 +149,68 @@ export const AppointForm = (props: any) => {
   }, [user]);
 
   useEffect(() => {
-    const items = itemsData?.data?.['getOperationItems']?.data || [];
-    const actions = actionsData?.data?.['getActions']?.data || [];
+    if (row && row._id) {
+      const items = itemsData?.data?.['getOperationItems']?.data || [];
 
-    if (items && items.length > 0) {
-      const ids = items.map((it: any) => it.itemId);
-      const servlist = [...services, ...products].filter((ser: any) =>
-        ids.includes(ser._id)
-      );
+      if (items && items.length > 0) {
+        const ids = items.map((it: any) => it.itemId);
+        const servlist = [...services, ...products].filter((ser: any) =>
+          ids.includes(ser._id)
+        );
 
-      const itemsWqtyprice = items.map((item: any, index: any) => {
-        const {
-          categoryId,
-          categoryName,
-          categoryNameAr,
-          departmentId,
-          departmentName,
-          departmentNameAr,
-          departmentColor,
-          employeeId,
-          employeeName,
-          employeeNameAr,
-          employeeColor,
-          resourseId,
-          resourseName,
-          resourseNameAr,
-          resourseColor,
-          note,
-        } = item;
-        const serv = servlist.filter((se: any) => se._id === item.itemId)[0];
-        return {
-          ...serv,
-          categoryId,
-          categoryName,
-          categoryNameAr,
-          departmentId,
-          departmentName,
-          departmentNameAr,
-          departmentColor,
-          employeeId,
-          employeeName,
-          employeeNameAr,
-          employeeColor,
-          resourseId,
-          resourseName,
-          resourseNameAr,
-          resourseColor,
-          index,
-          itemprice: item.itemPrice,
-          itemqty: item.qty,
-          itemtotal: item.total,
-          note,
-          // itemtotalcost: item.qty * serv.cost,
-        };
-      });
-      itemsWqtyprice.sort((a: any, b: any) =>
-        a.indx > b.indx ? 1 : b.indx > a.indx ? -1 : 0
-      );
-      setItemsList(itemsWqtyprice);
-
-      const listwithindex = indexTheList(actions);
-      setActionslist(listwithindex);
+        const itemsWqtyprice = items.map((item: any, index: any) => {
+          const {
+            categoryId,
+            categoryName,
+            categoryNameAr,
+            departmentId,
+            departmentName,
+            departmentNameAr,
+            departmentColor,
+            employeeId,
+            employeeName,
+            employeeNameAr,
+            employeeColor,
+            resourseId,
+            resourseName,
+            resourseNameAr,
+            resourseColor,
+            note,
+          } = item;
+          const serv = servlist.filter((se: any) => se._id === item.itemId)[0];
+          return {
+            ...serv,
+            categoryId,
+            categoryName,
+            categoryNameAr,
+            departmentId,
+            departmentName,
+            departmentNameAr,
+            departmentColor,
+            employeeId,
+            employeeName,
+            employeeNameAr,
+            employeeColor,
+            resourseId,
+            resourseName,
+            resourseNameAr,
+            resourseColor,
+            index,
+            itemprice: item.itemPrice,
+            itemqty: item.qty,
+            itemtotal: item.total,
+            note,
+            // itemtotalcost: item.qty * serv.cost,
+          };
+        });
+        itemsWqtyprice.sort((a: any, b: any) =>
+          a.indx > b.indx ? 1 : b.indx > a.indx ? -1 : 0
+        );
+        setItemsList(itemsWqtyprice);
+        setIsItems(true);
+      }
     }
-  }, [itemsData, actionsData]);
+  }, [itemsData]);
 
   useEffect(() => {
     getOverallTotal();
@@ -224,12 +219,12 @@ export const AppointForm = (props: any) => {
   useEffect(() => {
     if (row && row._id) {
       getItems({ variables: { opId: row._id } });
-      loadActions({ variables: { eventId: row.id } });
       if (row.location) {
         setLocation({ lat: row?.location?.lat, lng: row?.location?.lng });
       }
     }
   }, []);
+
   useEffect(() => {
     if (row && row._id) {
       if (row.contract && tasks.length > 0 && !taskvalue) {
@@ -260,8 +255,22 @@ export const AppointForm = (props: any) => {
         )?.[0];
         setDepartvalue(empl);
       }
+      if (row?.status) {
+        const stat = eventStatus.filter(
+          (es: any) => es.id === row?.status
+        )?.[0];
+        if (stat) {
+          setStatus(stat);
+        }
+      }
+      if (row?.retypeId) {
+        const depart = retypes.filter(
+          (dep: any) => dep._id === row.retypeId
+        )[0];
+        setRtypevalue(depart);
+      }
     }
-  }, [tasks, employees, resourses, departments, customers]);
+  }, [tasks, employees, resourses, departments, customers, retypes]);
 
   const addItemToList = (item: any) => {
     const isInList = itemsList?.filter((li: any) => li._id === item._id)?.[0];
@@ -364,6 +373,21 @@ export const AppointForm = (props: any) => {
     onNewFieldChange(newValue, 'customer');
     setCustvalue(newValue);
   };
+  const selectRetype = (value: any) => {
+    let newValue = value;
+    if (!value) {
+      newValue = {
+        retypeId: undefined,
+        retypeName: undefined,
+        retypeNameAr: undefined,
+      };
+      onNewFieldChange(value, 'retypeId');
+      onNewFieldChange(value, 'retypeName');
+      onNewFieldChange(value, 'retypeNameAr');
+    }
+    onNewFieldChange(newValue, 'retype');
+    setRtypevalue(newValue);
+  };
   const selectDepartment = (value: any) => {
     let newValue = value;
     if (!value) {
@@ -447,6 +471,13 @@ export const AppointForm = (props: any) => {
       onNewFieldChange(cust, 'customer');
       setCustvalue(cust);
     }
+    if (value?.projectId) {
+      const proj = projects.filter(
+        (ct: any) => ct._id === value?.projectId
+      )?.[0];
+      onNewFieldChange(proj, 'project');
+      setCustvalue(proj);
+    }
   };
 
   useEffect(() => {
@@ -477,43 +508,16 @@ export const AppointForm = (props: any) => {
   }, [taskvalue]);
 
   useEffect(() => {
-    onFieldChange({ actions: JSON.stringify(actionslist) });
-  }, [actionslist]);
-
-  useEffect(() => {
     if (!row._id) {
       setEventLength(eventLengthOptions[0].value);
     }
   }, []);
 
-  const addActionToList = (item: any) => {
-    const newArray = [...actionslist, item];
-    const listwithindex = indexTheList(newArray);
-    setActionslist(listwithindex);
-  };
-  const editActionInList = (item: any) => {
-    const newArray = actionslist.map((it: any) => {
-      if (it._id === item._id) {
-        return item;
-      } else {
-        return it;
-      }
-    });
-    const listwithindex = indexTheList(newArray);
-    setActionslist(listwithindex);
-  };
-
-  const removeActionFromList = (item: any) => {
-    const newlist = actionslist.filter((il: any) => il.index !== item.index);
-    const listwithindex = indexTheList(newlist);
-    setActionslist(listwithindex);
-  };
-
   const date = row?.startDate ? new Date(row?.startDate) : new Date();
   const day = weekdaysNNo?.[date.getDay()];
 
   return (
-    <>
+    <Box p={1}>
       <Box style={{ position: 'absolute', top: 50, left: 30 }}>
         <Typography
           style={{ fontWeight: 'bold', marginTop: 15 }}
@@ -523,277 +527,309 @@ export const AppointForm = (props: any) => {
         </Typography>
       </Box>
       <Grid container spacing={0}>
-        <Grid item xs={8}>
-          <Grid container spacing={1}>
-            <Grid item xs={12} md={4}>
-              <CalenderLocal
-                isRTL={isRTL}
-                label={words.start}
-                value={startDate}
-                onChange={(d: any) => {
-                  setStartDate(d);
-                  onNewFieldChange(d, 'startDate');
-                  const end = eventLength
-                    ? new Date(d).getTime() + eventLength * 60 * 1000
-                    : null;
-                  if (end) {
-                    setEndDate(new Date(end));
-                    onNewFieldChange(new Date(end), 'endDate');
-                  }
-                }}
-                format="dd/MM/yyyy - hh:mm"
-                time
-              ></CalenderLocal>
-            </Grid>
-            <Grid item xs={12} md={4}>
-              <SelectLocal
-                options={eventLengthOptions}
-                value={eventLength}
-                onChange={(e: any) => {
-                  const { value } = e.target;
-                  setEventLength(value);
-                  const end = startDate
-                    ? new Date(startDate).getTime() + value * 60 * 1000
-                    : null;
-                  if (end) {
-                    setEndDate(new Date(end));
-                    onNewFieldChange(new Date(end), 'endDate');
-                  }
-                }}
-                isRTL={isRTL}
-              ></SelectLocal>
-            </Grid>
-            <Grid item xs={12} md={4}>
-              <div style={{ pointerEvents: 'none', opacity: 0.5 }}>
-                <CalenderLocal
-                  isRTL={isRTL}
-                  label={words.end}
-                  value={endDate}
-                  onChange={(d: any) => {
-                    setEndDate(d);
-                  }}
-                  format="dd/MM/yyyy - hh:mm"
-                  time
-                ></CalenderLocal>
-              </div>
-            </Grid>
-            {!tempoptions?.noTsk && (
-              <Grid item xs={12}>
-                <TextFieldLocal
-                  autoFocus={true}
-                  name="tasktitle"
-                  label={words.title}
-                  value={tasktitle}
-                  onChange={(e: any) => {
-                    setTasktitle(e.target.value);
-                    onNewFieldChange(e.target.value, 'title');
-                  }}
-                  row={row}
-                  fullWidth
-                  mb={0}
-                />
+        <Grid item xs={12} md={12}>
+          <Grid container spacing={2}>
+            <Grid item xs={7}>
+              <Grid container spacing={1}>
+                <Grid item xs={12} md={4}>
+                  <CalenderLocal
+                    isRTL={isRTL}
+                    label={words.start}
+                    value={startDate}
+                    onChange={(d: any) => {
+                      setStartDate(d);
+                      onNewFieldChange(d, 'startDate');
+                      const end = eventLength
+                        ? new Date(d).getTime() + eventLength * 60 * 1000
+                        : null;
+                      if (end) {
+                        setEndDate(new Date(end));
+                        onNewFieldChange(new Date(end), 'endDate');
+                      }
+                    }}
+                    format="dd/MM/yyyy - hh:mm"
+                    time
+                  ></CalenderLocal>
+                </Grid>
+                <Grid item xs={12} md={4}>
+                  <Box style={{ marginTop: 5 }}>
+                    <SelectLocal
+                      options={eventLengthOptions}
+                      value={eventLength}
+                      onChange={(e: any) => {
+                        const { value } = e.target;
+                        setEventLength(value);
+                        const end = startDate
+                          ? new Date(startDate).getTime() + value * 60 * 1000
+                          : null;
+                        if (end) {
+                          setEndDate(new Date(end));
+                          onNewFieldChange(new Date(end), 'endDate');
+                        }
+                      }}
+                      isRTL={isRTL}
+                    ></SelectLocal>
+                  </Box>
+                </Grid>
+                <Grid item xs={12} md={4}>
+                  <div style={{ pointerEvents: 'none', opacity: 0.5 }}>
+                    <CalenderLocal
+                      isRTL={isRTL}
+                      label={words.end}
+                      value={endDate}
+                      onChange={(d: any) => setEndDate(d)}
+                      format="dd/MM/yyyy - hh:mm"
+                      time
+                    ></CalenderLocal>
+                  </div>
+                </Grid>
+                <Grid item xs={12}>
+                  <AutoFieldLocal
+                    name="retype"
+                    title={words?.retype}
+                    words={words}
+                    options={retypes.filter((dep: any) => dep.reType === 4)}
+                    value={rtypevalue}
+                    setSelectValue={selectRetype}
+                    isRTL={isRTL}
+                    fullWidth
+                    mb={0}
+                  ></AutoFieldLocal>
+                </Grid>
+                {!tempoptions?.noTsk && (
+                  <Grid item xs={12}>
+                    <TextFieldLocal
+                      autoFocus={true}
+                      name="tasktitle"
+                      label={words.title}
+                      value={tasktitle}
+                      onChange={(e: any) => {
+                        setTasktitle(e.target.value);
+                        onNewFieldChange(e.target.value, 'title');
+                      }}
+                      row={row}
+                      fullWidth
+                      multiline
+                      rowsMax={3}
+                      rows={3}
+                      mb={0}
+                    />
+                  </Grid>
+                )}
+                <Grid item xs={6}>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        checked={isItems}
+                        onChange={() => {
+                          setIsItems(!isItems);
+                          setItemsList([]);
+                        }}
+                        name="isItems"
+                        color="primary"
+                      />
+                    }
+                    style={{ marginTop: 25 }}
+                    label={
+                      <Typography style={{ fontWeight: 'bold', fontSize: 13 }}>
+                        {isRTL ? 'اضافة بنود' : 'Add Items'}
+                      </Typography>
+                    }
+                  />
+                </Grid>
+                <Grid item xs={6}>
+                  <Box
+                    mt={1}
+                    display="flex"
+                    style={{
+                      flex: 1,
+                      marginTop: 25,
+                      justifyContent: 'flex-start',
+                      direction: 'ltr',
+                    }}
+                  >
+                    <Button
+                      size="medium"
+                      color="primary"
+                      variant="outlined"
+                      onClick={() => setOpenMap(true)}
+                    >
+                      <Typography style={{ fontSize: 13, fontWeight: 'bold' }}>
+                        {isRTL ? 'الموقع الجغرافي' : 'Location'}
+                      </Typography>
+                    </Button>
+                    {location?.lat && (
+                      <>
+                        <MyIcon
+                          size={28}
+                          color="#ff80ed"
+                          icon="location"
+                        ></MyIcon>
+                        <Box
+                          onClick={() => setLocation(null)}
+                          style={{ cursor: 'pointer', padding: 2 }}
+                        >
+                          <MyIcon size={24} color="#aaa" icon="close"></MyIcon>
+                        </Box>
+                      </>
+                    )}
+                  </Box>
+                </Grid>
               </Grid>
-            )}
-            <Grid item xs={12}>
-              <AutoFieldLocal
-                name="customer"
-                title={tempwords?.customer}
-                words={words}
-                options={customers}
-                value={custvalue}
-                setSelectValue={selectCustomer}
-                isRTL={isRTL}
-                openAdd={openCustomer}
-                fullWidth
-                showphone
-                mb={0}
-              ></AutoFieldLocal>
             </Grid>
-            {!tempoptions?.noTsk && (
-              <Grid item xs={6}>
-                <AutoFieldLocal
-                  name="task"
-                  title={tempwords?.task}
-                  words={words}
-                  options={tasks}
-                  value={taskvalue}
-                  setSelectValue={selectTask}
-                  isRTL={isRTL}
-                  fullWidth
-                  mb={0}
-                ></AutoFieldLocal>
+            <Grid item xs={5}>
+              <Grid container spacing={1}>
+                <Grid item xs={12}>
+                  <AutoFieldLocal
+                    name="status"
+                    title={words.status}
+                    words={words}
+                    options={eventStatus}
+                    value={status}
+                    setSelectValue={setStatus}
+                    onNewFieldChange={onNewFieldChange}
+                    noPlus
+                    isRTL={isRTL}
+                    fullWidth
+                  ></AutoFieldLocal>
+                </Grid>
+
+                {!tempoptions?.noTsk && (
+                  <Grid item xs={12} style={{ marginTop: 5 }}>
+                    <AutoFieldLocal
+                      name="task"
+                      title={tempwords?.task}
+                      words={words}
+                      options={tasks}
+                      value={taskvalue}
+                      setSelectValue={selectTask}
+                      isRTL={isRTL}
+                      fullWidth
+                      mb={0}
+                    ></AutoFieldLocal>
+                  </Grid>
+                )}
+                <Grid item xs={12}>
+                  <AutoFieldLocal
+                    name="customer"
+                    title={tempwords?.customer}
+                    words={words}
+                    options={customers}
+                    value={custvalue}
+                    setSelectValue={selectCustomer}
+                    isRTL={isRTL}
+                    openAdd={openCustomer}
+                    fullWidth
+                    showphone
+                    mb={0}
+                  ></AutoFieldLocal>
+                </Grid>
+                {!tempoptions?.noRes && (
+                  <Grid item xs={12}>
+                    <AutoFieldLocal
+                      name="resourse"
+                      title={tempwords?.resourse}
+                      words={words}
+                      options={resourses}
+                      value={resovalue}
+                      setSelectValue={selectResourse}
+                      openAdd={openResourse}
+                      isRTL={isRTL}
+                      fullWidth
+                      day={day}
+                      mb={0}
+                    ></AutoFieldLocal>
+                  </Grid>
+                )}
+                {!tempoptions?.noEmp && (
+                  <Grid item xs={12}>
+                    <AutoFieldLocal
+                      name="employee"
+                      title={tempwords?.employee}
+                      words={words}
+                      options={employees}
+                      disabled={isemployee}
+                      value={emplvalue}
+                      setSelectValue={selectEmployee}
+                      openAdd={openEmployee}
+                      isRTL={isRTL}
+                      fullWidth
+                      day={day}
+                      mb={0}
+                    ></AutoFieldLocal>
+                  </Grid>
+                )}
+                <Grid item xs={12}>
+                  <AutoFieldLocal
+                    name="department"
+                    title={tempwords?.department}
+                    words={words}
+                    options={departments.filter((d: any) => d.depType === 1)}
+                    value={departvalue}
+                    setSelectValue={selectDepartment}
+                    openAdd={openDepartment}
+                    isRTL={isRTL}
+                    fullWidth
+                    mb={0}
+                  ></AutoFieldLocal>
+                </Grid>
               </Grid>
-            )}
-            {!tempoptions?.noRes && (
-              <Grid item xs={6}>
-                <AutoFieldLocal
-                  name="resourse"
-                  title={tempwords?.resourse}
-                  words={words}
-                  options={resourses}
-                  value={resovalue}
-                  setSelectValue={selectResourse}
-                  openAdd={openResourse}
-                  isRTL={isRTL}
-                  fullWidth
-                  day={day}
-                  mb={0}
-                ></AutoFieldLocal>
-              </Grid>
-            )}
-            {!tempoptions?.noEmp && (
-              <Grid item xs={6}>
-                <AutoFieldLocal
-                  name="employee"
-                  title={tempwords?.employee}
-                  words={words}
-                  options={employees}
-                  disabled={isemployee}
-                  value={emplvalue}
-                  setSelectValue={selectEmployee}
-                  openAdd={openEmployee}
-                  isRTL={isRTL}
-                  fullWidth
-                  day={day}
-                  mb={0}
-                ></AutoFieldLocal>
-              </Grid>
-            )}
-            <Grid item xs={6}>
-              <AutoFieldLocal
-                name="department"
-                title={tempwords?.department}
-                words={words}
-                options={departments.filter((d: any) => d.depType === 1)}
-                value={departvalue}
-                setSelectValue={selectDepartment}
-                openAdd={openDepartment}
-                isRTL={isRTL}
-                fullWidth
-                mb={0}
-              ></AutoFieldLocal>
             </Grid>
           </Grid>
-        </Grid>
-        <Grid item xs={4}>
-          <Box
-            style={{
-              backgroundColor: '#f5f5f5',
-              borderRadius: 5,
-              padding: 7,
-              margin: 5,
-            }}
-          >
-            <Button
-              variant="outlined"
+
+          {(isItems || itemsList?.length > 0) && (
+            <Box
               style={{
-                marginBottom: 5,
-                fontSize: 14,
-                minWidth: 80,
-              }}
-              onClick={() => {
-                setSelected(null);
-                setOpenAction(true);
+                backgroundColor: '#f4f4f4',
+                padding: 10,
+                marginTop: 15,
+                // marginBottom: 15,
+                borderRadius: 10,
               }}
             >
-              <Typography
-                style={{
-                  fontSize: 13,
-                  fontWeight: 'bold',
-                }}
-              >
-                {isRTL ? 'اضافة تنبيه' : 'Add Reminder'}
-              </Typography>{' '}
-            </Button>
-            <Paper style={{ height: 170, overflow: 'auto' }}>
-              {actionslist.map((act: any) => {
-                return (
-                  <ListItem>
-                    <ListItemText
-                      primary={actionTypeFormatter({ row: act })}
-                      secondary={getDateDayTimeFormat(act.sendtime, isRTL)}
-                    />
-                    <IconButton
-                      onClick={() => removeActionFromList(act)}
-                      title="Delete row"
-                      style={{ padding: 5, margin: 5 }}
-                    >
-                      <DeleteOutlinedIcon
-                        style={{ fontSize: 22, color: '#a76f9a' }}
-                      />
-                    </IconButton>
-                    <IconButton
-                      style={{ padding: 5 }}
-                      onClick={() => {
-                        setSelected(act);
-                        setOpenAction(true);
-                      }}
-                      title="Edit row"
-                    >
-                      <EditOutlinedIcon
-                        style={{ fontSize: 22, color: '#729aaf' }}
-                      />
-                    </IconButton>
-                  </ListItem>
-                );
-              })}
-            </Paper>
-          </Box>
-        </Grid>
-
-        <Grid item xs={12}>
-          <Box style={{ marginTop: 20 }}></Box>
-
-          <Box
-            style={{
-              backgroundColor: '#f4f4f4',
-              padding: 10,
-              marginTop: 15,
-              marginBottom: 15,
-              borderRadius: 10,
-            }}
-          >
-            <Box display="flex">
-              <ServiceItemForm
-                services={services}
-                products={products}
-                addItem={addItemToList}
-                words={words}
-                classes={classes}
-                user={user}
-                isRTL={isRTL}
-                setAlrt={setAlrt}
-              ></ServiceItemForm>
+              <Box display="flex">
+                <ServiceItemForm
+                  services={services}
+                  products={products}
+                  addItem={addItemToList}
+                  words={words}
+                  classes={classes}
+                  user={user}
+                  isRTL={isRTL}
+                  setAlrt={setAlrt}
+                ></ServiceItemForm>
+              </Box>
+              <Box>
+                <ItemsTable
+                  products={[...services, ...products]}
+                  rows={itemsList}
+                  editItem={editItemInList}
+                  removeItem={removeItemFromList}
+                  isRTL={isRTL}
+                  words={words}
+                  user={user}
+                ></ItemsTable>
+              </Box>
             </Box>
-            <Box style={{ marginBottom: 10 }}>
-              <ItemsTable
-                products={[...services, ...products]}
-                rows={itemsList}
-                editItem={editItemInList}
-                removeItem={removeItemFromList}
-                isRTL={isRTL}
-                words={words}
-                user={user}
-              ></ItemsTable>
-            </Box>
-            {/* {loading && <LoadingInline></LoadingInline>} */}
-          </Box>
-        </Grid>
-        <Grid item xs={8}>
-          <Typography style={{ fontWeight: 'bold', fontSize: 16, padding: 10 }}>
-            {words.total} : {moneyFormat(totals.amount)}
-          </Typography>
-        </Grid>
-        <Grid item xs={4}>
-          <StatusSelect
-            status={status}
-            setStatus={setStatus}
-            onNewFieldChange={onNewFieldChange}
-            isRTL={isRTL}
-            title={words.status}
-            noTitle
-            width={170}
-          ></StatusSelect>
+          )}
+          <Grid container spacing={1}>
+            <Grid item xs={7}>
+              {(isItems || itemsList?.length > 0) && (
+                <Typography
+                  style={{
+                    fontWeight: 'bold',
+                    fontSize: 16,
+                    paddingLeft: 10,
+                    paddingRight: 10,
+                  }}
+                >
+                  {words.total} : {moneyFormat(totals.amount)}
+                </Typography>
+              )}
+            </Grid>
+            <Grid item xs={3}></Grid>
+            <Grid item xs={2}></Grid>
+          </Grid>
         </Grid>
         <PopupCustomer
           newtext={newtext}
@@ -835,16 +871,6 @@ export const AppointForm = (props: any) => {
           addAction={addResourse}
           editAction={editResourse}
         ></PopupResourses>
-        <PopupAction
-          open={openAction}
-          onClose={() => setOpenAction(false)}
-          row={selected}
-          isNew={selected ? false : true}
-          addAction={addActionToList}
-          editAction={editActionInList}
-          theme={theme}
-          event={{ ...row, startDate, endDate }}
-        ></PopupAction>
         <PopupMaps
           open={openMap}
           onClose={() => setOpenMap(false)}
@@ -864,6 +890,6 @@ export const AppointForm = (props: any) => {
           ></AlertLocal>
         )}
       </Grid>
-    </>
+    </Box>
   );
 };

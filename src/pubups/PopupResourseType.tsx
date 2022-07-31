@@ -129,6 +129,17 @@ const PopupResourseType = ({
         <Grid item xs={10}>
           <Grid container spacing={1}>
             <Grid item xs={12}>
+              <FilterSelectSingle
+                options={retypeTypes}
+                value={retype}
+                setValue={setRetype}
+                words={words}
+                isRTL={isRTL}
+                name="reType"
+                disabled={reType}
+              ></FilterSelectSingle>
+            </Grid>
+            <Grid item xs={12}>
               <TextFieldLocal
                 autoFocus
                 required
@@ -156,17 +167,7 @@ const PopupResourseType = ({
               </Grid>
             )}
           </Grid>
-          <Grid item xs={12}>
-            <FilterSelectSingle
-              options={retypeTypes}
-              value={retype}
-              setValue={setRetype}
-              words={words}
-              isRTL={isRTL}
-              name="reType"
-              disabled={reType}
-            ></FilterSelectSingle>
-          </Grid>
+
           <Grid item xs={12}>
             <TextFieldLocal
               name="desc"

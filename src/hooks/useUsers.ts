@@ -10,6 +10,7 @@ import {
   deleteUser,
   changePassword,
   blockUser,
+  getEmployees,
 } from '../graphql';
 import changePasswordQuick from '../graphql/mutation/changePasswordQuick';
 
@@ -17,10 +18,10 @@ export default () => {
   const [getUsrs, usrData]: any = useLazyQuery(getUsers);
 
   const [addUser] = useMutation(signup, {
-    refetchQueries: [{ query: getUsers }],
+    refetchQueries: [{ query: getUsers }, { query: getEmployees }],
   });
   const [editUser] = useMutation(updateUser, {
-    refetchQueries: [{ query: getUsers }],
+    refetchQueries: [{ query: getUsers }, { query: getEmployees }],
   });
   const [editPassword] = useMutation(changePassword, {
     refetchQueries: [{ query: getUsers }],
@@ -32,7 +33,7 @@ export default () => {
     refetchQueries: [{ query: getUsers }],
   });
   const [removeUser] = useMutation(deleteUser, {
-    refetchQueries: [{ query: getUsers }],
+    refetchQueries: [{ query: getUsers }, { query: getEmployees }],
   });
 
   useEffect(() => {
@@ -51,5 +52,6 @@ export default () => {
     editPassword,
     editPasswordQuick,
     block,
+    loading: usrData?.loading,
   };
 };

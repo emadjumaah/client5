@@ -17,7 +17,7 @@ import {
   SearchPanel,
   Toolbar,
 } from '@devexpress/dx-react-grid-material-ui';
-import { Command, Loading, PopupEditing } from '../../Shared';
+import { Command, PopupEditing } from '../../Shared';
 import { getRowId, updateDocNumbers } from '../../common';
 import { useLazyQuery, useMutation } from '@apollo/client';
 import {
@@ -139,6 +139,7 @@ export default function FinanceAll({ isRTL, words, menuitem, theme }) {
       words={words}
       theme={theme}
       refresh={refresh}
+      loading={loading}
     >
       <Box
         style={{
@@ -249,7 +250,6 @@ export default function FinanceAll({ isRTL, words, menuitem, theme }) {
             <PopupFinanceAll></PopupFinanceAll>
           </PopupEditing>
         </Grid>
-        {loading && <Loading isRTL={isRTL} />}
       </Box>
     </PageLayout>
   );

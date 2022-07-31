@@ -5,7 +5,9 @@ import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import {
+  Checkbox,
   createStyles,
+  FormControlLabel,
   Grid,
   makeStyles,
   Theme,
@@ -60,6 +62,8 @@ const PopupAccount = ({
   editAction,
   theme,
   accounts,
+  emplnoaccount,
+  addNewEmployeeAccount,
 }: any) => {
   const [saving, setSaving] = useState(false);
   const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
@@ -70,8 +74,11 @@ const PopupAccount = ({
   const [range, setRange] = useState<any>({});
   const [code, setCode] = useState(0);
 
+  const [isEmployee, setisEmployee] = useState(false);
+  const [emplvalue, setEmplvalue] = useState<any>(null);
+
   const { register, handleSubmit, errors, reset } = useForm(
-    isNew ? accountResolver : accountEditResolver
+    !isEmployee ? (isNew ? accountResolver : accountEditResolver) : {}
   );
 
   const {
@@ -104,33 +111,44 @@ const PopupAccount = ({
   }, [row]);
 
   const onSubmit = async (data: any) => {
-    if (!parentvalue) {
+    if (!isEmployee && !parentvalue) {
       setParentError(true);
       parentRef.current.focus();
       return;
     }
-    if (isNew && (code > range.max || code < range.min)) {
+    if (!isEmployee && isNew && (code > range.max || code < range.min)) {
       await errorAlertMsg(
         setAlrt,
         isRTL ? 'رقم الحساب خارج النطاق' : 'Code range issue'
       );
       return;
     }
+    if (isEmployee && !emplvalue) {
+      await errorAlertMsg(setAlrt, 'You have to choose an Employee');
+      return;
+    }
     setSaving(true);
-    const name = data.name.trim();
-    const nameAr = !isNew ? data.nameAr.trim() : name;
-    const branch = user.branch;
-    const variables: any = {
-      _id: row?._id ? row?._id : undefined, // is it new or edit
-      branch,
-      code,
-      name,
-      nameAr,
-      canedit: row?._id ? undefined : true,
-      ...parentvalue,
-    };
-    const mutate = isNew ? addAction : editAction;
-    apply(mutate, variables);
+
+    if (isEmployee) {
+      const variables: any = { employeeId: emplvalue?._id };
+      const mutate = addNewEmployeeAccount;
+      apply(mutate, variables);
+    } else {
+      const name = data.name.trim();
+      const nameAr = !isNew ? data.nameAr.trim() : name;
+      const branch = user.branch;
+      const variables: any = {
+        _id: row?._id ? row?._id : undefined, // is it new or edit
+        branch,
+        code,
+        name,
+        nameAr,
+        canedit: row?._id ? undefined : true,
+        ...parentvalue,
+      };
+      const mutate = isNew ? addAction : editAction;
+      apply(mutate, variables);
+    }
   };
 
   const apply = async (mutate: any, variables: any) => {
@@ -160,6 +178,8 @@ const PopupAccount = ({
     setRange({});
     setCode(0);
     reset();
+    setisEmployee(false);
+    setEmplvalue(null);
   };
 
   const closeForm = () => {
@@ -177,6 +197,7 @@ const PopupAccount = ({
     : isNew
     ? 'New Account'
     : 'Edit Account';
+  const empl = isRTL ? 'عهدة موظف' : 'Employee Custody';
 
   return (
     <PopupLayout
@@ -188,64 +209,102 @@ const PopupAccount = ({
       theme={theme}
       alrt={alrt}
       saving={saving}
+      minWidth="md"
     >
-      <Grid container spacing={2}>
+      <Grid container spacing={2} style={{ minWidth: 450, minHeight: 255 }}>
         <Grid item xs={1}></Grid>
         <Grid item xs={9}>
-          <AutoFieldLocal
-            name="parent"
-            nolabel
-            title={isRTL ? 'الحساب الرئيسي' : 'Main Account'}
-            basename="parent"
-            options={parentsAccountsList}
-            value={parentvalue}
-            setSelectValue={setParentvalue}
-            setSelectError={setParentError}
-            selectError={parentError}
-            refernce={parentRef}
-            register={register}
-            disabled={row && row.parentcode ? true : false}
-            isRTL={isRTL}
-            fullWidth
-          ></AutoFieldLocal>
-          {range && range?.min && isNew && (
-            <Typography>
-              {range.min} - {range.max}
-            </Typography>
-          )}
-          <TextFieldLocal
-            required
-            name="code"
-            label={isRTL ? 'كود الحساب' : 'Code'}
-            value={code}
-            onChange={(e: any) => setCode(Number(e.target.value))}
-            row={row}
-            disabled={row && row.parentcode ? true : false}
-            type="number"
-            fullWidth
-          />
-          <TextFieldLocal
-            required
-            autoFocus
-            name="name"
-            label={words.name}
-            register={register}
-            errors={errors}
-            row={row}
-            fullWidth
-            mb={10}
-          />
-          {!isNew && (
-            <TextFieldLocal
-              required
-              name="nameAr"
-              label={words.nameAr}
-              register={register}
-              errors={errors}
-              row={row}
-              fullWidth
-              mb={0}
+          {isNew && (
+            <FormControlLabel
+              style={{ marginBottom: 15 }}
+              control={
+                <Checkbox
+                  checked={isEmployee}
+                  onChange={() => {
+                    setisEmployee(!isEmployee);
+                    setParentvalue(null);
+                  }}
+                  name={'isEmployee'}
+                  color="primary"
+                />
+              }
+              label={
+                <Typography variant="body2" style={{ fontWeight: 'bold' }}>
+                  {empl}
+                </Typography>
+              }
             />
+          )}
+          {isEmployee && (
+            <AutoFieldLocal
+              name="employee"
+              title={words.employee}
+              words={words}
+              options={emplnoaccount}
+              value={emplvalue}
+              setSelectValue={setEmplvalue}
+              noPlus
+              isRTL={isRTL}
+              fullWidth
+            ></AutoFieldLocal>
+          )}
+          {!isEmployee && (
+            <>
+              <AutoFieldLocal
+                name="parent"
+                nolabel
+                title={isRTL ? 'الحساب الرئيسي' : 'Main Account'}
+                basename="parent"
+                options={parentsAccountsList}
+                value={parentvalue}
+                setSelectValue={setParentvalue}
+                setSelectError={setParentError}
+                selectError={parentError}
+                refernce={parentRef}
+                register={register}
+                disabled={row && row.parentcode ? true : false}
+                isRTL={isRTL}
+                fullWidth
+              ></AutoFieldLocal>
+              {parentvalue && range && range?.min && isNew && (
+                <Typography>
+                  {range.min} - {range.max}
+                </Typography>
+              )}
+              <TextFieldLocal
+                required
+                name="code"
+                label={isRTL ? 'كود الحساب' : 'Code'}
+                value={code}
+                onChange={(e: any) => setCode(Number(e.target.value))}
+                row={row}
+                disabled={row && row.parentcode ? true : false}
+                type="number"
+                fullWidth
+              />
+              <TextFieldLocal
+                required
+                name="name"
+                label={words.name}
+                register={register}
+                errors={errors}
+                row={row}
+                fullWidth
+                mb={10}
+              />
+              {!isNew && (
+                <TextFieldLocal
+                  required
+                  name="nameAr"
+                  label={words.nameAr}
+                  register={register}
+                  errors={errors}
+                  row={row}
+                  fullWidth
+                  mb={0}
+                />
+              )}
+            </>
           )}
         </Grid>
 

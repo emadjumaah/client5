@@ -18,6 +18,7 @@ import { ColorPicker, PopupTextField } from '../../Shared';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { ImageOnlineUpload, uploadPhotoOnline } from '../../common/upload';
 import Package from './Package';
+import { appversion } from '../../constants';
 
 const phoneRegExp =
   /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
@@ -365,7 +366,7 @@ const Company = ({ words, editCompany, company, isRTL }) => {
                 marginRight: 10,
               }}
             >
-              {company?.appversion}
+              {appversion}
             </Box>
           </Box>
         </Grid>

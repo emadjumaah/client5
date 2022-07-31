@@ -81,6 +81,11 @@ export default gql`
         resourseNameAr
         resourseColor
 
+        retypeId
+        retypeName
+        retypeNameAr
+        retypeColor
+
         refNo
         refType
 

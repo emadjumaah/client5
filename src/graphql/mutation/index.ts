@@ -83,6 +83,7 @@ import deleteContact from './deleteContact';
 import sendVerificationCode from './sendVerificationCode';
 import verifyEmail from './verifyEmail';
 import createUserBranch from './createUserBranch';
+import createNewEmployeeAccount from './createNewEmployeeAccount';
 
 export {
   createCategory,
@@ -170,4 +171,5 @@ export {
   createRetype,
   deleteRetype,
   updateRetype,
+  createNewEmployeeAccount,
 };

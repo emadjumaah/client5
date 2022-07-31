@@ -359,6 +359,7 @@ export default function DocumentsReport({
       words={words}
       theme={theme}
       refresh={refresh}
+      loading={summaryData?.loading}
     >
       <Box
         style={{

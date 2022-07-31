@@ -26,7 +26,7 @@ import {
   TableColumnResizing,
   PagingPanel,
 } from '@devexpress/dx-react-grid-material-ui';
-import { Command, Loading, PopupEditing } from '../../Shared';
+import { Command, PopupEditing } from '../../Shared';
 import { getProjects, getResourses } from '../../graphql';
 import { useLazyQuery, useMutation } from '@apollo/client';
 import {
@@ -126,7 +126,6 @@ export default function Tasks({ isRTL, words, menuitem, theme, company }) {
   ]);
 
   const [rows, setRows] = useState([]);
-  const [loading, setLoading] = useState(false);
   const [start, setStart] = useState<any>(null);
   const [end, setEnd] = useState<any>(null);
   const [periodvalue, setPeriodvalue] = useState<any>(null);
@@ -273,7 +272,6 @@ export default function Tasks({ isRTL, words, menuitem, theme, company }) {
   const commitChanges = async ({ deleted }) => {
     if (deleted) {
       const _id = deleted[0];
-      setLoading(true);
       const res = await removeTaskById({ variables: { _id } });
       if (res?.data?.deleteTaskById?.ok === false) {
         if (res?.data?.deleteTaskById?.error.includes('related')) {
@@ -282,19 +280,14 @@ export default function Tasks({ isRTL, words, menuitem, theme, company }) {
           await errorAlert(setAlrt, isRTL);
         }
       }
-      setLoading(false);
     }
   };
 
   useEffect(() => {
-    if (tasksData?.loading) {
-      setLoading(true);
-    }
     if (tasksData?.data?.getTasks?.data) {
       const { data } = tasksData.data.getTasks;
       const taskswithstatus = getTaskStatus(data, isRTL);
       setRows(taskswithstatus);
-      setLoading(false);
     }
   }, [tasksData]);
 
@@ -310,6 +303,7 @@ export default function Tasks({ isRTL, words, menuitem, theme, company }) {
       refresh={refresh}
       periodvalue={periodvalue}
       setPeriodvalue={setPeriodvalue}
+      loading={tasksData?.loading}
     >
       <Box
         style={{
@@ -505,7 +499,6 @@ export default function Tasks({ isRTL, words, menuitem, theme, company }) {
               ></PopupTaskFull>
             </PopupEditing>
           </Grid>
-          {loading && <Loading isRTL={isRTL} />}
           {alrt.show && (
             <AlertLocal
               isRTL={isRTL}

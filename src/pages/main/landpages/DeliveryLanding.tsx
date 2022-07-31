@@ -7,12 +7,10 @@ import MonthsChart from '../../../components/charts/MonthsChart';
 import MonthsEmpChart from '../../../components/charts/MonthsEmpChart';
 import InfoBoxDark from '../../../components/charts/InfoBoxDark';
 import PageLayout from '../PageLayout';
-import { useEffect, useState } from 'react';
 import useEmployees from '../../../hooks/useEmployees';
 import useDepartments from '../../../hooks/useDepartments';
 import useWindowDimensions from '../../../hooks/useWindowDimensions';
-import { Loading } from '../../../Shared';
-import { roles } from '../../../common';
+import { LandingFooter, roles } from '../../../common';
 import useResourses from '../../../hooks/useResourses';
 import Cars from '../../../components/charts/Cars';
 import { useTemplate } from '../../../hooks';
@@ -21,8 +19,6 @@ import RemindersOutBox from '../../../Shared/RemindersOutBox';
 import useRetypes from '../../../hooks/useRetypes';
 
 export default function DeliveryLanding(props: any) {
-  const [loading, setLoading] = useState(true);
-
   const { words, isRTL, user, theme, menuitem } = props;
 
   const { resourses } = useResourses();
@@ -38,6 +34,7 @@ export default function DeliveryLanding(props: any) {
     salesMonthTotal,
     raseeds,
     refreshSalesData,
+    loading,
   } = useLandingSales();
 
   const refresh = () => {
@@ -45,12 +42,6 @@ export default function DeliveryLanding(props: any) {
       refreshSalesData();
     }
   };
-
-  useEffect(() => {
-    if (salesMonths) {
-      setLoading(false);
-    }
-  }, [salesMonths]);
 
   const salesColor = theme.palette.primary.light;
   const eventColor = theme.palette.secondary.main;
@@ -66,6 +57,7 @@ export default function DeliveryLanding(props: any) {
       user={user}
       theme={theme}
       refresh={refresh}
+      loading={loading}
     >
       <Box
         style={{
@@ -84,7 +76,6 @@ export default function DeliveryLanding(props: any) {
             marginBottom: 15,
           }}
         >
-          {loading && <Loading isRTL={isRTL}></Loading>}
           <Grid container spacing={2}>
             {roles.isBranchAdmin() && (
               <Grid item xs={6} md={4}>
@@ -198,18 +189,7 @@ export default function DeliveryLanding(props: any) {
             )}
           </Grid>
           <Grid item xs={12}>
-            <Box
-              style={{
-                minHeight: 500,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                fontSize: 50,
-                color: '#bbb',
-              }}
-            >
-              JADWAL.IO
-            </Box>
+            <LandingFooter></LandingFooter>
           </Grid>
         </Box>
       </Box>

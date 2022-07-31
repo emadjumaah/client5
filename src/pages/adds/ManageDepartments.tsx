@@ -45,6 +45,8 @@ import { roles } from '../../common';
 import { DepartmentContext } from '../../contexts/managment';
 import { getDepartments } from '../../graphql';
 import { useLazyQuery } from '@apollo/client';
+import AutoFieldLocal from '../../components/fields/AutoFieldLocal';
+import useRetypes from '../../hooks/useRetypes';
 // import FilterSelectSingle from '../../Shared/FilterSelectSingle';
 // import { departmentTypes } from '../../constants/datatypes';
 
@@ -57,12 +59,13 @@ export default function ManageDepartments({
 }: any) {
   const [pageSizes] = useState([5, 8, 10, 20, 50, 0]);
   const [rows, setRows] = useState([]);
-  // const [depart, setDepart] = useState(null);
+  const [rtypvalue, setRtypvalue] = useState<any>(null);
 
   const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
   const [item, setItem] = useState(null);
   const [openItem, setOpenItem] = useState(false);
   const col = getColumns({ isRTL, words });
+  const { retypes } = useRetypes();
 
   const { width, height } = useWindowDimensions();
   const onCloseItem = () => {
@@ -82,12 +85,14 @@ export default function ManageDepartments({
     { name: 'avatar', title: ' ' },
     col.name,
     col.desc,
+    col.retype,
   ]);
 
   const [tableColumnExtensions]: any = useState([
     { columnName: 'avatar', width: 30 },
     { columnName: col.name.name, width: 300 },
     { columnName: col.desc.name, width: 350 },
+    { columnName: col.retype.name, width: 150 },
   ]);
 
   const [columnsViewer] = useState([
@@ -109,9 +114,14 @@ export default function ManageDepartments({
   useEffect(() => {
     if (deptData?.data?.getDepartments?.data) {
       const { data } = deptData.data.getDepartments;
-      setRows(data);
+      if (rtypvalue) {
+        const fdata = data.filter((da: any) => da.retypeId === rtypvalue._id);
+        setRows(fdata);
+      } else {
+        setRows(data);
+      }
     }
-  }, [deptData]);
+  }, [deptData, rtypvalue]);
 
   useEffect(() => {
     if (openItem) {
@@ -146,6 +156,7 @@ export default function ManageDepartments({
       theme={theme}
       refresh={refreshdepartment}
       bgcolor={bgcolor}
+      loading={deptData?.loading}
     >
       <Box
         style={{
@@ -154,6 +165,31 @@ export default function ManageDepartments({
           backgroundColor: bgcolor,
         }}
       >
+        <Box
+          display="flex"
+          style={{
+            position: 'absolute',
+            zIndex: 111,
+            flexDirection: 'row',
+            alignItems: 'center',
+            marginTop: 7,
+            left: isRTL ? undefined : 470,
+            right: isRTL ? 470 : undefined,
+            width: 220,
+          }}
+        >
+          <AutoFieldLocal
+            name="retype"
+            title={words?.retype}
+            words={words}
+            options={retypes.filter((d: any) => d.reType === 3)}
+            value={rtypvalue}
+            setSelectValue={setRtypvalue}
+            isRTL={isRTL}
+            fullWidth
+            mb={0}
+          ></AutoFieldLocal>
+        </Box>
         <Paper
           elevation={5}
           style={{
@@ -191,7 +227,12 @@ export default function ManageDepartments({
               columnExtensions={tableColumnExtensions}
             />
             <TableColumnReordering
-              defaultOrder={['avatar', col.name.name, col.desc.name]}
+              defaultOrder={[
+                'avatar',
+                col.name.name,
+                col.desc.name,
+                col.retype.name,
+              ]}
             />
             <TableColumnResizing defaultColumnWidths={tableColumnExtensions} />
 

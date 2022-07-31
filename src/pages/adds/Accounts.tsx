@@ -19,12 +19,15 @@ import {
 import { PopupEditing, Command, errorAlert, Loading } from '../../Shared';
 import { PopupAccount } from '../../pubups';
 import useAccounts from '../../hooks/useAccounts';
-import { useBranches } from '../../hooks';
+import { useBranches, useEmployees } from '../../hooks';
 import { AlertLocal, SearchTable } from '../../components';
 import { errorAccountAlert, errorDeleteAlert } from '../../Shared/helpers';
 import { Box, Typography } from '@material-ui/core';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
 import { TableComponent } from '../../Shared/TableComponent';
+import { useMutation } from '@apollo/client';
+import { getAccounts, getEmployees } from '../../graphql';
+import { createNewEmployeeAccount } from '../../graphql/mutation';
 
 export const getRowId = (row: { _id: any }) => row._id;
 
@@ -46,6 +49,12 @@ export default function Accounts({ isRTL, accounts }: any) {
   ]);
   const { addAccount, editAccount, removeAccount } = useAccounts();
   const { branches } = useBranches();
+  const { employees } = useEmployees();
+
+  const [addNewEmployeeAccount] = useMutation(createNewEmployeeAccount, {
+    refetchQueries: [{ query: getAccounts }, { query: getEmployees }],
+  });
+
   const commitChanges = async ({ deleted }) => {
     if (deleted) {
       const _id = deleted[0];
@@ -72,6 +81,13 @@ export default function Accounts({ isRTL, accounts }: any) {
     const name = isRTL ? 'nameAr' : 'name';
     return <div>{branch ? branch[name] : ''}</div>;
   };
+
+  const emplusers = accounts.filter((fu: any) => fu?.employeeId);
+  const emplIds = emplusers.map((eu: any) => eu?.employeeId);
+  const emplnoaccount =
+    emplIds && emplIds?.length > 0
+      ? employees?.filter((emp: any) => !emplIds.includes(emp?._id))
+      : employees;
 
   return (
     <Box
@@ -135,7 +151,11 @@ export default function Accounts({ isRTL, accounts }: any) {
         />
 
         <PopupEditing addAction={addAccount} editAction={editAccount}>
-          <PopupAccount accounts={accounts}></PopupAccount>
+          <PopupAccount
+            accounts={accounts}
+            emplnoaccount={emplnoaccount}
+            addNewEmployeeAccount={addNewEmployeeAccount}
+          ></PopupAccount>
         </PopupEditing>
       </Grid>
       {alrt.show && (

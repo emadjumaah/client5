@@ -8,11 +8,8 @@ import { GlobalContext } from '../contexts';
 import {
   Box,
   Button,
-  // colors,
-  IconButton,
-  ListItem,
-  ListItemText,
-  Paper,
+  Checkbox,
+  FormControlLabel,
   Typography,
 } from '@material-ui/core';
 import PopupLayout from '../pages/main/PopupLayout';
@@ -22,18 +19,11 @@ import { CalenderLocal, TextFieldLocal } from '../components';
 import { eventStatus, weekdaysNNo } from '../constants/datatypes';
 import ItemsTable from '../Shared/ItemsTable';
 import { useLazyQuery } from '@apollo/client';
-import { getActions, getOperationItems } from '../graphql';
+import { getOperationItems } from '../graphql';
 import { invoiceClasses } from '../themes/classes';
-import {
-  actionTypeFormatter,
-  getDateDayTimeFormat,
-  moneyFormat,
-} from '../Shared/colorFormat';
+import { moneyFormat } from '../Shared/colorFormat';
 import PopupAddMultiEvents from './PopupAddMultiEvents';
 import PopupAppointInvoice from './PopupAppointInvoice';
-import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
-import DeleteOutlinedIcon from '@material-ui/icons/DeleteOutlined';
-import PopupAction from './PopupAction';
 import { getPopupTitle } from '../constants/menu';
 import { useCustomers, useProducts, useTemplate } from '../hooks';
 import PopupCustomer from './PopupCustomer';
@@ -49,6 +39,8 @@ import { eventLengthOptions } from '../constants/rrule';
 import { roles } from '../common';
 import ServiceItemForm from '../Shared/ServiceItemForm';
 import { successAlert } from '../Shared/helpers';
+import useRetypes from '../hooks/useRetypes';
+import MyIcon from '../Shared/MyIcon';
 
 export const indexTheList = (list: any) => {
   return list.map((item: any, index: any) => {
@@ -79,6 +71,8 @@ const PopupAppointmentCustomer = ({
 }: any) => {
   const classes = invoiceClasses();
   const [saving, setSaving] = useState(false);
+  const [rtypevalue, setRtypevalue] = useState<any>(null);
+
   const [startDate, setStartDate]: any = useState(null);
   const [endDate, setEndDate]: any = useState(null);
   const [eventLength, setEventLength]: any = useState(null);
@@ -112,6 +106,8 @@ const PopupAppointmentCustomer = ({
 
   const [totals, setTotals] = useState<any>({});
   const [itemsList, setItemsList] = useState<any>([]);
+  const [isItems, setIsItems] = useState(false);
+
   const [rrule, setRrule] = useState<any>(null);
 
   const [openMulti, setOpenMulti] = useState(false);
@@ -122,9 +118,6 @@ const PopupAppointmentCustomer = ({
 
   const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
 
-  const [openAction, setOpenAction] = useState(false);
-  const [actionslist, setActionslist] = useState([]);
-  const [selected, setSelected] = useState(null);
   const [tasktitle, setTasktitle]: any = useState(null);
 
   const [newtext, setNewtext] = useState('');
@@ -134,6 +127,7 @@ const PopupAppointmentCustomer = ({
   const [openEmp, setOpenEmp] = useState(false);
   const [openRes, setOpenRes] = useState(false);
 
+  const { retypes } = useRetypes();
   const { addCustomer, editCustomer } = useCustomers();
   const { addDepartment, editDepartment } = useDepartments();
   const { addEmployee, editEmployee } = useEmployees();
@@ -152,7 +146,6 @@ const PopupAppointmentCustomer = ({
     fetchPolicy: 'cache-and-network',
   });
 
-  const [loadActions, actionsData]: any = useLazyQuery(getActions);
   const openDepartment = () => {
     setOpenDep(true);
   };
@@ -228,69 +221,67 @@ const PopupAppointmentCustomer = ({
   }, [taskvalue]);
 
   useEffect(() => {
-    const items = itemsData?.data?.['getOperationItems']?.data || [];
-    const actions = actionsData?.data?.['getActions']?.data || [];
+    if (row && row._id) {
+      const items = itemsData?.data?.['getOperationItems']?.data || [];
+      if (items && items.length > 0) {
+        const ids = items.map((it: any) => it.itemId);
+        const servlist = [...servicesproducts, ...products].filter((ser: any) =>
+          ids.includes(ser._id)
+        );
 
-    if (items && items.length > 0) {
-      const ids = items.map((it: any) => it.itemId);
-      const servlist = [...servicesproducts, ...products].filter((ser: any) =>
-        ids.includes(ser._id)
-      );
-
-      const itemsWqtyprice = items.map((item: any, index: any) => {
-        const {
-          categoryId,
-          categoryName,
-          categoryNameAr,
-          departmentId,
-          departmentName,
-          departmentNameAr,
-          departmentColor,
-          employeeId,
-          employeeName,
-          employeeNameAr,
-          employeeColor,
-          resourseId,
-          resourseName,
-          resourseNameAr,
-          resourseColor,
-          note,
-        } = item;
-        const serv = servlist.filter((se: any) => se._id === item.itemId)[0];
-        return {
-          ...serv,
-          categoryId,
-          categoryName,
-          categoryNameAr,
-          departmentId,
-          departmentName,
-          departmentNameAr,
-          departmentColor,
-          employeeId,
-          employeeName,
-          employeeNameAr,
-          employeeColor,
-          resourseId,
-          resourseName,
-          resourseNameAr,
-          resourseColor,
-          index,
-          itemprice: item.itemPrice,
-          itemqty: item.qty,
-          itemtotal: item.total,
-          note,
-          // itemtotalcost: item.qty * serv.cost,
-        };
-      });
-      itemsWqtyprice.sort((a: any, b: any) =>
-        a.indx > b.indx ? 1 : b.indx > a.indx ? -1 : 0
-      );
-      setItemsList(itemsWqtyprice);
-
-      const listwithindex = indexTheList(actions);
-      setActionslist(listwithindex);
+        const itemsWqtyprice = items.map((item: any, index: any) => {
+          const {
+            categoryId,
+            categoryName,
+            categoryNameAr,
+            departmentId,
+            departmentName,
+            departmentNameAr,
+            departmentColor,
+            employeeId,
+            employeeName,
+            employeeNameAr,
+            employeeColor,
+            resourseId,
+            resourseName,
+            resourseNameAr,
+            resourseColor,
+            note,
+          } = item;
+          const serv = servlist.filter((se: any) => se._id === item.itemId)[0];
+          return {
+            ...serv,
+            categoryId,
+            categoryName,
+            categoryNameAr,
+            departmentId,
+            departmentName,
+            departmentNameAr,
+            departmentColor,
+            employeeId,
+            employeeName,
+            employeeNameAr,
+            employeeColor,
+            resourseId,
+            resourseName,
+            resourseNameAr,
+            resourseColor,
+            index,
+            itemprice: item.itemPrice,
+            itemqty: item.qty,
+            itemtotal: item.total,
+            note,
+            // itemtotalcost: item.qty * serv.cost,
+          };
+        });
+        itemsWqtyprice.sort((a: any, b: any) =>
+          a.indx > b.indx ? 1 : b.indx > a.indx ? -1 : 0
+        );
+        setItemsList(itemsWqtyprice);
+        setIsItems(true);
+      }
     }
-  }, [itemsData, actionsData]);
+  }, [itemsData]);
 
   useEffect(() => {
     if (isNew) {
@@ -318,7 +309,6 @@ const PopupAppointmentCustomer = ({
   useEffect(() => {
     if (row && row._id) {
       getItems({ variables: { opId: row._id } });
-      loadActions({ variables: { eventId: row.id } });
       setTasktitle(row?.title);
       const depId = row.departmentId;
       const empId = row.employeeId;
@@ -330,6 +320,12 @@ const PopupAppointmentCustomer = ({
       setStartDate(row?.startDate);
       setEndDate(row?.endDate);
       setRrule(row?.rRule);
+      if (row?.retypeId) {
+        const depart = retypes.filter(
+          (dep: any) => dep._id === row.retypeId
+        )[0];
+        setRtypevalue(depart);
+      }
 
       if (depId) {
         const depart = departments.filter((dep: any) => dep._id === depId)[0];
@@ -403,29 +399,6 @@ const PopupAppointmentCustomer = ({
     setItemsList(listwithindex);
   };
 
-  const addActionToList = (item: any) => {
-    const newArray = [...actionslist, item];
-    const listwithindex = indexTheList(newArray);
-    setActionslist(listwithindex);
-  };
-  const editActionInList = (item: any) => {
-    const newArray = actionslist.map((it: any) => {
-      if (it._id === item._id) {
-        return item;
-      } else {
-        return it;
-      }
-    });
-    const listwithindex = indexTheList(newArray);
-    setActionslist(listwithindex);
-  };
-
-  const removeActionFromList = (item: any) => {
-    const newlist = actionslist.filter((il: any) => il.index !== item.index);
-    const listwithindex = indexTheList(newlist);
-    setActionslist(listwithindex);
-  };
-
   const getOverallTotal = () => {
     const totalsin = itemsList.map((litem: any) => litem.itemtotal);
     const sum = totalsin.reduce((psum: any, a: any) => psum + a, 0);
@@ -456,9 +429,7 @@ const PopupAppointmentCustomer = ({
     setRrule(null);
     setItemsList([]);
     setTotals({});
-    setActionslist([]);
     setSaving(false);
-    setSelected(null);
     setTasktitle(null);
     setLocation(null);
     setEventLength(null);
@@ -480,17 +451,7 @@ const PopupAppointmentCustomer = ({
       return;
     }
 
-    if (!itemsList || itemsList.length === 0) {
-      await messageAlert(
-        setAlrt,
-        isRTL
-          ? `يجب اضافة عنصر (خدمة او منتج) واحد على الأقل`
-          : `You should add min one service to invoice`
-      );
-      return;
-    }
     setSaving(true);
-
     const rRule = rrule?.str ? rrule?.str : undefined;
     const title = tasktitle
       ? tasktitle
@@ -507,7 +468,6 @@ const PopupAppointmentCustomer = ({
       amount: totals.amount,
       status: status ? status.id : 2,
       items: JSON.stringify(itemsList),
-      actions: JSON.stringify(actionslist),
       rRule,
       customer: custvalue
         ? {
@@ -586,6 +546,19 @@ const PopupAppointmentCustomer = ({
             projectName: undefined,
             projectNameAr: undefined,
           },
+      retype: rtypevalue
+        ? {
+            retypeId: rtypevalue._id,
+            retypeName: rtypevalue.name,
+            retypeNameAr: rtypevalue.nameAr,
+            retypeColor: rtypevalue.color,
+          }
+        : {
+            retypeId: undefined,
+            retypeName: undefined,
+            retypeNameAr: undefined,
+            retypeColor: undefined,
+          },
     };
     const mutate = isNew ? addAction : editAction;
     apply(mutate, variables);
@@ -624,7 +597,6 @@ const PopupAppointmentCustomer = ({
 
   const date = row?.startDate ? new Date(row?.startDate) : new Date();
   const day = weekdaysNNo?.[date.getDay()];
-
   const title = getPopupTitle('appointment', isNew);
 
   const desabledSave = row.status === 10 || !roles.isEditor();
@@ -641,7 +613,6 @@ const PopupAppointmentCustomer = ({
       saving={saving}
       mt={10}
       maxWidth="md"
-      // bgcolor={colors.blue[500]}
       mb={20}
     >
       <>
@@ -651,10 +622,10 @@ const PopupAppointmentCustomer = ({
           </Typography>
         </Box>
 
-        <Grid container spacing={2}>
+        <Grid container spacing={0}>
           <Grid item xs={12} md={12}>
             <Grid container spacing={2}>
-              <Grid item xs={8}>
+              <Grid item xs={7}>
                 <Grid container spacing={1}>
                   <Grid item xs={12} md={4}>
                     <CalenderLocal
@@ -675,21 +646,23 @@ const PopupAppointmentCustomer = ({
                     ></CalenderLocal>
                   </Grid>
                   <Grid item xs={12} md={4}>
-                    <SelectLocal
-                      options={eventLengthOptions}
-                      value={eventLength}
-                      onChange={(e: any) => {
-                        const { value } = e.target;
-                        setEventLength(value);
-                        const end = startDate
-                          ? new Date(startDate).getTime() + value * 60 * 1000
-                          : null;
-                        if (end) {
-                          setEndDate(new Date(end));
-                        }
-                      }}
-                      isRTL={isRTL}
-                    ></SelectLocal>
+                    <Box style={{ marginTop: 5 }}>
+                      <SelectLocal
+                        options={eventLengthOptions}
+                        value={eventLength}
+                        onChange={(e: any) => {
+                          const { value } = e.target;
+                          setEventLength(value);
+                          const end = startDate
+                            ? new Date(startDate).getTime() + value * 60 * 1000
+                            : null;
+                          if (end) {
+                            setEndDate(new Date(end));
+                          }
+                        }}
+                        isRTL={isRTL}
+                      ></SelectLocal>
+                    </Box>
                   </Grid>
                   <Grid item xs={12} md={4}>
                     <div style={{ pointerEvents: 'none', opacity: 0.5 }}>
@@ -703,6 +676,20 @@ const PopupAppointmentCustomer = ({
                       ></CalenderLocal>
                     </div>
                   </Grid>
+                  <Grid item xs={12}>
+                    <AutoFieldLocal
+                      name="retype"
+                      title={words?.retype}
+                      words={words}
+                      options={retypes.filter((dep: any) => dep.reType === 4)}
+                      value={rtypevalue}
+                      setSelectValue={setRtypevalue}
+                      register={register}
+                      isRTL={isRTL}
+                      fullWidth
+                      mb={0}
+                    ></AutoFieldLocal>
+                  </Grid>
                   {!tempoptions?.noTsk && (
                     <Grid item xs={12}>
                       <TextFieldLocal
@@ -713,8 +700,114 @@ const PopupAppointmentCustomer = ({
                         onChange={(e: any) => setTasktitle(e.target.value)}
                         row={row}
                         fullWidth
+                        multiline
+                        rowsMax={3}
+                        rows={3}
                         mb={0}
                       />
+                    </Grid>
+                  )}
+                  <Grid item xs={6}>
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          checked={isItems}
+                          onChange={() => {
+                            setIsItems(!isItems);
+                            setItemsList([]);
+                          }}
+                          name="isItems"
+                          color="primary"
+                        />
+                      }
+                      style={{ marginTop: 25 }}
+                      label={
+                        <Typography
+                          style={{ fontWeight: 'bold', fontSize: 13 }}
+                        >
+                          {isRTL ? 'اضافة بنود' : 'Add Items'}
+                        </Typography>
+                      }
+                    />
+                  </Grid>
+                  <Grid item xs={6}>
+                    <Box
+                      mt={1}
+                      display="flex"
+                      style={{
+                        flex: 1,
+                        marginTop: 25,
+                        justifyContent: 'flex-start',
+                        direction: 'ltr',
+                      }}
+                    >
+                      <Button
+                        size="medium"
+                        color="primary"
+                        variant="outlined"
+                        onClick={() => setOpenMap(true)}
+                      >
+                        <Typography
+                          style={{ fontSize: 13, fontWeight: 'bold' }}
+                        >
+                          {isRTL ? 'الموقع الجغرافي' : 'Location'}
+                        </Typography>
+                      </Button>
+                      {location?.lat && (
+                        <>
+                          <MyIcon
+                            size={28}
+                            color="#ff80ed"
+                            icon="location"
+                          ></MyIcon>
+                          <Box
+                            onClick={() => setLocation(null)}
+                            style={{ cursor: 'pointer', padding: 2 }}
+                          >
+                            <MyIcon
+                              size={24}
+                              color="#aaa"
+                              icon="close"
+                            ></MyIcon>
+                          </Box>
+                        </>
+                      )}
+                    </Box>
+                  </Grid>
+                </Grid>
+              </Grid>
+              <Grid item xs={5}>
+                <Grid container spacing={1}>
+                  <Grid item xs={12}>
+                    <Box>
+                      <AutoFieldLocal
+                        name="status"
+                        title={words.status}
+                        words={words}
+                        options={eventStatus}
+                        value={status}
+                        setSelectValue={setStatus}
+                        noPlus
+                        isRTL={isRTL}
+                        fullWidth
+                      ></AutoFieldLocal>
+                    </Box>
+                  </Grid>
+                  {!tempoptions?.noTsk && (
+                    <Grid item xs={12}>
+                      <AutoFieldLocal
+                        name="task"
+                        title={tempwords?.task}
+                        words={words}
+                        options={tasks}
+                        value={taskvalue}
+                        setSelectValue={setTaskvalue}
+                        register={register}
+                        isRTL={isRTL}
+                        fullWidth
+                        disabled={name === 'contractId'}
+                        mb={0}
+                      ></AutoFieldLocal>
                     </Grid>
                   )}
                   <Grid item xs={12}>
@@ -737,48 +830,8 @@ const PopupAppointmentCustomer = ({
                       mb={0}
                     ></AutoFieldLocal>
                   </Grid>
-                  {!tempoptions?.noTsk && (
-                    <Grid item xs={6}>
-                      <AutoFieldLocal
-                        name="task"
-                        title={tempwords?.task}
-                        words={words}
-                        options={tasks}
-                        value={taskvalue}
-                        setSelectValue={setTaskvalue}
-                        register={register}
-                        isRTL={isRTL}
-                        fullWidth
-                        disabled={name === 'contractId'}
-                        mb={0}
-                      ></AutoFieldLocal>
-                    </Grid>
-                  )}
-
-                  {!tempoptions?.noEmp && (
-                    <Grid item xs={6}>
-                      <AutoFieldLocal
-                        name="employee"
-                        title={tempwords?.employee}
-                        words={words}
-                        options={employees}
-                        value={emplvalue}
-                        setSelectValue={setEmplvalue}
-                        setSelectError={setEmplError}
-                        selectError={emplError}
-                        refernce={emplRef}
-                        register={register}
-                        disabled={isemployee || name === 'employeeId'}
-                        openAdd={openEmployee}
-                        isRTL={isRTL}
-                        fullWidth
-                        day={day}
-                        mb={0}
-                      ></AutoFieldLocal>
-                    </Grid>
-                  )}
                   {!tempoptions?.noRes && (
-                    <Grid item xs={6}>
+                    <Grid item xs={12}>
                       <AutoFieldLocal
                         name="resourse"
                         title={tempwords?.resourse}
@@ -799,8 +852,30 @@ const PopupAppointmentCustomer = ({
                       ></AutoFieldLocal>
                     </Grid>
                   )}
+                  {!tempoptions?.noEmp && (
+                    <Grid item xs={12}>
+                      <AutoFieldLocal
+                        name="employee"
+                        title={tempwords?.employee}
+                        words={words}
+                        options={employees}
+                        value={emplvalue}
+                        setSelectValue={setEmplvalue}
+                        setSelectError={setEmplError}
+                        selectError={emplError}
+                        refernce={emplRef}
+                        register={register}
+                        disabled={isemployee || name === 'employeeId'}
+                        openAdd={openEmployee}
+                        isRTL={isRTL}
+                        fullWidth
+                        day={day}
+                        mb={0}
+                      ></AutoFieldLocal>
+                    </Grid>
+                  )}
 
-                  <Grid item xs={6}>
+                  <Grid item xs={12}>
                     <AutoFieldLocal
                       name="department"
                       title={tempwords?.department}
@@ -820,78 +895,15 @@ const PopupAppointmentCustomer = ({
                   </Grid>
                 </Grid>
               </Grid>
-              <Grid
-                item
-                xs={4}
-                style={{
-                  backgroundColor: '#f5f5f5',
-                  borderRadius: 5,
-                }}
-              >
-                <Button
-                  variant="outlined"
-                  style={{
-                    marginBottom: 10,
-                    fontSize: 14,
-                    minWidth: 80,
-                  }}
-                  onClick={() => {
-                    setSelected(null);
-                    setOpenAction(true);
-                  }}
-                >
-                  <Typography
-                    style={{
-                      fontSize: 13,
-                      fontWeight: 'bold',
-                    }}
-                  >
-                    {isRTL ? 'اضافة تنبيه' : 'Add Reminder'}
-                  </Typography>{' '}
-                </Button>
-                <Paper style={{ height: 115, overflow: 'auto' }}>
-                  {actionslist.map((act: any) => {
-                    return (
-                      <ListItem>
-                        <ListItemText
-                          primary={actionTypeFormatter({ row: act })}
-                          secondary={getDateDayTimeFormat(act.sendtime, isRTL)}
-                        />
-                        <IconButton
-                          onClick={() => removeActionFromList(act)}
-                          title="Delete row"
-                          style={{ padding: 5 }}
-                        >
-                          <DeleteOutlinedIcon
-                            style={{ fontSize: 22, color: '#a76f9a' }}
-                          />
-                        </IconButton>
-                        <IconButton
-                          style={{ padding: 5 }}
-                          onClick={() => {
-                            setSelected(act);
-                            setOpenAction(true);
-                          }}
-                          title="Edit row"
-                        >
-                          <EditOutlinedIcon
-                            style={{ fontSize: 22, color: '#729aaf' }}
-                          />
-                        </IconButton>
-                      </ListItem>
-                    );
-                  })}
-                </Paper>
-              </Grid>
             </Grid>
           </Grid>
-          <Grid item xs={12}>
-            <Grid container spacing={2}></Grid>
+          {(isItems || itemsList?.length > 0) && (
             <Box
               style={{
                 backgroundColor: '#f4f4f4',
                 padding: 10,
                 marginTop: 15,
+                marginBottom: 15,
                 borderRadius: 10,
               }}
             >
@@ -907,7 +919,7 @@ const PopupAppointmentCustomer = ({
                   setAlrt={() => null}
                 ></ServiceItemForm>
               </Box>
-              {(isNew || itemsList.length > 0) && (
+              <Box style={{ marginBottom: 20 }}>
                 <ItemsTable
                   products={[...servicesproducts, ...products]}
                   rows={itemsList}
@@ -917,86 +929,40 @@ const PopupAppointmentCustomer = ({
                   words={words}
                   user={user}
                 ></ItemsTable>
-              )}
-              {/* {loading && <LoadingInline></LoadingInline>} */}
+              </Box>
             </Box>
-            <Grid container spacing={2}>
-              <Grid item xs={6}>
+          )}
+          <Grid container spacing={2}>
+            <Grid item xs={7}>
+              {(isItems || itemsList?.length > 0) && (
                 <Typography
                   style={{ fontWeight: 'bold', fontSize: 16, padding: 10 }}
                 >
                   {words.total} : {moneyFormat(totals.amount)}
                 </Typography>
-              </Grid>
-
-              <Grid item xs={3}>
-                <Box>
-                  <AutoFieldLocal
-                    name="status"
-                    title={words.status}
-                    words={words}
-                    options={eventStatus}
-                    value={status}
-                    setSelectValue={setStatus}
-                    noPlus
-                    isRTL={isRTL}
-                    width={200}
-                  ></AutoFieldLocal>
-                </Box>
-              </Grid>
-              {/* <Grid item xs={3}>
+              )}
+            </Grid>
+            <Grid item xs={3}></Grid>
+            <Grid item xs={2}>
+              {!isNew && itemsList?.length > 0 && (
                 <Box
                   m={1}
                   display="flex"
-                  style={{ flex: 1, justifyContent: 'flex-end' }}
+                  style={{ flex: 1, justifyContent: 'flex-end', marginTop: 5 }}
                 >
                   <Button
                     size="medium"
                     color="primary"
-                    variant="contained"
-                    onClick={() => setOpenMap(true)}
+                    variant="outlined"
+                    onClick={() => setOpenInvoice(true)}
+                    disabled={desabledSave}
                   >
-                    {isRTL ? 'الموقع الجغرافي' : 'Location'}
+                    <Typography>{words.addInvoice}</Typography>
                   </Button>
-                  {location?.lat && (
-                    <>
-                      <MyIcon
-                        size={32}
-                        color="#ff80ed"
-                        icon="location"
-                      ></MyIcon>
-                      <Box
-                        onClick={() => setLocation(null)}
-                        style={{ cursor: 'pointer', padding: 4 }}
-                      >
-                        <MyIcon size={28} color="#777" icon="close"></MyIcon>
-                      </Box>
-                    </>
-                  )}
                 </Box>
-              </Grid> */}
-              <Grid item xs={3}>
-                {!isNew && (
-                  <Box
-                    m={1}
-                    display="flex"
-                    style={{ flex: 1, justifyContent: 'flex-end' }}
-                  >
-                    <Button
-                      size="medium"
-                      color="primary"
-                      variant="outlined"
-                      onClick={() => setOpenInvoice(true)}
-                      disabled={desabledSave}
-                    >
-                      {words.addInvoice}
-                    </Button>
-                  </Box>
-                )}
-              </Grid>
+              )}
             </Grid>
           </Grid>
-          <Grid item xs={2}></Grid>
         </Grid>
         <PopupAddMultiEvents
           open={openMulti}
@@ -1057,16 +1023,6 @@ const PopupAppointmentCustomer = ({
           addAction={addResourse}
           editAction={editResourse}
         ></PopupResourses>
-        <PopupAction
-          open={openAction}
-          onClose={() => setOpenAction(false)}
-          row={selected}
-          isNew={selected ? false : true}
-          addAction={addActionToList}
-          editAction={editActionInList}
-          theme={theme}
-          event={{ ...row, startDate, endDate }}
-        ></PopupAction>
         <PopupMaps
           open={openMap}
           onClose={() => setOpenMap(false)}

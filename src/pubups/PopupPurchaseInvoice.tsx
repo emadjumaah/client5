@@ -69,7 +69,7 @@ const PopupPurchaseInvoice = ({
   const [isCash, setIsCash] = useState(false);
 
   const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
-  const [selectedDate, setSelectedDate] = React.useState(new Date());
+  const [selectedDate, setSelectedDate] = React.useState(null);
   const [invNo, setInvNo] = useState<any>('');
 
   const [itemsList, setItemsList] = useState<any>([]);
@@ -334,7 +334,11 @@ const PopupPurchaseInvoice = ({
   };
 
   const handleDateChange = (date: any) => {
-    setSelectedDate(date);
+    if (date) {
+      const d = new Date(date);
+      d?.setHours(8, 0, 0);
+      setSelectedDate(d);
+    }
   };
 
   useEffect(() => {
@@ -411,6 +415,14 @@ const PopupPurchaseInvoice = ({
       setPtype(row.paymentType ? row.paymentType : 'cash');
     }
   }, [row]);
+
+  useEffect(() => {
+    if (isNew) {
+      const start = new Date();
+      start.setHours(8, 0, 0);
+      setSelectedDate(start);
+    }
+  }, [open]);
 
   const getOverallTotal = () => {
     const products = itemsList.filter((li: any) => li.itemType === 1);

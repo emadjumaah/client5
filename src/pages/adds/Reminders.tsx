@@ -25,7 +25,7 @@ import {
   ColumnChooser,
   PagingPanel,
 } from '@devexpress/dx-react-grid-material-ui';
-import { Command, Loading, PopupEditing } from '../../Shared';
+import { Command, PopupEditing } from '../../Shared';
 import { getRowId } from '../../common';
 import { actionTimeFormatter, sentFormatter } from '../../Shared/colorFormat';
 
@@ -54,7 +54,6 @@ export default function Reminders(props: any) {
   const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
 
   const [rows, setRows] = useState([]);
-  const [loading, setLoading] = useState(false);
   const [start, setStart] = useState<any>(null);
   const [end, setEnd] = useState<any>(null);
   const { tasks } = useTasks();
@@ -160,9 +159,6 @@ export default function Reminders(props: any) {
   };
 
   useEffect(() => {
-    if (remindersData?.loading) {
-      setLoading(true);
-    }
     if (remindersData?.data?.getRemindersActions?.data) {
       const { data } = remindersData.data.getRemindersActions;
       const rdata = data.map((da: any) => {
@@ -214,7 +210,6 @@ export default function Reminders(props: any) {
         };
       });
       setRows(rdata);
-      setLoading(false);
     }
   }, [remindersData]);
 
@@ -228,6 +223,7 @@ export default function Reminders(props: any) {
       words={words}
       theme={theme}
       refresh={refresh}
+      loading={remindersData?.loading}
     >
       <Box
         style={{
@@ -353,7 +349,6 @@ export default function Reminders(props: any) {
           </Grid>
         </Paper>
 
-        {loading && <Loading isRTL={isRTL} />}
         {alrt.show && (
           <AlertLocal
             isRTL={isRTL}

@@ -25,7 +25,7 @@ import {
   TableColumnResizing,
   PagingPanel,
 } from '@devexpress/dx-react-grid-material-ui';
-import { Command, errorAlert, Loading, PopupEditing } from '../../Shared';
+import { Command, errorAlert, PopupEditing } from '../../Shared';
 import { useCustomers } from '../../hooks';
 import { getRowId, roles } from '../../common';
 import {
@@ -56,7 +56,6 @@ import { useLazyQuery } from '@apollo/client';
 
 export default function ManageProjects({ isRTL, words, theme, menuitem }: any) {
   const [pageSizes] = useState([5, 8, 10, 20, 50, 0]);
-  const [loading, setLoading] = useState(false);
   const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
   const [rows, setRows] = useState([]);
   const [item, setItem] = useState(null);
@@ -132,7 +131,6 @@ export default function ManageProjects({ isRTL, words, theme, menuitem }: any) {
   const commitChanges = async ({ deleted }) => {
     if (deleted) {
       const _id = deleted[0];
-      setLoading(true);
       const res = await removeProject({ variables: { _id } });
       if (res?.data?.deleteProject?.ok === false) {
         if (res?.data?.deleteProject?.error.includes('related')) {
@@ -141,7 +139,6 @@ export default function ManageProjects({ isRTL, words, theme, menuitem }: any) {
           await errorAlert(setAlrt, isRTL);
         }
       }
-      setLoading(false);
     }
   };
 
@@ -152,6 +149,7 @@ export default function ManageProjects({ isRTL, words, theme, menuitem }: any) {
       words={words}
       theme={theme}
       refresh={refreshproject}
+      loading={empData?.loading}
     >
       <Box
         style={{
@@ -160,7 +158,6 @@ export default function ManageProjects({ isRTL, words, theme, menuitem }: any) {
           backgroundColor: '#fff',
         }}
       >
-        {loading && <Loading isRTL={isRTL}></Loading>}
         <Paper
           elevation={5}
           style={{

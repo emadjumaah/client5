@@ -65,7 +65,7 @@ export default function ItemsTable({
   isRTL,
   words,
   user,
-  height = 265,
+  height = 250,
   products,
 }: any) {
   const [columns] = useState([

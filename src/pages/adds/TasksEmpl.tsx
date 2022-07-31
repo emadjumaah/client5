@@ -20,7 +20,7 @@ import {
   TableColumnVisibility,
   ColumnChooser,
 } from '@devexpress/dx-react-grid-material-ui';
-import { Command, Loading, PopupEditing } from '../../Shared';
+import { Command, PopupEditing } from '../../Shared';
 import { useLazyQuery, useMutation } from '@apollo/client';
 import {
   createdAtFormatter,
@@ -99,7 +99,6 @@ export default function TasksEmpl({
   ]);
 
   const [rows, setRows] = useState([]);
-  const [loading, setLoading] = useState(false);
   const [openGantt, setOpenGantt] = useState(false);
   const [start, setStart] = useState<any>(null);
   const [end, setEnd] = useState<any>(null);
@@ -171,7 +170,6 @@ export default function TasksEmpl({
   const commitChanges = async ({ deleted }) => {
     if (deleted) {
       const _id = deleted[0];
-      setLoading(true);
       const res = await removeTaskById({ variables: { _id } });
       if (res?.data?.deleteTaskById?.ok === false) {
         if (res?.data?.deleteTaskById?.error.includes('related')) {
@@ -180,18 +178,13 @@ export default function TasksEmpl({
           await errorAlert(setAlrt, isRTL);
         }
       }
-      setLoading(false);
     }
   };
 
   useEffect(() => {
-    if (tasksData?.loading) {
-      setLoading(true);
-    }
     if (tasksData?.data?.getEmplTasks?.data) {
       const { data } = tasksData.data.getEmplTasks;
       setRows(data);
-      setLoading(false);
     }
   }, [tasksData]);
 
@@ -208,6 +201,7 @@ export default function TasksEmpl({
       refresh={refresh}
       periodvalue={periodvalue}
       setPeriodvalue={setPeriodvalue}
+      loading={tasksData?.loading}
       // bgcolor={colors.deepPurple[400]}
     >
       <Paper>
@@ -351,7 +345,6 @@ export default function TasksEmpl({
               ></PopupTask>
             </PopupEditing>
           </Grid>
-          {loading && <Loading isRTL={isRTL} />}
           <PopupGantt
             open={openGantt}
             onClose={() => setOpenGantt(false)}

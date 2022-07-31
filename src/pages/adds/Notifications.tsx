@@ -83,13 +83,18 @@ export default function Notifications({
     }
   }, [msgsData]);
 
+  const refresh = () => {
+    msgsData?.refetch();
+  };
+
   return (
     <PageLayout
       menuitem={menuitem}
       isRTL={isRTL}
       words={words}
       theme={theme}
-      refresh={() => null}
+      refresh={refresh}
+      loading={msgsData?.loading}
     >
       <Paper>
         <Box

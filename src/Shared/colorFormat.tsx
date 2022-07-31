@@ -28,6 +28,7 @@ import {
   isViewer,
   isFinance,
   isOperate,
+  isPurchase,
   isAdmin,
 } from '../common/roles';
 import CustodyChart from '../components/charts/CustodyChart';
@@ -100,95 +101,54 @@ export const rolesFormatter = ({ row, isRTL }: any) => {
   const user = row;
   const isF = isFinance(user);
   const isO = isOperate(user);
+  const isP = isPurchase(user);
   const isA = isAdmin(user);
   const isE = isEditor(user);
   const isW = isWriter(user);
   const isV = isViewer(user);
+  const isEmpl = row?.isEmployee;
 
   if (isSuperAdmin(user)) {
     return <Typography>{isRTL ? 'الأدمن' : 'Main Admin'}</Typography>;
   }
+  if (isEmpl) {
+    return <Typography>{isRTL ? 'موظف' : 'Employee'}</Typography>;
+  }
   if (isBranchAdmin(user)) {
     return <Typography>{isRTL ? 'مدير عام' : 'Branch Admin'}</Typography>;
   }
+  let fullt;
+  let fsect = [];
+  const titla = isRTL ? 'مدير' : 'Admin';
+  const title = isRTL ? 'محرر' : 'Editor';
+  const titlr = isRTL ? 'كاتب' : 'writer';
+  const titlv = isRTL ? 'زائر' : 'Viewer';
+  const acc = isRTL ? 'حسابات' : 'Accountant';
+  const opr = isRTL ? 'عمليات' : 'Operation';
+  const pur = isRTL ? 'مشتريات' : 'Purchase';
+
   if (isA) {
-    if (isF && isO) {
-      return (
-        <Typography>
-          {isRTL ? 'مدير حسابات وعمليات' : 'Admin / General'}
-        </Typography>
-      );
-    } else if (isF) {
-      return (
-        <Typography>{isRTL ? 'مدير حسابات' : 'Admin / Accountant'}</Typography>
-      );
-    } else if (isO) {
-      return (
-        <Typography>{isRTL ? 'مدير عمليات' : 'Admin / Accountant'}</Typography>
-      );
-    } else {
-      return <Typography>{isRTL ? 'مدير' : 'Admin'}</Typography>;
-    }
-  }
-  if (isE) {
-    if (isF && isO) {
-      return (
-        <Typography>
-          {isRTL ? 'محرر حسابات وعمليات' : 'Editor / General'}
-        </Typography>
-      );
-    } else if (isF) {
-      return (
-        <Typography>{isRTL ? 'محرر حسابات' : 'Editor / Accountant'}</Typography>
-      );
-    } else if (isO) {
-      return (
-        <Typography>{isRTL ? 'محرر عمليات' : 'Editor / Accountant'}</Typography>
-      );
-    } else {
-      return <Typography>{isRTL ? 'محرر' : 'Editor'}</Typography>;
-    }
-  }
-  if (isW) {
-    if (isF && isO) {
-      return (
-        <Typography>
-          {isRTL ? 'كاتب حسابات وعمليات' : 'writer / General'}
-        </Typography>
-      );
-    } else if (isF) {
-      return (
-        <Typography>{isRTL ? 'كاتب حسابات' : 'writer / Accountant'}</Typography>
-      );
-    } else if (isO) {
-      return (
-        <Typography>{isRTL ? 'كاتب عمليات' : 'writer / Accountant'}</Typography>
-      );
-    } else {
-      return <Typography>{isRTL ? 'كاتب' : 'writer'}</Typography>;
-    }
-  }
-  if (isV) {
-    if (isF && isO) {
-      return (
-        <Typography>
-          {isRTL ? 'زائر حسابات وعمليات ' : 'Viewer / General'}
-        </Typography>
-      );
-    } else if (isF) {
-      return (
-        <Typography>{isRTL ? 'زائر حسابات' : 'Viewer / Accountant'}</Typography>
-      );
-    } else if (isO) {
-      return (
-        <Typography>{isRTL ? 'زائر عمليات' : 'Viewer / Accountant'}</Typography>
-      );
-    } else {
-      return <Typography>{isRTL ? 'زائر' : 'Viewer'}</Typography>;
-    }
+    fullt = titla;
+  } else if (isE) {
+    fullt = title;
+  } else if (isW) {
+    fullt = titlr;
+  } else if (isV) {
+    fullt = titlv;
   }
 
-  return <Typography></Typography>;
+  if (isF) {
+    fsect.push(acc);
+  }
+  if (isO) {
+    fsect.push(opr);
+  }
+  if (isP) {
+    fsect.push(pur);
+  }
+
+  const fulltitle = `${fullt} ${fsect.join(' ')}`;
+  return <Typography>{fulltitle}</Typography>;
 };
 
 export const avatarPatternFormatter = ({ row }: any) => {
@@ -1220,9 +1180,6 @@ export const totalkaidAmountFormatter = ({ row }: any) => {
   }
 };
 export const doneFormatter = ({ row, editEvent }: any) => {
-  if (row.amount === 0) {
-    return <span></span>;
-  }
   const status = row.status === 10 ? 2 : 10;
   const id = row.id;
   const variables = { id, status };

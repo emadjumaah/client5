@@ -28,7 +28,7 @@ import {
 import AddIcon from '@material-ui/icons/Add';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
-import { errorAlert, Loading, PopupEditing } from '../../Shared';
+import { errorAlert, PopupEditing } from '../../Shared';
 import { Box, Fab, IconButton, Paper, Typography } from '@material-ui/core';
 import { useUsers } from '../../hooks';
 import {
@@ -48,7 +48,6 @@ import { getColumns } from '../../common/columns';
 const getRowId = (row: { _id: any }) => row._id;
 
 export default function Users({ isRTL, words, theme, user, menuitem }: any) {
-  const [loading, setLoading] = useState(false);
   const col = getColumns({ isRTL, words });
 
   const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
@@ -56,7 +55,7 @@ export default function Users({ isRTL, words, theme, user, menuitem }: any) {
   const [columns] = useState([
     { name: 'avatar', title: words.avatar },
     { name: 'username', title: words.email },
-    col.name,
+    { name: 'name', title: words.name },
     { name: 'phone', title: words.phoneNumber },
     { name: 'roles', title: words.roles },
     col.employee,
@@ -66,7 +65,7 @@ export default function Users({ isRTL, words, theme, user, menuitem }: any) {
   const [tableColumnExtensions]: any = useState([
     { columnName: 'avatar', width: 100 },
     { columnName: 'username', width: 200 },
-    { columnName: col.name.name, width: 250 },
+    { columnName: 'name', width: 250 },
     { columnName: 'phone', width: 150 },
     { columnName: 'roles', width: 150 },
     { columnName: col.employee.name, width: 200 },
@@ -89,6 +88,7 @@ export default function Users({ isRTL, words, theme, user, menuitem }: any) {
     editPasswordQuick,
     block,
     refreshuser,
+    loading,
   } = useUsers();
   const { company } = useCompany();
   const { employees } = useEmployees();
@@ -96,14 +96,11 @@ export default function Users({ isRTL, words, theme, user, menuitem }: any) {
   const commitChanges = async ({ deleted }) => {
     if (deleted) {
       const _id = deleted[0];
-      setLoading(true);
-      console.log('_id', _id);
       const res = await removeUser({ variables: { _id } });
       if (res?.data?.deleteUser?.ok === false) {
         await errorAlert(setAlrt, isRTL);
         return;
       }
-      setLoading(false);
     }
   };
 
@@ -151,6 +148,15 @@ export default function Users({ isRTL, words, theme, user, menuitem }: any) {
     ? users
     : users.filter((us: any) => !us.isSuperAdmin);
 
+  const emplusers = fusers.filter(
+    (fu: any) => fu?.employeeId && fu?.isEmployee
+  );
+  const emplIds = emplusers.map((eu: any) => eu?.employeeId);
+  const emplnoaccount =
+    emplIds && emplIds?.length > 0
+      ? employees?.filter((emp: any) => !emplIds.includes(emp?._id))
+      : employees;
+
   return (
     <PageLayout
       menuitem={menuitem}
@@ -158,6 +164,7 @@ export default function Users({ isRTL, words, theme, user, menuitem }: any) {
       words={words}
       theme={theme}
       refresh={refreshuser}
+      loading={loading}
     >
       <Box
         style={{
@@ -166,7 +173,6 @@ export default function Users({ isRTL, words, theme, user, menuitem }: any) {
           backgroundColor: '#fff',
         }}
       >
-        {loading && <Loading isRTL={isRTL}></Loading>}
         <Paper
           elevation={5}
           style={{
@@ -202,7 +208,7 @@ export default function Users({ isRTL, words, theme, user, menuitem }: any) {
               defaultOrder={[
                 'avatar',
                 'username',
-                col.name.name,
+                'name',
                 'phone',
                 'roles',
                 col.employee.name,
@@ -264,6 +270,7 @@ export default function Users({ isRTL, words, theme, user, menuitem }: any) {
                 editPassword={editPasswordQuick}
                 block={block}
                 employees={employees}
+                emplnoaccount={emplnoaccount}
               ></PopupUserEmail>
             </PopupEditing>
           </Grid>

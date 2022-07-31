@@ -84,6 +84,11 @@ export default gql`
         contractName
         contractNameAr
 
+        retypeId
+        retypeName
+        retypeNameAr
+        retypeColor
+
         refNo
         refType
 

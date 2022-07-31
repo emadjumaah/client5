@@ -14,8 +14,7 @@ import { PriceTotal } from '../Shared/TotalPrice';
 import { operationTypes } from '../constants';
 import { useMutation } from '@apollo/client';
 import { createInvoice, getInvoices, getProducts } from '../graphql';
-import { accountCode } from '../constants/kaid';
-// import PaymentSelect from '../pages/options/PaymentSelect';
+import { accountCode, parents } from '../constants/kaid';
 import PopupLayout from '../pages/main/PopupLayout';
 import { Grid } from '@material-ui/core';
 import AutoFieldLocal from '../components/fields/AutoFieldLocal';
@@ -31,6 +30,8 @@ import useResourses from '../hooks/useResourses';
 import { InvoicePrint } from '../print';
 import ServiceItemForm from '../Shared/ServiceItemForm';
 import { sleep, successAlert } from '../Shared/helpers';
+import useAccounts from '../hooks/useAccounts';
+import PaymentSelect from '../pages/options/PaymentSelect';
 
 export const indexTheList = (list: any) => {
   return list.map((item: any, index: any) => {
@@ -55,12 +56,11 @@ const PopupAppointInvoice = ({
   const classes = invoiceClasses();
   const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
   const [saving, setSaving] = useState(false);
-  const [selectedDate, setSelectedDate] = React.useState(new Date());
+  const [selectedDate, setSelectedDate] = React.useState(null);
   const [invNo, setInvNo] = useState<any>('');
 
   const [itemsList, setItemsList] = useState<any>([]);
   const [accounts, setAccounts] = useState<any>([]);
-  const [ptype, setPtype] = useState<any>('cash');
 
   const [discount, setDiscount] = useState(0);
   const [totals, setTotals] = useState<any>({});
@@ -81,11 +81,16 @@ const PopupAppointInvoice = ({
 
   const [taskvalue, setTaskvalue] = useState<any>(null);
 
+  const [isCash, setIsCash] = useState(false);
+  const [paid, setPaid] = useState<any>(0);
+  const [debitAcc, setDebitAcc]: any = React.useState(null);
+
   const [openCust, setOpenCust] = useState(false);
   const [newtext, setNewtext] = useState('');
 
-  const [isCash, setIsCash] = useState(true);
   const { customers, addCustomer, editCustomer } = useCustomers();
+  const { accounts: mainAccounts } = useAccounts();
+
   const { tasks } = useTasks();
   const { employees } = useEmployees();
   const { departments } = useDepartments();
@@ -125,6 +130,15 @@ const PopupAppointInvoice = ({
     setCustvalue(nextValue);
   };
 
+  const cashaccounts = mainAccounts.filter(
+    (acc: any) => acc.parentcode === parents.CASH && acc.code < 10499
+  );
+  useEffect(() => {
+    if (isCash) {
+      setDebitAcc(cashaccounts?.[0]);
+    }
+  }, [open, isCash]);
+
   const resetAllForms = () => {
     reset();
     setItemsList([]);
@@ -133,13 +147,13 @@ const PopupAppointInvoice = ({
     setCustvalue(null);
     setInvNo('');
     setAccounts([]);
-    setPtype('');
-    setIsCash(true);
+    setIsCash(false);
     setSaving(false);
     setSelectedDate(new Date());
     setDepartvalue(null);
     setEmplvalue(null);
     setResovalue(null);
+    setPaid(0);
   };
 
   const addItemToList = (item: any) => {
@@ -183,13 +197,16 @@ const PopupAppointInvoice = ({
     const listwithindex = indexTheList(newList);
     setItemsList(listwithindex);
   };
-
   const handleDateChange = (date: any) => {
-    setSelectedDate(date);
+    if (date) {
+      const d = new Date(date);
+      d?.setHours(8, 0, 0);
+      setSelectedDate(d);
+    }
   };
   useEffect(() => {
     getOverallTotal();
-  }, [itemsList, discount, ptype, isCash]);
+  }, [itemsList, discount, isCash, paid, debitAcc]);
 
   useEffect(() => {
     if (appoint && appoint.startDate) {
@@ -200,6 +217,8 @@ const PopupAppointInvoice = ({
     const depId = appoint.departmentId;
     const empId = appoint.employeeId;
     const resId = appoint.resourseId;
+    const da = appoint.debitAcc;
+
     if (depId) {
       const depart = departments.filter((dep: any) => dep._id === depId)[0];
       setDepartvalue(depart);
@@ -221,7 +240,22 @@ const PopupAppointInvoice = ({
     if (items) {
       setItemsList(items);
     }
+    if (da) {
+      const debit = mainAccounts.filter((acc: any) => acc.code === da)[0];
+      setDebitAcc(debit);
+    }
+    setIsCash(appoint.isCash);
+    setDiscount(appoint.discount);
+    setInvNo(appoint.docNo);
   }, [appoint, services, customers, items]);
+
+  useEffect(() => {
+    if (isNew) {
+      const start = new Date();
+      start.setHours(8, 0, 0);
+      setSelectedDate(start);
+    }
+  }, [open]);
 
   const getOverallTotal = () => {
     const totalsin = itemsList.map((litem: any) => litem.itemtotal);
@@ -256,9 +290,9 @@ const PopupAppointInvoice = ({
         type: operationTypes.customerDiscount,
       },
       {
-        debitAcc: accountCode.cash_on_hand,
+        debitAcc: debitAcc?.code,
         creditAcc: accountCode.accounts_receivable,
-        amount: isCash ? sum - discount : 0,
+        amount: isCash ? paid : 0,
         type: operationTypes.customerReceipt,
       },
       {
@@ -298,6 +332,15 @@ const PopupAppointInvoice = ({
       await messageAlert(
         setAlrt,
         isRTL ? 'يرجى اضافة عميل للفاتورة' : 'Please add Customer'
+      );
+      return;
+    }
+    if (!itemsList || itemsList.length === 0) {
+      await messageAlert(
+        setAlrt,
+        isRTL
+          ? `يجب اضافة عنصر (خدمة او منتج) واحد للفاتورة على الأقل`
+          : `You should add min one service to invoice`
       );
       return;
     }
@@ -385,9 +428,8 @@ const PopupAppointInvoice = ({
       profit,
       isPaid: isCash,
       isCash,
-      amountPaid: isCash ? amount : 0,
+      amountPaid: isCash ? paid : 0,
       accounts,
-      paymentType: ptype,
       userId: user._id,
       eventId: appoint.id,
       eventNo: appoint.docNo,
@@ -449,18 +491,13 @@ const PopupAppointInvoice = ({
     total: totals.total,
     amount: totals.amount,
     items: itemsList,
+    discount,
   };
 
   const date = appoint?.startDate ? new Date(appoint?.startDate) : new Date();
   const day = weekdaysNNo?.[date.getDay()];
 
-  const title = isRTL
-    ? isNew
-      ? 'فاتورة جديدة'
-      : 'تعديل فاتورة'
-    : isNew
-    ? 'New Invoice'
-    : 'Edit Invoice';
+  const title = isRTL ? 'فاتورة بيع' : 'Sales Invoice';
 
   return (
     <PopupLayout
@@ -495,8 +532,6 @@ const PopupAppointInvoice = ({
                 flexDirection: isRTL ? 'row-reverse' : 'row',
                 alignItems: 'center',
                 justifyContent: 'flex-end',
-                marginLeft: isRTL ? undefined : 20,
-                marginRight: isRTL ? 20 : undefined,
               }}
             >
               {isNew && (
@@ -521,13 +556,19 @@ const PopupAppointInvoice = ({
           )}
         </Grid>
         <Grid item xs={8}>
-          {/* <PaymentSelect
-            words={words}
-            ptype={ptype}
-            isCash={isCash}
-            setIsCash={setIsCash}
-            setPtype={setPtype}
-          ></PaymentSelect> */}
+          {isNew && (
+            <PaymentSelect
+              words={words}
+              isCash={isCash}
+              setIsCash={setIsCash}
+              paid={paid}
+              setPaid={setPaid}
+              isRTL={isRTL}
+              debitaccounts={cashaccounts}
+              debitAcc={debitAcc}
+              setDebitAcc={setDebitAcc}
+            ></PaymentSelect>
+          )}
         </Grid>
         <Grid item xs={8}>
           <AutoFieldLocal
@@ -558,26 +599,6 @@ const PopupAppointInvoice = ({
             ></AutoFieldLocal>
           </Grid>
         )}
-        {!tempoptions?.noEmp && (
-          <Grid item xs={4}>
-            <AutoFieldLocal
-              name="employee"
-              title={tempwords?.employee}
-              words={words}
-              options={employees}
-              value={emplvalue}
-              setSelectValue={setEmplvalue}
-              setSelectError={setEmplError}
-              selectError={emplError}
-              refernce={emplRef}
-              noPlus
-              isRTL={isRTL}
-              fullWidth
-              day={day}
-            ></AutoFieldLocal>
-          </Grid>
-        )}
-        {!tempoptions?.noRes && <Grid item xs={4}></Grid>}
         {!tempoptions?.noRes && (
           <Grid item xs={4}>
             <AutoFieldLocal
@@ -590,6 +611,26 @@ const PopupAppointInvoice = ({
               setSelectError={setResoError}
               selectError={resoError}
               refernce={resoRef}
+              noPlus
+              isRTL={isRTL}
+              fullWidth
+              day={day}
+            ></AutoFieldLocal>
+          </Grid>
+        )}
+        {!tempoptions?.noRes && <Grid item xs={4}></Grid>}
+        {!tempoptions?.noEmp && (
+          <Grid item xs={4}>
+            <AutoFieldLocal
+              name="employee"
+              title={tempwords?.employee}
+              words={words}
+              options={employees}
+              value={emplvalue}
+              setSelectValue={setEmplvalue}
+              setSelectError={setEmplError}
+              selectError={emplError}
+              refernce={emplRef}
               noPlus
               isRTL={isRTL}
               fullWidth
@@ -623,7 +664,7 @@ const PopupAppointInvoice = ({
               borderRadius: 10,
             }}
           >
-            <Box display="flex">
+            <Box display="flex" style={{ paddingLeft: 10, paddingRight: 10 }}>
               <ServiceItemForm
                 services={services}
                 products={products}
@@ -635,29 +676,33 @@ const PopupAppointInvoice = ({
                 setAlrt={setAlrt}
               ></ServiceItemForm>
             </Box>
-            <Box style={{ marginBottom: 20 }}>
-              <ItemsTable
-                products={[...services, ...products]}
-                rows={itemsList}
-                editItem={editItemInList}
-                removeItem={removeItemFromList}
-                isRTL={isRTL}
-                words={words}
-                user={user}
-              ></ItemsTable>
-            </Box>
+            {(isNew || itemsList.length > 0) && (
+              <Box style={{ marginBottom: 20 }}>
+                <ItemsTable
+                  products={[...services, ...products]}
+                  rows={itemsList}
+                  editItem={editItemInList}
+                  removeItem={removeItemFromList}
+                  isRTL={isRTL}
+                  words={words}
+                  user={user}
+                ></ItemsTable>
+              </Box>
+            )}
           </Box>
           <Box
             display="flex"
             style={{
               alignItems: 'center',
               justifyContent: 'space-between',
+              marginRight: 10,
+              marginLeft: 10,
             }}
           >
             <TextField
               name="discount"
               label={words.discount}
-              value={discount.toString()}
+              value={discount?.toString()}
               onChange={(e: any) => setDiscount(Number(e.target.value))}
               variant="outlined"
               style={{ width: 200 }}

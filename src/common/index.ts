@@ -28,6 +28,7 @@ import {
 } from './columns';
 import { roles } from './check';
 import { print, jadwalready } from './ipc';
+import LandingFooter from './Footer';
 
 export {
   nameToColor,
@@ -56,4 +57,5 @@ export {
   groupBy,
   updateDocNumbers,
   updateOpDocRefNumbers,
+  LandingFooter,
 };

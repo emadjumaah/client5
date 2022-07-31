@@ -516,6 +516,7 @@ export default function SalesReport({
       words={words}
       theme={theme}
       refresh={refresh}
+      loading={summaryData?.loading}
     >
       <Box
         style={{

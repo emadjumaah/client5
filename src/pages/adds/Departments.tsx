@@ -17,7 +17,7 @@ import {
   Toolbar,
   SearchPanel,
 } from '@devexpress/dx-react-grid-material-ui';
-import { Command, errorAlert, Loading, PopupEditing } from '../../Shared';
+import { Command, errorAlert, PopupEditing } from '../../Shared';
 import { getRowId } from '../../common';
 import { PopupDeprtment } from '../../pubups';
 import { avatarPatternFormatter } from '../../Shared/colorFormat';
@@ -71,10 +71,9 @@ export default function Departments({ isRTL, words, theme, menuitem }: any) {
       words={words}
       theme={theme}
       refresh={refreshdepartment}
+      loading={loading}
     >
       <Paper>
-        {loading && <Loading isRTL={isRTL}></Loading>}
-
         <Grid rows={departments} columns={columns} getRowId={getRowId}>
           <SortingState />
           <SearchState />

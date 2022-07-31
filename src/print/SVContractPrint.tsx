@@ -107,7 +107,7 @@ export class SVContractPrint extends React.PureComponent<any, any> {
         'https://res.cloudinary.com/jadwalio/image/upload/v1658845332/fullfootersmart2_w0rour.png'
       }
       alt={'car'}
-      height={480}
+      height={520}
       width="100%"
       style={{
         objectFit: 'fill',
@@ -214,7 +214,7 @@ export class SVContractPrint extends React.PureComponent<any, any> {
             borderColor="grey.400"
             style={{
               display: 'flex',
-              height: 30,
+              height: 28,
               alignItems: 'center',
               justifyContent: 'center',
               fontSize: 14,
@@ -236,7 +236,7 @@ export class SVContractPrint extends React.PureComponent<any, any> {
               backgroundColor: '#0E9DAD',
               color: '#fff',
               fontSize: 10,
-              height: 30,
+              height: 28,
             }}
           >
             <div>{item?.nameAr}</div>
@@ -271,7 +271,7 @@ export class SVContractPrint extends React.PureComponent<any, any> {
     } else if (item?.id === 11) {
       d = customer?.nationalDate;
     }
-    const height = 25;
+    const height = 28;
     return (
       <Grid container spacing={0}>
         <Grid item xs={2}>
@@ -284,10 +284,10 @@ export class SVContractPrint extends React.PureComponent<any, any> {
               alignItems: 'center',
               backgroundColor: '#0E9DAD',
               color: '#fff',
-              fontSize: 9,
+              fontSize: 10,
               height,
-              paddingRight: 2,
-              paddingLeft: 2,
+              paddingRight: 5,
+              paddingLeft: 5,
             }}
           >
             <Box style={{ alignItems: 'center', justifyContent: 'center' }}>
@@ -320,7 +320,7 @@ export class SVContractPrint extends React.PureComponent<any, any> {
               alignItems: 'center',
               backgroundColor: '#0E9DAD',
               color: '#fff',
-              fontSize: 9,
+              fontSize: 10,
               height,
               paddingRight: 2,
               paddingLeft: 2,
@@ -379,7 +379,7 @@ export class SVContractPrint extends React.PureComponent<any, any> {
                   justifyContent: 'center',
                   fontSize: 11,
                   flexDirection: 'column',
-                  height: 30,
+                  height: 28,
                 }}
               >
                 <Box>السعر</Box>
@@ -396,11 +396,11 @@ export class SVContractPrint extends React.PureComponent<any, any> {
                   justifyContent: 'center',
                   fontSize: 11,
                   flexDirection: 'column',
-                  height: 30,
+                  height: 28,
                 }}
               >
-                <Box>العدد</Box>
-                <Box>Quantity</Box>
+                <Box>المدة</Box>
+                <Box>Duration</Box>
               </Box>
             </Grid>
             <Grid item xs={4}>
@@ -413,7 +413,7 @@ export class SVContractPrint extends React.PureComponent<any, any> {
                   justifyContent: 'center',
                   fontSize: 11,
                   flexDirection: 'column',
-                  height: 30,
+                  height: 28,
                 }}
               >
                 <Box>يومي</Box>
@@ -432,7 +432,7 @@ export class SVContractPrint extends React.PureComponent<any, any> {
                   fontSize: 12,
                   fontWeight: 'bold',
                   flexDirection: 'column',
-                  height: 30,
+                  height: 28,
                 }}
               >
                 {moneyFormatEmpty(amount)}
@@ -449,7 +449,7 @@ export class SVContractPrint extends React.PureComponent<any, any> {
                   fontSize: 12,
                   fontWeight: 'bold',
                   flexDirection: 'column',
-                  height: 30,
+                  height: 28,
                 }}
               >
                 {evQty}
@@ -466,7 +466,7 @@ export class SVContractPrint extends React.PureComponent<any, any> {
                   fontSize: 12,
                   fontWeight: 'bold',
                   flexDirection: 'column',
-                  height: 30,
+                  height: 28,
                 }}
               >
                 {isFinite(fprice) ? moneyFormatEmpty(fprice) : ''}
@@ -487,7 +487,7 @@ export class SVContractPrint extends React.PureComponent<any, any> {
               flexDirection: 'column',
               backgroundColor: '#0E9DAD',
               color: '#fff',
-              height: 60,
+              height: 56,
             }}
           >
             <Box>السعر المتفق عليه</Box>
@@ -506,7 +506,7 @@ export class SVContractPrint extends React.PureComponent<any, any> {
               flexDirection: 'column',
               backgroundColor: '#0E9DAD',
               color: '#fff',
-              height: 30,
+              height: 28,
             }}
           >
             {amount && <Box>{tafkeet(amount, isRTL)}</Box>}
@@ -530,7 +530,7 @@ export class SVContractPrint extends React.PureComponent<any, any> {
               justifyContent: 'center',
               fontSize: 10,
               flexDirection: 'column',
-              height: 25,
+              height: 28,
             }}
           >
             QR
@@ -547,7 +547,7 @@ export class SVContractPrint extends React.PureComponent<any, any> {
               fontSize: 14,
               fontWeight: 'bold',
               flexDirection: 'column',
-              height: 25,
+              height: 28,
             }}
           >
             {moneyFormatEmpty(calcs?.totalpaid)}
@@ -568,7 +568,7 @@ export class SVContractPrint extends React.PureComponent<any, any> {
               flexDirection: 'column',
               backgroundColor: '#0E9DAD',
               color: '#fff',
-              height: 25,
+              height: 28,
             }}
           >
             <Box>مدفوعات</Box>
@@ -586,7 +586,7 @@ export class SVContractPrint extends React.PureComponent<any, any> {
               justifyContent: 'center',
               fontSize: 10,
               flexDirection: 'column',
-              height: 25,
+              height: 28,
             }}
           >
             QR
@@ -602,7 +602,7 @@ export class SVContractPrint extends React.PureComponent<any, any> {
               justifyContent: 'center',
               fontSize: 10,
               flexDirection: 'column',
-              height: 25,
+              height: 28,
             }}
           ></Box>
         </Grid>
@@ -621,7 +621,7 @@ export class SVContractPrint extends React.PureComponent<any, any> {
               flexDirection: 'column',
               backgroundColor: '#0E9DAD',
               color: '#fff',
-              height: 25,
+              height: 28,
             }}
           >
             <Box>أشياء اخرى</Box>
@@ -638,7 +638,7 @@ export class SVContractPrint extends React.PureComponent<any, any> {
               justifyContent: 'center',
               fontSize: 10,
               flexDirection: 'column',
-              height: 25,
+              height: 28,
             }}
           >
             QR
@@ -655,7 +655,7 @@ export class SVContractPrint extends React.PureComponent<any, any> {
               fontSize: 14,
               fontWeight: 'bold',
               flexDirection: 'column',
-              height: 25,
+              height: 28,
             }}
           >
             {moneyFormatEmpty(amount - calcs?.totalpaid)}
@@ -676,7 +676,7 @@ export class SVContractPrint extends React.PureComponent<any, any> {
               flexDirection: 'column',
               backgroundColor: '#0E9DAD',
               color: '#fff',
-              height: 25,
+              height: 28,
             }}
           >
             <Box>الرصيد المستحق</Box>
@@ -715,7 +715,7 @@ export class SVContractPrint extends React.PureComponent<any, any> {
                   </Grid>
                   <Grid item xs={6}>
                     {this.renderCarBox(carlist, data)}
-                    {this.renderDivider(2)}
+                    {this.renderDivider(1)}
                     {this.renderPriceType(data)}
                   </Grid>
                 </Grid>

@@ -58,6 +58,7 @@ export default function Sendreqs(props: any) {
     addSendreq,
     editSendreq,
     removeSendreq,
+    loading,
     // ooredoo,
   } = useSendreqs();
   const [columns] = useState([
@@ -106,6 +107,7 @@ export default function Sendreqs(props: any) {
       words={words}
       theme={theme}
       refresh={refreshsendreqs}
+      loading={loading}
     >
       <Box
         style={{

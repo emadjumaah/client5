@@ -25,7 +25,7 @@ import {
   ColumnChooser,
   PagingPanel,
 } from '@devexpress/dx-react-grid-material-ui';
-import { Command, Loading, PopupEditing } from '../../Shared';
+import { Command, PopupEditing } from '../../Shared';
 import { getRowId, updateDocNumbers } from '../../common';
 import {
   getPurchaseInvoices,
@@ -109,7 +109,6 @@ export default function PurchaseInvoices({
   ]);
   const [rows, setRows] = useState([]);
   const [sum, setSum] = useState(0);
-  const [loading, setLoading] = useState(false);
   const [start, setStart] = useState<any>(null);
   const [end, setEnd] = useState<any>(null);
   const { tasks } = useTasks();
@@ -178,16 +177,12 @@ export default function PurchaseInvoices({
   };
 
   useEffect(() => {
-    if (opData?.loading) {
-      setLoading(true);
-    }
     if (opData?.data?.getPurchaseInvoices?.data) {
       const { data } = opData.data.getPurchaseInvoices;
       const rdata = updateDocNumbers(data);
       const samount = _.sumBy(rdata, 'amount');
       setSum(samount);
       setRows(rdata);
-      setLoading(false);
     }
   }, [opData]);
 
@@ -202,6 +197,7 @@ export default function PurchaseInvoices({
       words={words}
       theme={theme}
       refresh={refresh}
+      loading={opData?.loading}
     >
       <Box
         style={{
@@ -350,7 +346,6 @@ export default function PurchaseInvoices({
             </PopupEditing>
           </Grid>
         </Paper>
-        {loading && <Loading isRTL={isRTL} />}
       </Box>
     </PageLayout>
   );

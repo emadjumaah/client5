@@ -30,6 +30,11 @@ export default gql`
         evQty
         evDone
 
+        retypeId
+        retypeName
+        retypeNameAr
+        retypeColor
+
         userId
 
         createdAt

@@ -16,7 +16,6 @@ import { packages } from './roles';
 
 // Dev
 // export const graphqlURI = 'http://jadwal-server/graphql';
-
 // dev online
 // export const graphqlURI = 'https://jadwal-prod.herokuapp.com/graphql';
 
@@ -32,6 +31,7 @@ import { packages } from './roles';
 // Online
 export const graphqlURI = process.env.REACT_APP_GRAPHQL_URI;
 
+export const appversion = '1.4.2';
 export {
   mainmenu,
   emplmenu,

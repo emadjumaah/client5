@@ -45,7 +45,7 @@ export default function Groups(props: any) {
   const [openItem, setOpenItem] = useState(false);
   const [item, setItem] = useState(null);
 
-  const { groups, refreshgroups, addGroup, editGroup, removeGroup } =
+  const { groups, refreshgroups, addGroup, editGroup, removeGroup, loading } =
     useGroups();
 
   const [columns] = useState([
@@ -86,6 +86,7 @@ export default function Groups(props: any) {
       words={words}
       theme={theme}
       refresh={refreshgroups}
+      loading={loading}
     >
       <Box
         style={{

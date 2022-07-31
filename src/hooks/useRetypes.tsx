@@ -32,5 +32,6 @@ export default () => {
     addRetype,
     editRetype,
     removeRetype,
+    loading: depData?.loading,
   };
 };

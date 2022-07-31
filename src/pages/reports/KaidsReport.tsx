@@ -401,6 +401,7 @@ export default function KaidsReport({
       words={words}
       theme={theme}
       refresh={refresh}
+      loading={summaryData?.loading}
     >
       <Box
         style={{

@@ -25,7 +25,7 @@ import {
   ColumnChooser,
   PagingPanel,
 } from '@devexpress/dx-react-grid-material-ui';
-import { Command, Loading, PopupEditing } from '../../Shared';
+import { Command, PopupEditing } from '../../Shared';
 import { getRowId, updateDocNumbers } from '../../common';
 import { useLazyQuery, useMutation } from '@apollo/client';
 import {
@@ -166,6 +166,7 @@ export default function FinanceAllKaid({
       words={words}
       theme={theme}
       refresh={refresh}
+      loading={loading}
     >
       <Box
         style={{
@@ -291,7 +292,6 @@ export default function FinanceAllKaid({
             </PopupEditing>
           </Grid>
         </Paper>
-        {loading && <Loading isRTL={isRTL} />}
       </Box>
     </PageLayout>
   );

@@ -55,6 +55,7 @@ export default function Contacts(props: any) {
     removeContact,
     syncCust,
     syncEmpl,
+    loading,
   } = useContacts();
   const { groups } = useGroups();
   const [columns] = useState([
@@ -107,6 +108,7 @@ export default function Contacts(props: any) {
       words={words}
       theme={theme}
       refresh={refreshcontact}
+      loading={loading}
     >
       <Box
         style={{

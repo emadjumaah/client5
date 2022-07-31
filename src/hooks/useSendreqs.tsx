@@ -40,5 +40,6 @@ export default () => {
     removeSendreq,
     refreshsendreqs,
     ooredoo,
+    loading: catpData?.loading,
   };
 };

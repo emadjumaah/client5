@@ -20,7 +20,6 @@ import AutoFieldLocal from '../components/fields/AutoFieldLocal';
 import { getPopupTitle } from '../constants/menu';
 import { carstatuss } from '../constants';
 import useRetypes from '../hooks/useRetypes';
-import PopupResourseType from './PopupResourseType';
 import { uploadMultiPhotoOnline } from '../common/AvatarUpload';
 import { ImageView } from '../components/viewer';
 import { UploadPhotos } from '../common/UploadPhotos';
@@ -42,32 +41,19 @@ const PopupResourses = ({
   const [depError, setDepError] = useState<any>(false);
   const [color, setColor] = useState<any>('#252B3B');
 
-  const [newtext2, setNewtext2] = useState('');
-  const [openTyp, setOpenTyp] = useState(false);
-
   const [urls, setUrls] = useState([]);
   const [photosimages, setPhotosimages] = useState([]);
   const [photosurls, setPhotosurls] = useState([]);
 
   const emplRef: any = React.useRef();
 
-  const { retypes, addRetype, editRetype } = useRetypes();
+  const { retypes } = useRetypes();
 
   const { register, handleSubmit, errors, reset } = useForm(yup.emppResolver);
   const {
     translate: { words, isRTL },
     store: { user, tempId },
   }: GContextTypes = useContext(GlobalContext);
-  const openRetype = () => {
-    setOpenTyp(true);
-  };
-  const onCloseRetype = () => {
-    setOpenTyp(false);
-    setNewtext2('');
-  };
-  const onNewTypChange = (nextValue: any) => {
-    setRtypevalue(nextValue);
-  };
 
   useEffect(() => {
     if (row && row._id) {
@@ -415,7 +401,6 @@ const PopupResourses = ({
                 selectError={depError}
                 refernce={emplRef}
                 register={register}
-                openAdd={openRetype}
                 isRTL={isRTL}
                 fullWidth
                 mb={0}
@@ -518,17 +503,6 @@ const PopupResourses = ({
           </Grid>
         </Grid>
         <Grid item xs={1}></Grid>
-        <PopupResourseType
-          newtext={newtext2}
-          open={openTyp}
-          onClose={onCloseRetype}
-          isNew={true}
-          setNewValue={onNewTypChange}
-          row={null}
-          addAction={addRetype}
-          editAction={editRetype}
-          reType={2}
-        ></PopupResourseType>
       </Grid>
     </PopupLayout>
   );

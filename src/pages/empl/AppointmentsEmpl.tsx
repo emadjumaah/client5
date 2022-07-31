@@ -20,7 +20,7 @@ import {
   TableColumnVisibility,
   ColumnChooser,
 } from '@devexpress/dx-react-grid-material-ui';
-import { Command, Loading, PopupEditing } from '../../Shared';
+import { Command, PopupEditing } from '../../Shared';
 import { getRowId } from '../../common';
 import { createEvent, deleteEventById, updateEvent } from '../../graphql';
 import { useLazyQuery, useMutation } from '@apollo/client';
@@ -264,6 +264,7 @@ export default function AppointmentsEmpl({
       refresh={refresh}
       periodvalue={periodvalue}
       setPeriodvalue={setPeriodvalue}
+      loading={loading}
       // bgcolor={colors.blue[500]}
     >
       <Paper>
@@ -479,7 +480,6 @@ export default function AppointmentsEmpl({
             }}
           />
         </Grid>
-        {loading && <Loading isRTL={isRTL} />}
         <PopupDepartmentView
           open={openDepartmentItem}
           onClose={onCloseDepartmentItem}

@@ -11,6 +11,7 @@ export default function PageLayout(props: any) {
     refresh,
     theme,
     bgcolor = fade(theme.palette.primary.light, 0.1),
+    loading,
   } = props;
 
   return (
@@ -42,6 +43,7 @@ export default function PageLayout(props: any) {
               isRTL={isRTL}
               theme={theme}
               refresh={refresh}
+              loading={loading}
             ></RefetchBox>
           )}
         </div>

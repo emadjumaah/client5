@@ -1,7 +1,7 @@
 export const carlist = [
   {
     id: 1,
-    name: 'Vehcle',
+    name: 'Vehicle',
     nameAr: 'المركبة',
   },
   {
@@ -31,12 +31,12 @@ export const carlist = [
   },
   {
     id: 7,
-    name: 'Km Out',
+    name: 'Km OUT',
     nameAr: 'العداد وقت الخروج',
   },
   {
     id: 8,
-    name: 'Km In',
+    name: 'Km IN',
     nameAr: 'العداد وقت العودة',
   },
   {
@@ -58,6 +58,11 @@ export const custlist = [
     nameAr: 'الاسم',
   },
   {
+    id: 1.5,
+    name: 'Department',
+    nameAr: 'الشركة',
+  },
+  {
     id: 2,
     name: 'Address',
     nameAr: 'العنوان',
@@ -75,12 +80,7 @@ export const custlist = [
   {
     id: 6,
     name: 'License No',
-    nameAr: 'رقم رخصة القيادة',
-  },
-  {
-    id: 7,
-    name: 'Issue Date',
-    nameAr: 'صادرة',
+    nameAr: 'رخصة القيادة',
   },
   {
     id: 8,
@@ -94,27 +94,12 @@ export const custlist = [
   },
   {
     id: 10,
-    name: 'PP / ID No',
-    nameAr: 'رقم البطاقة الشخصية',
-  },
-  {
-    id: 11,
-    name: 'Issue Date',
-    nameAr: 'صادرة',
+    name: 'ID No',
+    nameAr: 'البطاقة الشخصية',
   },
   {
     id: 12,
     name: 'Expire Date',
     nameAr: 'تاريخ الانتهاء',
-  },
-  {
-    id: 18,
-    name: 'Payment Type',
-    nameAr: 'طريقة الدفع',
-  },
-  {
-    id: 19,
-    name: 'Account No',
-    nameAr: 'رقم الحساب',
   },
 ];

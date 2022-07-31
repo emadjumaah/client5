@@ -1,5 +1,4 @@
 import { Box, Typography } from '@material-ui/core';
-import React from 'react';
 import MyIcon from '../Shared/MyIcon';
 
 export default function ImportBtn({ open, isRTL, theme }) {

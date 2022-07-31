@@ -24,5 +24,12 @@ export default () => {
 
   const groups = catpData?.data?.['getGroups']?.data || [];
   const refreshgroups = () => catpData?.refetch();
-  return { groups, addGroup, editGroup, removeGroup, refreshgroups };
+  return {
+    groups,
+    addGroup,
+    editGroup,
+    removeGroup,
+    refreshgroups,
+    loading: catpData?.loading,
+  };
 };

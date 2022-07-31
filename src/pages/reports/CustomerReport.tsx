@@ -277,6 +277,7 @@ export default function CustomerReport({
       words={words}
       theme={theme}
       refresh={refresh}
+      loading={summaryData?.loading}
     >
       <Box
         style={{

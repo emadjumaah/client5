@@ -189,6 +189,7 @@ export default function ManageEmployees({
       theme={theme}
       refresh={refreshemployee}
       bgcolor={bgcolor}
+      loading={empData?.loading}
     >
       <Box
         style={{

@@ -68,7 +68,7 @@ const PopupTaskInvoice = ({
   const classes = invoiceClasses();
   const [alrt, setAlrt] = useState({ show: false, msg: '', type: undefined });
   const [saving, setSaving] = useState(false);
-  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [selectedDate, setSelectedDate] = useState(null);
   const [invNo, setInvNo] = useState<any>('');
 
   const [isPeriod, setIsPeriod] = useState(false);
@@ -205,7 +205,11 @@ const PopupTaskInvoice = ({
   };
 
   const handleDateChange = (date: any) => {
-    setSelectedDate(date);
+    if (date) {
+      const d = new Date(date);
+      d?.setHours(8, 0, 0);
+      setSelectedDate(d);
+    }
   };
 
   useEffect(() => {
@@ -340,6 +344,14 @@ const PopupTaskInvoice = ({
       }
     }
   }, [task, services, customers, open]);
+
+  useEffect(() => {
+    if (isNew) {
+      const start = new Date();
+      start.setHours(8, 0, 0);
+      setSelectedDate(start);
+    }
+  }, [open]);
 
   const getOverallTotal = () => {
     const totalsin = itemsList.map((litem: any) => litem.itemtotal);

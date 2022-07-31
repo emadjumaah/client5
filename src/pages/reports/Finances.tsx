@@ -284,6 +284,7 @@ export default function Finances({
       refresh={refresh}
       periodvalue={periodvalue}
       setPeriodvalue={setPeriodvalue}
+      loading={financesData?.loading}
     >
       <Paper>
         <Box

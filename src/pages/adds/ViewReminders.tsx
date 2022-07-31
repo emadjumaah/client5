@@ -23,7 +23,6 @@ import {
   ColumnChooser,
   PagingPanel,
 } from '@devexpress/dx-react-grid-material-ui';
-import { Loading } from '../../Shared';
 import { getRowId } from '../../common';
 import { actionTimeFormatter, sentFormatter } from '../../Shared/colorFormat';
 
@@ -49,7 +48,6 @@ export default function ViewReminders(props: any) {
   const { isRTL, words, menuitem, theme } = props;
 
   const [rows, setRows] = useState([]);
-  const [loading, setLoading] = useState(false);
   const [start, setStart] = useState<any>(null);
   const [end, setEnd] = useState<any>(null);
 
@@ -141,9 +139,6 @@ export default function ViewReminders(props: any) {
   const [editRAction] = useMutation(updateAction, refresQuery);
 
   useEffect(() => {
-    if (actionsData?.loading) {
-      setLoading(true);
-    }
     if (actionsData?.data?.getRemindersActions?.data) {
       const { data } = actionsData.data.getRemindersActions;
       const rdata = data.map((da: any) => {
@@ -196,7 +191,6 @@ export default function ViewReminders(props: any) {
         };
       });
       setRows(rdata);
-      setLoading(false);
     }
   }, [actionsData]);
 
@@ -210,6 +204,7 @@ export default function ViewReminders(props: any) {
       words={words}
       theme={theme}
       refresh={refresh}
+      loading={actionsData?.loading}
     >
       <Box
         style={{
@@ -322,8 +317,6 @@ export default function ViewReminders(props: any) {
             />
           </Grid>
         </Paper>
-
-        {loading && <Loading isRTL={isRTL} />}
       </Box>
     </PageLayout>
   );

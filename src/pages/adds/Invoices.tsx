@@ -25,7 +25,7 @@ import {
   ColumnChooser,
   PagingPanel,
 } from '@devexpress/dx-react-grid-material-ui';
-import { Command, Loading, PopupEditing } from '../../Shared';
+import { Command, PopupEditing } from '../../Shared';
 import { getRowId, updateDocNumbers } from '../../common';
 import { PopupInvoice } from '../../pubups';
 import {
@@ -205,6 +205,7 @@ export default function Invoices({ isRTL, words, menuitem, theme, company }) {
       words={words}
       theme={theme}
       refresh={refresh}
+      loading={loading}
     >
       <Box
         style={{
@@ -357,7 +358,6 @@ export default function Invoices({ isRTL, words, menuitem, theme, company }) {
             </PopupEditing>
           </Grid>
         </Paper>
-        {loading && <Loading isRTL={isRTL} />}
       </Box>
     </PageLayout>
   );

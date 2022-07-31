@@ -202,6 +202,7 @@ const Main = (props: any) => {
                   words={words}
                   theme={theme}
                   refresh={refresh}
+                  loading={evnData?.loading}
                 ></EventsCalFilter>
               </Box>
             </Hidden>

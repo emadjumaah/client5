@@ -262,6 +262,7 @@ export default function BudgetReport({
       words={words}
       theme={theme}
       refresh={refresh}
+      loading={tbData?.loading}
     >
       <Box
         style={{

@@ -25,6 +25,7 @@ export default gql`
     $project: ProjectInput
     $resourse: ResourseInput
     $contract: ContractInput
+    $retype: RetypeInput
   ) {
     updateEvent(
       branch: $branch
@@ -50,6 +51,7 @@ export default gql`
       project: $project
       resourse: $resourse
       contract: $contract
+      retype: $retype
     ) {
       _id
       id
@@ -91,6 +93,11 @@ export default gql`
       employeeNameAr
       employeeColor
       employeePhone
+
+      retypeId
+      retypeName
+      retypeNameAr
+      retypeColor
 
       createdAt
       updatedAt

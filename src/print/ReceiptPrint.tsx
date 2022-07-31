@@ -314,7 +314,7 @@ export class ReceiptPrint extends React.PureComponent<any, any> {
                   </Typography>
                 </Box>
               )}
-              {blns && (
+              {blns && blns > 0 && (
                 <Typography>
                   ( {isRTL ? 'الرصيد' : 'Balance'} : {moneyFormat(blns)} )
                 </Typography>
